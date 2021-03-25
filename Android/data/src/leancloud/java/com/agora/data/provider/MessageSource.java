@@ -1,4 +1,4 @@
-package com.agora.data.provider.leancloud;
+package com.agora.data.provider;
 
 import android.content.Context;
 import android.util.Log;
@@ -8,19 +8,17 @@ import androidx.annotation.Nullable;
 import androidx.core.util.ObjectsCompat;
 
 import com.agora.data.BaseError;
-import com.agora.data.manager.AttributeManager;
+import com.agora.data.provider.service.AttributeManager;
 import com.agora.data.manager.RoomManager;
 import com.agora.data.model.Action;
 import com.agora.data.model.Member;
 import com.agora.data.model.Room;
 import com.agora.data.model.User;
 import com.agora.data.observer.DataMaybeObserver;
-import com.agora.data.provider.BaseMessageSource;
-import com.agora.data.provider.IRoomProxy;
-import com.agora.data.service.ActionService;
-import com.agora.data.service.MemberService;
-import com.agora.data.service.RoomService;
-import com.agora.data.service.UserService;
+import com.agora.data.provider.service.ActionService;
+import com.agora.data.provider.service.MemberService;
+import com.agora.data.provider.service.RoomService;
+import com.agora.data.provider.service.UserService;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -514,7 +512,7 @@ class MessageSource extends BaseMessageSource {
                 iRoomProxy.getMember(room.getObjectId(), member.getUserId().getObjectId())
                         .subscribe(new DataMaybeObserver<Member>(mContext) {
                             @Override
-                            public void handleError(@androidx.annotation.NonNull BaseError e) {
+                            public void handleError(@NonNull BaseError e) {
 
                             }
 

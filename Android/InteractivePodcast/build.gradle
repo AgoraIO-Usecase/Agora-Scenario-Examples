@@ -4,6 +4,8 @@ if (isModule) {
     apply plugin: 'com.android.library'
 }
 
+apply plugin: 'com.google.gms.google-services'
+
 android {
     compileSdkVersion COMPILESDKVERSION
     buildToolsVersion BUILDTOOLSVERSION
@@ -36,6 +38,15 @@ android {
 
     buildFeatures {
         dataBinding = true
+    }
+
+    flavorDimensions "test"
+    productFlavors {
+        leancloud {
+        }
+
+        firebase {
+        }
     }
 }
 

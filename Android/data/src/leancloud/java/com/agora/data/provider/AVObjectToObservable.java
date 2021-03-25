@@ -1,4 +1,4 @@
-package com.agora.data.provider.leancloud;
+package com.agora.data.provider;
 
 import com.google.gson.Gson;
 

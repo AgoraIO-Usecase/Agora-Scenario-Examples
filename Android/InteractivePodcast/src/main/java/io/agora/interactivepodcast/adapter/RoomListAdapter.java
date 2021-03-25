@@ -57,7 +57,7 @@ public class RoomListAdapter extends BaseRecyclerViewAdapter<Room, RoomListAdapt
 
         Context context = holder.itemView.getContext();
         DataRepositroy.Instance(context)
-                .getRoomListInfo(item)
+                .getRoomCountInfo(item)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DataObserver<Room>(context) {
@@ -74,7 +74,7 @@ public class RoomListAdapter extends BaseRecyclerViewAdapter<Room, RoomListAdapt
                 });
 
         DataRepositroy.Instance(context)
-                .getRoomListInfo2(item)
+                .getRoomSpeakersInfo(item)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DataMaybeObserver<Room>(context) {

@@ -8,10 +8,10 @@ import com.agora.data.manager.RoomManager;
 import com.agora.data.model.Member;
 import com.agora.data.model.Room;
 import com.agora.data.model.User;
+import com.agora.data.provider.DataProvider;
 import com.agora.data.provider.IDataProvider;
 import com.agora.data.provider.IMessageSource;
 import com.agora.data.provider.IStoreSource;
-import com.agora.data.provider.leancloud.DataProvider;
 
 import java.util.List;
 
@@ -60,13 +60,13 @@ public class DataRepositroy implements IStoreSource, IMessageSource {
     }
 
     @Override
-    public Observable<Room> getRoomListInfo(@NonNull Room room) {
-        return mDataProvider.getStoreSource().getRoomListInfo(room);
+    public Observable<Room> getRoomCountInfo(@NonNull Room room) {
+        return mDataProvider.getStoreSource().getRoomCountInfo(room);
     }
 
     @Override
-    public Maybe<Room> getRoomListInfo2(@NonNull Room room) {
-        return mDataProvider.getStoreSource().getRoomListInfo2(room);
+    public Maybe<Room> getRoomSpeakersInfo(@NonNull Room room) {
+        return mDataProvider.getStoreSource().getRoomSpeakersInfo(room);
     }
 
     @Override

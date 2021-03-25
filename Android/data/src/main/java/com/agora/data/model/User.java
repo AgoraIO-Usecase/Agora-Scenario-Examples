@@ -11,6 +11,9 @@ public class User implements Serializable, Cloneable {
     private String name;
     private String avatar;
 
+    public User() {
+    }
+
     public String getObjectId() {
         return objectId;
     }

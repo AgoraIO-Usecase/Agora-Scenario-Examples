@@ -19,9 +19,9 @@ public interface IStoreSource {
 
     Observable<List<Room>> getRooms();
 
-    Observable<Room> getRoomListInfo(@NonNull Room room);
+    Observable<Room> getRoomCountInfo(@NonNull Room room);
 
-    Maybe<Room> getRoomListInfo2(@NonNull Room room);
+    Maybe<Room> getRoomSpeakersInfo(@NonNull Room room);
 
     Observable<Room> creatRoom(@NonNull Room room);
 

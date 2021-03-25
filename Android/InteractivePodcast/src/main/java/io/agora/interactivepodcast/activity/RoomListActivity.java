@@ -23,8 +23,6 @@ import com.agora.data.observer.DataCompletableObserver;
 import com.agora.data.observer.DataObserver;
 import com.bumptech.glide.Glide;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -343,12 +341,12 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
     }
 
     @Override
-    public void onMemberJoin(@NotNull Member member) {
+    public void onMemberJoin(@NonNull Member member) {
         updateMinRoomInfo();
     }
 
     @Override
-    public void onMemberLeave(@NotNull Member member) {
+    public void onMemberLeave(@NonNull Member member) {
         if (RoomManager.Instance(this).isOwner(member) || RoomManager.Instance(this).isMine(member)) {
             mDataBinding.btCrateRoom.setVisibility(View.VISIBLE);
             mDataBinding.llMin.setVisibility(View.GONE);
@@ -401,34 +399,34 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
     }
 
     @Override
-    public void onReceivedHandUp(@NotNull Member member) {
+    public void onReceivedHandUp(@NonNull Member member) {
         mDataBinding.ivNews.setCount(DataRepositroy.Instance(this).getHandUpListCount());
     }
 
     @Override
-    public void onHandUpAgree(@NotNull Member member) {
+    public void onHandUpAgree(@NonNull Member member) {
         refreshHandUpView();
         mDataBinding.ivNews.setCount(DataRepositroy.Instance(this).getHandUpListCount());
     }
 
     @Override
-    public void onHandUpRefuse(@NotNull Member member) {
+    public void onHandUpRefuse(@NonNull Member member) {
         refreshHandUpView();
         mDataBinding.ivNews.setCount(DataRepositroy.Instance(this).getHandUpListCount());
     }
 
     @Override
-    public void onReceivedInvite(@NotNull Member member) {
+    public void onReceivedInvite(@NonNull Member member) {
 
     }
 
     @Override
-    public void onInviteAgree(@NotNull Member member) {
+    public void onInviteAgree(@NonNull Member member) {
 
     }
 
     @Override
-    public void onInviteRefuse(@NotNull Member member) {
+    public void onInviteRefuse(@NonNull Member member) {
         if (this.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) == false) {
             return;
         }

@@ -7,8 +7,6 @@ import androidx.annotation.Nullable;
 
 import com.agora.data.BaseError;
 
-import org.jetbrains.annotations.NotNull;
-
 import io.reactivex.MaybeObserver;
 import io.reactivex.disposables.Disposable;
 
@@ -27,7 +25,7 @@ public abstract class DataMaybeObserver<T> implements MaybeObserver<T> {
     }
 
     @Override
-    public void onError(@NotNull Throwable e) {
+    public void onError(@NonNull Throwable e) {
         if (e instanceof BaseError) {
             handleError((BaseError) e);
         } else {
@@ -41,7 +39,7 @@ public abstract class DataMaybeObserver<T> implements MaybeObserver<T> {
     }
 
     @Override
-    public void onSubscribe(@NotNull Disposable d) {
+    public void onSubscribe(@NonNull Disposable d) {
 
     }
 

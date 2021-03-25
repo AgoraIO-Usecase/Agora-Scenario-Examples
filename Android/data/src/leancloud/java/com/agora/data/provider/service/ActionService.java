@@ -1,7 +1,7 @@
-package com.agora.data.service;
+package com.agora.data.provider.service;
 
 import cn.leancloud.AVObject;
-import com.agora.data.manager.AttributeManager;
+
 import com.agora.data.model.Action;
 
 public class ActionService extends AttributeManager<Action> {

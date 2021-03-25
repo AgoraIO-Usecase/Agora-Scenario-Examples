@@ -1,4 +1,4 @@
-package com.agora.data.provider.leancloud;
+package com.agora.data.provider;
 
 import android.text.TextUtils;
 
@@ -7,10 +7,9 @@ import androidx.annotation.NonNull;
 import com.agora.data.model.Member;
 import com.agora.data.model.Room;
 import com.agora.data.model.User;
-import com.agora.data.provider.IStoreSource;
-import com.agora.data.service.MemberService;
-import com.agora.data.service.RoomService;
-import com.agora.data.service.UserService;
+import com.agora.data.provider.service.MemberService;
+import com.agora.data.provider.service.RoomService;
+import com.agora.data.provider.service.UserService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -110,7 +109,7 @@ class StoreSource implements IStoreSource {
     }
 
     @Override
-    public Observable<Room> getRoomListInfo(@NonNull Room room) {
+    public Observable<Room> getRoomCountInfo(@NonNull Room room) {
         String roomId = room.getObjectId();
         AVObject roomObject = AVObject.createWithoutData(RoomService.OBJECT_KEY, roomId);
 
@@ -134,13 +133,14 @@ class StoreSource implements IStoreSource {
     }
 
     @Override
-    public Maybe<Room> getRoomListInfo2(@NonNull Room room) {
+    public Maybe<Room> getRoomSpeakersInfo(@NonNull Room room) {
         String roomId = room.getObjectId();
         AVObject roomObject = AVObject.createWithoutData(RoomService.OBJECT_KEY, roomId);
 
         //查询3个用户成员
         AVQuery<AVObject> queryMember3 = AVQuery.getQuery(MemberService.OBJECT_KEY);
         queryMember3.whereEqualTo(MemberService.TAG_ROOMID, roomObject);
+        queryMember3.whereEqualTo(MemberService.TAG_IS_SPEAKER, 1);
         queryMember3.limit(3);
         queryMember3.include(MemberService.TAG_USERID);
 

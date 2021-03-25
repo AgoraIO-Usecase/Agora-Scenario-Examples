@@ -1,15 +1,15 @@
-package com.agora.data.provider.leancloud;
+package com.agora.data.provider;
 
 import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import com.agora.data.provider.IDataProvider;
-import com.agora.data.provider.IMessageSource;
-import com.agora.data.provider.IRoomProxy;
-import com.agora.data.provider.IStoreSource;
-
 public class DataProvider implements IDataProvider {
+
+    public static final String TAG_TABLE_USER = "USER";
+    public static final String TAG_TABLE_ROOM = "ROOM";
+    public static final String TAG_TABLE_MEMBER = "MEMBER";
+    public static final String TAG_TABLE_ACTION = "ACTION";
 
     private final IStoreSource mIStoreSource;
     private final IMessageSource mIMessageSource;

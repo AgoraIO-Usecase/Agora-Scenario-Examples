@@ -6,8 +6,6 @@ import androidx.annotation.NonNull;
 
 import com.agora.data.BaseError;
 
-import org.jetbrains.annotations.NotNull;
-
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
@@ -26,7 +24,7 @@ public abstract class DataObserver<T> implements Observer<T> {
     }
 
     @Override
-    public void onError(@NotNull Throwable e) {
+    public void onError(@NonNull Throwable e) {
         if (e instanceof BaseError) {
             handleError((BaseError) e);
         } else {
@@ -40,7 +38,7 @@ public abstract class DataObserver<T> implements Observer<T> {
     }
 
     @Override
-    public void onSubscribe(@NotNull Disposable d) {
+    public void onSubscribe(@NonNull Disposable d) {
 
     }
 
