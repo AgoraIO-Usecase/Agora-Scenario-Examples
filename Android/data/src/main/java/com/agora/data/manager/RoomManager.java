@@ -14,6 +14,8 @@ import com.agora.data.model.Member;
 import com.agora.data.model.Room;
 import com.agora.data.observer.DataCompletableObserver;
 import com.agora.data.provider.IRoomProxy;
+import com.elvishew.xlog.Logger;
+import com.elvishew.xlog.XLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +33,8 @@ import io.reactivex.functions.Consumer;
  */
 public final class RoomManager implements IRoomProxy {
 
+    private Logger.Builder mLogger = XLog.tag("RoomManager");
+
     public static final int ERROR_REGISTER_ANCHOR_ACTION_STATUS = 100;
     public static final int ERROR_REGISTER_MEMBER_ACTION_STATUS = ERROR_REGISTER_ANCHOR_ACTION_STATUS + 1;
     public static final int ERROR_REGISTER_MEMBER_CHANGED = ERROR_REGISTER_MEMBER_ACTION_STATUS + 1;
@@ -44,7 +48,6 @@ public final class RoomManager implements IRoomProxy {
     }
 
     private final IRtcEngineEventHandler mIRtcEngineEventHandler = new IRtcEngineEventHandler() {
-
     };
 
     public synchronized static RoomManager Instance(Context context) {
@@ -78,11 +81,13 @@ public final class RoomManager implements IRoomProxy {
     private final MainThreadDispatch mainThreadDispatch = new MainThreadDispatch();
 
     public Completable requestHandsUp() {
+        mLogger.d("requestHandsUp() called");
         return DataRepositroy.Instance(mContext)
                 .requestHandsUp(mMine);
     }
 
     public Completable toggleSelfAudio() {
+        mLogger.d("toggleSelfAudio() called");
         Member member = getMine();
         if (member == null) {
             return Completable.complete();
@@ -103,6 +108,7 @@ public final class RoomManager implements IRoomProxy {
     }
 
     public Completable toggleTargetAudio(@NonNull Member member) {
+        mLogger.d("toggleTargetAudio() called with: member = [" + member + "]");
         if (ObjectsCompat.equals(member, getMine())) {
             return toggleSelfAudio();
         }
@@ -122,6 +128,7 @@ public final class RoomManager implements IRoomProxy {
     }
 
     public Completable seatOff(@NonNull Member member) {
+        mLogger.d("seatOff() called with: member = [" + member + "]");
         return DataRepositroy.Instance(mContext)
                 .seatOff(member)
                 .doOnComplete(new io.reactivex.functions.Action() {
@@ -144,17 +151,20 @@ public final class RoomManager implements IRoomProxy {
     }
 
     public Observable<Member> joinRoom() {
+        mLogger.d("joinRoom() called");
         return DataRepositroy.Instance(mContext)
                 .joinRoom(mRoom, mMine)
                 .doOnNext(new Consumer<Member>() {
                     @Override
                     public void accept(Member member) throws Exception {
+                        mLogger.d("joinRoom() called member={}", member);
                         mMine = member;
                     }
                 });
     }
 
     public void onJoinRoom(Room room, Member member) {
+        mLogger.d("onJoinRoom() called room={} member={}", room, member);
         this.mRoom = room;
         this.mMine = member;
         isLeaving = false;
@@ -163,6 +173,7 @@ public final class RoomManager implements IRoomProxy {
     }
 
     public void leaveRoom() {
+        mLogger.d("onJoinRoom() called");
         isLeaving = true;
 
         RtcManager.Instance(mContext).stopAudio();
@@ -184,6 +195,7 @@ public final class RoomManager implements IRoomProxy {
     }
 
     private void onLeaveRoom() {
+        mLogger.d("onLeaveRoom() called");
         RtcManager.Instance(mContext).removeHandler(mIRtcEngineEventHandler);
 
         this.mRoom = null;
@@ -193,6 +205,7 @@ public final class RoomManager implements IRoomProxy {
     }
 
     public void onRoomUpdated(Room room) {
+        mLogger.d("onRoomUpdated() called with: room = [" + room + "]");
         this.mRoom = room;
     }
 
@@ -213,6 +226,7 @@ public final class RoomManager implements IRoomProxy {
     }
 
     public Maybe<Room> getRoom(Room room) {
+        mLogger.d("getRoom() called with: room = [" + room + "]");
         return DataRepositroy.Instance(mContext)
                 .getRoom(room)
                 .doOnSuccess(new Consumer<Room>() {
@@ -251,6 +265,7 @@ public final class RoomManager implements IRoomProxy {
     }
 
     public Completable agreeInvite(@NonNull Member member) {
+        mLogger.d("agreeInvite() called with: member = [" + member + "]");
         return DataRepositroy.Instance(mContext)
                 .agreeInvite(member)
                 .doOnComplete(new io.reactivex.functions.Action() {
@@ -263,6 +278,7 @@ public final class RoomManager implements IRoomProxy {
     }
 
     public Completable refuseInvite(@NonNull Member member) {
+        mLogger.d("refuseInvite() called with: member = [" + member + "]");
         return DataRepositroy.Instance(mContext)
                 .refuseInvite(member)
                 .doOnComplete(new io.reactivex.functions.Action() {
@@ -274,6 +290,7 @@ public final class RoomManager implements IRoomProxy {
     }
 
     public Completable agreeHandsUp(@NonNull Member member) {
+        mLogger.d("agreeHandsUp() called with: member = [" + member + "]");
         return DataRepositroy.Instance(mContext)
                 .agreeHandsUp(member)
                 .doOnComplete(new io.reactivex.functions.Action() {
@@ -285,6 +302,7 @@ public final class RoomManager implements IRoomProxy {
     }
 
     public Completable refuseHandsUp(@NonNull Member member) {
+        mLogger.d("refuseHandsUp() called with: member = [" + member + "]");
         return DataRepositroy.Instance(mContext)
                 .refuseHandsUp(member)
                 .doOnComplete(new io.reactivex.functions.Action() {
@@ -337,6 +355,7 @@ public final class RoomManager implements IRoomProxy {
 
     @Override
     public void onMemberJoin(@NonNull Member member) {
+        mLogger.d("onMemberJoin() called with: member = [" + member + "]");
         if (isLeaving) {
             return;
         }
@@ -354,6 +373,7 @@ public final class RoomManager implements IRoomProxy {
 
     @Override
     public void onMemberLeave(boolean isManual, @NonNull Member member) {
+        mLogger.d("onMemberLeave() called with: isManual = [" + isManual + "], member = [" + member + "]");
         if (isLeaving) {
             return;
         }
@@ -377,6 +397,7 @@ public final class RoomManager implements IRoomProxy {
 
     @Override
     public void onLocalRoleChanged(@NonNull Member member) {
+        mLogger.d("onLocalRoleChanged() called with: member = [" + member + "]");
         if (isLeaving) {
             return;
         }
@@ -398,6 +419,7 @@ public final class RoomManager implements IRoomProxy {
 
     @Override
     public void onLocalAudioStatusChanged(@NonNull Member member) {
+        mLogger.d("onLocalAudioStatusChanged() called with: member = [" + member + "]");
         if (isLeaving) {
             return;
         }
@@ -413,6 +435,7 @@ public final class RoomManager implements IRoomProxy {
 
     @Override
     public void onRemoteRoleChanged(@NonNull Member member) {
+        mLogger.d("onRemoteRoleChanged() called with: member = [" + member + "]");
         if (isLeaving) {
             return;
         }
@@ -435,6 +458,7 @@ public final class RoomManager implements IRoomProxy {
 
     @Override
     public void onRemoteAudioStatusChanged(@NonNull Member member) {
+        mLogger.d("onRemoteAudioStatusChanged() called with: member = [" + member + "]");
         if (isLeaving) {
             return;
         }
@@ -450,6 +474,7 @@ public final class RoomManager implements IRoomProxy {
 
     @Override
     public void onReceivedHandUp(@NonNull Member member) {
+        mLogger.d("onReceivedHandUp() called with: member = [" + member + "]");
         if (isLeaving) {
             return;
         }
@@ -459,6 +484,7 @@ public final class RoomManager implements IRoomProxy {
 
     @Override
     public void onHandUpAgree(@NonNull Member member) {
+        mLogger.d("onHandUpAgree() called with: member = [" + member + "]");
         if (isLeaving) {
             return;
         }
@@ -468,6 +494,7 @@ public final class RoomManager implements IRoomProxy {
 
     @Override
     public void onHandUpRefuse(@NonNull Member member) {
+        mLogger.d("onHandUpRefuse() called with: member = [" + member + "]");
         if (isLeaving) {
             return;
         }
@@ -477,6 +504,7 @@ public final class RoomManager implements IRoomProxy {
 
     @Override
     public void onReceivedInvite(@NonNull Member member) {
+        mLogger.d("onReceivedInvite() called with: member = [" + member + "]");
         if (isLeaving) {
             return;
         }
@@ -486,6 +514,7 @@ public final class RoomManager implements IRoomProxy {
 
     @Override
     public void onInviteAgree(@NonNull Member member) {
+        mLogger.d("onInviteAgree() called with: member = [" + member + "]");
         if (isLeaving) {
             return;
         }
@@ -495,6 +524,7 @@ public final class RoomManager implements IRoomProxy {
 
     @Override
     public void onInviteRefuse(@NonNull Member member) {
+        mLogger.d("onInviteRefuse() called with: member = [" + member + "]");
         if (isLeaving) {
             return;
         }
@@ -504,6 +534,7 @@ public final class RoomManager implements IRoomProxy {
 
     @Override
     public void onEnterMinStatus() {
+        mLogger.d("onEnterMinStatus() called");
         if (isLeaving) {
             return;
         }
@@ -513,6 +544,7 @@ public final class RoomManager implements IRoomProxy {
 
     @Override
     public void onRoomError(int error) {
+        mLogger.d("onRoomError() called with: error = [" + error + "]");
         mainThreadDispatch.onRoomError(error);
     }
 }

@@ -209,7 +209,9 @@ class StoreSource implements IStoreSource {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
-                                emitter.onSuccess(document.toObject(Room.class));
+                                Room roomNew = document.toObject(Room.class);
+                                roomNew.setObjectId(document.getId());
+                                emitter.onSuccess(roomNew);
                             } else {
                                 emitter.onComplete();
                             }

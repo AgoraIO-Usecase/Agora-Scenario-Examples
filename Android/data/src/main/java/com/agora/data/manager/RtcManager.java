@@ -25,7 +25,7 @@ public final class RtcManager {
     private int uid;
     private boolean isJoined = false;
 
-    private List<IRtcEngineEventHandler> handlers = new ArrayList<>();
+    private final List<IRtcEngineEventHandler> handlers = new ArrayList<>();
 
     private RtcManager(Context context) {
         mContext = context.getApplicationContext();
@@ -136,7 +136,7 @@ public final class RtcManager {
         mRtcEngine.removeHandler(handler);
     }
 
-    private IRtcEngineEventHandler mEventHandler = new IRtcEngineEventHandler() {
+    private final IRtcEngineEventHandler mEventHandler = new IRtcEngineEventHandler() {
         @Override
         public void onError(int err) {
             super.onError(err);

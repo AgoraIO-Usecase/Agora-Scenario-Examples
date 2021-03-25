@@ -2,7 +2,6 @@ package com.agora.data.manager;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
@@ -12,11 +11,15 @@ import com.agora.data.BaseError;
 import com.agora.data.DataRepositroy;
 import com.agora.data.model.User;
 import com.agora.data.observer.DataObserver;
+import com.elvishew.xlog.Logger;
+import com.elvishew.xlog.XLog;
 import com.google.gson.Gson;
 
 import java.util.Random;
 
 public final class UserManager {
+    private Logger.Builder mLogger = XLog.tag("UserManager");
+
     private static final String TAG = UserManager.class.getSimpleName();
 
     private static final String TAG_USER = "user";
@@ -57,17 +60,18 @@ public final class UserManager {
                 mUser = new Gson().fromJson(userValue, User.class);
             }
 
+            mLogger.d("loginIn() called");
             DataRepositroy.Instance(mContext)
                     .login(mUser)
                     .subscribe(new DataObserver<User>(mContext) {
                         @Override
                         public void handleError(@NonNull BaseError e) {
-                            Log.e(TAG, "loginIn error: " + e.getMessage());
+                            mLogger.e("loginIn faile ", e);
                         }
 
                         @Override
                         public void handleSuccess(@NonNull User user) {
-                            Log.i(TAG, "loginIn " + user);
+                            mLogger.i("loginIn success user= %s", user);
                             onLoginIn(user);
                         }
                     });
