@@ -12,7 +12,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -29,11 +28,6 @@ class StoreSource implements IStoreSource {
 
     public StoreSource() {
         db = FirebaseFirestore.getInstance();
-
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setPersistenceEnabled(false)
-                .build();
-        db.setFirestoreSettings(settings);
     }
 
     @Override
@@ -124,19 +118,29 @@ class StoreSource implements IStoreSource {
     }
 
     @Override
-    public Maybe<Room> getRoomListInfo(@NonNull Room room) {
-        return Maybe.create(emitter -> {
-            db.collection(DataProvider.TAG_TABLE_ROOM)
-                    .document(room.getObjectId())
+    public Observable<Room> getRoomCountInfo(@NonNull Room room) {
+        return Observable.create(emitter -> {
+            db.collection(DataProvider.TAG_TABLE_MEMBER)
                     .get()
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                emitter.onSuccess(document.toObject(Room.class));
-                            } else {
+                            if (task.getResult().isEmpty()) {
                                 emitter.onComplete();
+                                return;
                             }
+
+                            List<Member> speakers = new ArrayList<>();
+                            int members = 0;
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                int isSpeaker = document.get("isSpeaker", Integer.class);
+                                if (isSpeaker == 1) {
+                                    speakers.add(document.toObject(Member.class));
+                                }
+                                members++;
+                            }
+                            room.setSpeakers(speakers);
+                            room.setMembers(members);
+                            emitter.onNext(room);
                         } else {
                             emitter.onError(task.getException());
                         }
@@ -145,19 +149,25 @@ class StoreSource implements IStoreSource {
     }
 
     @Override
-    public Maybe<Room> getRoomListInfo2(@NonNull Room room) {
+    public Maybe<Room> getRoomSpeakersInfo(@NonNull Room room) {
         return Maybe.create(emitter -> {
-            db.collection(DataProvider.TAG_TABLE_ROOM)
-                    .document(room.getObjectId())
+            db.collection(DataProvider.TAG_TABLE_MEMBER)
+                    .whereEqualTo("isSpeaker", 1)
+                    .limit(3)
                     .get()
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                emitter.onSuccess(document.toObject(Room.class));
-                            } else {
+                            if (task.getResult().isEmpty()) {
                                 emitter.onComplete();
+                                return;
                             }
+
+                            List<Member> members = new ArrayList<>();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                members.add(document.toObject(Member.class));
+                            }
+                            room.setSpeakers(members);
+                            emitter.onSuccess(room);
                         } else {
                             emitter.onError(task.getException());
                         }
@@ -246,6 +256,7 @@ class StoreSource implements IStoreSource {
                         if (task.isSuccessful()) {
                             if (task.getResult().isEmpty()) {
                                 emitter.onComplete();
+                                return;
                             }
 
                             for (QueryDocumentSnapshot document : task.getResult()) {

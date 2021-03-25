@@ -4,6 +4,9 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
+
 public class DataProvider implements IDataProvider {
 
     public static final String TAG_TABLE_USER = "USER";
@@ -15,6 +18,13 @@ public class DataProvider implements IDataProvider {
     private final IMessageSource mIMessageSource;
 
     public DataProvider(@NonNull Context mContext, @NonNull IRoomProxy iRoomProxy) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(false)
+                .build();
+        db.setFirestoreSettings(settings);
+
         mIStoreSource = new StoreSource();
         mIMessageSource = new MessageSource(mContext, iRoomProxy);
     }
