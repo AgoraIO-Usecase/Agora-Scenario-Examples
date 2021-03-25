@@ -1,0 +1,5 @@
+include ':data'
+include ':baselibrary'
+include ':InteractivePodcast'
+//include ':app'
+rootProject.name = "Agora-Scene-Android"
