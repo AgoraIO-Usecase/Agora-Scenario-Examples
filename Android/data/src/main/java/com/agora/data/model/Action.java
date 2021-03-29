@@ -63,4 +63,32 @@ public class Action implements Serializable {
     public int hashCode() {
         return objectId.hashCode();
     }
+
+    public enum ACTION {
+        HandsUp(1), Invite(2);
+
+        private int value;
+
+        ACTION(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+
+    public enum ACTION_STATUS {
+        Ing(1), Agree(2), Refuse(3);
+
+        private int value;
+
+        ACTION_STATUS(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
 }

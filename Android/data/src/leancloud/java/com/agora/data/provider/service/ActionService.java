@@ -1,42 +1,14 @@
 package com.agora.data.provider.service;
 
-import cn.leancloud.AVObject;
-
 import com.agora.data.model.Action;
+
+import cn.leancloud.AVObject;
 
 public class ActionService extends AttributeManager<Action> {
 
     private volatile static ActionService instance;
 
     public static final String OBJECT_KEY = "ACTION";
-
-    public enum ACTION {
-        HandsUp(1), Invite(2);
-
-        private int value;
-
-        ACTION(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
-
-    public enum ACTION_STATUS {
-        Ing(1), Agree(2), Refuse(3);
-
-        private int value;
-
-        ACTION_STATUS(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
 
     public static final String TAG_ROOMID = "roomId";
     public static final String TAG_MEMBERID = "memberId";

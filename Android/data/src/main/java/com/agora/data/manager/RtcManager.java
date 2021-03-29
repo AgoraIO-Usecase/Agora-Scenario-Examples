@@ -42,11 +42,13 @@ public final class RtcManager {
     }
 
     public void init() {
+        Log.d(TAG, "init() called");
         if (mRtcEngine == null) {
             try {
                 mRtcEngine = RtcEngine.create(mContext, mContext.getString(R.string.app_id), mEventHandler);
             } catch (Exception e) {
                 e.printStackTrace();
+                Log.e(TAG, "init: ", e);
             }
         }
 

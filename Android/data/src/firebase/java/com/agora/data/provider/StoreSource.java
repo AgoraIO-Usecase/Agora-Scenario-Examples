@@ -37,8 +37,8 @@ class StoreSource implements IStoreSource {
 
             if (TextUtils.isEmpty(objectId)) {
                 HashMap<String, Object> map = new HashMap<>();
-                map.put("name", user.getName());
-                map.put("avatar", user.getAvatar());
+                map.put(DataProvider.USER_NAME, user.getName());
+                map.put(DataProvider.USER_AVATAR, user.getAvatar());
 
                 db.collection(DataProvider.TAG_TABLE_USER)
                         .add(map)
@@ -47,17 +47,11 @@ class StoreSource implements IStoreSource {
                             user.setObjectId(objectIdNew);
                             emitter.onNext(user);
                         })
-                        .addOnFailureListener(new OnFailureListener() {
-
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                emitter.onError(e);
-                            }
-                        });
+                        .addOnFailureListener(e -> emitter.onError(e));
             } else {
                 HashMap<String, Object> map = new HashMap<>();
-                map.put("name", user.getName());
-                map.put("avatar", user.getAvatar());
+                map.put(DataProvider.USER_NAME, user.getName());
+                map.put(DataProvider.USER_AVATAR, user.getAvatar());
 
                 db.collection(DataProvider.TAG_TABLE_USER)
                         .document(objectId)
@@ -79,8 +73,8 @@ class StoreSource implements IStoreSource {
         return Observable.create(emitter -> {
             String objectId = user.getObjectId();
             HashMap<String, Object> map = new HashMap<>();
-            map.put("name", user.getName());
-            map.put("avatar", user.getAvatar());
+            map.put(DataProvider.USER_NAME, user.getName());
+            map.put(DataProvider.USER_AVATAR, user.getAvatar());
 
             db.collection(DataProvider.TAG_TABLE_USER)
                     .document(objectId)
@@ -132,7 +126,7 @@ class StoreSource implements IStoreSource {
                             List<Member> speakers = new ArrayList<>();
                             int members = 0;
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                int isSpeaker = document.get("isSpeaker", Integer.class);
+                                int isSpeaker = document.get(DataProvider.MEMBER_ISSPEAKER, Integer.class);
                                 if (isSpeaker == 1) {
                                     speakers.add(document.toObject(Member.class));
                                 }
@@ -152,7 +146,7 @@ class StoreSource implements IStoreSource {
     public Maybe<Room> getRoomSpeakersInfo(@NonNull Room room) {
         return Maybe.create(emitter -> {
             db.collection(DataProvider.TAG_TABLE_MEMBER)
-                    .whereEqualTo("isSpeaker", 1)
+                    .whereEqualTo(DataProvider.MEMBER_ISSPEAKER, 1)
                     .limit(3)
                     .get()
                     .addOnCompleteListener(task -> {
@@ -179,14 +173,18 @@ class StoreSource implements IStoreSource {
     public Observable<Room> creatRoom(@NonNull Room room) {
         return Observable.create(emitter -> {
             HashMap<String, Object> map = new HashMap<>();
-            map.put("channelName", room.getChannelName());
-            map.put("anchorId", room.getAnchorId());
+            map.put(DataProvider.MEMBER_CHANNELNAME, room.getChannelName());
+            map.put(DataProvider.MEMBER_ANCHORID, room.getAnchorId());
 
             db.collection(DataProvider.TAG_TABLE_ROOM)
                     .add(map)
                     .addOnSuccessListener(documentReference -> {
                         String objectId = documentReference.getId();
-                        room.setObjectId(objectId);
+                        StringBuilder sb = new StringBuilder();
+                        for (char c : objectId.toCharArray()) {
+                            sb.append((int) c);
+                        }
+                        room.setObjectId(sb.toString());
                         emitter.onNext(room);
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -251,8 +249,8 @@ class StoreSource implements IStoreSource {
     public Maybe<Member> getMember(@NonNull String roomId, @NonNull String userId) {
         return Maybe.create(emitter -> {
             db.collection(DataProvider.TAG_TABLE_MEMBER)
-                    .whereEqualTo("roomId.objectId", roomId)
-                    .whereEqualTo("userId.objectId", userId)
+                    .whereEqualTo(DataProvider.MEMBER_ROOMID + "." + DataProvider.ROOM_OBJECTID, roomId)
+                    .whereEqualTo(DataProvider.MEMBER_USERID + "." + DataProvider.USER_OBJECTID, userId)
                     .get()
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {

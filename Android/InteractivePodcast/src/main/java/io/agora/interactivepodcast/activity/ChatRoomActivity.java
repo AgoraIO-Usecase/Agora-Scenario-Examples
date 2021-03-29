@@ -383,7 +383,14 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
         if (member.getStreamId() != null) {
             userId = member.getStreamId().intValue();
         }
-        RtcManager.Instance(this).joinChannel(room.getObjectId(), userId);
+
+        String objectId = room.getObjectId();
+//        StringBuilder sb = new StringBuilder();
+//        for (char c : objectId.toCharArray()) {
+//            sb.append((int) c);
+//        }
+//        objectId=sb.toString().substring(0,10);
+        RtcManager.Instance(this).joinChannel(objectId, userId);
     }
 
     private void onRTCRoomJoined() {

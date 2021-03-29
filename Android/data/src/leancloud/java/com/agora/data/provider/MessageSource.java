@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 import androidx.core.util.ObjectsCompat;
 
 import com.agora.data.BaseError;
-import com.agora.data.provider.service.AttributeManager;
 import com.agora.data.manager.RoomManager;
 import com.agora.data.model.Action;
 import com.agora.data.model.Member;
@@ -16,6 +15,7 @@ import com.agora.data.model.Room;
 import com.agora.data.model.User;
 import com.agora.data.observer.DataMaybeObserver;
 import com.agora.data.provider.service.ActionService;
+import com.agora.data.provider.service.AttributeManager;
 import com.agora.data.provider.service.MemberService;
 import com.agora.data.provider.service.RoomService;
 import com.agora.data.provider.service.UserService;
@@ -206,8 +206,8 @@ class MessageSource extends BaseMessageSource {
         AVObject avObject = new AVObject(ActionService.OBJECT_KEY);
         avObject.put(ActionService.TAG_MEMBERID, memberAVObject);
         avObject.put(ActionService.TAG_ROOMID, roomAVObject);
-        avObject.put(ActionService.TAG_ACTION, ActionService.ACTION.HandsUp.getValue());
-        avObject.put(ActionService.TAG_STATUS, ActionService.ACTION_STATUS.Ing.getValue());
+        avObject.put(ActionService.TAG_ACTION, Action.ACTION.HandsUp.getValue());
+        avObject.put(ActionService.TAG_STATUS, Action.ACTION_STATUS.Ing.getValue());
         return avObject.saveInBackground()
                 .concatMapCompletable(new Function<AVObject, CompletableSource>() {
                     @Override
@@ -229,8 +229,8 @@ class MessageSource extends BaseMessageSource {
         AVObject actionObject = new AVObject(ActionService.OBJECT_KEY);
         actionObject.put(ActionService.TAG_MEMBERID, memberObject);
         actionObject.put(ActionService.TAG_ROOMID, roomAVObject);
-        actionObject.put(ActionService.TAG_ACTION, ActionService.ACTION.HandsUp.getValue());
-        actionObject.put(ActionService.TAG_STATUS, ActionService.ACTION_STATUS.Agree.getValue());
+        actionObject.put(ActionService.TAG_ACTION, Action.ACTION.HandsUp.getValue());
+        actionObject.put(ActionService.TAG_STATUS, Action.ACTION_STATUS.Agree.getValue());
 
         return Completable.concatArray(memberObject.saveInBackground().concatMapCompletable(new Function<AVObject, CompletableSource>() {
             @Override
@@ -259,8 +259,8 @@ class MessageSource extends BaseMessageSource {
         AVObject actionObject = new AVObject(ActionService.OBJECT_KEY);
         actionObject.put(ActionService.TAG_MEMBERID, memberAVObject);
         actionObject.put(ActionService.TAG_ROOMID, roomAVObject);
-        actionObject.put(ActionService.TAG_ACTION, ActionService.ACTION.HandsUp.getValue());
-        actionObject.put(ActionService.TAG_STATUS, ActionService.ACTION_STATUS.Refuse.getValue());
+        actionObject.put(ActionService.TAG_ACTION, Action.ACTION.HandsUp.getValue());
+        actionObject.put(ActionService.TAG_STATUS, Action.ACTION_STATUS.Refuse.getValue());
 
         return actionObject.saveInBackground().concatMapCompletable(new Function<AVObject, CompletableSource>() {
             @Override
@@ -283,8 +283,8 @@ class MessageSource extends BaseMessageSource {
         AVObject avObject = new AVObject(ActionService.OBJECT_KEY);
         avObject.put(ActionService.TAG_MEMBERID, memberAVObject);
         avObject.put(ActionService.TAG_ROOMID, roomAVObject);
-        avObject.put(ActionService.TAG_ACTION, ActionService.ACTION.Invite.getValue());
-        avObject.put(ActionService.TAG_STATUS, ActionService.ACTION_STATUS.Ing.getValue());
+        avObject.put(ActionService.TAG_ACTION, Action.ACTION.Invite.getValue());
+        avObject.put(ActionService.TAG_STATUS, Action.ACTION_STATUS.Ing.getValue());
 
         return avObject.saveInBackground().concatMapCompletable(new Function<AVObject, CompletableSource>() {
             @Override
@@ -306,8 +306,8 @@ class MessageSource extends BaseMessageSource {
         AVObject actionObject = new AVObject(ActionService.OBJECT_KEY);
         actionObject.put(ActionService.TAG_MEMBERID, memberAVObject);
         actionObject.put(ActionService.TAG_ROOMID, roomAVObject);
-        actionObject.put(ActionService.TAG_ACTION, ActionService.ACTION.Invite.getValue());
-        actionObject.put(ActionService.TAG_STATUS, ActionService.ACTION_STATUS.Agree.getValue());
+        actionObject.put(ActionService.TAG_ACTION, Action.ACTION.Invite.getValue());
+        actionObject.put(ActionService.TAG_STATUS, Action.ACTION_STATUS.Agree.getValue());
 
         return Completable.concatArray(memberAVObject.saveInBackground().concatMapCompletable(new Function<AVObject, CompletableSource>() {
             @Override
@@ -331,8 +331,8 @@ class MessageSource extends BaseMessageSource {
         AVObject actionObject = new AVObject(ActionService.OBJECT_KEY);
         actionObject.put(ActionService.TAG_MEMBERID, memberAVObject);
         actionObject.put(ActionService.TAG_ROOMID, roomAVObject);
-        actionObject.put(ActionService.TAG_ACTION, ActionService.ACTION.Invite.getValue());
-        actionObject.put(ActionService.TAG_STATUS, ActionService.ACTION_STATUS.Refuse.getValue());
+        actionObject.put(ActionService.TAG_ACTION, Action.ACTION.Invite.getValue());
+        actionObject.put(ActionService.TAG_STATUS, Action.ACTION_STATUS.Refuse.getValue());
 
         return actionObject.saveInBackground().concatMapCompletable(new Function<AVObject, CompletableSource>() {
             @Override
@@ -382,8 +382,8 @@ class MessageSource extends BaseMessageSource {
         ActionService.Instance().registerObserve(query, new AttributeManager.AttributeListener<Action>() {
             @Override
             public void onCreated(Action item) {
-                if (item.getAction() == ActionService.ACTION.HandsUp.getValue()) {
-                    if (item.getStatus() == ActionService.ACTION_STATUS.Ing.getValue()) {
+                if (item.getAction() == Action.ACTION.HandsUp.getValue()) {
+                    if (item.getStatus() == Action.ACTION_STATUS.Ing.getValue()) {
                         Member member = item.getMemberId();
                         member = iRoomProxy.getMemberById(member.getObjectId());
                         if (member == null) {
@@ -397,8 +397,8 @@ class MessageSource extends BaseMessageSource {
                         handUpMembers.put(member.getObjectId(), member);
                         iRoomProxy.onReceivedHandUp(member);
                     }
-                } else if (item.getAction() == ActionService.ACTION.Invite.getValue()) {
-                    if (item.getStatus() == ActionService.ACTION_STATUS.Agree.getValue()) {
+                } else if (item.getAction() == Action.ACTION.Invite.getValue()) {
+                    if (item.getStatus() == Action.ACTION_STATUS.Agree.getValue()) {
                         Member member = item.getMemberId();
                         member = iRoomProxy.getMemberById(member.getObjectId());
                         if (member == null) {
@@ -406,7 +406,7 @@ class MessageSource extends BaseMessageSource {
                         }
 
                         iRoomProxy.onInviteAgree(member);
-                    } else if (item.getStatus() == ActionService.ACTION_STATUS.Refuse.getValue()) {
+                    } else if (item.getStatus() == Action.ACTION_STATUS.Refuse.getValue()) {
                         Member member = item.getMemberId();
                         member = iRoomProxy.getMemberById(member.getObjectId());
                         if (member == null) {
@@ -455,14 +455,14 @@ class MessageSource extends BaseMessageSource {
         ActionService.Instance().registerObserve(query, new AttributeManager.AttributeListener<Action>() {
             @Override
             public void onCreated(Action item) {
-                if (item.getAction() == ActionService.ACTION.HandsUp.getValue()) {
-                    if (item.getStatus() == ActionService.ACTION_STATUS.Agree.getValue()) {
+                if (item.getAction() == Action.ACTION.HandsUp.getValue()) {
+                    if (item.getStatus() == Action.ACTION_STATUS.Agree.getValue()) {
                         iRoomProxy.onHandUpAgree(member);
-                    } else if (item.getStatus() == ActionService.ACTION_STATUS.Refuse.getValue()) {
+                    } else if (item.getStatus() == Action.ACTION_STATUS.Refuse.getValue()) {
                         iRoomProxy.onHandUpRefuse(member);
                     }
-                } else if (item.getAction() == ActionService.ACTION.Invite.getValue()) {
-                    if (item.getStatus() == ActionService.ACTION_STATUS.Ing.getValue()) {
+                } else if (item.getAction() == Action.ACTION.Invite.getValue()) {
+                    if (item.getStatus() == Action.ACTION_STATUS.Ing.getValue()) {
                         iRoomProxy.onReceivedInvite(member);
                     }
                 }
