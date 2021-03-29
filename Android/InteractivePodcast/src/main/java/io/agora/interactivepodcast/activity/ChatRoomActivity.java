@@ -310,6 +310,10 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
 
     private void getMembers() {
         Room room = RoomManager.Instance(this).getRoom();
+        if (room == null) {
+            return;
+        }
+
         DataRepositroy.Instance(this)
                 .getMembers(room)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -385,11 +389,6 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
         }
 
         String objectId = room.getObjectId();
-//        StringBuilder sb = new StringBuilder();
-//        for (char c : objectId.toCharArray()) {
-//            sb.append((int) c);
-//        }
-//        objectId=sb.toString().substring(0,10);
         RtcManager.Instance(this).joinChannel(objectId, userId);
     }
 

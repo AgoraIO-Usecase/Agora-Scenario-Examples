@@ -65,6 +65,10 @@ public class User implements Serializable, Cloneable {
     }
 
     public int getAvatarRes() {
+        if (avatar == null) {
+            return R.mipmap.portrait01;
+        }
+
         switch (avatar) {
             case "1":
                 return R.mipmap.portrait01;
