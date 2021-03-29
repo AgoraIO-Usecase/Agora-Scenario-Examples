@@ -543,11 +543,15 @@ class MessageSource extends BaseMessageSource {
                 }
 
                 if (memberOld.getIsSpeaker() != member.getIsSpeaker()) {
-                    iRoomProxy.onRemoteRoleChanged(member);
+                    iRoomProxy.onRoleChanged(false, member);
+                }
+
+                if (memberOld.getIsSelfMuted() != member.getIsSelfMuted()) {
+                    iRoomProxy.onAudioStatusChanged(false, member);
                 }
 
                 if (memberOld.getIsMuted() != member.getIsMuted()) {
-                    iRoomProxy.onRemoteAudioStatusChanged(member);
+                    iRoomProxy.onAudioStatusChanged(false, member);
                 }
             }
 

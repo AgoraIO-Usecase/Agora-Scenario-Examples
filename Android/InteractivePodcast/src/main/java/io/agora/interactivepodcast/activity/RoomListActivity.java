@@ -365,37 +365,26 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
     }
 
     @Override
-    public void onLocalRoleChanged(@NonNull Member member) {
+    public void onRoleChanged(boolean isMine, @NonNull Member member) {
+        if (!isMine && isMine(member)) {
+            if (member.getIsSpeaker() == 0 && this.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+                ToastUtile.toastShort(this, R.string.member_speaker_to_listener);
+            }
+        }
+
         refreshVoiceView();
         refreshHandUpView();
     }
 
     @Override
-    public void onLocalAudioStatusChanged(@NonNull Member member) {
-        refreshVoiceView();
-    }
-
-    @Override
-    public void onRemoteRoleChanged(@NonNull Member member) {
-        if (isMine(member)) {
-            if (member.getIsSpeaker() == 0) {
-                ToastUtile.toastShort(this, R.string.member_speaker_to_listener);
-            }
-
-            refreshVoiceView();
-            refreshHandUpView();
-        }
-    }
-
-    @Override
-    public void onRemoteAudioStatusChanged(@NonNull Member member) {
-        if (isMine(member)) {
-            if (member.getIsMuted() == 1) {
+    public void onAudioStatusChanged(boolean isMine, @NonNull Member member) {
+        if (!isMine && isMine(member)) {
+            if (member.getIsMuted() == 1 && this.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
                 ToastUtile.toastShort(this, R.string.member_muted);
             }
-
-            refreshVoiceView();
         }
+
+        refreshVoiceView();
     }
 
     @Override
@@ -427,11 +416,7 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
 
     @Override
     public void onInviteRefuse(@NonNull Member member) {
-        if (this.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) == false) {
-            return;
-        }
-
-        if (!RoomManager.Instance(this).isMine(member)) {
+        if (isOwner() && this.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
             ToastUtile.toastShort(this, getString(R.string.invite_refuse, member.getUserId().getName()));
         }
     }

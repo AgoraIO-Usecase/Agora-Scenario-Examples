@@ -1,5 +1,6 @@
 package com.agora.data.provider.service;
 
+import android.os.Handler;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -36,6 +37,8 @@ public abstract class AttributeManager<T> {
         void onSubscribeError();
     }
 
+    private Handler mHandler = new Handler();
+
     public void registerObserve(AVQuery<AVObject> query, AttributeListener<T> callback) {
         avLiveQuery = AVLiveQuery.initWithQuery(query);
         avLiveQuery.setEventHandler(new AVLiveQueryEventHandler() {
@@ -61,6 +64,15 @@ public abstract class AttributeManager<T> {
                 callback.onDeleted(objectId);
             }
         });
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Log.e(TAG, String.format("%s subscribe error: timeout", getObjectName()));
+                callback.onSubscribeError();
+            }
+        };
+        mHandler.postDelayed(runnable, 5000L);
         avLiveQuery.subscribeInBackground(new AVLiveQuerySubscribeCallback() {
             @Override
             public void done(AVException e) {
@@ -70,6 +82,7 @@ public abstract class AttributeManager<T> {
                 } else {
                     Log.i(TAG, String.format("%s subscribe success", getObjectName()));
                 }
+                mHandler.removeCallbacks(runnable);
             }
         });
     }

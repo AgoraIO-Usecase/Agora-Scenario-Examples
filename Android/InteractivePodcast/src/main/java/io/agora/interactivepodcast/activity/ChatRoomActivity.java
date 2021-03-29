@@ -166,10 +166,8 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
 
         if (isOwner()) {
             mMember.setIsSpeaker(1);
-            mDataBinding.ivExit.setVisibility(View.VISIBLE);
         } else {
             mMember.setIsSpeaker(0);
-            mDataBinding.ivExit.setVisibility(View.INVISIBLE);
         }
 
         setUserBaseInfo();
@@ -186,12 +184,6 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
             temp.setUser(tempUser);
             setUserBaseInfo();
         });
-
-        if (isOwner()) {
-            mDataBinding.ivNews.setVisibility(View.VISIBLE);
-        } else {
-            mDataBinding.ivNews.setVisibility(View.GONE);
-        }
 
         preJoinRoom(mRoom);
     }
@@ -414,8 +406,22 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
                         }
 
                         getMembers();
+                        onJoinRoomEnd();
                     }
                 });
+    }
+
+    private void onJoinRoomEnd() {
+        refreshVoiceView();
+        refreshHandUpView();
+
+        if (isOwner()) {
+            mDataBinding.ivNews.setVisibility(View.VISIBLE);
+            mDataBinding.ivExit.setVisibility(View.VISIBLE);
+        } else {
+            mDataBinding.ivNews.setVisibility(View.GONE);
+            mDataBinding.ivExit.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -582,7 +588,7 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
     }
 
     @Override
-    public void onLocalRoleChanged(@NonNull Member member) {
+    public void onRoleChanged(boolean isMine, @NonNull Member member) {
         if (member.getIsSpeaker() == 1) {
             mSpeakerAdapter.addItem(member);
             mListenerAdapter.deleteItem(member);
@@ -593,41 +599,27 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
 
         refreshVoiceView();
         refreshHandUpView();
-    }
 
-    @Override
-    public void onLocalAudioStatusChanged(@NonNull Member member) {
-        refreshVoiceView();
-    }
-
-    @Override
-    public void onRemoteRoleChanged(@NonNull Member member) {
-        if (member.getIsSpeaker() == 1) {
-            mSpeakerAdapter.addItem(member);
-            mListenerAdapter.deleteItem(member);
-        } else {
-            mSpeakerAdapter.deleteItem(member);
-            mListenerAdapter.addItem(member);
-        }
-
-        if (isMine(member)) {
+        if (!isMine && isMine(member)) {
             if (member.getIsSpeaker() == 0) {
                 ToastUtile.toastShort(this, R.string.member_speaker_to_listener);
             }
-
-            refreshVoiceView();
-            refreshHandUpView();
         }
     }
 
     @Override
-    public void onRemoteAudioStatusChanged(@NonNull Member member) {
-        if (isMine(member)) {
+    public void onAudioStatusChanged(boolean isMine, @NonNull Member member) {
+        refreshVoiceView();
+
+        if (!isMine && isMine(member)) {
             if (member.getIsMuted() == 1) {
                 ToastUtile.toastShort(this, R.string.member_muted);
             }
+        }
 
-            refreshVoiceView();
+        int index = mSpeakerAdapter.indexOf(member);
+        if (index >= 0) {
+            mSpeakerAdapter.update(index, member);
         }
     }
 
@@ -639,13 +631,23 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
     @Override
     public void onHandUpAgree(@NonNull Member member) {
         refreshHandUpView();
-        mDataBinding.ivNews.setCount(DataRepositroy.Instance(this).getHandUpListCount());
+
+        if (isOwner()) {
+            mDataBinding.ivNews.setCount(DataRepositroy.Instance(this).getHandUpListCount());
+        }
     }
 
     @Override
     public void onHandUpRefuse(@NonNull Member member) {
+        if (isMine(member)) {
+            ToastUtile.toastShort(this, R.string.handup_refuse);
+        }
+
         refreshHandUpView();
-        mDataBinding.ivNews.setCount(DataRepositroy.Instance(this).getHandUpListCount());
+
+        if (isOwner()) {
+            mDataBinding.ivNews.setCount(DataRepositroy.Instance(this).getHandUpListCount());
+        }
     }
 
     @Override
@@ -660,7 +662,9 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
 
     @Override
     public void onInviteRefuse(@NonNull Member member) {
-
+        if (isOwner()) {
+            ToastUtile.toastShort(this, getString(R.string.invite_refuse, member.getUserId().getName()));
+        }
     }
 
     @Override

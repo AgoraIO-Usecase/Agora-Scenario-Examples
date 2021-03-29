@@ -99,10 +99,10 @@ public final class RoomManager implements IRoomProxy {
                 .doOnComplete(new io.reactivex.functions.Action() {
                     @Override
                     public void run() throws Exception {
-                        RtcManager.Instance(mContext).muteLocalAudioStream(newValue == 1);
-
                         mMine.setIsSelfMuted(newValue);
-                        onLocalAudioStatusChanged(mMine);
+
+                        RtcManager.Instance(mContext).muteLocalAudioStream(newValue == 1);
+                        onAudioStatusChanged(true, mMine);
                     }
                 });
     }
@@ -119,10 +119,10 @@ public final class RoomManager implements IRoomProxy {
                 .doOnComplete(new io.reactivex.functions.Action() {
                     @Override
                     public void run() throws Exception {
-                        RtcManager.Instance(mContext).muteRemoteVideoStream(member.getStreamId().intValue(), newValue != 0);
-
                         member.setIsMuted(newValue);
-                        onRemoteAudioStatusChanged(member);
+
+                        RtcManager.Instance(mContext).muteRemoteVideoStream(member.getStreamId().intValue(), newValue != 0);
+                        onAudioStatusChanged(false, member);
                     }
                 });
     }
@@ -134,9 +134,12 @@ public final class RoomManager implements IRoomProxy {
                 .doOnComplete(new io.reactivex.functions.Action() {
                     @Override
                     public void run() throws Exception {
+                        member.setIsSpeaker(0);
+
                         if (isMine(member)) {
-                            member.setIsSpeaker(0);
-                            onLocalRoleChanged(member);
+                            onRoleChanged(true, member);
+                        } else {
+                            onRoleChanged(false, member);
                         }
                     }
                 });
@@ -396,56 +399,10 @@ public final class RoomManager implements IRoomProxy {
     }
 
     @Override
-    public void onLocalRoleChanged(@NonNull Member member) {
-        mLogger.d("onLocalRoleChanged() called with: member = [" + member + "]");
+    public void onRoleChanged(boolean isMine, @NonNull Member member) {
+        mLogger.d("onRoleChanged() called with: isMine = [" + isMine + "], member = [" + member + "]");
         if (isLeaving) {
             return;
-        }
-
-        if (member.getIsSpeaker() == 1) {
-            RtcManager.Instance(mContext).startAudio();
-        } else {
-            RtcManager.Instance(mContext).stopAudio();
-        }
-
-        Member mine = getMine();
-        if (mine == null) {
-            return;
-        }
-
-        mine.setIsSpeaker(member.getIsSpeaker());
-        mainThreadDispatch.onLocalRoleChanged(mine);
-    }
-
-    @Override
-    public void onLocalAudioStatusChanged(@NonNull Member member) {
-        mLogger.d("onLocalAudioStatusChanged() called with: member = [" + member + "]");
-        if (isLeaving) {
-            return;
-        }
-
-        Member mine = getMine();
-        if (mine == null) {
-            return;
-        }
-
-        mine.setIsSelfMuted(member.getIsSelfMuted());
-        mainThreadDispatch.onLocalAudioStatusChanged(mine);
-    }
-
-    @Override
-    public void onRemoteRoleChanged(@NonNull Member member) {
-        mLogger.d("onRemoteRoleChanged() called with: member = [" + member + "]");
-        if (isLeaving) {
-            return;
-        }
-
-        if (isMine(member)) {
-            if (member.getIsSpeaker() == 1) {
-                RtcManager.Instance(mContext).startAudio();
-            } else {
-                RtcManager.Instance(mContext).stopAudio();
-            }
         }
 
         Member old = getMemberById(member.getObjectId());
@@ -453,12 +410,20 @@ public final class RoomManager implements IRoomProxy {
             return;
         }
         old.setIsSpeaker(member.getIsSpeaker());
-        mainThreadDispatch.onRemoteRoleChanged(member);
+
+        if (isMine(old)) {
+            if (old.getIsSpeaker() == 1) {
+                RtcManager.Instance(mContext).startAudio();
+            } else {
+                RtcManager.Instance(mContext).stopAudio();
+            }
+        }
+        mainThreadDispatch.onRoleChanged(isMine, old);
     }
 
     @Override
-    public void onRemoteAudioStatusChanged(@NonNull Member member) {
-        mLogger.d("onRemoteAudioStatusChanged() called with: member = [" + member + "]");
+    public void onAudioStatusChanged(boolean isMine, @NonNull Member member) {
+        mLogger.d("onAudioStatusChanged() called with: isMine = [" + isMine + "], member = [" + member + "]");
         if (isLeaving) {
             return;
         }
@@ -469,7 +434,7 @@ public final class RoomManager implements IRoomProxy {
         }
         old.setIsMuted(member.getIsMuted());
         old.setIsSelfMuted(member.getIsSelfMuted());
-        mainThreadDispatch.onRemoteAudioStatusChanged(member);
+        mainThreadDispatch.onAudioStatusChanged(isMine, old);
     }
 
     @Override

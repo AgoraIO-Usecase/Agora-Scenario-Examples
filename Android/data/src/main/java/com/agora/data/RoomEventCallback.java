@@ -12,24 +12,18 @@ public interface RoomEventCallback {
     void onMemberLeave(@NonNull Member member);
 
     /**
-     * 本地操作触发回调，比如自己下台操作，会触发此回调
+     * 房间角色变化回调，角色变化指：观众和说话人变化
+     *
+     * @param isMine 是否是我主动触发的回调，true-我主动触发，false-不是我触发，被动触发。
      */
-    void onLocalRoleChanged(@NonNull Member member);
+    void onRoleChanged(boolean isMine, @NonNull Member member);
 
     /**
-     * 本地操作触发回调，比如自己静音，会触发次回调
+     * Audio变化回调，这里变化是指：开麦和禁麦
+     *
+     * @param isMine 是否是我主动触发的回调，true-我主动触发，false-不是我触发，被动触发。
      */
-    void onLocalAudioStatusChanged(@NonNull Member member);
-
-    /**
-     * 远端操纵触发次回调，比如管理员把某人下台，会触发此回调
-     */
-    void onRemoteRoleChanged(@NonNull Member member);
-
-    /**
-     * 远端操纵触发次回调，比如管理员把某人禁言，会触发此回调
-     */
-    void onRemoteAudioStatusChanged(@NonNull Member member);
+    void onAudioStatusChanged(boolean isMine, @NonNull Member member);
 
     void onReceivedHandUp(@NonNull Member member);
 

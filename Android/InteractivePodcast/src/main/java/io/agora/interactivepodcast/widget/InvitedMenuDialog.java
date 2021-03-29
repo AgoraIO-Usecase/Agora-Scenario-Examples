@@ -78,6 +78,10 @@ public class InvitedMenuDialog extends DataBindBaseDialog<DialogUserInvitedBindi
 
     @Override
     public void iniData() {
+        setCancelable(false);
+        if (getDialog() != null) {
+            getDialog().setCanceledOnTouchOutside(false);
+        }
         mDataBinding.tvText.setText(getString(R.string.room_dialog_invited, owner.getName()));
     }
 

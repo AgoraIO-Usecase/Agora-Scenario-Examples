@@ -1,5 +1,6 @@
 package com.agora.data.manager;
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -19,11 +20,9 @@ public class MainThreadDispatch implements RoomEventCallback {
 
     private static final int ON_MEMBER_JOIN = 1;
     private static final int ON_MEMBER_LEAVE = ON_MEMBER_JOIN + 1;
-    private static final int ON_LOCAL_SPEAKER_CHANGED = ON_MEMBER_LEAVE + 1;
-    private static final int ON_LOCAL_MUTE_CHANGED = ON_LOCAL_SPEAKER_CHANGED + 1;
-    private static final int ON_REMOTE_SPEAKER_CHANGED = ON_LOCAL_MUTE_CHANGED + 1;
-    private static final int ON_REMOTE_MUTE_CHANGED = ON_REMOTE_SPEAKER_CHANGED + 1;
-    private static final int ON_RECEIVED_HAND_UP = ON_REMOTE_MUTE_CHANGED + 1;
+    private static final int ON_ROLE_CHANGED = ON_MEMBER_LEAVE + 1;
+    private static final int ON_AUDIO_CHANGED = ON_ROLE_CHANGED + 1;
+    private static final int ON_RECEIVED_HAND_UP = ON_AUDIO_CHANGED + 1;
     private static final int ON_HANDUP_AGREE = ON_RECEIVED_HAND_UP + 1;
     private static final int ON_HANDUP_REFUSE = ON_HANDUP_AGREE + 1;
     private static final int ON_RECEIVED_INVITE = ON_HANDUP_REFUSE + 1;
@@ -53,21 +52,21 @@ public class MainThreadDispatch implements RoomEventCallback {
                 for (RoomEventCallback callback : enevtCallbacks) {
                     callback.onMemberLeave((Member) msg.obj);
                 }
-            } else if (msg.what == ON_LOCAL_SPEAKER_CHANGED) {
+            } else if (msg.what == ON_ROLE_CHANGED) {
+                Bundle bundle = msg.getData();
+                boolean isMine = bundle.getBoolean("isMine");
+                Member member = (Member) bundle.getSerializable("member");
+
                 for (RoomEventCallback callback : enevtCallbacks) {
-                    callback.onLocalRoleChanged((Member) msg.obj);
+                    callback.onRoleChanged(isMine, member);
                 }
-            } else if (msg.what == ON_LOCAL_MUTE_CHANGED) {
+            } else if (msg.what == ON_AUDIO_CHANGED) {
+                Bundle bundle = msg.getData();
+                boolean isMine = bundle.getBoolean("isMine");
+                Member member = (Member) bundle.getSerializable("member");
+
                 for (RoomEventCallback callback : enevtCallbacks) {
-                    callback.onLocalAudioStatusChanged((Member) msg.obj);
-                }
-            } else if (msg.what == ON_REMOTE_SPEAKER_CHANGED) {
-                for (RoomEventCallback callback : enevtCallbacks) {
-                    callback.onRemoteRoleChanged((Member) msg.obj);
-                }
-            } else if (msg.what == ON_REMOTE_MUTE_CHANGED) {
-                for (RoomEventCallback callback : enevtCallbacks) {
-                    callback.onRemoteAudioStatusChanged((Member) msg.obj);
+                    callback.onAudioStatusChanged(isMine, member);
                 }
             } else if (msg.what == ON_RECEIVED_HAND_UP) {
                 for (RoomEventCallback callback : enevtCallbacks) {
@@ -117,23 +116,25 @@ public class MainThreadDispatch implements RoomEventCallback {
     }
 
     @Override
-    public void onLocalRoleChanged(@NonNull Member member) {
-        mHandler.obtainMessage(ON_LOCAL_SPEAKER_CHANGED, member).sendToTarget();
+    public void onRoleChanged(boolean isMine, @NonNull Member member) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("isMine", isMine);
+        bundle.putSerializable("member", member);
+
+        Message message = mHandler.obtainMessage(ON_ROLE_CHANGED, member);
+        message.setData(bundle);
+        message.sendToTarget();
     }
 
     @Override
-    public void onLocalAudioStatusChanged(@NonNull Member member) {
-        mHandler.obtainMessage(ON_LOCAL_MUTE_CHANGED, member).sendToTarget();
-    }
+    public void onAudioStatusChanged(boolean isMine, @NonNull Member member) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("isMine", isMine);
+        bundle.putSerializable("member", member);
 
-    @Override
-    public void onRemoteRoleChanged(@NonNull Member member) {
-        mHandler.obtainMessage(ON_REMOTE_SPEAKER_CHANGED, member).sendToTarget();
-    }
-
-    @Override
-    public void onRemoteAudioStatusChanged(@NonNull Member member) {
-        mHandler.obtainMessage(ON_REMOTE_MUTE_CHANGED, member).sendToTarget();
+        Message message = mHandler.obtainMessage(ON_AUDIO_CHANGED, member);
+        message.setData(bundle);
+        message.sendToTarget();
     }
 
     @Override
