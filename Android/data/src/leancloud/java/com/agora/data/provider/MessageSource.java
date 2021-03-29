@@ -566,7 +566,7 @@ class MessageSource extends BaseMessageSource {
                     return;
                 }
 
-                iRoomProxy.onMemberLeave(false, member);
+                iRoomProxy.onMemberLeave(member);
             }
 
             @Override

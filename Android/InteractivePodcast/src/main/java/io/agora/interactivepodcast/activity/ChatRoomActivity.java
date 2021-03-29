@@ -555,12 +555,38 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
                 });
     }
 
+    private UserSeatMenuDialog mUserSeatMenuDialog;
+
     private void showUserMenuDialog(Member data) {
-        new UserSeatMenuDialog().show(getSupportFragmentManager(), data);
+        if (mUserSeatMenuDialog != null && mUserSeatMenuDialog.isShowing()) {
+            return;
+        }
+
+        mUserSeatMenuDialog = new UserSeatMenuDialog();
+        mUserSeatMenuDialog.show(getSupportFragmentManager(), data);
     }
 
+
+    private InviteMenuDialog mInviteMenuDialog;
+
     private void showUserInviteDialog(Member data) {
-        new InviteMenuDialog().show(getSupportFragmentManager(), data);
+        if (mInviteMenuDialog != null && mInviteMenuDialog.isShowing()) {
+            return;
+        }
+
+        mInviteMenuDialog = new InviteMenuDialog();
+        mInviteMenuDialog.show(getSupportFragmentManager(), data);
+    }
+
+    @Override
+    public void onOwnerLeaveRoom(@NonNull Room room) {
+        ToastUtile.toastShort(this, R.string.room_closed);
+        finish();
+    }
+
+    @Override
+    public void onLeaveRoom(@NonNull Room room) {
+
     }
 
     @Override
@@ -580,11 +606,6 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
     public void onMemberLeave(@NonNull Member member) {
         mSpeakerAdapter.deleteItem(member);
         mListenerAdapter.deleteItem(member);
-
-        if (isOwner(member)) {
-            ToastUtile.toastShort(this, R.string.room_closed);
-            finish();
-        }
     }
 
     @Override

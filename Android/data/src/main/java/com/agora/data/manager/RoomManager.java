@@ -193,13 +193,15 @@ public final class RoomManager implements IRoomProxy {
                     public void handleSuccess() {
                     }
                 });
-        onMemberLeave(true, mMine);
+
         onLeaveRoom();
     }
 
     private void onLeaveRoom() {
         mLogger.d("onLeaveRoom() called");
         RtcManager.Instance(mContext).removeHandler(mIRtcEngineEventHandler);
+
+        mainThreadDispatch.onLeaveRoom(getRoom());
 
         this.mRoom = null;
         this.mMine = null;
@@ -375,8 +377,8 @@ public final class RoomManager implements IRoomProxy {
     }
 
     @Override
-    public void onMemberLeave(boolean isManual, @NonNull Member member) {
-        mLogger.d("onMemberLeave() called with: isManual = [" + isManual + "], member = [" + member + "]");
+    public void onMemberLeave(@NonNull Member member) {
+        mLogger.d("onMemberLeave() called with: member = [" + member + "]");
         if (isLeaving) {
             return;
         }
@@ -389,13 +391,12 @@ public final class RoomManager implements IRoomProxy {
             streamIdMap.remove(member.getStreamId());
         }
 
-        if (ObjectsCompat.equals(member.getUserId(), getRoom().getAnchorId())) {
-            if (!isManual) {
-                leaveRoom();
-            }
+        if (isOwner(member)) {
+            mainThreadDispatch.onOwnerLeaveRoom(getRoom());
+            leaveRoom();
+        } else {
+            mainThreadDispatch.onMemberLeave(member);
         }
-
-        mainThreadDispatch.onMemberLeave(member);
     }
 
     @Override

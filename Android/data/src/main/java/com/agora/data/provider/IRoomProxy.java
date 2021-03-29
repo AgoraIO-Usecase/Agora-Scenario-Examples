@@ -35,7 +35,7 @@ public interface IRoomProxy {
 
     void onMemberJoin(@NonNull Member member);
 
-    void onMemberLeave(boolean isManual, @NonNull Member member);
+    void onMemberLeave(@NonNull Member member);
 
     /**
      * 房间角色变化回调，角色变化指：观众和说话人变化

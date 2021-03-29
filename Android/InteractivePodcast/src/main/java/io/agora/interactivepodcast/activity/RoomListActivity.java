@@ -54,6 +54,8 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
 
     private RoomListAdapter mAdapter;
 
+    private Room mRoom;
+
     @Override
     protected void iniBundle(@NonNull Bundle bundle) {
 
@@ -320,6 +322,7 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
             }
         }
 
+        this.mRoom = data;
         Intent intent = ChatRoomActivity.newIntent(this, data);
         startActivity(intent);
     }
@@ -341,27 +344,32 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
     }
 
     @Override
+    public void onOwnerLeaveRoom(@NonNull Room room) {
+        mDataBinding.btCrateRoom.setVisibility(View.VISIBLE);
+        mDataBinding.llMin.setVisibility(View.GONE);
+
+        mAdapter.deleteItem(room);
+        mDataBinding.tvEmpty.setVisibility(mAdapter.getItemCount() <= 0 ? View.VISIBLE : View.GONE);
+
+        if (this.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+            ToastUtile.toastShort(this, R.string.room_closed);
+        }
+    }
+
+    @Override
+    public void onLeaveRoom(@NonNull Room room) {
+        mDataBinding.btCrateRoom.setVisibility(View.VISIBLE);
+        mDataBinding.llMin.setVisibility(View.GONE);
+    }
+
+    @Override
     public void onMemberJoin(@NonNull Member member) {
         updateMinRoomInfo();
     }
 
     @Override
     public void onMemberLeave(@NonNull Member member) {
-        if (RoomManager.Instance(this).isOwner(member) || RoomManager.Instance(this).isMine(member)) {
-            mDataBinding.btCrateRoom.setVisibility(View.VISIBLE);
-            mDataBinding.llMin.setVisibility(View.GONE);
-
-            if (RoomManager.Instance(this).isOwner(member)) {
-                mAdapter.deleteItem(member.getRoomId());
-                mDataBinding.tvEmpty.setVisibility(mAdapter.getItemCount() <= 0 ? View.VISIBLE : View.GONE);
-            }
-
-            if (RoomManager.Instance(this).isOwner(member)) {
-                ToastUtile.toastShort(this, R.string.room_closed);
-            }
-        } else {
-            updateMinRoomInfo();
-        }
+        updateMinRoomInfo();
     }
 
     @Override

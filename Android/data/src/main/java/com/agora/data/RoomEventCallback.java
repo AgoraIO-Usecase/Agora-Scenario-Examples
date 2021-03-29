@@ -4,9 +4,14 @@ import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 
 import com.agora.data.model.Member;
+import com.agora.data.model.Room;
 
 @MainThread
 public interface RoomEventCallback {
+    void onOwnerLeaveRoom(@NonNull Room room);
+
+    void onLeaveRoom(@NonNull Room room);
+
     void onMemberJoin(@NonNull Member member);
 
     void onMemberLeave(@NonNull Member member);

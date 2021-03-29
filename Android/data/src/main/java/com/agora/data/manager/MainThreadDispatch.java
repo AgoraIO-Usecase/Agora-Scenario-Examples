@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 
 import com.agora.data.RoomEventCallback;
 import com.agora.data.model.Member;
+import com.agora.data.model.Room;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,8 @@ public class MainThreadDispatch implements RoomEventCallback {
     private static final int ON_INVITE_REFUSE = ON_INVITE_AGREE + 1;
     private static final int ON_ENTER_MIN_STATUS = ON_INVITE_REFUSE + 1;
     private static final int ON_ROOM_ERROR = ON_ENTER_MIN_STATUS + 1;
+    private static final int ON_LEAVE_ROOM = ON_ROOM_ERROR + 1;
+    private static final int ON_OWNER_LEAVE_ROOM = ON_LEAVE_ROOM + 1;
 
     private final List<RoomEventCallback> enevtCallbacks = new ArrayList<>();
 
@@ -100,10 +103,28 @@ public class MainThreadDispatch implements RoomEventCallback {
                 for (RoomEventCallback callback : enevtCallbacks) {
                     callback.onRoomError((Integer) msg.obj);
                 }
+            } else if (msg.what == ON_OWNER_LEAVE_ROOM) {
+                for (RoomEventCallback callback : enevtCallbacks) {
+                    callback.onOwnerLeaveRoom((Room) msg.obj);
+                }
+            } else if (msg.what == ON_LEAVE_ROOM) {
+                for (RoomEventCallback callback : enevtCallbacks) {
+                    callback.onLeaveRoom((Room) msg.obj);
+                }
             }
             return false;
         }
     });
+
+    @Override
+    public void onOwnerLeaveRoom(@NonNull Room room) {
+        mHandler.obtainMessage(ON_OWNER_LEAVE_ROOM, room).sendToTarget();
+    }
+
+    @Override
+    public void onLeaveRoom(@NonNull Room room) {
+        mHandler.obtainMessage(ON_LEAVE_ROOM, room).sendToTarget();
+    }
 
     @Override
     public void onMemberJoin(@NonNull Member member) {
