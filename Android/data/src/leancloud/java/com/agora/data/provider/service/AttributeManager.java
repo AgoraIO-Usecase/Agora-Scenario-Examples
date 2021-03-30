@@ -67,6 +67,7 @@ public abstract class AttributeManager<T> {
             }
         });
 
+        //如果同时订阅，会导致前一次订阅无任何回调，所以这里做一个超时监控处理
         runnable = new Runnable() {
             @Override
             public void run() {
