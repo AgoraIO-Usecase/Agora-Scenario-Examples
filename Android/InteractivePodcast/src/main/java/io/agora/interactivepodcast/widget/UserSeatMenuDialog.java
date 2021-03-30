@@ -120,6 +120,18 @@ public class UserSeatMenuDialog extends DataBindBaseDialog<DialogUserSeatMenuBin
     }
 
     private void toggleAudio() {
+        if (!RoomManager.Instance(requireContext()).isOwner()) {
+            Member member = RoomManager.Instance(requireContext()).getMine();
+            if (member == null) {
+                return;
+            }
+
+            if (member.getIsMuted() == 1) {
+                ToastUtile.toastShort(requireContext(), R.string.member_muted);
+                return;
+            }
+        }
+
         mDataBinding.btAudio.setEnabled(false);
         RoomManager.Instance(requireContext())
                 .toggleTargetAudio(mMember)
