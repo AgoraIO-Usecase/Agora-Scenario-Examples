@@ -1,6 +1,8 @@
 package com.agora.data.provider;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -109,16 +111,20 @@ class MessageSource extends BaseMessageSource {
                                     });
                         }
                     }
-                }).doOnComplete(new io.reactivex.functions.Action() {
-                    @Override
-                    public void run() throws Exception {
-                        registerMemberChanged();
-                        if (ObjectsCompat.equals(room.getAnchorId(), member.getUserId())) {
-                            registerAnchorActionStatus();
-                        } else {
-                            registerMemberActionStatus();
+                }).doOnComplete(() -> {
+                    registerMemberChanged();
+
+                    //todo：如果同时订阅，会导致前一个订阅收不到回调，所以这里做了延迟
+                    new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (ObjectsCompat.equals(room.getAnchorId(), member.getUserId())) {
+                                registerAnchorActionStatus();
+                            } else {
+                                registerMemberActionStatus();
+                            }
                         }
-                    }
+                    }, 500L);
                 });
     }
 
