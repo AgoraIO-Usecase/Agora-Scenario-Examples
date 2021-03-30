@@ -38,6 +38,7 @@ public abstract class AttributeManager<T> {
     }
 
     private Handler mHandler = new Handler();
+    private Runnable runnable;
 
     public void registerObserve(AVQuery<AVObject> query, AttributeListener<T> callback) {
         avLiveQuery = AVLiveQuery.initWithQuery(query);
@@ -65,7 +66,7 @@ public abstract class AttributeManager<T> {
             }
         });
 
-        Runnable runnable = new Runnable() {
+        runnable = new Runnable() {
             @Override
             public void run() {
                 Log.e(TAG, String.format("%s subscribe error: timeout", getObjectName()));
@@ -83,6 +84,7 @@ public abstract class AttributeManager<T> {
                     Log.i(TAG, String.format("%s subscribe success", getObjectName()));
                 }
                 mHandler.removeCallbacks(runnable);
+                runnable = null;
             }
         });
     }
@@ -90,6 +92,9 @@ public abstract class AttributeManager<T> {
     public void unregisterObserve() {
         Log.i(TAG, String.format("%s unregisterObserve", getObjectName()));
 
+        if (runnable != null) {
+            mHandler.removeCallbacks(runnable);
+        }
         if (avLiveQuery != null) {
             avLiveQuery.unsubscribeInBackground(new AVLiveQuerySubscribeCallback() {
                 @Override

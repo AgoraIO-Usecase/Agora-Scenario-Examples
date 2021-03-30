@@ -8,6 +8,7 @@ import com.agora.data.R;
 
 import cn.leancloud.AVLogger;
 import cn.leancloud.AVOSCloud;
+import cn.leancloud.push.PushService;
 import io.agora.baselibrary.BuildConfig;
 
 public class DataProvider implements IDataProvider {
@@ -24,6 +25,8 @@ public class DataProvider implements IDataProvider {
         AVOSCloud.initialize(mContext, mContext.getString(R.string.leancloud_app_id),
                 mContext.getString(R.string.leancloud_app_key),
                 mContext.getString(R.string.leancloud_server_url));
+
+        PushService.startIfRequired(mContext);
 
         mIStoreSource = new StoreSource();
         mIMessageSource = new MessageSource(mContext, iRoomProxy);
