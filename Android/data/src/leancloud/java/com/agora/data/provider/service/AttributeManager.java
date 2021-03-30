@@ -1,6 +1,7 @@
 package com.agora.data.provider.service;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -37,7 +38,7 @@ public abstract class AttributeManager<T> {
         void onSubscribeError();
     }
 
-    private Handler mHandler = new Handler();
+    private Handler mHandler = new Handler(Looper.myLooper());
     private Runnable runnable;
 
     public void registerObserve(AVQuery<AVObject> query, AttributeListener<T> callback) {
