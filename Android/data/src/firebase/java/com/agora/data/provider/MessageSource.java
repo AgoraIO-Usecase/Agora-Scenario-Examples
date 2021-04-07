@@ -7,11 +7,22 @@ import androidx.annotation.NonNull;
 import com.agora.data.model.Action;
 import com.agora.data.model.Member;
 import com.agora.data.model.Room;
+import com.agora.data.model.User;
+import com.agora.data.provider.model.MemberTemp;
+import com.agora.data.provider.model.RoomTemp;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.WriteBatch;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,17 +53,20 @@ class MessageSource extends BaseMessageSource {
     @Override
     public Observable<Member> joinRoom(@NonNull Room room, @NonNull Member member) {
         return Observable.create(emitter -> {
+            DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(room.getObjectId());
+            DocumentReference drUser = db.collection(DataProvider.TAG_TABLE_USER).document(member.getUserId().getObjectId());
+
             db.collection(DataProvider.TAG_TABLE_MEMBER)
-                    .whereEqualTo(DataProvider.MEMBER_ROOMID + "." + DataProvider.ROOM_OBJECTID, room.getObjectId())
-                    .whereEqualTo(DataProvider.MEMBER_USERID + "." + DataProvider.USER_OBJECTID, member.getObjectId())
+                    .whereEqualTo(DataProvider.MEMBER_ROOMID, drRoom)
+                    .whereEqualTo(DataProvider.MEMBER_USERID, drUser)
                     .get()
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             if (task.getResult().isEmpty()) {
                                 HashMap<String, Object> map = new HashMap<>();
-                                map.put(DataProvider.MEMBER_ROOMID, room);
+                                map.put(DataProvider.MEMBER_ROOMID, drRoom);
+                                map.put(DataProvider.MEMBER_USERID, drUser);
                                 map.put(DataProvider.MEMBER_STREAMID, member.getStreamId());
-                                map.put(DataProvider.MEMBER_USERID, member.getUserId());
                                 map.put(DataProvider.MEMBER_ISSPEAKER, member.getIsSpeaker());
                                 map.put(DataProvider.MEMBER_ISMUTED, member.getIsMuted());
                                 map.put(DataProvider.MEMBER_ISSELFMUTED, member.getIsSelfMuted());
@@ -61,12 +75,7 @@ class MessageSource extends BaseMessageSource {
                                         .add(map)
                                         .addOnSuccessListener(documentReference -> {
                                             String objectId = documentReference.getId();
-                                            StringBuilder sb = new StringBuilder();
-                                            for (char c : objectId.toCharArray()) {
-                                                sb.append((int) c);
-                                            }
-                                            room.setObjectId(sb.toString());
-                                            member.setRoomId(room);
+                                            room.setObjectId(objectId);
                                             emitter.onNext(member);
                                         })
                                         .addOnFailureListener(new OnFailureListener() {
@@ -80,7 +89,64 @@ class MessageSource extends BaseMessageSource {
                             }
 
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                emitter.onNext(document.toObject(Member.class));
+                                MemberTemp memberTemp = document.toObject(MemberTemp.class);
+                                Member member2 = memberTemp.createMember(document.getId());
+
+                                Task<Void> taskRoom = memberTemp.getRoomId()
+                                        .get()
+                                        .continueWith(new Continuation<DocumentSnapshot, Void>() {
+                                            @Override
+                                            public Void then(@NonNull Task<DocumentSnapshot> task) throws Exception {
+                                                if (!task.isSuccessful()) {
+                                                    throw task.getException();
+                                                }
+
+                                                DocumentSnapshot document = task.getResult();
+                                                if (document == null || !document.exists()) {
+                                                    return null;
+                                                }
+
+                                                RoomTemp roomTemp = document.toObject(RoomTemp.class);
+                                                Room room = roomTemp.createRoom(document.getId());
+                                                member.setRoomId(room);
+                                                return null;
+                                            }
+                                        });
+                                Task<Void> taskUser = memberTemp.getUserId()
+                                        .get()
+                                        .continueWith(new Continuation<DocumentSnapshot, Void>() {
+                                            @Override
+                                            public Void then(@NonNull Task<DocumentSnapshot> task) throws Exception {
+                                                if (!task.isSuccessful()) {
+                                                    throw task.getException();
+                                                }
+
+                                                DocumentSnapshot document = task.getResult();
+                                                if (document == null || !document.exists()) {
+                                                    return null;
+                                                }
+
+                                                User user = document.toObject(User.class);
+                                                user.setObjectId(document.getId());
+                                                member2.setUserId(user);
+                                                return null;
+                                            }
+                                        });
+
+
+                                List<Task<Void>> tasks = new ArrayList<>();
+                                tasks.add(taskRoom);
+                                tasks.add(taskUser);
+                                Tasks.whenAll(tasks).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            emitter.onNext(member2);
+                                        } else {
+                                            emitter.onError(task.getException());
+                                        }
+                                    }
+                                });
                                 break;
                             }
                         } else {
@@ -93,9 +159,11 @@ class MessageSource extends BaseMessageSource {
     @Override
     public Completable leaveRoom(@NonNull Room room, @NonNull Member member) {
         return Completable.create(emitter -> {
+            DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_MEMBER).document(room.getObjectId());
+            DocumentReference drUser = db.collection(DataProvider.TAG_TABLE_USER).document(member.getUserId().getObjectId());
+
             db.collection(DataProvider.TAG_TABLE_MEMBER)
-                    .whereEqualTo(DataProvider.MEMBER_ROOMID + "." + DataProvider.ROOM_OBJECTID, room.getObjectId())
-                    .whereEqualTo(DataProvider.MEMBER_USERID + "." + DataProvider.USER_OBJECTID, member.getObjectId())
+                    .whereEqualTo(DataProvider.MEMBER_ROOMID, drRoom)
                     .get()
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
@@ -104,13 +172,16 @@ class MessageSource extends BaseMessageSource {
                                 return;
                             }
 
+                            WriteBatch batch = db.batch();
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                db.collection(DataProvider.TAG_TABLE_MEMBER)
-                                        .document(document.getId())
-                                        .delete()
-                                        .addOnSuccessListener(aVoid -> emitter.onComplete())
-                                        .addOnFailureListener(e -> emitter.onError(e));
+                                DocumentReference dr = db.collection(DataProvider.TAG_TABLE_MEMBER)
+                                        .document(document.getId());
+                                batch.delete(dr);
                             }
+
+                            batch.commit()
+                                    .addOnSuccessListener(aVoid -> emitter.onComplete())
+                                    .addOnFailureListener(e -> emitter.onError(e));
                         } else {
                             emitter.onError(task.getException());
                         }

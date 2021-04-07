@@ -159,14 +159,14 @@ public final class RoomManager implements IRoomProxy {
                 .doOnNext(new Consumer<Member>() {
                     @Override
                     public void accept(Member member) throws Exception {
-                        mLogger.d("joinRoom() called member={}", member);
+                        mLogger.d("joinRoom() called member= [%s]", member);
                         mMine = member;
                     }
                 });
     }
 
     public void onJoinRoom(Room room, Member member) {
-        mLogger.d("onJoinRoom() called room={} member={}", room, member);
+        mLogger.d("onJoinRoom() called room= [%s] member= [%s]", room, member);
         this.mRoom = room;
         this.mMine = member;
         isLeaving = false;

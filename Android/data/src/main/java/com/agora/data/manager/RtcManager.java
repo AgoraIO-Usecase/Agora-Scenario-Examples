@@ -3,6 +3,7 @@ package com.agora.data.manager;
 import android.content.Context;
 import android.util.Log;
 
+import com.agora.data.Config;
 import com.agora.data.R;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.List;
 import io.agora.rtc.Constants;
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
+import io.agora.rtc.RtcEngineConfig;
 
 public final class RtcManager {
 
@@ -44,8 +46,19 @@ public final class RtcManager {
     public void init() {
         Log.d(TAG, "init() called");
         if (mRtcEngine == null) {
+            RtcEngineConfig config = new RtcEngineConfig();
+            config.mContext = mContext;
+            config.mAppId = mContext.getString(R.string.app_id);
+            config.mEventHandler = mEventHandler;
+
+            if (Config.isLeanCloud()) {
+                config.mAreaCode = RtcEngineConfig.AreaCode.AREA_CODE_CN;
+            } else {
+                config.mAreaCode = RtcEngineConfig.AreaCode.AREA_CODE_GLOB;
+            }
+
             try {
-                mRtcEngine = RtcEngine.create(mContext, mContext.getString(R.string.app_id), mEventHandler);
+                mRtcEngine = RtcEngine.create(config);
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.e(TAG, "init: ", e);
@@ -144,28 +157,35 @@ public final class RtcManager {
     }
 
     private final IRtcEngineEventHandler mEventHandler = new IRtcEngineEventHandler() {
+
+        @Override
+        public void onWarning(int warn) {
+            super.onWarning(warn);
+            Log.w(TAG, "onWarning: " + warn);
+        }
+
         @Override
         public void onError(int err) {
             super.onError(err);
-            Log.e(TAG, "onError: " + err);
+            Log.e(TAG, "onError: " + err + " , " + RtcEngine.getErrorDescription(err));
         }
 
         @Override
         public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
             super.onJoinChannelSuccess(channel, uid, elapsed);
+            Log.d(TAG, "onJoinChannelSuccess() called with: channel = [" + channel + "], uid = [" + uid + "], elapsed = [" + elapsed + "]");
             RtcManager.this.isJoined = true;
             RtcManager.this.channel = channel;
             RtcManager.this.uid = uid;
-            Log.d(TAG, "onJoinChannelSuccess() called with: channel = [" + channel + "], uid = [" + uid + "], elapsed = [" + elapsed + "]");
         }
 
         @Override
         public void onLeaveChannel(RtcStats stats) {
             super.onLeaveChannel(stats);
+            Log.d(TAG, "onLeaveChannel() called with: stats = [" + stats + "]");
             RtcManager.this.isJoined = false;
             RtcManager.this.channel = null;
             RtcManager.this.uid = 0;
-            Log.d(TAG, "onLeaveChannel() called with: stats = [" + stats + "]");
         }
 
         @Override
