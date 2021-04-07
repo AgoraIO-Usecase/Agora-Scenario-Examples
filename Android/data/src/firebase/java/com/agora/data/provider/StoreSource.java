@@ -10,6 +10,7 @@ import com.agora.data.model.User;
 import com.agora.data.provider.model.MemberTemp;
 import com.agora.data.provider.model.RoomTemp;
 import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -172,16 +173,7 @@ class StoreSource implements IStoreSource {
                                 return;
                             }
 
-                            List<Member> speakers = new ArrayList<>();
-                            int members = 0;
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                int isSpeaker = document.get(DataProvider.MEMBER_ISSPEAKER, Integer.class);
-                                if (isSpeaker == 1) {
-                                    speakers.add(document.toObject(Member.class));
-                                }
-                                members++;
-                            }
-                            room.setSpeakers(speakers);
+                            int members = task.getResult().size();
                             room.setMembers(members);
                             emitter.onNext(room);
                         } else {
@@ -206,11 +198,39 @@ class StoreSource implements IStoreSource {
                             }
 
                             List<Member> members = new ArrayList<>();
+                            List<Task<Void>> tasks = new ArrayList<>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                members.add(document.toObject(Member.class));
+                                MemberTemp memberTemp = document.toObject(MemberTemp.class);
+                                Member member = memberTemp.createMember(document.getId());
+                                members.add(member);
+
+                                tasks.add(memberTemp.getUserId().get().continueWith(new Continuation<DocumentSnapshot, Void>() {
+                                    @Override
+                                    public Void then(@NonNull Task<DocumentSnapshot> task) throws Exception {
+                                        if (!task.isSuccessful()) {
+                                            throw task.getException();
+                                        }
+
+                                        DocumentSnapshot document = task.getResult();
+                                        if (document == null || !document.exists()) {
+                                            return null;
+                                        }
+
+                                        User user = document.toObject(User.class);
+                                        user.setObjectId(document.getId());
+                                        member.setUserId(user);
+                                        return null;
+                                    }
+                                }));
                             }
                             room.setSpeakers(members);
-                            emitter.onSuccess(room);
+
+                            Tasks.whenAll(tasks).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    emitter.onSuccess(room);
+                                }
+                            });
                         } else {
                             emitter.onError(task.getException());
                         }

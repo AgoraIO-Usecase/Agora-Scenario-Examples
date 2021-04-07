@@ -3,11 +3,16 @@ package com.agora.data.provider;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.util.ObjectsCompat;
 
+import com.agora.data.BaseError;
 import com.agora.data.model.Action;
 import com.agora.data.model.Member;
 import com.agora.data.model.Room;
 import com.agora.data.model.User;
+import com.agora.data.observer.DataMaybeObserver;
+import com.agora.data.provider.model.ActionTemp;
 import com.agora.data.provider.model.MemberTemp;
 import com.agora.data.provider.model.RoomTemp;
 import com.google.android.gms.tasks.Continuation;
@@ -15,10 +20,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 import com.google.gson.Gson;
 
@@ -30,6 +40,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
 
 class MessageSource extends BaseMessageSource {
 
@@ -52,7 +63,7 @@ class MessageSource extends BaseMessageSource {
 
     @Override
     public Observable<Member> joinRoom(@NonNull Room room, @NonNull Member member) {
-        return Observable.create(emitter -> {
+        return Observable.create((ObservableOnSubscribe<Member>) emitter -> {
             DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(room.getObjectId());
             DocumentReference drUser = db.collection(DataProvider.TAG_TABLE_USER).document(member.getUserId().getObjectId());
 
@@ -75,7 +86,7 @@ class MessageSource extends BaseMessageSource {
                                         .add(map)
                                         .addOnSuccessListener(documentReference -> {
                                             String objectId = documentReference.getId();
-                                            room.setObjectId(objectId);
+                                            member.setObjectId(objectId);
                                             emitter.onNext(member);
                                         })
                                         .addOnFailureListener(new OnFailureListener() {
@@ -153,40 +164,120 @@ class MessageSource extends BaseMessageSource {
                             emitter.onError(task.getException());
                         }
                     });
+        }).doOnComplete(new io.reactivex.functions.Action() {
+            @Override
+            public void run() throws Exception {
+                registerMemberChanged();
+
+                if (ObjectsCompat.equals(room.getAnchorId(), member.getUserId())) {
+                    registerAnchorActionStatus();
+                } else {
+                    registerMemberActionStatus();
+                }
+            }
         });
     }
 
     @Override
     public Completable leaveRoom(@NonNull Room room, @NonNull Member member) {
-        return Completable.create(emitter -> {
-            DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_MEMBER).document(room.getObjectId());
-            DocumentReference drUser = db.collection(DataProvider.TAG_TABLE_USER).document(member.getUserId().getObjectId());
+        unregisterAnchorActionStatus();
+        unregisterMemberActionStatus();
+        unregisterMemberChanged();
 
-            db.collection(DataProvider.TAG_TABLE_MEMBER)
-                    .whereEqualTo(DataProvider.MEMBER_ROOMID, drRoom)
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            if (task.getResult().isEmpty()) {
+        if (ObjectsCompat.equals(room.getAnchorId(), member.getUserId())) {
+            return Completable.create(emitter -> {
+                DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(room.getObjectId());
+
+                db.collection(DataProvider.TAG_TABLE_ACTION)
+                        .whereEqualTo(DataProvider.ACTION_ROOMID, drRoom)
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                if (task.getResult().isEmpty()) {
+                                    return;
+                                }
+
+                                WriteBatch batch = db.batch();
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    DocumentReference dr = db.collection(DataProvider.TAG_TABLE_ACTION)
+                                            .document(document.getId());
+                                    batch.delete(dr);
+                                }
+
+                                batch.commit();
+                            } else {
+                            }
+                        });
+
+                db.collection(DataProvider.TAG_TABLE_MEMBER)
+                        .whereEqualTo(DataProvider.MEMBER_ROOMID, drRoom)
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                if (task.getResult().isEmpty()) {
+                                    emitter.onComplete();
+                                    return;
+                                }
+
+                                WriteBatch batch = db.batch();
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    DocumentReference dr = db.collection(DataProvider.TAG_TABLE_MEMBER)
+                                            .document(document.getId());
+                                    batch.delete(dr);
+                                }
+
+                                batch.commit();
+                            }
+                        });
+
+                drRoom.delete()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
                                 emitter.onComplete();
-                                return;
+                            } else {
+                                emitter.onError(task.getException());
                             }
+                        });
 
-                            WriteBatch batch = db.batch();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                DocumentReference dr = db.collection(DataProvider.TAG_TABLE_MEMBER)
-                                        .document(document.getId());
-                                batch.delete(dr);
+            });
+        } else {
+            return Completable.create(emitter -> {
+                DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(room.getObjectId());
+                DocumentReference drMember = db.collection(DataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
+
+                db.collection(DataProvider.TAG_TABLE_ACTION)
+                        .whereEqualTo(DataProvider.ACTION_ROOMID, drRoom)
+                        .whereEqualTo(DataProvider.ACTION_MEMBERID, drMember)
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                if (task.getResult().isEmpty()) {
+                                    return;
+                                }
+
+                                WriteBatch batch = db.batch();
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    DocumentReference dr = db.collection(DataProvider.TAG_TABLE_ACTION)
+                                            .document(document.getId());
+                                    batch.delete(dr);
+                                }
+
+                                batch.commit();
+                            } else {
                             }
+                        });
 
-                            batch.commit()
-                                    .addOnSuccessListener(aVoid -> emitter.onComplete())
-                                    .addOnFailureListener(e -> emitter.onError(e));
-                        } else {
-                            emitter.onError(task.getException());
-                        }
-                    });
-        });
+                drMember.delete()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                emitter.onComplete();
+                            } else {
+                                emitter.onError(task.getException());
+                            }
+                        });
+
+            });
+        }
     }
 
     @Override
@@ -338,11 +429,215 @@ class MessageSource extends BaseMessageSource {
 
     @Override
     public Observable<List<Member>> getHandUpList() {
-        return null;
+        return Observable.just(new ArrayList<>(handUpMembers.values()));
     }
 
     @Override
     public int getHandUpListCount() {
-        return 0;
+        return handUpMembers.size();
+    }
+
+    ListenerRegistration lrAction;
+
+    /**
+     * 作为房主，需要监听房间中Action变化。
+     */
+    private void registerAnchorActionStatus() {
+        Room room = iRoomProxy.getRoom();
+        if (room == null) {
+            return;
+        }
+
+        final DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(room.getObjectId());
+        lrAction = db.collection(DataProvider.TAG_TABLE_ACTION)
+                .whereEqualTo(DataProvider.ACTION_ROOMID, drRoom)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        for (DocumentChange dc : value.getDocumentChanges()) {
+                            ActionTemp actionTemp = dc.getDocument().toObject(ActionTemp.class);
+                            Action item = actionTemp.create(dc.getDocument().getId());
+                            if (dc.getType() == DocumentChange.Type.ADDED) {
+                                if (item.getAction() == Action.ACTION.HandsUp.getValue()) {
+                                    if (item.getStatus() == Action.ACTION_STATUS.Ing.getValue()) {
+                                        Member member = item.getMemberId();
+                                        member = iRoomProxy.getMemberById(member.getObjectId());
+                                        if (member == null) {
+                                            return;
+                                        }
+
+                                        if (handUpMembers.containsKey(member.getObjectId())) {
+                                            return;
+                                        }
+
+                                        handUpMembers.put(member.getObjectId(), member);
+                                        iRoomProxy.onReceivedHandUp(member);
+                                    }
+                                } else if (item.getAction() == Action.ACTION.Invite.getValue()) {
+                                    if (item.getStatus() == Action.ACTION_STATUS.Agree.getValue()) {
+                                        Member member = item.getMemberId();
+                                        member = iRoomProxy.getMemberById(member.getObjectId());
+                                        if (member == null) {
+                                            return;
+                                        }
+
+                                        iRoomProxy.onInviteAgree(member);
+                                    } else if (item.getStatus() == Action.ACTION_STATUS.Refuse.getValue()) {
+                                        Member member = item.getMemberId();
+                                        member = iRoomProxy.getMemberById(member.getObjectId());
+                                        if (member == null) {
+                                            return;
+                                        }
+
+                                        iRoomProxy.onInviteRefuse(member);
+                                    }
+                                }
+                            } else if (dc.getType() == DocumentChange.Type.MODIFIED) {
+                            } else if (dc.getType() == DocumentChange.Type.REMOVED) {
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void unregisterAnchorActionStatus() {
+        if (lrAction != null) {
+            lrAction.remove();
+        }
+    }
+
+    ListenerRegistration lrAction2;
+
+    /**
+     * 作为观众，需要监听自己的Action变化。
+     */
+    private void registerMemberActionStatus() {
+        Member member = iRoomProxy.getMine();
+        if (member == null) {
+            return;
+        }
+
+        final DocumentReference drMember = db.collection(DataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
+        lrAction2 = db.collection(DataProvider.TAG_TABLE_ACTION)
+                .whereEqualTo(DataProvider.ACTION_MEMBERID, drMember)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        for (DocumentChange dc : value.getDocumentChanges()) {
+                            ActionTemp actionTemp = dc.getDocument().toObject(ActionTemp.class);
+                            Action item = actionTemp.create(dc.getDocument().getId());
+                            if (dc.getType() == DocumentChange.Type.ADDED) {
+                                if (item.getAction() == Action.ACTION.HandsUp.getValue()) {
+                                    if (item.getStatus() == Action.ACTION_STATUS.Agree.getValue()) {
+                                        iRoomProxy.onHandUpAgree(member);
+                                    } else if (item.getStatus() == Action.ACTION_STATUS.Refuse.getValue()) {
+                                        iRoomProxy.onHandUpRefuse(member);
+                                    }
+                                } else if (item.getAction() == Action.ACTION.Invite.getValue()) {
+                                    if (item.getStatus() == Action.ACTION_STATUS.Ing.getValue()) {
+                                        iRoomProxy.onReceivedInvite(member);
+                                    }
+                                }
+                            } else if (dc.getType() == DocumentChange.Type.MODIFIED) {
+                            } else if (dc.getType() == DocumentChange.Type.REMOVED) {
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void unregisterMemberActionStatus() {
+        if (lrAction2 != null) {
+            lrAction2.remove();
+        }
+    }
+
+    ListenerRegistration lrMember;
+
+    /**
+     * 监听房间内部成员信息变化
+     */
+    private void registerMemberChanged() {
+        Room room = iRoomProxy.getRoom();
+        if (room == null) {
+            return;
+        }
+
+        final DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(room.getObjectId());
+        lrMember = db.collection(DataProvider.TAG_TABLE_MEMBER)
+                .whereEqualTo(DataProvider.MEMBER_ROOMID, drRoom)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        for (DocumentChange dc : value.getDocumentChanges()) {
+                            MemberTemp temp = dc.getDocument().toObject(MemberTemp.class);
+                            Member member = temp.createMember(dc.getDocument().getId());
+                            if (dc.getType() == DocumentChange.Type.ADDED) {
+                                if (iRoomProxy.isMembersContainsKey(member.getObjectId())) {
+                                    return;
+                                }
+
+                                iRoomProxy.getMember(room.getObjectId(), member.getUserId().getObjectId())
+                                        .subscribe(new DataMaybeObserver<Member>(mContext) {
+                                            @Override
+                                            public void handleError(@NonNull BaseError e) {
+
+                                            }
+
+                                            @Override
+                                            public void handleSuccess(@Nullable Member member) {
+                                                if (member == null) {
+                                                    return;
+                                                }
+
+                                                if (iRoomProxy.isMembersContainsKey(member.getObjectId())) {
+                                                    return;
+                                                }
+
+                                                iRoomProxy.onMemberJoin(member);
+                                            }
+                                        });
+                            } else if (dc.getType() == DocumentChange.Type.MODIFIED) {
+                                if (!iRoomProxy.isMembersContainsKey(member.getObjectId())) {
+                                    return;
+                                }
+
+                                Member memberOld = iRoomProxy.getMemberById(member.getObjectId());
+                                if (memberOld == null) {
+                                    return;
+                                }
+
+                                if (memberOld.getIsSpeaker() != member.getIsSpeaker()) {
+                                    iRoomProxy.onRoleChanged(false, member);
+                                }
+
+                                if (memberOld.getIsSelfMuted() != member.getIsSelfMuted()) {
+                                    iRoomProxy.onAudioStatusChanged(false, member);
+                                }
+
+                                if (memberOld.getIsMuted() != member.getIsMuted()) {
+                                    iRoomProxy.onAudioStatusChanged(false, member);
+                                }
+                            } else if (dc.getType() == DocumentChange.Type.REMOVED) {
+                                if (!iRoomProxy.isMembersContainsKey(member.getObjectId())) {
+                                    return;
+                                }
+
+                                Member member2 = iRoomProxy.getMemberById(member.getObjectId());
+                                if (member2 == null) {
+                                    return;
+                                }
+
+                                iRoomProxy.onMemberLeave(member2);
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void unregisterMemberChanged() {
+        if (lrMember != null) {
+            lrMember.remove();
+        }
     }
 }
