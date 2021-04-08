@@ -135,10 +135,12 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
                     public void handleSuccess(@Nullable List<Room> rooms) {
                         mDataBinding.swipeRefreshLayout.setRefreshing(false);
 
-                        if (rooms != null) {
+                        if (rooms == null) {
+                            mAdapter.clear();
+                        } else {
                             mAdapter.setDatas(rooms);
-                            mDataBinding.tvEmpty.setVisibility(mAdapter.getItemCount() <= 0 ? View.VISIBLE : View.GONE);
                         }
+                        mDataBinding.tvEmpty.setVisibility(mAdapter.getItemCount() <= 0 ? View.VISIBLE : View.GONE);
                     }
                 });
     }

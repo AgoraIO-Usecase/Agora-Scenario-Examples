@@ -17,6 +17,7 @@ public class DataProvider implements IDataProvider {
     public static final String USER_OBJECTID = "objectId";
     public static final String USER_NAME = "name";
     public static final String USER_AVATAR = "avatar";
+    public static final String USER_CREATEDAT = "createdAt";
 
     public static final String MEMBER_OBJECTID = "objectId";
     public static final String MEMBER_ISSPEAKER = "isSpeaker";
@@ -27,14 +28,17 @@ public class DataProvider implements IDataProvider {
     public static final String MEMBER_ISMUTED = "isMuted";
     public static final String MEMBER_ISSELFMUTED = "isSelfMuted";
     public static final String MEMBER_STREAMID = "streamId";
+    public static final String MEMBER_CREATEDAT = "createdAt";
 
     public static final String ROOM_OBJECTID = "objectId";
+    public static final String ROOM_CREATEDAT = "createdAt";
 
     public static final String ACTION_OBJECTID = "objectId";
     public static final String ACTION_MEMBERID = "memberId";
     public static final String ACTION_ROOMID = "roomId";
     public static final String ACTION_ACTION = "action";
     public static final String ACTION_STATUS = "status";
+    public static final String ACTION_CREATEDAT = "createdAt";
 
     private final IStoreSource mIStoreSource;
     private final IMessageSource mIMessageSource;

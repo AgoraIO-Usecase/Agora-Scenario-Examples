@@ -47,6 +47,7 @@ class StoreSource implements IStoreSource {
                 HashMap<String, Object> map = new HashMap<>();
                 map.put(DataProvider.USER_NAME, user.getName());
                 map.put(DataProvider.USER_AVATAR, user.getAvatar());
+                map.put(DataProvider.USER_CREATEDAT, System.currentTimeMillis());
 
                 db.collection(DataProvider.TAG_TABLE_USER)
                         .add(map)
@@ -246,6 +247,7 @@ class StoreSource implements IStoreSource {
             HashMap<String, Object> map = new HashMap<>();
             map.put(DataProvider.MEMBER_CHANNELNAME, room.getChannelName());
             map.put(DataProvider.MEMBER_ANCHORID, drUser);
+            map.put(DataProvider.MEMBER_CREATEDAT, System.currentTimeMillis());
 
             db.collection(DataProvider.TAG_TABLE_ROOM)
                     .add(map)

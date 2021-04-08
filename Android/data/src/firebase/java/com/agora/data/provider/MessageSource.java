@@ -15,6 +15,8 @@ import com.agora.data.observer.DataMaybeObserver;
 import com.agora.data.provider.model.ActionTemp;
 import com.agora.data.provider.model.MemberTemp;
 import com.agora.data.provider.model.RoomTemp;
+import com.elvishew.xlog.Logger;
+import com.elvishew.xlog.XLog;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -29,6 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Transaction;
 import com.google.firebase.firestore.WriteBatch;
 import com.google.gson.Gson;
 
@@ -41,8 +44,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.schedulers.Schedulers;
 
 class MessageSource extends BaseMessageSource {
+
+    private final Logger.Builder mLogger = XLog.tag(MessageSource.class.getSimpleName());
 
     private Gson mGson = new Gson();
     private Context mContext;
@@ -81,6 +87,7 @@ class MessageSource extends BaseMessageSource {
                                 map.put(DataProvider.MEMBER_ISSPEAKER, member.getIsSpeaker());
                                 map.put(DataProvider.MEMBER_ISMUTED, member.getIsMuted());
                                 map.put(DataProvider.MEMBER_ISSELFMUTED, member.getIsSelfMuted());
+                                map.put(DataProvider.MEMBER_CREATEDAT, System.currentTimeMillis());
 
                                 db.collection(DataProvider.TAG_TABLE_MEMBER)
                                         .add(map)
@@ -88,12 +95,14 @@ class MessageSource extends BaseMessageSource {
                                             String objectId = documentReference.getId();
                                             member.setObjectId(objectId);
                                             emitter.onNext(member);
+                                            emitter.onComplete();
                                         })
                                         .addOnFailureListener(new OnFailureListener() {
 
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
                                                 emitter.onError(e);
+                                                emitter.onComplete();
                                             }
                                         });
                                 return;
@@ -156,12 +165,14 @@ class MessageSource extends BaseMessageSource {
                                         } else {
                                             emitter.onError(task.getException());
                                         }
+                                        emitter.onComplete();
                                     }
                                 });
                                 break;
                             }
                         } else {
                             emitter.onError(task.getException());
+                            emitter.onComplete();
                         }
                     });
         }).doOnComplete(new io.reactivex.functions.Action() {
@@ -305,11 +316,15 @@ class MessageSource extends BaseMessageSource {
     @Override
     public Completable requestHandsUp(@NonNull Member member) {
         return Completable.create(emitter -> {
+            DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(member.getRoomId().getObjectId());
+            DocumentReference drMember = db.collection(DataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
+
             HashMap<String, Object> map = new HashMap<>();
-            map.put(DataProvider.ACTION_MEMBERID, member);
-            map.put(DataProvider.ACTION_ROOMID, member.getRoomId());
+            map.put(DataProvider.ACTION_MEMBERID, drMember);
+            map.put(DataProvider.ACTION_ROOMID, drRoom);
             map.put(DataProvider.ACTION_ACTION, Action.ACTION.HandsUp.getValue());
             map.put(DataProvider.ACTION_STATUS, Action.ACTION_STATUS.Ing.getValue());
+            map.put(DataProvider.ACTION_CREATEDAT, System.currentTimeMillis());
 
             db.collection(DataProvider.TAG_TABLE_ACTION)
                     .add(map)
@@ -317,37 +332,55 @@ class MessageSource extends BaseMessageSource {
                         String objectIdNew = documentReference.getId();
                         emitter.onComplete();
                     })
-                    .addOnFailureListener(e -> emitter.onError(e));
+                    .addOnFailureListener(emitter::onError);
         });
     }
 
     @Override
     public Completable agreeHandsUp(@NonNull Member member) {
         return Completable.create(emitter -> {
-            HashMap<String, Object> map = new HashMap<>();
-            map.put(DataProvider.ACTION_MEMBERID, member);
-            map.put(DataProvider.ACTION_ROOMID, member.getRoomId());
-            map.put(DataProvider.ACTION_ACTION, Action.ACTION.HandsUp.getValue());
-            map.put(DataProvider.ACTION_STATUS, Action.ACTION_STATUS.Agree.getValue());
+            db.runTransaction(new Transaction.Function<Void>() {
+                @Nullable
+                @Override
+                public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                    DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(member.getRoomId().getObjectId());
+                    DocumentReference drMember = db.collection(DataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
 
-            db.collection(DataProvider.TAG_TABLE_ACTION)
-                    .add(map)
-                    .addOnSuccessListener(documentReference -> {
-                        String objectIdNew = documentReference.getId();
-                        emitter.onComplete();
-                    })
-                    .addOnFailureListener(e -> emitter.onError(e));
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put(DataProvider.ACTION_MEMBERID, drMember);
+                    map.put(DataProvider.ACTION_ROOMID, drRoom);
+                    map.put(DataProvider.ACTION_ACTION, Action.ACTION.HandsUp.getValue());
+                    map.put(DataProvider.ACTION_STATUS, Action.ACTION_STATUS.Agree.getValue());
+                    map.put(DataProvider.ACTION_CREATEDAT, System.currentTimeMillis());
+                    db.collection(DataProvider.TAG_TABLE_ACTION)
+                            .add(map);
+
+                    transaction.update(drMember, DataProvider.MEMBER_ISSPEAKER, 1);
+                    return null;
+                }
+            }).addOnSuccessListener(documentReference -> {
+                emitter.onComplete();
+            }).addOnFailureListener(e -> emitter.onError(e));
+        }).subscribeOn(Schedulers.io()).doOnComplete(new io.reactivex.functions.Action() {
+            @Override
+            public void run() throws Exception {
+                handUpMembers.remove(member.getObjectId());
+            }
         });
     }
 
     @Override
     public Completable refuseHandsUp(@NonNull Member member) {
         return Completable.create(emitter -> {
+            DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(member.getRoomId().getObjectId());
+            DocumentReference drMember = db.collection(DataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
+
             HashMap<String, Object> map = new HashMap<>();
-            map.put(DataProvider.ACTION_MEMBERID, member);
-            map.put(DataProvider.ACTION_ROOMID, member.getRoomId());
+            map.put(DataProvider.ACTION_MEMBERID, drMember);
+            map.put(DataProvider.ACTION_ROOMID, drRoom);
             map.put(DataProvider.ACTION_ACTION, Action.ACTION.HandsUp.getValue());
             map.put(DataProvider.ACTION_STATUS, Action.ACTION_STATUS.Refuse.getValue());
+            map.put(DataProvider.ACTION_CREATEDAT, System.currentTimeMillis());
 
             db.collection(DataProvider.TAG_TABLE_ACTION)
                     .add(map)
@@ -356,17 +389,26 @@ class MessageSource extends BaseMessageSource {
                         emitter.onComplete();
                     })
                     .addOnFailureListener(e -> emitter.onError(e));
+        }).subscribeOn(Schedulers.io()).doOnComplete(new io.reactivex.functions.Action() {
+            @Override
+            public void run() throws Exception {
+                handUpMembers.remove(member.getObjectId());
+            }
         });
     }
 
     @Override
     public Completable inviteSeat(@NonNull Member member) {
         return Completable.create(emitter -> {
+            DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(member.getRoomId().getObjectId());
+            DocumentReference drMember = db.collection(DataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
+
             HashMap<String, Object> map = new HashMap<>();
-            map.put(DataProvider.ACTION_MEMBERID, member);
-            map.put(DataProvider.ACTION_ROOMID, member.getRoomId());
+            map.put(DataProvider.ACTION_MEMBERID, drMember);
+            map.put(DataProvider.ACTION_ROOMID, drRoom);
             map.put(DataProvider.ACTION_ACTION, Action.ACTION.Invite.getValue());
             map.put(DataProvider.ACTION_STATUS, Action.ACTION_STATUS.Ing.getValue());
+            map.put(DataProvider.ACTION_CREATEDAT, System.currentTimeMillis());
 
             db.collection(DataProvider.TAG_TABLE_ACTION)
                     .add(map)
@@ -381,30 +423,48 @@ class MessageSource extends BaseMessageSource {
     @Override
     public Completable agreeInvite(@NonNull Member member) {
         return Completable.create(emitter -> {
-            HashMap<String, Object> map = new HashMap<>();
-            map.put(DataProvider.ACTION_MEMBERID, member);
-            map.put(DataProvider.ACTION_ROOMID, member.getRoomId());
-            map.put(DataProvider.ACTION_ACTION, Action.ACTION.Invite.getValue());
-            map.put(DataProvider.ACTION_STATUS, Action.ACTION_STATUS.Agree.getValue());
+            db.runTransaction(new Transaction.Function<Void>() {
+                @Nullable
+                @Override
+                public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                    DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(member.getRoomId().getObjectId());
+                    DocumentReference drMember = db.collection(DataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
 
-            db.collection(DataProvider.TAG_TABLE_ACTION)
-                    .add(map)
-                    .addOnSuccessListener(documentReference -> {
-                        String objectIdNew = documentReference.getId();
-                        emitter.onComplete();
-                    })
-                    .addOnFailureListener(e -> emitter.onError(e));
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put(DataProvider.ACTION_MEMBERID, drMember);
+                    map.put(DataProvider.ACTION_ROOMID, drRoom);
+                    map.put(DataProvider.ACTION_ACTION, Action.ACTION.Invite.getValue());
+                    map.put(DataProvider.ACTION_STATUS, Action.ACTION_STATUS.Agree.getValue());
+                    map.put(DataProvider.ACTION_CREATEDAT, System.currentTimeMillis());
+                    db.collection(DataProvider.TAG_TABLE_ACTION)
+                            .add(map);
+
+                    transaction.update(drMember, DataProvider.MEMBER_ISSPEAKER, 1);
+                    return null;
+                }
+            }).addOnSuccessListener(documentReference -> {
+                emitter.onComplete();
+            }).addOnFailureListener(e -> emitter.onError(e));
+        }).subscribeOn(Schedulers.io()).doOnComplete(new io.reactivex.functions.Action() {
+            @Override
+            public void run() throws Exception {
+                handUpMembers.remove(member.getObjectId());
+            }
         });
     }
 
     @Override
     public Completable refuseInvite(@NonNull Member member) {
         return Completable.create(emitter -> {
+            DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(member.getRoomId().getObjectId());
+            DocumentReference drMember = db.collection(DataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
+
             HashMap<String, Object> map = new HashMap<>();
-            map.put(DataProvider.ACTION_MEMBERID, member);
-            map.put(DataProvider.ACTION_ROOMID, member.getRoomId());
+            map.put(DataProvider.ACTION_MEMBERID, drMember);
+            map.put(DataProvider.ACTION_ROOMID, drRoom);
             map.put(DataProvider.ACTION_ACTION, Action.ACTION.Invite.getValue());
             map.put(DataProvider.ACTION_STATUS, Action.ACTION_STATUS.Refuse.getValue());
+            map.put(DataProvider.ACTION_CREATEDAT, System.currentTimeMillis());
 
             db.collection(DataProvider.TAG_TABLE_ACTION)
                     .add(map)
@@ -456,45 +516,60 @@ class MessageSource extends BaseMessageSource {
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                         for (DocumentChange dc : value.getDocumentChanges()) {
                             ActionTemp actionTemp = dc.getDocument().toObject(ActionTemp.class);
+                            mLogger.d("AnchorActionChanged onEvent type= [%s] action= [%s]", dc.getType().toString(), actionTemp.toString());
+
                             Action item = actionTemp.create(dc.getDocument().getId());
-                            if (dc.getType() == DocumentChange.Type.ADDED) {
-                                if (item.getAction() == Action.ACTION.HandsUp.getValue()) {
-                                    if (item.getStatus() == Action.ACTION_STATUS.Ing.getValue()) {
-                                        Member member = item.getMemberId();
-                                        member = iRoomProxy.getMemberById(member.getObjectId());
-                                        if (member == null) {
-                                            return;
-                                        }
+                            item.setRoomId(iRoomProxy.getRoom());
+                            actionTemp.getMemberId().get()
+                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (!task.isSuccessful()) {
+                                                return;
+                                            }
 
-                                        if (handUpMembers.containsKey(member.getObjectId())) {
-                                            return;
-                                        }
+                                            DocumentSnapshot ds = task.getResult();
+                                            if (!ds.exists()) {
+                                                return;
+                                            }
 
-                                        handUpMembers.put(member.getObjectId(), member);
-                                        iRoomProxy.onReceivedHandUp(member);
-                                    }
-                                } else if (item.getAction() == Action.ACTION.Invite.getValue()) {
-                                    if (item.getStatus() == Action.ACTION_STATUS.Agree.getValue()) {
-                                        Member member = item.getMemberId();
-                                        member = iRoomProxy.getMemberById(member.getObjectId());
-                                        if (member == null) {
-                                            return;
-                                        }
+                                            if (dc.getType() == DocumentChange.Type.ADDED) {
+                                                if (item.getAction() == Action.ACTION.HandsUp.getValue()) {
+                                                    if (item.getStatus() == Action.ACTION_STATUS.Ing.getValue()) {
+                                                        Member member = iRoomProxy.getMemberById(ds.getId());
+                                                        if (member == null) {
+                                                            return;
+                                                        }
 
-                                        iRoomProxy.onInviteAgree(member);
-                                    } else if (item.getStatus() == Action.ACTION_STATUS.Refuse.getValue()) {
-                                        Member member = item.getMemberId();
-                                        member = iRoomProxy.getMemberById(member.getObjectId());
-                                        if (member == null) {
-                                            return;
-                                        }
+                                                        if (handUpMembers.containsKey(member.getObjectId())) {
+                                                            return;
+                                                        }
 
-                                        iRoomProxy.onInviteRefuse(member);
-                                    }
-                                }
-                            } else if (dc.getType() == DocumentChange.Type.MODIFIED) {
-                            } else if (dc.getType() == DocumentChange.Type.REMOVED) {
-                            }
+                                                        handUpMembers.put(member.getObjectId(), member);
+                                                        iRoomProxy.onReceivedHandUp(member);
+                                                    }
+                                                } else if (item.getAction() == Action.ACTION.Invite.getValue()) {
+                                                    if (item.getStatus() == Action.ACTION_STATUS.Agree.getValue()) {
+                                                        Member member = iRoomProxy.getMemberById(ds.getId());
+                                                        if (member == null) {
+                                                            return;
+                                                        }
+
+                                                        iRoomProxy.onInviteAgree(member);
+                                                    } else if (item.getStatus() == Action.ACTION_STATUS.Refuse.getValue()) {
+                                                        Member member = iRoomProxy.getMemberById(ds.getId());
+                                                        if (member == null) {
+                                                            return;
+                                                        }
+
+                                                        iRoomProxy.onInviteRefuse(member);
+                                                    }
+                                                }
+                                            } else if (dc.getType() == DocumentChange.Type.MODIFIED) {
+                                            } else if (dc.getType() == DocumentChange.Type.REMOVED) {
+                                            }
+                                        }
+                                    });
                         }
                     }
                 });
@@ -525,7 +600,11 @@ class MessageSource extends BaseMessageSource {
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                         for (DocumentChange dc : value.getDocumentChanges()) {
                             ActionTemp actionTemp = dc.getDocument().toObject(ActionTemp.class);
+                            mLogger.d("MemberActionChanged onEvent type= [%s] action= [%s]", dc.getType().toString(), actionTemp.toString());
+
                             Action item = actionTemp.create(dc.getDocument().getId());
+                            item.setRoomId(iRoomProxy.getRoom());
+                            item.setMemberId(iRoomProxy.getMine());
                             if (dc.getType() == DocumentChange.Type.ADDED) {
                                 if (item.getAction() == Action.ACTION.HandsUp.getValue()) {
                                     if (item.getStatus() == Action.ACTION_STATUS.Agree.getValue()) {
@@ -571,65 +650,86 @@ class MessageSource extends BaseMessageSource {
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                         for (DocumentChange dc : value.getDocumentChanges()) {
                             MemberTemp temp = dc.getDocument().toObject(MemberTemp.class);
+                            mLogger.d("MemberChanged onEvent type= [%s] member= [%s]", dc.getType().toString(), temp.toString());
+
                             Member member = temp.createMember(dc.getDocument().getId());
-                            if (dc.getType() == DocumentChange.Type.ADDED) {
-                                if (iRoomProxy.isMembersContainsKey(member.getObjectId())) {
-                                    return;
+                            member.setRoomId(iRoomProxy.getRoom());
+                            temp.getUserId().get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (!task.isSuccessful()) {
+                                        return;
+                                    }
+
+                                    DocumentSnapshot ds = task.getResult();
+                                    if (!ds.exists()) {
+                                        return;
+                                    }
+
+                                    User user = ds.toObject(User.class);
+                                    user.setObjectId(ds.getId());
+                                    member.setUserId(user);
+
+                                    if (dc.getType() == DocumentChange.Type.ADDED) {
+                                        if (iRoomProxy.isMembersContainsKey(member.getObjectId())) {
+                                            return;
+                                        }
+
+                                        iRoomProxy.getMember(room.getObjectId(), member.getUserId().getObjectId())
+                                                .subscribe(new DataMaybeObserver<Member>(mContext) {
+                                                    @Override
+                                                    public void handleError(@NonNull BaseError e) {
+
+                                                    }
+
+                                                    @Override
+                                                    public void handleSuccess(@Nullable Member member) {
+                                                        if (member == null) {
+                                                            return;
+                                                        }
+
+                                                        if (iRoomProxy.isMembersContainsKey(member.getObjectId())) {
+                                                            return;
+                                                        }
+
+                                                        iRoomProxy.onMemberJoin(member);
+                                                    }
+                                                });
+                                    } else if (dc.getType() == DocumentChange.Type.MODIFIED) {
+                                        if (!iRoomProxy.isMembersContainsKey(member.getObjectId())) {
+                                            return;
+                                        }
+
+                                        Member memberOld = iRoomProxy.getMemberById(member.getObjectId());
+                                        if (memberOld == null) {
+                                            return;
+                                        }
+
+                                        if (memberOld.getIsSpeaker() != member.getIsSpeaker()) {
+                                            iRoomProxy.onRoleChanged(false, member);
+                                        }
+
+                                        if (memberOld.getIsSelfMuted() != member.getIsSelfMuted()) {
+                                            iRoomProxy.onAudioStatusChanged(false, member);
+                                        }
+
+                                        if (memberOld.getIsMuted() != member.getIsMuted()) {
+                                            iRoomProxy.onAudioStatusChanged(false, member);
+                                        }
+                                    } else if (dc.getType() == DocumentChange.Type.REMOVED) {
+                                        if (!iRoomProxy.isMembersContainsKey(member.getObjectId())) {
+                                            return;
+                                        }
+
+                                        Member member2 = iRoomProxy.getMemberById(member.getObjectId());
+                                        if (member2 == null) {
+                                            return;
+                                        }
+
+                                        iRoomProxy.onMemberLeave(member2);
+                                    }
                                 }
-
-                                iRoomProxy.getMember(room.getObjectId(), member.getUserId().getObjectId())
-                                        .subscribe(new DataMaybeObserver<Member>(mContext) {
-                                            @Override
-                                            public void handleError(@NonNull BaseError e) {
-
-                                            }
-
-                                            @Override
-                                            public void handleSuccess(@Nullable Member member) {
-                                                if (member == null) {
-                                                    return;
-                                                }
-
-                                                if (iRoomProxy.isMembersContainsKey(member.getObjectId())) {
-                                                    return;
-                                                }
-
-                                                iRoomProxy.onMemberJoin(member);
-                                            }
-                                        });
-                            } else if (dc.getType() == DocumentChange.Type.MODIFIED) {
-                                if (!iRoomProxy.isMembersContainsKey(member.getObjectId())) {
-                                    return;
-                                }
-
-                                Member memberOld = iRoomProxy.getMemberById(member.getObjectId());
-                                if (memberOld == null) {
-                                    return;
-                                }
-
-                                if (memberOld.getIsSpeaker() != member.getIsSpeaker()) {
-                                    iRoomProxy.onRoleChanged(false, member);
-                                }
-
-                                if (memberOld.getIsSelfMuted() != member.getIsSelfMuted()) {
-                                    iRoomProxy.onAudioStatusChanged(false, member);
-                                }
-
-                                if (memberOld.getIsMuted() != member.getIsMuted()) {
-                                    iRoomProxy.onAudioStatusChanged(false, member);
-                                }
-                            } else if (dc.getType() == DocumentChange.Type.REMOVED) {
-                                if (!iRoomProxy.isMembersContainsKey(member.getObjectId())) {
-                                    return;
-                                }
-
-                                Member member2 = iRoomProxy.getMemberById(member.getObjectId());
-                                if (member2 == null) {
-                                    return;
-                                }
-
-                                iRoomProxy.onMemberLeave(member2);
-                            }
+                            });
                         }
                     }
                 });

@@ -10,6 +10,7 @@ public class MemberTemp {
     private int isSpeaker = 0;
     private int isMuted = 0;
     private int isSelfMuted = 0;
+    private long createdAt;
 
     public MemberTemp() {
     }
@@ -71,5 +72,26 @@ public class MemberTemp {
 
     public void setIsSelfMuted(int isSelfMuted) {
         this.isSelfMuted = isSelfMuted;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    @Override
+    public String toString() {
+        return "MemberTemp{" +
+                "roomId=" + roomId +
+                ", userId=" + userId +
+                ", streamId=" + streamId +
+                ", isSpeaker=" + isSpeaker +
+                ", isMuted=" + isMuted +
+                ", isSelfMuted=" + isSelfMuted +
+                ", createdAt=" + createdAt +
+                '}';
     }
 }

@@ -6,6 +6,7 @@ import com.google.firebase.firestore.DocumentReference;
 public class RoomTemp {
     private String channelName;
     private DocumentReference anchorId;
+    private long createdAt;
 
     public RoomTemp() {
     }
@@ -31,5 +32,13 @@ public class RoomTemp {
 
     public void setAnchorId(DocumentReference anchorId) {
         this.anchorId = anchorId;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
     }
 }
