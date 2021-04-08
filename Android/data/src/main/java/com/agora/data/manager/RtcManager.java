@@ -13,6 +13,7 @@ import io.agora.rtc.Constants;
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
 import io.agora.rtc.RtcEngineConfig;
+import io.agora.rtc.models.ClientRoleOptions;
 
 public final class RtcManager {
 
@@ -65,8 +66,7 @@ public final class RtcManager {
             }
         }
 
-        setClientRole(IRtcEngineEventHandler.ClientRole.CLIENT_ROLE_AUDIENCE);
-        mRtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
+        mRtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_COMMUNICATION);
         mRtcEngine.enableAudio();
         mRtcEngine.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_HIGH_QUALITY, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
     }
@@ -100,13 +100,18 @@ public final class RtcManager {
             mRtcEngine.setClientRole(role);
     }
 
+    public void setClientRole(int role, ClientRoleOptions options) {
+        Log.d(TAG, "setClientRole() called with: role = [" + role + "], options = [" + options + "]");
+        if (mRtcEngine != null)
+            mRtcEngine.setClientRole(role, options);
+    }
+
     public void startAudio() {
         Log.d(TAG, "startAudio() called");
         if (mRtcEngine == null) {
             return;
         }
 
-        setClientRole(IRtcEngineEventHandler.ClientRole.CLIENT_ROLE_BROADCASTER);
         mRtcEngine.enableLocalAudio(true);
     }
 
@@ -116,7 +121,6 @@ public final class RtcManager {
             return;
         }
 
-        setClientRole(IRtcEngineEventHandler.ClientRole.CLIENT_ROLE_AUDIENCE);
         mRtcEngine.enableLocalAudio(false);
     }
 
