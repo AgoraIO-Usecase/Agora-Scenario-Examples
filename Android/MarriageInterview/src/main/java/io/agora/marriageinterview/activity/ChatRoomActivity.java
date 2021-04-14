@@ -23,7 +23,7 @@ import com.agora.data.model.User;
 import com.agora.data.observer.DataCompletableObserver;
 import com.agora.data.observer.DataMaybeObserver;
 import com.agora.data.observer.DataObserver;
-import com.agora.data.observer.DataSingleObserver;
+import com.agora.data.provider.IRoomConfigProvider;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
@@ -39,7 +39,9 @@ import io.agora.marriageinterview.widget.HandUpDialog;
 import io.agora.marriageinterview.widget.InviteMenuDialog;
 import io.agora.marriageinterview.widget.InvitedMenuDialog;
 import io.agora.marriageinterview.widget.UserSeatMenuDialog;
+import io.agora.rtc.Constants;
 import io.agora.rtc.IRtcEngineEventHandler;
+import io.agora.rtc.RtcEngine;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
@@ -85,6 +87,28 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
             }
 
             showUserInviteDialog(data);
+        }
+    };
+
+    private IRoomConfigProvider roomConfig = new IRoomConfigProvider() {
+
+        @Override
+        public void setup(RtcEngine mRtcEngine) {
+            mRtcEngine.enableAudio();
+            mRtcEngine.enableVideo();
+
+            mRtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
+            mRtcEngine.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_HIGH_QUALITY, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
+        }
+
+        @Override
+        public boolean isNeedVideo() {
+            return true;
+        }
+
+        @Override
+        public boolean isNeedAudio() {
+            return true;
         }
     };
 
@@ -139,6 +163,8 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
         }
 
         Room mRoom = (Room) getIntent().getExtras().getSerializable(TAG_ROOM);
+
+        RoomManager.Instance(this).setupRoomConfig(roomConfig);
 
         Member mMember = new Member(mUser);
         mMember.setRoomId(mRoom);
@@ -273,7 +299,7 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
                                             return;
                                         }
 
-                                        joinRTCRoom();
+                                        joinRoom();
                                     }
                                 });
                     }
@@ -344,68 +370,23 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
         }
     }
 
-    private void joinRTCRoom() {
-        Room room = RoomManager.Instance(this).getRoom();
-        if (room == null) {
-            return;
-        }
-
-        Member member = RoomManager.Instance(this).getMine();
-        if (member == null) {
-            return;
-        }
-
-        int userId = 0;
-        if (member.getStreamId() != null) {
-            userId = member.getStreamId().intValue();
-        }
-
-        String objectId = room.getObjectId();
-        RtcManager.Instance(this).joinChannel(objectId, userId)
-                .observeOn(AndroidSchedulers.mainThread())
-                .compose(mLifecycleProvider.bindToLifecycle())
-                .subscribe(new DataSingleObserver<Integer>(this) {
-
-                    @Override
-                    public void handleError(@NonNull BaseError e) {
-
-                    }
-
-                    @Override
-                    public void handleSuccess(@NonNull Integer uid) {
-                        if (RoomManager.isLeaving) {
-                            return;
-                        }
-
-                        Member member = RoomManager.Instance(ChatRoomActivity.this).getMine();
-                        if (member == null) {
-                            return;
-                        }
-
-                        long streamId = uid & 0xffffffffL;
-                        member.setStreamId(streamId);
-                        onRTCRoomJoined();
-                    }
-                });
-    }
-
-    private void onRTCRoomJoined() {
-        joinRoom();
-    }
-
     private void joinRoom() {
         RoomManager.Instance(this)
                 .joinRoom()
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(mLifecycleProvider.bindToLifecycle())
-                .subscribe(new DataObserver<Member>(this) {
+                .subscribe(new DataCompletableObserver(this) {
                     @Override
                     public void handleError(@NonNull BaseError e) {
+                        if (RoomManager.isLeaving) {
+                            return;
+                        }
 
+                        showErrorDialog(e.getMessage());
                     }
 
                     @Override
-                    public void handleSuccess(@NonNull Member member) {
+                    public void handleSuccess() {
                         if (RoomManager.isLeaving) {
                             return;
                         }

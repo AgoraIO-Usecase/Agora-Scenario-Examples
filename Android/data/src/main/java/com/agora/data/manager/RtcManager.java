@@ -5,17 +5,13 @@ import android.util.Log;
 
 import com.agora.data.Config;
 import com.agora.data.R;
+import com.agora.data.provider.IRoomConfigProvider;
 import com.elvishew.xlog.Logger;
 import com.elvishew.xlog.XLog;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import io.agora.rtc.Constants;
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
 import io.agora.rtc.RtcEngineConfig;
-import io.agora.rtc.models.ClientRoleOptions;
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
 
@@ -34,7 +30,7 @@ public final class RtcManager {
     private int uid;
     private boolean isJoined = false;
 
-    private final List<IRtcEngineEventHandler> handlers = new ArrayList<>();
+    private IRoomConfigProvider roomConfig;
 
     private RtcManager(Context context) {
         mContext = context.getApplicationContext();
@@ -71,10 +67,11 @@ public final class RtcManager {
                 mLogger.e("init error", e);
             }
         }
+    }
 
-        mRtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_COMMUNICATION);
-        mRtcEngine.enableAudio();
-        mRtcEngine.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_HIGH_QUALITY, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
+    public void setupRoomConfig(IRoomConfigProvider roomConfig) {
+        RtcManager.this.roomConfig = roomConfig;
+        roomConfig.setup(getRtcEngine());
     }
 
     private SingleEmitter<Integer> emitterJoin;
@@ -94,7 +91,6 @@ public final class RtcManager {
                 emitter.onSuccess(uid);
                 return;
             }
-
             mRtcEngine.joinChannel(mContext.getString(R.string.token), channelId, null, userId);
         });
     }
@@ -104,55 +100,20 @@ public final class RtcManager {
         if (mRtcEngine == null) {
             return;
         }
+
         mRtcEngine.leaveChannel();
+        RtcManager.this.roomConfig = null;
     }
 
-    public void setClientRole(int role) {
-        mLogger.d("setClientRole() called with: role = [" + role + "]");
-        if (mRtcEngine != null)
-            mRtcEngine.setClientRole(role);
+    public IRoomConfigProvider getRoomConfig() {
+        return roomConfig;
     }
 
-    public void setClientRole(int role, ClientRoleOptions options) {
-        mLogger.d("setClientRole() called with: role = [" + role + "], options = [" + options + "]");
-        if (mRtcEngine != null)
-            mRtcEngine.setClientRole(role, options);
-    }
-
-    public void startAudio() {
-        mLogger.d("startAudio() called");
+    public RtcEngine getRtcEngine() {
         if (mRtcEngine == null) {
-            return;
+            throw new NullPointerException("mRtcEngine is null");
         }
-
-        mRtcEngine.enableLocalAudio(true);
-    }
-
-    public void stopAudio() {
-        mLogger.d("stopAudio() called");
-        if (mRtcEngine == null) {
-            return;
-        }
-
-        mRtcEngine.enableLocalAudio(false);
-    }
-
-    public void muteRemoteVideoStream(int uid, boolean muted) {
-        mLogger.d("muteRemoteVideoStream() called with: uid = [" + uid + "], muted = [" + muted + "]");
-        if (mRtcEngine == null) {
-            return;
-        }
-
-        mRtcEngine.muteRemoteVideoStream(uid, muted);
-    }
-
-    public void muteLocalAudioStream(boolean muted) {
-        mLogger.d("muteLocalAudioStream() called with: muted = [" + muted + "]");
-        if (mRtcEngine == null) {
-            return;
-        }
-
-        mRtcEngine.muteLocalAudioStream(muted);
+        return mRtcEngine;
     }
 
     public void addHandler(IRtcEngineEventHandler handler) {
@@ -160,7 +121,6 @@ public final class RtcManager {
             return;
         }
 
-        handlers.add(handler);
         mRtcEngine.addHandler(handler);
     }
 
@@ -169,7 +129,6 @@ public final class RtcManager {
             return;
         }
 
-        handlers.remove(handler);
         mRtcEngine.removeHandler(handler);
     }
 

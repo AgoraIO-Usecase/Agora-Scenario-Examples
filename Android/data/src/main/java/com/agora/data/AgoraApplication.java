@@ -12,6 +12,7 @@ public class AgoraApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         XLog.init(LogLevel.ALL);
+
         RtcManager.Instance(this).init();
     }
 }
