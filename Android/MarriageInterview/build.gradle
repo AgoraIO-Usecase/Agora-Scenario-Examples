@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         if (isModule) {
-            applicationId "io.agora.interactivepodcast"
+            applicationId "io.agora.marriageinterview"
         }
         minSdkVersion MINSDKVERSION
         targetSdkVersion TARGETSDKVERSION

@@ -1,4 +1,4 @@
-package io.agora.interactivepodcast.activity;
+package io.agora.marriageinterview.activity;
 
 import android.Manifest;
 import android.content.Intent;
@@ -30,12 +30,12 @@ import java.util.List;
 import io.agora.baselibrary.base.DataBindBaseActivity;
 import io.agora.baselibrary.base.OnItemClickListener;
 import io.agora.baselibrary.util.ToastUtile;
-import io.agora.interactivepodcast.R;
-import io.agora.interactivepodcast.adapter.RoomListAdapter;
-import io.agora.interactivepodcast.databinding.ActivityRoomListBinding;
-import io.agora.interactivepodcast.widget.CreateRoomDialog;
-import io.agora.interactivepodcast.widget.HandUpDialog;
-import io.agora.interactivepodcast.widget.SpaceItemDecoration;
+import io.agora.marriageinterview.R;
+import io.agora.marriageinterview.adapter.RoomListAdapter;
+import io.agora.marriageinterview.databinding.ActivityRoomListBinding;
+import io.agora.marriageinterview.widget.CreateRoomDialog;
+import io.agora.marriageinterview.widget.HandUpDialog;
+import io.agora.marriageinterview.widget.SpaceItemDecoration;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import pub.devrel.easypermissions.EasyPermissions;
 

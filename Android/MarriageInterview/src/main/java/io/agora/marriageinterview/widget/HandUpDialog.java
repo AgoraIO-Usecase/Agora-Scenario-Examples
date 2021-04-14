@@ -1,4 +1,4 @@
-package io.agora.interactivepodcast.widget;
+package io.agora.marriageinterview.widget;
 
 import android.os.Bundle;
 import android.view.Gravity;
@@ -13,29 +13,36 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 
 import com.agora.data.BaseError;
+import com.agora.data.DataRepositroy;
 import com.agora.data.manager.RoomManager;
 import com.agora.data.model.Member;
-import com.agora.data.model.User;
+import com.agora.data.model.Room;
 import com.agora.data.observer.DataCompletableObserver;
-import com.bumptech.glide.Glide;
+import com.agora.data.observer.DataObserver;
+
+import java.util.List;
 
 import io.agora.baselibrary.base.DataBindBaseDialog;
+import io.agora.baselibrary.base.OnItemClickListener;
 import io.agora.baselibrary.util.ToastUtile;
-import io.agora.interactivepodcast.R;
-import io.agora.interactivepodcast.databinding.DialogUserSeatMenuBinding;
+import io.agora.marriageinterview.R;
+import io.agora.marriageinterview.adapter.HandsUpListAdapter;
+import io.agora.marriageinterview.databinding.DialogHandUpBinding;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
- * 房间用户菜单
+ * 举手列表
  *
  * @author chenhengfei@agora.io
  */
-public class UserSeatMenuDialog extends DataBindBaseDialog<DialogUserSeatMenuBinding> implements View.OnClickListener {
-    private static final String TAG = UserSeatMenuDialog.class.getSimpleName();
+public class HandUpDialog extends DataBindBaseDialog<DialogHandUpBinding> implements OnItemClickListener<Member> {
+    private static final String TAG = HandUpDialog.class.getSimpleName();
 
-    private static final String TAG_USER = "user";
+    private HandsUpListAdapter mAdapter;
 
-    private Member mMember;
+    private static final String TAG_ROOM = "room";
+
+    private Room room;
 
     @Nullable
     @Override
@@ -58,12 +65,12 @@ public class UserSeatMenuDialog extends DataBindBaseDialog<DialogUserSeatMenuBin
 
     @Override
     public void iniBundle(@NonNull Bundle bundle) {
-        mMember = (Member) bundle.getSerializable(TAG_USER);
+        room = (Room) bundle.getSerializable(TAG_ROOM);
     }
 
     @Override
     public int getLayoutId() {
-        return R.layout.dialog_user_seat_menu;
+        return R.layout.dialog_hand_up;
     }
 
     @Override
@@ -73,102 +80,84 @@ public class UserSeatMenuDialog extends DataBindBaseDialog<DialogUserSeatMenuBin
 
     @Override
     public void iniListener() {
-        mDataBinding.btSeatoff.setOnClickListener(this);
-        mDataBinding.btAudio.setOnClickListener(this);
+
     }
 
     @Override
     public void iniData() {
-        User mUser = mMember.getUserId();
-        mDataBinding.tvName.setText(mUser.getName());
-        Glide.with(this)
-                .load(mUser.getAvatarRes())
-                .placeholder(R.mipmap.default_head)
-                .error(R.mipmap.default_head)
-                .circleCrop()
-                .into(mDataBinding.ivUser);
-        refreshAudioView();
+        mAdapter = new HandsUpListAdapter(null, this);
+        mDataBinding.rvList.setAdapter(mAdapter);
+
+        loadData();
     }
 
-    private void refreshAudioView() {
-        if (mMember.getIsMuted() == 1) {
-            mDataBinding.ivAudio.setImageResource(R.mipmap.icon_microphoneon);
-            mDataBinding.btAudio.setText(R.string.room_dialog_open_audio);
-        } else if (mMember.getIsSelfMuted() == 1) {
-            mDataBinding.ivAudio.setImageResource(R.mipmap.icon_microphoneon);
-            mDataBinding.btAudio.setText(R.string.room_dialog_open_audio);
-        } else {
-            mDataBinding.ivAudio.setImageResource(R.mipmap.icon_microphoneon);
-            mDataBinding.btAudio.setText(R.string.room_dialog_close_audio);
-        }
+    public void loadData() {
+        DataRepositroy.Instance(requireContext())
+                .getHandUpList()
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(mLifecycleProvider.bindToLifecycle())
+                .subscribe(new DataObserver<List<Member>>(requireContext()) {
+
+                    @Override
+                    public void handleError(@NonNull BaseError e) {
+
+                    }
+
+                    @Override
+                    public void handleSuccess(@NonNull List<Member> members) {
+                        mAdapter.setDatas(members);
+                    }
+                });
     }
 
-    public void show(@NonNull FragmentManager manager, Member data) {
+    public void show(@NonNull FragmentManager manager, @NonNull Room room) {
         Bundle intent = new Bundle();
-        intent.putSerializable(TAG_USER, data);
+        intent.putSerializable(TAG_ROOM, room);
         setArguments(intent);
         super.show(manager, TAG);
     }
 
     @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.btSeatoff) {
-            seatOff();
-        } else if (v.getId() == R.id.btAudio) {
-            toggleAudio();
+    public void onItemClick(@NonNull Member data, View view, int position, long id) {
+        if (view.getId() == R.id.btRefuse) {
+            clickRefuse(position, data);
+        } else if (view.getId() == R.id.btAgree) {
+            clickAgree(position, data);
         }
     }
 
-    private void toggleAudio() {
-        if (!RoomManager.Instance(requireContext()).isOwner()) {
-            Member member = RoomManager.Instance(requireContext()).getMine();
-            if (member == null) {
-                return;
-            }
-
-            if (member.getIsMuted() == 1) {
-                ToastUtile.toastShort(requireContext(), R.string.member_muted);
-                return;
-            }
-        }
-
-        mDataBinding.btAudio.setEnabled(false);
+    private void clickRefuse(int index, Member data) {
         RoomManager.Instance(requireContext())
-                .toggleTargetAudio(mMember)
+                .refuseHandsUp(data)
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(mLifecycleProvider.bindToLifecycle())
                 .subscribe(new DataCompletableObserver(requireContext()) {
                     @Override
                     public void handleError(@NonNull BaseError e) {
-                        mDataBinding.btAudio.setEnabled(true);
                         ToastUtile.toastShort(requireContext(), e.getMessage());
                     }
 
                     @Override
                     public void handleSuccess() {
-                        mDataBinding.btAudio.setEnabled(true);
-                        refreshAudioView();
+                        mAdapter.deleteItem(index);
                     }
                 });
     }
 
-    private void seatOff() {
-        mDataBinding.btSeatoff.setEnabled(false);
+    private void clickAgree(int index, Member data) {
         RoomManager.Instance(requireContext())
-                .seatOff(mMember)
+                .agreeHandsUp(data)
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(mLifecycleProvider.bindToLifecycle())
                 .subscribe(new DataCompletableObserver(requireContext()) {
                     @Override
                     public void handleError(@NonNull BaseError e) {
-                        mDataBinding.btSeatoff.setEnabled(true);
                         ToastUtile.toastShort(requireContext(), e.getMessage());
                     }
 
                     @Override
                     public void handleSuccess() {
-                        mDataBinding.btSeatoff.setEnabled(true);
-                        dismiss();
+                        mAdapter.deleteItem(index);
                     }
                 });
     }

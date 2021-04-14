@@ -1,4 +1,4 @@
-package io.agora.interactivepodcast.widget;
+package io.agora.marriageinterview.widget;
 
 import android.os.Bundle;
 import android.view.Gravity;
@@ -13,36 +13,28 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 
 import com.agora.data.BaseError;
-import com.agora.data.DataRepositroy;
 import com.agora.data.manager.RoomManager;
 import com.agora.data.model.Member;
-import com.agora.data.model.Room;
+import com.agora.data.model.User;
 import com.agora.data.observer.DataCompletableObserver;
-import com.agora.data.observer.DataObserver;
-
-import java.util.List;
 
 import io.agora.baselibrary.base.DataBindBaseDialog;
-import io.agora.baselibrary.base.OnItemClickListener;
 import io.agora.baselibrary.util.ToastUtile;
-import io.agora.interactivepodcast.R;
-import io.agora.interactivepodcast.adapter.HandsUpListAdapter;
-import io.agora.interactivepodcast.databinding.DialogHandUpBinding;
+import io.agora.marriageinterview.R;
+import io.agora.marriageinterview.databinding.DialogUserInvitedBinding;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
- * 举手列表
+ * 被邀请菜单
  *
  * @author chenhengfei@agora.io
  */
-public class HandUpDialog extends DataBindBaseDialog<DialogHandUpBinding> implements OnItemClickListener<Member> {
-    private static final String TAG = HandUpDialog.class.getSimpleName();
+public class InvitedMenuDialog extends DataBindBaseDialog<DialogUserInvitedBinding> implements View.OnClickListener {
+    private static final String TAG = InvitedMenuDialog.class.getSimpleName();
 
-    private HandsUpListAdapter mAdapter;
+    private static final String TAG_OWNER = "owner";
 
-    private static final String TAG_ROOM = "room";
-
-    private Room room;
+    private User owner;
 
     @Nullable
     @Override
@@ -50,7 +42,7 @@ public class HandUpDialog extends DataBindBaseDialog<DialogHandUpBinding> implem
                              @Nullable Bundle savedInstanceState) {
         Window win = getDialog().getWindow();
         WindowManager.LayoutParams params = win.getAttributes();
-        params.gravity = Gravity.BOTTOM;
+        params.gravity = Gravity.TOP;
         params.width = ViewGroup.LayoutParams.MATCH_PARENT;
         params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         win.setAttributes(params);
@@ -60,17 +52,17 @@ public class HandUpDialog extends DataBindBaseDialog<DialogHandUpBinding> implem
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NORMAL, R.style.Dialog_Bottom);
+        setStyle(STYLE_NORMAL, R.style.Dialog_Top);
     }
 
     @Override
     public void iniBundle(@NonNull Bundle bundle) {
-        room = (Room) bundle.getSerializable(TAG_ROOM);
+        owner = (User) bundle.getSerializable(TAG_OWNER);
     }
 
     @Override
     public int getLayoutId() {
-        return R.layout.dialog_hand_up;
+        return R.layout.dialog_user_invited;
     }
 
     @Override
@@ -80,84 +72,85 @@ public class HandUpDialog extends DataBindBaseDialog<DialogHandUpBinding> implem
 
     @Override
     public void iniListener() {
-
+        mDataBinding.btRefuse.setOnClickListener(this);
+        mDataBinding.btAgree.setOnClickListener(this);
     }
 
     @Override
     public void iniData() {
-        mAdapter = new HandsUpListAdapter(null, this);
-        mDataBinding.rvList.setAdapter(mAdapter);
-
-        loadData();
+        setCancelable(false);
+        if (getDialog() != null) {
+            getDialog().setCanceledOnTouchOutside(false);
+        }
+        mDataBinding.tvText.setText(getString(R.string.room_dialog_invited, owner.getName()));
     }
 
-    public void loadData() {
-        DataRepositroy.Instance(requireContext())
-                .getHandUpList()
-                .observeOn(AndroidSchedulers.mainThread())
-                .compose(mLifecycleProvider.bindToLifecycle())
-                .subscribe(new DataObserver<List<Member>>(requireContext()) {
-
-                    @Override
-                    public void handleError(@NonNull BaseError e) {
-
-                    }
-
-                    @Override
-                    public void handleSuccess(@NonNull List<Member> members) {
-                        mAdapter.setDatas(members);
-                    }
-                });
-    }
-
-    public void show(@NonNull FragmentManager manager, @NonNull Room room) {
+    public void show(@NonNull FragmentManager manager, User owner) {
         Bundle intent = new Bundle();
-        intent.putSerializable(TAG_ROOM, room);
+        intent.putSerializable(TAG_OWNER, owner);
         setArguments(intent);
         super.show(manager, TAG);
     }
 
     @Override
-    public void onItemClick(@NonNull Member data, View view, int position, long id) {
-        if (view.getId() == R.id.btRefuse) {
-            clickRefuse(position, data);
-        } else if (view.getId() == R.id.btAgree) {
-            clickAgree(position, data);
+    public void onClick(View v) {
+        if (v.getId() == R.id.btRefuse) {
+            doRefuse();
+        } else if (v.getId() == R.id.btAgree) {
+            doAgree();
         }
     }
 
-    private void clickRefuse(int index, Member data) {
+    private void doAgree() {
+        Member mine = RoomManager.Instance(requireContext()).getMine();
+        if (mine == null) {
+            dismiss();
+            return;
+        }
+
+        mDataBinding.btAgree.setEnabled(false);
         RoomManager.Instance(requireContext())
-                .refuseHandsUp(data)
+                .agreeInvite(mine)
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(mLifecycleProvider.bindToLifecycle())
                 .subscribe(new DataCompletableObserver(requireContext()) {
                     @Override
                     public void handleError(@NonNull BaseError e) {
+                        mDataBinding.btAgree.setEnabled(true);
                         ToastUtile.toastShort(requireContext(), e.getMessage());
                     }
 
                     @Override
                     public void handleSuccess() {
-                        mAdapter.deleteItem(index);
+                        mDataBinding.btAgree.setEnabled(true);
+                        dismiss();
                     }
                 });
     }
 
-    private void clickAgree(int index, Member data) {
+    private void doRefuse() {
+        Member mine = RoomManager.Instance(requireContext()).getMine();
+        if (mine == null) {
+            dismiss();
+            return;
+        }
+
+        mDataBinding.btRefuse.setEnabled(false);
         RoomManager.Instance(requireContext())
-                .agreeHandsUp(data)
+                .refuseInvite(mine)
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(mLifecycleProvider.bindToLifecycle())
                 .subscribe(new DataCompletableObserver(requireContext()) {
                     @Override
                     public void handleError(@NonNull BaseError e) {
+                        mDataBinding.btRefuse.setEnabled(true);
                         ToastUtile.toastShort(requireContext(), e.getMessage());
                     }
 
                     @Override
                     public void handleSuccess() {
-                        mAdapter.deleteItem(index);
+                        mDataBinding.btRefuse.setEnabled(true);
+                        dismiss();
                     }
                 });
     }

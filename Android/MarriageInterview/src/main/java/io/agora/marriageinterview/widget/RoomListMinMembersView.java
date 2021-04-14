@@ -1,4 +1,4 @@
-package io.agora.interactivepodcast.widget;
+package io.agora.marriageinterview.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -13,50 +13,42 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-import io.agora.interactivepodcast.R;
-import io.agora.interactivepodcast.databinding.LayoutRoomListMemebrsBinding;
+import io.agora.marriageinterview.R;
+import io.agora.marriageinterview.databinding.LayoutRoomListMemebrs2Binding;
 import com.agora.data.model.Member;
 
 /**
- * 房间列表显示成员view
+ * 房间列表最小化显示成员view
  *
  * @author chenhengfei@agora.io
  */
-public class RoomListItemMembersView extends ConstraintLayout {
+public class RoomListMinMembersView extends ConstraintLayout {
 
-    protected LayoutRoomListMemebrsBinding mDataBinding;
+    protected LayoutRoomListMemebrs2Binding mDataBinding;
 
-    public RoomListItemMembersView(@NonNull Context context) {
+    public RoomListMinMembersView(@NonNull Context context) {
         super(context);
         init(context, null, 0);
     }
 
-    public RoomListItemMembersView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public RoomListMinMembersView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs, 0);
     }
 
-    public RoomListItemMembersView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public RoomListMinMembersView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs, defStyleAttr);
     }
 
     private void init(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        mDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.layout_room_list_memebrs, this, true);
+        mDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.layout_room_list_memebrs2, this, true);
     }
 
     public void setMemebrs(List<Member> users) {
         mDataBinding.iv1.setVisibility(GONE);
         mDataBinding.iv2.setVisibility(GONE);
         mDataBinding.iv3.setVisibility(GONE);
-
-        mDataBinding.ivName1.setVisibility(GONE);
-        mDataBinding.ivName2.setVisibility(GONE);
-        mDataBinding.ivName3.setVisibility(GONE);
-
-        mDataBinding.ivName1.setText("");
-        mDataBinding.ivName2.setText("");
-        mDataBinding.ivName3.setText("");
 
         if (users == null) {
             return;
@@ -70,9 +62,6 @@ public class RoomListItemMembersView extends ConstraintLayout {
                     .circleCrop()
                     .into(mDataBinding.iv1);
             mDataBinding.iv1.setVisibility(VISIBLE);
-
-            mDataBinding.ivName1.setText(users.get(0).getUserId().getName());
-            mDataBinding.ivName1.setVisibility(VISIBLE);
         }
 
         if (users.size() >= 2) {
@@ -83,9 +72,6 @@ public class RoomListItemMembersView extends ConstraintLayout {
                     .circleCrop()
                     .into(mDataBinding.iv2);
             mDataBinding.iv2.setVisibility(VISIBLE);
-
-            mDataBinding.ivName2.setText(users.get(1).getUserId().getName());
-            mDataBinding.ivName2.setVisibility(VISIBLE);
         }
 
         if (users.size() >= 3) {
@@ -96,9 +82,6 @@ public class RoomListItemMembersView extends ConstraintLayout {
                     .circleCrop()
                     .into(mDataBinding.iv3);
             mDataBinding.iv3.setVisibility(VISIBLE);
-
-            mDataBinding.ivName3.setText(users.get(2).getUserId().getName());
-            mDataBinding.ivName3.setVisibility(VISIBLE);
         }
     }
 }

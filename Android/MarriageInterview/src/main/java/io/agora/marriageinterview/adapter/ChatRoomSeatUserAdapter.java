@@ -1,4 +1,4 @@
-package io.agora.interactivepodcast.adapter;
+package io.agora.marriageinterview.adapter;
 
 import android.view.View;
 
@@ -7,9 +7,9 @@ import androidx.annotation.Nullable;
 
 import java.util.List;
 
-import io.agora.interactivepodcast.R;
+import io.agora.marriageinterview.R;
 import io.agora.baselibrary.base.BaseRecyclerViewAdapter;
-import io.agora.interactivepodcast.databinding.ItemRoomSeatUserBinding;
+import io.agora.marriageinterview.databinding.ItemRoomSeatUserBinding;
 import com.agora.data.model.Member;
 
 /**

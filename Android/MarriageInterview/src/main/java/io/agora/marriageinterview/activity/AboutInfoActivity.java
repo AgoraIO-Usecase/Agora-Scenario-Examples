@@ -1,4 +1,4 @@
-package io.agora.interactivepodcast.activity;
+package io.agora.marriageinterview.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,8 +9,8 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import io.agora.baselibrary.base.DataBindBaseActivity;
-import io.agora.interactivepodcast.R;
-import io.agora.interactivepodcast.databinding.ActivityAboutInfoBinding;
+import io.agora.marriageinterview.R;
+import io.agora.marriageinterview.databinding.ActivityAboutInfoBinding;
 import io.agora.rtc.RtcEngine;
 
 /**

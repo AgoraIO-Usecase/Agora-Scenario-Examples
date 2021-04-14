@@ -1,4 +1,4 @@
-package io.agora.interactivepodcast.widget;
+package io.agora.marriageinterview.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -14,8 +14,8 @@ import androidx.annotation.StringRes;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
 
-import io.agora.interactivepodcast.R;
-import io.agora.interactivepodcast.databinding.LayoutMenuTextBinding;
+import io.agora.marriageinterview.R;
+import io.agora.marriageinterview.databinding.LayoutMenuTextBinding;
 
 /**
  * 菜单显示veiw

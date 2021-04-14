@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.agora.data.Config;
 import com.agora.data.R;
+import com.elvishew.xlog.Logger;
+import com.elvishew.xlog.XLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,12 +16,16 @@ import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
 import io.agora.rtc.RtcEngineConfig;
 import io.agora.rtc.models.ClientRoleOptions;
+import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
 
 public final class RtcManager {
 
+    private Logger.Builder mLogger = XLog.tag(RtcManager.class.getSimpleName());
+
     private final String TAG = RtcManager.class.getSimpleName();
 
-    private static RtcManager instance;
+    private volatile static RtcManager instance;
 
     private Context mContext;
     private RtcEngine mRtcEngine;
@@ -34,7 +40,7 @@ public final class RtcManager {
         mContext = context.getApplicationContext();
     }
 
-    public static RtcManager Instance(Context context) {
+    public static synchronized RtcManager Instance(Context context) {
         if (instance == null) {
             synchronized (RtcManager.class) {
                 if (instance == null)
@@ -45,7 +51,7 @@ public final class RtcManager {
     }
 
     public void init() {
-        Log.d(TAG, "init() called");
+        mLogger.d("init() called");
         if (mRtcEngine == null) {
             RtcEngineConfig config = new RtcEngineConfig();
             config.mContext = mContext;
@@ -62,7 +68,7 @@ public final class RtcManager {
                 mRtcEngine = RtcEngine.create(config);
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.e(TAG, "init: ", e);
+                mLogger.e("init error", e);
             }
         }
 
@@ -71,23 +77,30 @@ public final class RtcManager {
         mRtcEngine.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_HIGH_QUALITY, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
     }
 
-    public void joinChannel(String channelId, int userId) {
-        Log.d(TAG, "joinChannel() called with: channelId = [" + channelId + "], userId = [" + userId + "]");
-        if (mRtcEngine == null) {
-            return;
-        }
+    private SingleEmitter<Integer> emitterJoin;
 
-        if (isJoined) {
-            for (IRtcEngineEventHandler handler : handlers) {
-                handler.onJoinChannelSuccess(channel, uid, 0);
+    public Single<Integer> joinChannel(String channelId, int userId) {
+        mLogger.d("joinChannel() called with: channelId = [" + channelId + "], userId = [" + userId + "]");
+
+        return Single.create(emitter -> {
+            this.emitterJoin = emitter;
+
+            if (mRtcEngine == null) {
+                emitter.onError(new NullPointerException("mRtcEngine is null"));
+                return;
             }
-            return;
-        }
-        mRtcEngine.joinChannel(mContext.getString(R.string.token), channelId, null, userId);
+
+            if (isJoined) {
+                emitter.onSuccess(uid);
+                return;
+            }
+
+            mRtcEngine.joinChannel(mContext.getString(R.string.token), channelId, null, userId);
+        });
     }
 
     public void leaveChannel() {
-        Log.d(TAG, "leaveChannel() called");
+        mLogger.d("leaveChannel() called");
         if (mRtcEngine == null) {
             return;
         }
@@ -95,19 +108,19 @@ public final class RtcManager {
     }
 
     public void setClientRole(int role) {
-        Log.d(TAG, "setClientRole() called with: role = [" + role + "]");
+        mLogger.d("setClientRole() called with: role = [" + role + "]");
         if (mRtcEngine != null)
             mRtcEngine.setClientRole(role);
     }
 
     public void setClientRole(int role, ClientRoleOptions options) {
-        Log.d(TAG, "setClientRole() called with: role = [" + role + "], options = [" + options + "]");
+        mLogger.d("setClientRole() called with: role = [" + role + "], options = [" + options + "]");
         if (mRtcEngine != null)
             mRtcEngine.setClientRole(role, options);
     }
 
     public void startAudio() {
-        Log.d(TAG, "startAudio() called");
+        mLogger.d("startAudio() called");
         if (mRtcEngine == null) {
             return;
         }
@@ -116,7 +129,7 @@ public final class RtcManager {
     }
 
     public void stopAudio() {
-        Log.d(TAG, "stopAudio() called");
+        mLogger.d("stopAudio() called");
         if (mRtcEngine == null) {
             return;
         }
@@ -125,7 +138,7 @@ public final class RtcManager {
     }
 
     public void muteRemoteVideoStream(int uid, boolean muted) {
-        Log.d(TAG, "muteRemoteVideoStream() called with: uid = [" + uid + "], muted = [" + muted + "]");
+        mLogger.d("muteRemoteVideoStream() called with: uid = [" + uid + "], muted = [" + muted + "]");
         if (mRtcEngine == null) {
             return;
         }
@@ -134,7 +147,7 @@ public final class RtcManager {
     }
 
     public void muteLocalAudioStream(boolean muted) {
-        Log.d(TAG, "muteLocalAudioStream() called with: muted = [" + muted + "]");
+        mLogger.d("muteLocalAudioStream() called with: muted = [" + muted + "]");
         if (mRtcEngine == null) {
             return;
         }
@@ -177,16 +190,17 @@ public final class RtcManager {
         @Override
         public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
             super.onJoinChannelSuccess(channel, uid, elapsed);
-            Log.d(TAG, "onJoinChannelSuccess() called with: channel = [" + channel + "], uid = [" + uid + "], elapsed = [" + elapsed + "]");
+            mLogger.d("onJoinChannelSuccess() called with: channel = [" + channel + "], uid = [" + uid + "], elapsed = [" + elapsed + "]");
             RtcManager.this.isJoined = true;
             RtcManager.this.channel = channel;
             RtcManager.this.uid = uid;
+            RtcManager.this.emitterJoin.onSuccess(uid);
         }
 
         @Override
         public void onLeaveChannel(RtcStats stats) {
             super.onLeaveChannel(stats);
-            Log.d(TAG, "onLeaveChannel() called with: stats = [" + stats + "]");
+            mLogger.d("onLeaveChannel() called with: stats = [" + stats + "]");
             RtcManager.this.isJoined = false;
             RtcManager.this.channel = null;
             RtcManager.this.uid = 0;
@@ -195,25 +209,25 @@ public final class RtcManager {
         @Override
         public void onUserJoined(int uid, int elapsed) {
             super.onUserJoined(uid, elapsed);
-            Log.d(TAG, "onUserJoined() called with: uid = [" + uid + "], elapsed = [" + elapsed + "]");
+            mLogger.d("onUserJoined() called with: uid = [" + uid + "], elapsed = [" + elapsed + "]");
         }
 
         @Override
         public void onUserOffline(int uid, int reason) {
             super.onUserOffline(uid, reason);
-            Log.d(TAG, "onUserOffline() called with: uid = [" + uid + "], reason = [" + reason + "]");
+            mLogger.d("onUserOffline() called with: uid = [" + uid + "], reason = [" + reason + "]");
         }
 
         @Override
         public void onLocalAudioStateChanged(int state, int error) {
             super.onLocalAudioStateChanged(state, error);
-            Log.d(TAG, "onLocalAudioStateChanged() called with: state = [" + state + "], error = [" + error + "]");
+            mLogger.d("onLocalAudioStateChanged() called with: state = [" + state + "], error = [" + error + "]");
         }
 
         @Override
         public void onRemoteAudioStateChanged(int uid, int state, int reason, int elapsed) {
             super.onRemoteAudioStateChanged(uid, state, reason, elapsed);
-            Log.d(TAG, "onRemoteAudioStateChanged() called with: uid = [" + uid + "], state = [" + state + "], reason = [" + reason + "], elapsed = [" + elapsed + "]");
+            mLogger.d("onRemoteAudioStateChanged() called with: uid = [" + uid + "], state = [" + state + "], reason = [" + reason + "], elapsed = [" + elapsed + "]");
         }
     };
 }

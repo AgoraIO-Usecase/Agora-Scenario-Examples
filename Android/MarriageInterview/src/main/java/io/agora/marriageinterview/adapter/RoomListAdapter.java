@@ -1,4 +1,4 @@
-package io.agora.interactivepodcast.adapter;
+package io.agora.marriageinterview.adapter;
 
 import android.content.Context;
 import android.view.View;
@@ -16,8 +16,8 @@ import com.agora.data.observer.DataObserver;
 import java.util.List;
 
 import io.agora.baselibrary.base.BaseRecyclerViewAdapter;
-import io.agora.interactivepodcast.R;
-import io.agora.interactivepodcast.databinding.ItemRoomsBinding;
+import io.agora.marriageinterview.R;
+import io.agora.marriageinterview.databinding.ItemRoomsBinding;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
