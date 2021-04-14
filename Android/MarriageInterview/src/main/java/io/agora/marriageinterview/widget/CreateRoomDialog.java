@@ -1,4 +1,4 @@
-package io.agora.interactivepodcast.widget;
+package io.agora.marriageinterview.widget;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,9 +25,9 @@ import java.util.Random;
 
 import io.agora.baselibrary.base.DataBindBaseDialog;
 import io.agora.baselibrary.util.ToastUtile;
-import io.agora.interactivepodcast.R;
-import io.agora.interactivepodcast.activity.ChatRoomActivity;
-import io.agora.interactivepodcast.databinding.DialogCreateRoomBinding;
+import io.agora.marriageinterview.R;
+import io.agora.marriageinterview.activity.ChatRoomActivity;
+import io.agora.marriageinterview.databinding.DialogCreateRoomBinding;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**

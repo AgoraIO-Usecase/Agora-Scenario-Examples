@@ -1,4 +1,4 @@
-package io.agora.interactivepodcast;
+package io.agora.marriageinterview;
 
 import org.junit.Test;
 

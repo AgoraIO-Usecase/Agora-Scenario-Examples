@@ -1,4 +1,4 @@
-package io.agora.interactivepodcast.activity;
+package io.agora.marriageinterview.activity;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -22,9 +22,9 @@ import com.bumptech.glide.Glide;
 
 import io.agora.baselibrary.base.DataBindBaseActivity;
 import io.agora.baselibrary.util.ToastUtile;
-import io.agora.interactivepodcast.R;
-import io.agora.interactivepodcast.databinding.ActivityUserInfoBinding;
-import io.agora.interactivepodcast.widget.MenuTextView;
+import io.agora.marriageinterview.R;
+import io.agora.marriageinterview.databinding.ActivityUserInfoBinding;
+import io.agora.marriageinterview.widget.MenuTextView;
 import io.agora.rtc.Constants;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 

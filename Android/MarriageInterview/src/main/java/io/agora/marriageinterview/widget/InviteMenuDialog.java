@@ -1,4 +1,4 @@
-package io.agora.interactivepodcast.widget;
+package io.agora.marriageinterview.widget;
 
 import android.os.Bundle;
 import android.view.Gravity;
@@ -21,8 +21,8 @@ import com.bumptech.glide.Glide;
 
 import io.agora.baselibrary.base.DataBindBaseDialog;
 import io.agora.baselibrary.util.ToastUtile;
-import io.agora.interactivepodcast.R;
-import io.agora.interactivepodcast.databinding.DialogUserInviteBinding;
+import io.agora.marriageinterview.R;
+import io.agora.marriageinterview.databinding.DialogUserInviteBinding;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**

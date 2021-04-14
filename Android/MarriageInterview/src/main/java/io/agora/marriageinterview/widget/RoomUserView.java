@@ -1,4 +1,4 @@
-package io.agora.interactivepodcast.widget;
+package io.agora.marriageinterview.widget;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -16,8 +16,8 @@ import androidx.databinding.DataBindingUtil;
 
 import com.bumptech.glide.Glide;
 
-import io.agora.interactivepodcast.R;
-import io.agora.interactivepodcast.databinding.LayoutRoomUserBinding;
+import io.agora.marriageinterview.R;
+import io.agora.marriageinterview.databinding.LayoutRoomUserBinding;
 import com.agora.data.model.Member;
 import com.agora.data.model.User;
 

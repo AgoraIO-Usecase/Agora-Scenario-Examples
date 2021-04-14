@@ -1,4 +1,4 @@
-package io.agora.interactivepodcast.widget;
+package io.agora.marriageinterview.widget;
 
 import android.os.Bundle;
 import android.view.Gravity;
@@ -17,24 +17,25 @@ import com.agora.data.manager.RoomManager;
 import com.agora.data.model.Member;
 import com.agora.data.model.User;
 import com.agora.data.observer.DataCompletableObserver;
+import com.bumptech.glide.Glide;
 
 import io.agora.baselibrary.base.DataBindBaseDialog;
 import io.agora.baselibrary.util.ToastUtile;
-import io.agora.interactivepodcast.R;
-import io.agora.interactivepodcast.databinding.DialogUserInvitedBinding;
+import io.agora.marriageinterview.R;
+import io.agora.marriageinterview.databinding.DialogUserSeatMenuBinding;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
- * 被邀请菜单
+ * 房间用户菜单
  *
  * @author chenhengfei@agora.io
  */
-public class InvitedMenuDialog extends DataBindBaseDialog<DialogUserInvitedBinding> implements View.OnClickListener {
-    private static final String TAG = InvitedMenuDialog.class.getSimpleName();
+public class UserSeatMenuDialog extends DataBindBaseDialog<DialogUserSeatMenuBinding> implements View.OnClickListener {
+    private static final String TAG = UserSeatMenuDialog.class.getSimpleName();
 
-    private static final String TAG_OWNER = "owner";
+    private static final String TAG_USER = "user";
 
-    private User owner;
+    private Member mMember;
 
     @Nullable
     @Override
@@ -42,7 +43,7 @@ public class InvitedMenuDialog extends DataBindBaseDialog<DialogUserInvitedBindi
                              @Nullable Bundle savedInstanceState) {
         Window win = getDialog().getWindow();
         WindowManager.LayoutParams params = win.getAttributes();
-        params.gravity = Gravity.TOP;
+        params.gravity = Gravity.BOTTOM;
         params.width = ViewGroup.LayoutParams.MATCH_PARENT;
         params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         win.setAttributes(params);
@@ -52,17 +53,17 @@ public class InvitedMenuDialog extends DataBindBaseDialog<DialogUserInvitedBindi
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NORMAL, R.style.Dialog_Top);
+        setStyle(STYLE_NORMAL, R.style.Dialog_Bottom);
     }
 
     @Override
     public void iniBundle(@NonNull Bundle bundle) {
-        owner = (User) bundle.getSerializable(TAG_OWNER);
+        mMember = (Member) bundle.getSerializable(TAG_USER);
     }
 
     @Override
     public int getLayoutId() {
-        return R.layout.dialog_user_invited;
+        return R.layout.dialog_user_seat_menu;
     }
 
     @Override
@@ -72,84 +73,101 @@ public class InvitedMenuDialog extends DataBindBaseDialog<DialogUserInvitedBindi
 
     @Override
     public void iniListener() {
-        mDataBinding.btRefuse.setOnClickListener(this);
-        mDataBinding.btAgree.setOnClickListener(this);
+        mDataBinding.btSeatoff.setOnClickListener(this);
+        mDataBinding.btAudio.setOnClickListener(this);
     }
 
     @Override
     public void iniData() {
-        setCancelable(false);
-        if (getDialog() != null) {
-            getDialog().setCanceledOnTouchOutside(false);
-        }
-        mDataBinding.tvText.setText(getString(R.string.room_dialog_invited, owner.getName()));
+        User mUser = mMember.getUserId();
+        mDataBinding.tvName.setText(mUser.getName());
+        Glide.with(this)
+                .load(mUser.getAvatarRes())
+                .placeholder(R.mipmap.default_head)
+                .error(R.mipmap.default_head)
+                .circleCrop()
+                .into(mDataBinding.ivUser);
+        refreshAudioView();
     }
 
-    public void show(@NonNull FragmentManager manager, User owner) {
+    private void refreshAudioView() {
+        if (mMember.getIsMuted() == 1) {
+            mDataBinding.ivAudio.setImageResource(R.mipmap.icon_microphoneon);
+            mDataBinding.btAudio.setText(R.string.room_dialog_open_audio);
+        } else if (mMember.getIsSelfMuted() == 1) {
+            mDataBinding.ivAudio.setImageResource(R.mipmap.icon_microphoneon);
+            mDataBinding.btAudio.setText(R.string.room_dialog_open_audio);
+        } else {
+            mDataBinding.ivAudio.setImageResource(R.mipmap.icon_microphoneon);
+            mDataBinding.btAudio.setText(R.string.room_dialog_close_audio);
+        }
+    }
+
+    public void show(@NonNull FragmentManager manager, Member data) {
         Bundle intent = new Bundle();
-        intent.putSerializable(TAG_OWNER, owner);
+        intent.putSerializable(TAG_USER, data);
         setArguments(intent);
         super.show(manager, TAG);
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.btRefuse) {
-            doRefuse();
-        } else if (v.getId() == R.id.btAgree) {
-            doAgree();
+        if (v.getId() == R.id.btSeatoff) {
+            seatOff();
+        } else if (v.getId() == R.id.btAudio) {
+            toggleAudio();
         }
     }
 
-    private void doAgree() {
-        Member mine = RoomManager.Instance(requireContext()).getMine();
-        if (mine == null) {
-            dismiss();
-            return;
+    private void toggleAudio() {
+        if (!RoomManager.Instance(requireContext()).isOwner()) {
+            Member member = RoomManager.Instance(requireContext()).getMine();
+            if (member == null) {
+                return;
+            }
+
+            if (member.getIsMuted() == 1) {
+                ToastUtile.toastShort(requireContext(), R.string.member_muted);
+                return;
+            }
         }
 
-        mDataBinding.btAgree.setEnabled(false);
+        mDataBinding.btAudio.setEnabled(false);
         RoomManager.Instance(requireContext())
-                .agreeInvite(mine)
+                .toggleTargetAudio(mMember)
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(mLifecycleProvider.bindToLifecycle())
                 .subscribe(new DataCompletableObserver(requireContext()) {
                     @Override
                     public void handleError(@NonNull BaseError e) {
-                        mDataBinding.btAgree.setEnabled(true);
+                        mDataBinding.btAudio.setEnabled(true);
                         ToastUtile.toastShort(requireContext(), e.getMessage());
                     }
 
                     @Override
                     public void handleSuccess() {
-                        mDataBinding.btAgree.setEnabled(true);
-                        dismiss();
+                        mDataBinding.btAudio.setEnabled(true);
+                        refreshAudioView();
                     }
                 });
     }
 
-    private void doRefuse() {
-        Member mine = RoomManager.Instance(requireContext()).getMine();
-        if (mine == null) {
-            dismiss();
-            return;
-        }
-
-        mDataBinding.btRefuse.setEnabled(false);
+    private void seatOff() {
+        mDataBinding.btSeatoff.setEnabled(false);
         RoomManager.Instance(requireContext())
-                .refuseInvite(mine)
+                .seatOff(mMember)
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(mLifecycleProvider.bindToLifecycle())
                 .subscribe(new DataCompletableObserver(requireContext()) {
                     @Override
                     public void handleError(@NonNull BaseError e) {
-                        mDataBinding.btRefuse.setEnabled(true);
+                        mDataBinding.btSeatoff.setEnabled(true);
                         ToastUtile.toastShort(requireContext(), e.getMessage());
                     }
 
                     @Override
                     public void handleSuccess() {
-                        mDataBinding.btRefuse.setEnabled(true);
+                        mDataBinding.btSeatoff.setEnabled(true);
                         dismiss();
                     }
                 });

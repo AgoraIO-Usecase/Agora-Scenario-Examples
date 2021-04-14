@@ -1,27 +1,27 @@
-package io.agora.interactivepodcast.adapter;
+package io.agora.marriageinterview.adapter;
 
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.agora.data.model.Member;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+import io.agora.marriageinterview.R;
 import io.agora.baselibrary.base.BaseRecyclerViewAdapter;
-import io.agora.interactivepodcast.R;
-import io.agora.interactivepodcast.databinding.ItemHandsupListBinding;
+import io.agora.marriageinterview.databinding.ItemRoomListenerBinding;
+import com.agora.data.model.Member;
 
 /**
- * 举手列表
+ * 房间上坐用户
  *
  * @author chenhengfei@agora.io
  */
-public class HandsUpListAdapter extends BaseRecyclerViewAdapter<Member, HandsUpListAdapter.ViewHolder> {
+public class ChatRoomListsnerAdapter extends BaseRecyclerViewAdapter<Member, ChatRoomListsnerAdapter.ViewHolder> {
 
-    public HandsUpListAdapter(@Nullable List<Member> datas, @Nullable Object listener) {
+    public ChatRoomListsnerAdapter(@Nullable List<Member> datas, @Nullable Object listener) {
         super(datas, listener);
     }
 
@@ -32,7 +32,7 @@ public class HandsUpListAdapter extends BaseRecyclerViewAdapter<Member, HandsUpL
 
     @Override
     public int getLayoutId() {
-        return R.layout.item_handsup_list;
+        return R.layout.item_room_listener;
     }
 
     @Override
@@ -51,13 +51,10 @@ public class HandsUpListAdapter extends BaseRecyclerViewAdapter<Member, HandsUpL
         holder.mDataBinding.tvName.setText(item.getUserId().getName());
     }
 
-    static class ViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder<ItemHandsupListBinding> {
+    class ViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder<ItemRoomListenerBinding> {
 
-        ViewHolder(View view) {
+        public ViewHolder(View view) {
             super(view);
-
-            mDataBinding.btRefuse.setOnClickListener(this::onItemClick);
-            mDataBinding.btAgree.setOnClickListener(this::onItemClick);
         }
     }
 }

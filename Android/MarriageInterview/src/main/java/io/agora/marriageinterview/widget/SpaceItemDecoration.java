@@ -1,4 +1,4 @@
-package io.agora.interactivepodcast.widget;
+package io.agora.marriageinterview.widget;
 
 import android.content.Context;
 import android.graphics.Rect;
@@ -7,7 +7,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import io.agora.interactivepodcast.R;
+import io.agora.marriageinterview.R;
 
 /**
  * 分割线

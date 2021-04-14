@@ -1,4 +1,4 @@
-package io.agora.interactivepodcast.activity;
+package io.agora.marriageinterview.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,8 +8,8 @@ import androidx.annotation.NonNull;
 import com.agora.data.manager.UserManager;
 
 import io.agora.baselibrary.base.DataBindBaseActivity;
-import io.agora.interactivepodcast.R;
-import io.agora.interactivepodcast.databinding.ActivitySplashBinding;
+import io.agora.marriageinterview.R;
+import io.agora.marriageinterview.databinding.ActivitySplashBinding;
 
 /**
  * 闪屏界面

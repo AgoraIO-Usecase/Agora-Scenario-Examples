@@ -1,4 +1,4 @@
-package io.agora.interactivepodcast.activity;
+package io.agora.marriageinterview.activity;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,6 +23,7 @@ import com.agora.data.model.User;
 import com.agora.data.observer.DataCompletableObserver;
 import com.agora.data.observer.DataMaybeObserver;
 import com.agora.data.observer.DataObserver;
+import com.agora.data.observer.DataSingleObserver;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
@@ -30,14 +31,14 @@ import java.util.List;
 import io.agora.baselibrary.base.DataBindBaseActivity;
 import io.agora.baselibrary.base.OnItemClickListener;
 import io.agora.baselibrary.util.ToastUtile;
-import io.agora.interactivepodcast.R;
-import io.agora.interactivepodcast.adapter.ChatRoomListsnerAdapter;
-import io.agora.interactivepodcast.adapter.ChatRoomSeatUserAdapter;
-import io.agora.interactivepodcast.databinding.ActivityChatRoomBinding;
-import io.agora.interactivepodcast.widget.HandUpDialog;
-import io.agora.interactivepodcast.widget.InviteMenuDialog;
-import io.agora.interactivepodcast.widget.InvitedMenuDialog;
-import io.agora.interactivepodcast.widget.UserSeatMenuDialog;
+import io.agora.marriageinterview.R;
+import io.agora.marriageinterview.adapter.ChatRoomListsnerAdapter;
+import io.agora.marriageinterview.adapter.ChatRoomSeatUserAdapter;
+import io.agora.marriageinterview.databinding.ActivityChatRoomBinding;
+import io.agora.marriageinterview.widget.HandUpDialog;
+import io.agora.marriageinterview.widget.InviteMenuDialog;
+import io.agora.marriageinterview.widget.InvitedMenuDialog;
+import io.agora.marriageinterview.widget.UserSeatMenuDialog;
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
@@ -94,27 +95,6 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
     }
 
     private final IRtcEngineEventHandler mIRtcEngineEventHandler = new IRtcEngineEventHandler() {
-        @Override
-        public void onError(int err) {
-            super.onError(err);
-        }
-
-        @Override
-        public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
-            super.onJoinChannelSuccess(channel, uid, elapsed);
-            if (RoomManager.isLeaving) {
-                return;
-            }
-
-            Member member = RoomManager.Instance(ChatRoomActivity.this).getMine();
-            if (member == null) {
-                return;
-            }
-
-            long streamId = uid & 0xffffffffL;
-            member.setStreamId(streamId);
-            onRTCRoomJoined();
-        }
     };
 
     @Override
@@ -381,7 +361,32 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
         }
 
         String objectId = room.getObjectId();
-        RtcManager.Instance(this).joinChannel(objectId, userId);
+        RtcManager.Instance(this).joinChannel(objectId, userId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(mLifecycleProvider.bindToLifecycle())
+                .subscribe(new DataSingleObserver<Integer>(this) {
+
+                    @Override
+                    public void handleError(@NonNull BaseError e) {
+
+                    }
+
+                    @Override
+                    public void handleSuccess(@NonNull Integer uid) {
+                        if (RoomManager.isLeaving) {
+                            return;
+                        }
+
+                        Member member = RoomManager.Instance(ChatRoomActivity.this).getMine();
+                        if (member == null) {
+                            return;
+                        }
+
+                        long streamId = uid & 0xffffffffL;
+                        member.setStreamId(streamId);
+                        onRTCRoomJoined();
+                    }
+                });
     }
 
     private void onRTCRoomJoined() {
