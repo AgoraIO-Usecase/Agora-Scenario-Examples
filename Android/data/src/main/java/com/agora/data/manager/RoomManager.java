@@ -14,6 +14,7 @@ import com.agora.data.RoomEventCallback;
 import com.agora.data.model.Member;
 import com.agora.data.model.Room;
 import com.agora.data.observer.DataCompletableObserver;
+import com.agora.data.provider.IRoomConfigProvider;
 import com.agora.data.provider.IRoomProxy;
 import com.elvishew.xlog.Logger;
 import com.elvishew.xlog.XLog;
@@ -27,9 +28,10 @@ import io.agora.rtc.Constants;
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.models.ClientRoleOptions;
 import io.reactivex.Completable;
+import io.reactivex.CompletableSource;
 import io.reactivex.Maybe;
-import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 /**
  * 负责房间内数据的管理以及事件通知
@@ -38,7 +40,7 @@ public final class RoomManager implements IRoomProxy {
 
     public static final String TAG_AUDIENCELATENCYLEVEL = "audienceLatencyLevel";
 
-    private Logger.Builder mLogger = XLog.tag("RoomManager");
+    private Logger.Builder mLogger = XLog.tag(RoomManager.class.getSimpleName());
 
     public static final int ERROR_REGISTER_LEANCLOUD = 1000;
     public static final int ERROR_REGISTER_LEANCLOUD_EXCEEDED_QUOTA = ERROR_REGISTER_LEANCLOUD + 1;
@@ -50,6 +52,8 @@ public final class RoomManager implements IRoomProxy {
     private RoomManager(Context context) {
         mContext = context.getApplicationContext();
     }
+
+    private IRoomConfigProvider roomConfig;
 
     private final IRtcEngineEventHandler mIRtcEngineEventHandler = new IRtcEngineEventHandler() {
     };
@@ -84,6 +88,50 @@ public final class RoomManager implements IRoomProxy {
 
     private final MainThreadDispatch mainThreadDispatch = new MainThreadDispatch();
 
+    public void setupRoomConfig(IRoomConfigProvider roomConfig) {
+        this.roomConfig = roomConfig;
+        RtcManager.Instance(mContext).setupRoomConfig(roomConfig);
+    }
+
+    /**
+     * 先加入RTC房间，获取userId，然后加入到业务服务器。
+     */
+    public Completable joinRoom() {
+        mLogger.d("joinRoom() called");
+
+        Room room = getRoom();
+        if (room == null) {
+            return Completable.complete();
+        }
+
+        Member member = getMine();
+        if (member == null) {
+            return Completable.complete();
+        }
+
+        int userId = 0;
+        if (member.getStreamId() != null) {
+            userId = member.getStreamId().intValue();
+        }
+
+        String objectId = room.getObjectId();
+        return RtcManager.Instance(mContext).joinChannel(objectId, userId).flatMapCompletable(new Function<Integer, CompletableSource>() {
+            @Override
+            public CompletableSource apply(@NonNull Integer uid) throws Exception {
+                long streamId = uid & 0xffffffffL;
+                member.setStreamId(streamId);
+                return DataRepositroy.Instance(mContext).joinRoom(room, member).concatMapCompletable(new Function<Member, CompletableSource>() {
+                    @Override
+                    public CompletableSource apply(@NonNull Member member) throws Exception {
+                        mMine = member;
+                        mLogger.d("joinRoom() doOnComplete called member= [%s]", mMine);
+                        return Completable.complete();
+                    }
+                });
+            }
+        });
+    }
+
     public Completable requestHandsUp() {
         mLogger.d("requestHandsUp() called");
         return DataRepositroy.Instance(mContext)
@@ -105,7 +153,7 @@ public final class RoomManager implements IRoomProxy {
                     public void run() throws Exception {
                         mMine.setIsSelfMuted(newValue);
 
-                        RtcManager.Instance(mContext).muteLocalAudioStream(newValue == 1);
+                        RtcManager.Instance(mContext).getRtcEngine().muteLocalAudioStream(newValue == 1);
                         onAudioStatusChanged(true, mMine);
                     }
                 });
@@ -125,7 +173,7 @@ public final class RoomManager implements IRoomProxy {
                     public void run() throws Exception {
                         member.setIsMuted(newValue);
 
-                        RtcManager.Instance(mContext).muteRemoteVideoStream(member.getStreamId().intValue(), newValue != 0);
+                        RtcManager.Instance(mContext).getRtcEngine().muteRemoteVideoStream(member.getStreamId().intValue(), newValue != 0);
                         onAudioStatusChanged(false, member);
                     }
                 });
@@ -155,19 +203,6 @@ public final class RoomManager implements IRoomProxy {
 
     public void removeRoomEventCallback(@NonNull RoomEventCallback callback) {
         this.mainThreadDispatch.removeRoomEventCallback(callback);
-    }
-
-    public Observable<Member> joinRoom() {
-        mLogger.d("joinRoom() called");
-        return DataRepositroy.Instance(mContext)
-                .joinRoom(mRoom, mMine)
-                .doOnNext(new Consumer<Member>() {
-                    @Override
-                    public void accept(Member member) throws Exception {
-                        mLogger.d("joinRoom() called member= [%s]", member);
-                        mMine = member;
-                    }
-                });
     }
 
     public void onJoinRoom(Room room, Member member) {
@@ -262,17 +297,30 @@ public final class RoomManager implements IRoomProxy {
     }
 
     public void startLivePlay() {
-        RtcManager.Instance(mContext).startAudio();
-        RtcManager.Instance(mContext).setClientRole(IRtcEngineEventHandler.ClientRole.CLIENT_ROLE_BROADCASTER);
+        if (roomConfig.isNeedAudio()) {
+            RtcManager.Instance(mContext).getRtcEngine().enableLocalAudio(true);
+        }
+
+        if (roomConfig.isNeedVideo()) {
+            RtcManager.Instance(mContext).getRtcEngine().enableLocalVideo(true);
+        }
+
+        RtcManager.Instance(mContext).getRtcEngine().setClientRole(IRtcEngineEventHandler.ClientRole.CLIENT_ROLE_BROADCASTER);
     }
 
     public void stopLivePlay() {
-        RtcManager.Instance(mContext).stopAudio();
+        if (roomConfig.isNeedAudio()) {
+            RtcManager.Instance(mContext).getRtcEngine().enableLocalAudio(false);
+        }
+
+        if (roomConfig.isNeedVideo()) {
+            RtcManager.Instance(mContext).getRtcEngine().enableLocalVideo(false);
+        }
 
         int audienceLatencyLevel = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(TAG_AUDIENCELATENCYLEVEL, Constants.AUDIENCE_LATENCY_LEVEL_ULTRA_LOW_LATENCY);
         ClientRoleOptions mClientRoleOptions = new ClientRoleOptions();
         mClientRoleOptions.audienceLatencyLevel = audienceLatencyLevel;
-        RtcManager.Instance(mContext).setClientRole(IRtcEngineEventHandler.ClientRole.CLIENT_ROLE_AUDIENCE, mClientRoleOptions);
+        RtcManager.Instance(mContext).getRtcEngine().setClientRole(IRtcEngineEventHandler.ClientRole.CLIENT_ROLE_AUDIENCE, mClientRoleOptions);
     }
 
     public Maybe<Member> getMember(String userId) {
