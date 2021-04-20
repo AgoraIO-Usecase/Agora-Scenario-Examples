@@ -323,7 +323,7 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
         Room roomCur = RoomManager.Instance(this).getRoom();
         if (roomCur != null) {
             if (!ObjectsCompat.equals(roomCur, data)) {
-                ToastUtile.toastShort(this, "您已经加入了一个房间，请先退出");
+                ToastUtile.toastShort(this, R.string.error_joined_room);
                 return;
             }
         }

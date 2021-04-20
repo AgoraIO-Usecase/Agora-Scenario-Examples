@@ -69,7 +69,7 @@ public class AboutInfoActivity extends DataBindBaseActivity<ActivityAboutInfoBin
     }
 
     private void clickMenu1() {
-        Uri uri = Uri.parse("https://www.agora.io/cn/privacy-policy/");
+        Uri uri = Uri.parse(getString(R.string.about_privacy_policy));
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
@@ -80,7 +80,7 @@ public class AboutInfoActivity extends DataBindBaseActivity<ActivityAboutInfoBin
     }
 
     private void clickMenu3() {
-        Uri uri = Uri.parse("https://sso.agora.io/cn/v3/signup");
+        Uri uri = Uri.parse(getString(R.string.about_signup));
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

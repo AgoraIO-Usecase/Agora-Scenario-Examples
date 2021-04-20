@@ -19,6 +19,7 @@
     <string name="main_create_dialog_des">The max duration per session is 10 minutes.</string>
     <string name="error_room_not_exsit">The room does not exist</string>
 
+    <string name="error_joined_room">You have joined a room. Please leave it first.</string>
     <string name="error_room_default">Room exception(%s)</string>
     <string name="room_name_speaker">Speaker</string>
     <string name="room_name_listener">Audience</string>
@@ -29,8 +30,8 @@
     <string name="room_dialog_seat_off">Become audience</string>
     <string name="room_dialog_open_audio">Turn on mic</string>
     <string name="room_dialog_close_audio">Turn off mic</string>
-    <string name="room_dialog_close_title">Close room</string>
-    <string name="room_dialog_close_message">Ending the room will remove everyone and close the room</string>
+    <string name="room_dialog_close_title">Leave room</string>
+    <string name="room_dialog_close_message">Leaving the room ends the session and removes everyone</string>
     <string name="room_dialog_invite">Invite to speak</string>
     <string name="room_dialog_invited">%s invites you to speak</string>
     <string name="invite_refuse">%s declines your request</string>
@@ -51,6 +52,9 @@
     <string name="about_menu4">Released on</string>
     <string name="about_menu5">SDK version</string>
     <string name="about_menu6">Livecast version</string>
+
+    <string name="about_privacy_policy">https://www.agora.io/en/privacy-policy/</string>
+    <string name="about_signup">https://sso.agora.io/en/v3/signup</string>
 
     <string name="about_product_title">Product disclaimer</string>
     <string name="about_product_text">\t\t\t\tAgora Livecast ("this product") is a product provided by Agora . Agora enjoys the copyright and ownership of this product. It is hereby granted free of charge to anyone who obtains a copy of this product and related documentation (hereinafter referred to as "software") to try the software without limitation, including but not limited to trial, copy, modify, merge, publish, distribute, but this product shall not be used For any commercial use, you may not sublicense and / or sell copies of the software.
