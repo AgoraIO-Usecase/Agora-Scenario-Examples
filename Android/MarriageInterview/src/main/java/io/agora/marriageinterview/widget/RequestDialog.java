@@ -14,15 +14,15 @@ import androidx.fragment.app.FragmentManager;
 
 import io.agora.baselibrary.base.DataBindBaseDialog;
 import io.agora.marriageinterview.R;
-import io.agora.marriageinterview.databinding.DialogUserInviteBinding;
+import io.agora.marriageinterview.databinding.DialogRequestBinding;
 
 /**
- * 邀请菜单
+ * 申请连麦
  *
  * @author chenhengfei@agora.io
  */
-public class InviteMenuDialog extends DataBindBaseDialog<DialogUserInviteBinding> {
-    private static final String TAG = InviteMenuDialog.class.getSimpleName();
+public class RequestDialog extends DataBindBaseDialog<DialogRequestBinding> implements View.OnClickListener {
+    private static final String TAG = RequestDialog.class.getSimpleName();
 
     @Nullable
     @Override
@@ -49,7 +49,7 @@ public class InviteMenuDialog extends DataBindBaseDialog<DialogUserInviteBinding
 
     @Override
     public int getLayoutId() {
-        return R.layout.dialog_user_invite;
+        return R.layout.dialog_request;
     }
 
     @Override
@@ -59,10 +59,13 @@ public class InviteMenuDialog extends DataBindBaseDialog<DialogUserInviteBinding
 
     @Override
     public void iniListener() {
+        mDataBinding.btCancel.setOnClickListener(this);
+        mDataBinding.btConfirm.setOnClickListener(this);
     }
 
     @Override
     public void iniData() {
+
     }
 
     public void show(@NonNull FragmentManager manager) {
@@ -71,8 +74,17 @@ public class InviteMenuDialog extends DataBindBaseDialog<DialogUserInviteBinding
         super.show(manager, TAG);
     }
 
-    private void invite() {
-//        mDataBinding.btFuntion.setEnabled(false);
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.btCancel) {
+            dismiss();
+        } else if (v.getId() == R.id.btConfirm) {
+            doRequest();
+        }
+    }
+
+    private void doRequest() {
+        mDataBinding.btConfirm.setEnabled(false);
 //        DataRepositroy.Instance(requireContext())
 //                .inviteSeat(mMember)
 //                .observeOn(AndroidSchedulers.mainThread())
@@ -80,13 +92,13 @@ public class InviteMenuDialog extends DataBindBaseDialog<DialogUserInviteBinding
 //                .subscribe(new DataCompletableObserver(requireContext()) {
 //                    @Override
 //                    public void handleError(@NonNull BaseError e) {
-//                        mDataBinding.btFuntion.setEnabled(true);
+//                        mDataBinding.btConfirm.setEnabled(true);
 //                        ToastUtile.toastShort(requireContext(), e.getMessage());
 //                    }
 //
 //                    @Override
 //                    public void handleSuccess() {
-//                        mDataBinding.btFuntion.setEnabled(true);
+//                        mDataBinding.btConfirm.setEnabled(true);
 //                        dismiss();
 //                    }
 //                });

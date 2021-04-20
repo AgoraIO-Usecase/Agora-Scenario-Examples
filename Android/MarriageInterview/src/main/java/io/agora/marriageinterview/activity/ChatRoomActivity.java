@@ -9,13 +9,11 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.agora.data.BaseError;
 import com.agora.data.DataRepositroy;
 import com.agora.data.RoomEventCallback;
 import com.agora.data.manager.RoomManager;
-import com.agora.data.manager.RtcManager;
 import com.agora.data.manager.UserManager;
 import com.agora.data.model.Member;
 import com.agora.data.model.Room;
@@ -24,28 +22,25 @@ import com.agora.data.observer.DataCompletableObserver;
 import com.agora.data.observer.DataMaybeObserver;
 import com.agora.data.observer.DataObserver;
 import com.agora.data.provider.IRoomConfigProvider;
-import com.bumptech.glide.Glide;
 
 import java.util.List;
 
 import io.agora.baselibrary.base.DataBindBaseActivity;
-import io.agora.baselibrary.base.OnItemClickListener;
 import io.agora.baselibrary.util.ToastUtile;
 import io.agora.marriageinterview.R;
-import io.agora.marriageinterview.adapter.ChatRoomListsnerAdapter;
-import io.agora.marriageinterview.adapter.ChatRoomSeatUserAdapter;
+import io.agora.marriageinterview.adapter.RoomMembersAdapter;
+import io.agora.marriageinterview.adapter.RoomMessagesAdapter;
 import io.agora.marriageinterview.databinding.ActivityChatRoomBinding;
 import io.agora.marriageinterview.widget.HandUpDialog;
 import io.agora.marriageinterview.widget.InviteMenuDialog;
 import io.agora.marriageinterview.widget.InvitedMenuDialog;
 import io.agora.marriageinterview.widget.UserSeatMenuDialog;
 import io.agora.rtc.Constants;
-import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
- * 聊天室
+ * 直播
  * 1. 查询Room表，房间是否存在，不存在就退出。
  * 2. 查询Member表
  * 2.1. 不存在就创建用户，并且用0加入到RTC，利用RTC分配一个唯一的uid，并且修改member的streamId值，这里注意，rtc分配的uid是int类型，需要进行（& 0xffffffffL）转换成long类型。
@@ -59,36 +54,8 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
 
     private static final String TAG_ROOM = "room";
 
-    private ChatRoomSeatUserAdapter mSpeakerAdapter;
-    private ChatRoomListsnerAdapter mListenerAdapter;
-
-    private OnItemClickListener<Member> onitemSpeaker = new OnItemClickListener<Member>() {
-        @Override
-        public void onItemClick(@NonNull Member data, View view, int position, long id) {
-            if (isOwner()) {
-                if (isMine(data)) {
-                    return;
-                }
-            } else {
-                if (!isMine(data)) {
-                    return;
-                }
-            }
-
-            showUserMenuDialog(data);
-        }
-    };
-
-    private OnItemClickListener<Member> onitemListener = new OnItemClickListener<Member>() {
-        @Override
-        public void onItemClick(@NonNull Member data, View view, int position, long id) {
-            if (!isOwner()) {
-                return;
-            }
-
-            showUserInviteDialog(data);
-        }
-    };
+    private RoomMembersAdapter mAdapterMembers;
+    private RoomMessagesAdapter mAdapterMessage;
 
     private IRoomConfigProvider roomConfig = new IRoomConfigProvider() {
 
@@ -118,9 +85,6 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
         return intent;
     }
 
-    private final IRtcEngineEventHandler mIRtcEngineEventHandler = new IRtcEngineEventHandler() {
-    };
-
     @Override
     protected void iniBundle(@NonNull Bundle bundle) {
 
@@ -133,24 +97,22 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
 
     @Override
     protected void iniView() {
-        mSpeakerAdapter = new ChatRoomSeatUserAdapter(null, onitemSpeaker);
-        mListenerAdapter = new ChatRoomListsnerAdapter(null, onitemListener);
-        mDataBinding.rvSpeakers.setLayoutManager(new GridLayoutManager(this, 3));
-        mDataBinding.rvListeners.setLayoutManager(new GridLayoutManager(this, 2));
-        mDataBinding.rvSpeakers.setAdapter(mSpeakerAdapter);
-        mDataBinding.rvListeners.setAdapter(mListenerAdapter);
+        mAdapterMembers = new RoomMembersAdapter(null, null);
+        mAdapterMessage = new RoomMessagesAdapter(null, null);
+        mDataBinding.rvMembers.setAdapter(mAdapterMembers);
+        mDataBinding.rvMessage.setAdapter(mAdapterMessage);
     }
 
     @Override
     protected void iniListener() {
-        RtcManager.Instance(this).addHandler(mIRtcEngineEventHandler);
         RoomManager.Instance(this).addRoomEventCallback(this);
-        mDataBinding.ivMin.setOnClickListener(this);
-        mDataBinding.ivExit.setOnClickListener(this);
-        mDataBinding.llExit.setOnClickListener(this);
-        mDataBinding.ivNews.setOnClickListener(this);
+        mDataBinding.ivMessage.setOnClickListener(this);
+        mDataBinding.ivRequest.setOnClickListener(this);
+        mDataBinding.ivMagic.setOnClickListener(this);
         mDataBinding.ivAudio.setOnClickListener(this);
-        mDataBinding.ivHandUp.setOnClickListener(this);
+        mDataBinding.viewUserMiddle.setOnClickListener(this);
+        mDataBinding.viewUserLeft.setOnClickListener(this);
+        mDataBinding.viewUserRight.setOnClickListener(this);
     }
 
     @Override
@@ -176,7 +138,6 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
             mMember.setIsSpeaker(0);
         }
 
-        setUserBaseInfo();
         UserManager.Instance(this).getUserLiveData().observe(this, tempUser -> {
             if (tempUser == null) {
                 return;
@@ -188,24 +149,9 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
             }
 
             temp.setUser(tempUser);
-            setUserBaseInfo();
         });
 
         preJoinRoom(mRoom);
-    }
-
-    private void setUserBaseInfo() {
-        Member member = RoomManager.Instance(ChatRoomActivity.this).getMine();
-        if (member == null) {
-            return;
-        }
-
-        Glide.with(this)
-                .load(member.getUserId().getAvatarRes())
-                .placeholder(R.mipmap.default_head)
-                .error(R.mipmap.default_head)
-                .circleCrop()
-                .into(mDataBinding.ivUser);
     }
 
     private void refreshVoiceView() {
@@ -334,18 +280,14 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
     }
 
     private void onLoadRoom(Room room) {
-        mDataBinding.tvName.setText(room.getChannelName());
+
     }
 
     private void onLoadRoomMembers(@NonNull List<Member> members) {
         RoomManager.Instance(this).onLoadRoomMembers(members);
 
         for (Member member : members) {
-            if (member.getIsSpeaker() == 0) {
-                mListenerAdapter.addItem(member);
-            } else {
-                mSpeakerAdapter.addItem(member);
-            }
+            mAdapterMembers.addItem(member);
         }
     }
 
@@ -402,8 +344,9 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
         refreshHandUpView();
 
         if (isOwner()) {
-            mDataBinding.ivNews.setVisibility(View.VISIBLE);
-            mDataBinding.ivExit.setVisibility(View.VISIBLE);
+            mDataBinding.ivRequest.setVisibility(View.VISIBLE);
+            mDataBinding.ivMagic.setVisibility(View.VISIBLE);
+            mDataBinding.ivAudio.setVisibility(View.VISIBLE);
 
             Member member = RoomManager.Instance(this).getMine();
             if (member == null) {
@@ -416,34 +359,26 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
                 RoomManager.Instance(this).stopLivePlay();
             }
         } else {
-            mDataBinding.ivNews.setVisibility(View.GONE);
-            mDataBinding.ivExit.setVisibility(View.INVISIBLE);
+            mDataBinding.ivRequest.setVisibility(View.GONE);
+            mDataBinding.ivMagic.setVisibility(View.GONE);
+            mDataBinding.ivAudio.setVisibility(View.GONE);
+
         }
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.ivMin) {
-            exitRoom(false);
-        } else if (id == R.id.ivExit) {
-            if (isOwner()) {
-                showCloseRoomDialog();
-            } else {
-                exitRoom(true);
-            }
-        } else if (id == R.id.llExit) {
-            if (isOwner()) {
-                showCloseRoomDialog();
-            } else {
-                exitRoom(true);
-            }
-        } else if (id == R.id.ivNews) {
-            gotoHandsUpList();
+        if (id == R.id.ivMembers) {
+
+        } else if (id == R.id.ivRequest) {
+
+        } else if (id == R.id.ivMagic) {
+
         } else if (id == R.id.ivAudio) {
             toggleAudio();
-        } else if (id == R.id.ivHandUp) {
-            toggleHandUp();
+        } else if (id == R.id.viewUserLeft) {
+        } else if (id == R.id.viewUserRight) {
         }
     }
 
@@ -480,7 +415,7 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
             return;
         }
 
-        new HandUpDialog().show(getSupportFragmentManager(), mRoom);
+        new HandUpDialog().show(getSupportFragmentManager());
     }
 
     private void toggleAudio() {
@@ -517,39 +452,39 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
     }
 
     private void refreshHandUpView() {
-        if (RoomManager.Instance(this).isOwner()) {
-            mDataBinding.ivHandUp.setVisibility(View.GONE);
-        } else {
-            mDataBinding.ivHandUp.setImageResource(R.mipmap.icon_un_handup);
-
-            Member member = RoomManager.Instance(this).getMine();
-            if (member == null) {
-                return;
-            }
-            mDataBinding.ivHandUp.setVisibility(member.getIsSpeaker() == 0 ? View.VISIBLE : View.GONE);
-        }
+//        if (RoomManager.Instance(this).isOwner()) {
+//            mDataBinding.ivHandUp.setVisibility(View.GONE);
+//        } else {
+//            mDataBinding.ivHandUp.setImageResource(R.mipmap.icon_un_handup);
+//
+//            Member member = RoomManager.Instance(this).getMine();
+//            if (member == null) {
+//                return;
+//            }
+//            mDataBinding.ivHandUp.setVisibility(member.getIsSpeaker() == 0 ? View.VISIBLE : View.GONE);
+//        }
     }
 
     private void toggleHandUp() {
-        mDataBinding.ivHandUp.setEnabled(false);
-        RoomManager.Instance(this)
-                .requestHandsUp()
-                .observeOn(AndroidSchedulers.mainThread())
-                .compose(mLifecycleProvider.bindToLifecycle())
-                .subscribe(new DataCompletableObserver(this) {
-                    @Override
-                    public void handleError(@NonNull BaseError e) {
-                        ToastUtile.toastShort(ChatRoomActivity.this, e.getMessage());
-                        mDataBinding.ivHandUp.setEnabled(true);
-                    }
-
-                    @Override
-                    public void handleSuccess() {
-                        refreshHandUpView();
-                        mDataBinding.ivHandUp.setEnabled(true);
-                        ToastUtile.toastShort(ChatRoomActivity.this, R.string.request_handup_success);
-                    }
-                });
+//        mDataBinding.ivHandUp.setEnabled(false);
+//        RoomManager.Instance(this)
+//                .requestHandsUp()
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .compose(mLifecycleProvider.bindToLifecycle())
+//                .subscribe(new DataCompletableObserver(this) {
+//                    @Override
+//                    public void handleError(@NonNull BaseError e) {
+//                        ToastUtile.toastShort(ChatRoomActivity.this, e.getMessage());
+//                        mDataBinding.ivHandUp.setEnabled(true);
+//                    }
+//
+//                    @Override
+//                    public void handleSuccess() {
+//                        refreshHandUpView();
+//                        mDataBinding.ivHandUp.setEnabled(true);
+//                        ToastUtile.toastShort(ChatRoomActivity.this, R.string.request_handup_success);
+//                    }
+//                });
     }
 
     private UserSeatMenuDialog mUserSeatMenuDialog;
@@ -572,7 +507,7 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
         }
 
         mInviteMenuDialog = new InviteMenuDialog();
-        mInviteMenuDialog.show(getSupportFragmentManager(), data);
+        mInviteMenuDialog.show(getSupportFragmentManager());
     }
 
     @Override
@@ -588,32 +523,15 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
 
     @Override
     public void onMemberJoin(@NonNull Member member) {
-        if (member.getIsSpeaker() == 0) {
-            mListenerAdapter.addItem(member);
-        } else {
-            if (isOwner(member)) {
-                mSpeakerAdapter.addItem(member, 0);
-            } else {
-                mSpeakerAdapter.addItem(member);
-            }
-        }
+
     }
 
     @Override
     public void onMemberLeave(@NonNull Member member) {
-        mSpeakerAdapter.deleteItem(member);
-        mListenerAdapter.deleteItem(member);
     }
 
     @Override
     public void onRoleChanged(boolean isMine, @NonNull Member member) {
-        if (member.getIsSpeaker() == 1) {
-            mSpeakerAdapter.addItem(member);
-            mListenerAdapter.deleteItem(member);
-        } else {
-            mSpeakerAdapter.deleteItem(member);
-            mListenerAdapter.addItem(member);
-        }
 
         refreshVoiceView();
         refreshHandUpView();
@@ -635,15 +553,11 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
             }
         }
 
-        int index = mSpeakerAdapter.indexOf(member);
-        if (index >= 0) {
-            mSpeakerAdapter.update(index, member);
-        }
     }
 
     @Override
     public void onReceivedHandUp(@NonNull Member member) {
-        mDataBinding.ivNews.setCount(DataRepositroy.Instance(this).getHandUpListCount());
+        mDataBinding.ivRequest.setCount(DataRepositroy.Instance(this).getHandUpListCount());
     }
 
     @Override
@@ -651,7 +565,7 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
         refreshHandUpView();
 
         if (isOwner()) {
-            mDataBinding.ivNews.setCount(DataRepositroy.Instance(this).getHandUpListCount());
+            mDataBinding.ivRequest.setCount(DataRepositroy.Instance(this).getHandUpListCount());
         }
     }
 
@@ -664,7 +578,7 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
         refreshHandUpView();
 
         if (isOwner()) {
-            mDataBinding.ivNews.setCount(DataRepositroy.Instance(this).getHandUpListCount());
+            mDataBinding.ivRequest.setCount(DataRepositroy.Instance(this).getHandUpListCount());
         }
     }
 
@@ -729,7 +643,6 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
 
     @Override
     protected void onDestroy() {
-        RtcManager.Instance(this).removeHandler(mIRtcEngineEventHandler);
         RoomManager.Instance(this).removeRoomEventCallback(this);
         closeInviteDialog();
         super.onDestroy();

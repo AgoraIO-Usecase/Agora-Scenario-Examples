@@ -14,41 +14,41 @@ import androidx.core.content.ContextCompat;
 import androidx.core.util.ObjectsCompat;
 import androidx.databinding.DataBindingUtil;
 
+import com.agora.data.model.Member;
+import com.agora.data.model.User;
 import com.bumptech.glide.Glide;
 
 import io.agora.marriageinterview.R;
-import io.agora.marriageinterview.databinding.LayoutRoomUserBinding;
-import com.agora.data.model.Member;
-import com.agora.data.model.User;
+import io.agora.marriageinterview.databinding.LayoutRoomSpeakerBinding;
 
 /**
- * 房间用户信息view
+ * 房间中说话人View
  *
  * @author chenhengfei@agora.io
  */
-public class RoomUserView extends ConstraintLayout {
+public class RoomSpeakerView extends ConstraintLayout {
 
-    protected LayoutRoomUserBinding mDataBinding;
+    protected LayoutRoomSpeakerBinding mDataBinding;
 
     private Member mMember;
 
-    public RoomUserView(@NonNull Context context) {
+    public RoomSpeakerView(@NonNull Context context) {
         super(context);
         init(context, null, 0);
     }
 
-    public RoomUserView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public RoomSpeakerView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs, 0);
     }
 
-    public RoomUserView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public RoomSpeakerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs, defStyleAttr);
     }
 
     private void init(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        mDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.layout_room_user, this, true);
+        mDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.layout_room_speaker, this, true);
     }
 
     public void setUserInfo(@NonNull Member member) {
@@ -63,7 +63,7 @@ public class RoomUserView extends ConstraintLayout {
         } else {
             mDataBinding.tvName.setCompoundDrawables(null, null, null, null);
         }
-        
+
         if (this.mMember == null
                 || this.mMember.getUserId() == null || !TextUtils.equals(this.mMember.getUserId().getAvatar(), user.getAvatar())) {
             Glide.with(this)

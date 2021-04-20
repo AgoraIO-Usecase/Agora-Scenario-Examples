@@ -5,31 +5,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_create_dialog_background"
-        android:padding="10dp">
+        android:padding="20dp">
 
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/main_create"
-            android:textColor="@android:color/white"
+            android:textColor="@color/create_dialog_title"
             android:textSize="@dimen/main_title_size"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tvDes"
+        <ImageView
+            android:id="@+id/ivClose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:gravity="center"
-            android:text="@string/main_create_dialog_des"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="@dimen/create_room_des_size"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:id="@+id/llInput"
@@ -44,7 +37,7 @@
             android:padding="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvDes">
+            app:layout_constraintTop_toBottomOf="@+id/tvTitle">
 
             <EditText
                 android:id="@+id/etInput"
@@ -71,29 +64,17 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/btCancel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="?android:selectableItemBackground"
-            android:text="@string/cancel"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/main_title_size"
-            app:layout_constraintEnd_toStartOf="@+id/btCreate"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/llInput" />
-
-        <Button
             android:id="@+id/btCreate"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?android:selectableItemBackground"
+            android:background="@mipmap/all_but_party"
             android:text="@string/main_create2"
+            android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="@dimen/main_title_size"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/btCancel"
-            app:layout_constraintTop_toTopOf="@+id/btCancel" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/llInput" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

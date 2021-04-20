@@ -55,8 +55,6 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
 
     private RoomListAdapter mAdapter;
 
-    private Room mRoom;
-
     @Override
     protected void iniBundle(@NonNull Bundle bundle) {
 
@@ -328,7 +326,6 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
             }
         }
 
-        this.mRoom = data;
         Intent intent = ChatRoomActivity.newIntent(this, data);
         startActivity(intent);
     }
