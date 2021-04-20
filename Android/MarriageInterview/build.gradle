@@ -48,6 +48,12 @@ android {
         firebase {
         }
     }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "Marry-${versionName}-${variant.buildType.name}.apk"
+        }
+    }
 }
 
 dependencies {
