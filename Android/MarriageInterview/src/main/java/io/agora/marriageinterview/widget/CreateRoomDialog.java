@@ -75,7 +75,6 @@ public class CreateRoomDialog extends DataBindBaseDialog<DialogCreateRoomBinding
 
     @Override
     public void iniListener() {
-        mDataBinding.btCancel.setOnClickListener(this);
         mDataBinding.ivRefresh.setOnClickListener(this);
         mDataBinding.btCreate.setOnClickListener(this);
     }

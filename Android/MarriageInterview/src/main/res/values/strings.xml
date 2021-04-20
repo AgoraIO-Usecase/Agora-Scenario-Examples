@@ -13,12 +13,13 @@
 
     <string name="list_empty_create">Create a room to start</string>
     <string name="main_title">Room list</string>
-    <string name="main_create">Create a room</string>
+    <string name="main_create">Create Room</string>
     <string name="main_create2">Create</string>
     <string name="main_create_dialog_inpit_hint">Please enter the room name</string>
     <string name="main_create_dialog_des">The max duration per session is 10 minutes.</string>
     <string name="error_room_not_exsit">The room does not exist</string>
 
+    <string name="error_joined_room">You have joined a room. Please leave it first.</string>
     <string name="error_room_default">Room exception(%s)</string>
     <string name="room_name_speaker">Speaker</string>
     <string name="room_name_listener">Audience</string>

@@ -16,7 +16,6 @@ import com.agora.data.BaseError;
 import com.agora.data.DataRepositroy;
 import com.agora.data.manager.RoomManager;
 import com.agora.data.model.Member;
-import com.agora.data.model.Room;
 import com.agora.data.observer.DataCompletableObserver;
 import com.agora.data.observer.DataObserver;
 
@@ -40,10 +39,6 @@ public class HandUpDialog extends DataBindBaseDialog<DialogHandUpBinding> implem
 
     private HandsUpListAdapter mAdapter;
 
-    private static final String TAG_ROOM = "room";
-
-    private Room room;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -65,7 +60,6 @@ public class HandUpDialog extends DataBindBaseDialog<DialogHandUpBinding> implem
 
     @Override
     public void iniBundle(@NonNull Bundle bundle) {
-        room = (Room) bundle.getSerializable(TAG_ROOM);
     }
 
     @Override
@@ -110,9 +104,8 @@ public class HandUpDialog extends DataBindBaseDialog<DialogHandUpBinding> implem
                 });
     }
 
-    public void show(@NonNull FragmentManager manager, @NonNull Room room) {
+    public void show(@NonNull FragmentManager manager) {
         Bundle intent = new Bundle();
-        intent.putSerializable(TAG_ROOM, room);
         setArguments(intent);
         super.show(manager, TAG);
     }

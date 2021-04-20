@@ -8,4 +8,6 @@
     <dimen name="main_list_item_header">36dp</dimen>
     <dimen name="main_header">36dp</dimen>
 
+    <dimen name="head_stroke_size">1px</dimen>
+
 </resources>

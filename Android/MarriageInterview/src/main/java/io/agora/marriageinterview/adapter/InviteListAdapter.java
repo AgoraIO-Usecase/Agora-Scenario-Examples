@@ -5,23 +5,23 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.agora.data.model.Member;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-import io.agora.marriageinterview.R;
 import io.agora.baselibrary.base.BaseRecyclerViewAdapter;
-import io.agora.marriageinterview.databinding.ItemRoomListenerBinding;
-import com.agora.data.model.Member;
+import io.agora.marriageinterview.R;
+import io.agora.marriageinterview.databinding.ItemInviteListBinding;
 
 /**
- * 房间上坐用户
+ * 邀请列表
  *
  * @author chenhengfei@agora.io
  */
-public class ChatRoomListsnerAdapter extends BaseRecyclerViewAdapter<Member, ChatRoomListsnerAdapter.ViewHolder> {
+public class InviteListAdapter extends BaseRecyclerViewAdapter<Member, InviteListAdapter.ViewHolder> {
 
-    public ChatRoomListsnerAdapter(@Nullable List<Member> datas, @Nullable Object listener) {
+    public InviteListAdapter(@Nullable List<Member> datas, @Nullable Object listener) {
         super(datas, listener);
     }
 
@@ -32,7 +32,7 @@ public class ChatRoomListsnerAdapter extends BaseRecyclerViewAdapter<Member, Cha
 
     @Override
     public int getLayoutId() {
-        return R.layout.item_room_listener;
+        return R.layout.item_invite_list;
     }
 
     @Override
@@ -51,10 +51,12 @@ public class ChatRoomListsnerAdapter extends BaseRecyclerViewAdapter<Member, Cha
         holder.mDataBinding.tvName.setText(item.getUserId().getName());
     }
 
-    class ViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder<ItemRoomListenerBinding> {
+    static class ViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder<ItemInviteListBinding> {
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
+
+            mDataBinding.btInvite.setOnClickListener(this::onItemClick);
         }
     }
 }
