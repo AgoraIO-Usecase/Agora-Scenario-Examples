@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -87,7 +88,7 @@ class MessageSource extends BaseMessageSource {
                                 map.put(DataProvider.MEMBER_ISSPEAKER, member.getIsSpeaker());
                                 map.put(DataProvider.MEMBER_ISMUTED, member.getIsMuted());
                                 map.put(DataProvider.MEMBER_ISSELFMUTED, member.getIsSelfMuted());
-                                map.put(DataProvider.MEMBER_CREATEDAT, System.currentTimeMillis());
+                                map.put(DataProvider.MEMBER_CREATEDAT, Timestamp.now());
 
                                 db.collection(DataProvider.TAG_TABLE_MEMBER)
                                         .add(map)
@@ -324,7 +325,7 @@ class MessageSource extends BaseMessageSource {
             map.put(DataProvider.ACTION_ROOMID, drRoom);
             map.put(DataProvider.ACTION_ACTION, Action.ACTION.HandsUp.getValue());
             map.put(DataProvider.ACTION_STATUS, Action.ACTION_STATUS.Ing.getValue());
-            map.put(DataProvider.ACTION_CREATEDAT, System.currentTimeMillis());
+            map.put(DataProvider.ACTION_CREATEDAT, Timestamp.now());
 
             db.collection(DataProvider.TAG_TABLE_ACTION)
                     .add(map)
@@ -351,7 +352,7 @@ class MessageSource extends BaseMessageSource {
                     map.put(DataProvider.ACTION_ROOMID, drRoom);
                     map.put(DataProvider.ACTION_ACTION, Action.ACTION.HandsUp.getValue());
                     map.put(DataProvider.ACTION_STATUS, Action.ACTION_STATUS.Agree.getValue());
-                    map.put(DataProvider.ACTION_CREATEDAT, System.currentTimeMillis());
+                    map.put(DataProvider.ACTION_CREATEDAT, Timestamp.now());
                     db.collection(DataProvider.TAG_TABLE_ACTION)
                             .add(map);
 
@@ -380,7 +381,7 @@ class MessageSource extends BaseMessageSource {
             map.put(DataProvider.ACTION_ROOMID, drRoom);
             map.put(DataProvider.ACTION_ACTION, Action.ACTION.HandsUp.getValue());
             map.put(DataProvider.ACTION_STATUS, Action.ACTION_STATUS.Refuse.getValue());
-            map.put(DataProvider.ACTION_CREATEDAT, System.currentTimeMillis());
+            map.put(DataProvider.ACTION_CREATEDAT, Timestamp.now());
 
             db.collection(DataProvider.TAG_TABLE_ACTION)
                     .add(map)
@@ -408,7 +409,7 @@ class MessageSource extends BaseMessageSource {
             map.put(DataProvider.ACTION_ROOMID, drRoom);
             map.put(DataProvider.ACTION_ACTION, Action.ACTION.Invite.getValue());
             map.put(DataProvider.ACTION_STATUS, Action.ACTION_STATUS.Ing.getValue());
-            map.put(DataProvider.ACTION_CREATEDAT, System.currentTimeMillis());
+            map.put(DataProvider.ACTION_CREATEDAT, Timestamp.now());
 
             db.collection(DataProvider.TAG_TABLE_ACTION)
                     .add(map)
@@ -435,7 +436,7 @@ class MessageSource extends BaseMessageSource {
                     map.put(DataProvider.ACTION_ROOMID, drRoom);
                     map.put(DataProvider.ACTION_ACTION, Action.ACTION.Invite.getValue());
                     map.put(DataProvider.ACTION_STATUS, Action.ACTION_STATUS.Agree.getValue());
-                    map.put(DataProvider.ACTION_CREATEDAT, System.currentTimeMillis());
+                    map.put(DataProvider.ACTION_CREATEDAT, Timestamp.now());
                     db.collection(DataProvider.TAG_TABLE_ACTION)
                             .add(map);
 
@@ -464,7 +465,7 @@ class MessageSource extends BaseMessageSource {
             map.put(DataProvider.ACTION_ROOMID, drRoom);
             map.put(DataProvider.ACTION_ACTION, Action.ACTION.Invite.getValue());
             map.put(DataProvider.ACTION_STATUS, Action.ACTION_STATUS.Refuse.getValue());
-            map.put(DataProvider.ACTION_CREATEDAT, System.currentTimeMillis());
+            map.put(DataProvider.ACTION_CREATEDAT, Timestamp.now());
 
             db.collection(DataProvider.TAG_TABLE_ACTION)
                     .add(map)

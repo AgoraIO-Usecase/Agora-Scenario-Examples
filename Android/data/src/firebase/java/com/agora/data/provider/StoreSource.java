@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -47,7 +48,7 @@ class StoreSource implements IStoreSource {
                 HashMap<String, Object> map = new HashMap<>();
                 map.put(DataProvider.USER_NAME, user.getName());
                 map.put(DataProvider.USER_AVATAR, user.getAvatar());
-                map.put(DataProvider.USER_CREATEDAT, System.currentTimeMillis());
+                map.put(DataProvider.USER_CREATEDAT, Timestamp.now());
 
                 db.collection(DataProvider.TAG_TABLE_USER)
                         .add(map)
@@ -247,7 +248,7 @@ class StoreSource implements IStoreSource {
             HashMap<String, Object> map = new HashMap<>();
             map.put(DataProvider.MEMBER_CHANNELNAME, room.getChannelName());
             map.put(DataProvider.MEMBER_ANCHORID, drUser);
-            map.put(DataProvider.MEMBER_CREATEDAT, System.currentTimeMillis());
+            map.put(DataProvider.MEMBER_CREATEDAT, Timestamp.now());
 
             db.collection(DataProvider.TAG_TABLE_ROOM)
                     .add(map)
