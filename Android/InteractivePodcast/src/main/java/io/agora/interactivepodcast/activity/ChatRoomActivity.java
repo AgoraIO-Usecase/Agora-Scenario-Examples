@@ -344,7 +344,11 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
             if (member.getIsSpeaker() == 0) {
                 mListenerAdapter.addItem(member);
             } else {
-                mSpeakerAdapter.addItem(member);
+                if (isOwner(member)) {
+                    mSpeakerAdapter.addItem(member, 0);
+                } else {
+                    mSpeakerAdapter.addItem(member);
+                }
             }
         }
     }
