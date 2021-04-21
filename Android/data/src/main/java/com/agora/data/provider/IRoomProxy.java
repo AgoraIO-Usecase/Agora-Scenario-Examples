@@ -33,6 +33,9 @@ public interface IRoomProxy {
     @Nullable
     Room getRoom();
 
+    @Nullable
+    Member getOwner();
+
     void onMemberJoin(@NonNull Member member);
 
     void onMemberLeave(@NonNull Member member);

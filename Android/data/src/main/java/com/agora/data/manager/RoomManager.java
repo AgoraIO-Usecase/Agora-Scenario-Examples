@@ -56,6 +56,38 @@ public final class RoomManager implements IRoomProxy {
     private IRoomConfigProvider roomConfig;
 
     private final IRtcEngineEventHandler mIRtcEngineEventHandler = new IRtcEngineEventHandler() {
+        @Override
+        public void onLocalVideoStateChanged(int localVideoState, int error) {
+            super.onLocalVideoStateChanged(localVideoState, error);
+            Member member = getMine();
+            if (member == null) {
+                return;
+            }
+
+            if (localVideoState == Constants.LOCAL_VIDEO_STREAM_STATE_ENCODING) {
+                member.setIsSDKVideoMuted(0);
+            } else if (localVideoState == Constants.LOCAL_VIDEO_STREAM_STATE_STOPPED || localVideoState == Constants.LOCAL_VIDEO_STREAM_STATE_FAILED) {
+                member.setIsSDKVideoMuted(1);
+            }
+            mainThreadDispatch.onSDKVideoStatusChanged(member);
+        }
+
+        @Override
+        public void onRemoteVideoStateChanged(int uid, int state, int reason, int elapsed) {
+            super.onRemoteVideoStateChanged(uid, state, reason, elapsed);
+            long streamId = uid & 0xffffffffL;
+            Member member = getMemberByStramId(streamId);
+            if (member == null) {
+                return;
+            }
+
+            if (state == Constants.REMOTE_VIDEO_STATE_DECODING) {
+                member.setIsSDKVideoMuted(0);
+            } else if (state == Constants.REMOTE_VIDEO_STATE_STOPPED || state == Constants.REMOTE_VIDEO_STATE_FAILED) {
+                member.setIsSDKVideoMuted(1);
+            }
+            mainThreadDispatch.onSDKVideoStatusChanged(member);
+        }
     };
 
     public synchronized static RoomManager Instance(Context context) {
@@ -75,6 +107,7 @@ public final class RoomManager implements IRoomProxy {
 
     private Room mRoom;
     private Member mMine;
+    private Member mOwner;
 
     /**
      * Member表中objectId和Member的键值对
@@ -124,6 +157,10 @@ public final class RoomManager implements IRoomProxy {
                     @Override
                     public CompletableSource apply(@NonNull Member member) throws Exception {
                         mMine = member;
+                        if (ObjectsCompat.equals(room.getAnchorId(), mMine.getUserId())) {
+                            mOwner = mMine;
+                        }
+
                         mLogger.d("joinRoom() doOnComplete called member= [%s]", mMine);
                         return Completable.complete();
                     }
@@ -243,6 +280,7 @@ public final class RoomManager implements IRoomProxy {
 
         this.mRoom = null;
         this.mMine = null;
+        this.mOwner = null;
         this.membersMap.clear();
         this.streamIdMap.clear();
     }
@@ -258,6 +296,10 @@ public final class RoomManager implements IRoomProxy {
             if (isMine(member)) {
                 member = mMine;
                 members.set(i, mMine);
+            }
+
+            if (ObjectsCompat.equals(mRoom.getAnchorId(), member.getUserId())) {
+                mOwner = member;
             }
 
             member.setRoomId(mRoom);
@@ -296,7 +338,14 @@ public final class RoomManager implements IRoomProxy {
         return mRoom;
     }
 
+    @Nullable
+    @Override
+    public Member getOwner() {
+        return mOwner;
+    }
+
     public void startLivePlay() {
+        mLogger.d("startLivePlay() called");
         if (roomConfig.isNeedAudio()) {
             RtcManager.Instance(mContext).getRtcEngine().enableLocalAudio(true);
         }
@@ -309,6 +358,7 @@ public final class RoomManager implements IRoomProxy {
     }
 
     public void stopLivePlay() {
+        mLogger.d("stopLivePlay() called");
         if (roomConfig.isNeedAudio()) {
             RtcManager.Instance(mContext).getRtcEngine().enableLocalAudio(false);
         }

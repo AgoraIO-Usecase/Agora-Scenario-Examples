@@ -1,5 +1,5 @@
 <resources>
-    <dimen name="main_title_size">18sp</dimen>
+    <dimen name="main_title_size">20sp</dimen>
     <dimen name="main_list_item_name_size">14sp</dimen>
     <dimen name="main_list_item_user_name_size">12sp</dimen>
     <dimen name="create_room_des_size">14sp</dimen>
@@ -9,5 +9,7 @@
     <dimen name="main_header">36dp</dimen>
 
     <dimen name="head_stroke_size">1px</dimen>
+    <dimen name="room_list_create_button">18sp</dimen>
+    <dimen name="confirm_dialog_message">16sp</dimen>
 
 </resources>

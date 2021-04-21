@@ -26,8 +26,8 @@ public final class RtcManager {
     private Context mContext;
     private RtcEngine mRtcEngine;
 
-    private String channel;
-    private int uid;
+    public volatile String channel;
+    public volatile int uid;
     private boolean isJoined = false;
 
     private IRoomConfigProvider roomConfig;

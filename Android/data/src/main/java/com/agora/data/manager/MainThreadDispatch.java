@@ -33,6 +33,7 @@ public class MainThreadDispatch implements RoomEventCallback {
     private static final int ON_ROOM_ERROR = ON_ENTER_MIN_STATUS + 1;
     private static final int ON_LEAVE_ROOM = ON_ROOM_ERROR + 1;
     private static final int ON_OWNER_LEAVE_ROOM = ON_LEAVE_ROOM + 1;
+    private static final int ON_SDK_VIDEO_STATUS_CHANGED = ON_OWNER_LEAVE_ROOM + 1;
 
     private final List<RoomEventCallback> enevtCallbacks = new ArrayList<>();
 
@@ -111,6 +112,11 @@ public class MainThreadDispatch implements RoomEventCallback {
                 for (RoomEventCallback callback : enevtCallbacks) {
                     callback.onLeaveRoom((Room) msg.obj);
                 }
+            } else if (msg.what == ON_SDK_VIDEO_STATUS_CHANGED) {
+                Member member = (Member) msg.obj;
+                for (RoomEventCallback callback : enevtCallbacks) {
+                    callback.onSDKVideoStatusChanged(member);
+                }
             }
             return false;
         }
@@ -156,6 +162,11 @@ public class MainThreadDispatch implements RoomEventCallback {
         Message message = mHandler.obtainMessage(ON_AUDIO_CHANGED, member);
         message.setData(bundle);
         message.sendToTarget();
+    }
+
+    @Override
+    public void onSDKVideoStatusChanged(@NonNull Member member) {
+        mHandler.obtainMessage(ON_SDK_VIDEO_STATUS_CHANGED, member).sendToTarget();
     }
 
     @Override

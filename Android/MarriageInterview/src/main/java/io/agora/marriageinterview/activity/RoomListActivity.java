@@ -15,11 +15,8 @@ import com.agora.data.BaseError;
 import com.agora.data.BaseRoomEventCallback;
 import com.agora.data.DataRepositroy;
 import com.agora.data.manager.RoomManager;
-import com.agora.data.manager.UserManager;
 import com.agora.data.model.Room;
-import com.agora.data.model.User;
 import com.agora.data.observer.DataMaybeObserver;
-import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -46,6 +43,7 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
     private static final String[] PERMISSTION = new String[]{
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA,
             Manifest.permission.RECORD_AUDIO};
 
     private RoomListAdapter mAdapter;
@@ -90,29 +88,8 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
     protected void iniData() {
         mDataBinding.btCrateRoom.setVisibility(View.VISIBLE);
 
-        User user = UserManager.Instance(this).getUserLiveData().getValue();
-        if (user != null) {
-            setUser(user);
-        }
-
-        UserManager.Instance(this).getUserLiveData().observe(this, mUser -> {
-            if (mUser == null) {
-                return;
-            }
-            setUser(mUser);
-        });
-
         mDataBinding.tvEmpty.setVisibility(mAdapter.getItemCount() <= 0 ? View.VISIBLE : View.GONE);
         loadRooms();
-    }
-
-    private void setUser(@NonNull User user) {
-        Glide.with(RoomListActivity.this)
-                .load(user.getAvatarRes())
-                .placeholder(R.mipmap.default_head)
-                .circleCrop()
-                .error(R.mipmap.default_head)
-                .into(mDataBinding.ivHead);
     }
 
     private void loadRooms() {
