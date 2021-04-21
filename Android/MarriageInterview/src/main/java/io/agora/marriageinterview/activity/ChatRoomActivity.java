@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.SurfaceView;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import com.agora.data.BaseError;
 import com.agora.data.DataRepositroy;
 import com.agora.data.RoomEventCallback;
 import com.agora.data.manager.RoomManager;
+import com.agora.data.manager.RtcManager;
 import com.agora.data.manager.UserManager;
 import com.agora.data.model.Member;
 import com.agora.data.model.Room;
@@ -31,12 +33,15 @@ import io.agora.marriageinterview.R;
 import io.agora.marriageinterview.adapter.RoomMembersAdapter;
 import io.agora.marriageinterview.adapter.RoomMessagesAdapter;
 import io.agora.marriageinterview.databinding.ActivityChatRoomBinding;
+import io.agora.marriageinterview.widget.ConfirmDialog;
 import io.agora.marriageinterview.widget.HandUpDialog;
 import io.agora.marriageinterview.widget.InviteMenuDialog;
 import io.agora.marriageinterview.widget.InvitedMenuDialog;
 import io.agora.marriageinterview.widget.UserSeatMenuDialog;
 import io.agora.rtc.Constants;
 import io.agora.rtc.RtcEngine;
+import io.agora.rtc.video.VideoCanvas;
+import io.agora.rtc.video.VideoEncoderConfiguration;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
@@ -66,6 +71,7 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
 
             mRtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
             mRtcEngine.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_HIGH_QUALITY, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
+            mRtcEngine.setVideoEncoderConfiguration(new VideoEncoderConfiguration());
         }
 
         @Override
@@ -106,6 +112,7 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
     @Override
     protected void iniListener() {
         RoomManager.Instance(this).addRoomEventCallback(this);
+        mDataBinding.ivBack.setOnClickListener(this);
         mDataBinding.ivMessage.setOnClickListener(this);
         mDataBinding.ivRequest.setOnClickListener(this);
         mDataBinding.ivMagic.setOnClickListener(this);
@@ -245,6 +252,9 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
                                             return;
                                         }
 
+                                        Room room = RoomManager.Instance(ChatRoomActivity.this).getRoom();
+                                        onLoadRoom(room);
+
                                         joinRoom();
                                     }
                                 });
@@ -343,18 +353,32 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
         refreshVoiceView();
         refreshHandUpView();
 
+        Member member = RoomManager.Instance(this).getMine();
+        if (member == null) {
+            return;
+        }
+
+        Member owner = RoomManager.Instance(this).getOwner();
+        if (owner == null) {
+            return;
+        }
         if (isOwner()) {
             mDataBinding.ivRequest.setVisibility(View.VISIBLE);
             mDataBinding.ivMagic.setVisibility(View.VISIBLE);
             mDataBinding.ivAudio.setVisibility(View.VISIBLE);
 
-            Member member = RoomManager.Instance(this).getMine();
-            if (member == null) {
-                return;
-            }
 
             if (member.getIsSpeaker() == 1) {
+                SurfaceView mLocalView = mDataBinding.viewUserMiddle.getVideoSurfaceView();
+                mLocalView.setZOrderMediaOverlay(true);
+                VideoCanvas mVideoCanvas = new VideoCanvas(mLocalView);
+                mVideoCanvas.renderMode = VideoCanvas.RENDER_MODE_HIDDEN;
+                mVideoCanvas.uid = RtcManager.Instance(this).uid;
+                RtcManager.Instance(this).getRtcEngine().setupLocalVideo(mVideoCanvas);
+                mDataBinding.viewUserMiddle.onMemberJoin(member);
+
                 RoomManager.Instance(this).startLivePlay();
+                RtcManager.Instance(this).getRtcEngine().startPreview();
             } else {
                 RoomManager.Instance(this).stopLivePlay();
             }
@@ -363,6 +387,27 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
             mDataBinding.ivMagic.setVisibility(View.GONE);
             mDataBinding.ivAudio.setVisibility(View.GONE);
 
+            mDataBinding.viewUserMiddle.onMemberJoin(owner);
+            SurfaceView mRemoteView = mDataBinding.viewUserMiddle.getVideoSurfaceView();
+            VideoCanvas mVideoCanvasOwner = new VideoCanvas(mRemoteView);
+            mVideoCanvasOwner.renderMode = VideoCanvas.RENDER_MODE_HIDDEN;
+            mVideoCanvasOwner.uid = owner.getStreamId().intValue();
+            RtcManager.Instance(this).getRtcEngine().setupRemoteVideo(mVideoCanvasOwner);
+
+            if (member.getIsSpeaker() == 1) {
+                SurfaceView mLocalView = mDataBinding.viewUserLeft.getVideoSurfaceView();
+                mLocalView.setZOrderMediaOverlay(true);
+                VideoCanvas mVideoCanvas = new VideoCanvas(mLocalView);
+                mVideoCanvas.renderMode = VideoCanvas.RENDER_MODE_HIDDEN;
+                mVideoCanvas.uid = RtcManager.Instance(this).uid;
+                RtcManager.Instance(this).getRtcEngine().setupLocalVideo(mVideoCanvas);
+                mDataBinding.viewUserLeft.onMemberJoin(member);
+
+                RoomManager.Instance(this).startLivePlay();
+                RtcManager.Instance(this).getRtcEngine().startPreview();
+            } else {
+                RoomManager.Instance(this).stopLivePlay();
+            }
         }
     }
 
@@ -379,34 +424,14 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
             toggleAudio();
         } else if (id == R.id.viewUserLeft) {
         } else if (id == R.id.viewUserRight) {
+        } else if (id == R.id.ivBack) {
+            showLeaveRoomDialog();
         }
     }
 
-    private void showCloseRoomDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.room_dialog_close_title)
-                .setMessage(R.string.room_dialog_close_message)
-                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        exitRoom(true);
-                    }
-                })
-                .setNegativeButton(R.string.cancel, null)
-                .show();
-    }
-
-    private void exitRoom(boolean leaveRoom) {
-        if (leaveRoom) {
-            RoomManager.Instance(this).leaveRoom();
-        } else {
-            RoomManager.Instance(this).onEnterMinStatus();
-        }
-
+    private void leaveRoom() {
+        RoomManager.Instance(this).leaveRoom();
         finish();
-        if (!leaveRoom) {
-            overridePendingTransition(R.anim.chat_room_in, R.anim.chat_room_out);
-        }
     }
 
     private void gotoHandsUpList() {
@@ -532,7 +557,6 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
 
     @Override
     public void onRoleChanged(boolean isMine, @NonNull Member member) {
-
         refreshVoiceView();
         refreshHandUpView();
 
@@ -553,6 +577,11 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
             }
         }
 
+    }
+
+    @Override
+    public void onSDKVideoStatusChanged(@NonNull Member member) {
+        mDataBinding.viewUserMiddle.onMemberVideoChanged(member);
     }
 
     @Override
@@ -623,7 +652,7 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        exitRoom(true);
+                        leaveRoom();
                     }
                 })
                 .show();
@@ -639,6 +668,38 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
 
     private boolean isOwner(Member member) {
         return RoomManager.Instance(this).isOwner(member);
+    }
+
+    private void showCloseRoomDialog() {
+        ConfirmDialog dialog = new ConfirmDialog();
+        dialog.show(getSupportFragmentManager(), getString(R.string.room_dialog_close_room_title), getString(R.string.room_dialog_close_room_message),
+                new ConfirmDialog.OnConfirmCallback() {
+                    @Override
+                    public void onClickCancel() {
+
+                    }
+
+                    @Override
+                    public void onClickConfirm() {
+                        leaveRoom();
+                    }
+                });
+    }
+
+    private void showLeaveRoomDialog() {
+        ConfirmDialog dialog = new ConfirmDialog();
+        dialog.show(getSupportFragmentManager(), getString(R.string.room_dialog_leave_room_title), getString(R.string.room_dialog_leave_room_message),
+                new ConfirmDialog.OnConfirmCallback() {
+                    @Override
+                    public void onClickCancel() {
+
+                    }
+
+                    @Override
+                    public void onClickConfirm() {
+                        leaveRoom();
+                    }
+                });
     }
 
     @Override

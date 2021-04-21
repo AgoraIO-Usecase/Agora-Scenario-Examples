@@ -12,6 +12,7 @@ public class Member implements Serializable, Cloneable {
     private int isSpeaker = 0;
     private int isMuted = 0;
     private int isSelfMuted = 0;
+    private int isSDKVideoMuted = 0;
 
     public Member() {
     }
@@ -80,6 +81,28 @@ public class Member implements Serializable, Cloneable {
         this.isSelfMuted = isSelfMuted;
     }
 
+    public int getIsSDKVideoMuted() {
+        return isSDKVideoMuted;
+    }
+
+    public void setIsSDKVideoMuted(int isSDKVideoMuted) {
+        this.isSDKVideoMuted = isSDKVideoMuted;
+    }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "objectId='" + objectId + '\'' +
+                ", roomId=" + roomId +
+                ", streamId=" + streamId +
+                ", userId=" + userId +
+                ", isSpeaker=" + isSpeaker +
+                ", isMuted=" + isMuted +
+                ", isSelfMuted=" + isSelfMuted +
+                ", isSDKVideoMuted=" + isSDKVideoMuted +
+                '}';
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -106,17 +129,4 @@ public class Member implements Serializable, Cloneable {
         return new Member();
     }
 
-    @NonNull
-    @Override
-    public String toString() {
-        return "Member{" +
-                "objectId='" + objectId + '\'' +
-                ", roomId=" + roomId +
-                ", streamId=" + streamId +
-                ", userId=" + userId +
-                ", isSpeaker=" + isSpeaker +
-                ", isMuted=" + isMuted +
-                ", isSelfMuted=" + isSelfMuted +
-                '}';
-    }
 }

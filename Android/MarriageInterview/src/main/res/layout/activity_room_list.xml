@@ -10,7 +10,7 @@
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="60dp"
             android:background="@drawable/shape_room_list_top"
             android:gravity="center"
             android:text="@string/main_title"
@@ -22,10 +22,10 @@
 
         <ImageView
             android:id="@+id/ivHead"
-            android:layout_width="@dimen/main_header"
-            android:layout_height="@dimen/main_header"
-            android:layout_marginEnd="20dp"
-            android:src="@mipmap/default_head"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:src="@mipmap/nav_icon_lobby_n"
             app:layout_constraintBottom_toBottomOf="@+id/tvTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tvTitle" />
@@ -63,7 +63,7 @@
                 tools:listitem="@layout/item_rooms" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <TextView
+        <Button
             android:id="@+id/btCrateRoom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -71,7 +71,9 @@
             android:background="@mipmap/all_but_party"
             android:gravity="center"
             android:text="@string/main_create"
+            android:textAllCaps="false"
             android:textColor="@android:color/white"
+            android:textSize="@dimen/room_list_create_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

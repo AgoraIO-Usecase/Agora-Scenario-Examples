@@ -40,6 +40,11 @@ public class BaseRoomEventCallback implements RoomEventCallback {
     }
 
     @Override
+    public void onSDKVideoStatusChanged(@NonNull Member member) {
+
+    }
+
+    @Override
     public void onReceivedHandUp(@NonNull Member member) {
 
     }

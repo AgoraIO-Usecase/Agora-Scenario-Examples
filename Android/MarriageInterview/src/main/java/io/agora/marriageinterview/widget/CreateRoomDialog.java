@@ -77,6 +77,7 @@ public class CreateRoomDialog extends DataBindBaseDialog<DialogCreateRoomBinding
     public void iniListener() {
         mDataBinding.ivRefresh.setOnClickListener(this);
         mDataBinding.btCreate.setOnClickListener(this);
+        mDataBinding.ivClose.setOnClickListener(this);
     }
 
     @Override
@@ -91,7 +92,7 @@ public class CreateRoomDialog extends DataBindBaseDialog<DialogCreateRoomBinding
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.btCancel) {
+        if (id == R.id.ivClose) {
             dismiss();
         } else if (id == R.id.ivRefresh) {
             refreshName();

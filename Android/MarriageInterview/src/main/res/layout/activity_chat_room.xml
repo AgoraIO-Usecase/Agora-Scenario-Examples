@@ -5,12 +5,16 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@mipmap/icon_room_background"
         android:keepScreenOn="true">
 
         <ImageView
             android:id="@+id/ivBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:background="?android:selectableItemBackground"
+            android:src="@mipmap/back"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -18,6 +22,9 @@
             android:id="@+id/ivMembers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:src="@mipmap/lobby_user_icon"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,46 +35,54 @@
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toStartOf="@+id/ivMembers"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/ivMembers" />
 
         <io.agora.marriageinterview.widget.RoomSpeakerView
             android:id="@+id/viewUserMiddle"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_marginTop="100dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintDimensionRatio="h,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/ivMembers"
+            app:layout_constraintWidth_percent="0.45" />
 
         <io.agora.marriageinterview.widget.RoomSpeakerView
             android:id="@+id/viewUserLeft"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="20dp"
+            app:layout_constraintDimensionRatio="h,1:1"
             app:layout_constraintEnd_toStartOf="@+id/viewUserRight"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/viewUserMiddle" />
 
         <io.agora.marriageinterview.widget.RoomSpeakerView
             android:id="@+id/viewUserRight"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintDimensionRatio="h,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/viewUserLeft"
             app:layout_constraintTop_toBottomOf="@+id/viewUserMiddle" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="300dp"
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@+id/llMenu"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_percent="0.7" />
 
         <LinearLayout
             android:id="@+id/llMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
@@ -77,9 +92,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:background="@drawable/selector_room_bottom_menu_background"
                 android:padding="2dp"
-                android:src="@mipmap/icon_microphoneon" />
+                android:src="@mipmap/icon_menu_commit" />
 
             <Space
                 android:layout_width="0dp"
@@ -99,18 +113,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
-                android:background="@drawable/selector_room_bottom_menu_background"
                 android:padding="2dp"
-                android:src="@mipmap/icon_un_handup" />
+                android:src="@mipmap/icon_menu_open_magic" />
 
             <ImageView
                 android:id="@+id/ivAudio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
-                android:background="@drawable/selector_room_bottom_menu_background"
                 android:padding="2dp"
-                android:src="@mipmap/icon_microphoneon" />
+                android:src="@mipmap/icon_menu_open_audio" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

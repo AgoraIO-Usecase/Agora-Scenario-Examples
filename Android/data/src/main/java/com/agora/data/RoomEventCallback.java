@@ -30,6 +30,11 @@ public interface RoomEventCallback {
      */
     void onAudioStatusChanged(boolean isMine, @NonNull Member member);
 
+    /**
+     * SDK Video变化回调
+     */
+    void onSDKVideoStatusChanged(@NonNull Member member);
+
     void onReceivedHandUp(@NonNull Member member);
 
     void onHandUpAgree(@NonNull Member member);

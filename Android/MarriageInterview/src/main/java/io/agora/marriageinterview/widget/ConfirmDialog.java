@@ -1,7 +1,7 @@
 package io.agora.marriageinterview.widget;
 
 import android.os.Bundle;
-import android.view.Gravity;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,18 +37,20 @@ public class ConfirmDialog extends DataBindBaseDialog<DialogConfirmBinding> impl
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         Window win = getDialog().getWindow();
+        WindowManager windowManager = win.getWindowManager();
+        Display display = windowManager.getDefaultDisplay();
         WindowManager.LayoutParams params = win.getAttributes();
-        params.gravity = Gravity.BOTTOM;
-        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        params.width = display.getWidth() * 4 / 5;
         params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         win.setAttributes(params);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NORMAL, R.style.Dialog_Bottom);
+        setStyle(STYLE_NORMAL, R.style.Dialog_Nomal);
     }
 
     @Override
