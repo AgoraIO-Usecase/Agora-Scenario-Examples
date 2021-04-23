@@ -1,0 +1,38 @@
+# Uncomment the next line to define a global platform for your project
+platform :ios, '11.0'
+
+def commonPods
+  use_frameworks!
+  pod 'AgoraRtcEngine_iOS'
+  pod 'RxSwift', '6.1.0'
+  pod 'RxCocoa', '6.1.0'
+  pod 'RxRelay', '6.1.0'
+  pod 'IGListKit', '~> 4.0.0'
+end
+
+target 'Scene-Examples' do
+  commonPods
+  use_frameworks!
+  pod 'LeanCloud'
+end
+
+target 'Core' do
+  use_frameworks!
+  pod 'LeanCloud'
+  pod 'RxSwift', '6.1.0'
+  pod 'RxCocoa', '6.1.0'
+  pod 'RxRelay', '6.1.0'
+end
+
+target 'InteractivePodcast' do
+  commonPods
+  use_frameworks!
+  pod 'LeanCloud'
+end
+
+target 'BlindDate' do
+  commonPods
+  use_frameworks!
+  pod 'LeanCloud'
+end
+

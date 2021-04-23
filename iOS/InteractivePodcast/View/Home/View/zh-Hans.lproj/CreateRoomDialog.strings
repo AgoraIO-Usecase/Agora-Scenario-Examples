@@ -1,0 +1,15 @@
+
+/* Class = "UILabel"; text = "本应用为测试产品，请勿商用。单次直播最长10分钟"; ObjectID = "5Y6-XT-8yY"; */
+"5Y6-XT-8yY.text" = "本应用为测试产品，请勿商用。单次直播最长10分钟";
+
+/* Class = "UITextField"; placeholder = "请输入房间名"; ObjectID = "e8g-4w-z1o"; */
+"e8g-4w-z1o.placeholder" = "请输入房间名";
+
+/* Class = "UILabel"; text = "创建房间"; ObjectID = "gu2-aR-qDR"; */
+"gu2-aR-qDR.text" = "创建房间";
+
+/* Class = "UIButton"; normalTitle = "取消"; ObjectID = "hSO-U9-EYx"; */
+"hSO-U9-EYx.normalTitle" = "取消";
+
+/* Class = "UIButton"; normalTitle = "创建"; ObjectID = "z5M-z5-qas"; */
+"z5M-z5-qas.normalTitle" = "创建";

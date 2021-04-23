@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2B7-KZ-W3K" userLabel="dialog" customClass="CreateRoomDialog" customModule="BlindDate" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="354" height="255"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Create Room" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gu2-aR-qDR" userLabel="title">
+                    <rect key="frame" x="24" y="24" width="122" height="24"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5b3-n5-Hvt">
+                    <rect key="frame" x="24" y="60" width="306" height="60"/>
+                    <subviews>
+                        <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="240" horizontalCompressionResistancePriority="740" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Room Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="e8g-4w-z1o">
+                            <rect key="frame" x="12" y="19" width="245" height="22"/>
+                            <color key="textColor" red="0.70618587730000004" green="0.68114072079999999" blue="0.74902886150000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <textInputTraits key="textInputTraits" returnKeyType="go"/>
+                        </textField>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lto-fk-lrw">
+                            <rect key="frame" x="267" y="13" width="34" height="34"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="34" id="VRs-1A-d1C"/>
+                                <constraint firstAttribute="width" constant="34" id="xjg-7O-IVf"/>
+                            </constraints>
+                            <state key="normal" image="refresh"/>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" red="0.93355673549999996" green="0.93276512619999996" blue="0.96471124890000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="Lto-fk-lrw" secondAttribute="trailing" constant="5" id="3sx-SR-rJT"/>
+                        <constraint firstAttribute="height" constant="60" id="GJj-Bi-j67"/>
+                        <constraint firstItem="e8g-4w-z1o" firstAttribute="centerY" secondItem="5b3-n5-Hvt" secondAttribute="centerY" id="OGQ-ac-gKb"/>
+                        <constraint firstItem="Lto-fk-lrw" firstAttribute="leading" secondItem="e8g-4w-z1o" secondAttribute="trailing" constant="10" id="PLg-XX-2hU"/>
+                        <constraint firstItem="e8g-4w-z1o" firstAttribute="leading" secondItem="5b3-n5-Hvt" secondAttribute="leading" constant="12" id="d6v-OI-VtS"/>
+                        <constraint firstItem="Lto-fk-lrw" firstAttribute="centerY" secondItem="e8g-4w-z1o" secondAttribute="centerY" id="qbg-t9-qxm"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                            <integer key="value" value="6"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" animating="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="a6t-EA-DAQ" userLabel="processing">
+                    <rect key="frame" x="326.5" y="295" width="20" height="20"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="color" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </activityIndicatorView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hSO-U9-EYx">
+                    <rect key="frame" x="310" y="10" width="34" height="34"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="34" id="RPk-fQ-LC1"/>
+                        <constraint firstAttribute="width" constant="34" id="zUb-67-VZr"/>
+                    </constraints>
+                    <state key="normal" image="close"/>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z5M-z5-qas" userLabel="create">
+                    <rect key="frame" x="37" y="130" width="280" height="105"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                    <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <state key="normal" title="Create" backgroundImage="create_room">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                </button>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="Did-1p-XOR"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="gu2-aR-qDR" firstAttribute="leading" secondItem="2B7-KZ-W3K" secondAttribute="leading" constant="24" id="4Co-Rl-5KB"/>
+                <constraint firstItem="Did-1p-XOR" firstAttribute="bottom" secondItem="z5M-z5-qas" secondAttribute="bottom" constant="20" id="4Lq-dh-Mg3"/>
+                <constraint firstItem="5b3-n5-Hvt" firstAttribute="top" secondItem="gu2-aR-qDR" secondAttribute="bottom" constant="12" id="Hub-ud-WWv"/>
+                <constraint firstItem="5b3-n5-Hvt" firstAttribute="leading" secondItem="2B7-KZ-W3K" secondAttribute="leading" constant="24" id="TQA-LZ-37L"/>
+                <constraint firstItem="5b3-n5-Hvt" firstAttribute="centerX" secondItem="2B7-KZ-W3K" secondAttribute="centerX" id="XSf-v4-vfX"/>
+                <constraint firstItem="gu2-aR-qDR" firstAttribute="top" secondItem="2B7-KZ-W3K" secondAttribute="top" constant="24" id="aLj-sv-GZp"/>
+                <constraint firstItem="z5M-z5-qas" firstAttribute="top" secondItem="5b3-n5-Hvt" secondAttribute="bottom" constant="10" id="f9e-jv-0Pb"/>
+                <constraint firstItem="z5M-z5-qas" firstAttribute="centerX" secondItem="Did-1p-XOR" secondAttribute="centerX" id="fse-ze-LHn"/>
+                <constraint firstAttribute="top" secondItem="hSO-U9-EYx" secondAttribute="top" constant="-10" id="hcf-ti-fWw"/>
+                <constraint firstItem="Did-1p-XOR" firstAttribute="trailing" secondItem="hSO-U9-EYx" secondAttribute="trailing" constant="10" id="i6X-8L-l8e"/>
+                <constraint firstItem="z5M-z5-qas" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Did-1p-XOR" secondAttribute="leading" constant="24" id="ivh-Ix-dt7"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                    <integer key="value" value="18"/>
+                </userDefinedRuntimeAttribute>
+            </userDefinedRuntimeAttributes>
+            <connections>
+                <outlet property="cancelButton" destination="hSO-U9-EYx" id="vX8-ZV-byB"/>
+                <outlet property="createButton" destination="z5M-z5-qas" id="vtB-Aa-A9C"/>
+                <outlet property="indicatorView" destination="a6t-EA-DAQ" id="gvz-e5-rfF"/>
+                <outlet property="inputRoomView" destination="e8g-4w-z1o" id="Hv7-ee-R4q"/>
+                <outlet property="refreshButton" destination="Lto-fk-lrw" id="7E7-V3-9Fw"/>
+            </connections>
+            <point key="canvasLocation" x="-91" y="-365"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="close" width="34" height="34"/>
+        <image name="create_room" width="280" height="76"/>
+        <image name="refresh" width="34" height="34"/>
+    </resources>
+</document>
