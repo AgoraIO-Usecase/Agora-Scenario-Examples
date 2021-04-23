@@ -51,8 +51,9 @@ public class DataProvider implements IDataProvider {
                 .build();
         db.setFirestoreSettings(settings);
 
+        IConfigSource mIConfigSource = new DefaultConfigSource();
         mIStoreSource = new StoreSource();
-        mIMessageSource = new MessageSource(mContext, iRoomProxy);
+        mIMessageSource = new MessageSource(mContext, iRoomProxy, mIConfigSource);
     }
 
     @Override

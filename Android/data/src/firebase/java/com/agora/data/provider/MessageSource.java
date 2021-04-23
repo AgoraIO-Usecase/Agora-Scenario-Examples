@@ -9,6 +9,7 @@ import androidx.core.util.ObjectsCompat;
 import com.agora.data.BaseError;
 import com.agora.data.model.Action;
 import com.agora.data.model.Member;
+import com.agora.data.model.RequestMember;
 import com.agora.data.model.Room;
 import com.agora.data.model.User;
 import com.agora.data.observer.DataMaybeObserver;
@@ -59,10 +60,10 @@ class MessageSource extends BaseMessageSource {
     /**
      * 申请举手用户列表
      */
-    private final Map<String, Member> handUpMembers = new ConcurrentHashMap<>();
+    private final Map<String, RequestMember> handUpMembers = new ConcurrentHashMap<>();
 
-    public MessageSource(@NonNull Context context, @NonNull IRoomProxy iRoomProxy) {
-        super(iRoomProxy);
+    public MessageSource(@NonNull Context context, @NonNull IRoomProxy iRoomProxy, @NonNull IConfigSource mIConfigSource) {
+        super(iRoomProxy, mIConfigSource);
         this.mContext = context;
 
         db = FirebaseFirestore.getInstance();
@@ -315,7 +316,7 @@ class MessageSource extends BaseMessageSource {
     }
 
     @Override
-    public Completable requestHandsUp(@NonNull Member member) {
+    public Completable requestConnect(@NonNull Member member, @NonNull Action.ACTION action) {
         return Completable.create(emitter -> {
             DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(member.getRoomId().getObjectId());
             DocumentReference drMember = db.collection(DataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
@@ -338,7 +339,7 @@ class MessageSource extends BaseMessageSource {
     }
 
     @Override
-    public Completable agreeHandsUp(@NonNull Member member) {
+    public Completable agreeRequest(@NonNull Member member, @NonNull Action.ACTION action) {
         return Completable.create(emitter -> {
             db.runTransaction(new Transaction.Function<Void>() {
                 @Nullable
@@ -371,7 +372,7 @@ class MessageSource extends BaseMessageSource {
     }
 
     @Override
-    public Completable refuseHandsUp(@NonNull Member member) {
+    public Completable refuseRequest(@NonNull Member member, @NonNull Action.ACTION action) {
         return Completable.create(emitter -> {
             DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(member.getRoomId().getObjectId());
             DocumentReference drMember = db.collection(DataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
@@ -399,7 +400,7 @@ class MessageSource extends BaseMessageSource {
     }
 
     @Override
-    public Completable inviteSeat(@NonNull Member member) {
+    public Completable inviteConnect(@NonNull Member member, @NonNull Action.ACTION action) {
         return Completable.create(emitter -> {
             DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(member.getRoomId().getObjectId());
             DocumentReference drMember = db.collection(DataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
@@ -478,7 +479,7 @@ class MessageSource extends BaseMessageSource {
     }
 
     @Override
-    public Completable seatOff(@NonNull Member member) {
+    public Completable seatOff(@NonNull Member member, @NonNull Member.Role role) {
         return Completable.create(emitter -> {
             db.collection(DataProvider.TAG_TABLE_MEMBER)
                     .document(member.getObjectId())
@@ -489,7 +490,7 @@ class MessageSource extends BaseMessageSource {
     }
 
     @Override
-    public Observable<List<Member>> getHandUpList() {
+    public Observable<List<RequestMember>> getRequestList() {
         return Observable.just(new ArrayList<>(handUpMembers.values()));
     }
 
@@ -535,7 +536,7 @@ class MessageSource extends BaseMessageSource {
                                             }
 
                                             if (dc.getType() == DocumentChange.Type.ADDED) {
-                                                if (item.getAction() == Action.ACTION.HandsUp.getValue()) {
+                                                if (item.getAction() == Action.ACTION.HandsUp) {
                                                     if (item.getStatus() == Action.ACTION_STATUS.Ing.getValue()) {
                                                         Member member = iRoomProxy.getMemberById(ds.getId());
                                                         if (member == null) {
@@ -546,10 +547,11 @@ class MessageSource extends BaseMessageSource {
                                                             return;
                                                         }
 
-                                                        handUpMembers.put(member.getObjectId(), member);
-                                                        iRoomProxy.onReceivedHandUp(member);
+                                                        RequestMember requestMember = new RequestMember(member, item.getAction());
+                                                        handUpMembers.put(member.getObjectId(), requestMember);
+                                                        iRoomProxy.onReceivedRequest(member, item.getAction());
                                                     }
-                                                } else if (item.getAction() == Action.ACTION.Invite.getValue()) {
+                                                } else if (item.getAction() == Action.ACTION.Invite) {
                                                     if (item.getStatus() == Action.ACTION_STATUS.Agree.getValue()) {
                                                         Member member = iRoomProxy.getMemberById(ds.getId());
                                                         if (member == null) {
@@ -607,13 +609,13 @@ class MessageSource extends BaseMessageSource {
                             item.setRoomId(iRoomProxy.getRoom());
                             item.setMemberId(iRoomProxy.getMine());
                             if (dc.getType() == DocumentChange.Type.ADDED) {
-                                if (item.getAction() == Action.ACTION.HandsUp.getValue()) {
+                                if (item.getAction() == Action.ACTION.HandsUp) {
                                     if (item.getStatus() == Action.ACTION_STATUS.Agree.getValue()) {
-                                        iRoomProxy.onHandUpAgree(member);
+                                        iRoomProxy.onRequestAgreed(member, item.getAction());
                                     } else if (item.getStatus() == Action.ACTION_STATUS.Refuse.getValue()) {
-                                        iRoomProxy.onHandUpRefuse(member);
+                                        iRoomProxy.onRequestRefused(member);
                                     }
-                                } else if (item.getAction() == Action.ACTION.Invite.getValue()) {
+                                } else if (item.getAction() == Action.ACTION.Invite) {
                                     if (item.getStatus() == Action.ACTION_STATUS.Ing.getValue()) {
                                         iRoomProxy.onReceivedInvite(member);
                                     }

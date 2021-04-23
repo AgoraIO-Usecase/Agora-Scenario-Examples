@@ -17,7 +17,7 @@ public class ActionTemp {
     public Action create(String objectId) {
         Action action = new Action();
         action.setObjectId(objectId);
-        action.setAction(this.action);
+        action.setAction(Action.ACTION.parse(this.action));
         action.setStatus(this.status);
         return action;
     }
