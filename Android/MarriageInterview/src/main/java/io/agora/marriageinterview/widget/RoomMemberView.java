@@ -10,6 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
 
 import com.agora.data.model.Member;
+import com.bumptech.glide.Glide;
 
 import io.agora.marriageinterview.R;
 import io.agora.marriageinterview.databinding.LayoutRoomMemberBinding;
@@ -42,5 +43,9 @@ public class RoomMemberView extends ConstraintLayout {
 
     private void init(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         mDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.layout_room_member, this, true);
+    }
+
+    public void setUser(@NonNull Member mMember){
+        Glide.with(this).load(mMember.getUserId().getAvatarRes()).circleCrop().into(mDataBinding.ivHead);
     }
 }

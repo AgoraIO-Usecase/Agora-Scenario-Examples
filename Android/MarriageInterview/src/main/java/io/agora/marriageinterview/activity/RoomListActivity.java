@@ -89,7 +89,14 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
         mDataBinding.btCrateRoom.setVisibility(View.VISIBLE);
 
         mDataBinding.tvEmpty.setVisibility(mAdapter.getItemCount() <= 0 ? View.VISIBLE : View.GONE);
-        loadRooms();
+
+        mDataBinding.swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mDataBinding.swipeRefreshLayout.setRefreshing(true);
+                loadRooms();
+            }
+        });
     }
 
     private void loadRooms() {

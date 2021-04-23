@@ -4,19 +4,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.SurfaceView;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.util.ObjectsCompat;
 
 import com.agora.data.BaseError;
 import com.agora.data.DataRepositroy;
 import com.agora.data.RoomEventCallback;
 import com.agora.data.manager.RoomManager;
-import com.agora.data.manager.RtcManager;
 import com.agora.data.manager.UserManager;
+import com.agora.data.model.Action;
 import com.agora.data.model.Member;
 import com.agora.data.model.Room;
 import com.agora.data.model.User;
@@ -30,17 +30,17 @@ import java.util.List;
 import io.agora.baselibrary.base.DataBindBaseActivity;
 import io.agora.baselibrary.util.ToastUtile;
 import io.agora.marriageinterview.R;
-import io.agora.marriageinterview.adapter.RoomMembersAdapter;
 import io.agora.marriageinterview.adapter.RoomMessagesAdapter;
+import io.agora.marriageinterview.adapter.RoomPreMemberListAdapter;
 import io.agora.marriageinterview.databinding.ActivityChatRoomBinding;
 import io.agora.marriageinterview.widget.ConfirmDialog;
-import io.agora.marriageinterview.widget.HandUpDialog;
-import io.agora.marriageinterview.widget.InviteMenuDialog;
 import io.agora.marriageinterview.widget.InvitedMenuDialog;
+import io.agora.marriageinterview.widget.MemberListDialog;
+import io.agora.marriageinterview.widget.RequestConnectListDialog;
+import io.agora.marriageinterview.widget.RoomSpeakerView;
 import io.agora.marriageinterview.widget.UserSeatMenuDialog;
 import io.agora.rtc.Constants;
 import io.agora.rtc.RtcEngine;
-import io.agora.rtc.video.VideoCanvas;
 import io.agora.rtc.video.VideoEncoderConfiguration;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
@@ -59,7 +59,7 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
 
     private static final String TAG_ROOM = "room";
 
-    private RoomMembersAdapter mAdapterMembers;
+    private RoomPreMemberListAdapter mAdapterMembers;
     private RoomMessagesAdapter mAdapterMessage;
 
     private IRoomConfigProvider roomConfig = new IRoomConfigProvider() {
@@ -103,7 +103,7 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
 
     @Override
     protected void iniView() {
-        mAdapterMembers = new RoomMembersAdapter(null, null);
+        mAdapterMembers = new RoomPreMemberListAdapter(null, null);
         mAdapterMessage = new RoomMessagesAdapter(null, null);
         mDataBinding.rvMembers.setAdapter(mAdapterMembers);
         mDataBinding.rvMessage.setAdapter(mAdapterMessage);
@@ -113,6 +113,7 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
     protected void iniListener() {
         RoomManager.Instance(this).addRoomEventCallback(this);
         mDataBinding.ivBack.setOnClickListener(this);
+        mDataBinding.ivMembers.setOnClickListener(this);
         mDataBinding.ivMessage.setOnClickListener(this);
         mDataBinding.ivRequest.setOnClickListener(this);
         mDataBinding.ivMagic.setOnClickListener(this);
@@ -140,9 +141,9 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
         RoomManager.Instance(this).onJoinRoom(mRoom, mMember);
 
         if (isOwner()) {
-            mMember.setIsSpeaker(1);
+            mMember.setRole(Member.Role.Speaker);
         } else {
-            mMember.setIsSpeaker(0);
+            mMember.setRole(Member.Role.Listener);
         }
 
         UserManager.Instance(this).getUserLiveData().observe(this, tempUser -> {
@@ -161,7 +162,7 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
         preJoinRoom(mRoom);
     }
 
-    private void refreshVoiceView() {
+    private void refreshAudioView() {
         Member member = RoomManager.Instance(ChatRoomActivity.this).getMine();
         if (member == null) {
             return;
@@ -170,23 +171,23 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
         if (isOwner()) {
             mDataBinding.ivAudio.setVisibility(View.VISIBLE);
             if (member.getIsMuted() == 1) {
-                mDataBinding.ivAudio.setImageResource(R.mipmap.icon_microphoneoff);
+                mDataBinding.ivAudio.setImageResource(R.mipmap.icon_menu_close_audio);
             } else if (member.getIsSelfMuted() == 1) {
-                mDataBinding.ivAudio.setImageResource(R.mipmap.icon_microphoneoff);
+                mDataBinding.ivAudio.setImageResource(R.mipmap.icon_menu_close_audio);
             } else {
-                mDataBinding.ivAudio.setImageResource(R.mipmap.icon_microphoneon);
+                mDataBinding.ivAudio.setImageResource(R.mipmap.icon_menu_open_audio);
             }
         } else {
-            if (member.getIsSpeaker() == 0) {
+            if (member.getRole() == Member.Role.Listener) {
                 mDataBinding.ivAudio.setVisibility(View.GONE);
             } else {
                 mDataBinding.ivAudio.setVisibility(View.VISIBLE);
                 if (member.getIsMuted() == 1) {
-                    mDataBinding.ivAudio.setImageResource(R.mipmap.icon_microphoneoff);
+                    mDataBinding.ivAudio.setImageResource(R.mipmap.icon_menu_close_audio);
                 } else if (member.getIsSelfMuted() == 1) {
-                    mDataBinding.ivAudio.setImageResource(R.mipmap.icon_microphoneoff);
+                    mDataBinding.ivAudio.setImageResource(R.mipmap.icon_menu_close_audio);
                 } else {
-                    mDataBinding.ivAudio.setImageResource(R.mipmap.icon_microphoneon);
+                    mDataBinding.ivAudio.setImageResource(R.mipmap.icon_menu_open_audio);
                 }
             }
         }
@@ -231,33 +232,8 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
                             return;
                         }
 
-                        RoomManager.Instance(ChatRoomActivity.this)
-                                .getMember(mine.getUserId().getObjectId())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .compose(mLifecycleProvider.bindToLifecycle())
-                                .subscribe(new DataMaybeObserver<Member>(ChatRoomActivity.this) {
-                                    @Override
-                                    public void handleError(@NonNull BaseError e) {
-                                        if (RoomManager.isLeaving) {
-                                            return;
-                                        }
-
-                                        ToastUtile.toastShort(ChatRoomActivity.this, R.string.error_room_not_exsit);
-                                        finish();
-                                    }
-
-                                    @Override
-                                    public void handleSuccess(@Nullable Member member) {
-                                        if (RoomManager.isLeaving) {
-                                            return;
-                                        }
-
-                                        Room room = RoomManager.Instance(ChatRoomActivity.this).getRoom();
-                                        onLoadRoom(room);
-
-                                        joinRoom();
-                                    }
-                                });
+                        onLoadRoom(room);
+                        joinRoom();
                     }
                 });
     }
@@ -275,7 +251,7 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
                 .subscribe(new DataObserver<List<Member>>(this) {
                     @Override
                     public void handleError(@NonNull BaseError e) {
-
+                        showErrorDialog(e.getMessage());
                     }
 
                     @Override
@@ -285,11 +261,12 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
                         }
 
                         onLoadRoomMembers(members);
+                        onJoinRoomEnd();
                     }
                 });
     }
 
-    private void onLoadRoom(Room room) {
+    private void onLoadRoom(@NonNull Room room) {
 
     }
 
@@ -297,7 +274,17 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
         RoomManager.Instance(this).onLoadRoomMembers(members);
 
         for (Member member : members) {
-            mAdapterMembers.addItem(member);
+            if (mAdapterMembers.getItemCount() <= 3) {
+                mAdapterMembers.addItem(member);
+            }
+
+            boolean isLocal = isMine(member);
+            if (member.getRole() == Member.Role.Left) {
+                mDataBinding.viewUserLeft.onMemberJoin(isLocal, member);
+            }
+            if (member.getRole() == Member.Role.Right) {
+                mDataBinding.viewUserRight.onMemberJoin(isLocal, member);
+            }
         }
     }
 
@@ -313,7 +300,17 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
             return;
         }
         inviteDialog = new InvitedMenuDialog();
-        inviteDialog.show(getSupportFragmentManager(), room.getAnchorId());
+        inviteDialog.show(getSupportFragmentManager(), room.getAnchorId(), new InvitedMenuDialog.IConnectStatusProvider() {
+            @Override
+            public boolean hasLeftMember() {
+                return mDataBinding.viewUserLeft.hasMember();
+            }
+
+            @Override
+            public boolean hasRightMember() {
+                return mDataBinding.viewUserRight.hasMember();
+            }
+        });
     }
 
     private void closeInviteDialog() {
@@ -344,14 +341,12 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
                         }
 
                         getMembers();
-                        onJoinRoomEnd();
                     }
                 });
     }
 
     private void onJoinRoomEnd() {
-        refreshVoiceView();
-        refreshHandUpView();
+        refreshAudioView();
 
         Member member = RoomManager.Instance(this).getMine();
         if (member == null) {
@@ -362,85 +357,131 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
         if (owner == null) {
             return;
         }
+
         if (isOwner()) {
             mDataBinding.ivRequest.setVisibility(View.VISIBLE);
             mDataBinding.ivMagic.setVisibility(View.VISIBLE);
             mDataBinding.ivAudio.setVisibility(View.VISIBLE);
 
+            mDataBinding.viewUserMiddle.onMemberJoin(true, member);
 
-            if (member.getIsSpeaker() == 1) {
-                SurfaceView mLocalView = mDataBinding.viewUserMiddle.getVideoSurfaceView();
-                mLocalView.setZOrderMediaOverlay(true);
-                VideoCanvas mVideoCanvas = new VideoCanvas(mLocalView);
-                mVideoCanvas.renderMode = VideoCanvas.RENDER_MODE_HIDDEN;
-                mVideoCanvas.uid = RtcManager.Instance(this).uid;
-                RtcManager.Instance(this).getRtcEngine().setupLocalVideo(mVideoCanvas);
-                mDataBinding.viewUserMiddle.onMemberJoin(member);
-
-                RoomManager.Instance(this).startLivePlay();
-                RtcManager.Instance(this).getRtcEngine().startPreview();
-            } else {
-                RoomManager.Instance(this).stopLivePlay();
-            }
+            RoomManager.Instance(this).startLivePlay();
         } else {
             mDataBinding.ivRequest.setVisibility(View.GONE);
             mDataBinding.ivMagic.setVisibility(View.GONE);
             mDataBinding.ivAudio.setVisibility(View.GONE);
 
-            mDataBinding.viewUserMiddle.onMemberJoin(owner);
-            SurfaceView mRemoteView = mDataBinding.viewUserMiddle.getVideoSurfaceView();
-            VideoCanvas mVideoCanvasOwner = new VideoCanvas(mRemoteView);
-            mVideoCanvasOwner.renderMode = VideoCanvas.RENDER_MODE_HIDDEN;
-            mVideoCanvasOwner.uid = owner.getStreamId().intValue();
-            RtcManager.Instance(this).getRtcEngine().setupRemoteVideo(mVideoCanvasOwner);
+            mDataBinding.viewUserMiddle.onMemberJoin(false, owner);
 
-            if (member.getIsSpeaker() == 1) {
-                SurfaceView mLocalView = mDataBinding.viewUserLeft.getVideoSurfaceView();
-                mLocalView.setZOrderMediaOverlay(true);
-                VideoCanvas mVideoCanvas = new VideoCanvas(mLocalView);
-                mVideoCanvas.renderMode = VideoCanvas.RENDER_MODE_HIDDEN;
-                mVideoCanvas.uid = RtcManager.Instance(this).uid;
-                RtcManager.Instance(this).getRtcEngine().setupLocalVideo(mVideoCanvas);
-                mDataBinding.viewUserLeft.onMemberJoin(member);
+            if (member.getRole() != Member.Role.Listener) {
+                mDataBinding.ivMagic.setVisibility(View.VISIBLE);
+                mDataBinding.ivAudio.setVisibility(View.VISIBLE);
 
                 RoomManager.Instance(this).startLivePlay();
-                RtcManager.Instance(this).getRtcEngine().startPreview();
             } else {
                 RoomManager.Instance(this).stopLivePlay();
             }
         }
+        refreshAudioView();
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.ivMembers) {
-
+            showMembersDialog();
         } else if (id == R.id.ivRequest) {
-
+            showRequestListDialog();
         } else if (id == R.id.ivMagic) {
 
         } else if (id == R.id.ivAudio) {
             toggleAudio();
         } else if (id == R.id.viewUserLeft) {
+            onLeftViewClick();
         } else if (id == R.id.viewUserRight) {
+            onRightViewClick();
         } else if (id == R.id.ivBack) {
-            showLeaveRoomDialog();
+            if (isOwner()) {
+                showCloseRoomDialog();
+            } else {
+                showLeaveRoomDialog();
+            }
+        }
+    }
+
+    private void showRequestListDialog() {
+        RequestConnectListDialog dialog = new RequestConnectListDialog();
+        dialog.show(getSupportFragmentManager(), new RequestConnectListDialog.IConnectStatusProvider() {
+            @Override
+            public boolean hasLeftMember() {
+                return mDataBinding.viewUserLeft.hasMember();
+            }
+
+            @Override
+            public boolean hasRightMember() {
+                return mDataBinding.viewUserRight.hasMember();
+            }
+        });
+    }
+
+    private void showMembersDialog() {
+        MemberListDialog dialog = new MemberListDialog();
+        dialog.show(getSupportFragmentManager(), new MemberListDialog.IConnectStatusProvider() {
+            @Override
+            public boolean isMemberConnected(Member member) {
+                if (ObjectsCompat.equals(mDataBinding.viewUserLeft.getMember(), member)) {
+                    return true;
+                }
+
+                if (ObjectsCompat.equals(mDataBinding.viewUserRight.getMember(), member)) {
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public boolean hasLeftMember() {
+                return mDataBinding.viewUserLeft.hasMember();
+            }
+
+            @Override
+            public boolean hasRightMember() {
+                return mDataBinding.viewUserRight.hasMember();
+            }
+        });
+    }
+
+    private void onLeftViewClick() {
+        if (mDataBinding.viewUserLeft.hasMember()) {
+            if (isOwner()) {
+                showUserMenuDialog(mDataBinding.viewUserLeft.getMember());
+            }
+        } else {
+            if (isOwner()) {
+                return;
+            }
+
+            requestContect(mDataBinding.viewUserLeft, Action.ACTION.RequestLeft);
+        }
+    }
+
+    private void onRightViewClick() {
+        if (mDataBinding.viewUserRight.hasMember()) {
+            if (isOwner()) {
+                showUserMenuDialog(mDataBinding.viewUserRight.getMember());
+            }
+        } else {
+            if (isOwner()) {
+                return;
+            }
+
+            requestContect(mDataBinding.viewUserRight, Action.ACTION.RequestRight);
         }
     }
 
     private void leaveRoom() {
         RoomManager.Instance(this).leaveRoom();
         finish();
-    }
-
-    private void gotoHandsUpList() {
-        Room mRoom = RoomManager.Instance(this).getRoom();
-        if (mRoom == null) {
-            return;
-        }
-
-        new HandUpDialog().show(getSupportFragmentManager());
     }
 
     private void toggleAudio() {
@@ -471,45 +512,35 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
                     @Override
                     public void handleSuccess() {
                         mDataBinding.ivAudio.setEnabled(true);
-                        refreshVoiceView();
+                        refreshAudioView();
                     }
                 });
     }
 
-    private void refreshHandUpView() {
-//        if (RoomManager.Instance(this).isOwner()) {
-//            mDataBinding.ivHandUp.setVisibility(View.GONE);
-//        } else {
-//            mDataBinding.ivHandUp.setImageResource(R.mipmap.icon_un_handup);
-//
-//            Member member = RoomManager.Instance(this).getMine();
-//            if (member == null) {
-//                return;
-//            }
-//            mDataBinding.ivHandUp.setVisibility(member.getIsSpeaker() == 0 ? View.VISIBLE : View.GONE);
-//        }
-    }
+    private void requestContect(RoomSpeakerView mRoomSpeakerView, @NonNull Action.ACTION action) {
+        Member member = RoomManager.Instance(this).getMine();
+        if (member == null || member.getRole() != Member.Role.Listener) {
+            return;
+        }
 
-    private void toggleHandUp() {
-//        mDataBinding.ivHandUp.setEnabled(false);
-//        RoomManager.Instance(this)
-//                .requestHandsUp()
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .compose(mLifecycleProvider.bindToLifecycle())
-//                .subscribe(new DataCompletableObserver(this) {
-//                    @Override
-//                    public void handleError(@NonNull BaseError e) {
-//                        ToastUtile.toastShort(ChatRoomActivity.this, e.getMessage());
-//                        mDataBinding.ivHandUp.setEnabled(true);
-//                    }
-//
-//                    @Override
-//                    public void handleSuccess() {
-//                        refreshHandUpView();
-//                        mDataBinding.ivHandUp.setEnabled(true);
-//                        ToastUtile.toastShort(ChatRoomActivity.this, R.string.request_handup_success);
-//                    }
-//                });
+        mRoomSpeakerView.setEnabled(false);
+        RoomManager.Instance(this)
+                .requestConnect(action)
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(mLifecycleProvider.bindToLifecycle())
+                .subscribe(new DataCompletableObserver(this) {
+                    @Override
+                    public void handleError(@NonNull BaseError e) {
+                        ToastUtile.toastShort(ChatRoomActivity.this, e.getMessage());
+                        mRoomSpeakerView.setEnabled(true);
+                    }
+
+                    @Override
+                    public void handleSuccess() {
+                        mRoomSpeakerView.setEnabled(true);
+                        ToastUtile.toastShort(ChatRoomActivity.this, R.string.request_handup_success);
+                    }
+                });
     }
 
     private UserSeatMenuDialog mUserSeatMenuDialog;
@@ -524,17 +555,6 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
     }
 
 
-    private InviteMenuDialog mInviteMenuDialog;
-
-    private void showUserInviteDialog(Member data) {
-        if (mInviteMenuDialog != null && mInviteMenuDialog.isShowing()) {
-            return;
-        }
-
-        mInviteMenuDialog = new InviteMenuDialog();
-        mInviteMenuDialog.show(getSupportFragmentManager());
-    }
-
     @Override
     public void onOwnerLeaveRoom(@NonNull Room room) {
         ToastUtile.toastShort(this, R.string.room_closed);
@@ -548,20 +568,30 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
 
     @Override
     public void onMemberJoin(@NonNull Member member) {
-
+        if (mAdapterMembers.getItemCount() <= 3) {
+            mAdapterMembers.addItem(member);
+        }
     }
 
     @Override
     public void onMemberLeave(@NonNull Member member) {
+        mAdapterMembers.deleteItem(member);
+
+        this.mDataBinding.viewUserLeft.onMemberLeave(member);
+        this.mDataBinding.viewUserRight.onMemberLeave(member);
     }
 
     @Override
     public void onRoleChanged(boolean isMine, @NonNull Member member) {
-        refreshVoiceView();
-        refreshHandUpView();
+        refreshAudioView();
+
+        if (member.getRole() == Member.Role.Listener) {
+            this.mDataBinding.viewUserLeft.onMemberLeave(member);
+            this.mDataBinding.viewUserRight.onMemberLeave(member);
+        }
 
         if (!isMine && isMine(member)) {
-            if (member.getIsSpeaker() == 0) {
+            if (member.getRole() == Member.Role.Listener) {
                 ToastUtile.toastShort(this, R.string.member_speaker_to_listener);
             }
         }
@@ -569,29 +599,43 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
 
     @Override
     public void onAudioStatusChanged(boolean isMine, @NonNull Member member) {
-        refreshVoiceView();
+        refreshAudioView();
+
+        Member mOwner = RoomManager.Instance(this).getOwner();
+        if (ObjectsCompat.equals(member, mOwner)) {
+            mDataBinding.viewUserMiddle.onMemberAudioChanged(member);
+        } else {
+            mDataBinding.viewUserLeft.onMemberAudioChanged(member);
+            mDataBinding.viewUserRight.onMemberAudioChanged(member);
+        }
 
         if (!isMine && isMine(member)) {
             if (member.getIsMuted() == 1) {
                 ToastUtile.toastShort(this, R.string.member_muted);
             }
         }
-
     }
 
     @Override
     public void onSDKVideoStatusChanged(@NonNull Member member) {
         mDataBinding.viewUserMiddle.onMemberVideoChanged(member);
+        mDataBinding.viewUserLeft.onMemberVideoChanged(member);
+        mDataBinding.viewUserRight.onMemberVideoChanged(member);
     }
 
     @Override
-    public void onReceivedHandUp(@NonNull Member member) {
+    public void onReceivedRequest(@NonNull Member member, @NonNull Action.ACTION action) {
         mDataBinding.ivRequest.setCount(DataRepositroy.Instance(this).getHandUpListCount());
     }
 
     @Override
-    public void onHandUpAgree(@NonNull Member member) {
-        refreshHandUpView();
+    public void onRequestAgreed(@NonNull Member member) {
+        boolean isLocal = isMine(member);
+        if (member.getRole() == Member.Role.Left) {
+            this.mDataBinding.viewUserLeft.onMemberJoin(isLocal, member);
+        } else if (member.getRole() == Member.Role.Right) {
+            this.mDataBinding.viewUserRight.onMemberJoin(isLocal, member);
+        }
 
         if (isOwner()) {
             mDataBinding.ivRequest.setCount(DataRepositroy.Instance(this).getHandUpListCount());
@@ -599,12 +643,10 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
     }
 
     @Override
-    public void onHandUpRefuse(@NonNull Member member) {
+    public void onRequestRefuse(@NonNull Member member) {
         if (isMine(member)) {
             ToastUtile.toastShort(this, R.string.handup_refuse);
         }
-
-        refreshHandUpView();
 
         if (isOwner()) {
             mDataBinding.ivRequest.setCount(DataRepositroy.Instance(this).getHandUpListCount());
@@ -618,7 +660,18 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
 
     @Override
     public void onInviteAgree(@NonNull Member member) {
+        if (mDataBinding.viewUserLeft.hasMember() && mDataBinding.viewUserRight.hasMember()) {
+            return;
+        }
 
+        boolean isLocal = isMine(member);
+        if (mDataBinding.viewUserLeft.hasMember() == false) {
+            member.setRole(Member.Role.Left);
+            mDataBinding.viewUserLeft.onMemberJoin(isLocal, member);
+        } else if (mDataBinding.viewUserRight.hasMember() == false) {
+            member.setRole(Member.Role.Right);
+            mDataBinding.viewUserLeft.onMemberJoin(isLocal, member);
+        }
     }
 
     @Override
@@ -711,6 +764,6 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
 
     @Override
     public void onBackPressed() {
-
+        mDataBinding.ivBack.performClick();
     }
 }

@@ -12,7 +12,6 @@ import io.reactivex.Maybe;
 import io.reactivex.Observable;
 
 public interface IStoreSource {
-
     Observable<User> login(@NonNull User user);
 
     Observable<User> update(@NonNull User user);

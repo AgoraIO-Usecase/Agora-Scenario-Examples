@@ -3,6 +3,7 @@ package com.agora.data;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 
+import com.agora.data.model.Action;
 import com.agora.data.model.Member;
 import com.agora.data.model.Room;
 
@@ -45,17 +46,18 @@ public class BaseRoomEventCallback implements RoomEventCallback {
     }
 
     @Override
-    public void onReceivedHandUp(@NonNull Member member) {
+    public void onReceivedRequest(@NonNull Member member, @NonNull Action.ACTION action) {
+
+    }
+
+
+    @Override
+    public void onRequestAgreed(@NonNull Member member) {
 
     }
 
     @Override
-    public void onHandUpAgree(@NonNull Member member) {
-
-    }
-
-    @Override
-    public void onHandUpRefuse(@NonNull Member member) {
+    public void onRequestRefuse(@NonNull Member member) {
 
     }
 

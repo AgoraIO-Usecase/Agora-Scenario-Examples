@@ -12,6 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.util.ObjectsCompat;
 import androidx.databinding.DataBindingUtil;
 
+import com.agora.data.manager.RtcManager;
 import com.agora.data.model.Member;
 import com.agora.data.model.User;
 import com.bumptech.glide.Glide;
@@ -19,6 +20,7 @@ import com.bumptech.glide.Glide;
 import io.agora.marriageinterview.R;
 import io.agora.marriageinterview.databinding.LayoutRoomSpeakerBinding;
 import io.agora.rtc.RtcEngine;
+import io.agora.rtc.video.VideoCanvas;
 
 /**
  * 房间中说话人View
@@ -56,61 +58,101 @@ public class RoomSpeakerView extends ConstraintLayout {
         mDataBinding.ivAudio.setVisibility(View.GONE);
     }
 
-    public SurfaceView getVideoSurfaceView() {
+    public boolean hasMember() {
+        return mMember != null;
+    }
+
+    public Member getMember() {
+        return mMember;
+    }
+
+    private SurfaceView getVideoSurfaceView() {
         if (svVideo == null) {
             svVideo = RtcEngine.CreateRendererView(getContext());
+            svVideo.setZOrderMediaOverlay(true);
             addView(svVideo, 0);
         }
         return svVideo;
     }
 
-    public void onMemberJoin(@NonNull Member member) {
+    public void onMemberJoin(boolean isLocal, @NonNull Member member) {
         this.mMember = member;
         mDataBinding.ivJoin.setVisibility(GONE);
-        svVideo.setVisibility(GONE);
-        mDataBinding.ivUser.setVisibility(VISIBLE);
+
+        mDataBinding.ivAudio.setVisibility(VISIBLE);
+
+        SurfaceView svVideo = getVideoSurfaceView();
+        if (member.getIsSDKVideoMuted() == 0) {
+            svVideo.setVisibility(VISIBLE);
+            mDataBinding.ivUser.setVisibility(GONE);
+        } else {
+            svVideo.setVisibility(GONE);
+            mDataBinding.ivUser.setVisibility(VISIBLE);
+        }
+
+        if (isLocal) {
+            VideoCanvas mVideoCanvasOwner = new VideoCanvas(svVideo);
+            mVideoCanvasOwner.renderMode = VideoCanvas.RENDER_MODE_HIDDEN;
+            mVideoCanvasOwner.uid = member.getStreamId().intValue();
+            RtcManager.Instance(getContext()).getRtcEngine().setupLocalVideo(mVideoCanvasOwner);
+        } else {
+            VideoCanvas mVideoCanvasOwner = new VideoCanvas(svVideo);
+            mVideoCanvasOwner.renderMode = VideoCanvas.RENDER_MODE_HIDDEN;
+            mVideoCanvasOwner.uid = member.getStreamId().intValue();
+            RtcManager.Instance(getContext()).getRtcEngine().setupRemoteVideo(mVideoCanvasOwner);
+        }
+
         setUserInfo(member);
         onMemberAudioChanged(member);
     }
 
     public void onMemberLeave(@NonNull Member member) {
+        if (mMember == null) {
+            return;
+        }
+
+        if (ObjectsCompat.equals(member, mMember) == false) {
+            return;
+        }
+
         mMember = null;
-        svVideo.setVisibility(GONE);
+        if (svVideo != null) {
+            svVideo.setVisibility(GONE);
+        }
         mDataBinding.ivUser.setVisibility(GONE);
         mDataBinding.ivJoin.setVisibility(VISIBLE);
-    }
-
-    public void leaveMember(@NonNull Member member) {
-        if (ObjectsCompat.equals(member, mMember)) {
-            onMemberLeave(mMember);
-        }
+        mDataBinding.tvName.setText("");
+        mDataBinding.ivAudio.setVisibility(GONE);
     }
 
     public void onMemberVideoChanged(@NonNull Member member) {
         if (ObjectsCompat.equals(member, mMember)) {
             if (member.getIsSDKVideoMuted() == 0) {
                 mDataBinding.ivUser.setVisibility(View.GONE);
-                svVideo.setVisibility(VISIBLE);
+                if (svVideo != null) {
+                    svVideo.setVisibility(VISIBLE);
+                }
             } else {
                 mDataBinding.ivUser.setVisibility(View.VISIBLE);
-                svVideo.setVisibility(GONE);
+                if (svVideo != null) {
+                    svVideo.setVisibility(GONE);
+                }
             }
         }
     }
 
     public void onMemberAudioChanged(@NonNull Member member) {
+        if (mMember == null) {
+            return;
+        }
+
         if (ObjectsCompat.equals(member, mMember)) {
-            if (member.getIsSpeaker() == 0) {
-                mDataBinding.ivAudio.setVisibility(View.GONE);
+            if (member.getIsMuted() == 1) {
+                mDataBinding.ivAudio.setImageResource(R.mipmap.icon_audio_close);
+            } else if (member.getIsSelfMuted() == 1) {
+                mDataBinding.ivAudio.setImageResource(R.mipmap.icon_audio_close);
             } else {
-                mDataBinding.ivAudio.setVisibility(View.VISIBLE);
-                if (member.getIsMuted() == 1) {
-                    mDataBinding.ivAudio.setImageResource(R.mipmap.icon_audio_close);
-                } else if (member.getIsSelfMuted() == 1) {
-                    mDataBinding.ivAudio.setImageResource(R.mipmap.icon_audio_close);
-                } else {
-                    mDataBinding.ivAudio.setImageResource(R.mipmap.icon_audio_open);
-                }
+                mDataBinding.ivAudio.setImageResource(R.mipmap.icon_audio_open);
             }
         }
     }

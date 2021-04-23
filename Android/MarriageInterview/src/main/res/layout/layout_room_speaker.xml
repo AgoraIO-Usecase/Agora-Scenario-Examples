@@ -12,8 +12,10 @@
 
         <ImageView
             android:id="@+id/ivJoin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#1C004C"
+            android:scaleType="center"
             android:src="@mipmap/room_plus"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -13,10 +13,11 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.agora.data.BaseError;
+import com.agora.data.BaseRoomEventCallback;
 import com.agora.data.DataRepositroy;
-import com.agora.data.RoomEventCallback;
 import com.agora.data.manager.RoomManager;
 import com.agora.data.manager.UserManager;
+import com.agora.data.model.Action;
 import com.agora.data.model.Member;
 import com.agora.data.model.Room;
 import com.agora.data.model.User;
@@ -45,7 +46,7 @@ import pub.devrel.easypermissions.EasyPermissions;
  * @author chenhengfei@agora.io
  */
 public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBinding> implements View.OnClickListener,
-        OnItemClickListener<Room>, EasyPermissions.PermissionCallbacks, SwipeRefreshLayout.OnRefreshListener, RoomEventCallback {
+        OnItemClickListener<Room>, EasyPermissions.PermissionCallbacks, SwipeRefreshLayout.OnRefreshListener {
 
     private static final int TAG_PERMISSTION_REQUESTCODE = 1000;
     private static final String[] PERMISSTION = new String[]{
@@ -54,6 +55,107 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
             Manifest.permission.RECORD_AUDIO};
 
     private RoomListAdapter mAdapter;
+
+    private BaseRoomEventCallback mBaseRoomEventCallback = new BaseRoomEventCallback() {
+        @Override
+        public void onOwnerLeaveRoom(@NonNull Room room) {
+            mDataBinding.btCrateRoom.setVisibility(View.VISIBLE);
+            mDataBinding.llMin.setVisibility(View.GONE);
+
+            mAdapter.deleteItem(room);
+            mDataBinding.tvEmpty.setVisibility(mAdapter.getItemCount() <= 0 ? View.VISIBLE : View.GONE);
+
+            if (RoomListActivity.this.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+                ToastUtile.toastShort(RoomListActivity.this, R.string.room_closed);
+            }
+        }
+
+        @Override
+        public void onLeaveRoom(@NonNull Room room) {
+            mDataBinding.btCrateRoom.setVisibility(View.VISIBLE);
+            mDataBinding.llMin.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onMemberJoin(@NonNull Member member) {
+            updateMinRoomInfo();
+        }
+
+        @Override
+        public void onMemberLeave(@NonNull Member member) {
+            updateMinRoomInfo();
+        }
+
+        @Override
+        public void onRoleChanged(boolean isMine, @NonNull Member member) {
+            if (!isMine && isMine(member)) {
+                if (member.getIsSpeaker() == 0 && RoomListActivity.this.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+                    ToastUtile.toastShort(RoomListActivity.this, R.string.member_speaker_to_listener);
+                }
+            }
+
+            refreshVoiceView();
+            refreshHandUpView();
+        }
+
+        @Override
+        public void onAudioStatusChanged(boolean isMine, @NonNull Member member) {
+            if (!isMine && isMine(member)) {
+                if (member.getIsMuted() == 1 && RoomListActivity.this.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+                    ToastUtile.toastShort(RoomListActivity.this, R.string.member_muted);
+                }
+            }
+
+            refreshVoiceView();
+        }
+
+        @Override
+        public void onReceivedRequest(@NonNull Member member, @NonNull Action.ACTION action) {
+            mDataBinding.ivNews.setCount(DataRepositroy.Instance(RoomListActivity.this).getHandUpListCount());
+        }
+
+        @Override
+        public void onRequestAgreed(@NonNull Member member) {
+            refreshHandUpView();
+            mDataBinding.ivNews.setCount(DataRepositroy.Instance(RoomListActivity.this).getHandUpListCount());
+        }
+
+        @Override
+        public void onRequestRefuse(@NonNull Member member) {
+            refreshHandUpView();
+            mDataBinding.ivNews.setCount(DataRepositroy.Instance(RoomListActivity.this).getHandUpListCount());
+        }
+
+        @Override
+        public void onInviteRefuse(@NonNull Member member) {
+            if (isOwner() && RoomListActivity.this.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+                ToastUtile.toastShort(RoomListActivity.this, getString(R.string.invite_refuse, member.getUserId().getName()));
+            }
+        }
+
+        @Override
+        public void onEnterMinStatus() {
+            mDataBinding.btCrateRoom.setVisibility(View.GONE);
+            mDataBinding.llMin.setVisibility(View.VISIBLE);
+
+            if (RoomManager.Instance(RoomListActivity.this).isOwner()) {
+                mDataBinding.ivNews.setVisibility(View.VISIBLE);
+            } else {
+                mDataBinding.ivNews.setVisibility(View.GONE);
+            }
+
+            refreshVoiceView();
+            refreshHandUpView();
+            updateMinRoomInfo();
+        }
+
+        @Override
+        public void onRoomError(int error) {
+            if (RoomListActivity.this.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) == false) {
+                return;
+            }
+        }
+    };
 
     @Override
     protected void iniBundle(@NonNull Bundle bundle) {
@@ -75,7 +177,7 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
 
     @Override
     protected void iniListener() {
-        RoomManager.Instance(this).addRoomEventCallback(this);
+        RoomManager.Instance(this).addRoomEventCallback(mBaseRoomEventCallback);
         mDataBinding.swipeRefreshLayout.setOnRefreshListener(this);
         mDataBinding.ivHead.setOnClickListener(this);
         mDataBinding.btCrateRoom.setOnClickListener(this);
@@ -271,7 +373,7 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
     private void toggleHandUp() {
         mDataBinding.ivHandUp.setEnabled(false);
         RoomManager.Instance(this).
-                requestHandsUp()
+                requestConnect(Action.ACTION.HandsUp)
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(mLifecycleProvider.bindToLifecycle())
                 .subscribe(new DataCompletableObserver(this) {
@@ -337,122 +439,13 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
 
     @Override
     protected void onDestroy() {
-        RoomManager.Instance(this).removeRoomEventCallback(this);
+        RoomManager.Instance(this).removeRoomEventCallback(mBaseRoomEventCallback);
         super.onDestroy();
     }
 
     @Override
     public void onRefresh() {
         loadRooms();
-    }
-
-    @Override
-    public void onOwnerLeaveRoom(@NonNull Room room) {
-        mDataBinding.btCrateRoom.setVisibility(View.VISIBLE);
-        mDataBinding.llMin.setVisibility(View.GONE);
-
-        mAdapter.deleteItem(room);
-        mDataBinding.tvEmpty.setVisibility(mAdapter.getItemCount() <= 0 ? View.VISIBLE : View.GONE);
-
-        if (this.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
-            ToastUtile.toastShort(this, R.string.room_closed);
-        }
-    }
-
-    @Override
-    public void onLeaveRoom(@NonNull Room room) {
-        mDataBinding.btCrateRoom.setVisibility(View.VISIBLE);
-        mDataBinding.llMin.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onMemberJoin(@NonNull Member member) {
-        updateMinRoomInfo();
-    }
-
-    @Override
-    public void onMemberLeave(@NonNull Member member) {
-        updateMinRoomInfo();
-    }
-
-    @Override
-    public void onRoleChanged(boolean isMine, @NonNull Member member) {
-        if (!isMine && isMine(member)) {
-            if (member.getIsSpeaker() == 0 && this.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
-                ToastUtile.toastShort(this, R.string.member_speaker_to_listener);
-            }
-        }
-
-        refreshVoiceView();
-        refreshHandUpView();
-    }
-
-    @Override
-    public void onAudioStatusChanged(boolean isMine, @NonNull Member member) {
-        if (!isMine && isMine(member)) {
-            if (member.getIsMuted() == 1 && this.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
-                ToastUtile.toastShort(this, R.string.member_muted);
-            }
-        }
-
-        refreshVoiceView();
-    }
-
-    @Override
-    public void onReceivedHandUp(@NonNull Member member) {
-        mDataBinding.ivNews.setCount(DataRepositroy.Instance(this).getHandUpListCount());
-    }
-
-    @Override
-    public void onHandUpAgree(@NonNull Member member) {
-        refreshHandUpView();
-        mDataBinding.ivNews.setCount(DataRepositroy.Instance(this).getHandUpListCount());
-    }
-
-    @Override
-    public void onHandUpRefuse(@NonNull Member member) {
-        refreshHandUpView();
-        mDataBinding.ivNews.setCount(DataRepositroy.Instance(this).getHandUpListCount());
-    }
-
-    @Override
-    public void onReceivedInvite(@NonNull Member member) {
-
-    }
-
-    @Override
-    public void onInviteAgree(@NonNull Member member) {
-
-    }
-
-    @Override
-    public void onInviteRefuse(@NonNull Member member) {
-        if (isOwner() && this.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
-            ToastUtile.toastShort(this, getString(R.string.invite_refuse, member.getUserId().getName()));
-        }
-    }
-
-    @Override
-    public void onEnterMinStatus() {
-        mDataBinding.btCrateRoom.setVisibility(View.GONE);
-        mDataBinding.llMin.setVisibility(View.VISIBLE);
-
-        if (RoomManager.Instance(this).isOwner()) {
-            mDataBinding.ivNews.setVisibility(View.VISIBLE);
-        } else {
-            mDataBinding.ivNews.setVisibility(View.GONE);
-        }
-
-        refreshVoiceView();
-        refreshHandUpView();
-        updateMinRoomInfo();
-    }
-
-    @Override
-    public void onRoomError(int error) {
-        if (this.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) == false) {
-            return;
-        }
     }
 
     private boolean isMine(Member member) {

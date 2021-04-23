@@ -3,13 +3,14 @@
 
     <io.agora.marriageinterview.widget.CustomeCardView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="10dp">
+        android:layout_height="match_parent"
+        app:cardCornerRadius="6dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clbackground"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp">
+            android:layout_height="match_parent"
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/tvAddress"
@@ -22,8 +23,8 @@
 
             <ImageView
                 android:id="@+id/ivHead"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:background="@drawable/shape_head_background"
                 android:padding="@dimen/head_stroke_size"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -33,6 +34,7 @@
                 android:id="@+id/tvName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/main_list_item_name_size"
                 app:layout_constraintBottom_toBottomOf="@+id/ivHead"

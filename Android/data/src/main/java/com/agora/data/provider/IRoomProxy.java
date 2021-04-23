@@ -3,6 +3,7 @@ package com.agora.data.provider;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.agora.data.model.Action;
 import com.agora.data.model.Member;
 import com.agora.data.model.Room;
 
@@ -54,11 +55,11 @@ public interface IRoomProxy {
      */
     void onAudioStatusChanged(boolean isMine, @NonNull Member member);
 
-    void onReceivedHandUp(@NonNull Member member);
+    void onReceivedRequest(@NonNull Member member, @NonNull Action.ACTION action);
 
-    void onHandUpAgree(@NonNull Member member);
+    void onRequestAgreed(@NonNull Member member, @NonNull Action.ACTION action);
 
-    void onHandUpRefuse(@NonNull Member member);
+    void onRequestRefused(@NonNull Member member);
 
     void onReceivedInvite(@NonNull Member member);
 
