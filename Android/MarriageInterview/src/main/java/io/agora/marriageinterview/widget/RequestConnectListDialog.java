@@ -1,4 +1,4 @@
-package io.agora.interactivepodcast.widget;
+package io.agora.marriageinterview.widget;
 
 import android.os.Bundle;
 import android.view.Gravity;
@@ -15,8 +15,8 @@ import androidx.fragment.app.FragmentManager;
 import com.agora.data.BaseError;
 import com.agora.data.DataRepositroy;
 import com.agora.data.manager.RoomManager;
+import com.agora.data.model.Action;
 import com.agora.data.model.RequestMember;
-import com.agora.data.model.Room;
 import com.agora.data.observer.DataCompletableObserver;
 import com.agora.data.observer.DataObserver;
 
@@ -25,24 +25,22 @@ import java.util.List;
 import io.agora.baselibrary.base.DataBindBaseDialog;
 import io.agora.baselibrary.base.OnItemClickListener;
 import io.agora.baselibrary.util.ToastUtile;
-import io.agora.interactivepodcast.R;
-import io.agora.interactivepodcast.adapter.HandsUpListAdapter;
-import io.agora.interactivepodcast.databinding.DialogHandUpBinding;
+import io.agora.marriageinterview.R;
+import io.agora.marriageinterview.adapter.RequestConnectListAdapter;
+import io.agora.marriageinterview.databinding.DialogRequestConnectListBinding;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
- * 举手列表
+ * 申请连接列表
  *
  * @author chenhengfei@agora.io
  */
-public class HandUpDialog extends DataBindBaseDialog<DialogHandUpBinding> implements OnItemClickListener<RequestMember> {
-    private static final String TAG = HandUpDialog.class.getSimpleName();
+public class RequestConnectListDialog extends DataBindBaseDialog<DialogRequestConnectListBinding> implements OnItemClickListener<RequestMember> {
+    private static final String TAG = RequestConnectListDialog.class.getSimpleName();
 
-    private HandsUpListAdapter mAdapter;
+    private RequestConnectListAdapter mAdapter;
 
-    private static final String TAG_ROOM = "room";
-
-    private Room room;
+    private IConnectStatusProvider mIConnectStatusProvider;
 
     @Nullable
     @Override
@@ -65,12 +63,11 @@ public class HandUpDialog extends DataBindBaseDialog<DialogHandUpBinding> implem
 
     @Override
     public void iniBundle(@NonNull Bundle bundle) {
-        room = (Room) bundle.getSerializable(TAG_ROOM);
     }
 
     @Override
     public int getLayoutId() {
-        return R.layout.dialog_hand_up;
+        return R.layout.dialog_request_connect_list;
     }
 
     @Override
@@ -85,7 +82,7 @@ public class HandUpDialog extends DataBindBaseDialog<DialogHandUpBinding> implem
 
     @Override
     public void iniData() {
-        mAdapter = new HandsUpListAdapter(null, this);
+        mAdapter = new RequestConnectListAdapter(null, this);
         mDataBinding.rvList.setAdapter(mAdapter);
 
         loadData();
@@ -110,9 +107,9 @@ public class HandUpDialog extends DataBindBaseDialog<DialogHandUpBinding> implem
                 });
     }
 
-    public void show(@NonNull FragmentManager manager, @NonNull Room room) {
+    public void show(@NonNull FragmentManager manager, IConnectStatusProvider mIConnectStatusProvider) {
+        this.mIConnectStatusProvider = mIConnectStatusProvider;
         Bundle intent = new Bundle();
-        intent.putSerializable(TAG_ROOM, room);
         setArguments(intent);
         super.show(manager, TAG);
     }
@@ -120,13 +117,14 @@ public class HandUpDialog extends DataBindBaseDialog<DialogHandUpBinding> implem
     @Override
     public void onItemClick(@NonNull RequestMember data, View view, int position, long id) {
         if (view.getId() == R.id.btRefuse) {
-            clickRefuse(position, data);
+            clickRefuse(view, position, data);
         } else if (view.getId() == R.id.btAgree) {
-            clickAgree(position, data);
+            clickAgree(view, position, data);
         }
     }
 
-    private void clickRefuse(int index, RequestMember data) {
+    private void clickRefuse(View view, int index, RequestMember data) {
+        view.setEnabled(false);
         RoomManager.Instance(requireContext())
                 .refuseRequest(data.getMember(), data.getAction())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -135,16 +133,30 @@ public class HandUpDialog extends DataBindBaseDialog<DialogHandUpBinding> implem
                     @Override
                     public void handleError(@NonNull BaseError e) {
                         ToastUtile.toastShort(requireContext(), e.getMessage());
+                        view.setEnabled(true);
                     }
 
                     @Override
                     public void handleSuccess() {
                         mAdapter.deleteItem(index);
+                        view.setEnabled(true);
                     }
                 });
     }
 
-    private void clickAgree(int index, RequestMember data) {
+    private void clickAgree(View view, int index, RequestMember data) {
+        Action.ACTION action = data.getAction();
+        if (action == Action.ACTION.RequestLeft) {
+            if (mIConnectStatusProvider.hasLeftMember()) {
+                return;
+            }
+        } else if (action == Action.ACTION.RequestRight) {
+            if (mIConnectStatusProvider.hasRightMember()) {
+                return;
+            }
+        }
+
+        view.setEnabled(false);
         RoomManager.Instance(requireContext())
                 .agreeRequest(data.getMember(), data.getAction())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -153,12 +165,20 @@ public class HandUpDialog extends DataBindBaseDialog<DialogHandUpBinding> implem
                     @Override
                     public void handleError(@NonNull BaseError e) {
                         ToastUtile.toastShort(requireContext(), e.getMessage());
+                        view.setEnabled(true);
                     }
 
                     @Override
                     public void handleSuccess() {
                         mAdapter.deleteItem(index);
+                        view.setEnabled(true);
                     }
                 });
+    }
+
+    public interface IConnectStatusProvider {
+        boolean hasLeftMember();
+
+        boolean hasRightMember();
     }
 }

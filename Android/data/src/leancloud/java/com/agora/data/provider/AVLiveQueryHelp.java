@@ -1,10 +1,15 @@
-package com.agora.data.provider.service;
+package com.agora.data.provider;
 
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.agora.data.EnumActionSerializer;
+import com.agora.data.EnumRoleSerializer;
+import com.agora.data.model.Action;
+import com.agora.data.model.Member;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
@@ -15,21 +20,19 @@ import cn.leancloud.livequery.AVLiveQuery;
 import cn.leancloud.livequery.AVLiveQueryEventHandler;
 import cn.leancloud.livequery.AVLiveQuerySubscribeCallback;
 
-public abstract class AttributeManager<T> {
+public class AVLiveQueryHelp<T> {
 
     public static final int ERROR_DEFAULT = 1000;
     public static final int ERROR_EXCEEDED_QUOTA = ERROR_DEFAULT + 1;
 
-    public static final String TAG = AttributeManager.class.getSimpleName();
-
-    public static final String TAG_OBJECTID = "objectId";
-    public static final String TAG_CREATEDAT = "createdAt";
+    public static final String TAG = AVLiveQueryHelp.class.getSimpleName();
 
     private AVLiveQuery avLiveQuery;
 
-    protected abstract String getObjectName();
-
-    protected Gson mGson = new Gson();
+    private Gson mGson = new GsonBuilder()
+            .registerTypeAdapter(Member.Role.class, new EnumRoleSerializer())
+            .registerTypeAdapter(Action.ACTION.class, new EnumActionSerializer())
+            .create();
 
     public interface AttributeListener<T> {
         void onCreated(T item);
@@ -41,8 +44,22 @@ public abstract class AttributeManager<T> {
         void onSubscribeError(int error);
     }
 
-    private Handler mHandler = new Handler(Looper.myLooper());
+    private final Handler mHandler = new Handler(Looper.myLooper());
     private Runnable runnable;
+
+    private final Class<T> mCLass;
+
+    public AVLiveQueryHelp(Class<T> mCLass) {
+        this.mCLass = mCLass;
+    }
+
+    protected T convertObject(AVObject object) {
+        return mGson.fromJson(object.toJSONObject().toJSONString(), mCLass);
+    }
+
+    private String getTag() {
+        return this.mCLass.getSimpleName();
+    }
 
     public void registerObserve(AVQuery<AVObject> query, AttributeListener<T> callback) {
         avLiveQuery = AVLiveQuery.initWithQuery(query);
@@ -51,21 +68,21 @@ public abstract class AttributeManager<T> {
             @Override
             public void onObjectCreated(AVObject avObject) {
                 super.onObjectCreated(avObject);
-                Log.d(TAG, String.format("%s onObjectCreated: %s", getObjectName(), avObject));
+                Log.d(TAG, String.format("%s onObjectCreated: %s", getTag(), avObject));
                 callback.onCreated(convertObject(avObject));
             }
 
             @Override
             public void onObjectUpdated(AVObject avObject, List<String> updatedKeys) {
                 super.onObjectUpdated(avObject, updatedKeys);
-                Log.d(TAG, String.format("%s onObjectUpdated: %s", getObjectName(), avObject));
+                Log.d(TAG, String.format("%s onObjectUpdated: %s", getTag(), avObject));
                 callback.onUpdated(convertObject(avObject));
             }
 
             @Override
             public void onObjectDeleted(String objectId) {
                 super.onObjectDeleted(objectId);
-                Log.d(TAG, String.format("%s onObjectDeleted: %s", getObjectName(), objectId));
+                Log.d(TAG, String.format("%s onObjectDeleted: %s", getTag(), objectId));
                 callback.onDeleted(objectId);
             }
         });
@@ -74,7 +91,7 @@ public abstract class AttributeManager<T> {
         runnable = new Runnable() {
             @Override
             public void run() {
-                Log.e(TAG, String.format("%s subscribe error: timeout", getObjectName()));
+                Log.e(TAG, String.format("%s subscribe error: timeout", getTag()));
                 callback.onSubscribeError(ERROR_DEFAULT);
             }
         };
@@ -83,7 +100,7 @@ public abstract class AttributeManager<T> {
             @Override
             public void done(AVException e) {
                 if (null != e) {
-                    Log.e(TAG, String.format("%s subscribe error: %s", getObjectName(), e.getMessage()));
+                    Log.e(TAG, String.format("%s subscribe error: %s", getTag(), e.getMessage()));
                     avLiveQuery = null;
                     if (e.getCode() == AVException.EXCEEDED_QUOTA) {
                         callback.onSubscribeError(ERROR_EXCEEDED_QUOTA);
@@ -91,7 +108,7 @@ public abstract class AttributeManager<T> {
                         callback.onSubscribeError(ERROR_DEFAULT);
                     }
                 } else {
-                    Log.i(TAG, String.format("%s subscribe success", getObjectName()));
+                    Log.i(TAG, String.format("%s subscribe success", getTag()));
                 }
                 mHandler.removeCallbacks(runnable);
                 runnable = null;
@@ -100,7 +117,7 @@ public abstract class AttributeManager<T> {
     }
 
     public void unregisterObserve() {
-        Log.i(TAG, String.format("%s unregisterObserve", getObjectName()));
+        Log.i(TAG, String.format("%s unregisterObserve", getTag()));
 
         if (runnable != null) {
             mHandler.removeCallbacks(runnable);
@@ -110,15 +127,13 @@ public abstract class AttributeManager<T> {
                 @Override
                 public void done(AVException e) {
                     if (null != e) {
-                        Log.e(TAG, String.format("%s unsubscribe error: %s", getObjectName(), e.getMessage()));
+                        Log.e(TAG, String.format("%s unsubscribe error: %s", getTag(), e.getMessage()));
                     } else {
-                        Log.i(TAG, String.format("%s unsubscribe success", getObjectName()));
+                        Log.i(TAG, String.format("%s unsubscribe success", getTag()));
                     }
                 }
             });
             avLiveQuery = null;
         }
     }
-
-    protected abstract T convertObject(AVObject object);
 }

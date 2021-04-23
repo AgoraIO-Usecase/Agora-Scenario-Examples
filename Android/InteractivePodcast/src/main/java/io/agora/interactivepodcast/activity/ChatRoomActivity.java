@@ -17,6 +17,7 @@ import com.agora.data.RoomEventCallback;
 import com.agora.data.manager.RoomManager;
 import com.agora.data.manager.RtcManager;
 import com.agora.data.manager.UserManager;
+import com.agora.data.model.Action;
 import com.agora.data.model.Member;
 import com.agora.data.model.Room;
 import com.agora.data.model.User;
@@ -537,7 +538,7 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
     private void toggleHandUp() {
         mDataBinding.ivHandUp.setEnabled(false);
         RoomManager.Instance(this)
-                .requestHandsUp()
+                .requestConnect(Action.ACTION.HandsUp)
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(mLifecycleProvider.bindToLifecycle())
                 .subscribe(new DataCompletableObserver(this) {
@@ -646,12 +647,17 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
     }
 
     @Override
-    public void onReceivedHandUp(@NonNull Member member) {
+    public void onSDKVideoStatusChanged(@NonNull Member member) {
+
+    }
+
+    @Override
+    public void onReceivedRequest(@NonNull Member member, @NonNull Action.ACTION action) {
         mDataBinding.ivNews.setCount(DataRepositroy.Instance(this).getHandUpListCount());
     }
 
     @Override
-    public void onHandUpAgree(@NonNull Member member) {
+    public void onRequestAgreed(@NonNull Member member) {
         refreshHandUpView();
 
         if (isOwner()) {
@@ -660,7 +666,7 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
     }
 
     @Override
-    public void onHandUpRefuse(@NonNull Member member) {
+    public void onRequestRefuse(@NonNull Member member) {
         if (isMine(member)) {
             ToastUtile.toastShort(this, R.string.handup_refuse);
         }

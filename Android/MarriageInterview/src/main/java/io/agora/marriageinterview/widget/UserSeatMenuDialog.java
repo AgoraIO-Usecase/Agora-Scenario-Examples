@@ -86,19 +86,16 @@ public class UserSeatMenuDialog extends DataBindBaseDialog<DialogUserSeatMenuBin
                 .placeholder(R.mipmap.default_head)
                 .error(R.mipmap.default_head)
                 .circleCrop()
-                .into(mDataBinding.ivUser);
+                .into(mDataBinding.ivHead);
         refreshAudioView();
     }
 
     private void refreshAudioView() {
         if (mMember.getIsMuted() == 1) {
-            mDataBinding.ivAudio.setImageResource(R.mipmap.icon_microphoneon);
             mDataBinding.btAudio.setText(R.string.room_dialog_open_audio);
         } else if (mMember.getIsSelfMuted() == 1) {
-            mDataBinding.ivAudio.setImageResource(R.mipmap.icon_microphoneon);
             mDataBinding.btAudio.setText(R.string.room_dialog_open_audio);
         } else {
-            mDataBinding.ivAudio.setImageResource(R.mipmap.icon_microphoneon);
             mDataBinding.btAudio.setText(R.string.room_dialog_close_audio);
         }
     }
@@ -155,7 +152,7 @@ public class UserSeatMenuDialog extends DataBindBaseDialog<DialogUserSeatMenuBin
     private void seatOff() {
         mDataBinding.btSeatoff.setEnabled(false);
         RoomManager.Instance(requireContext())
-                .seatOff(mMember)
+                .seatOff(mMember, Member.Role.Listener)
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(mLifecycleProvider.bindToLifecycle())
                 .subscribe(new DataCompletableObserver(requireContext()) {

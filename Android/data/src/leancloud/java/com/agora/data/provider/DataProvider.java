@@ -13,8 +13,8 @@ import io.agora.baselibrary.BuildConfig;
 
 public class DataProvider implements IDataProvider {
 
-    private final IStoreSource mIStoreSource;
-    private final IMessageSource mIMessageSource;
+    private IStoreSource mIStoreSource;
+    private IMessageSource mIMessageSource;
 
     public DataProvider(@NonNull Context mContext, @NonNull IRoomProxy iRoomProxy) {
         if (BuildConfig.DEBUG) {
@@ -28,8 +28,9 @@ public class DataProvider implements IDataProvider {
 
         PushService.startIfRequired(mContext);
 
-        mIStoreSource = new StoreSource();
-        mIMessageSource = new MessageSource(mContext, iRoomProxy);
+        IConfigSource mIConfigSource = new DefaultConfigSource();
+        mIStoreSource = new StoreSource(mIConfigSource);
+        mIMessageSource = new MessageSource(mContext, iRoomProxy, mIConfigSource);
     }
 
     @Override

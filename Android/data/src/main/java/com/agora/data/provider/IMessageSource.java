@@ -2,7 +2,9 @@ package com.agora.data.provider;
 
 import androidx.annotation.NonNull;
 
+import com.agora.data.model.Action;
 import com.agora.data.model.Member;
+import com.agora.data.model.RequestMember;
 import com.agora.data.model.Room;
 
 import java.util.List;
@@ -20,21 +22,21 @@ public interface IMessageSource {
 
     Completable muteSelfVoice(@NonNull Member member, int muted);
 
-    Completable requestHandsUp(@NonNull Member member);
+    Completable requestConnect(@NonNull Member member, @NonNull Action.ACTION action);
 
-    Completable agreeHandsUp(@NonNull Member member);
+    Completable agreeRequest(@NonNull Member member, @NonNull Action.ACTION action);
 
-    Completable refuseHandsUp(@NonNull Member member);
+    Completable refuseRequest(@NonNull Member member, @NonNull Action.ACTION action);
 
-    Completable inviteSeat(@NonNull Member member);
+    Completable inviteConnect(@NonNull Member member, @NonNull Action.ACTION action);
 
     Completable agreeInvite(@NonNull Member member);
 
     Completable refuseInvite(@NonNull Member member);
 
-    Completable seatOff(@NonNull Member member);
+    Completable seatOff(@NonNull Member member, @NonNull Member.Role role);
 
-    Observable<List<Member>> getHandUpList();
+    Observable<List<RequestMember>> getRequestList();
 
     int getHandUpListCount();
 }

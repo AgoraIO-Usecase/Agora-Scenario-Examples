@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -20,8 +21,8 @@
 
         <ImageView
             android:id="@+id/ivMembers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
             android:src="@mipmap/lobby_user_icon"
@@ -32,10 +33,12 @@
             android:id="@+id/rvMembers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toStartOf="@+id/ivMembers"
-            app:layout_constraintTop_toTopOf="@+id/ivMembers" />
+            app:layout_constraintTop_toTopOf="@+id/ivMembers"
+            tools:listitem="@layout/item_room_pre_member_list" />
 
         <io.agora.marriageinterview.widget.RoomSpeakerView
             android:id="@+id/viewUserMiddle"
@@ -89,10 +92,9 @@
 
             <ImageView
                 android:id="@+id/ivMessage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
                 android:layout_marginStart="20dp"
-                android:padding="2dp"
                 android:src="@mipmap/icon_menu_commit" />
 
             <Space
@@ -102,26 +104,23 @@
 
             <io.agora.marriageinterview.widget.CountImageView
                 android:id="@+id/ivRequest"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
                 android:layout_marginEnd="20dp"
-                android:padding="2dp"
-                android:src="@mipmap/icon_un_handup" />
+                app:iv_src="@mipmap/chat_icon_gift" />
 
             <ImageView
                 android:id="@+id/ivMagic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
                 android:layout_marginEnd="20dp"
-                android:padding="2dp"
                 android:src="@mipmap/icon_menu_open_magic" />
 
             <ImageView
                 android:id="@+id/ivAudio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
                 android:layout_marginEnd="20dp"
-                android:padding="2dp"
                 android:src="@mipmap/icon_menu_open_audio" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

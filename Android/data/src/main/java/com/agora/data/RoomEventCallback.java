@@ -3,17 +3,38 @@ package com.agora.data;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 
+import com.agora.data.model.Action;
 import com.agora.data.model.Member;
 import com.agora.data.model.Room;
 
 @MainThread
 public interface RoomEventCallback {
+    /**
+     * 房主离开房间回调
+     *
+     * @param room
+     */
     void onOwnerLeaveRoom(@NonNull Room room);
 
+    /**
+     * 我自己主动离开房间回调
+     *
+     * @param room
+     */
     void onLeaveRoom(@NonNull Room room);
 
+    /**
+     * 用户加入房间
+     *
+     * @param member
+     */
     void onMemberJoin(@NonNull Member member);
 
+    /**
+     * 用户离开房间，不包括房主
+     *
+     * @param member
+     */
     void onMemberLeave(@NonNull Member member);
 
     /**
@@ -35,11 +56,11 @@ public interface RoomEventCallback {
      */
     void onSDKVideoStatusChanged(@NonNull Member member);
 
-    void onReceivedHandUp(@NonNull Member member);
+    void onReceivedRequest(@NonNull Member member, @NonNull Action.ACTION action);
 
-    void onHandUpAgree(@NonNull Member member);
+    void onRequestAgreed(@NonNull Member member);
 
-    void onHandUpRefuse(@NonNull Member member);
+    void onRequestRefuse(@NonNull Member member);
 
     void onReceivedInvite(@NonNull Member member);
 

@@ -11,22 +11,22 @@ import java.util.List;
 
 import io.agora.baselibrary.base.BaseRecyclerViewAdapter;
 import io.agora.marriageinterview.R;
-import io.agora.marriageinterview.databinding.ItemRoomMembersBinding;
+import io.agora.marriageinterview.databinding.ItemRoomPreMemberListBinding;
 
 /**
  * 房间成员列表
  *
  * @author chenhengfei@agora.io
  */
-public class RoomMembersAdapter extends BaseRecyclerViewAdapter<Member, RoomMembersAdapter.ViewHolder> {
+public class RoomPreMemberListAdapter extends BaseRecyclerViewAdapter<Member, RoomPreMemberListAdapter.ViewHolder> {
 
-    public RoomMembersAdapter(@Nullable List<Member> datas, @Nullable Object listener) {
+    public RoomPreMemberListAdapter(@Nullable List<Member> datas, @Nullable Object listener) {
         super(datas, listener);
     }
 
     @Override
     public int getLayoutId() {
-        return R.layout.item_room_members;
+        return R.layout.item_room_pre_member_list;
     }
 
     @Override
@@ -40,9 +40,11 @@ public class RoomMembersAdapter extends BaseRecyclerViewAdapter<Member, RoomMemb
         if (item == null) {
             return;
         }
+
+        holder.mDataBinding.view.setUser(item);
     }
 
-    class ViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder<ItemRoomMembersBinding> {
+    class ViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder<ItemRoomPreMemberListBinding> {
 
         public ViewHolder(View view) {
             super(view);

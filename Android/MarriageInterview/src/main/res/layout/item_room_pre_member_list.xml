@@ -2,8 +2,9 @@
 <layout>
 
     <io.agora.marriageinterview.widget.RoomMemberView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="50dp"
-        android:layout_height="50dp" />
+        android:id="@+id/view"
+        android:layout_width="36dp"
+        android:layout_height="36dp" />
 
 </layout>
 

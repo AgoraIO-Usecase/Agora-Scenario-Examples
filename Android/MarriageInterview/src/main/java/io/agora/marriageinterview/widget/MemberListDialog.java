@@ -15,9 +15,9 @@ import androidx.fragment.app.FragmentManager;
 import com.agora.data.BaseError;
 import com.agora.data.DataRepositroy;
 import com.agora.data.manager.RoomManager;
+import com.agora.data.model.Action;
 import com.agora.data.model.Member;
 import com.agora.data.observer.DataCompletableObserver;
-import com.agora.data.observer.DataObserver;
 
 import java.util.List;
 
@@ -25,19 +25,19 @@ import io.agora.baselibrary.base.DataBindBaseDialog;
 import io.agora.baselibrary.base.OnItemClickListener;
 import io.agora.baselibrary.util.ToastUtile;
 import io.agora.marriageinterview.R;
-import io.agora.marriageinterview.adapter.HandsUpListAdapter;
-import io.agora.marriageinterview.databinding.DialogHandUpBinding;
+import io.agora.marriageinterview.adapter.RoomMemberListAdapter;
+import io.agora.marriageinterview.databinding.DialogMemberListBinding;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
- * 举手列表
+ * 房间成员列表
  *
  * @author chenhengfei@agora.io
  */
-public class HandUpDialog extends DataBindBaseDialog<DialogHandUpBinding> implements OnItemClickListener<Member> {
-    private static final String TAG = HandUpDialog.class.getSimpleName();
+public class MemberListDialog extends DataBindBaseDialog<DialogMemberListBinding> implements OnItemClickListener<Member> {
+    private static final String TAG = MemberListDialog.class.getSimpleName();
 
-    private HandsUpListAdapter mAdapter;
+    private RoomMemberListAdapter mAdapter;
 
     @Nullable
     @Override
@@ -64,7 +64,7 @@ public class HandUpDialog extends DataBindBaseDialog<DialogHandUpBinding> implem
 
     @Override
     public int getLayoutId() {
-        return R.layout.dialog_hand_up;
+        return R.layout.dialog_member_list;
     }
 
     @Override
@@ -79,32 +79,21 @@ public class HandUpDialog extends DataBindBaseDialog<DialogHandUpBinding> implem
 
     @Override
     public void iniData() {
-        mAdapter = new HandsUpListAdapter(null, this);
+        boolean showInvite = RoomManager.Instance(requireContext()).isOwner();
+        Member member = RoomManager.Instance(requireContext()).getMine();
+        mAdapter = new RoomMemberListAdapter(null, this, showInvite, member, mIConnectStatusProvider);
         mDataBinding.rvList.setAdapter(mAdapter);
 
         loadData();
     }
 
     public void loadData() {
-        DataRepositroy.Instance(requireContext())
-                .getHandUpList()
-                .observeOn(AndroidSchedulers.mainThread())
-                .compose(mLifecycleProvider.bindToLifecycle())
-                .subscribe(new DataObserver<List<Member>>(requireContext()) {
-
-                    @Override
-                    public void handleError(@NonNull BaseError e) {
-
-                    }
-
-                    @Override
-                    public void handleSuccess(@NonNull List<Member> members) {
-                        mAdapter.setDatas(members);
-                    }
-                });
+        List<Member> members = RoomManager.Instance(requireContext()).getMembers();
+        mAdapter.setDatas(members);
     }
 
-    public void show(@NonNull FragmentManager manager) {
+    public void show(@NonNull FragmentManager manager, IConnectStatusProvider mIConnectStatusProvider) {
+        this.mIConnectStatusProvider = mIConnectStatusProvider;
         Bundle intent = new Bundle();
         setArguments(intent);
         super.show(manager, TAG);
@@ -112,46 +101,42 @@ public class HandUpDialog extends DataBindBaseDialog<DialogHandUpBinding> implem
 
     @Override
     public void onItemClick(@NonNull Member data, View view, int position, long id) {
-        if (view.getId() == R.id.btRefuse) {
-            clickRefuse(position, data);
-        } else if (view.getId() == R.id.btAgree) {
-            clickAgree(position, data);
+        if (view.getId() == R.id.tvInvite) {
+            doInvite(view, position, data);
         }
     }
 
-    private void clickRefuse(int index, Member data) {
-        RoomManager.Instance(requireContext())
-                .refuseHandsUp(data)
+    private void doInvite(View view, int index, Member data) {
+        if (mIConnectStatusProvider.hasLeftMember() && mIConnectStatusProvider.hasRightMember()) {
+            return;
+        }
+
+        view.setEnabled(false);
+        DataRepositroy.Instance(requireContext())
+                .inviteConnect(data, Action.ACTION.Invite)
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(mLifecycleProvider.bindToLifecycle())
                 .subscribe(new DataCompletableObserver(requireContext()) {
                     @Override
                     public void handleError(@NonNull BaseError e) {
                         ToastUtile.toastShort(requireContext(), e.getMessage());
+                        view.setEnabled(true);
                     }
 
                     @Override
                     public void handleSuccess() {
-                        mAdapter.deleteItem(index);
+                        view.setEnabled(true);
                     }
                 });
     }
 
-    private void clickAgree(int index, Member data) {
-        RoomManager.Instance(requireContext())
-                .agreeHandsUp(data)
-                .observeOn(AndroidSchedulers.mainThread())
-                .compose(mLifecycleProvider.bindToLifecycle())
-                .subscribe(new DataCompletableObserver(requireContext()) {
-                    @Override
-                    public void handleError(@NonNull BaseError e) {
-                        ToastUtile.toastShort(requireContext(), e.getMessage());
-                    }
+    private IConnectStatusProvider mIConnectStatusProvider;
 
-                    @Override
-                    public void handleSuccess() {
-                        mAdapter.deleteItem(index);
-                    }
-                });
+    public interface IConnectStatusProvider {
+        boolean isMemberConnected(Member member);
+
+        boolean hasLeftMember();
+
+        boolean hasRightMember();
     }
 }

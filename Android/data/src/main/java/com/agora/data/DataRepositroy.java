@@ -5,7 +5,9 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import com.agora.data.manager.RoomManager;
+import com.agora.data.model.Action;
 import com.agora.data.model.Member;
+import com.agora.data.model.RequestMember;
 import com.agora.data.model.Room;
 import com.agora.data.model.User;
 import com.agora.data.provider.DataProvider;
@@ -110,23 +112,23 @@ public class DataRepositroy implements IStoreSource, IMessageSource {
     }
 
     @Override
-    public Completable requestHandsUp(@NonNull Member member) {
-        return mDataProvider.getMessageSource().requestHandsUp(member);
+    public Completable requestConnect(@NonNull Member member, @NonNull Action.ACTION action) {
+        return mDataProvider.getMessageSource().requestConnect(member, action);
     }
 
     @Override
-    public Completable agreeHandsUp(@NonNull Member member) {
-        return mDataProvider.getMessageSource().agreeHandsUp(member);
+    public Completable agreeRequest(@NonNull Member member, @NonNull Action.ACTION action) {
+        return mDataProvider.getMessageSource().agreeRequest(member, action);
     }
 
     @Override
-    public Completable refuseHandsUp(@NonNull Member member) {
-        return mDataProvider.getMessageSource().refuseHandsUp(member);
+    public Completable refuseRequest(@NonNull Member member, @NonNull Action.ACTION action) {
+        return mDataProvider.getMessageSource().refuseRequest(member, action);
     }
 
     @Override
-    public Completable inviteSeat(@NonNull Member member) {
-        return mDataProvider.getMessageSource().inviteSeat(member);
+    public Completable inviteConnect(@NonNull Member member, @NonNull Action.ACTION action) {
+        return mDataProvider.getMessageSource().inviteConnect(member, action);
     }
 
     @Override
@@ -140,13 +142,13 @@ public class DataRepositroy implements IStoreSource, IMessageSource {
     }
 
     @Override
-    public Completable seatOff(@NonNull Member member) {
-        return mDataProvider.getMessageSource().seatOff(member);
+    public Completable seatOff(@NonNull Member member, @NonNull Member.Role role) {
+        return mDataProvider.getMessageSource().seatOff(member, role);
     }
 
     @Override
-    public Observable<List<Member>> getHandUpList() {
-        return mDataProvider.getMessageSource().getHandUpList();
+    public Observable<List<RequestMember>> getRequestList() {
+        return mDataProvider.getMessageSource().getRequestList();
     }
 
     @Override

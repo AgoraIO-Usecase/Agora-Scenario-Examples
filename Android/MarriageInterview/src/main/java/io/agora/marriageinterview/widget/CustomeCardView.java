@@ -27,9 +27,6 @@ public class CustomeCardView extends CardView {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        int width = MeasureSpec.getSize(widthMeasureSpec);
-        setMeasuredDimension(width, width);
+        super.onMeasure(widthMeasureSpec, widthMeasureSpec);
     }
 }

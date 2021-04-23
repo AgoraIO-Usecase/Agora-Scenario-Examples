@@ -6,22 +6,23 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.agora.data.model.Member;
+import com.agora.data.model.RequestMember;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
 
 import io.agora.baselibrary.base.BaseRecyclerViewAdapter;
 import io.agora.marriageinterview.R;
-import io.agora.marriageinterview.databinding.ItemInviteListBinding;
+import io.agora.marriageinterview.databinding.ItemRequestConnectListBinding;
 
 /**
- * 邀请列表
+ * 申请连接列表
  *
  * @author chenhengfei@agora.io
  */
-public class InviteListAdapter extends BaseRecyclerViewAdapter<Member, InviteListAdapter.ViewHolder> {
+public class RequestConnectListAdapter extends BaseRecyclerViewAdapter<RequestMember, RequestConnectListAdapter.ViewHolder> {
 
-    public InviteListAdapter(@Nullable List<Member> datas, @Nullable Object listener) {
+    public RequestConnectListAdapter(@Nullable List<RequestMember> datas, @Nullable Object listener) {
         super(datas, listener);
     }
 
@@ -32,31 +33,33 @@ public class InviteListAdapter extends BaseRecyclerViewAdapter<Member, InviteLis
 
     @Override
     public int getLayoutId() {
-        return R.layout.item_invite_list;
+        return R.layout.item_request_connect_list;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Member item = getItemData(position);
+        RequestMember item = getItemData(position);
         if (item == null) {
             return;
         }
 
+        Member member = item.getMember();
         Glide.with(holder.itemView.getContext())
-                .load(item.getUserId().getAvatarRes())
+                .load(member.getUserId().getAvatarRes())
                 .placeholder(R.mipmap.default_head)
                 .error(R.mipmap.default_head)
                 .circleCrop()
-                .into(holder.mDataBinding.ivUser);
-        holder.mDataBinding.tvName.setText(item.getUserId().getName());
+                .into(holder.mDataBinding.ivHead);
+        holder.mDataBinding.tvName.setText(member.getUserId().getName());
     }
 
-    static class ViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder<ItemInviteListBinding> {
+    static class ViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder<ItemRequestConnectListBinding> {
 
         ViewHolder(View view) {
             super(view);
 
-            mDataBinding.btInvite.setOnClickListener(this::onItemClick);
+            mDataBinding.btRefuse.setOnClickListener(this::onItemClick);
+            mDataBinding.btAgree.setOnClickListener(this::onItemClick);
         }
     }
 }

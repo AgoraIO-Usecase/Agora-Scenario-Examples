@@ -85,7 +85,9 @@ public class InvitedMenuDialog extends DataBindBaseDialog<DialogUserInvitedBindi
         mDataBinding.tvText.setText(getString(R.string.room_dialog_invited, owner.getName()));
     }
 
-    public void show(@NonNull FragmentManager manager, User owner) {
+    public void show(@NonNull FragmentManager manager, User owner, IConnectStatusProvider mIConnectStatusProvider) {
+        this.mIConnectStatusProvider = mIConnectStatusProvider;
+
         Bundle intent = new Bundle();
         intent.putSerializable(TAG_OWNER, owner);
         setArguments(intent);
@@ -105,6 +107,14 @@ public class InvitedMenuDialog extends DataBindBaseDialog<DialogUserInvitedBindi
         Member mine = RoomManager.Instance(requireContext()).getMine();
         if (mine == null) {
             dismiss();
+            return;
+        }
+
+        if (mIConnectStatusProvider.hasLeftMember() == false) {
+            mine.setRole(Member.Role.Left);
+        } else if (mIConnectStatusProvider.hasRightMember() == false) {
+            mine.setRole(Member.Role.Right);
+        } else {
             return;
         }
 
@@ -153,5 +163,13 @@ public class InvitedMenuDialog extends DataBindBaseDialog<DialogUserInvitedBindi
                         dismiss();
                     }
                 });
+    }
+
+    private IConnectStatusProvider mIConnectStatusProvider;
+
+    public interface IConnectStatusProvider {
+        boolean hasLeftMember();
+
+        boolean hasRightMember();
     }
 }

@@ -10,18 +10,18 @@ import androidx.annotation.Nullable;
 import androidx.core.util.ObjectsCompat;
 
 import com.agora.data.BaseError;
+import com.agora.data.Config;
+import com.agora.data.EnumActionSerializer;
+import com.agora.data.EnumRoleSerializer;
 import com.agora.data.manager.RoomManager;
 import com.agora.data.model.Action;
 import com.agora.data.model.Member;
+import com.agora.data.model.RequestMember;
 import com.agora.data.model.Room;
 import com.agora.data.model.User;
 import com.agora.data.observer.DataMaybeObserver;
-import com.agora.data.provider.service.ActionService;
-import com.agora.data.provider.service.AttributeManager;
-import com.agora.data.provider.service.MemberService;
-import com.agora.data.provider.service.RoomService;
-import com.agora.data.provider.service.UserService;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,27 +40,31 @@ import io.reactivex.schedulers.Schedulers;
 
 class MessageSource extends BaseMessageSource {
 
-    private Gson mGson = new Gson();
+    private Gson mGson = new GsonBuilder()
+            .registerTypeAdapter(Member.Role.class, new EnumRoleSerializer())
+            .registerTypeAdapter(Action.ACTION.class, new EnumActionSerializer())
+            .create();
+
     private Context mContext;
 
     /**
      * 申请举手用户列表
      */
-    private final Map<String, Member> handUpMembers = new ConcurrentHashMap<>();
+    private final Map<String, RequestMember> requestMembers = new ConcurrentHashMap<>();
 
-    public MessageSource(@NonNull Context context, @NonNull IRoomProxy iRoomProxy) {
-        super(iRoomProxy);
+    public MessageSource(@NonNull Context context, @NonNull IRoomProxy iRoomProxy, @NonNull IConfigSource mIConfigSource) {
+        super(iRoomProxy, mIConfigSource);
         this.mContext = context;
     }
 
     @Override
     public Observable<Member> joinRoom(@NonNull Room room, @NonNull Member member) {
-        AVObject roomAVObject = AVObject.createWithoutData(RoomService.OBJECT_KEY, member.getRoomId().getObjectId());
-        AVObject userAVObject = AVObject.createWithoutData(UserService.OBJECT_KEY, member.getUserId().getObjectId());
+        AVObject roomAVObject = AVObject.createWithoutData(mIConfigSource.getRoomTableName(), member.getRoomId().getObjectId());
+        AVObject userAVObject = AVObject.createWithoutData(mIConfigSource.getUserTableName(), member.getUserId().getObjectId());
 
-        AVQuery<AVObject> avQuery = AVQuery.getQuery(MemberService.OBJECT_KEY)
-                .whereEqualTo(MemberService.TAG_USERID, userAVObject)
-                .whereEqualTo(MemberService.TAG_ROOMID, roomAVObject);
+        AVQuery<AVObject> avQuery = AVQuery.getQuery(mIConfigSource.getMemberTableName())
+                .whereEqualTo(Config.MEMBER_USERID, userAVObject)
+                .whereEqualTo(Config.MEMBER_ROOMID, roomAVObject);
 
         return avQuery.countInBackground()
                 .subscribeOn(Schedulers.io())
@@ -68,14 +72,15 @@ class MessageSource extends BaseMessageSource {
                     @Override
                     public ObservableSource<Member> apply(@NonNull Integer integer) throws Exception {
                         if (integer <= 0) {
-                            AVObject avObject = new AVObject(MemberService.OBJECT_KEY);
-                            avObject.put(MemberService.TAG_ROOMID, roomAVObject);
-                            avObject.put(MemberService.TAG_USERID, userAVObject);
+                            AVObject avObject = new AVObject(mIConfigSource.getMemberTableName());
+                            avObject.put(Config.MEMBER_ROOMID, roomAVObject);
+                            avObject.put(Config.MEMBER_USERID, userAVObject);
 
-                            avObject.put(MemberService.TAG_STREAMID, member.getStreamId());
-                            avObject.put(MemberService.TAG_IS_SPEAKER, member.getIsSpeaker());
-                            avObject.put(MemberService.TAG_ISMUTED, member.getIsMuted());
-                            avObject.put(MemberService.TAG_ISSELFMUTED, member.getIsSelfMuted());
+                            avObject.put(Config.MEMBER_STREAMID, member.getStreamId());
+                            avObject.put(Config.MEMBER_IS_SPEAKER, member.getIsSpeaker());
+                            avObject.put(Config.MEMBER_ROLE, member.getRole().getValue());
+                            avObject.put(Config.MEMBER_ISMUTED, member.getIsMuted());
+                            avObject.put(Config.MEMBER_ISSELFMUTED, member.getIsSelfMuted());
                             return avObject.saveInBackground()
                                     .flatMap(new Function<AVObject, ObservableSource<Member>>() {
                                         @Override
@@ -87,16 +92,16 @@ class MessageSource extends BaseMessageSource {
                                         }
                                     });
                         } else {
-                            avQuery.include(MemberService.TAG_ROOMID);
-                            avQuery.include(MemberService.TAG_ROOMID + "." + RoomService.ANCHOR_ID_KEY);
-                            avQuery.include(MemberService.TAG_USERID);
+                            avQuery.include(Config.MEMBER_ROOMID);
+                            avQuery.include(Config.MEMBER_ROOMID + "." + Config.MEMBER_ANCHORID);
+                            avQuery.include(Config.MEMBER_USERID);
                             return avQuery.getFirstInBackground()
                                     .flatMap(new Function<AVObject, ObservableSource<Member>>() {
                                         @Override
                                         public ObservableSource<Member> apply(@NonNull AVObject avObject) throws Exception {
-                                            AVObject userObject = avObject.getAVObject(MemberService.TAG_USERID);
-                                            AVObject roomObject = avObject.getAVObject(MemberService.TAG_ROOMID);
-                                            AVObject ancherObject = roomObject.getAVObject(RoomService.ANCHOR_ID_KEY);
+                                            AVObject userObject = avObject.getAVObject(Config.MEMBER_USERID);
+                                            AVObject roomObject = avObject.getAVObject(Config.MEMBER_ROOMID);
+                                            AVObject ancherObject = roomObject.getAVObject(Config.MEMBER_ANCHORID);
 
                                             User user = mGson.fromJson(userObject.toJSONObject().toJSONString(), User.class);
                                             Room room = mGson.fromJson(roomObject.toJSONObject().toJSONString(), Room.class);
@@ -135,18 +140,18 @@ class MessageSource extends BaseMessageSource {
         unregisterMemberChanged();
 
         if (ObjectsCompat.equals(room.getAnchorId(), member.getUserId())) {
-            AVObject roomAVObject = AVObject.createWithoutData(RoomService.OBJECT_KEY, member.getRoomId().getObjectId());
+            AVObject roomAVObject = AVObject.createWithoutData(mIConfigSource.getRoomTableName(), member.getRoomId().getObjectId());
 
             //删除Member。
-            AVQuery<AVObject> avQueryMember = AVQuery.getQuery(MemberService.OBJECT_KEY)
-                    .whereEqualTo(MemberService.TAG_ROOMID, roomAVObject);
+            AVQuery<AVObject> avQueryMember = AVQuery.getQuery(mIConfigSource.getMemberTableName())
+                    .whereEqualTo(Config.MEMBER_ROOMID, roomAVObject);
 
             //删除Action
-            AVQuery<AVObject> avQueryAction = AVQuery.getQuery(ActionService.OBJECT_KEY)
-                    .whereEqualTo(ActionService.TAG_ROOMID, roomAVObject);
+            AVQuery<AVObject> avQueryAction = AVQuery.getQuery(mIConfigSource.getActionTableName())
+                    .whereEqualTo(Config.ACTION_ROOMID, roomAVObject);
 
             //删除房间
-            AVObject avObjectRoom = AVObject.createWithoutData(RoomService.OBJECT_KEY, member.getRoomId().getObjectId());
+            AVObject avObjectRoom = AVObject.createWithoutData(mIConfigSource.getRoomTableName(), member.getRoomId().getObjectId());
 
             return Observable.concat(avQueryMember.deleteAllInBackground(), avQueryAction.deleteAllInBackground(), avObjectRoom.deleteInBackground()).concatMapCompletable(new Function<AVNull, CompletableSource>() {
                 @Override
@@ -155,16 +160,16 @@ class MessageSource extends BaseMessageSource {
                 }
             }).subscribeOn(Schedulers.io());
         } else {
-            AVObject roomAVObject = AVObject.createWithoutData(RoomService.OBJECT_KEY, member.getRoomId().getObjectId());
-            AVObject memberAVObject = AVObject.createWithoutData(MemberService.OBJECT_KEY, member.getObjectId());
+            AVObject roomAVObject = AVObject.createWithoutData(mIConfigSource.getRoomTableName(), member.getRoomId().getObjectId());
+            AVObject memberAVObject = AVObject.createWithoutData(mIConfigSource.getMemberTableName(), member.getObjectId());
 
             //删除Action
-            AVQuery<AVObject> avQueryAction = AVQuery.getQuery(ActionService.OBJECT_KEY)
-                    .whereEqualTo(ActionService.TAG_ROOMID, roomAVObject)
-                    .whereEqualTo(ActionService.TAG_MEMBERID, memberAVObject);
+            AVQuery<AVObject> avQueryAction = AVQuery.getQuery(mIConfigSource.getActionTableName())
+                    .whereEqualTo(Config.ACTION_ROOMID, roomAVObject)
+                    .whereEqualTo(Config.ACTION_MEMBERID, memberAVObject);
 
             //删除Member
-            AVObject avObject = AVObject.createWithoutData(MemberService.OBJECT_KEY, member.getObjectId());
+            AVObject avObject = AVObject.createWithoutData(mIConfigSource.getMemberTableName(), member.getObjectId());
 
             return avQueryAction.deleteAllInBackground()
                     .concatWith(avObject.deleteInBackground()).concatMapCompletable(new Function<AVNull, CompletableSource>() {
@@ -178,8 +183,8 @@ class MessageSource extends BaseMessageSource {
 
     @Override
     public Completable muteVoice(@NonNull Member member, int muted) {
-        AVObject avObject = AVObject.createWithoutData(MemberService.OBJECT_KEY, member.getObjectId());
-        avObject.put(MemberService.TAG_ISMUTED, muted);
+        AVObject avObject = AVObject.createWithoutData(mIConfigSource.getMemberTableName(), member.getObjectId());
+        avObject.put(Config.MEMBER_ISMUTED, muted);
         return avObject.saveInBackground()
                 .subscribeOn(Schedulers.io())
                 .concatMapCompletable(new Function<AVObject, CompletableSource>() {
@@ -192,8 +197,8 @@ class MessageSource extends BaseMessageSource {
 
     @Override
     public Completable muteSelfVoice(@NonNull Member member, int muted) {
-        AVObject avObject = AVObject.createWithoutData(MemberService.OBJECT_KEY, member.getObjectId());
-        avObject.put(MemberService.TAG_ISSELFMUTED, muted);
+        AVObject avObject = AVObject.createWithoutData(mIConfigSource.getMemberTableName(), member.getObjectId());
+        avObject.put(Config.MEMBER_ISSELFMUTED, muted);
         return avObject.saveInBackground()
                 .subscribeOn(Schedulers.io())
                 .concatMapCompletable(new Function<AVObject, CompletableSource>() {
@@ -205,15 +210,15 @@ class MessageSource extends BaseMessageSource {
     }
 
     @Override
-    public Completable requestHandsUp(@NonNull Member member) {
-        AVObject memberAVObject = AVObject.createWithoutData(MemberService.OBJECT_KEY, member.getObjectId());
-        AVObject roomAVObject = AVObject.createWithoutData(RoomService.OBJECT_KEY, member.getRoomId().getObjectId());
+    public Completable requestConnect(@NonNull Member member, @NonNull Action.ACTION action) {
+        AVObject memberAVObject = AVObject.createWithoutData(mIConfigSource.getMemberTableName(), member.getObjectId());
+        AVObject roomAVObject = AVObject.createWithoutData(mIConfigSource.getRoomTableName(), member.getRoomId().getObjectId());
 
-        AVObject avObject = new AVObject(ActionService.OBJECT_KEY);
-        avObject.put(ActionService.TAG_MEMBERID, memberAVObject);
-        avObject.put(ActionService.TAG_ROOMID, roomAVObject);
-        avObject.put(ActionService.TAG_ACTION, Action.ACTION.HandsUp.getValue());
-        avObject.put(ActionService.TAG_STATUS, Action.ACTION_STATUS.Ing.getValue());
+        AVObject avObject = new AVObject(mIConfigSource.getActionTableName());
+        avObject.put(Config.ACTION_MEMBERID, memberAVObject);
+        avObject.put(Config.ACTION_ROOMID, roomAVObject);
+        avObject.put(Config.ACTION_ACTION, action.getValue());
+        avObject.put(Config.ACTION_STATUS, Action.ACTION_STATUS.Ing.getValue());
         return avObject.saveInBackground()
                 .concatMapCompletable(new Function<AVObject, CompletableSource>() {
                     @Override
@@ -224,19 +229,24 @@ class MessageSource extends BaseMessageSource {
     }
 
     @Override
-    public Completable agreeHandsUp(@NonNull Member member) {
-        AVObject memberObject = AVObject.createWithoutData(MemberService.OBJECT_KEY, member.getObjectId());
-        AVObject roomAVObject = AVObject.createWithoutData(RoomService.OBJECT_KEY, member.getRoomId().getObjectId());
+    public Completable agreeRequest(@NonNull Member member, @NonNull Action.ACTION action) {
+        AVObject memberObject = AVObject.createWithoutData(mIConfigSource.getMemberTableName(), member.getObjectId());
+        AVObject roomAVObject = AVObject.createWithoutData(mIConfigSource.getRoomTableName(), member.getRoomId().getObjectId());
 
         //更新Member表
-        memberObject.put(MemberService.TAG_IS_SPEAKER, 1);
+        memberObject.put(Config.MEMBER_IS_SPEAKER, 1);
+        if (action == Action.ACTION.RequestLeft) {
+            memberObject.put(Config.MEMBER_ROLE, Member.Role.Left.getValue());
+        } else if (action == Action.ACTION.RequestRight) {
+            memberObject.put(Config.MEMBER_ROLE, Member.Role.Right.getValue());
+        }
 
         //更新Action表
-        AVObject actionObject = new AVObject(ActionService.OBJECT_KEY);
-        actionObject.put(ActionService.TAG_MEMBERID, memberObject);
-        actionObject.put(ActionService.TAG_ROOMID, roomAVObject);
-        actionObject.put(ActionService.TAG_ACTION, Action.ACTION.HandsUp.getValue());
-        actionObject.put(ActionService.TAG_STATUS, Action.ACTION_STATUS.Agree.getValue());
+        AVObject actionObject = new AVObject(mIConfigSource.getActionTableName());
+        actionObject.put(Config.ACTION_MEMBERID, memberObject);
+        actionObject.put(Config.ACTION_ROOMID, roomAVObject);
+        actionObject.put(Config.ACTION_ACTION, action.getValue());
+        actionObject.put(Config.ACTION_STATUS, Action.ACTION_STATUS.Agree.getValue());
 
         return Completable.concatArray(memberObject.saveInBackground().concatMapCompletable(new Function<AVObject, CompletableSource>() {
             @Override
@@ -251,22 +261,22 @@ class MessageSource extends BaseMessageSource {
         })).subscribeOn(Schedulers.io()).doOnComplete(new io.reactivex.functions.Action() {
             @Override
             public void run() throws Exception {
-                handUpMembers.remove(member.getObjectId());
+                requestMembers.remove(member.getObjectId());
             }
         });
     }
 
     @Override
-    public Completable refuseHandsUp(@NonNull Member member) {
-        AVObject memberAVObject = AVObject.createWithoutData(MemberService.OBJECT_KEY, member.getObjectId());
-        AVObject roomAVObject = AVObject.createWithoutData(RoomService.OBJECT_KEY, member.getRoomId().getObjectId());
+    public Completable refuseRequest(@NonNull Member member, @NonNull Action.ACTION action) {
+        AVObject memberAVObject = AVObject.createWithoutData(mIConfigSource.getMemberTableName(), member.getObjectId());
+        AVObject roomAVObject = AVObject.createWithoutData(mIConfigSource.getRoomTableName(), member.getRoomId().getObjectId());
 
         //更新Action表
-        AVObject actionObject = new AVObject(ActionService.OBJECT_KEY);
-        actionObject.put(ActionService.TAG_MEMBERID, memberAVObject);
-        actionObject.put(ActionService.TAG_ROOMID, roomAVObject);
-        actionObject.put(ActionService.TAG_ACTION, Action.ACTION.HandsUp.getValue());
-        actionObject.put(ActionService.TAG_STATUS, Action.ACTION_STATUS.Refuse.getValue());
+        AVObject actionObject = new AVObject(mIConfigSource.getActionTableName());
+        actionObject.put(Config.ACTION_MEMBERID, memberAVObject);
+        actionObject.put(Config.ACTION_ROOMID, roomAVObject);
+        actionObject.put(Config.ACTION_ACTION, action.getValue());
+        actionObject.put(Config.ACTION_STATUS, Action.ACTION_STATUS.Refuse.getValue());
 
         return actionObject.saveInBackground().concatMapCompletable(new Function<AVObject, CompletableSource>() {
             @Override
@@ -276,21 +286,21 @@ class MessageSource extends BaseMessageSource {
         }).subscribeOn(Schedulers.io()).doOnComplete(new io.reactivex.functions.Action() {
             @Override
             public void run() throws Exception {
-                handUpMembers.remove(member.getObjectId());
+                requestMembers.remove(member.getObjectId());
             }
         });
     }
 
     @Override
-    public Completable inviteSeat(@NonNull Member member) {
-        AVObject memberAVObject = AVObject.createWithoutData(MemberService.OBJECT_KEY, member.getObjectId());
-        AVObject roomAVObject = AVObject.createWithoutData(RoomService.OBJECT_KEY, member.getRoomId().getObjectId());
+    public Completable inviteConnect(@NonNull Member member, @NonNull Action.ACTION action) {
+        AVObject memberAVObject = AVObject.createWithoutData(mIConfigSource.getMemberTableName(), member.getObjectId());
+        AVObject roomAVObject = AVObject.createWithoutData(mIConfigSource.getRoomTableName(), member.getRoomId().getObjectId());
 
-        AVObject avObject = new AVObject(ActionService.OBJECT_KEY);
-        avObject.put(ActionService.TAG_MEMBERID, memberAVObject);
-        avObject.put(ActionService.TAG_ROOMID, roomAVObject);
-        avObject.put(ActionService.TAG_ACTION, Action.ACTION.Invite.getValue());
-        avObject.put(ActionService.TAG_STATUS, Action.ACTION_STATUS.Ing.getValue());
+        AVObject avObject = new AVObject(mIConfigSource.getActionTableName());
+        avObject.put(Config.ACTION_MEMBERID, memberAVObject);
+        avObject.put(Config.ACTION_ROOMID, roomAVObject);
+        avObject.put(Config.ACTION_ACTION, action.getValue());
+        avObject.put(Config.ACTION_STATUS, Action.ACTION_STATUS.Ing.getValue());
 
         return avObject.saveInBackground().concatMapCompletable(new Function<AVObject, CompletableSource>() {
             @Override
@@ -302,18 +312,19 @@ class MessageSource extends BaseMessageSource {
 
     @Override
     public Completable agreeInvite(@NonNull Member member) {
-        AVObject memberAVObject = AVObject.createWithoutData(MemberService.OBJECT_KEY, member.getObjectId());
-        AVObject roomAVObject = AVObject.createWithoutData(RoomService.OBJECT_KEY, member.getRoomId().getObjectId());
+        AVObject memberAVObject = AVObject.createWithoutData(mIConfigSource.getMemberTableName(), member.getObjectId());
+        AVObject roomAVObject = AVObject.createWithoutData(mIConfigSource.getRoomTableName(), member.getRoomId().getObjectId());
 
         //更新Member表
-        memberAVObject.put(MemberService.TAG_IS_SPEAKER, 1);
+        memberAVObject.put(Config.MEMBER_IS_SPEAKER, 1);
+        memberAVObject.put(Config.MEMBER_ROLE, member.getRole().getValue());
 
         //更新Action表
-        AVObject actionObject = new AVObject(ActionService.OBJECT_KEY);
-        actionObject.put(ActionService.TAG_MEMBERID, memberAVObject);
-        actionObject.put(ActionService.TAG_ROOMID, roomAVObject);
-        actionObject.put(ActionService.TAG_ACTION, Action.ACTION.Invite.getValue());
-        actionObject.put(ActionService.TAG_STATUS, Action.ACTION_STATUS.Agree.getValue());
+        AVObject actionObject = new AVObject(mIConfigSource.getActionTableName());
+        actionObject.put(Config.ACTION_MEMBERID, memberAVObject);
+        actionObject.put(Config.ACTION_ROOMID, roomAVObject);
+        actionObject.put(Config.ACTION_ACTION, Action.ACTION.Invite.getValue());
+        actionObject.put(Config.ACTION_STATUS, Action.ACTION_STATUS.Agree.getValue());
 
         return Completable.concatArray(memberAVObject.saveInBackground().concatMapCompletable(new Function<AVObject, CompletableSource>() {
             @Override
@@ -330,15 +341,15 @@ class MessageSource extends BaseMessageSource {
 
     @Override
     public Completable refuseInvite(@NonNull Member member) {
-        AVObject memberAVObject = AVObject.createWithoutData(MemberService.OBJECT_KEY, member.getObjectId());
-        AVObject roomAVObject = AVObject.createWithoutData(RoomService.OBJECT_KEY, member.getRoomId().getObjectId());
+        AVObject memberAVObject = AVObject.createWithoutData(mIConfigSource.getMemberTableName(), member.getObjectId());
+        AVObject roomAVObject = AVObject.createWithoutData(mIConfigSource.getRoomTableName(), member.getRoomId().getObjectId());
 
         //更新Action表
-        AVObject actionObject = new AVObject(ActionService.OBJECT_KEY);
-        actionObject.put(ActionService.TAG_MEMBERID, memberAVObject);
-        actionObject.put(ActionService.TAG_ROOMID, roomAVObject);
-        actionObject.put(ActionService.TAG_ACTION, Action.ACTION.Invite.getValue());
-        actionObject.put(ActionService.TAG_STATUS, Action.ACTION_STATUS.Refuse.getValue());
+        AVObject actionObject = new AVObject(mIConfigSource.getActionTableName());
+        actionObject.put(Config.ACTION_MEMBERID, memberAVObject);
+        actionObject.put(Config.ACTION_ROOMID, roomAVObject);
+        actionObject.put(Config.ACTION_ACTION, Action.ACTION.Invite.getValue());
+        actionObject.put(Config.ACTION_STATUS, Action.ACTION_STATUS.Refuse.getValue());
 
         return actionObject.saveInBackground().concatMapCompletable(new Function<AVObject, CompletableSource>() {
             @Override
@@ -349,9 +360,10 @@ class MessageSource extends BaseMessageSource {
     }
 
     @Override
-    public Completable seatOff(@NonNull Member member) {
-        AVObject memberObject = AVObject.createWithoutData(MemberService.OBJECT_KEY, member.getObjectId());
-        memberObject.put(MemberService.TAG_IS_SPEAKER, 0);
+    public Completable seatOff(@NonNull Member member, @NonNull Member.Role role) {
+        AVObject memberObject = AVObject.createWithoutData(mIConfigSource.getMemberTableName(), member.getObjectId());
+        memberObject.put(Config.MEMBER_IS_SPEAKER, 0);
+        memberObject.put(Config.MEMBER_ROLE, role.getValue());
         return memberObject.saveInBackground()
                 .subscribeOn(Schedulers.io())
                 .concatMapCompletable(new Function<AVObject, CompletableSource>() {
@@ -363,14 +375,17 @@ class MessageSource extends BaseMessageSource {
     }
 
     @Override
-    public Observable<List<Member>> getHandUpList() {
-        return Observable.just(new ArrayList<>(handUpMembers.values()));
+    public Observable<List<RequestMember>> getRequestList() {
+        return Observable.just(new ArrayList<>(requestMembers.values()));
     }
 
     @Override
     public int getHandUpListCount() {
-        return handUpMembers.size();
+        return requestMembers.size();
     }
+
+    private AVLiveQueryHelp<Action> mAVLiveQueryHelpAction = new AVLiveQueryHelp<>(Action.class);
+    private AVLiveQueryHelp<Member> mAVLiveQueryHelpMember = new AVLiveQueryHelp<>(Member.class);
 
     /**
      * 作为房主，需要监听房间中Action变化。
@@ -380,15 +395,15 @@ class MessageSource extends BaseMessageSource {
         if (room == null) {
             return;
         }
-        AVObject roomAVObject = AVObject.createWithoutData(RoomService.OBJECT_KEY, room.getObjectId());
+        AVObject roomAVObject = AVObject.createWithoutData(mIConfigSource.getRoomTableName(), room.getObjectId());
 
-        AVQuery<AVObject> query = AVQuery.getQuery(ActionService.OBJECT_KEY);
-        query.whereEqualTo(ActionService.TAG_ROOMID, roomAVObject);
-        Log.i(AttributeManager.TAG, String.format("%s registerObserve roomId= %s", ActionService.OBJECT_KEY, room.getObjectId()));
-        ActionService.Instance().registerObserve(query, new AttributeManager.AttributeListener<Action>() {
+        AVQuery<AVObject> query = AVQuery.getQuery(mIConfigSource.getActionTableName());
+        query.whereEqualTo(Config.ACTION_ROOMID, roomAVObject);
+        Log.i(AVLiveQueryHelp.TAG, String.format("%s registerObserve roomId= %s", mIConfigSource.getActionTableName(), room.getObjectId()));
+        mAVLiveQueryHelpAction.registerObserve(query, new AVLiveQueryHelp.AttributeListener<Action>() {
             @Override
             public void onCreated(Action item) {
-                if (item.getAction() == Action.ACTION.HandsUp.getValue()) {
+                if (item.getAction() == Action.ACTION.HandsUp) {
                     if (item.getStatus() == Action.ACTION_STATUS.Ing.getValue()) {
                         Member member = item.getMemberId();
                         member = iRoomProxy.getMemberById(member.getObjectId());
@@ -396,14 +411,14 @@ class MessageSource extends BaseMessageSource {
                             return;
                         }
 
-                        if (handUpMembers.containsKey(member.getObjectId())) {
+                        if (requestMembers.containsKey(member.getObjectId())) {
                             return;
                         }
 
-                        handUpMembers.put(member.getObjectId(), member);
-                        iRoomProxy.onReceivedHandUp(member);
+                        requestMembers.put(member.getObjectId(), new RequestMember(member, item.getAction()));
+                        iRoomProxy.onReceivedRequest(member, item.getAction());
                     }
-                } else if (item.getAction() == Action.ACTION.Invite.getValue()) {
+                } else if (item.getAction() == Action.ACTION.Invite) {
                     if (item.getStatus() == Action.ACTION_STATUS.Agree.getValue()) {
                         Member member = item.getMemberId();
                         member = iRoomProxy.getMemberById(member.getObjectId());
@@ -421,6 +436,21 @@ class MessageSource extends BaseMessageSource {
 
                         iRoomProxy.onInviteRefuse(member);
                     }
+                } else if (item.getAction() == Action.ACTION.RequestLeft || item.getAction() == Action.ACTION.RequestRight) {
+                    if (item.getStatus() == Action.ACTION_STATUS.Ing.getValue()) {
+                        Member member = item.getMemberId();
+                        member = iRoomProxy.getMemberById(member.getObjectId());
+                        if (member == null) {
+                            return;
+                        }
+
+                        if (requestMembers.containsKey(member.getObjectId())) {
+                            return;
+                        }
+
+                        requestMembers.put(member.getObjectId(), new RequestMember(member, item.getAction()));
+                        iRoomProxy.onReceivedRequest(member, item.getAction());
+                    }
                 }
             }
 
@@ -436,7 +466,7 @@ class MessageSource extends BaseMessageSource {
 
             @Override
             public void onSubscribeError(int error) {
-                if (error == AttributeManager.ERROR_EXCEEDED_QUOTA) {
+                if (error == AVLiveQueryHelp.ERROR_EXCEEDED_QUOTA) {
                     iRoomProxy.onRoomError(RoomManager.ERROR_REGISTER_LEANCLOUD_EXCEEDED_QUOTA);
                 } else {
                     iRoomProxy.onRoomError(RoomManager.ERROR_REGISTER_LEANCLOUD);
@@ -446,7 +476,7 @@ class MessageSource extends BaseMessageSource {
     }
 
     private void unregisterAnchorActionStatus() {
-        ActionService.Instance().unregisterObserve();
+        mAVLiveQueryHelpAction.unregisterObserve();
     }
 
     /**
@@ -457,21 +487,23 @@ class MessageSource extends BaseMessageSource {
         if (member == null) {
             return;
         }
-        AVObject memberAVObject = AVObject.createWithoutData(MemberService.OBJECT_KEY, member.getObjectId());
+        AVObject memberAVObject = AVObject.createWithoutData(mIConfigSource.getMemberTableName(), member.getObjectId());
 
-        AVQuery<AVObject> query = AVQuery.getQuery(ActionService.OBJECT_KEY);
-        query.whereEqualTo(ActionService.TAG_MEMBERID, memberAVObject);
-        Log.i(AttributeManager.TAG, String.format("%s registerObserve memberId= %s", ActionService.OBJECT_KEY, member.getObjectId()));
-        ActionService.Instance().registerObserve(query, new AttributeManager.AttributeListener<Action>() {
+        AVQuery<AVObject> query = AVQuery.getQuery(mIConfigSource.getActionTableName());
+        query.whereEqualTo(Config.ACTION_MEMBERID, memberAVObject);
+        Log.i(AVLiveQueryHelp.TAG, String.format("%s registerObserve memberId= %s", mIConfigSource.getActionTableName(), member.getObjectId()));
+        mAVLiveQueryHelpAction.registerObserve(query, new AVLiveQueryHelp.AttributeListener<Action>() {
             @Override
             public void onCreated(Action item) {
-                if (item.getAction() == Action.ACTION.HandsUp.getValue()) {
+                if (item.getAction() == Action.ACTION.HandsUp
+                        || item.getAction() == Action.ACTION.RequestLeft
+                        || item.getAction() == Action.ACTION.RequestRight) {
                     if (item.getStatus() == Action.ACTION_STATUS.Agree.getValue()) {
-                        iRoomProxy.onHandUpAgree(member);
+                        iRoomProxy.onRequestAgreed(member, item.getAction());
                     } else if (item.getStatus() == Action.ACTION_STATUS.Refuse.getValue()) {
-                        iRoomProxy.onHandUpRefuse(member);
+                        iRoomProxy.onRequestRefused(member);
                     }
-                } else if (item.getAction() == Action.ACTION.Invite.getValue()) {
+                } else if (item.getAction() == Action.ACTION.Invite) {
                     if (item.getStatus() == Action.ACTION_STATUS.Ing.getValue()) {
                         iRoomProxy.onReceivedInvite(member);
                     }
@@ -490,7 +522,7 @@ class MessageSource extends BaseMessageSource {
 
             @Override
             public void onSubscribeError(int error) {
-                if (error == AttributeManager.ERROR_EXCEEDED_QUOTA) {
+                if (error == AVLiveQueryHelp.ERROR_EXCEEDED_QUOTA) {
                     iRoomProxy.onRoomError(RoomManager.ERROR_REGISTER_LEANCLOUD_EXCEEDED_QUOTA);
                 } else {
                     iRoomProxy.onRoomError(RoomManager.ERROR_REGISTER_LEANCLOUD);
@@ -500,7 +532,7 @@ class MessageSource extends BaseMessageSource {
     }
 
     private void unregisterMemberActionStatus() {
-        ActionService.Instance().unregisterObserve();
+        mAVLiveQueryHelpAction.unregisterObserve();
     }
 
     /**
@@ -511,12 +543,12 @@ class MessageSource extends BaseMessageSource {
         if (room == null) {
             return;
         }
-        AVObject roomAVObject = AVObject.createWithoutData(RoomService.OBJECT_KEY, room.getObjectId());
+        AVObject roomAVObject = AVObject.createWithoutData(mIConfigSource.getRoomTableName(), room.getObjectId());
 
-        AVQuery<AVObject> query = AVQuery.getQuery(MemberService.OBJECT_KEY);
-        query.whereEqualTo(MemberService.TAG_ROOMID, roomAVObject);
-        Log.i(AttributeManager.TAG, String.format("%s registerObserve roomId= %s", MemberService.OBJECT_KEY, room.getObjectId()));
-        MemberService.Instance().registerObserve(query, new AttributeManager.AttributeListener<Member>() {
+        AVQuery<AVObject> query = AVQuery.getQuery(mIConfigSource.getMemberTableName());
+        query.whereEqualTo(Config.MEMBER_ROOMID, roomAVObject);
+        Log.i(AVLiveQueryHelp.TAG, String.format("%s registerObserve roomId= %s", mIConfigSource.getMemberTableName(), room.getObjectId()));
+        mAVLiveQueryHelpMember.registerObserve(query, new AVLiveQueryHelp.AttributeListener<Member>() {
             @Override
             public void onCreated(Member member) {
                 if (iRoomProxy.isMembersContainsKey(member.getObjectId())) {
@@ -585,7 +617,7 @@ class MessageSource extends BaseMessageSource {
 
             @Override
             public void onSubscribeError(int error) {
-                if (error == AttributeManager.ERROR_EXCEEDED_QUOTA) {
+                if (error == AVLiveQueryHelp.ERROR_EXCEEDED_QUOTA) {
                     iRoomProxy.onRoomError(RoomManager.ERROR_REGISTER_LEANCLOUD_EXCEEDED_QUOTA);
                 } else {
                     iRoomProxy.onRoomError(RoomManager.ERROR_REGISTER_LEANCLOUD);
@@ -595,6 +627,6 @@ class MessageSource extends BaseMessageSource {
     }
 
     private void unregisterMemberChanged() {
-        MemberService.Instance().unregisterObserve();
+        mAVLiveQueryHelpMember.unregisterObserve();
     }
 }

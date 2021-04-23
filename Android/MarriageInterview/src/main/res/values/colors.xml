@@ -10,4 +10,5 @@
 
     <color name="create_dialog_title">#1C004C</color>
     <color name="confirm_dialog_cancel_text">#9B44FD</color>
+    <color name="member_list_line">#ffdedef0</color>
 </resources>
