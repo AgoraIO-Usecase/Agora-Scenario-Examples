@@ -45,6 +45,7 @@
             android:name=".activity.ChatRoomActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
+            android:theme="@style/BaseTranslucentAppTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.UserInfoActivity"
