@@ -3,19 +3,19 @@ package com.agora.data.manager;
 import android.content.Context;
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.preference.PreferenceManager;
 
-import com.agora.data.BaseError;
-import com.agora.data.DataRepositroy;
+import com.agora.data.IDataRepositroy;
 import com.agora.data.model.User;
-import com.agora.data.observer.DataObserver;
 import com.elvishew.xlog.Logger;
 import com.elvishew.xlog.XLog;
 import com.google.gson.Gson;
 
 import java.util.Random;
+
+import io.reactivex.Observable;
+import io.reactivex.functions.Consumer;
 
 public final class UserManager {
     private Logger.Builder mLogger = XLog.tag("UserManager");
@@ -28,6 +28,8 @@ public final class UserManager {
     private volatile static UserManager instance;
 
     private MutableLiveData<User> mUserLiveData = new MutableLiveData<>();
+
+    private IDataRepositroy iDataRepositroy;
 
     private UserManager(Context context) {
         mContext = context.getApplicationContext();
@@ -47,8 +49,17 @@ public final class UserManager {
         return mUserLiveData;
     }
 
-    public void loginIn() {
-        if (UserManager.Instance(mContext).getUserLiveData().getValue() == null) {
+    public void setupDataRepositroy(IDataRepositroy iDataRepositroy) {
+        this.iDataRepositroy = iDataRepositroy;
+    }
+
+    public boolean isLogin() {
+        return UserManager.Instance(mContext).getUserLiveData().getValue() != null;
+    }
+
+    public Observable<User> loginIn() {
+        User user = UserManager.Instance(mContext).getUserLiveData().getValue();
+        if (user == null) {
             String userValue = PreferenceManager.getDefaultSharedPreferences(mContext)
                     .getString(TAG_USER, null);
             User mUser = null;
@@ -61,20 +72,21 @@ public final class UserManager {
             }
 
             mLogger.d("loginIn() called");
-            DataRepositroy.Instance(mContext)
-                    .login(mUser)
-                    .subscribe(new DataObserver<User>(mContext) {
+            return iDataRepositroy
+                    .login(mUser).doOnError(new Consumer<Throwable>() {
                         @Override
-                        public void handleError(@NonNull BaseError e) {
-                            mLogger.e("loginIn faile ", e);
+                        public void accept(Throwable throwable) throws Exception {
+                            mLogger.e("loginIn faile ", throwable);
                         }
-
+                    }).doOnNext(new Consumer<User>() {
                         @Override
-                        public void handleSuccess(@NonNull User user) {
+                        public void accept(User user) throws Exception {
                             mLogger.i("loginIn success user= %s", user);
                             onLoginIn(user);
                         }
                     });
+        } else {
+            return Observable.just(user);
         }
     }
 

@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 
 import com.agora.data.BaseError;
-import com.agora.data.DataRepositroy;
 import com.agora.data.manager.RoomManager;
 import com.agora.data.model.RequestMember;
 import com.agora.data.model.Room;
@@ -27,6 +26,7 @@ import io.agora.baselibrary.base.OnItemClickListener;
 import io.agora.baselibrary.util.ToastUtile;
 import io.agora.interactivepodcast.R;
 import io.agora.interactivepodcast.adapter.HandsUpListAdapter;
+import io.agora.interactivepodcast.data.DataRepositroy;
 import io.agora.interactivepodcast.databinding.DialogHandUpBinding;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 

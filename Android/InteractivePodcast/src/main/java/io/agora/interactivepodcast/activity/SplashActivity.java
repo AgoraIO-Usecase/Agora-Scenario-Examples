@@ -5,8 +5,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
-import com.agora.data.manager.UserManager;
-
 import io.agora.baselibrary.base.DataBindBaseActivity;
 import io.agora.interactivepodcast.R;
 import io.agora.interactivepodcast.databinding.ActivitySplashBinding;
@@ -40,8 +38,6 @@ public class SplashActivity extends DataBindBaseActivity<ActivitySplashBinding> 
 
     @Override
     protected void iniData() {
-        UserManager.Instance(this).loginIn();
-
         startActivity(new Intent(this, RoomListActivity.class));
         finish();
     }

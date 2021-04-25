@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 
 import com.agora.data.BaseError;
-import com.agora.data.DataRepositroy;
 import com.agora.data.manager.RoomManager;
 import com.agora.data.manager.UserManager;
 import com.agora.data.model.User;
@@ -23,6 +22,7 @@ import com.bumptech.glide.Glide;
 import io.agora.baselibrary.base.DataBindBaseActivity;
 import io.agora.baselibrary.util.ToastUtile;
 import io.agora.marriageinterview.R;
+import io.agora.marriageinterview.data.DataRepositroy;
 import io.agora.marriageinterview.databinding.ActivityUserInfoBinding;
 import io.agora.marriageinterview.widget.MenuTextView;
 import io.agora.rtc.Constants;

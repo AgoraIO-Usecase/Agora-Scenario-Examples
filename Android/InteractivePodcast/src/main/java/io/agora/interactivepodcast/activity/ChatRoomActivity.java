@@ -12,7 +12,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.agora.data.BaseError;
-import com.agora.data.DataRepositroy;
 import com.agora.data.RoomEventCallback;
 import com.agora.data.manager.RoomManager;
 import com.agora.data.manager.RtcManager;
@@ -35,6 +34,7 @@ import io.agora.baselibrary.util.ToastUtile;
 import io.agora.interactivepodcast.R;
 import io.agora.interactivepodcast.adapter.ChatRoomListsnerAdapter;
 import io.agora.interactivepodcast.adapter.ChatRoomSeatUserAdapter;
+import io.agora.interactivepodcast.data.DataRepositroy;
 import io.agora.interactivepodcast.databinding.ActivityChatRoomBinding;
 import io.agora.interactivepodcast.widget.HandUpDialog;
 import io.agora.interactivepodcast.widget.InviteMenuDialog;

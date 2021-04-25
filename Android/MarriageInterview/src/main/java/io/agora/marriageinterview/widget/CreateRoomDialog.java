@@ -15,7 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 
 import com.agora.data.BaseError;
-import com.agora.data.DataRepositroy;
 import com.agora.data.manager.UserManager;
 import com.agora.data.model.Room;
 import com.agora.data.model.User;
@@ -27,6 +26,7 @@ import io.agora.baselibrary.base.DataBindBaseDialog;
 import io.agora.baselibrary.util.ToastUtile;
 import io.agora.marriageinterview.R;
 import io.agora.marriageinterview.activity.ChatRoomActivity;
+import io.agora.marriageinterview.data.DataRepositroy;
 import io.agora.marriageinterview.databinding.DialogCreateRoomBinding;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 

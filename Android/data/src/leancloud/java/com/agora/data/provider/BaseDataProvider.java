@@ -11,12 +11,19 @@ import cn.leancloud.AVOSCloud;
 import cn.leancloud.push.PushService;
 import io.agora.baselibrary.BuildConfig;
 
-public class DataProvider implements IDataProvider {
+public class BaseDataProvider implements IDataProvider {
 
-    private IStoreSource mIStoreSource;
-    private IMessageSource mIMessageSource;
+    protected IConfigSource mIConfigSource;
+    protected IStoreSource mIStoreSource;
+    protected IMessageSource mIMessageSource;
 
-    public DataProvider(@NonNull Context mContext, @NonNull IRoomProxy iRoomProxy) {
+    private Context mContext;
+    private IRoomProxy iRoomProxy;
+
+    public BaseDataProvider(@NonNull Context mContext, @NonNull IRoomProxy iRoomProxy) {
+        this.mContext = mContext;
+        this.iRoomProxy = iRoomProxy;
+
         if (BuildConfig.DEBUG) {
             AVOSCloud.setLogLevel(AVLogger.Level.DEBUG);
         } else {
@@ -28,14 +35,34 @@ public class DataProvider implements IDataProvider {
 
         PushService.startIfRequired(mContext);
 
-        IConfigSource mIConfigSource = new DefaultConfigSource();
+        initConfigSource();
+        initStoreSource();
+        initMessageSource();
+    }
+
+    @Override
+    public void initConfigSource() {
+        mIConfigSource = new DefaultConfigSource();
+    }
+
+    @Override
+    public IConfigSource getConfigSource() {
+        return mIConfigSource;
+    }
+
+    @Override
+    public void initStoreSource() {
         mIStoreSource = new StoreSource(mIConfigSource);
-        mIMessageSource = new MessageSource(mContext, iRoomProxy, mIConfigSource);
     }
 
     @Override
     public IStoreSource getStoreSource() {
         return mIStoreSource;
+    }
+
+    @Override
+    public void initMessageSource() {
+        mIMessageSource = new MessageSource(mContext, iRoomProxy, mIConfigSource);
     }
 
     @Override
