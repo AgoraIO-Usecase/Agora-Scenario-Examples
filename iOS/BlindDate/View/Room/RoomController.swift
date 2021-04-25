@@ -17,8 +17,12 @@ protocol RoomControlDelegate: class {
 }
 
 class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
+    
     @IBOutlet weak var backView: UIButton!
     @IBOutlet weak var showMembersView: UIButton!
+    @IBOutlet weak var avatar0: RoundImageView!
+    @IBOutlet weak var avatar1: RoundImageView!
+    @IBOutlet weak var avatar2: RoundImageView!
     
     @IBOutlet weak var hostRootView: UIView!
     @IBOutlet weak var hostVideoView: UIView! {
@@ -83,6 +87,8 @@ class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
     
     @IBOutlet weak var chatListView: UITableView!
     @IBOutlet weak var toolBarRootView: UIView!
+    @IBOutlet weak var inputMessageRootView: UIView!
+    @IBOutlet weak var inputMessageView: UITextField!
     
     private var hosterVideoView: RoleVideoView = RoleVideoView()
     private var leftSpeakerVideoView: RoleVideoView = RoleVideoView()
@@ -90,10 +96,7 @@ class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
     private var hosterToolbar: HosterToolbar?
     private var speakerToolbar: SpeakerToolbar?
     private var listenerToolbar: ListenerToolbar?
-    
-    private var dataSourceDisposable: Disposable? = nil
-    private var actionDisposable: Disposable? = nil
-    private var messagesDisposable: Disposable? = nil
+    private var keyboardHeight: CGFloat = -1
     
     var viewModel: RoomViewModel = RoomViewModel()
     
@@ -206,12 +209,70 @@ class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
                 RoomListenerList().show(delegate: self)
             })
             .disposed(by: disposeBag)
-            
+        
+        keyboardHeight()
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [unowned self] height in
+                Logger.log(message: "keyboardHeight: \(height)", level: .info)
+                if (height == 0) {
+                    if (self.inputMessageRootView.isHidden) {
+                        return
+                    }
+                    self.inputMessageRootView.isHidden = true
+                    self.inputMessageRootView.removeAllConstraints()
+                    self.inputMessageView.removeAllConstraints()
+                    self.inputMessageRootView.marginTrailing(anchor: self.view.trailingAnchor)
+                        .centerX(anchor: self.view.centerXAnchor)
+                        .marginBottom(anchor: self.view.bottomAnchor, constant: 0)
+                        .active()
+                    self.inputMessageView.fill(view: self.inputMessageRootView, leading: 12, top: 12, trailing: 12, bottom: 12)
+                        .active()
+                } else {
+                    if (!self.inputMessageRootView.isHidden) {
+                        return
+                    }
+                    if (self.keyboardHeight == -1) {
+                        self.keyboardHeight = height
+                    }
+                    self.inputMessageRootView.removeAllConstraints()
+                    self.inputMessageView.removeAllConstraints()
+                    self.inputMessageRootView.marginTrailing(anchor: self.view.trailingAnchor)
+                        .centerX(anchor: self.view.centerXAnchor)
+                        .marginBottom(anchor: self.view.bottomAnchor, constant: self.keyboardHeight)
+                        .active()
+                    self.inputMessageView.fill(view: self.inputMessageRootView, leading: 12, top: 12, trailing: 12, bottom: 12)
+                        .active()
+                    self.inputMessageRootView.isHidden = false
+                    self.inputMessageRootView.alpha = 0
+                    UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
+                        self.inputMessageRootView.alpha = 1
+                    })
+                }
+            })
+            .disposed(by: disposeBag)
+        
+//        inputMessageView.rx.controlEvent(.)
+//            .concatMap { [unowned self] _ -> Observable<Result<Void>> in
+//                if let message = self.inputMessageView.text {
+//                    self.inputMessageView.text = nil
+//                    if (!message.isEmpty) {
+//                        return self.viewModel.sendMessage(message: message)
+//                    } else {
+//                        return Observable.just(Result<Void>(success: true))
+//                    }
+//                }
+//                return Observable.just(Result(success: true))
+//            }
+//            .subscribe(onNext: { [unowned self] result in
+//                if (!result.success) {
+//                    self.show(message: result.message ?? "unknown error".localized, type: .error)
+//                }
+//            })
+//            .disposed(by: disposeBag)
     }
     
     private func subcribeRoomEvent() {
-        dataSourceDisposable?.dispose()
-        dataSourceDisposable = viewModel.roomMembersDataSource()
+        viewModel.roomMembersDataSource()
             .observe(on: MainScheduler.instance)
             .flatMap { [unowned self] result -> Observable<Result<Bool>> in
                 let roomClosed = result.data
@@ -225,7 +286,7 @@ class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
             .flatMap { [unowned self] result -> Observable<Result<Bool>> in
                 if (result.data == true) {
                     Logger.log(message: "subcribeRoomEvent roomClosed", level: .info)
-                    return self.popAsObservable().map { _ in result }
+                    return self.dismiss().asObservable().map { _ in result }
                 } else {
                     //self.adapter.performUpdates(animated: false)
                     self.renderSpeakers()
@@ -238,13 +299,13 @@ class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
                     self.show(message: result.message ?? "unknown error".localized, type: .error)
                 } else if (roomClosed == true) {
                     //self.leaveAction?(.leave, self.viewModel.room)
-                    self.disconnect()
                 } else {
                     self.renderToolbar()
                 }
             })
+            .disposed(by: disposeBag)
 
-        actionDisposable = viewModel.actionsSource()
+        viewModel.actionsSource()
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [unowned self] result in
                 switch self.viewModel.role {
@@ -256,31 +317,98 @@ class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
                     listenerToolbar?.onReceivedAction(result)
                 }
             })
+            .disposed(by: disposeBag)
+        
+        viewModel.subscribeMessages()
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [unowned self] result in
+                if (!result.success) {
+                    self.show(message: result.message ?? "unknown error".localized, type: .error)
+                } else {
+                    self.chatListView.reloadData()
+                }
+            })
+            .disposed(by: disposeBag)
         
         viewModel.onTopListenersChange
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { list in
-                
+            .subscribe(onNext: { [unowned self] _ in
+                self.avatar2.isHidden = self.viewModel.topListeners[2]??.id == nil
+                self.avatar1.isHidden = self.viewModel.topListeners[1]??.id == nil
+                self.avatar0.isHidden = self.viewModel.topListeners[0]??.id == nil
+                let bundle = Bundle(identifier: "io.agora.InteractivePodcast")!
+                if (!self.avatar2.isHidden) {
+                    if let avatar = self.viewModel.topListeners[0]??.getLocalAvatar() {
+                        self.avatar2.image = UIImage(named: avatar, in: bundle, with: nil)
+                    }
+                    if let avatar = self.viewModel.topListeners[1]??.getLocalAvatar() {
+                        self.avatar1.image = UIImage(named: avatar, in: bundle, with: nil)
+                    }
+                    if let avatar = self.viewModel.topListeners[2]??.getLocalAvatar() {
+                        self.avatar0.image = UIImage(named: avatar, in: bundle, with: nil)
+                    }
+                } else if (!self.avatar1.isHidden) {
+                    if let avatar = self.viewModel.topListeners[0]??.getLocalAvatar() {
+                        self.avatar1.image = UIImage(named: avatar, in: bundle, with: nil)
+                    }
+                    if let avatar = self.viewModel.topListeners[1]??.getLocalAvatar() {
+                        self.avatar0.image = UIImage(named: avatar, in: bundle, with: nil)
+                    }
+                } else if (!self.avatar0.isHidden) {
+                    if let avatar = self.viewModel.topListeners[0]??.getLocalAvatar() {
+                        self.avatar0.image = UIImage(named: avatar, in: bundle, with: nil)
+                    }
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.onMemberEnter
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [unowned self] member in
+                if let member = member {
+                    self.onMemberEnter(member: member)
+                }
             })
             .disposed(by: disposeBag)
     }
     
-    func disconnect() {
-        dataSourceDisposable?.dispose()
-        dataSourceDisposable = nil
-        actionDisposable?.dispose()
-        actionDisposable = nil
-        messagesDisposable?.dispose()
-        messagesDisposable = nil
+    private func onMemberEnter(member: Member) {
+        Logger.log(message: "\(member.user.name) enter the live room", level: .info)
+        let view = MemberEnterView()
+        view.member = member
+        
+        self.view.addSubview(view)
+        view.marginLeading(anchor: self.view.leadingAnchor, constant: 12)
+            .marginTop(anchor: self.chatListView.topAnchor, constant: 17)
+            .width(constant: 257)
+            .height(constant: 24, relation: .greaterOrEqual)
+            .active()
+        
+        let translationY: CGFloat = 257
+        view.transform = CGAffineTransform(translationX: translationY, y: 0)
+        view.alpha = 0
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
+            view.alpha = 1
+            view.transform = CGAffineTransform(translationX: 0, y: 0)
+        }, completion: { success in
+            UIView.animate(withDuration: 0.2, delay: 1.5, options: .curveEaseInOut, animations: {
+                view.alpha = 0
+                view.transform = CGAffineTransform(translationX: -translationY, y: 0)
+            }, completion: { _ in
+                view.removeFromSuperview()
+            })
+        })
     }
     
-    private func popAsObservable() -> Observable<Bool> {
-        return super.dismiss().asObservable()
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        inputMessageView.endEditing(true)
+        //inputMessageRootView.isHidden = true
     }
     
-    override func dismiss() -> Single<Bool> {
-        disconnect()
-        return super.dismiss()
+    func enableInputMessage() {
+        //inputMessageRootView.isHidden = false
+        inputMessageView.becomeFirstResponder()
     }
     
     override func viewDidLayoutSubviews() {
@@ -298,6 +426,16 @@ class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
         leftSpeakerVideoView.member = viewModel.speakers.leftSpeaker
         rightSpeakerVideoView.delegate = self
         rightSpeakerVideoView.member = viewModel.speakers.rightSpeaker
+        
+        let id = NSStringFromClass(MessageView.self)
+        chatListView.register(MessageView.self, forCellReuseIdentifier: id)
+        chatListView.dataSource = self
+        chatListView.rowHeight = UITableView.automaticDimension
+        chatListView.estimatedRowHeight = 30
+        chatListView.separatorStyle = .none
+        
+        inputMessageView.returnKeyType = .send
+        inputMessageView.delegate = self
         
         renderToolbar()
         subcribeUIEvent()
@@ -367,3 +505,35 @@ extension RoomController: UIGestureRecognizerDelegate {
     }
 }
 
+extension RoomController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        self.viewModel.messageList.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let identifier = NSStringFromClass(MessageView.self)
+        let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! MessageView
+        cell.message = self.viewModel.messageList[indexPath.row]
+        return cell
+    }
+}
+
+extension RoomController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if let message = textField.text {
+            textField.text = nil
+            if (!message.isEmpty) {
+                self.viewModel
+                    .sendMessage(message: message)
+                    .subscribe(onNext: { [unowned self] result in
+                        if (!result.success) {
+                            self.show(message: result.message ?? "unknown error".localized, type: .error)
+                        }
+                    })
+                    .disposed(by: disposeBag)
+            }
+        }
+        textField.endEditing(true)
+        return true
+    }
+}

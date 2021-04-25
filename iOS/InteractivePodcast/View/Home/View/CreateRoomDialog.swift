@@ -93,7 +93,7 @@ class CreateRoomDialog: UIView {
                 })
                 .disposed(by: disposeBag)
             
-            return self.createRoomDelegate.show(dialog: self, padding: 16).map { finished in
+            return self.createRoomDelegate.show(dialog: self, padding: 16, relation: UIView.Relation.greaterOrEqual).map { finished in
                 self.inputRoomView.becomeFirstResponder()
                 return finished
             }

@@ -35,7 +35,15 @@ class ListenerToolbar: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func subcribeUIEvent() {}
+    func subcribeUIEvent() {
+        sendMsgBtn.rx.tap
+            .debounce(RxTimeInterval.microseconds(300), scheduler: MainScheduler.instance)
+            .throttle(RxTimeInterval.seconds(1), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [unowned self] _ in
+                self.delegate.enableInputMessage()
+            })
+            .disposed(by: disposeBag)
+    }
     
     func onReceivedAction(_ result: Result<Action>) {
         if (!result.success) {

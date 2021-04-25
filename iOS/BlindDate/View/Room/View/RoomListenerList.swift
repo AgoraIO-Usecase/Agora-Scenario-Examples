@@ -117,7 +117,7 @@ class ListenerCellView: UITableViewCell {
     var item: Member! {
         didSet {
             name.text = item.user.name
-            avatar.image = UIImage(named: item.user.getLocalAvatar(), in: Bundle.init(identifier: "io.agora.InteractivePodcast")!, with: nil)
+            avatar.image = UIImage(named: item.user.getLocalAvatar(), in: Bundle(identifier: "io.agora.InteractivePodcast")!, with: nil)
         }
     }
     var isManager: Bool = true {

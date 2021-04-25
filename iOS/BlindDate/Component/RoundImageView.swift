@@ -17,7 +17,7 @@ class RoundImageView: UIImageView {
     override func layoutSubviews() {
         super.layoutSubviews()
         clipsToBounds = true
-        rounded(color: color, borderWidth: borderWidth, radius: radius)
+        rounded(color: !isHidden ? color : nil, borderWidth: borderWidth, radius: radius)
     }
 }
 

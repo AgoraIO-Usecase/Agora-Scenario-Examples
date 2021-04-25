@@ -16,7 +16,7 @@ class ManageSpeakerDialog: Dialog {
     var model: Member! {
         didSet {
             name.text = model.user.name
-            avatar.image = UIImage(named: model.user.getLocalAvatar(), in: Bundle.init(identifier: "io.agora.InteractivePodcast")!, with: nil)
+            avatar.image = UIImage(named: model.user.getLocalAvatar(), in: Bundle(identifier: "io.agora.InteractivePodcast")!, with: nil)
             if (model.isMuted) {
                 closeMicButton.setTitle(model.isMuted ? "开麦".localized : "禁麦".localized, for: .normal)
             }

@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 extension Utils {
-    static let bundle = Bundle.init(identifier: "io.agora.BlindDate")!
+    static let bundle = Bundle(identifier: "io.agora.BlindDate")!
     
     static let namesData: [String: [String]] = [
         "cn": [

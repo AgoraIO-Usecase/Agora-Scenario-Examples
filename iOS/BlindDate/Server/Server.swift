@@ -20,6 +20,7 @@ class Server: NSObject {
     var setting: LocalSetting = CoreData.getSetting() ?? LocalSetting()
     //var room: Room? = nil
     private var rtcServer: RtcServer = RtcServer()
+    private var rtmServer: RtmServer = RtmServer()
     private var scheduler = SerialDispatchQueueScheduler(internalSerialQueueName: "rtc")
 }
 
@@ -141,9 +142,13 @@ extension Server: Service {
     func leave() -> Observable<Result<Void>> {
         if let member = member {
             if (rtcServer.isJoinChannel) {
-                return Observable.zip(self.rtcServer.leaveChannel(), member.leave()).map { result0, result1 in
-                    if (!result0.success || !result1.success) {
-                        Logger.log(message: "leaveRoom error: \(result0.message ?? "") \(result1.message ?? "")", level: .error)
+                return Observable.zip(
+                    self.rtcServer.leaveChannel(),
+                    member.leave(),
+                    self.rtmServer.logout()
+                ).map { result0, result1, result2 in
+                    if (!result0.success || !result1.success || !result2.success) {
+                        Logger.log(message: "leaveRoom error: \(result0.message ?? "") \(result1.message ?? "") \(result2.message ?? "")", level: .error)
                     }
                     return Result(success: true)
                 }
@@ -307,6 +312,32 @@ extension Server: Service {
             rtcServer.bindRemoteVideo(view: view, uid: uid)
         } else {
             rtcServer.unbindRemoteVideo(uid: uid)
+        }
+    }
+    
+    func subscribeMessages() -> Observable<Result<Message>> {
+        if let member = member {
+            return rtmServer.login(user: member.id)
+                .concatMap { [unowned self] result in
+                    return result.onSuccess {
+                        return self.rtmServer.join(room: member.room.id)
+                    }
+                }
+                .concatMap { [unowned self] result in
+                    return result.onSuccess {
+                        return self.rtmServer.subscribeMessages(room: member.room.id)
+                    }
+                }
+        } else {
+            return Observable.just(Result(success: false, message: "member is nil!"))
+        }
+    }
+    
+    func sendMessage(message: String) -> Observable<Result<Void>> {
+        if let member = member {
+            return rtmServer.sendMessage(room: member.room.id, message: message)
+        } else {
+            return Observable.just(Result(success: false, message: "member is nil!"))
         }
     }
 }

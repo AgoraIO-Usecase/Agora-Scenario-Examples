@@ -9,7 +9,7 @@ import Foundation
 import Core
 
 extension Utils {
-    static let bundle = Bundle.init(identifier: "io.agora.InteractivePodcast")!
+    static let bundle = Bundle(identifier: "io.agora.InteractivePodcast")!
     
     static let namesData: [String: [String]] = [
         "cn": [

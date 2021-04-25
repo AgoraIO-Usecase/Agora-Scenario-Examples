@@ -84,6 +84,14 @@ class HosterToolbar: UIView {
     }
     
     func subcribeUIEvent() {
+        sendMsgBtn.rx.tap
+            .debounce(RxTimeInterval.microseconds(300), scheduler: MainScheduler.instance)
+            .throttle(RxTimeInterval.seconds(1), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [unowned self] _ in
+                self.delegate.enableInputMessage()
+            })
+            .disposed(by: disposeBag)
+        
         onMicView.rx.tap
             .debounce(RxTimeInterval.microseconds(300), scheduler: MainScheduler.instance)
             .throttle(RxTimeInterval.seconds(1), scheduler: MainScheduler.instance)

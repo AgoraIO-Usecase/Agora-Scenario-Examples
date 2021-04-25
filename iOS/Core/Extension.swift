@@ -70,6 +70,8 @@ extension UIView {
         self.layer.cornerRadius = radius ?? min(self.bounds.width, self.bounds.height) / 2
         if let borderColor = color {
             self.layer.borderColor = UIColor(hex: borderColor).cgColor
+        } else {
+            self.layer.borderColor = UIColor.clear.cgColor
         }
         self.layer.borderWidth = borderWidth
     }
@@ -249,6 +251,12 @@ extension UIViewController {
             return
         }
         self.show(message: _message, type: type, duration: duration)
+    }
+}
+
+extension Notification {
+    var keyboardHeight: CGFloat {
+        return (userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect)?.height ?? 0
     }
 }
 

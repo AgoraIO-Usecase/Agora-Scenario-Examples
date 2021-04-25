@@ -34,5 +34,6 @@ target 'BlindDate' do
   commonPods
   use_frameworks!
   pod 'LeanCloud'
+  pod 'AgoraRtm_iOS'
 end
 

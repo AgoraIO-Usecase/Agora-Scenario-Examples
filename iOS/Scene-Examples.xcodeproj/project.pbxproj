@@ -126,6 +126,9 @@
 		57F63A8E2632C28F00B45C0B /* InvitedDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63A8D2632C28F00B45C0B /* InvitedDialog.swift */; };
 		57F63A932632CD0000B45C0B /* AlertDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63A922632CD0000B45C0B /* AlertDialog.swift */; };
 		57F63A982632EBB700B45C0B /* RoomListenerList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63A972632EBB700B45C0B /* RoomListenerList.swift */; };
+		57F63AB42635527B00B45C0B /* MemberEnterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63AB32635527B00B45C0B /* MemberEnterView.swift */; };
+		57F63AB9263560CD00B45C0B /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63AB8263560CD00B45C0B /* MessageView.swift */; };
+		57F63ABE2635634900B45C0B /* RtmServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63ABD2635634900B45C0B /* RtmServer.swift */; };
 		89264C70CFB59394E13AF02F /* Pods_Scene_Examples.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C7FB2E501D0DCAF25AB5379 /* Pods_Scene_Examples.framework */; };
 		BAE05AEAD603AC8F77EBB4D8 /* Pods_Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83A7B67A16BEB4B32D1DB28A /* Pods_Core.framework */; };
 		D5F4552EC0FCB83209377EF4 /* Pods_BlindDate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB5CAB911233B6021082C1C5 /* Pods_BlindDate.framework */; platformFilter = ios; };
@@ -319,6 +322,9 @@
 		57F63A8D2632C28F00B45C0B /* InvitedDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvitedDialog.swift; sourceTree = "<group>"; };
 		57F63A922632CD0000B45C0B /* AlertDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertDialog.swift; sourceTree = "<group>"; };
 		57F63A972632EBB700B45C0B /* RoomListenerList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomListenerList.swift; sourceTree = "<group>"; };
+		57F63AB32635527B00B45C0B /* MemberEnterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberEnterView.swift; sourceTree = "<group>"; };
+		57F63AB8263560CD00B45C0B /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
+		57F63ABD2635634900B45C0B /* RtmServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmServer.swift; sourceTree = "<group>"; };
 		7B7A6D6F466688183D0F5FD5 /* Pods-Scene-Examples.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Scene-Examples.debug.xcconfig"; path = "Target Support Files/Pods-Scene-Examples/Pods-Scene-Examples.debug.xcconfig"; sourceTree = "<group>"; };
 		7B7B8BFA7F27BE306F7D83A6 /* Pods-InteractivePodcast.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InteractivePodcast.release.xcconfig"; path = "Target Support Files/Pods-InteractivePodcast/Pods-InteractivePodcast.release.xcconfig"; sourceTree = "<group>"; };
 		83A7B67A16BEB4B32D1DB28A /* Pods_Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -697,6 +703,7 @@
 				57F63A01263050C800B45C0B /* LeanCloud.swift */,
 				57F63A09263050E400B45C0B /* RtcServer.swift */,
 				57F63A0E2630511500B45C0B /* Server.swift */,
+				57F63ABD2635634900B45C0B /* RtmServer.swift */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -733,6 +740,8 @@
 				57F63A882632B83400B45C0B /* RoleVideoView.swift */,
 				57F63A8D2632C28F00B45C0B /* InvitedDialog.swift */,
 				57F63A972632EBB700B45C0B /* RoomListenerList.swift */,
+				57F63AB32635527B00B45C0B /* MemberEnterView.swift */,
+				57F63AB8263560CD00B45C0B /* MessageView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1175,6 +1184,7 @@
 				57F63A0A263050E400B45C0B /* RtcServer.swift in Sources */,
 				57F639EA26304EB400B45C0B /* HomeCardView.swift in Sources */,
 				57F63A842631AA1700B45C0B /* ManageSpeakerDialog.swift in Sources */,
+				57F63ABE2635634900B45C0B /* RtmServer.swift in Sources */,
 				57F639F72630502E00B45C0B /* Service.swift in Sources */,
 				57F63A1F263054B300B45C0B /* RoomController.swift in Sources */,
 				57F639B226301DB400B45C0B /* HomeController.swift in Sources */,
@@ -1184,6 +1194,7 @@
 				57F63A8E2632C28F00B45C0B /* InvitedDialog.swift in Sources */,
 				57F639E126304E5C00B45C0B /* Colors.swift in Sources */,
 				57F63A0F2630511500B45C0B /* Server.swift in Sources */,
+				57F63AB9263560CD00B45C0B /* MessageView.swift in Sources */,
 				57F63A532631847700B45C0B /* SpeakerToolbar.swift in Sources */,
 				57F639F226304F0200B45C0B /* Model.swift in Sources */,
 				57F63A982632EBB700B45C0B /* RoomListenerList.swift in Sources */,
@@ -1195,6 +1206,7 @@
 				57F63A362630561900B45C0B /* RoundImageView.swift in Sources */,
 				57F63A4926317E9B00B45C0B /* IconButton.swift in Sources */,
 				57F63A7F2631A9A200B45C0B /* HandsupListDialog.swift in Sources */,
+				57F63AB42635527B00B45C0B /* MemberEnterView.swift in Sources */,
 				57F63A19263053DD00B45C0B /* CreateRoomDialog.swift in Sources */,
 				57F63A932632CD0000B45C0B /* AlertDialog.swift in Sources */,
 				57F639BE2630225800B45C0B /* Utils.swift in Sources */,

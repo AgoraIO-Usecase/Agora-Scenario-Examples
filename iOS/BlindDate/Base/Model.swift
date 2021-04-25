@@ -123,3 +123,15 @@ class Action {
         self.room = room
     }
 }
+
+class Message {
+    var channelId: String
+    var userId: String
+    var value: String
+    
+    init(channelId: String, userId: String, value: String) {
+        self.channelId = channelId
+        self.userId = userId
+        self.value = value
+    }
+}

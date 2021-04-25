@@ -277,6 +277,45 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
+                            <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="nPs-8F-kZ6" userLabel="avatar0" customClass="RoundImageView" customModule="BlindDate" customModuleProvider="target">
+                                <rect key="frame" x="332" y="50" width="32" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="32" id="d57-T6-NPd"/>
+                                    <constraint firstAttribute="width" constant="32" id="eJm-vT-uie"/>
+                                </constraints>
+                            </imageView>
+                            <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="058-hG-YCG" userLabel="avatar1" customClass="RoundImageView" customModule="BlindDate" customModuleProvider="target">
+                                <rect key="frame" x="294" y="50" width="32" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="32" id="bVA-ge-hOW"/>
+                                    <constraint firstAttribute="height" constant="32" id="zuP-U4-Hoy"/>
+                                </constraints>
+                            </imageView>
+                            <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="mO4-cZ-VGM" userLabel="avatar2" customClass="RoundImageView" customModule="BlindDate" customModuleProvider="target">
+                                <rect key="frame" x="256" y="50" width="32" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="32" id="L6g-CM-o92"/>
+                                    <constraint firstAttribute="width" constant="32" id="kyi-DY-0mY"/>
+                                </constraints>
+                            </imageView>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yZL-e1-pjL" userLabel="send message">
+                                <rect key="frame" x="0.0" y="815" width="414" height="47"/>
+                                <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AK2-9c-bee" userLabel="input">
+                                        <rect key="frame" x="12" y="12" width="390" height="23"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <textInputTraits key="textInputTraits" returnKeyType="send"/>
+                                    </textField>
+                                </subviews>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="AK2-9c-bee" secondAttribute="trailing" constant="12" id="35Q-rg-Y7F"/>
+                                    <constraint firstItem="AK2-9c-bee" firstAttribute="leading" secondItem="yZL-e1-pjL" secondAttribute="leading" constant="12" id="DNB-av-rjn"/>
+                                    <constraint firstAttribute="bottom" secondItem="AK2-9c-bee" secondAttribute="bottom" constant="12" id="aS6-2k-3TW"/>
+                                    <constraint firstItem="AK2-9c-bee" firstAttribute="top" secondItem="yZL-e1-pjL" secondAttribute="top" constant="12" id="jRr-6e-im2"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="wg3-8t-x0z"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -285,29 +324,43 @@
                             <constraint firstItem="NQW-Dn-i1u" firstAttribute="leading" secondItem="wg3-8t-x0z" secondAttribute="leading" constant="12" id="2KM-ZL-USI"/>
                             <constraint firstItem="2Xj-ty-Jz6" firstAttribute="centerY" secondItem="1x5-Gf-Gir" secondAttribute="centerY" id="2aA-7Q-gyH"/>
                             <constraint firstItem="1x5-Gf-Gir" firstAttribute="top" secondItem="wg3-8t-x0z" secondAttribute="top" id="3bg-Q0-6hW"/>
+                            <constraint firstItem="2Xj-ty-Jz6" firstAttribute="leading" secondItem="nPs-8F-kZ6" secondAttribute="trailing" constant="6" id="788-1A-3NJ"/>
                             <constraint firstItem="wg3-8t-x0z" firstAttribute="trailing" secondItem="2Xj-ty-Jz6" secondAttribute="trailing" constant="12" id="8gO-DL-m4z"/>
                             <constraint firstItem="wg3-8t-x0z" firstAttribute="bottom" secondItem="P5G-G4-6ow" secondAttribute="bottom" constant="12" id="Aa0-sn-O20"/>
+                            <constraint firstItem="058-hG-YCG" firstAttribute="centerY" secondItem="nPs-8F-kZ6" secondAttribute="centerY" id="Ejb-dd-Qzy"/>
+                            <constraint firstItem="nPs-8F-kZ6" firstAttribute="leading" secondItem="058-hG-YCG" secondAttribute="trailing" constant="6" id="GHr-nJ-PTi"/>
+                            <constraint firstItem="mO4-cZ-VGM" firstAttribute="centerY" secondItem="058-hG-YCG" secondAttribute="centerY" id="Iru-Gx-r20"/>
                             <constraint firstItem="P5G-G4-6ow" firstAttribute="leading" secondItem="wg3-8t-x0z" secondAttribute="leading" id="Kit-dg-RRC"/>
                             <constraint firstItem="NQW-Dn-i1u" firstAttribute="centerX" secondItem="ZW4-DK-pqW" secondAttribute="centerX" id="M1s-eV-NhN"/>
+                            <constraint firstItem="058-hG-YCG" firstAttribute="leading" secondItem="mO4-cZ-VGM" secondAttribute="trailing" constant="6" id="N2V-23-fCv"/>
                             <constraint firstItem="ZW4-DK-pqW" firstAttribute="top" secondItem="cro-8z-ozW" secondAttribute="top" id="O5u-bY-AFl"/>
                             <constraint firstItem="wg3-8t-x0z" firstAttribute="trailing" secondItem="P5G-G4-6ow" secondAttribute="trailing" id="Q8O-1a-Zst"/>
                             <constraint firstItem="wg3-8t-x0z" firstAttribute="trailing" secondItem="ZW4-DK-pqW" secondAttribute="trailing" id="Z0v-bR-J1O"/>
                             <constraint firstAttribute="bottom" secondItem="ZW4-DK-pqW" secondAttribute="bottom" id="anj-cv-SBu"/>
                             <constraint firstItem="wpE-9Z-w6f" firstAttribute="leading" secondItem="wg3-8t-x0z" secondAttribute="leading" id="by3-qm-TFY"/>
+                            <constraint firstItem="wg3-8t-x0z" firstAttribute="trailing" secondItem="yZL-e1-pjL" secondAttribute="trailing" id="cM6-hg-2Oz"/>
+                            <constraint firstItem="yZL-e1-pjL" firstAttribute="bottom" secondItem="wg3-8t-x0z" secondAttribute="bottom" id="fLs-gR-3yL"/>
                             <constraint firstItem="wg3-8t-x0z" firstAttribute="trailing" secondItem="wpE-9Z-w6f" secondAttribute="trailing" id="kN1-0V-27a"/>
                             <constraint firstItem="NQW-Dn-i1u" firstAttribute="top" secondItem="1x5-Gf-Gir" secondAttribute="bottom" constant="8" id="kw1-uP-8Gc"/>
+                            <constraint firstItem="nPs-8F-kZ6" firstAttribute="centerY" secondItem="1x5-Gf-Gir" secondAttribute="centerY" id="nyp-JV-vew"/>
                             <constraint firstItem="ZW4-DK-pqW" firstAttribute="leading" secondItem="wg3-8t-x0z" secondAttribute="leading" id="q43-Yd-Uyw"/>
                             <constraint firstItem="1x5-Gf-Gir" firstAttribute="leading" secondItem="wg3-8t-x0z" secondAttribute="leading" id="uA3-94-93N"/>
+                            <constraint firstItem="wg3-8t-x0z" firstAttribute="leading" secondItem="yZL-e1-pjL" secondAttribute="leading" id="uTx-st-Y1V"/>
                             <constraint firstItem="wpE-9Z-w6f" firstAttribute="top" secondItem="NQW-Dn-i1u" secondAttribute="bottom" constant="12" id="ulU-eB-6XP"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="avatar0" destination="nPs-8F-kZ6" id="JnA-2t-AkO"/>
+                        <outlet property="avatar1" destination="058-hG-YCG" id="bdT-LC-asm"/>
+                        <outlet property="avatar2" destination="mO4-cZ-VGM" id="Gms-61-ht0"/>
                         <outlet property="backView" destination="1x5-Gf-Gir" id="I33-uT-QbS"/>
                         <outlet property="chatListView" destination="wpE-9Z-w6f" id="PEC-2D-xA2"/>
                         <outlet property="hostMicView" destination="eJU-fl-WFg" id="e3w-M2-UHJ"/>
                         <outlet property="hostNameView" destination="zdD-1f-6li" id="1BY-36-bfE"/>
                         <outlet property="hostRootView" destination="9qm-XB-IDG" id="ylD-D3-BET"/>
                         <outlet property="hostVideoView" destination="Fd6-zU-rVt" id="iMm-Z7-XTC"/>
+                        <outlet property="inputMessageRootView" destination="yZL-e1-pjL" id="mia-n5-bVd"/>
+                        <outlet property="inputMessageView" destination="AK2-9c-bee" id="FIl-df-kuz"/>
                         <outlet property="leftAddView" destination="bt2-oY-AXD" id="gOn-0p-UOX"/>
                         <outlet property="leftMicView" destination="dyG-Iu-1JA" id="f3x-kI-jXr"/>
                         <outlet property="leftNameView" destination="EWs-PI-dqh" id="Y4C-U4-KBW"/>

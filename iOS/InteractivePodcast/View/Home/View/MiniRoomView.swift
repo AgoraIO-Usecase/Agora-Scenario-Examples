@@ -289,8 +289,8 @@ class MiniRoomView: Dialog {
 
 extension MiniRoomView: RoomDelegate {
     
-    func show(dialog: UIView, style: DialogStyle, padding: CGFloat, onDismiss: (() -> Void)?) -> Single<Bool> {
-        return delegate.show(dialog: dialog, style: style, padding: padding, onDismiss: onDismiss)
+    func show(dialog: UIView, style: DialogStyle, padding: CGFloat, relation: UIView.Relation, onDismiss: (() -> Void)?) -> Single<Bool> {
+        return delegate.show(dialog: dialog, style: style, padding: padding, relation: relation, onDismiss: onDismiss)
     }
     
     func dismiss(dialog: UIView) -> Single<Bool> {

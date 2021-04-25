@@ -120,7 +120,7 @@ class HandsupCellView: UITableViewCell {
     var item: Action! {
         didSet {
             name.text = item.member.user.name
-            avatar.image = UIImage(named: item.member.user.getLocalAvatar(), in: Bundle.init(identifier: "io.agora.InteractivePodcast")!, with: nil)
+            avatar.image = UIImage(named: item.member.user.getLocalAvatar(), in: Bundle(identifier: "io.agora.InteractivePodcast")!, with: nil)
         }
     }
     

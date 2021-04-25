@@ -68,7 +68,11 @@ open class BaseViewContoller: UIViewController {
         }
     }
 
-    open func show(dialog: UIView, style: DialogStyle = .center, padding: CGFloat = 0, onDismiss: (() -> Void)? = nil) -> Single<Bool> {
+    open func show(dialog: UIView,
+                   style: DialogStyle = .center,
+                   padding: CGFloat = 0,
+                   relation: UIView.Relation = .equal,
+                   onDismiss: (() -> Void)? = nil) -> Single<Bool> {
         return Single.create { [unowned self] single in
             self.onDismiss = onDismiss
             dialog.tag = style.rawValue
@@ -78,7 +82,7 @@ open class BaseViewContoller: UIViewController {
                 _showMaskView(dialog: dialog)
                 let root = addViewTop(dialog)
                 //self.view.addSubview(dialog)
-                dialog.marginLeading(anchor: root.leadingAnchor, constant: padding)
+                dialog.marginLeading(anchor: root.leadingAnchor, constant: padding, relation: relation)
                     .centerX(anchor: root.centerXAnchor)
                     .marginBottom(anchor: root.bottomAnchor)
                     .active()
@@ -96,7 +100,7 @@ open class BaseViewContoller: UIViewController {
                 _showMaskView(dialog: dialog, alpha: 0.65)
                 let root = addViewTop(dialog)
                 //self.view.addSubview(dialog)
-                dialog.marginLeading(anchor: root.leadingAnchor, constant: padding, relation: .equal)
+                dialog.marginLeading(anchor: root.leadingAnchor, constant: padding, relation: relation)
                     .centerX(anchor: root.centerXAnchor)
                     .centerY(anchor: root.centerYAnchor, constant: -50)
                     .active()
@@ -113,9 +117,9 @@ open class BaseViewContoller: UIViewController {
                 _showMaskView(dialog: dialog)
                 let root = addViewTop(dialog)
                 //self.view.addSubview(dialog)
-                dialog.marginLeading(anchor: root.leadingAnchor, constant: padding)
+                dialog.marginLeading(anchor: root.leadingAnchor, constant: padding, relation: relation)
                     .centerX(anchor: root.centerXAnchor)
-                    .marginTop(anchor: root.safeAreaLayoutGuide.topAnchor, constant: padding)
+                    .marginTop(anchor: root.safeAreaLayoutGuide.topAnchor, constant: padding, relation: relation)
                     .active()
                 
                 dialog.alpha = 0
@@ -130,9 +134,9 @@ open class BaseViewContoller: UIViewController {
             case .topNoMask:
                 let root = addViewTop(dialog)
                 //self.view.addSubview(dialog)
-                dialog.marginLeading(anchor: root.leadingAnchor, constant: padding)
+                dialog.marginLeading(anchor: root.leadingAnchor, constant: padding, relation: relation)
                     .centerX(anchor: root.centerXAnchor)
-                    .marginTop(anchor: root.safeAreaLayoutGuide.topAnchor, constant: padding)
+                    .marginTop(anchor: root.safeAreaLayoutGuide.topAnchor, constant: padding, relation: relation)
                     .active()
                 
                 dialog.alpha = 0
@@ -148,9 +152,9 @@ open class BaseViewContoller: UIViewController {
                 let root = addViewTop(dialog)
                 //self.view.addSubview(dialog)
                 if (padding > 0) {
-                    dialog.marginLeading(anchor: root.leadingAnchor, constant: padding)
+                    dialog.marginLeading(anchor: root.leadingAnchor, constant: padding, relation: relation)
                         .centerX(anchor: root.centerXAnchor)
-                        .marginBottom(anchor: root.safeAreaLayoutGuide.bottomAnchor, constant: padding)
+                        .marginBottom(anchor: root.safeAreaLayoutGuide.bottomAnchor, constant: padding, relation: relation)
                         .active()
                 } else {
                     dialog.marginLeading(anchor: root.leadingAnchor)
@@ -330,5 +334,19 @@ open class BaseViewContoller: UIViewController {
             self.navigationController?.view.layer.add(transition, forKey: kCATransition)
             self.navigationController?.pushViewController(controller, animated: false)
         }
+    }
+    
+    open func keyboardHeight() -> Observable<CGFloat> {
+        return Observable.from([
+            NotificationCenter.default.rx.notification(UIApplication.keyboardDidShowNotification)
+                .map { notification -> CGFloat in
+                    notification.keyboardHeight
+                },
+            NotificationCenter.default.rx.notification(UIApplication.keyboardWillHideNotification)
+                .map { _ -> CGFloat in
+                    0
+                }
+            ])
+            .merge()
     }
 }

@@ -32,7 +32,7 @@ public enum DialogStyle: Int {
 }
 
 public protocol DialogDelegate: class {
-    func show(dialog: UIView, style: DialogStyle, padding: CGFloat, onDismiss: (() -> Void)?) -> Single<Bool>
+    func show(dialog: UIView, style: DialogStyle, padding: CGFloat, relation: UIView.Relation, onDismiss: (() -> Void)?) -> Single<Bool>
     func dismiss(dialog: UIView) -> Single<Bool>
     func show(message: String, type: NotificationType, duration: CGFloat)
 }
@@ -63,7 +63,7 @@ open class Dialog: UIView {
         padding: CGFloat = 0,
         onDismiss: (() -> Void)? = nil
     ) {
-        controller.show(dialog: self, style: style, padding: padding, onDismiss: onDismiss)
+        controller.show(dialog: self, style: style, padding: padding, relation: UIView.Relation.equal, onDismiss: onDismiss)
             .subscribe()
             .disposed(by: disposeBag)
     }

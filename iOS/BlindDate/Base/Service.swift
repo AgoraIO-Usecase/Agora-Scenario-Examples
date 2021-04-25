@@ -39,6 +39,9 @@ protocol Service {
     
     func bindLocalVideo(view: UIView?)
     func bindRemoteVideo(view: UIView?, uid: UInt)
+    
+    func subscribeMessages() -> Observable<Result<Message>>
+    func sendMessage(message: String) -> Observable<Result<Void>>
 }
 
 protocol ErrorDescription {

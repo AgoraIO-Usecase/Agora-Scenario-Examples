@@ -37,17 +37,47 @@ class SpeakerGroup {
 }
 
 class MemberGroup {
+    private var first = true
     var list: Array<Member>
     
     init() {
         self.list = []
     }
     
-    func sync(list: Array<Member>) -> Bool {
-        self.list.removeAll()
-        self.list.append(contentsOf: list)
-        
-        return true
+    func sync(list: Array<Member>) -> (Bool, Array<Member>) {
+        let add = first ? [] : list.filter { member -> Bool in
+            return self.list.count == 0 || self.list.first(where: { _member -> Bool in
+                _member.id == member.id
+            }) == nil
+        }
+        first = false
+        var changed = false
+        if (list.count != self.list.count) {
+            changed = true
+        } else if (list.count != 0) {
+            for index in 0...list.count - 1 {
+                if (list[index].id != self.list[index].id) {
+                    changed = true
+                    break
+                }
+            }
+        }
+        if (changed) {
+            self.list.removeAll()
+            self.list.append(contentsOf: list)
+        }
+
+        return (changed, add)
+    }
+}
+
+class RoomChat {
+    var member: Member
+    var message: String
+    
+    init(member: Member, message: String) {
+        self.message = message
+        self.member = member
     }
 }
 
@@ -82,8 +112,8 @@ class RoomViewModel {
     //var count: Int = 0
     //var speakersCount: Int = 0
     
-    var topListeners: [User] = []
-    var onTopListenersChange: BehaviorRelay<[User]> = BehaviorRelay(value: [])
+    var topListeners: [Int: User?] = [0: nil, 1: nil, 2: nil]
+    var onTopListenersChange: BehaviorRelay<Bool> = BehaviorRelay(value: false)
     //var memberList: [Any] = []
     var speakers: SpeakerGroup = SpeakerGroup()
     
@@ -92,6 +122,16 @@ class RoomViewModel {
     
     var handsupList: [Action] = []
     var onHandsupListChange: BehaviorRelay<[Action]> = BehaviorRelay(value: [])
+
+    var onMemberEnter: BehaviorRelay<Member?> = BehaviorRelay(value: nil)
+    
+    var messageList: [RoomChat] = []
+    
+    init() {
+        messageList.append(RoomChat(member: member, message: "hello world"))
+        messageList.append(RoomChat(member: member, message: "hello world"))
+        messageList.append(RoomChat(member: member, message: "hello world"))
+    }
     
     func actionsSource() -> Observable<Result<Action>> {
         return Server.shared().subscribeActions()
@@ -109,10 +149,37 @@ class RoomViewModel {
             }
     }
     
+    func sendMessage(message: String) -> Observable<Result<Void>> {
+        return Server.shared().sendMessage(message: message)
+    }
+    
+    func subscribeMessages() -> Observable<Result<Message>> {
+        return Server.shared().subscribeMessages()
+            .map { [unowned self] result in
+                if let message = result.data {
+                    let member: Member?
+                    if (message.userId == self.speakers.hoster?.id) {
+                        member = self.speakers.hoster
+                    } else if (message.userId == self.speakers.leftSpeaker?.id) {
+                        member = self.speakers.leftSpeaker
+                    } else if (message.userId == self.speakers.rightSpeaker?.id) {
+                        member = self.speakers.rightSpeaker
+                    } else {
+                        member = self.listeners.list.first { member -> Bool in
+                            member.id == message.userId
+                        }
+                    }
+                    if let member = member {
+                        self.messageList.append(RoomChat(member: member, message: message.value))
+                    }
+                }
+                return result
+            }
+    }
+    
     func roomMembersDataSource() -> Observable<Result<Bool>> {
         return Server.shared().subscribeMembers()
             .map { [unowned self] result in
-                Logger.log(message: "member isMuted:\(member.isMuted) member:\(member.isSelfMuted)", level: .info)
                 var roomClosed = false
                 if (result.success) {
                     syncLocalUIStatus()
@@ -128,9 +195,12 @@ class RoomViewModel {
                         self.speakers.sync(list: list.filter { user in
                             return user.role != .listener
                         })
-                        let changed = self.listeners.sync(list: list.filter { user in
+                        let (changed, add) = self.listeners.sync(list: list.filter { user in
                             return user.role == .listener
                         })
+                        add.forEach { member in
+                            self.onMemberEnter.accept(member)
+                        }
                         if (changed) {
                             self.onListenersListChange.accept(true)
                         }
@@ -145,18 +215,20 @@ class RoomViewModel {
     
     private func checkTopListeners() {
         var changed = false
-        var tops: [User] = []
+        var tops: [Int: User?] = [0: nil, 1: nil, 2: nil]
         let max = min(self.listeners.list.count, 3)
         if (max > 0) {
             for index in 0...(max - 1) {
-                tops.append(self.listeners.list[index].user)
+                tops[index] = self.listeners.list[index].user
             }
         }
         if (tops.count != 0 && tops.count == self.topListeners.count) {
-            for index in 0...tops.count - 1 {
+            for index in 0...2 {
                 let a = tops[index]
                 let b = self.topListeners[index]
-                if (a.avatar != b.avatar) {
+                if (a == nil && b == nil) {
+                    continue
+                } else if (a??.id != b??.id || a??.avatar != b??.avatar) {
                     changed = true
                     break
                 }
@@ -165,9 +237,10 @@ class RoomViewModel {
             changed = true
         }
         if (changed) {
-            self.topListeners.removeAll()
-            self.topListeners.append(contentsOf: tops)
-            self.onTopListenersChange.accept(self.topListeners)
+            for index in 0...2 {
+                self.topListeners[index] = tops[index]
+            }
+            self.onTopListenersChange.accept(true)
         }
     }
     
