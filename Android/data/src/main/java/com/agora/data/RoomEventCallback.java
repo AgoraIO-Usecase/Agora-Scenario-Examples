@@ -71,4 +71,6 @@ public interface RoomEventCallback {
     void onEnterMinStatus();
 
     void onRoomError(int error);
+
+    void onRoomMessageReceived(@NonNull Member member, @NonNull String message);
 }

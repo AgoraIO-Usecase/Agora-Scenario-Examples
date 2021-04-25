@@ -35,6 +35,7 @@ public class MainThreadDispatch implements RoomEventCallback {
     private static final int ON_LEAVE_ROOM = ON_ROOM_ERROR + 1;
     private static final int ON_OWNER_LEAVE_ROOM = ON_LEAVE_ROOM + 1;
     private static final int ON_SDK_VIDEO_STATUS_CHANGED = ON_OWNER_LEAVE_ROOM + 1;
+    private static final int ON_ROOM_MESSAGE_RECEIVED = ON_SDK_VIDEO_STATUS_CHANGED + 1;
 
     private final List<RoomEventCallback> enevtCallbacks = new ArrayList<>();
 
@@ -121,6 +122,13 @@ public class MainThreadDispatch implements RoomEventCallback {
                 Member member = (Member) msg.obj;
                 for (RoomEventCallback callback : enevtCallbacks) {
                     callback.onSDKVideoStatusChanged(member);
+                }
+            } else if (msg.what == ON_ROOM_MESSAGE_RECEIVED) {
+                Bundle bundle = msg.getData();
+                String message = bundle.getString("message");
+                Member member = (Member) bundle.getSerializable("member");
+                for (RoomEventCallback callback : enevtCallbacks) {
+                    callback.onRoomMessageReceived(member, message);
                 }
             }
             return false;
@@ -218,5 +226,16 @@ public class MainThreadDispatch implements RoomEventCallback {
     @Override
     public void onRoomError(int error) {
         mHandler.obtainMessage(ON_ROOM_ERROR, error).sendToTarget();
+    }
+
+    @Override
+    public void onRoomMessageReceived(@NonNull Member member, @NonNull String message) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("message", message);
+        bundle.putSerializable("member", member);
+
+        Message message2 = mHandler.obtainMessage(ON_ROOM_MESSAGE_RECEIVED);
+        message2.setData(bundle);
+        message2.sendToTarget();
     }
 }

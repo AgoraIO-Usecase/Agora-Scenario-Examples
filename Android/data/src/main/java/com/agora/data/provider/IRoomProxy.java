@@ -70,4 +70,6 @@ public interface IRoomProxy {
     void onEnterMinStatus();
 
     void onRoomError(int error);
+
+    void onRoomMessageReceived(@NonNull Member member, @NonNull String message);
 }

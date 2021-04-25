@@ -56,5 +56,8 @@ dependencies {
     firebaseImplementation platform('com.google.firebase:firebase-bom:26.7.0')
     firebaseImplementation 'com.google.firebase:firebase-firestore'
 
+    //RTM
+    implementation 'com.github.agorabuilder:rtm-sdk:1.4.4'
+
     api project(':baselibrary')
 }

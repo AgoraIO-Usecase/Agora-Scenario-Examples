@@ -13,6 +13,7 @@ import androidx.core.util.ObjectsCompat;
 
 import com.agora.data.BaseError;
 import com.agora.data.RoomEventCallback;
+import com.agora.data.manager.RTMManager;
 import com.agora.data.manager.RoomManager;
 import com.agora.data.manager.UserManager;
 import com.agora.data.model.Action;
@@ -34,6 +35,7 @@ import io.agora.marriageinterview.adapter.RoomPreMemberListAdapter;
 import io.agora.marriageinterview.data.DataRepositroy;
 import io.agora.marriageinterview.databinding.ActivityChatRoomBinding;
 import io.agora.marriageinterview.widget.ConfirmDialog;
+import io.agora.marriageinterview.widget.InputMessageDialog;
 import io.agora.marriageinterview.widget.InvitedMenuDialog;
 import io.agora.marriageinterview.widget.MemberListDialog;
 import io.agora.marriageinterview.widget.RequestConnectListDialog;
@@ -238,6 +240,49 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
                 });
     }
 
+    private void joinRTM() {
+        Room room = RoomManager.Instance(ChatRoomActivity.this).getRoom();
+        Member mine = RoomManager.Instance(ChatRoomActivity.this).getMine();
+        if (room == null || mine == null) {
+            return;
+        }
+
+        RTMManager.Instance(ChatRoomActivity.this)
+                .login(mine.getObjectId())
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(mLifecycleProvider.bindToLifecycle())
+                .concatWith(RTMManager.Instance(ChatRoomActivity.this).joinChannel(room.getObjectId()))
+                .subscribe(new DataCompletableObserver(ChatRoomActivity.this) {
+                    @Override
+                    public void handleError(@NonNull BaseError e) {
+                        ToastUtile.toastShort(ChatRoomActivity.this, e.getMessage());
+                    }
+
+                    @Override
+                    public void handleSuccess() {
+
+                    }
+                });
+    }
+
+    private void leaveRTM() {
+        RTMManager.Instance(ChatRoomActivity.this)
+                .leaveChannel()
+                .concatWith(RTMManager.Instance(ChatRoomActivity.this).logout())
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(mLifecycleProvider.bindToLifecycle())
+                .subscribe(new DataCompletableObserver(ChatRoomActivity.this) {
+                    @Override
+                    public void handleError(@NonNull BaseError e) {
+                    }
+
+                    @Override
+                    public void handleSuccess() {
+
+                    }
+                });
+    }
+
     private void getMembers() {
         Room room = RoomManager.Instance(this).getRoom();
         if (room == null) {
@@ -340,6 +385,7 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
                             return;
                         }
 
+                        joinRTM();
                         getMembers();
                     }
                 });
@@ -388,7 +434,9 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.ivMembers) {
+        if (id == R.id.ivMessage) {
+            showInputMessageDialog();
+        } else if (id == R.id.ivMembers) {
             showMembersDialog();
         } else if (id == R.id.ivRequest) {
             showRequestListDialog();
@@ -407,6 +455,21 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
                 showLeaveRoomDialog();
             }
         }
+    }
+
+    private void showInputMessageDialog() {
+        Member mine = RoomManager.Instance(ChatRoomActivity.this).getMine();
+        if (mine == null) {
+            return;
+        }
+
+        InputMessageDialog dialog = new InputMessageDialog();
+        dialog.show(getSupportFragmentManager(), new InputMessageDialog.ISendMessageCallback() {
+            @Override
+            public void onSendMessage(String message) {
+                onRoomMessageReceived(mine, message);
+            }
+        });
     }
 
     private void showRequestListDialog() {
@@ -480,6 +543,7 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
     }
 
     private void leaveRoom() {
+        leaveRTM();
         RoomManager.Instance(this).leaveRoom();
         finish();
     }
@@ -571,11 +635,15 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
         if (mAdapterMembers.getItemCount() <= 3) {
             mAdapterMembers.addItem(member);
         }
+
+        mAdapterMessage.onMemberJoin(ChatRoomActivity.this, member);
     }
 
     @Override
     public void onMemberLeave(@NonNull Member member) {
         mAdapterMembers.deleteItem(member);
+
+        mAdapterMessage.onMemberLeave(ChatRoomActivity.this, member);
 
         this.mDataBinding.viewUserLeft.onMemberLeave(member);
         this.mDataBinding.viewUserRight.onMemberLeave(member);
@@ -690,6 +758,11 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
     @Override
     public void onRoomError(int error) {
         showErrorDialog(getString(R.string.error_room_default, String.valueOf(error)));
+    }
+
+    @Override
+    public void onRoomMessageReceived(@NonNull Member member, @NonNull String message) {
+        mAdapterMessage.onRoomMessageReceived(member, message);
     }
 
     private AlertDialog errorDialog = null;
