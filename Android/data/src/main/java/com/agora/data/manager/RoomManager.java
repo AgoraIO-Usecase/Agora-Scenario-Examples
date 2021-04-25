@@ -9,7 +9,7 @@ import androidx.core.util.ObjectsCompat;
 import androidx.preference.PreferenceManager;
 
 import com.agora.data.BaseError;
-import com.agora.data.DataRepositroy;
+import com.agora.data.IDataRepositroy;
 import com.agora.data.RoomEventCallback;
 import com.agora.data.model.Action;
 import com.agora.data.model.Member;
@@ -55,6 +55,8 @@ public final class RoomManager implements IRoomProxy {
     }
 
     private IRoomConfigProvider roomConfig;
+
+    private IDataRepositroy iDataRepositroy;
 
     private final IRtcEngineEventHandler mIRtcEngineEventHandler = new IRtcEngineEventHandler() {
         @Override
@@ -127,6 +129,10 @@ public final class RoomManager implements IRoomProxy {
         RtcManager.Instance(mContext).setupRoomConfig(roomConfig);
     }
 
+    public void setupDataRepositroy(IDataRepositroy iDataRepositroy) {
+        this.iDataRepositroy = iDataRepositroy;
+    }
+
     /**
      * 先加入RTC房间，获取userId，然后加入到业务服务器。
      */
@@ -154,7 +160,7 @@ public final class RoomManager implements IRoomProxy {
             public CompletableSource apply(@NonNull Integer uid) throws Exception {
                 long streamId = uid & 0xffffffffL;
                 member.setStreamId(streamId);
-                return DataRepositroy.Instance(mContext).joinRoom(room, member).concatMapCompletable(new Function<Member, CompletableSource>() {
+                return iDataRepositroy.joinRoom(room, member).concatMapCompletable(new Function<Member, CompletableSource>() {
                     @Override
                     public CompletableSource apply(@NonNull Member member) throws Exception {
                         mMine = member;
@@ -172,7 +178,7 @@ public final class RoomManager implements IRoomProxy {
 
     public Completable requestConnect(@NonNull Action.ACTION action) {
         mLogger.d("requestConnect() called with: action = [" + action + "]");
-        return DataRepositroy.Instance(mContext)
+        return iDataRepositroy
                 .requestConnect(mMine, action);
     }
 
@@ -184,7 +190,7 @@ public final class RoomManager implements IRoomProxy {
         }
 
         int newValue = mMine.getIsSelfMuted() == 0 ? 1 : 0;
-        return DataRepositroy.Instance(mContext)
+        return iDataRepositroy
                 .muteSelfVoice(mMine, newValue)
                 .doOnComplete(new io.reactivex.functions.Action() {
                     @Override
@@ -204,7 +210,7 @@ public final class RoomManager implements IRoomProxy {
         }
 
         int newValue = member.getIsMuted() == 0 ? 1 : 0;
-        return DataRepositroy.Instance(mContext)
+        return iDataRepositroy
                 .muteVoice(member, newValue)
                 .doOnComplete(new io.reactivex.functions.Action() {
                     @Override
@@ -219,7 +225,7 @@ public final class RoomManager implements IRoomProxy {
 
     public Completable seatOff(@NonNull Member member, @NonNull Member.Role role) {
         mLogger.d("seatOff() called with: member = [" + member + "], role = [" + role + "]");
-        return DataRepositroy.Instance(mContext)
+        return iDataRepositroy
                 .seatOff(member, role)
                 .doOnComplete(new io.reactivex.functions.Action() {
                     @Override
@@ -260,7 +266,7 @@ public final class RoomManager implements IRoomProxy {
 
         RoomManager.Instance(mContext).stopLivePlay();
         RtcManager.Instance(mContext).leaveChannel();
-        DataRepositroy.Instance(mContext)
+        iDataRepositroy
                 .leaveRoom(mRoom, mMine)
                 .subscribe(new DataCompletableObserver(mContext) {
                     @Override
@@ -315,7 +321,7 @@ public final class RoomManager implements IRoomProxy {
 
     public Maybe<Room> getRoom(Room room) {
         mLogger.d("getRoom() called with: room = [" + room + "]");
-        return DataRepositroy.Instance(mContext)
+        return iDataRepositroy
                 .getRoom(room)
                 .doOnSuccess(new Consumer<Room>() {
                     @Override
@@ -379,7 +385,7 @@ public final class RoomManager implements IRoomProxy {
     }
 
     public Maybe<Member> getMember(String userId) {
-        return DataRepositroy.Instance(mContext)
+        return iDataRepositroy
                 .getMember(mRoom.getObjectId(), userId)
                 .doOnSuccess(new Consumer<Member>() {
                     @Override
@@ -391,7 +397,7 @@ public final class RoomManager implements IRoomProxy {
 
     public Completable agreeInvite(@NonNull Member member) {
         mLogger.d("agreeInvite() called with: member = [" + member + "]");
-        return DataRepositroy.Instance(mContext)
+        return iDataRepositroy
                 .agreeInvite(member)
                 .doOnComplete(new io.reactivex.functions.Action() {
                     @Override
@@ -404,7 +410,7 @@ public final class RoomManager implements IRoomProxy {
 
     public Completable refuseInvite(@NonNull Member member) {
         mLogger.d("refuseInvite() called with: member = [" + member + "]");
-        return DataRepositroy.Instance(mContext)
+        return iDataRepositroy
                 .refuseInvite(member)
                 .doOnComplete(new io.reactivex.functions.Action() {
                     @Override
@@ -416,7 +422,7 @@ public final class RoomManager implements IRoomProxy {
 
     public Completable agreeRequest(@NonNull Member member, @NonNull Action.ACTION action) {
         mLogger.d("agreeRequest() called with: member = [" + member + "], action = [" + action + "]");
-        return DataRepositroy.Instance(mContext)
+        return iDataRepositroy
                 .agreeRequest(member, action)
                 .doOnComplete(new io.reactivex.functions.Action() {
                     @Override
@@ -441,7 +447,7 @@ public final class RoomManager implements IRoomProxy {
 
     public Completable refuseRequest(@NonNull Member member, @NonNull Action.ACTION action) {
         mLogger.d("refuseRequest() called with: member = [" + member + "], action = [" + action + "]");
-        return DataRepositroy.Instance(mContext)
+        return iDataRepositroy
                 .refuseRequest(member, action)
                 .doOnComplete(new io.reactivex.functions.Action() {
                     @Override
@@ -468,7 +474,7 @@ public final class RoomManager implements IRoomProxy {
 
     @Override
     public Maybe<Member> getMember(@NonNull String roomId, @NonNull String userId) {
-        return DataRepositroy.Instance(mContext).getMember(roomId, userId);
+        return iDataRepositroy.getMember(roomId, userId);
     }
 
     @Override

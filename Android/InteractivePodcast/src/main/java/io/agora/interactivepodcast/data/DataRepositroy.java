@@ -1,16 +1,17 @@
-package com.agora.data;
+package io.agora.interactivepodcast.data;
 
 import android.content.Context;
 
 import androidx.annotation.NonNull;
 
+import com.agora.data.IDataRepositroy;
 import com.agora.data.manager.RoomManager;
 import com.agora.data.model.Action;
 import com.agora.data.model.Member;
 import com.agora.data.model.RequestMember;
 import com.agora.data.model.Room;
 import com.agora.data.model.User;
-import com.agora.data.provider.DataProvider;
+import com.agora.data.provider.BaseDataProvider;
 import com.agora.data.provider.IDataProvider;
 import com.agora.data.provider.IMessageSource;
 import com.agora.data.provider.IStoreSource;
@@ -21,7 +22,7 @@ import io.reactivex.Completable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
 
-public class DataRepositroy implements IStoreSource, IMessageSource {
+public class DataRepositroy implements IDataRepositroy {
     private static final String TAG = DataRepositroy.class.getSimpleName();
 
     private volatile static DataRepositroy instance;
@@ -33,7 +34,7 @@ public class DataRepositroy implements IStoreSource, IMessageSource {
     private DataRepositroy(Context context) {
         mContext = context.getApplicationContext();
 
-        mDataProvider = new DataProvider(context, RoomManager.Instance(mContext));
+        mDataProvider = new BaseDataProvider(context, RoomManager.Instance(mContext));
     }
 
     public static synchronized DataRepositroy Instance(Context context) {

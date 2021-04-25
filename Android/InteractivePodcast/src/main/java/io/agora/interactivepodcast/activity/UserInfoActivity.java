@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 
 import com.agora.data.BaseError;
-import com.agora.data.DataRepositroy;
 import com.agora.data.manager.RoomManager;
 import com.agora.data.manager.UserManager;
 import com.agora.data.model.User;
@@ -23,6 +22,7 @@ import com.bumptech.glide.Glide;
 import io.agora.baselibrary.base.DataBindBaseActivity;
 import io.agora.baselibrary.util.ToastUtile;
 import io.agora.interactivepodcast.R;
+import io.agora.interactivepodcast.data.DataRepositroy;
 import io.agora.interactivepodcast.databinding.ActivityUserInfoBinding;
 import io.agora.interactivepodcast.widget.MenuTextView;
 import io.agora.rtc.Constants;

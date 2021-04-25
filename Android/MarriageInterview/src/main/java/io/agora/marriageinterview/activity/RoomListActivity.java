@@ -13,10 +13,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.agora.data.BaseError;
 import com.agora.data.BaseRoomEventCallback;
-import com.agora.data.DataRepositroy;
 import com.agora.data.manager.RoomManager;
+import com.agora.data.manager.UserManager;
 import com.agora.data.model.Room;
+import com.agora.data.model.User;
 import com.agora.data.observer.DataMaybeObserver;
+import com.agora.data.observer.DataObserver;
 
 import java.util.List;
 
@@ -25,6 +27,7 @@ import io.agora.baselibrary.base.OnItemClickListener;
 import io.agora.baselibrary.util.ToastUtile;
 import io.agora.marriageinterview.R;
 import io.agora.marriageinterview.adapter.RoomListAdapter;
+import io.agora.marriageinterview.data.DataRepositroy;
 import io.agora.marriageinterview.databinding.ActivityRoomListBinding;
 import io.agora.marriageinterview.widget.CreateRoomDialog;
 import io.agora.marriageinterview.widget.SpaceItemDecoration;
@@ -86,17 +89,37 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
 
     @Override
     protected void iniData() {
-        mDataBinding.btCrateRoom.setVisibility(View.VISIBLE);
+        UserManager.Instance(this).setupDataRepositroy(DataRepositroy.Instance(this));
+        RoomManager.Instance(this).setupDataRepositroy(DataRepositroy.Instance(this));
 
+        mDataBinding.btCrateRoom.setVisibility(View.VISIBLE);
         mDataBinding.tvEmpty.setVisibility(mAdapter.getItemCount() <= 0 ? View.VISIBLE : View.GONE);
 
-        mDataBinding.swipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                mDataBinding.swipeRefreshLayout.setRefreshing(true);
-                loadRooms();
-            }
-        });
+        login();
+    }
+
+    private void login() {
+        UserManager.Instance(this)
+                .loginIn()
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(mLifecycleProvider.bindToLifecycle())
+                .subscribe(new DataObserver<User>(this) {
+                    @Override
+                    public void handleError(@NonNull BaseError e) {
+
+                    }
+
+                    @Override
+                    public void handleSuccess(@NonNull User user) {
+                        mDataBinding.swipeRefreshLayout.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mDataBinding.swipeRefreshLayout.setRefreshing(true);
+                                loadRooms();
+                            }
+                        });
+                    }
+                });
     }
 
     private void loadRooms() {
@@ -127,6 +150,11 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
 
     @Override
     public void onClick(View v) {
+        if (!UserManager.Instance(this).isLogin()) {
+            login();
+            return;
+        }
+
         if (v.getId() == R.id.btCrateRoom) {
             gotoCreateRoom();
         } else if (v.getId() == R.id.ivHead) {
