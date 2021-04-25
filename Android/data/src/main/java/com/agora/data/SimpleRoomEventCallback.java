@@ -8,7 +8,7 @@ import com.agora.data.model.Member;
 import com.agora.data.model.Room;
 
 @MainThread
-public class BaseRoomEventCallback implements RoomEventCallback {
+public class SimpleRoomEventCallback implements RoomEventCallback {
 
     @Override
     public void onOwnerLeaveRoom(@NonNull Room room) {
@@ -83,6 +83,11 @@ public class BaseRoomEventCallback implements RoomEventCallback {
 
     @Override
     public void onRoomError(int error) {
+
+    }
+
+    @Override
+    public void onRoomMessageReceived(@NonNull Member member, @NonNull String message) {
 
     }
 }

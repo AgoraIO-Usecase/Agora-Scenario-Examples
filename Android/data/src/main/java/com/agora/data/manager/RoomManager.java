@@ -11,6 +11,7 @@ import androidx.preference.PreferenceManager;
 import com.agora.data.BaseError;
 import com.agora.data.IDataRepositroy;
 import com.agora.data.RoomEventCallback;
+import com.agora.data.SimpleRtmChannelListener;
 import com.agora.data.model.Action;
 import com.agora.data.model.Member;
 import com.agora.data.model.Room;
@@ -28,6 +29,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import io.agora.rtc.Constants;
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.models.ClientRoleOptions;
+import io.agora.rtm.RtmChannelListener;
+import io.agora.rtm.RtmChannelMember;
+import io.agora.rtm.RtmMessage;
 import io.reactivex.Completable;
 import io.reactivex.CompletableSource;
 import io.reactivex.Maybe;
@@ -90,6 +94,23 @@ public final class RoomManager implements IRoomProxy {
                 member.setIsSDKVideoMuted(1);
             }
             mainThreadDispatch.onSDKVideoStatusChanged(member);
+        }
+    };
+
+    private final RtmChannelListener mRtmChannelListener = new SimpleRtmChannelListener() {
+        @Override
+        public void onMessageReceived(RtmMessage rtmMessage, RtmChannelMember rtmChannelMember) {
+            super.onMessageReceived(rtmMessage, rtmChannelMember);
+            if (isLeaving) {
+                return;
+            }
+
+            String uid = rtmChannelMember.getUserId();
+            Member member = getMemberById(uid);
+            if (member == null) {
+                return;
+            }
+            onRoomMessageReceived(member, rtmMessage.getText());
         }
     };
 
@@ -258,6 +279,7 @@ public final class RoomManager implements IRoomProxy {
         isLeaving = false;
 
         RtcManager.Instance(mContext).addHandler(mIRtcEngineEventHandler);
+        RTMManager.Instance(mContext).addChannelListeners(mRtmChannelListener);
     }
 
     public void leaveRoom() {
@@ -284,6 +306,7 @@ public final class RoomManager implements IRoomProxy {
     private void onLeaveRoom() {
         mLogger.d("onLeaveRoom() called");
         RtcManager.Instance(mContext).removeHandler(mIRtcEngineEventHandler);
+        RTMManager.Instance(mContext).removeChannelListeners(mRtmChannelListener);
 
         mainThreadDispatch.onLeaveRoom(getRoom());
 
@@ -670,5 +693,11 @@ public final class RoomManager implements IRoomProxy {
     public void onRoomError(int error) {
         mLogger.d("onRoomError() called with: error = [" + error + "]");
         mainThreadDispatch.onRoomError(error);
+    }
+
+    @Override
+    public void onRoomMessageReceived(@NonNull Member member, @NonNull String message) {
+        mLogger.d("onRoomMessageReceived() called with: member = [" + member + "], message = [" + message + "]");
+        mainThreadDispatch.onRoomMessageReceived(member, message);
     }
 }

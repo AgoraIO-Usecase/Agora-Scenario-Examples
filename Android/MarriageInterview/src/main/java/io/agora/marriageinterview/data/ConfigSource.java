@@ -11,11 +11,16 @@ public class ConfigSource extends DefaultConfigSource {
 
     @Override
     public String getMemberTableName() {
-        return "MERRYMEMBER";
+        return "MEMBER_MARRY";
     }
 
     @Override
     public String getActionTableName() {
-        return "MERRYACTION";
+        return "ACTION_MARRY";
+    }
+
+    @Override
+    public String getRoomTableName() {
+        return "ROOM_MARRY";
     }
 }

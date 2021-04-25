@@ -1,10 +1,12 @@
 package io.agora.marriageinterview.adapter;
 
+import android.content.Context;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.agora.data.model.Member;
 import com.agora.data.model.Message;
 
 import java.util.List;
@@ -24,6 +26,18 @@ public class RoomMessagesAdapter extends BaseRecyclerViewAdapter<Message, RoomMe
         super(datas, listener);
     }
 
+    public void onMemberJoin(@NonNull Context context, @NonNull Member member) {
+        addItem(new Message(member.getUserId().getName(), context.getString(R.string.room_chat_message_join)));
+    }
+
+    public void onMemberLeave(@NonNull Context context, @NonNull Member member) {
+        addItem(new Message(member.getUserId().getName(), context.getString(R.string.room_chat_message_leave)));
+    }
+
+    public void onRoomMessageReceived(@NonNull Member member, @NonNull String message) {
+        addItem(new Message(member.getUserId().getName(), message));
+    }
+
     @Override
     public int getLayoutId() {
         return R.layout.item_room_messages;
@@ -40,6 +54,9 @@ public class RoomMessagesAdapter extends BaseRecyclerViewAdapter<Message, RoomMe
         if (item == null) {
             return;
         }
+
+        holder.mDataBinding.tvName.setText(item.getName());
+        holder.mDataBinding.tvMessage.setText(item.getMessage());
     }
 
     class ViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder<ItemRoomMessagesBinding> {

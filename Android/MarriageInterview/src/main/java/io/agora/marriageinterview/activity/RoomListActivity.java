@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.agora.data.BaseError;
-import com.agora.data.BaseRoomEventCallback;
+import com.agora.data.SimpleRoomEventCallback;
 import com.agora.data.manager.RoomManager;
 import com.agora.data.manager.UserManager;
 import com.agora.data.model.Room;
@@ -51,7 +51,7 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
 
     private RoomListAdapter mAdapter;
 
-    private BaseRoomEventCallback mBaseRoomEventCallback = new BaseRoomEventCallback() {
+    private SimpleRoomEventCallback mSimpleRoomEventCallback = new SimpleRoomEventCallback() {
         @Override
         public void onOwnerLeaveRoom(@NonNull Room room) {
             super.onOwnerLeaveRoom(room);
@@ -81,7 +81,7 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
 
     @Override
     protected void iniListener() {
-        RoomManager.Instance(this).addRoomEventCallback(mBaseRoomEventCallback);
+        RoomManager.Instance(this).addRoomEventCallback(mSimpleRoomEventCallback);
         mDataBinding.swipeRefreshLayout.setOnRefreshListener(this);
         mDataBinding.ivHead.setOnClickListener(this);
         mDataBinding.btCrateRoom.setOnClickListener(this);
@@ -209,7 +209,7 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
 
     @Override
     protected void onDestroy() {
-        RoomManager.Instance(this).removeRoomEventCallback(mBaseRoomEventCallback);
+        RoomManager.Instance(this).removeRoomEventCallback(mSimpleRoomEventCallback);
         super.onDestroy();
     }
 
