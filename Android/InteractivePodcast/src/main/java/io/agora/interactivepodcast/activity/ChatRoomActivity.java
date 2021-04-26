@@ -49,7 +49,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  * 聊天室
  * 1. 查询Room表，房间是否存在，不存在就退出。
  * 2. 查询Member表
- * 2.1. 不存在就创建用户，并且用0加入到RTC，利用RTC分配一个唯一的uid，并且修改member的streamId值，这里注意，rtc分配的uid是int类型，需要进行（& 0xffffffffL）转换成long类型。
+ * 2.1. 不存在就创建用户，并且用0加入到RTC，利用RTC分配一个唯一的uid，并且修改member的streamId值.
  * 2.2. 存在就返回member对象，利用streamId加入到RTC。
  *
  * @author chenhengfei@agora.io
@@ -272,6 +272,9 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
                             return;
                         }
 
+                        onLoadRoom(room);
+
+                        //查看是否已经加入到了房间
                         Member mine = RoomManager.Instance(ChatRoomActivity.this).getMine();
                         if (mine == null) {
                             RoomManager.Instance(ChatRoomActivity.this).leaveRoom();
@@ -286,18 +289,17 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
                                 .subscribe(new DataMaybeObserver<Member>(ChatRoomActivity.this) {
                                     @Override
                                     public void handleError(@NonNull BaseError e) {
-                                        if (RoomManager.isLeaving) {
-                                            return;
-                                        }
-
-                                        ToastUtile.toastShort(ChatRoomActivity.this, R.string.error_room_not_exsit);
-                                        finish();
+                                        joinRoom();
                                     }
 
                                     @Override
                                     public void handleSuccess(@Nullable Member member) {
                                         if (RoomManager.isLeaving) {
                                             return;
+                                        }
+
+                                        if (member != null) {
+                                            RoomManager.Instance(ChatRoomActivity.this).updateMine(member);
                                         }
 
                                         joinRoom();
@@ -704,6 +706,11 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
     @Override
     public void onRoomError(int error) {
         showErrorDialog(getString(R.string.error_room_default, String.valueOf(error)));
+    }
+
+    @Override
+    public void onRoomMessageReceived(@NonNull Member member, @NonNull String message) {
+
     }
 
     private AlertDialog errorDialog = null;

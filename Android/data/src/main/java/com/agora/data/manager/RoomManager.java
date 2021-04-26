@@ -82,7 +82,7 @@ public final class RoomManager implements IRoomProxy {
         @Override
         public void onRemoteVideoStateChanged(int uid, int state, int reason, int elapsed) {
             super.onRemoteVideoStateChanged(uid, state, reason, elapsed);
-            long streamId = uid & 0xffffffffL;
+            long streamId = Integer.valueOf(uid).longValue();
             Member member = getMemberByStramId(streamId);
             if (member == null) {
                 return;
@@ -129,9 +129,9 @@ public final class RoomManager implements IRoomProxy {
      */
     public volatile static boolean isLeaving = false;
 
-    private Room mRoom;
-    private Member mMine;
-    private Member mOwner;
+    private volatile Room mRoom;
+    private volatile Member mMine;
+    private volatile Member mOwner;
 
     /**
      * Member表中objectId和Member的键值对
@@ -179,7 +179,7 @@ public final class RoomManager implements IRoomProxy {
         return RtcManager.Instance(mContext).joinChannel(objectId, userId).flatMapCompletable(new Function<Integer, CompletableSource>() {
             @Override
             public CompletableSource apply(@NonNull Integer uid) throws Exception {
-                long streamId = uid & 0xffffffffL;
+                long streamId = uid.longValue();
                 member.setStreamId(streamId);
                 return iDataRepositroy.joinRoom(room, member).concatMapCompletable(new Function<Member, CompletableSource>() {
                     @Override
@@ -238,7 +238,7 @@ public final class RoomManager implements IRoomProxy {
                     public void run() throws Exception {
                         member.setIsMuted(newValue);
 
-                        RtcManager.Instance(mContext).getRtcEngine().muteRemoteVideoStream(member.getStreamId().intValue(), newValue != 0);
+                        RtcManager.Instance(mContext).getRtcEngine().muteRemoteAudioStream(member.getStreamId().intValue(), newValue != 0);
                         onAudioStatusChanged(false, member);
                     }
                 });
@@ -374,6 +374,10 @@ public final class RoomManager implements IRoomProxy {
     @Override
     public Member getOwner() {
         return mOwner;
+    }
+
+    public void updateMine(@NonNull Member mine) {
+        this.mMine = mine;
     }
 
     public void startLivePlay() {

@@ -588,7 +588,9 @@ class MessageSource extends BaseMessageSource {
                     return;
                 }
 
-                if (memberOld.getIsSpeaker() != member.getIsSpeaker()) {
+                boolean isChanged = (memberOld.getIsSpeaker() != member.getIsSpeaker()
+                        || memberOld.getRole() != member.getRole());
+                if (isChanged) {
                     iRoomProxy.onRoleChanged(false, member);
                 }
 
