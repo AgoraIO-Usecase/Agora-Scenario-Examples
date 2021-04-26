@@ -89,6 +89,7 @@ class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
     @IBOutlet weak var toolBarRootView: UIView!
     @IBOutlet weak var inputMessageRootView: UIView!
     @IBOutlet weak var inputMessageView: UITextField!
+    private var showInputView: Bool = false
     
     private var hosterVideoView: RoleVideoView = RoleVideoView()
     private var leftSpeakerVideoView: RoleVideoView = RoleVideoView()
@@ -96,7 +97,6 @@ class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
     private var hosterToolbar: HosterToolbar?
     private var speakerToolbar: SpeakerToolbar?
     private var listenerToolbar: ListenerToolbar?
-    private var keyboardHeight: CGFloat = -1
     
     var viewModel: RoomViewModel = RoomViewModel()
     
@@ -183,7 +183,7 @@ class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
             .filter { close in
                 return close
             }
-            .concatMap { [unowned self] _ in
+            .concatMap { [unowned self] _ -> Observable<Result<Void>> in
                 return self.viewModel.leaveRoom(action: .closeRoom)
             }
             .filter { [unowned self] result in
@@ -213,11 +213,27 @@ class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
         keyboardHeight()
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [unowned self] height in
-                Logger.log(message: "keyboardHeight: \(height)", level: .info)
-                if (height == 0) {
-                    if (self.inputMessageRootView.isHidden) {
-                        return
+                if (self.showInputView) {
+                    self.inputMessageRootView.isHidden = false
+                    self.inputMessageRootView.removeAllConstraints()
+                    self.inputMessageView.removeAllConstraints()
+                    self.inputMessageRootView.marginTrailing(anchor: self.view.trailingAnchor)
+                        .centerX(anchor: self.view.centerXAnchor)
+                        .marginBottom(anchor: self.view.bottomAnchor, constant: height)
+                        .active()
+                    if (height == 0) {
+                        self.inputMessageView
+                            .marginLeading(anchor: self.inputMessageRootView.leadingAnchor, constant: 12)
+                            .centerX(anchor: self.inputMessageRootView.centerXAnchor)
+                            .marginTop(anchor: self.inputMessageRootView.topAnchor, constant: 12)
+                            .marginBottom(anchor: self.view.safeAreaLayoutGuide.bottomAnchor, constant: 12)
+                            .active()
+                    } else {
+                        self.inputMessageView
+                            .fill(view: self.inputMessageRootView, leading: 12, top: 12, trailing: 12, bottom: 12)
+                            .active()
                     }
+                } else {
                     self.inputMessageRootView.isHidden = true
                     self.inputMessageRootView.removeAllConstraints()
                     self.inputMessageView.removeAllConstraints()
@@ -225,50 +241,12 @@ class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
                         .centerX(anchor: self.view.centerXAnchor)
                         .marginBottom(anchor: self.view.bottomAnchor, constant: 0)
                         .active()
-                    self.inputMessageView.fill(view: self.inputMessageRootView, leading: 12, top: 12, trailing: 12, bottom: 12)
+                    self.inputMessageView
+                        .fill(view: self.inputMessageRootView, leading: 12, top: 12, trailing: 12, bottom: 12)
                         .active()
-                } else {
-                    if (!self.inputMessageRootView.isHidden) {
-                        return
-                    }
-                    if (self.keyboardHeight == -1) {
-                        self.keyboardHeight = height
-                    }
-                    self.inputMessageRootView.removeAllConstraints()
-                    self.inputMessageView.removeAllConstraints()
-                    self.inputMessageRootView.marginTrailing(anchor: self.view.trailingAnchor)
-                        .centerX(anchor: self.view.centerXAnchor)
-                        .marginBottom(anchor: self.view.bottomAnchor, constant: self.keyboardHeight)
-                        .active()
-                    self.inputMessageView.fill(view: self.inputMessageRootView, leading: 12, top: 12, trailing: 12, bottom: 12)
-                        .active()
-                    self.inputMessageRootView.isHidden = false
-                    self.inputMessageRootView.alpha = 0
-                    UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
-                        self.inputMessageRootView.alpha = 1
-                    })
                 }
             })
             .disposed(by: disposeBag)
-        
-//        inputMessageView.rx.controlEvent(.)
-//            .concatMap { [unowned self] _ -> Observable<Result<Void>> in
-//                if let message = self.inputMessageView.text {
-//                    self.inputMessageView.text = nil
-//                    if (!message.isEmpty) {
-//                        return self.viewModel.sendMessage(message: message)
-//                    } else {
-//                        return Observable.just(Result<Void>(success: true))
-//                    }
-//                }
-//                return Observable.just(Result(success: true))
-//            }
-//            .subscribe(onNext: { [unowned self] result in
-//                if (!result.success) {
-//                    self.show(message: result.message ?? "unknown error".localized, type: .error)
-//                }
-//            })
-//            .disposed(by: disposeBag)
     }
     
     private func subcribeRoomEvent() {
@@ -325,7 +303,9 @@ class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
                 if (!result.success) {
                     self.show(message: result.message ?? "unknown error".localized, type: .error)
                 } else {
-                    self.chatListView.reloadData()
+                    self.chatListView.reloadData() {
+                        self.chatListView.scroll(to: .top, animated: true)
+                    }
                 }
             })
             .disposed(by: disposeBag)
@@ -333,30 +313,17 @@ class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
         viewModel.onTopListenersChange
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [unowned self] _ in
-                self.avatar2.isHidden = self.viewModel.topListeners[2]??.id == nil
-                self.avatar1.isHidden = self.viewModel.topListeners[1]??.id == nil
-                self.avatar0.isHidden = self.viewModel.topListeners[0]??.id == nil
                 let bundle = Bundle(identifier: "io.agora.InteractivePodcast")!
-                if (!self.avatar2.isHidden) {
-                    if let avatar = self.viewModel.topListeners[0]??.getLocalAvatar() {
-                        self.avatar2.image = UIImage(named: avatar, in: bundle, with: nil)
-                    }
-                    if let avatar = self.viewModel.topListeners[1]??.getLocalAvatar() {
-                        self.avatar1.image = UIImage(named: avatar, in: bundle, with: nil)
-                    }
-                    if let avatar = self.viewModel.topListeners[2]??.getLocalAvatar() {
-                        self.avatar0.image = UIImage(named: avatar, in: bundle, with: nil)
-                    }
-                } else if (!self.avatar1.isHidden) {
-                    if let avatar = self.viewModel.topListeners[0]??.getLocalAvatar() {
-                        self.avatar1.image = UIImage(named: avatar, in: bundle, with: nil)
-                    }
-                    if let avatar = self.viewModel.topListeners[1]??.getLocalAvatar() {
-                        self.avatar0.image = UIImage(named: avatar, in: bundle, with: nil)
-                    }
-                } else if (!self.avatar0.isHidden) {
-                    if let avatar = self.viewModel.topListeners[0]??.getLocalAvatar() {
-                        self.avatar0.image = UIImage(named: avatar, in: bundle, with: nil)
+                let views = [self.avatar0, self.avatar1, self.avatar2]
+                var Sum = 2
+                for index in (0...2).reversed() {
+                    views[index]?.isHidden = self.viewModel.topListeners[index]??.id == nil
+                    if (views[index]?.isHidden == false) {
+                        if let avatar = self.viewModel.topListeners[Sum - index]??.getLocalAvatar() {
+                            views[index]?.image = UIImage(named: avatar, in: bundle, with: nil)
+                        }
+                    } else {
+                        Sum -= 1
                     }
                 }
             })
@@ -379,7 +346,7 @@ class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
         
         self.view.addSubview(view)
         view.marginLeading(anchor: self.view.leadingAnchor, constant: 12)
-            .marginTop(anchor: self.chatListView.topAnchor, constant: 17)
+            .marginTop(anchor: self.chatListView.topAnchor)
             .width(constant: 257)
             .height(constant: 24, relation: .greaterOrEqual)
             .active()
@@ -402,13 +369,29 @@ class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
-        inputMessageView.endEditing(true)
-        //inputMessageRootView.isHidden = true
+        enableInputMessage(false)
     }
-    
-    func enableInputMessage() {
-        //inputMessageRootView.isHidden = false
-        inputMessageView.becomeFirstResponder()
+        
+    func enableInputMessage(_ enable: Bool = true) {
+        if (enable) {
+            if (!showInputView) {
+                toolBarRootView.isHidden = true
+                showInputView = true
+                inputMessageView.text = nil
+                inputMessageView.becomeFirstResponder()
+                self.inputMessageRootView.alpha = 0
+                UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
+                    self.inputMessageRootView.alpha = 1
+                })
+            }
+        } else {
+            if (showInputView) {
+                toolBarRootView.isHidden = false
+                showInputView = false
+                inputMessageView.endEditing(true)
+                inputMessageRootView.isHidden = true
+            }
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -433,6 +416,9 @@ class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
         chatListView.rowHeight = UITableView.automaticDimension
         chatListView.estimatedRowHeight = 30
         chatListView.separatorStyle = .none
+        chatListView.showsVerticalScrollIndicator = false
+        chatListView.showsHorizontalScrollIndicator = false
+        chatListView.transform = CGAffineTransform(scaleX: 1, y: -1)
         
         inputMessageView.returnKeyType = .send
         inputMessageView.delegate = self
@@ -444,6 +430,10 @@ class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+    }
+    
+    deinit {
+        Logger.log(message: "RoomController deinit", level: .info)
     }
     
     public static func instance() -> RoomController {
@@ -513,7 +503,8 @@ extension RoomController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = NSStringFromClass(MessageView.self)
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! MessageView
-        cell.message = self.viewModel.messageList[indexPath.row]
+        cell.contentView.transform = CGAffineTransform(scaleX: 1, y: -1)
+        cell.message = self.viewModel.messageList[self.viewModel.messageList.count - 1 - indexPath.row]
         return cell
     }
 }
@@ -533,7 +524,7 @@ extension RoomController: UITextFieldDelegate {
                     .disposed(by: disposeBag)
             }
         }
-        textField.endEditing(true)
+        enableInputMessage(false)
         return true
     }
 }

@@ -18,7 +18,6 @@ class AlertDialog: UIView {
         view.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         view.numberOfLines = 1
         view.textColor = UIColor(hex: Colors.Black)
-        //view.text = "申请连麦"
         view.textAlignment = .center
         return view
     }()
@@ -28,7 +27,6 @@ class AlertDialog: UIView {
         view.font = UIFont.systemFont(ofSize: 16)
         view.numberOfLines = 0
         view.textColor = UIColor(hex: Colors.Black)
-        //view.text = "红娘同意后会自动开始视频连麦"
         view.textAlignment = .center
         return view
     }()

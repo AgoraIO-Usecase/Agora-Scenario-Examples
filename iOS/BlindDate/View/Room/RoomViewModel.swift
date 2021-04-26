@@ -127,12 +127,6 @@ class RoomViewModel {
     
     var messageList: [RoomChat] = []
     
-    init() {
-        messageList.append(RoomChat(member: member, message: "hello world"))
-        messageList.append(RoomChat(member: member, message: "hello world"))
-        messageList.append(RoomChat(member: member, message: "hello world"))
-    }
-    
     func actionsSource() -> Observable<Result<Action>> {
         return Server.shared().subscribeActions()
             .map { [unowned self] result in
@@ -192,19 +186,25 @@ class RoomViewModel {
                                 return member.isManager
                             }
                         }
-                        self.speakers.sync(list: list.filter { user in
-                            return user.role != .listener
-                        })
                         let (changed, add) = self.listeners.sync(list: list.filter { user in
                             return user.role == .listener
                         })
-                        add.forEach { member in
+                        add.filter { member -> Bool in
+                            member.id != self.speakers.hoster?.id &&
+                            member.id != self.speakers.leftSpeaker?.id &&
+                            member.id != self.speakers.rightSpeaker?.id
+                        }
+                        .forEach { member in
                             self.onMemberEnter.accept(member)
                         }
                         if (changed) {
                             self.onListenersListChange.accept(true)
                         }
                         checkTopListeners()
+                        
+                        self.speakers.sync(list: list.filter { user in
+                            return user.role != .listener
+                        })
                     } else {
                         self.roomManager = nil
                     }
@@ -254,10 +254,20 @@ class RoomViewModel {
         }
     }
     
-    let isMuted: PublishRelay<Bool> = PublishRelay<Bool>()
+    let isMuted: BehaviorRelay<Bool> = BehaviorRelay<Bool>(value: Server.shared().isMicrophoneClose())
+    let isEnableBeauty: BehaviorRelay<Bool> = BehaviorRelay<Bool>(value: Server.shared().isEnableBeauty())
     
     func muted() -> Bool {
         return Server.shared().isMicrophoneClose()
+    }
+    
+    func enabledBeauty() -> Bool {
+        return Server.shared().isEnableBeauty()
+    }
+    
+    func enableBeauty(enable: Bool) {
+        isEnableBeauty.accept(enable)
+        Server.shared().enableBeauty(enable: enable)
     }
     
     func selfMute(mute: Bool) -> Observable<Result<Void>>{

@@ -49,13 +49,13 @@ extension User {
 }
 
 extension Room {
-    static let TABLE: String = "ROOM"
+    static let TABLE: String = "ROOM_MARRY"
     static let ANCHOR_ID: String = "anchorId"
     static let CHANNEL_NAME: String = "channelName"
 }
 
 extension Member {
-    static let TABLE: String = "MEMBER"
+    static let TABLE: String = "MEMBER_MARRY"
     static let MUTED: String = "isMuted"
     static let SELF_MUTED: String = "isSelfMuted"
     static let ROLE: String = "role"
@@ -65,7 +65,7 @@ extension Member {
 }
 
 extension Action {
-    static let TABLE: String = "ACTION"
+    static let TABLE: String = "ACTION_MARRY"
     static let ACTION: String = "action"
     static let MEMBER: String = "memberId"
     static let ROOM: String = "roomId"

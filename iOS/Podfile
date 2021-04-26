@@ -3,7 +3,6 @@ platform :ios, '11.0'
 
 def commonPods
   use_frameworks!
-  pod 'AgoraRtcEngine_iOS'
   pod 'RxSwift', '6.1.0'
   pod 'RxCocoa', '6.1.0'
   pod 'RxRelay', '6.1.0'
@@ -28,6 +27,7 @@ target 'InteractivePodcast' do
   commonPods
   use_frameworks!
   pod 'LeanCloud'
+  pod 'AgoraRtcEngine_iOS'
 end
 
 target 'BlindDate' do
@@ -35,5 +35,6 @@ target 'BlindDate' do
   use_frameworks!
   pod 'LeanCloud'
   pod 'AgoraRtm_iOS'
+  pod 'AgoraRtcEngine_iOS'
 end
 

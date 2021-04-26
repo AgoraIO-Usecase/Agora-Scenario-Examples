@@ -20,7 +20,7 @@ class InteractivePodcastCard: HomeCard {
 }
 
 class DateFaceTime: HomeCard {
-    var title: String = "相亲"
+    var title: String = "在线相亲"
     var color: UIColor = UIColor(hex: Colors.LightBLue)
     
     func create() -> UIViewController {
@@ -32,21 +32,14 @@ class HomeController: UITableViewController {
     
     var listData: Array<HomeCard> = [
         InteractivePodcastCard(),
-        DateFaceTime(),
-        InteractivePodcastCard(),
-        DateFaceTime(),
-        InteractivePodcastCard(),
-        DateFaceTime(),
-        InteractivePodcastCard(),
         DateFaceTime()
     ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        tableView.contentInsetAdjustmentBehavior = .automatic
-//        tableView.automaticallyAdjustsScrollIndicatorInsets = true
         tableView.backgroundColor = .white
         tableView.rowHeight = 200
+        tableView.separatorStyle = .none
         tableView.register(HomeCardView.self, forCellReuseIdentifier: NSStringFromClass(HomeCardView.self))
     }
     

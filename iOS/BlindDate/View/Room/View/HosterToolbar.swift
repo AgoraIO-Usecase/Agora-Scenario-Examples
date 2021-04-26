@@ -122,6 +122,23 @@ class HosterToolbar: UIView {
             .disposed(by: disposeBag)
         
         self.delegate.viewModel.syncLocalUIStatus()
+        
+        //self.isBeauty = self.delegate.viewModel.enabledBeauty()
+        beautyBtn.rx.tap
+            .debounce(RxTimeInterval.microseconds(300), scheduler: MainScheduler.instance)
+            .throttle(RxTimeInterval.seconds(1), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [unowned self] _ in
+                self.delegate.viewModel.enableBeauty(enable: !self.delegate.viewModel.enabledBeauty())
+            })
+            .disposed(by: disposeBag)
+        
+        self.delegate.viewModel.isEnableBeauty
+            .distinctUntilChanged()
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [unowned self] isBeauty in
+                self.isBeauty = isBeauty
+            })
+            .disposed(by: disposeBag)
     }
     
     func onReceivedAction(_ result: Result<Action>) {

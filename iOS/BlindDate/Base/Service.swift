@@ -20,8 +20,12 @@ protocol Service {
     func create(room: Room) -> Observable<Result<Room>>
     func join(room: Room) -> Observable<Result<Room>>
     func leave() -> Observable<Result<Void>>
+    
     func closeMicrophone(close: Bool) -> Observable<Result<Void>>
     func isMicrophoneClose() -> Bool
+    
+    func enableBeauty(enable: Bool)
+    func isEnableBeauty() -> Bool
     
     func subscribeMembers() -> Observable<Result<Array<Member>>>
     func subscribeActions() -> Observable<Result<Action>>

@@ -272,8 +272,8 @@
                                     <constraint firstAttribute="height" constant="34" id="ROL-nP-ZVq"/>
                                 </constraints>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="wpE-9Z-w6f" userLabel="chat list">
-                                <rect key="frame" x="0.0" y="498" width="414" height="306"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="wpE-9Z-w6f" userLabel="chat list">
+                                <rect key="frame" x="0.0" y="515" width="414" height="289"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
@@ -346,7 +346,7 @@
                             <constraint firstItem="ZW4-DK-pqW" firstAttribute="leading" secondItem="wg3-8t-x0z" secondAttribute="leading" id="q43-Yd-Uyw"/>
                             <constraint firstItem="1x5-Gf-Gir" firstAttribute="leading" secondItem="wg3-8t-x0z" secondAttribute="leading" id="uA3-94-93N"/>
                             <constraint firstItem="wg3-8t-x0z" firstAttribute="leading" secondItem="yZL-e1-pjL" secondAttribute="leading" id="uTx-st-Y1V"/>
-                            <constraint firstItem="wpE-9Z-w6f" firstAttribute="top" secondItem="NQW-Dn-i1u" secondAttribute="bottom" constant="12" id="ulU-eB-6XP"/>
+                            <constraint firstItem="wpE-9Z-w6f" firstAttribute="top" secondItem="NQW-Dn-i1u" secondAttribute="bottom" constant="29" id="ulU-eB-6XP"/>
                         </constraints>
                     </view>
                     <connections>

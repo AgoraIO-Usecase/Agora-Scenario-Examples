@@ -21,34 +21,25 @@ class RoleVideoView {
                 nameView.isHidden = false
                 nameView.text = member.user.name
                 micView.isHidden = false
+                videoView.isHidden = false
                 let icon = member.isMuted || member.isSelfMuted ? "status_mic_close" : "status_mic_open"
                 micView.image = UIImage(named: icon, in: Utils.bundle, compatibleWith: nil)
                 
                 if let old = oldValue {
                     if (old.isLocal != member.isLocal || old.streamId != member.streamId) {
-                        if (old.isLocal) {
-                            Server.shared().bindLocalVideo(view: nil)
-                        } else {
-                            Server.shared().bindRemoteVideo(view: nil, uid: old.streamId)
-                        }
+                        unbindVideo(member: old)
+                        bindVideo(member: member)
                     }
                 } else {
-                    if (member.isLocal) {
-                        Server.shared().bindLocalVideo(view: videoView)
-                    } else {
-                        Server.shared().bindRemoteVideo(view: videoView, uid: member.streamId)
-                    }
+                    bindVideo(member: member)
                 }
             } else {
                 addView?.isHidden = false
                 nameView.isHidden = true
                 micView.isHidden = true
+                videoView.isHidden = true
                 if let old = oldValue {
-                    if (old.isLocal) {
-                        Server.shared().bindLocalVideo(view: nil)
-                    } else {
-                        Server.shared().bindRemoteVideo(view: nil, uid: old.streamId)
-                    }
+                    unbindVideo(member: old)
                 }
             }
         }
@@ -72,6 +63,22 @@ class RoleVideoView {
                 self.delegate?.onTap(view: self)
             })
             .disposed(by: disposeBag)
+    }
+    
+    private func bindVideo(member: Member) {
+        if (member.isLocal) {
+            Server.shared().bindLocalVideo(view: videoView)
+        } else {
+            Server.shared().bindRemoteVideo(view: videoView, uid: member.streamId)
+        }
+    }
+    
+    private func unbindVideo(member: Member) {
+        if (member.isLocal) {
+            Server.shared().bindLocalVideo(view: nil)
+        } else {
+            Server.shared().bindRemoteVideo(view: nil, uid: member.streamId)
+        }
     }
     
     deinit {

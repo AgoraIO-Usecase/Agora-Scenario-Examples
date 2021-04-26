@@ -119,7 +119,7 @@ class CreateRoomDialog: UIView {
                     return Disposables.create()
                 }.subscribe(on: MainScheduler.instance)
             } else {
-                return self.createRoomDelegate.show(dialog: self, padding: 16).map { finished in
+                return self.createRoomDelegate.show(dialog: self, padding: 27, relation: .greaterOrEqual).map { finished in
                     self.inputRoomView.becomeFirstResponder()
                     return finished
                 }

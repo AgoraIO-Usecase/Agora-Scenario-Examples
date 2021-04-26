@@ -181,7 +181,7 @@ extension Server: Service {
             }
             .throttle(RxTimeInterval.milliseconds(20), latest: true, scheduler: scheduler)
             .map { [unowned self] (args) -> Result<Array<Member>> in
-                let (result, uids) = args
+                let (result, _) = args
                 if (result.success) {
                     if let list = result.data {
                         // sync local user status
@@ -339,5 +339,17 @@ extension Server: Service {
         } else {
             return Observable.just(Result(success: false, message: "member is nil!"))
         }
+    }
+    
+    func enableBeauty(enable: Bool) {
+        if enable {
+            rtcServer.enableBeauty()
+        } else {
+            rtcServer.diableBeauty()
+        }
+    }
+    
+    func isEnableBeauty() -> Bool {
+        return rtcServer.isEnableBeauty
     }
 }

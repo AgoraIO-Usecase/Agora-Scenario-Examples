@@ -44,7 +44,7 @@ extension String {
 
 extension BaseViewContoller {
     func showAlert(title: String, message: String) -> Observable<Bool> {
-        return Single.create { single in
+        return Single.create { [unowned self] single in
             let alert = AlertDialog(title: title, message: message)
             alert.cancelAction = {
                 self.dismiss(dialog: alert).subscribe().disposed(by: self.disposeBag)
@@ -53,7 +53,7 @@ extension BaseViewContoller {
                 single(.success(true))
                 self.dismiss(dialog: alert).subscribe().disposed(by: self.disposeBag)
             }
-            self.show(dialog: alert, style: .center, padding: 27) {
+            self.show(dialog: alert, style: .center, padding: 27, relation: .greaterOrEqual) {
                 single(.success(false))
             }.subscribe().disposed(by: self.disposeBag)
             return Disposables.create {

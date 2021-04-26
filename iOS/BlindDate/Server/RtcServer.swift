@@ -30,6 +30,7 @@ class RtcServer: NSObject {
     var role: AgoraClientRole? = nil
     var audienceLatencyLevel: AgoraAudienceLatencyLevelType? = nil
     var muted: Bool = false
+    var isEnableBeauty: Bool = false
     
     var isJoinChannel: Bool {
         get {
@@ -52,14 +53,23 @@ class RtcServer: NSObject {
             engine.setChannelProfile(.liveBroadcasting)
             engine.setAudioProfile(.musicHighQualityStereo, scenario: .chatRoomEntertainment)
             engine.enableAudioVolumeIndication(500, smooth: 3, report_vad: false)
+            
+            engine.enableVideo()
+            engine.setVideoEncoderConfiguration(
+                AgoraVideoEncoderConfiguration(
+                    size: CGSize(width: 480, height: 480),
+                    frameRate: .fps15,
+                    bitrate: AgoraVideoBitrateStandard,
+                    orientationMode: .fixedPortrait)
+            )
         }
     }
     
     func bindLocalVideo(view: UIView) {
         if let rtc = rtcEngine {
-            Logger.log(message: "bindLocalVideo", level: .info)
+            Logger.log(message: "rtc bindLocalVideo", level: .info)
             let videoCanvas = AgoraRtcVideoCanvas()
-            videoCanvas.uid = uid
+            videoCanvas.uid = 0
             // the view to be binded
             videoCanvas.view = view
             videoCanvas.renderMode = .hidden
@@ -69,7 +79,7 @@ class RtcServer: NSObject {
     
     func bindRemoteVideo(view: UIView, uid: UInt) {
         if let rtc = rtcEngine {
-            Logger.log(message: "bindRemoteVideo", level: .info)
+            Logger.log(message: "rtc bindRemoteVideo \(uid)", level: .info)
             let videoCanvas = AgoraRtcVideoCanvas()
             videoCanvas.uid = uid
             // the view to be binded
@@ -81,9 +91,9 @@ class RtcServer: NSObject {
     
     func unbindLocalVideo() {
         if let rtc = rtcEngine {
-            Logger.log(message: "unbindLocalVideo", level: .info)
+            Logger.log(message: "rtc unbindLocalVideo", level: .info)
             let videoCanvas = AgoraRtcVideoCanvas()
-            videoCanvas.uid = uid
+            videoCanvas.uid = 0
             // the view to be binded
             videoCanvas.view = nil
             videoCanvas.renderMode = .hidden
@@ -93,13 +103,29 @@ class RtcServer: NSObject {
     
     func unbindRemoteVideo(uid: UInt) {
         if let rtc = rtcEngine {
-            Logger.log(message: "unbindRemoteVideo", level: .info)
+            Logger.log(message: "rtc unbindRemoteVideo \(uid)", level: .info)
             let videoCanvas = AgoraRtcVideoCanvas()
             videoCanvas.uid = uid
             // the view to be binded
             videoCanvas.view = nil
             videoCanvas.renderMode = .hidden
             rtc.setupRemoteVideo(videoCanvas)
+        }
+    }
+    
+    func enableBeauty() {
+        if let rtc = rtcEngine {
+            isEnableBeauty = true
+            Logger.log(message: "rtc enableBeauty", level: .info)
+            rtc.setBeautyEffectOptions(true, options: nil)
+        }
+    }
+    
+    func diableBeauty() {
+        if let rtc = rtcEngine {
+            isEnableBeauty = false
+            Logger.log(message: "rtc diableBeauty", level: .info)
+            rtc.setBeautyEffectOptions(false, options: nil)
         }
     }
     
@@ -116,7 +142,7 @@ class RtcServer: NSObject {
         }
         let option = AgoraClientRoleOptions()
         option.audienceLatencyLevel = _audienceLatencyLevel
-        Logger.log(message: "setClientRole audienceLatencyLevel: \(_audienceLatencyLevel.rawValue)", level: .info)
+        Logger.log(message: "rtc setClientRole audienceLatencyLevel: \(_audienceLatencyLevel.rawValue)", level: .info)
         rtc.setClientRole(role, options: option)
         configVideo(enable: role == .broadcaster)
     }
@@ -125,16 +151,11 @@ class RtcServer: NSObject {
         DispatchQueue.main.sync {
             if let rtc = rtcEngine {
                 if (enable) {
-                    rtc.enableVideo()
-                    rtc.setVideoEncoderConfiguration(
-                        AgoraVideoEncoderConfiguration(
-                            size: CGSize(width: 480, height: 480),
-                            frameRate: .fps15,
-                            bitrate: AgoraVideoBitrateStandard,
-                            orientationMode: .fixedPortrait)
-                    )
+                    rtc.enableLocalVideo(true)
+                    Logger.log(message: "rtc enableVideo", level: .info)
                 } else {
-                    rtc.disableVideo()
+                    rtc.enableLocalVideo(false)
+                    Logger.log(message: "rtc disableVideo", level: .info)
                 }
             }
         }
@@ -154,18 +175,36 @@ class RtcServer: NSObject {
         } else {
             setClientRole(.audience, setting.audienceLatency)
         }
+        enableBeauty()
         muteLocalMicrophone(mute: member.isSelfMuted)
         
-        let code = rtc.joinChannel(byToken: BuildConfig.Token, channelId: channel, info: nil, uid: 0, options: AgoraRtcChannelMediaOptions())
-        if (code != 0) {
-            return Observable.just(Result(success: false, message: RtcServer.toErrorString(type: .join, code: code)))
-        } else {
-            return statePublisher.filter { (state) -> Bool in
-                return state.data == RtcServerStateType.join || state.data == RtcServerStateType.error
-            }.take(1).map { (state) -> Result<Void> in
-                return Result(success: state.success, message: state.message)
+        return Single.create { single in
+            let code = rtc.joinChannel(byToken: BuildConfig.Token, channelId: channel, info: nil, uid: 0, options: AgoraRtcChannelMediaOptions())
+            single(.success(code))
+            return Disposables.create()
+        }.asObservable().subscribe(on: MainScheduler.instance)
+        .concatMap { (code: Int32) -> Observable<Result<Void>> in
+            if (code != 0) {
+                return Observable.just(Result(success: false, message: RtcServer.toErrorString(type: .join, code: code)))
+            } else {
+                return self.statePublisher.filter { (state) -> Bool in
+                    return state.data == RtcServerStateType.join || state.data == RtcServerStateType.error
+                }.take(1).map { (state) -> Result<Void> in
+                    return Result(success: state.success, message: state.message)
+                }
             }
         }
+        
+//        let code = rtc.joinChannel(byToken: BuildConfig.Token, channelId: channel, info: nil, uid: 0, options: AgoraRtcChannelMediaOptions())
+//        if (code != 0) {
+//            return Observable.just(Result(success: false, message: RtcServer.toErrorString(type: .join, code: code)))
+//        } else {
+//            return statePublisher.filter { (state) -> Bool in
+//                return state.data == RtcServerStateType.join || state.data == RtcServerStateType.error
+//            }.take(1).map { (state) -> Result<Void> in
+//                return Result(success: state.success, message: state.message)
+//            }
+//        }
     }
     
     func leaveChannel() -> Observable<Result<Void>> {
@@ -223,7 +262,7 @@ extension RtcServer: AgoraRtcEngineDelegate {
     }
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, didJoinChannel channel: String, withUid uid: UInt, elapsed: Int) {
-        Logger.log(message: "didJoinChannel:\(channel) uid:\(uid)", level: .info)
+        Logger.log(message: "rtc didJoinChannel:\(channel) uid:\(uid)", level: .info)
         self.uid = uid
         self.channel = channel
         self.members.append(uid)
@@ -232,24 +271,24 @@ extension RtcServer: AgoraRtcEngineDelegate {
     }
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, didLeaveChannelWith stats: AgoraChannelStats) {
-        Logger.log(message: "didLeaveChannelWith:\(stats)", level: .info)
+        Logger.log(message: "rtc didLeaveChannelWith:\(stats)", level: .info)
     }
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, didJoinedOfUid uid: UInt, elapsed: Int) {
-        Logger.log(message: "didJoinedOfUid uid:\(uid)", level: .info)
+        Logger.log(message: "rtc didJoinedOfUid uid:\(uid)", level: .info)
         self.members.append(uid)
         self.speakers[uid] = true
         self.statePublisher.accept(Result(success: true, data: RtcServerStateType.members))
     }
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, didAudioMuted muted: Bool, byUid uid: UInt) {
-        Logger.log(message: "didAudioMuted uid:\(uid) muted:\(muted)", level: .info)
+        Logger.log(message: "rtc didAudioMuted uid:\(uid) muted:\(muted)", level: .info)
         self.speakers[uid] = muted
         self.statePublisher.accept(Result(success: true, data: RtcServerStateType.members))
     }
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, didOfflineOfUid uid: UInt, reason: AgoraUserOfflineReason) {
-        Logger.log(message: "didOfflineOfUid uid:\(uid)", level: .info)
+        Logger.log(message: "rtc didOfflineOfUid uid:\(uid)", level: .info)
         if let index = self.members.firstIndex(of: uid) {
             self.members.remove(at: index)
         }

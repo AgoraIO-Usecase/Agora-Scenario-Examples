@@ -178,7 +178,7 @@ extension Room {
         } onEvent: { (event) -> Bool in
             return true
         }
-        //.startWith(Result(success: true))
+        .startWith(Result(success: true))
         .flatMap { [unowned self] result -> Observable<Result<Array<Member>>> in
             return result.onSuccess { self.getMembers() }
         }

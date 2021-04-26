@@ -40,7 +40,7 @@ class RtmServer: NSObject {
                 .concatMap { result -> Observable<Result<Void>> in
                     return result.onSuccess { () -> Observable<Result<Void>> in
                         return Single.create { single in
-                            self.rtmKit.login(byToken: BuildConfig.Token, user: user) { code in
+                            self.rtmKit.login(byToken: BuildConfig.RtmToken, user: user) { code in
                                 if code == .ok {
                                     self.userId = user
                                     Logger.log(message: "login success", level: .info)

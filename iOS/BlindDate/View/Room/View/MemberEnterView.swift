@@ -47,7 +47,7 @@ class MemberEnterView: UIView {
             .marginTrailing(anchor: trailingAnchor, constant: 6)
             .active()
         
-        bg = gradientLayer(colors: [UIColor(hex: "#ACB0FF"), UIColor(hex: "#C8CBFF").withAlphaComponent(0)])
+        bg = gradientLayer(colors: [UIColor(hex: "#ACB0FF"), UIColor(hex: "#C8CBFF"), UIColor(hex: "#C8CBFF").withAlphaComponent(0)])
         bg.frame = frame
         layer.insertSublayer(bg, at: 0)
         backgroundColor = .clear

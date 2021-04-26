@@ -339,13 +339,9 @@ open class BaseViewContoller: UIViewController {
     open func keyboardHeight() -> Observable<CGFloat> {
         return Observable.from([
             NotificationCenter.default.rx.notification(UIApplication.keyboardDidShowNotification)
-                .map { notification -> CGFloat in
-                    notification.keyboardHeight
-                },
+                .map { notification in notification.keyboardHeight },
             NotificationCenter.default.rx.notification(UIApplication.keyboardWillHideNotification)
-                .map { _ -> CGFloat in
-                    0
-                }
+                .map { _ in 0 }
             ])
             .merge()
     }
