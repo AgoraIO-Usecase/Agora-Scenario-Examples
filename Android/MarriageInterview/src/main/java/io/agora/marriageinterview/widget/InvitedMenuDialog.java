@@ -1,7 +1,7 @@
 package io.agora.marriageinterview.widget;
 
 import android.os.Bundle;
-import android.view.Gravity;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,9 +41,10 @@ public class InvitedMenuDialog extends DataBindBaseDialog<DialogUserInvitedBindi
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         Window win = getDialog().getWindow();
+        WindowManager windowManager = win.getWindowManager();
+        Display display = windowManager.getDefaultDisplay();
         WindowManager.LayoutParams params = win.getAttributes();
-        params.gravity = Gravity.TOP;
-        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        params.width = display.getWidth() * 4 / 5;
         params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         win.setAttributes(params);
         return super.onCreateView(inflater, container, savedInstanceState);
@@ -52,7 +53,7 @@ public class InvitedMenuDialog extends DataBindBaseDialog<DialogUserInvitedBindi
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NORMAL, R.style.Dialog_Top);
+        setStyle(STYLE_NORMAL, R.style.Dialog_Nomal);
     }
 
     @Override
@@ -82,7 +83,7 @@ public class InvitedMenuDialog extends DataBindBaseDialog<DialogUserInvitedBindi
         if (getDialog() != null) {
             getDialog().setCanceledOnTouchOutside(false);
         }
-        mDataBinding.tvText.setText(getString(R.string.room_dialog_invited, owner.getName()));
+        mDataBinding.tvMessage.setText(getString(R.string.room_dialog_invited, owner.getName()));
     }
 
     public void show(@NonNull FragmentManager manager, User owner, IConnectStatusProvider mIConnectStatusProvider) {

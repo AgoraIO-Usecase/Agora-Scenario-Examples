@@ -26,6 +26,7 @@ import io.agora.rtm.RtmImageMessage;
 import io.agora.rtm.RtmMediaOperationProgress;
 import io.agora.rtm.RtmMessage;
 import io.reactivex.Completable;
+import io.reactivex.schedulers.Schedulers;
 
 public final class RTMManager {
     private Logger.Builder mLogger = XLog.tag(RTMManager.class.getSimpleName());
@@ -115,21 +116,33 @@ public final class RTMManager {
 
                 @Override
                 public void onFailure(ErrorInfo errorInfo) {
-                    mLogger.e("login onFailure() called with: errorInfo = [" + errorInfo + "]");
+                    mLogger.e("login onFailure: {}", errorInfo);
                     emitter.onError(new BaseError(errorInfo.getErrorCode(), errorInfo.getErrorDescription()));
                 }
             });
-        });
+        }).subscribeOn(Schedulers.io());
     }
 
     public Completable logout() {
-        mLogger.d("logout() called");
-        if (mRtmClient == null) {
-            return Completable.complete();
-        }
+        return Completable.create(emitter -> {
+            mLogger.d("logout() called");
+            if (mRtmClient == null) {
+                emitter.onComplete();
+            }
 
-        mRtmClient.logout(null);
-        return Completable.complete();
+            mRtmClient.logout(new ResultCallback<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+
+                }
+
+                @Override
+                public void onFailure(ErrorInfo errorInfo) {
+                    mLogger.e("logout onFailure: {}", errorInfo);
+                }
+            });
+            emitter.onComplete();
+        }).subscribeOn(Schedulers.io());
     }
 
     private final List<RtmChannelListener> channelListeners = new ArrayList<>();
@@ -218,17 +231,18 @@ public final class RTMManager {
 
                 @Override
                 public void onFailure(ErrorInfo errorInfo) {
-                    mLogger.e("joinChannel onFailure: %s %s", errorInfo.getErrorCode(), errorInfo.getErrorDescription());
+                    mLogger.e("joinChannel onFailure: {}", errorInfo);
                     emitter.onError(new BaseError(errorInfo.getErrorCode(), errorInfo.getErrorDescription()));
                 }
             });
-        });
+        }).subscribeOn(Schedulers.io());
     }
 
     public Completable leaveChannel() {
         mLogger.d("leaveChannel() called");
         return Completable.create(emitter -> {
             if (mRtmChannel == null) {
+                mLogger.e("mRtmChannel is null");
                 emitter.onComplete();
                 return;
             }
@@ -241,11 +255,11 @@ public final class RTMManager {
 
                 @Override
                 public void onFailure(ErrorInfo errorInfo) {
-                    mLogger.e("leaveChannel onFailure: %s %s", errorInfo.getErrorCode(), errorInfo.getErrorDescription());
+                    mLogger.e("leaveChannel onFailure: {}", errorInfo);
                     emitter.onError(new BaseError(errorInfo.getErrorCode(), errorInfo.getErrorDescription()));
                 }
             });
-        });
+        }).subscribeOn(Schedulers.io());
     }
 
     public Completable sendChannelMessage(String msg) {
@@ -266,10 +280,10 @@ public final class RTMManager {
 
                 @Override
                 public void onFailure(ErrorInfo errorInfo) {
-                    mLogger.e("sendChannelMessage onFailure: %s %s", errorInfo.getErrorCode(), errorInfo.getErrorDescription());
+                    mLogger.e("sendChannelMessage onFailure: {}", errorInfo);
                     emitter.onError(new BaseError(errorInfo.getErrorCode(), errorInfo.getErrorDescription()));
                 }
             });
-        });
+        }).subscribeOn(Schedulers.io());
     }
 }

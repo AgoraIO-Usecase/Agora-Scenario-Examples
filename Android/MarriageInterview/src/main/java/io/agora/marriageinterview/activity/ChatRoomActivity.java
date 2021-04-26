@@ -50,7 +50,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  * 直播
  * 1. 查询Room表，房间是否存在，不存在就退出。
  * 2. 查询Member表
- * 2.1. 不存在就创建用户，并且用0加入到RTC，利用RTC分配一个唯一的uid，并且修改member的streamId值，这里注意，rtc分配的uid是int类型，需要进行（& 0xffffffffL）转换成long类型。
+ * 2.1. 不存在就创建用户，并且用0加入到RTC，利用RTC分配一个唯一的uid，并且修改member的streamId值.
  * 2.2. 存在就返回member对象，利用streamId加入到RTC。
  *
  * @author chenhengfei@agora.io
@@ -227,6 +227,9 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
                             return;
                         }
 
+                        onLoadRoom(room);
+
+                        //查看是否已经加入到了房间
                         Member mine = RoomManager.Instance(ChatRoomActivity.this).getMine();
                         if (mine == null) {
                             RoomManager.Instance(ChatRoomActivity.this).leaveRoom();
@@ -234,8 +237,29 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
                             return;
                         }
 
-                        onLoadRoom(room);
-                        joinRoom();
+                        RoomManager.Instance(ChatRoomActivity.this)
+                                .getMember(mine.getUserId().getObjectId())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .compose(mLifecycleProvider.bindToLifecycle())
+                                .subscribe(new DataMaybeObserver<Member>(ChatRoomActivity.this) {
+                                    @Override
+                                    public void handleError(@NonNull BaseError e) {
+                                        joinRoom();
+                                    }
+
+                                    @Override
+                                    public void handleSuccess(@Nullable Member member) {
+                                        if (RoomManager.isLeaving) {
+                                            return;
+                                        }
+
+                                        if (member != null) {
+                                            RoomManager.Instance(ChatRoomActivity.this).updateMine(member);
+                                        }
+
+                                        joinRoom();
+                                    }
+                                });
                     }
                 });
     }
@@ -268,7 +292,7 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
     private void leaveRTM() {
         RTMManager.Instance(ChatRoomActivity.this)
                 .leaveChannel()
-                .concatWith(RTMManager.Instance(ChatRoomActivity.this).logout())
+                .andThen(RTMManager.Instance(ChatRoomActivity.this).logout())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(mLifecycleProvider.bindToLifecycle())
                 .subscribe(new DataCompletableObserver(ChatRoomActivity.this) {
@@ -319,7 +343,7 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
         RoomManager.Instance(this).onLoadRoomMembers(members);
 
         for (Member member : members) {
-            if (mAdapterMembers.getItemCount() <= 3) {
+            if (mAdapterMembers.getItemCount() < 3) {
                 mAdapterMembers.addItem(member);
             }
 
@@ -412,6 +436,7 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
             mDataBinding.viewUserMiddle.onMemberJoin(true, member);
 
             RoomManager.Instance(this).startLivePlay();
+            refreshAudioView();
         } else {
             mDataBinding.ivRequest.setVisibility(View.GONE);
             mDataBinding.ivMagic.setVisibility(View.GONE);
@@ -419,16 +444,9 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
 
             mDataBinding.viewUserMiddle.onMemberJoin(false, owner);
 
-            if (member.getRole() != Member.Role.Listener) {
-                mDataBinding.ivMagic.setVisibility(View.VISIBLE);
-                mDataBinding.ivAudio.setVisibility(View.VISIBLE);
-
-                RoomManager.Instance(this).startLivePlay();
-            } else {
-                RoomManager.Instance(this).stopLivePlay();
-            }
+            onRoleChanged(false, member);
+            onAudioStatusChanged(false, member);
         }
-        refreshAudioView();
     }
 
     @Override
@@ -632,7 +650,7 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
 
     @Override
     public void onMemberJoin(@NonNull Member member) {
-        if (mAdapterMembers.getItemCount() <= 3) {
+        if (mAdapterMembers.getItemCount() < 3) {
             mAdapterMembers.addItem(member);
         }
 
@@ -653,9 +671,14 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
     public void onRoleChanged(boolean isMine, @NonNull Member member) {
         refreshAudioView();
 
+        boolean isLocal = isMine(member);
         if (member.getRole() == Member.Role.Listener) {
             this.mDataBinding.viewUserLeft.onMemberLeave(member);
             this.mDataBinding.viewUserRight.onMemberLeave(member);
+        } else if (member.getRole() == Member.Role.Left) {
+            this.mDataBinding.viewUserLeft.onMemberJoin(isLocal, member);
+        } else if (member.getRole() == Member.Role.Right) {
+            this.mDataBinding.viewUserRight.onMemberJoin(isLocal, member);
         }
 
         if (!isMine && isMine(member)) {
@@ -698,13 +721,6 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
 
     @Override
     public void onRequestAgreed(@NonNull Member member) {
-        boolean isLocal = isMine(member);
-        if (member.getRole() == Member.Role.Left) {
-            this.mDataBinding.viewUserLeft.onMemberJoin(isLocal, member);
-        } else if (member.getRole() == Member.Role.Right) {
-            this.mDataBinding.viewUserRight.onMemberJoin(isLocal, member);
-        }
-
         if (isOwner()) {
             mDataBinding.ivRequest.setCount(DataRepositroy.Instance(this).getHandUpListCount());
         }
