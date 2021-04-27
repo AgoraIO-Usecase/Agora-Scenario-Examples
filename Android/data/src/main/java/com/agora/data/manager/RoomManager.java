@@ -283,7 +283,11 @@ public final class RoomManager implements IRoomProxy {
     }
 
     public void leaveRoom() {
-        mLogger.d("onJoinRoom() called");
+        mLogger.d("onJoinRoom() called with: isLeaving = [%s]", isLeaving);
+        if (isLeaving) {
+            return;
+        }
+
         isLeaving = true;
 
         RoomManager.Instance(mContext).stopLivePlay();

@@ -48,6 +48,8 @@
     <string name="room_chat_message_join">加入房间</string>
     <string name="room_chat_message_leave">离开房间</string>
     <string name="send">发送</string>
+    <string name="request_dialog_title">申请连麦</string>
+    <string name="request_dialog_message">红娘同意后会自动开始视频连麦</string>
 
     <string name="user_info_name">设置昵称</string>
     <string name="user_info_about">关于</string>

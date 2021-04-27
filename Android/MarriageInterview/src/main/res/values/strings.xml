@@ -48,6 +48,8 @@
     <string name="room_chat_message_join">Join the room</string>
     <string name="room_chat_message_leave">Leave the room</string>
     <string name="send">Send</string>
+    <string name="request_dialog_title">Request Connect</string>
+    <string name="request_dialog_message">After the matchmaker agrees, it will automatically start video linking.</string>
 
     <string name="user_info_name">Profile name</string>
     <string name="user_info_about">About</string>
