@@ -60,7 +60,7 @@ class MessageSource extends BaseMessageSource {
     /**
      * 申请举手用户列表
      */
-    private final Map<String, RequestMember> handUpMembers = new ConcurrentHashMap<>();
+    private final Map<String, RequestMember> requestMembers = new ConcurrentHashMap<>();
 
     public MessageSource(@NonNull Context context, @NonNull IRoomProxy iRoomProxy, @NonNull IConfigSource mIConfigSource) {
         super(iRoomProxy, mIConfigSource);
@@ -72,26 +72,26 @@ class MessageSource extends BaseMessageSource {
     @Override
     public Observable<Member> joinRoom(@NonNull Room room, @NonNull Member member) {
         return Observable.create((ObservableOnSubscribe<Member>) emitter -> {
-            DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(room.getObjectId());
-            DocumentReference drUser = db.collection(DataProvider.TAG_TABLE_USER).document(member.getUserId().getObjectId());
+            DocumentReference drRoom = db.collection(BaseDataProvider.TAG_TABLE_ROOM).document(room.getObjectId());
+            DocumentReference drUser = db.collection(BaseDataProvider.TAG_TABLE_USER).document(member.getUserId().getObjectId());
 
-            db.collection(DataProvider.TAG_TABLE_MEMBER)
-                    .whereEqualTo(DataProvider.MEMBER_ROOMID, drRoom)
-                    .whereEqualTo(DataProvider.MEMBER_USERID, drUser)
+            db.collection(BaseDataProvider.TAG_TABLE_MEMBER)
+                    .whereEqualTo(BaseDataProvider.MEMBER_ROOMID, drRoom)
+                    .whereEqualTo(BaseDataProvider.MEMBER_USERID, drUser)
                     .get()
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             if (task.getResult().isEmpty()) {
                                 HashMap<String, Object> map = new HashMap<>();
-                                map.put(DataProvider.MEMBER_ROOMID, drRoom);
-                                map.put(DataProvider.MEMBER_USERID, drUser);
-                                map.put(DataProvider.MEMBER_STREAMID, member.getStreamId());
-                                map.put(DataProvider.MEMBER_ISSPEAKER, member.getIsSpeaker());
-                                map.put(DataProvider.MEMBER_ISMUTED, member.getIsMuted());
-                                map.put(DataProvider.MEMBER_ISSELFMUTED, member.getIsSelfMuted());
-                                map.put(DataProvider.MEMBER_CREATEDAT, Timestamp.now());
+                                map.put(BaseDataProvider.MEMBER_ROOMID, drRoom);
+                                map.put(BaseDataProvider.MEMBER_USERID, drUser);
+                                map.put(BaseDataProvider.MEMBER_STREAMID, member.getStreamId());
+                                map.put(BaseDataProvider.MEMBER_ISSPEAKER, member.getIsSpeaker());
+                                map.put(BaseDataProvider.MEMBER_ISMUTED, member.getIsMuted());
+                                map.put(BaseDataProvider.MEMBER_ISSELFMUTED, member.getIsSelfMuted());
+                                map.put(BaseDataProvider.MEMBER_CREATEDAT, Timestamp.now());
 
-                                db.collection(DataProvider.TAG_TABLE_MEMBER)
+                                db.collection(BaseDataProvider.TAG_TABLE_MEMBER)
                                         .add(map)
                                         .addOnSuccessListener(documentReference -> {
                                             String objectId = documentReference.getId();
@@ -199,10 +199,10 @@ class MessageSource extends BaseMessageSource {
 
         if (ObjectsCompat.equals(room.getAnchorId(), member.getUserId())) {
             return Completable.create(emitter -> {
-                DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(room.getObjectId());
+                DocumentReference drRoom = db.collection(BaseDataProvider.TAG_TABLE_ROOM).document(room.getObjectId());
 
-                db.collection(DataProvider.TAG_TABLE_ACTION)
-                        .whereEqualTo(DataProvider.ACTION_ROOMID, drRoom)
+                db.collection(BaseDataProvider.TAG_TABLE_ACTION)
+                        .whereEqualTo(BaseDataProvider.ACTION_ROOMID, drRoom)
                         .get()
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
@@ -212,7 +212,7 @@ class MessageSource extends BaseMessageSource {
 
                                 WriteBatch batch = db.batch();
                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                    DocumentReference dr = db.collection(DataProvider.TAG_TABLE_ACTION)
+                                    DocumentReference dr = db.collection(BaseDataProvider.TAG_TABLE_ACTION)
                                             .document(document.getId());
                                     batch.delete(dr);
                                 }
@@ -222,8 +222,8 @@ class MessageSource extends BaseMessageSource {
                             }
                         });
 
-                db.collection(DataProvider.TAG_TABLE_MEMBER)
-                        .whereEqualTo(DataProvider.MEMBER_ROOMID, drRoom)
+                db.collection(BaseDataProvider.TAG_TABLE_MEMBER)
+                        .whereEqualTo(BaseDataProvider.MEMBER_ROOMID, drRoom)
                         .get()
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
@@ -234,7 +234,7 @@ class MessageSource extends BaseMessageSource {
 
                                 WriteBatch batch = db.batch();
                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                    DocumentReference dr = db.collection(DataProvider.TAG_TABLE_MEMBER)
+                                    DocumentReference dr = db.collection(BaseDataProvider.TAG_TABLE_MEMBER)
                                             .document(document.getId());
                                     batch.delete(dr);
                                 }
@@ -255,12 +255,12 @@ class MessageSource extends BaseMessageSource {
             });
         } else {
             return Completable.create(emitter -> {
-                DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(room.getObjectId());
-                DocumentReference drMember = db.collection(DataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
+                DocumentReference drRoom = db.collection(BaseDataProvider.TAG_TABLE_ROOM).document(room.getObjectId());
+                DocumentReference drMember = db.collection(BaseDataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
 
-                db.collection(DataProvider.TAG_TABLE_ACTION)
-                        .whereEqualTo(DataProvider.ACTION_ROOMID, drRoom)
-                        .whereEqualTo(DataProvider.ACTION_MEMBERID, drMember)
+                db.collection(BaseDataProvider.TAG_TABLE_ACTION)
+                        .whereEqualTo(BaseDataProvider.ACTION_ROOMID, drRoom)
+                        .whereEqualTo(BaseDataProvider.ACTION_MEMBERID, drMember)
                         .get()
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
@@ -270,7 +270,7 @@ class MessageSource extends BaseMessageSource {
 
                                 WriteBatch batch = db.batch();
                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                    DocumentReference dr = db.collection(DataProvider.TAG_TABLE_ACTION)
+                                    DocumentReference dr = db.collection(BaseDataProvider.TAG_TABLE_ACTION)
                                             .document(document.getId());
                                     batch.delete(dr);
                                 }
@@ -296,9 +296,9 @@ class MessageSource extends BaseMessageSource {
     @Override
     public Completable muteVoice(@NonNull Member member, int muted) {
         return Completable.create(emitter -> {
-            db.collection(DataProvider.TAG_TABLE_MEMBER)
+            db.collection(BaseDataProvider.TAG_TABLE_MEMBER)
                     .document(member.getObjectId())
-                    .update(DataProvider.MEMBER_ISMUTED, muted)
+                    .update(BaseDataProvider.MEMBER_ISMUTED, muted)
                     .addOnCompleteListener(aVoid -> emitter.onComplete())
                     .addOnFailureListener(e -> emitter.onError(e));
         });
@@ -307,9 +307,9 @@ class MessageSource extends BaseMessageSource {
     @Override
     public Completable muteSelfVoice(@NonNull Member member, int muted) {
         return Completable.create(emitter -> {
-            db.collection(DataProvider.TAG_TABLE_MEMBER)
+            db.collection(BaseDataProvider.TAG_TABLE_MEMBER)
                     .document(member.getObjectId())
-                    .update(DataProvider.MEMBER_ISSELFMUTED, muted)
+                    .update(BaseDataProvider.MEMBER_ISSELFMUTED, muted)
                     .addOnCompleteListener(aVoid -> emitter.onComplete())
                     .addOnFailureListener(e -> emitter.onError(e));
         });
@@ -318,17 +318,17 @@ class MessageSource extends BaseMessageSource {
     @Override
     public Completable requestConnect(@NonNull Member member, @NonNull Action.ACTION action) {
         return Completable.create(emitter -> {
-            DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(member.getRoomId().getObjectId());
-            DocumentReference drMember = db.collection(DataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
+            DocumentReference drRoom = db.collection(BaseDataProvider.TAG_TABLE_ROOM).document(member.getRoomId().getObjectId());
+            DocumentReference drMember = db.collection(BaseDataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
 
             HashMap<String, Object> map = new HashMap<>();
-            map.put(DataProvider.ACTION_MEMBERID, drMember);
-            map.put(DataProvider.ACTION_ROOMID, drRoom);
-            map.put(DataProvider.ACTION_ACTION, Action.ACTION.HandsUp.getValue());
-            map.put(DataProvider.ACTION_STATUS, Action.ACTION_STATUS.Ing.getValue());
-            map.put(DataProvider.ACTION_CREATEDAT, Timestamp.now());
+            map.put(BaseDataProvider.ACTION_MEMBERID, drMember);
+            map.put(BaseDataProvider.ACTION_ROOMID, drRoom);
+            map.put(BaseDataProvider.ACTION_ACTION, action.getValue());
+            map.put(BaseDataProvider.ACTION_STATUS, Action.ACTION_STATUS.Ing.getValue());
+            map.put(BaseDataProvider.ACTION_CREATEDAT, Timestamp.now());
 
-            db.collection(DataProvider.TAG_TABLE_ACTION)
+            db.collection(BaseDataProvider.TAG_TABLE_ACTION)
                     .add(map)
                     .addOnSuccessListener(documentReference -> {
                         String objectIdNew = documentReference.getId();
@@ -345,19 +345,22 @@ class MessageSource extends BaseMessageSource {
                 @Nullable
                 @Override
                 public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                    DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(member.getRoomId().getObjectId());
-                    DocumentReference drMember = db.collection(DataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
+                    DocumentReference drRoom = db.collection(BaseDataProvider.TAG_TABLE_ROOM).document(member.getRoomId().getObjectId());
+                    DocumentReference drMember = db.collection(BaseDataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
 
                     HashMap<String, Object> map = new HashMap<>();
-                    map.put(DataProvider.ACTION_MEMBERID, drMember);
-                    map.put(DataProvider.ACTION_ROOMID, drRoom);
-                    map.put(DataProvider.ACTION_ACTION, Action.ACTION.HandsUp.getValue());
-                    map.put(DataProvider.ACTION_STATUS, Action.ACTION_STATUS.Agree.getValue());
-                    map.put(DataProvider.ACTION_CREATEDAT, Timestamp.now());
-                    db.collection(DataProvider.TAG_TABLE_ACTION)
+                    map.put(BaseDataProvider.ACTION_MEMBERID, drMember);
+                    map.put(BaseDataProvider.ACTION_ROOMID, drRoom);
+                    map.put(BaseDataProvider.ACTION_ACTION, action.getValue());
+                    map.put(BaseDataProvider.ACTION_STATUS, Action.ACTION_STATUS.Agree.getValue());
+                    map.put(BaseDataProvider.ACTION_CREATEDAT, Timestamp.now());
+                    db.collection(BaseDataProvider.TAG_TABLE_ACTION)
                             .add(map);
 
-                    transaction.update(drMember, DataProvider.MEMBER_ISSPEAKER, 1);
+                    HashMap<String, Object> map2 = new HashMap<>();
+                    map2.put(BaseDataProvider.MEMBER_ISSPEAKER, 1);
+                    map2.put(BaseDataProvider.MEMBER_ROLE, member.getRole().getValue());
+                    transaction.update(drMember, map2);
                     return null;
                 }
             }).addOnSuccessListener(documentReference -> {
@@ -366,7 +369,7 @@ class MessageSource extends BaseMessageSource {
         }).subscribeOn(Schedulers.io()).doOnComplete(new io.reactivex.functions.Action() {
             @Override
             public void run() throws Exception {
-                handUpMembers.remove(member.getObjectId());
+                requestMembers.remove(member.getObjectId());
             }
         });
     }
@@ -374,17 +377,17 @@ class MessageSource extends BaseMessageSource {
     @Override
     public Completable refuseRequest(@NonNull Member member, @NonNull Action.ACTION action) {
         return Completable.create(emitter -> {
-            DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(member.getRoomId().getObjectId());
-            DocumentReference drMember = db.collection(DataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
+            DocumentReference drRoom = db.collection(BaseDataProvider.TAG_TABLE_ROOM).document(member.getRoomId().getObjectId());
+            DocumentReference drMember = db.collection(BaseDataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
 
             HashMap<String, Object> map = new HashMap<>();
-            map.put(DataProvider.ACTION_MEMBERID, drMember);
-            map.put(DataProvider.ACTION_ROOMID, drRoom);
-            map.put(DataProvider.ACTION_ACTION, Action.ACTION.HandsUp.getValue());
-            map.put(DataProvider.ACTION_STATUS, Action.ACTION_STATUS.Refuse.getValue());
-            map.put(DataProvider.ACTION_CREATEDAT, Timestamp.now());
+            map.put(BaseDataProvider.ACTION_MEMBERID, drMember);
+            map.put(BaseDataProvider.ACTION_ROOMID, drRoom);
+            map.put(BaseDataProvider.ACTION_ACTION, action.getValue());
+            map.put(BaseDataProvider.ACTION_STATUS, Action.ACTION_STATUS.Refuse.getValue());
+            map.put(BaseDataProvider.ACTION_CREATEDAT, Timestamp.now());
 
-            db.collection(DataProvider.TAG_TABLE_ACTION)
+            db.collection(BaseDataProvider.TAG_TABLE_ACTION)
                     .add(map)
                     .addOnSuccessListener(documentReference -> {
                         String objectIdNew = documentReference.getId();
@@ -394,7 +397,7 @@ class MessageSource extends BaseMessageSource {
         }).subscribeOn(Schedulers.io()).doOnComplete(new io.reactivex.functions.Action() {
             @Override
             public void run() throws Exception {
-                handUpMembers.remove(member.getObjectId());
+                requestMembers.remove(member.getObjectId());
             }
         });
     }
@@ -402,17 +405,17 @@ class MessageSource extends BaseMessageSource {
     @Override
     public Completable inviteConnect(@NonNull Member member, @NonNull Action.ACTION action) {
         return Completable.create(emitter -> {
-            DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(member.getRoomId().getObjectId());
-            DocumentReference drMember = db.collection(DataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
+            DocumentReference drRoom = db.collection(BaseDataProvider.TAG_TABLE_ROOM).document(member.getRoomId().getObjectId());
+            DocumentReference drMember = db.collection(BaseDataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
 
             HashMap<String, Object> map = new HashMap<>();
-            map.put(DataProvider.ACTION_MEMBERID, drMember);
-            map.put(DataProvider.ACTION_ROOMID, drRoom);
-            map.put(DataProvider.ACTION_ACTION, Action.ACTION.Invite.getValue());
-            map.put(DataProvider.ACTION_STATUS, Action.ACTION_STATUS.Ing.getValue());
-            map.put(DataProvider.ACTION_CREATEDAT, Timestamp.now());
+            map.put(BaseDataProvider.ACTION_MEMBERID, drMember);
+            map.put(BaseDataProvider.ACTION_ROOMID, drRoom);
+            map.put(BaseDataProvider.ACTION_ACTION, action.getValue());
+            map.put(BaseDataProvider.ACTION_STATUS, Action.ACTION_STATUS.Ing.getValue());
+            map.put(BaseDataProvider.ACTION_CREATEDAT, Timestamp.now());
 
-            db.collection(DataProvider.TAG_TABLE_ACTION)
+            db.collection(BaseDataProvider.TAG_TABLE_ACTION)
                     .add(map)
                     .addOnSuccessListener(documentReference -> {
                         String objectIdNew = documentReference.getId();
@@ -429,19 +432,22 @@ class MessageSource extends BaseMessageSource {
                 @Nullable
                 @Override
                 public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                    DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(member.getRoomId().getObjectId());
-                    DocumentReference drMember = db.collection(DataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
+                    DocumentReference drRoom = db.collection(BaseDataProvider.TAG_TABLE_ROOM).document(member.getRoomId().getObjectId());
+                    DocumentReference drMember = db.collection(BaseDataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
 
                     HashMap<String, Object> map = new HashMap<>();
-                    map.put(DataProvider.ACTION_MEMBERID, drMember);
-                    map.put(DataProvider.ACTION_ROOMID, drRoom);
-                    map.put(DataProvider.ACTION_ACTION, Action.ACTION.Invite.getValue());
-                    map.put(DataProvider.ACTION_STATUS, Action.ACTION_STATUS.Agree.getValue());
-                    map.put(DataProvider.ACTION_CREATEDAT, Timestamp.now());
-                    db.collection(DataProvider.TAG_TABLE_ACTION)
+                    map.put(BaseDataProvider.ACTION_MEMBERID, drMember);
+                    map.put(BaseDataProvider.ACTION_ROOMID, drRoom);
+                    map.put(BaseDataProvider.ACTION_ACTION, Action.ACTION.Invite.getValue());
+                    map.put(BaseDataProvider.ACTION_STATUS, Action.ACTION_STATUS.Agree.getValue());
+                    map.put(BaseDataProvider.ACTION_CREATEDAT, Timestamp.now());
+                    db.collection(BaseDataProvider.TAG_TABLE_ACTION)
                             .add(map);
 
-                    transaction.update(drMember, DataProvider.MEMBER_ISSPEAKER, 1);
+                    HashMap<String, Object> map2 = new HashMap<>();
+                    map2.put(BaseDataProvider.MEMBER_ISSPEAKER, 1);
+                    map2.put(BaseDataProvider.MEMBER_ROLE, member.getRole().getValue());
+                    transaction.update(drMember, map2);
                     return null;
                 }
             }).addOnSuccessListener(documentReference -> {
@@ -450,7 +456,7 @@ class MessageSource extends BaseMessageSource {
         }).subscribeOn(Schedulers.io()).doOnComplete(new io.reactivex.functions.Action() {
             @Override
             public void run() throws Exception {
-                handUpMembers.remove(member.getObjectId());
+                requestMembers.remove(member.getObjectId());
             }
         });
     }
@@ -458,17 +464,17 @@ class MessageSource extends BaseMessageSource {
     @Override
     public Completable refuseInvite(@NonNull Member member) {
         return Completable.create(emitter -> {
-            DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(member.getRoomId().getObjectId());
-            DocumentReference drMember = db.collection(DataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
+            DocumentReference drRoom = db.collection(BaseDataProvider.TAG_TABLE_ROOM).document(member.getRoomId().getObjectId());
+            DocumentReference drMember = db.collection(BaseDataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
 
             HashMap<String, Object> map = new HashMap<>();
-            map.put(DataProvider.ACTION_MEMBERID, drMember);
-            map.put(DataProvider.ACTION_ROOMID, drRoom);
-            map.put(DataProvider.ACTION_ACTION, Action.ACTION.Invite.getValue());
-            map.put(DataProvider.ACTION_STATUS, Action.ACTION_STATUS.Refuse.getValue());
-            map.put(DataProvider.ACTION_CREATEDAT, Timestamp.now());
+            map.put(BaseDataProvider.ACTION_MEMBERID, drMember);
+            map.put(BaseDataProvider.ACTION_ROOMID, drRoom);
+            map.put(BaseDataProvider.ACTION_ACTION, Action.ACTION.Invite.getValue());
+            map.put(BaseDataProvider.ACTION_STATUS, Action.ACTION_STATUS.Refuse.getValue());
+            map.put(BaseDataProvider.ACTION_CREATEDAT, Timestamp.now());
 
-            db.collection(DataProvider.TAG_TABLE_ACTION)
+            db.collection(BaseDataProvider.TAG_TABLE_ACTION)
                     .add(map)
                     .addOnSuccessListener(documentReference -> {
                         String objectIdNew = documentReference.getId();
@@ -480,10 +486,14 @@ class MessageSource extends BaseMessageSource {
 
     @Override
     public Completable seatOff(@NonNull Member member, @NonNull Member.Role role) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put(BaseDataProvider.MEMBER_ISSPEAKER, 0);
+        map.put(BaseDataProvider.MEMBER_ROLE, role.getValue());
+
         return Completable.create(emitter -> {
-            db.collection(DataProvider.TAG_TABLE_MEMBER)
+            db.collection(BaseDataProvider.TAG_TABLE_MEMBER)
                     .document(member.getObjectId())
-                    .update(DataProvider.MEMBER_ISSPEAKER, 0)
+                    .update(map)
                     .addOnCompleteListener(aVoid -> emitter.onComplete())
                     .addOnFailureListener(e -> emitter.onError(e));
         });
@@ -491,12 +501,12 @@ class MessageSource extends BaseMessageSource {
 
     @Override
     public Observable<List<RequestMember>> getRequestList() {
-        return Observable.just(new ArrayList<>(handUpMembers.values()));
+        return Observable.just(new ArrayList<>(requestMembers.values()));
     }
 
     @Override
     public int getHandUpListCount() {
-        return handUpMembers.size();
+        return requestMembers.size();
     }
 
     ListenerRegistration lrAction;
@@ -510,9 +520,9 @@ class MessageSource extends BaseMessageSource {
             return;
         }
 
-        final DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(room.getObjectId());
-        lrAction = db.collection(DataProvider.TAG_TABLE_ACTION)
-                .whereEqualTo(DataProvider.ACTION_ROOMID, drRoom)
+        final DocumentReference drRoom = db.collection(BaseDataProvider.TAG_TABLE_ROOM).document(room.getObjectId());
+        lrAction = db.collection(BaseDataProvider.TAG_TABLE_ACTION)
+                .whereEqualTo(BaseDataProvider.ACTION_ROOMID, drRoom)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -536,19 +546,21 @@ class MessageSource extends BaseMessageSource {
                                             }
 
                                             if (dc.getType() == DocumentChange.Type.ADDED) {
-                                                if (item.getAction() == Action.ACTION.HandsUp) {
+                                                if (item.getAction() == Action.ACTION.HandsUp
+                                                        || item.getAction() == Action.ACTION.RequestLeft
+                                                        || item.getAction() == Action.ACTION.RequestRight) {
                                                     if (item.getStatus() == Action.ACTION_STATUS.Ing.getValue()) {
                                                         Member member = iRoomProxy.getMemberById(ds.getId());
                                                         if (member == null) {
                                                             return;
                                                         }
 
-                                                        if (handUpMembers.containsKey(member.getObjectId())) {
+                                                        if (requestMembers.containsKey(member.getObjectId())) {
                                                             return;
                                                         }
 
                                                         RequestMember requestMember = new RequestMember(member, item.getAction());
-                                                        handUpMembers.put(member.getObjectId(), requestMember);
+                                                        requestMembers.put(member.getObjectId(), requestMember);
                                                         iRoomProxy.onReceivedRequest(member, item.getAction());
                                                     }
                                                 } else if (item.getAction() == Action.ACTION.Invite) {
@@ -595,9 +607,9 @@ class MessageSource extends BaseMessageSource {
             return;
         }
 
-        final DocumentReference drMember = db.collection(DataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
-        lrAction2 = db.collection(DataProvider.TAG_TABLE_ACTION)
-                .whereEqualTo(DataProvider.ACTION_MEMBERID, drMember)
+        final DocumentReference drMember = db.collection(BaseDataProvider.TAG_TABLE_MEMBER).document(member.getObjectId());
+        lrAction2 = db.collection(BaseDataProvider.TAG_TABLE_ACTION)
+                .whereEqualTo(BaseDataProvider.ACTION_MEMBERID, drMember)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -609,7 +621,9 @@ class MessageSource extends BaseMessageSource {
                             item.setRoomId(iRoomProxy.getRoom());
                             item.setMemberId(iRoomProxy.getMine());
                             if (dc.getType() == DocumentChange.Type.ADDED) {
-                                if (item.getAction() == Action.ACTION.HandsUp) {
+                                if (item.getAction() == Action.ACTION.HandsUp
+                                        || item.getAction() == Action.ACTION.RequestLeft
+                                        || item.getAction() == Action.ACTION.RequestRight) {
                                     if (item.getStatus() == Action.ACTION_STATUS.Agree.getValue()) {
                                         iRoomProxy.onRequestAgreed(member, item.getAction());
                                     } else if (item.getStatus() == Action.ACTION_STATUS.Refuse.getValue()) {
@@ -645,9 +659,9 @@ class MessageSource extends BaseMessageSource {
             return;
         }
 
-        final DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(room.getObjectId());
-        lrMember = db.collection(DataProvider.TAG_TABLE_MEMBER)
-                .whereEqualTo(DataProvider.MEMBER_ROOMID, drRoom)
+        final DocumentReference drRoom = db.collection(BaseDataProvider.TAG_TABLE_ROOM).document(room.getObjectId());
+        lrMember = db.collection(BaseDataProvider.TAG_TABLE_MEMBER)
+                .whereEqualTo(BaseDataProvider.MEMBER_ROOMID, drRoom)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -708,15 +722,13 @@ class MessageSource extends BaseMessageSource {
                                             return;
                                         }
 
-                                        if (memberOld.getIsSpeaker() != member.getIsSpeaker()) {
+                                        if (memberOld.getIsSpeaker() != member.getIsSpeaker()
+                                                || memberOld.getRole() != member.getRole()) {
                                             iRoomProxy.onRoleChanged(false, member);
                                         }
 
-                                        if (memberOld.getIsSelfMuted() != member.getIsSelfMuted()) {
-                                            iRoomProxy.onAudioStatusChanged(false, member);
-                                        }
-
-                                        if (memberOld.getIsMuted() != member.getIsMuted()) {
+                                        if (memberOld.getIsSelfMuted() != member.getIsSelfMuted()
+                                                || memberOld.getIsMuted() != member.getIsMuted()) {
                                             iRoomProxy.onAudioStatusChanged(false, member);
                                         }
                                     } else if (dc.getType() == DocumentChange.Type.REMOVED) {

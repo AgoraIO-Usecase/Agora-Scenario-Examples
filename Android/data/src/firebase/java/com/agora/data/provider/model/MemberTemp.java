@@ -9,6 +9,7 @@ public class MemberTemp {
     private DocumentReference userId;
     private Long streamId;
     private int isSpeaker = 0;
+    private int role = 0;
     private int isMuted = 0;
     private int isSelfMuted = 0;
     private Timestamp createdAt;
@@ -23,6 +24,7 @@ public class MemberTemp {
         member.setIsSpeaker(isSpeaker);
         member.setIsMuted(isMuted);
         member.setIsSelfMuted(isSelfMuted);
+        member.setRole(Member.Role.parse(role));
 
         return member;
     }

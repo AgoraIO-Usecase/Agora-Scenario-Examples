@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
-public class DataProvider implements IDataProvider {
+public class BaseDataProvider implements IDataProvider {
 
     public static final String TAG_TABLE_USER = "USER";
     public static final String TAG_TABLE_ROOM = "ROOM";
@@ -29,6 +29,7 @@ public class DataProvider implements IDataProvider {
     public static final String MEMBER_ISSELFMUTED = "isSelfMuted";
     public static final String MEMBER_STREAMID = "streamId";
     public static final String MEMBER_CREATEDAT = "createdAt";
+    public static final String MEMBER_ROLE = "role";
 
     public static final String ROOM_OBJECTID = "objectId";
     public static final String ROOM_CREATEDAT = "createdAt";
@@ -40,10 +41,17 @@ public class DataProvider implements IDataProvider {
     public static final String ACTION_STATUS = "status";
     public static final String ACTION_CREATEDAT = "createdAt";
 
-    private final IStoreSource mIStoreSource;
-    private final IMessageSource mIMessageSource;
+    protected IConfigSource mIConfigSource;
+    protected IStoreSource mIStoreSource;
+    protected IMessageSource mIMessageSource;
 
-    public DataProvider(@NonNull Context mContext, @NonNull IRoomProxy iRoomProxy) {
+    private Context mContext;
+    private IRoomProxy iRoomProxy;
+
+    public BaseDataProvider(@NonNull Context mContext, @NonNull IRoomProxy iRoomProxy) {
+        this.mContext = mContext;
+        this.iRoomProxy = iRoomProxy;
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
@@ -51,14 +59,34 @@ public class DataProvider implements IDataProvider {
                 .build();
         db.setFirestoreSettings(settings);
 
-        IConfigSource mIConfigSource = new DefaultConfigSource();
-        mIStoreSource = new StoreSource();
-        mIMessageSource = new MessageSource(mContext, iRoomProxy, mIConfigSource);
+        initConfigSource();
+        initStoreSource();
+        initMessageSource();
+    }
+
+    @Override
+    public void initConfigSource() {
+        mIConfigSource = new DefaultConfigSource();
+    }
+
+    @Override
+    public IConfigSource getConfigSource() {
+        return mIConfigSource;
+    }
+
+    @Override
+    public void initStoreSource() {
+        mIStoreSource = new StoreSource(mIConfigSource);
     }
 
     @Override
     public IStoreSource getStoreSource() {
         return mIStoreSource;
+    }
+
+    @Override
+    public void initMessageSource() {
+        mIMessageSource = new MessageSource(mContext, iRoomProxy, mIConfigSource);
     }
 
     @Override
