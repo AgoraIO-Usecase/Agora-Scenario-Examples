@@ -542,7 +542,11 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
                 return;
             }
 
-            requestContect(mDataBinding.viewUserLeft, Action.ACTION.RequestLeft);
+            Member member = RoomManager.Instance(this).getMine();
+            if (member == null || member.getRole() != Member.Role.Listener) {
+                return;
+            }
+            showRequestDialog(mDataBinding.viewUserLeft, Action.ACTION.RequestLeft);
         }
     }
 
@@ -556,8 +560,34 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
                 return;
             }
 
-            requestContect(mDataBinding.viewUserRight, Action.ACTION.RequestRight);
+            Member member = RoomManager.Instance(this).getMine();
+            if (member == null || member.getRole() != Member.Role.Listener) {
+                return;
+            }
+            showRequestDialog(mDataBinding.viewUserRight, Action.ACTION.RequestRight);
         }
+    }
+
+    private ConfirmDialog requestConnectDialog;
+
+    private void showRequestDialog(RoomSpeakerView mRoomSpeakerView, @NonNull Action.ACTION action) {
+        if (requestConnectDialog != null && requestConnectDialog.isShowing()) {
+            return;
+        }
+
+        requestConnectDialog = new ConfirmDialog();
+        requestConnectDialog.show(getSupportFragmentManager(), getString(R.string.request_dialog_title), getString(R.string.request_dialog_message), new ConfirmDialog.OnConfirmCallback() {
+
+            @Override
+            public void onClickCancel() {
+
+            }
+
+            @Override
+            public void onClickConfirm() {
+                requestContect(mRoomSpeakerView, action);
+            }
+        });
     }
 
     private void leaveRoom() {
