@@ -93,12 +93,12 @@ public class RoomSpeakerView extends ConstraintLayout {
         if (isLocal) {
             VideoCanvas mVideoCanvasOwner = new VideoCanvas(svVideo);
             mVideoCanvasOwner.renderMode = VideoCanvas.RENDER_MODE_HIDDEN;
-            mVideoCanvasOwner.uid = member.getStreamId();
+            mVideoCanvasOwner.uid = member.getStreamIntId();
             RtcManager.Instance(getContext()).getRtcEngine().setupLocalVideo(mVideoCanvasOwner);
         } else {
             VideoCanvas mVideoCanvasOwner = new VideoCanvas(svVideo);
             mVideoCanvasOwner.renderMode = VideoCanvas.RENDER_MODE_HIDDEN;
-            mVideoCanvasOwner.uid = member.getStreamId();
+            mVideoCanvasOwner.uid = member.getStreamIntId();
             RtcManager.Instance(getContext()).getRtcEngine().setupRemoteVideo(mVideoCanvasOwner);
         }
 

@@ -101,7 +101,7 @@ public final class RTMManager {
     }
 
     public Completable login(String userId) {
-        mLogger.d("login() called with: userId = [" + userId + "]");
+        mLogger.d("login() called with: userId = [%s]", userId);
         return Completable.create(emitter -> {
             if (mRtmClient == null) {
                 emitter.onError(new NullPointerException("mRtmClient is null, please call init first"));
@@ -116,7 +116,7 @@ public final class RTMManager {
 
                 @Override
                 public void onFailure(ErrorInfo errorInfo) {
-                    mLogger.e("login onFailure: {}", errorInfo);
+                    mLogger.e("login onFailure: %s", errorInfo);
                     emitter.onError(new BaseError(errorInfo.getErrorCode(), errorInfo.getErrorDescription()));
                 }
             });
@@ -138,7 +138,7 @@ public final class RTMManager {
 
                 @Override
                 public void onFailure(ErrorInfo errorInfo) {
-                    mLogger.e("logout onFailure: {}", errorInfo);
+                    mLogger.e("logout onFailure: %s", errorInfo);
                 }
             });
             emitter.onComplete();
@@ -231,7 +231,7 @@ public final class RTMManager {
 
                 @Override
                 public void onFailure(ErrorInfo errorInfo) {
-                    mLogger.e("joinChannel onFailure: {}", errorInfo);
+                    mLogger.e("joinChannel onFailure: %s", errorInfo);
                     emitter.onError(new BaseError(errorInfo.getErrorCode(), errorInfo.getErrorDescription()));
                 }
             });
@@ -255,7 +255,7 @@ public final class RTMManager {
 
                 @Override
                 public void onFailure(ErrorInfo errorInfo) {
-                    mLogger.e("leaveChannel onFailure: {}", errorInfo);
+                    mLogger.e("leaveChannel onFailure: %s", errorInfo);
                     emitter.onError(new BaseError(errorInfo.getErrorCode(), errorInfo.getErrorDescription()));
                 }
             });
@@ -280,7 +280,7 @@ public final class RTMManager {
 
                 @Override
                 public void onFailure(ErrorInfo errorInfo) {
-                    mLogger.e("sendChannelMessage onFailure: {}", errorInfo);
+                    mLogger.e("sendChannelMessage onFailure: %s", errorInfo);
                     emitter.onError(new BaseError(errorInfo.getErrorCode(), errorInfo.getErrorDescription()));
                 }
             });

@@ -34,7 +34,7 @@ public class Member implements Serializable, Cloneable {
 
     private String objectId;
     private Room roomId;
-    private Integer streamId;
+    private Long streamId;
     private User userId;
 
     //是否是演讲者，区分开观众和演讲者。0-不是，1-是。
@@ -75,11 +75,15 @@ public class Member implements Serializable, Cloneable {
         this.roomId = roomId;
     }
 
-    public Integer getStreamId() {
+    public Long getStreamId() {
         return streamId;
     }
 
-    public void setStreamId(Integer streamId) {
+    public int getStreamIntId() {
+        return streamId.intValue();
+    }
+
+    public void setStreamId(Long streamId) {
         this.streamId = streamId;
     }
 
