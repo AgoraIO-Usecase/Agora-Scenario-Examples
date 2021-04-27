@@ -16,7 +16,7 @@ public interface IRoomProxy {
     Member getMemberById(@NonNull String memberId);
 
     @Nullable
-    Member getMemberByStramId(long streamId);
+    Member getMemberByStramId(int streamId);
 
     Maybe<Member> getMember(@NonNull String roomId, @NonNull String userId);
 

@@ -82,8 +82,7 @@ public final class RoomManager implements IRoomProxy {
         @Override
         public void onRemoteVideoStateChanged(int uid, int state, int reason, int elapsed) {
             super.onRemoteVideoStateChanged(uid, state, reason, elapsed);
-            long streamId = Integer.valueOf(uid).longValue();
-            Member member = getMemberByStramId(streamId);
+            Member member = getMemberByStramId(uid);
             if (member == null) {
                 return;
             }
@@ -141,7 +140,7 @@ public final class RoomManager implements IRoomProxy {
     /**
      * RTC的UID和Member的键值对
      */
-    private final Map<Long, Member> streamIdMap = new ConcurrentHashMap<>();
+    private final Map<Integer, Member> streamIdMap = new ConcurrentHashMap<>();
 
     private final MainThreadDispatch mainThreadDispatch = new MainThreadDispatch();
 
@@ -172,15 +171,14 @@ public final class RoomManager implements IRoomProxy {
 
         int userId = 0;
         if (member.getStreamId() != null) {
-            userId = member.getStreamId().intValue();
+            userId = member.getStreamId();
         }
 
         String objectId = room.getObjectId();
         return RtcManager.Instance(mContext).joinChannel(objectId, userId).flatMapCompletable(new Function<Integer, CompletableSource>() {
             @Override
             public CompletableSource apply(@NonNull Integer uid) throws Exception {
-                long streamId = uid.longValue();
-                member.setStreamId(streamId);
+                member.setStreamId(uid);
                 return iDataRepositroy.joinRoom(room, member).concatMapCompletable(new Function<Member, CompletableSource>() {
                     @Override
                     public CompletableSource apply(@NonNull Member member) throws Exception {
@@ -238,7 +236,7 @@ public final class RoomManager implements IRoomProxy {
                     public void run() throws Exception {
                         member.setIsMuted(newValue);
 
-                        RtcManager.Instance(mContext).getRtcEngine().muteRemoteAudioStream(member.getStreamId().intValue(), newValue != 0);
+                        RtcManager.Instance(mContext).getRtcEngine().muteRemoteAudioStream(member.getStreamId(), newValue != 0);
                         onAudioStatusChanged(false, member);
                     }
                 });
@@ -495,7 +493,7 @@ public final class RoomManager implements IRoomProxy {
     }
 
     @Override
-    public Member getMemberByStramId(long streamId) {
+    public Member getMemberByStramId(int streamId) {
         return streamIdMap.get(streamId);
     }
 
