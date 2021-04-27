@@ -53,7 +53,6 @@ public final class RtcManager {
             config.mContext = mContext;
             config.mAppId = mContext.getString(R.string.app_id);
             config.mEventHandler = mEventHandler;
-
             if (Config.isLeanCloud()) {
                 config.mAreaCode = RtcEngineConfig.AreaCode.AREA_CODE_CN;
             } else {

@@ -444,8 +444,8 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
 
             mDataBinding.viewUserMiddle.onMemberJoin(false, owner);
 
-            onRoleChanged(false, member);
-            onAudioStatusChanged(false, member);
+            onRoleChanged(true, member);
+            onAudioStatusChanged(true, member);
         }
     }
 
@@ -640,7 +640,7 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
     @Override
     public void onOwnerLeaveRoom(@NonNull Room room) {
         ToastUtile.toastShort(this, R.string.room_closed);
-        finish();
+        leaveRoom();
     }
 
     @Override
