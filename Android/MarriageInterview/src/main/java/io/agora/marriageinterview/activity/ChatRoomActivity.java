@@ -15,6 +15,7 @@ import com.agora.data.BaseError;
 import com.agora.data.RoomEventCallback;
 import com.agora.data.manager.RTMManager;
 import com.agora.data.manager.RoomManager;
+import com.agora.data.manager.RtcManager;
 import com.agora.data.manager.UserManager;
 import com.agora.data.model.Action;
 import com.agora.data.model.Member;
@@ -43,6 +44,7 @@ import io.agora.marriageinterview.widget.RoomSpeakerView;
 import io.agora.marriageinterview.widget.UserSeatMenuDialog;
 import io.agora.rtc.Constants;
 import io.agora.rtc.RtcEngine;
+import io.agora.rtc.video.BeautyOptions;
 import io.agora.rtc.video.VideoEncoderConfiguration;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
@@ -64,7 +66,7 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
     private RoomPreMemberListAdapter mAdapterMembers;
     private RoomMessagesAdapter mAdapterMessage;
 
-    private IRoomConfigProvider roomConfig = new IRoomConfigProvider() {
+    private final IRoomConfigProvider roomConfig = new IRoomConfigProvider() {
 
         @Override
         public void setup(RtcEngine mRtcEngine) {
@@ -459,7 +461,7 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
         } else if (id == R.id.ivRequest) {
             showRequestListDialog();
         } else if (id == R.id.ivMagic) {
-
+            toggleMagic();
         } else if (id == R.id.ivAudio) {
             toggleAudio();
         } else if (id == R.id.viewUserLeft) {
@@ -473,6 +475,14 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
                 showLeaveRoomDialog();
             }
         }
+    }
+
+    private boolean enableBeauty = false;
+    private BeautyOptions mOptions = new BeautyOptions();
+
+    private void toggleMagic() {
+        enableBeauty = !enableBeauty;
+        RtcManager.Instance(this).getRtcEngine().setBeautyEffectOptions(enableBeauty, mOptions);
     }
 
     private void showInputMessageDialog() {
