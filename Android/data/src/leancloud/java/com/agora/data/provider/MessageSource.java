@@ -403,7 +403,9 @@ class MessageSource extends BaseMessageSource {
         mAVLiveQueryHelpAction.registerObserve(query, new AVLiveQueryHelp.AttributeListener<Action>() {
             @Override
             public void onCreated(Action item) {
-                if (item.getAction() == Action.ACTION.HandsUp) {
+                if (item.getAction() == Action.ACTION.HandsUp
+                        || item.getAction() == Action.ACTION.RequestLeft
+                        || item.getAction() == Action.ACTION.RequestRight) {
                     if (item.getStatus() == Action.ACTION_STATUS.Ing.getValue()) {
                         Member member = item.getMemberId();
                         member = iRoomProxy.getMemberById(member.getObjectId());
@@ -435,21 +437,6 @@ class MessageSource extends BaseMessageSource {
                         }
 
                         iRoomProxy.onInviteRefuse(member);
-                    }
-                } else if (item.getAction() == Action.ACTION.RequestLeft || item.getAction() == Action.ACTION.RequestRight) {
-                    if (item.getStatus() == Action.ACTION_STATUS.Ing.getValue()) {
-                        Member member = item.getMemberId();
-                        member = iRoomProxy.getMemberById(member.getObjectId());
-                        if (member == null) {
-                            return;
-                        }
-
-                        if (requestMembers.containsKey(member.getObjectId())) {
-                            return;
-                        }
-
-                        requestMembers.put(member.getObjectId(), new RequestMember(member, item.getAction()));
-                        iRoomProxy.onReceivedRequest(member, item.getAction());
                     }
                 }
             }
@@ -588,17 +575,13 @@ class MessageSource extends BaseMessageSource {
                     return;
                 }
 
-                boolean isChanged = (memberOld.getIsSpeaker() != member.getIsSpeaker()
-                        || memberOld.getRole() != member.getRole());
-                if (isChanged) {
+                if (memberOld.getIsSpeaker() != member.getIsSpeaker()
+                        || memberOld.getRole() != member.getRole()) {
                     iRoomProxy.onRoleChanged(false, member);
                 }
 
-                if (memberOld.getIsSelfMuted() != member.getIsSelfMuted()) {
-                    iRoomProxy.onAudioStatusChanged(false, member);
-                }
-
-                if (memberOld.getIsMuted() != member.getIsMuted()) {
+                if (memberOld.getIsSelfMuted() != member.getIsSelfMuted()
+                        || memberOld.getIsMuted() != member.getIsMuted()) {
                     iRoomProxy.onAudioStatusChanged(false, member);
                 }
             }
