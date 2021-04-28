@@ -12,10 +12,13 @@ import RxCocoa
 import Core
 
 public class HomeController: BaseViewContoller, DialogDelegate {
-
     @IBOutlet weak var emptyView: UIView!
     @IBOutlet weak var avatarView: RoundImageView!
-    @IBOutlet weak var backView: UIView!
+    @IBOutlet weak var backView: UIView! {
+        didSet {
+            backView.isHidden = navigationController?.viewControllers.count == 1
+        }
+    }
     @IBOutlet weak var listView: UICollectionView! {
         didSet {
             let layout = WaterfallLayout()

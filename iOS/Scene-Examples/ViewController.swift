@@ -28,7 +28,7 @@ class ViewController: CustomTabBarController {
         ]
         setTabBar(items: [
             CustomTabBarItem(icon: UIImage(systemName: "square.grid.3x3")!, title: "全部"),
-            CustomTabBarItem(icon: UIImage(systemName: "volume")!, title: "互动播客") {
+            CustomTabBarItem(icon: UIImage(systemName: "music.mic")!, title: "互动播客") {
                 InteractivePodcast.HomeController.instance()
             },
             CustomTabBarItem(icon: UIImage(systemName: "video")!, title: "在线相亲") {

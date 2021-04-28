@@ -16,20 +16,25 @@ public class CustomTabBarItem: UIButton {
     
     var mode: Mode = .Switch
     var builder: (() -> UIViewController)?
+    var tint: Bool = true
     
     var color: UIColor = UIColor.lightGray {
         didSet {
-            if let image = iconView.image {
-                iconView.image = image.withRenderingMode(.alwaysTemplate)
+            if (tint) {
+                if let image = iconView.image {
+                    iconView.image = image.withRenderingMode(.alwaysTemplate)
+                }
+                iconView.tintColor = color
+            } else {
+                iconView.tintColor = nil
             }
-            iconView.tintColor = color
             label.textColor = color
         }
     }
     
     private let iconView: UIImageView = {
         let view = UIImageView()
-        view.contentMode = .scaleAspectFill
+        view.contentMode = .scaleAspectFit
         view.clipsToBounds = true
         return view
     }()
@@ -43,8 +48,9 @@ public class CustomTabBarItem: UIButton {
         return view
     }()
     
-    public convenience init(icon: UIImage, title: String, builder: (() -> UIViewController)? = nil) {
+    public convenience init(icon: UIImage, title: String, tint: Bool = true, builder: (() -> UIViewController)? = nil) {
         self.init()
+        self.tint = tint
         self.builder = builder
         if (self.builder != nil) {
             self.mode = .Push

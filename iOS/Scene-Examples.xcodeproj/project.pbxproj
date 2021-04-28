@@ -129,9 +129,9 @@
 		57F63AB42635527B00B45C0B /* MemberEnterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63AB32635527B00B45C0B /* MemberEnterView.swift */; };
 		57F63AB9263560CD00B45C0B /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63AB8263560CD00B45C0B /* MessageView.swift */; };
 		57F63ABE2635634900B45C0B /* RtmServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63ABD2635634900B45C0B /* RtmServer.swift */; };
+		57F9E7AB2639154700EFD575 /* Pods_BlindDate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB5CAB911233B6021082C1C5 /* Pods_BlindDate.framework */; platformFilter = ios; };
 		89264C70CFB59394E13AF02F /* Pods_Scene_Examples.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C7FB2E501D0DCAF25AB5379 /* Pods_Scene_Examples.framework */; };
 		BAE05AEAD603AC8F77EBB4D8 /* Pods_Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83A7B67A16BEB4B32D1DB28A /* Pods_Core.framework */; };
-		D5F4552EC0FCB83209377EF4 /* Pods_BlindDate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB5CAB911233B6021082C1C5 /* Pods_BlindDate.framework */; platformFilter = ios; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -369,7 +369,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D5F4552EC0FCB83209377EF4 /* Pods_BlindDate.framework in Frameworks */,
+				57F9E7AB2639154700EFD575 /* Pods_BlindDate.framework in Frameworks */,
 				57F639A0263009D500B45C0B /* Core.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1455,6 +1455,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = "io.agora.Scene-Examples";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1478,6 +1479,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = "io.agora.Scene-Examples";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
