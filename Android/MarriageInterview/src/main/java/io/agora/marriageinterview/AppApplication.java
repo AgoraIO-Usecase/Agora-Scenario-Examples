@@ -7,7 +7,5 @@ public class AppApplication extends AgoraApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        RTMManager.Instance(this).init();
     }
 }

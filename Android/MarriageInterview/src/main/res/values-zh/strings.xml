@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">互动相亲</string>
+    <string name="merry_app_name">互动相亲</string>
 
     <string name="error_permisstion">需要相应权限，请打开</string>
 

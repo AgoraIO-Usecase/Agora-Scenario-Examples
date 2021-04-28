@@ -2,12 +2,11 @@ package io.agora.scene.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 
 import io.agora.baselibrary.base.DataBindBaseActivity;
-import com.agora.data.manager.UserManager;
-import io.agora.interactivepodcast.activity.RoomListActivity;
 import io.agora.scene.R;
 import io.agora.scene.databinding.ActivitySplashBinding;
 
@@ -16,7 +15,7 @@ import io.agora.scene.databinding.ActivitySplashBinding;
  *
  * @author chenhengfei@agora.io
  */
-public class SplashActivity extends DataBindBaseActivity<ActivitySplashBinding> {
+public class SplashActivity extends DataBindBaseActivity<ActivitySplashBinding> implements View.OnClickListener {
 
     @Override
     protected void iniBundle(@NonNull Bundle bundle) {
@@ -35,14 +34,22 @@ public class SplashActivity extends DataBindBaseActivity<ActivitySplashBinding> 
 
     @Override
     protected void iniListener() {
-
+        mDataBinding.tvLivecast.setOnClickListener(this);
+        mDataBinding.tvMerry.setOnClickListener(this);
     }
 
     @Override
     protected void iniData() {
-        UserManager.Instance(this).loginIn();
+    }
 
-        startActivity(new Intent(this, RoomListActivity.class));
-        finish();
+    @Override
+    public void onClick(View v) {
+        if (v == mDataBinding.tvLivecast) {
+            Intent intent = new Intent(this, io.agora.interactivepodcast.activity.RoomListActivity.class);
+            startActivity(intent);
+        } else if (v == mDataBinding.tvMerry) {
+            Intent intent = new Intent(this, io.agora.marriageinterview.activity.RoomListActivity.class);
+            startActivity(intent);
+        }
     }
 }

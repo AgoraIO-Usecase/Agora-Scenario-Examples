@@ -1,9 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 ext {
-    //是否模块化，true-模块化，拆分成多个app。false-输出一个app
-    isModule = true
-
     COMPILESDKVERSION = 30
     BUILDTOOLSVERSION = "30.0.3"
     MINSDKVERSION = 17
@@ -13,6 +10,7 @@ ext {
 buildscript {
     repositories {
         google()
+        mavenCentral()
         jcenter()
         maven { url 'https://www.jitpack.io' }
     }
@@ -28,6 +26,7 @@ buildscript {
 allprojects {
     repositories {
         google()
+        mavenCentral()
         jcenter()
         maven { url 'https://www.jitpack.io' }
     }

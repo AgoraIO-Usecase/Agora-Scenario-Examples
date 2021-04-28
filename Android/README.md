@@ -1,5 +1,5 @@
 # 场景化Demo
-此项目包含多个场景Demo，可以输出一个整理APK，也可输出单个场景APK。在 **build.gradle** 中 **isModule** 进行设置。
+此项目包含多个场景Demo，可以输出一个整理APK，也可输出单个场景APK。在 **gradle.properties** 中 **isModule** 进行设置。
 
 目前包含以下场景
 

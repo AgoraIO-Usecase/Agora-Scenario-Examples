@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">互动播客</string>
+    <string name="livecast_app_name">互动播客</string>
 
     <string name="error_permisstion">需要相应权限，请打开</string>
 
