@@ -6,24 +6,17 @@
 
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-    <string name="done">Done</string>
     <string name="confirm">OK</string>
-    <string name="refuse">Reject</string>
-    <string name="agree">Accept</string>
 
     <string name="list_empty_create">Create a room to start</string>
     <string name="main_title">Room list</string>
     <string name="main_create">Create Room</string>
     <string name="main_create2">Create</string>
     <string name="main_create_dialog_inpit_hint">Room Name</string>
-    <string name="main_create_dialog_des">The max duration per session is 10 minutes.</string>
     <string name="error_room_not_exsit">The room does not exist</string>
 
     <string name="error_joined_room">You have joined a room. Please leave it first.</string>
     <string name="error_room_default">Room exception(%s)</string>
-    <string name="room_name_speaker">Speaker</string>
-    <string name="room_name_listener">Audience</string>
-    <string name="room_name_exit">Leave quietly</string>
     <string name="room_dialog_hand_up_title">Application List</string>
     <string name="room_dialog_hand_up_agree">Agree</string>
     <string name="room_dialog_hand_up_refuse">Decline</string>
@@ -37,7 +30,6 @@
     <string name="room_dialog_invite">Invite to speak</string>
     <string name="room_dialog_invited">%s invites you to speak</string>
     <string name="invite_refuse">%s declines your request</string>
-    <string name="invite_agree">%s approves your request</string>
     <string name="request_handup_success">You have raised hands to speak. Please wait.</string>
     <string name="handup_refuse">Your request to speak has been rejected</string>
     <string name="room_closed">Room closed</string>
