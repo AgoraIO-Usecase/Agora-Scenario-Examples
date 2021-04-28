@@ -27,7 +27,7 @@ import io.agora.baselibrary.util.ToastUtile;
 import io.agora.marriageinterview.R;
 import io.agora.marriageinterview.activity.ChatRoomActivity;
 import io.agora.marriageinterview.data.DataRepositroy;
-import io.agora.marriageinterview.databinding.DialogCreateRoomBinding;
+import io.agora.marriageinterview.databinding.MerryDialogCreateRoomBinding;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
@@ -35,7 +35,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  *
  * @author chenhengfei@agora.io
  */
-public class CreateRoomDialog extends DataBindBaseDialog<DialogCreateRoomBinding> implements View.OnClickListener {
+public class CreateRoomDialog extends DataBindBaseDialog<MerryDialogCreateRoomBinding> implements View.OnClickListener {
     private static final String TAG = CreateRoomDialog.class.getSimpleName();
 
     @Nullable
@@ -65,7 +65,7 @@ public class CreateRoomDialog extends DataBindBaseDialog<DialogCreateRoomBinding
 
     @Override
     public int getLayoutId() {
-        return R.layout.dialog_create_room;
+        return R.layout.merry_dialog_create_room;
     }
 
     @Override

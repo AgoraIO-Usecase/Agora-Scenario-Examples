@@ -15,7 +15,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
 
 import io.agora.marriageinterview.R;
-import io.agora.marriageinterview.databinding.LayoutMenuTextBinding;
+import io.agora.marriageinterview.databinding.MerryLayoutMenuTextBinding;
 
 /**
  * 菜单显示veiw
@@ -24,7 +24,7 @@ import io.agora.marriageinterview.databinding.LayoutMenuTextBinding;
  */
 public class MenuTextView extends ConstraintLayout {
 
-    protected LayoutMenuTextBinding mDataBinding;
+    protected MerryLayoutMenuTextBinding mDataBinding;
 
     public MenuTextView(@NonNull Context context) {
         super(context);
@@ -42,7 +42,7 @@ public class MenuTextView extends ConstraintLayout {
     }
 
     private void init(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        mDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.layout_menu_text, this, true);
+        mDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.merry_layout_menu_text, this, true);
 
         if (attrs == null) {
             return;

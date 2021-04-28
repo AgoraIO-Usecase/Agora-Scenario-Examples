@@ -22,7 +22,7 @@ import com.bumptech.glide.Glide;
 import io.agora.baselibrary.base.DataBindBaseDialog;
 import io.agora.baselibrary.util.ToastUtile;
 import io.agora.marriageinterview.R;
-import io.agora.marriageinterview.databinding.DialogUserSeatMenuBinding;
+import io.agora.marriageinterview.databinding.MerryDialogUserSeatMenuBinding;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
@@ -30,7 +30,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  *
  * @author chenhengfei@agora.io
  */
-public class UserSeatMenuDialog extends DataBindBaseDialog<DialogUserSeatMenuBinding> implements View.OnClickListener {
+public class UserSeatMenuDialog extends DataBindBaseDialog<MerryDialogUserSeatMenuBinding> implements View.OnClickListener {
     private static final String TAG = UserSeatMenuDialog.class.getSimpleName();
 
     private static final String TAG_USER = "user";
@@ -63,7 +63,7 @@ public class UserSeatMenuDialog extends DataBindBaseDialog<DialogUserSeatMenuBin
 
     @Override
     public int getLayoutId() {
-        return R.layout.dialog_user_seat_menu;
+        return R.layout.merry_dialog_user_seat_menu;
     }
 
     @Override

@@ -14,7 +14,7 @@ import com.agora.data.observer.DataCompletableObserver;
 
 import io.agora.baselibrary.base.DataBindBottomSheetDialogFragment;
 import io.agora.marriageinterview.R;
-import io.agora.marriageinterview.databinding.DialogInputMessageBinding;
+import io.agora.marriageinterview.databinding.MerryDialogInputMessageBinding;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
@@ -22,7 +22,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  *
  * @author chenhengfei@agora.io
  */
-public class InputMessageDialog extends DataBindBottomSheetDialogFragment<DialogInputMessageBinding> implements View.OnClickListener {
+public class InputMessageDialog extends DataBindBottomSheetDialogFragment<MerryDialogInputMessageBinding> implements View.OnClickListener {
     private static final String TAG = InputMessageDialog.class.getSimpleName();
 
     @Override
@@ -37,7 +37,7 @@ public class InputMessageDialog extends DataBindBottomSheetDialogFragment<Dialog
 
     @Override
     public int getLayoutId() {
-        return R.layout.dialog_input_message;
+        return R.layout.merry_dialog_input_message;
     }
 
     @Override

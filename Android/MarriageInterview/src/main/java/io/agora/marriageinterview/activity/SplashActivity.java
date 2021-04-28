@@ -7,14 +7,14 @@ import androidx.annotation.NonNull;
 
 import io.agora.baselibrary.base.DataBindBaseActivity;
 import io.agora.marriageinterview.R;
-import io.agora.marriageinterview.databinding.ActivitySplashBinding;
+import io.agora.marriageinterview.databinding.MerryActivitySplashBinding;
 
 /**
  * 闪屏界面
  *
  * @author chenhengfei@agora.io
  */
-public class SplashActivity extends DataBindBaseActivity<ActivitySplashBinding> {
+public class SplashActivity extends DataBindBaseActivity<MerryActivitySplashBinding> {
 
     @Override
     protected void iniBundle(@NonNull Bundle bundle) {
@@ -23,7 +23,7 @@ public class SplashActivity extends DataBindBaseActivity<ActivitySplashBinding> 
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_splash;
+        return R.layout.merry_activity_splash;
     }
 
     @Override

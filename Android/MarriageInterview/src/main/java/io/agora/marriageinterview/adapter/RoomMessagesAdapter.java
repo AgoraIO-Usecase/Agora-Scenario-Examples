@@ -13,7 +13,7 @@ import java.util.List;
 
 import io.agora.baselibrary.base.BaseRecyclerViewAdapter;
 import io.agora.marriageinterview.R;
-import io.agora.marriageinterview.databinding.ItemRoomMessagesBinding;
+import io.agora.marriageinterview.databinding.MerryItemRoomMessagesBinding;
 
 /**
  * 房间信息列表
@@ -40,7 +40,7 @@ public class RoomMessagesAdapter extends BaseRecyclerViewAdapter<Message, RoomMe
 
     @Override
     public int getLayoutId() {
-        return R.layout.item_room_messages;
+        return R.layout.merry_item_room_messages;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class RoomMessagesAdapter extends BaseRecyclerViewAdapter<Message, RoomMe
         holder.mDataBinding.tvMessage.setText(item.getMessage());
     }
 
-    class ViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder<ItemRoomMessagesBinding> {
+    class ViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder<MerryItemRoomMessagesBinding> {
 
         public ViewHolder(View view) {
             super(view);

@@ -13,7 +13,7 @@ import java.util.List;
 
 import io.agora.baselibrary.base.BaseRecyclerViewAdapter;
 import io.agora.marriageinterview.R;
-import io.agora.marriageinterview.databinding.ItemRequestConnectListBinding;
+import io.agora.marriageinterview.databinding.MerryItemRequestConnectListBinding;
 
 /**
  * 申请连接列表
@@ -33,7 +33,7 @@ public class RequestConnectListAdapter extends BaseRecyclerViewAdapter<RequestMe
 
     @Override
     public int getLayoutId() {
-        return R.layout.item_request_connect_list;
+        return R.layout.merry_item_request_connect_list;
     }
 
     @Override
@@ -53,7 +53,7 @@ public class RequestConnectListAdapter extends BaseRecyclerViewAdapter<RequestMe
         holder.mDataBinding.tvName.setText(member.getUserId().getName());
     }
 
-    static class ViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder<ItemRequestConnectListBinding> {
+    static class ViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder<MerryItemRequestConnectListBinding> {
 
         ViewHolder(View view) {
             super(view);

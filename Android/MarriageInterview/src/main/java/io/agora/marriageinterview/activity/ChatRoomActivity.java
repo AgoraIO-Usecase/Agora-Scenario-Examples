@@ -34,7 +34,7 @@ import io.agora.marriageinterview.R;
 import io.agora.marriageinterview.adapter.RoomMessagesAdapter;
 import io.agora.marriageinterview.adapter.RoomPreMemberListAdapter;
 import io.agora.marriageinterview.data.DataRepositroy;
-import io.agora.marriageinterview.databinding.ActivityChatRoomBinding;
+import io.agora.marriageinterview.databinding.MerryActivityChatRoomBinding;
 import io.agora.marriageinterview.widget.ConfirmDialog;
 import io.agora.marriageinterview.widget.InputMessageDialog;
 import io.agora.marriageinterview.widget.InvitedMenuDialog;
@@ -57,7 +57,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  *
  * @author chenhengfei@agora.io
  */
-public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBinding> implements View.OnClickListener, RoomEventCallback {
+public class ChatRoomActivity extends DataBindBaseActivity<MerryActivityChatRoomBinding> implements View.OnClickListener, RoomEventCallback {
 
     private static final String TAG = ChatRoomActivity.class.getSimpleName();
 
@@ -102,7 +102,7 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_chat_room;
+        return R.layout.merry_activity_chat_room;
     }
 
     @Override
