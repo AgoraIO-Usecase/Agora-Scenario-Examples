@@ -13,10 +13,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:gravity="center"
+            android:text="@string/room_dialog_invite"
             android:textColor="@color/create_dialog_title"
             android:textSize="@dimen/main_title_size"
             android:textStyle="bold"
-            android:text="@string/room_dialog_invite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -39,12 +39,12 @@
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="26dp"
-            android:background="@drawable/shape_confirm_dialog_cancel_background"
+            android:background="@drawable/merry_shape_confirm_dialog_cancel_background"
             android:text="@string/room_dialog_hand_up_refuse"
             android:textAllCaps="false"
             android:textColor="@color/confirm_dialog_cancel_text"
             android:textSize="@dimen/confirm_dialog_message"
-            app:layout_constraintEnd_toStartOf="@+id/btConfirm"
+            app:layout_constraintEnd_toStartOf="@+id/btAgree"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvMessage" />
 
@@ -53,13 +53,13 @@
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="26dp"
-            android:background="@drawable/shape_confirm_dialog_ok_background"
+            android:background="@drawable/merry_shape_confirm_dialog_ok_background"
             android:text="@string/room_dialog_hand_up_agree"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="@dimen/confirm_dialog_message"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/btCancel"
+            app:layout_constraintStart_toEndOf="@+id/btRefuse"
             app:layout_constraintTop_toBottomOf="@+id/tvMessage" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
