@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@drawable/shape_create_dialog_input_background"
+            android:background="@drawable/merry_shape_create_dialog_input_background"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingStart="4dp"

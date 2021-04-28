@@ -5,7 +5,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_bottom_dialog_background"
+        android:background="@drawable/merry_shape_bottom_dialog_background"
         android:padding="10dp">
 
         <TextView
@@ -39,7 +39,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/line"
-            tools:listitem="@layout/item_room_member_list" />
+            tools:listitem="@layout/merry_item_room_member_list" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
