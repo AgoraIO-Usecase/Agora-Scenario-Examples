@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 
 import io.agora.baselibrary.base.DataBindBaseActivity;
 import io.agora.marriageinterview.R;
-import io.agora.marriageinterview.databinding.ActivityTextBinding;
+import io.agora.marriageinterview.databinding.MerryActivityTextBinding;
 
 
 /**
@@ -16,7 +16,7 @@ import io.agora.marriageinterview.databinding.ActivityTextBinding;
  *
  * @author chenhengfei@agora.io
  */
-public class TextActivity extends DataBindBaseActivity<ActivityTextBinding> {
+public class TextActivity extends DataBindBaseActivity<MerryActivityTextBinding> {
 
     private static final String TAG_TITLE = "title";
     private static final String TAG_TEXT = "text";
@@ -35,7 +35,7 @@ public class TextActivity extends DataBindBaseActivity<ActivityTextBinding> {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_text;
+        return R.layout.merry_activity_text;
     }
 
     @Override

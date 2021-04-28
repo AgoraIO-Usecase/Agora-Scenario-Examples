@@ -23,7 +23,7 @@ import io.agora.baselibrary.base.DataBindBaseActivity;
 import io.agora.baselibrary.util.ToastUtile;
 import io.agora.marriageinterview.R;
 import io.agora.marriageinterview.data.DataRepositroy;
-import io.agora.marriageinterview.databinding.ActivityUserInfoBinding;
+import io.agora.marriageinterview.databinding.MerryActivityUserInfoBinding;
 import io.agora.marriageinterview.widget.MenuTextView;
 import io.agora.rtc.Constants;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -33,7 +33,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  *
  * @author chenhengfei@agora.io
  */
-public class UserInfoActivity extends DataBindBaseActivity<ActivityUserInfoBinding> implements View.OnClickListener {
+public class UserInfoActivity extends DataBindBaseActivity<MerryActivityUserInfoBinding> implements View.OnClickListener {
 
     public static Intent newIntent(Context context) {
         Intent intent = new Intent(context, UserInfoActivity.class);
@@ -47,7 +47,7 @@ public class UserInfoActivity extends DataBindBaseActivity<ActivityUserInfoBindi
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_user_info;
+        return R.layout.merry_activity_user_info;
     }
 
     @Override

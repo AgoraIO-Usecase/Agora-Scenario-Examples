@@ -14,7 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
 
 import io.agora.marriageinterview.R;
-import io.agora.marriageinterview.databinding.LayoutCountImageviewBinding;
+import io.agora.marriageinterview.databinding.MerryLayoutCountImageviewBinding;
 
 /**
  * 带消息显示ImagerView
@@ -23,7 +23,7 @@ import io.agora.marriageinterview.databinding.LayoutCountImageviewBinding;
  */
 public class CountImageView extends ConstraintLayout {
 
-    protected LayoutCountImageviewBinding mDataBinding;
+    protected MerryLayoutCountImageviewBinding mDataBinding;
 
     private int count = 0;
 
@@ -43,7 +43,7 @@ public class CountImageView extends ConstraintLayout {
     }
 
     private void init(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        mDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.layout_count_imageview, this, true);
+        mDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.merry_layout_count_imageview, this, true);
         if (attrs == null) {
             return;
         }

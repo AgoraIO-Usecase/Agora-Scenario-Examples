@@ -15,7 +15,7 @@ import java.util.List;
 
 import io.agora.baselibrary.base.BaseRecyclerViewAdapter;
 import io.agora.marriageinterview.R;
-import io.agora.marriageinterview.databinding.ItemRoomsBinding;
+import io.agora.marriageinterview.databinding.MerryItemRoomsBinding;
 
 /**
  * 房间列表
@@ -30,7 +30,7 @@ public class RoomListAdapter extends BaseRecyclerViewAdapter<Room, RoomListAdapt
 
     @Override
     public int getLayoutId() {
-        return R.layout.item_rooms;
+        return R.layout.merry_item_rooms;
     }
 
     @Override
@@ -57,7 +57,7 @@ public class RoomListAdapter extends BaseRecyclerViewAdapter<Room, RoomListAdapt
                 });
     }
 
-    class ViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder<ItemRoomsBinding> {
+    class ViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder<MerryItemRoomsBinding> {
 
         public ViewHolder(View view) {
             super(view);

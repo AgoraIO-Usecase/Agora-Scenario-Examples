@@ -14,14 +14,14 @@ import androidx.fragment.app.FragmentManager;
 
 import io.agora.baselibrary.base.DataBindBaseDialog;
 import io.agora.marriageinterview.R;
-import io.agora.marriageinterview.databinding.DialogRequestBinding;
+import io.agora.marriageinterview.databinding.MerryDialogRequestBinding;
 
 /**
  * 申请连麦
  *
  * @author chenhengfei@agora.io
  */
-public class RequestDialog extends DataBindBaseDialog<DialogRequestBinding> implements View.OnClickListener {
+public class RequestDialog extends DataBindBaseDialog<MerryDialogRequestBinding> implements View.OnClickListener {
     private static final String TAG = RequestDialog.class.getSimpleName();
 
     @Nullable
@@ -49,7 +49,7 @@ public class RequestDialog extends DataBindBaseDialog<DialogRequestBinding> impl
 
     @Override
     public int getLayoutId() {
-        return R.layout.dialog_request;
+        return R.layout.merry_dialog_request;
     }
 
     @Override

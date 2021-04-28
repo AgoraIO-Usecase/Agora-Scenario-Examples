@@ -27,7 +27,7 @@ import io.agora.baselibrary.util.ToastUtile;
 import io.agora.marriageinterview.R;
 import io.agora.marriageinterview.adapter.RequestConnectListAdapter;
 import io.agora.marriageinterview.data.DataRepositroy;
-import io.agora.marriageinterview.databinding.DialogRequestConnectListBinding;
+import io.agora.marriageinterview.databinding.MerryDialogRequestConnectListBinding;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
@@ -35,7 +35,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  *
  * @author chenhengfei@agora.io
  */
-public class RequestConnectListDialog extends DataBindBaseDialog<DialogRequestConnectListBinding> implements OnItemClickListener<RequestMember> {
+public class RequestConnectListDialog extends DataBindBaseDialog<MerryDialogRequestConnectListBinding> implements OnItemClickListener<RequestMember> {
     private static final String TAG = RequestConnectListDialog.class.getSimpleName();
 
     private RequestConnectListAdapter mAdapter;
@@ -67,7 +67,7 @@ public class RequestConnectListDialog extends DataBindBaseDialog<DialogRequestCo
 
     @Override
     public int getLayoutId() {
-        return R.layout.dialog_request_connect_list;
+        return R.layout.merry_dialog_request_connect_list;
     }
 
     @Override

@@ -14,14 +14,14 @@ import androidx.fragment.app.FragmentManager;
 
 import io.agora.baselibrary.base.DataBindBaseDialog;
 import io.agora.marriageinterview.R;
-import io.agora.marriageinterview.databinding.DialogConfirmBinding;
+import io.agora.marriageinterview.databinding.MerryDialogConfirmBinding;
 
 /**
  * 确认窗口
  *
  * @author chenhengfei@agora.io
  */
-public class ConfirmDialog extends DataBindBaseDialog<DialogConfirmBinding> implements View.OnClickListener {
+public class ConfirmDialog extends DataBindBaseDialog<MerryDialogConfirmBinding> implements View.OnClickListener {
     private static final String TAG = ConfirmDialog.class.getSimpleName();
 
     private OnConfirmCallback mOnConfirmCallback;
@@ -61,7 +61,7 @@ public class ConfirmDialog extends DataBindBaseDialog<DialogConfirmBinding> impl
 
     @Override
     public int getLayoutId() {
-        return R.layout.dialog_confirm;
+        return R.layout.merry_dialog_confirm;
     }
 
     @Override

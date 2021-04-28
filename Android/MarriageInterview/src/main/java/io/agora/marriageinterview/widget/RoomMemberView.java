@@ -13,7 +13,7 @@ import com.agora.data.model.Member;
 import com.bumptech.glide.Glide;
 
 import io.agora.marriageinterview.R;
-import io.agora.marriageinterview.databinding.LayoutRoomMemberBinding;
+import io.agora.marriageinterview.databinding.MerryLayoutRoomMemberBinding;
 
 /**
  * 房间中成员view
@@ -22,7 +22,7 @@ import io.agora.marriageinterview.databinding.LayoutRoomMemberBinding;
  */
 public class RoomMemberView extends ConstraintLayout {
 
-    protected LayoutRoomMemberBinding mDataBinding;
+    protected MerryLayoutRoomMemberBinding mDataBinding;
 
     private Member mMember;
 
@@ -42,10 +42,10 @@ public class RoomMemberView extends ConstraintLayout {
     }
 
     private void init(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        mDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.layout_room_member, this, true);
+        mDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.merry_layout_room_member, this, true);
     }
 
-    public void setUser(@NonNull Member mMember){
+    public void setUser(@NonNull Member mMember) {
         Glide.with(this).load(mMember.getUserId().getAvatarRes()).circleCrop().into(mDataBinding.ivHead);
     }
 }

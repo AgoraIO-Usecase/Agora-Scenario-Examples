@@ -30,7 +30,7 @@
             android:name=".activity.SplashActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
-            <intent-filter>
+            <intent-filter tools:node="remove">
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />

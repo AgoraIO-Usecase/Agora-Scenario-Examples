@@ -21,7 +21,7 @@ import com.agora.data.observer.DataCompletableObserver;
 import io.agora.baselibrary.base.DataBindBaseDialog;
 import io.agora.baselibrary.util.ToastUtile;
 import io.agora.marriageinterview.R;
-import io.agora.marriageinterview.databinding.DialogUserInvitedBinding;
+import io.agora.marriageinterview.databinding.MerryDialogUserInvitedBinding;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
@@ -29,7 +29,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  *
  * @author chenhengfei@agora.io
  */
-public class InvitedMenuDialog extends DataBindBaseDialog<DialogUserInvitedBinding> implements View.OnClickListener {
+public class InvitedMenuDialog extends DataBindBaseDialog<MerryDialogUserInvitedBinding> implements View.OnClickListener {
     private static final String TAG = InvitedMenuDialog.class.getSimpleName();
 
     private static final String TAG_OWNER = "owner";
@@ -63,7 +63,7 @@ public class InvitedMenuDialog extends DataBindBaseDialog<DialogUserInvitedBindi
 
     @Override
     public int getLayoutId() {
-        return R.layout.dialog_user_invited;
+        return R.layout.merry_dialog_user_invited;
     }
 
     @Override

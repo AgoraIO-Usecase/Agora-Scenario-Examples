@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 
 import io.agora.baselibrary.base.DataBindBaseActivity;
 import io.agora.marriageinterview.R;
-import io.agora.marriageinterview.databinding.ActivityAboutInfoBinding;
+import io.agora.marriageinterview.databinding.MerryActivityAboutInfoBinding;
 import io.agora.rtc.RtcEngine;
 
 /**
@@ -18,7 +18,7 @@ import io.agora.rtc.RtcEngine;
  *
  * @author chenhengfei@agora.io
  */
-public class AboutInfoActivity extends DataBindBaseActivity<ActivityAboutInfoBinding> implements View.OnClickListener {
+public class AboutInfoActivity extends DataBindBaseActivity<MerryActivityAboutInfoBinding> implements View.OnClickListener {
 
     public static Intent newIntent(Context context) {
         Intent intent = new Intent(context, AboutInfoActivity.class);
@@ -32,7 +32,7 @@ public class AboutInfoActivity extends DataBindBaseActivity<ActivityAboutInfoBin
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_about_info;
+        return R.layout.merry_activity_about_info;
     }
 
     @Override

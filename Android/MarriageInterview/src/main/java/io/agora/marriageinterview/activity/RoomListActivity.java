@@ -29,7 +29,7 @@ import io.agora.baselibrary.util.ToastUtile;
 import io.agora.marriageinterview.R;
 import io.agora.marriageinterview.adapter.RoomListAdapter;
 import io.agora.marriageinterview.data.DataRepositroy;
-import io.agora.marriageinterview.databinding.ActivityRoomListBinding;
+import io.agora.marriageinterview.databinding.MerryActivityRoomListBinding;
 import io.agora.marriageinterview.widget.CreateRoomDialog;
 import io.agora.marriageinterview.widget.SpaceItemDecoration;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -40,7 +40,7 @@ import pub.devrel.easypermissions.EasyPermissions;
  *
  * @author chenhengfei@agora.io
  */
-public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBinding> implements View.OnClickListener,
+public class RoomListActivity extends DataBindBaseActivity<MerryActivityRoomListBinding> implements View.OnClickListener,
         OnItemClickListener<Room>, EasyPermissions.PermissionCallbacks, SwipeRefreshLayout.OnRefreshListener {
 
     private static final int TAG_PERMISSTION_REQUESTCODE = 1000;
@@ -69,7 +69,7 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_room_list;
+        return R.layout.merry_activity_room_list;
     }
 
     @Override

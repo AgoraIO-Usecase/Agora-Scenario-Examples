@@ -26,7 +26,7 @@ import io.agora.baselibrary.util.ToastUtile;
 import io.agora.marriageinterview.R;
 import io.agora.marriageinterview.adapter.RoomMemberListAdapter;
 import io.agora.marriageinterview.data.DataRepositroy;
-import io.agora.marriageinterview.databinding.DialogMemberListBinding;
+import io.agora.marriageinterview.databinding.MerryDialogMemberListBinding;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
@@ -34,7 +34,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  *
  * @author chenhengfei@agora.io
  */
-public class MemberListDialog extends DataBindBaseDialog<DialogMemberListBinding> implements OnItemClickListener<Member> {
+public class MemberListDialog extends DataBindBaseDialog<MerryDialogMemberListBinding> implements OnItemClickListener<Member> {
     private static final String TAG = MemberListDialog.class.getSimpleName();
 
     private RoomMemberListAdapter mAdapter;
@@ -64,7 +64,7 @@ public class MemberListDialog extends DataBindBaseDialog<DialogMemberListBinding
 
     @Override
     public int getLayoutId() {
-        return R.layout.dialog_member_list;
+        return R.layout.merry_dialog_member_list;
     }
 
     @Override

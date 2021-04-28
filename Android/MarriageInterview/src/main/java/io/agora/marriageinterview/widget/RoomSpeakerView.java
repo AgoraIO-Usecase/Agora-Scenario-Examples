@@ -18,7 +18,7 @@ import com.agora.data.model.User;
 import com.bumptech.glide.Glide;
 
 import io.agora.marriageinterview.R;
-import io.agora.marriageinterview.databinding.LayoutRoomSpeakerBinding;
+import io.agora.marriageinterview.databinding.MerryLayoutRoomSpeakerBinding;
 import io.agora.rtc.RtcEngine;
 import io.agora.rtc.video.VideoCanvas;
 
@@ -29,7 +29,7 @@ import io.agora.rtc.video.VideoCanvas;
  */
 public class RoomSpeakerView extends ConstraintLayout {
 
-    protected LayoutRoomSpeakerBinding mDataBinding;
+    protected MerryLayoutRoomSpeakerBinding mDataBinding;
 
     private Member mMember;
     private SurfaceView svVideo;
@@ -50,7 +50,7 @@ public class RoomSpeakerView extends ConstraintLayout {
     }
 
     private void init(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        mDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.layout_room_speaker, this, true);
+        mDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.merry_layout_room_speaker, this, true);
 
         mDataBinding.ivUser.setVisibility(GONE);
         mDataBinding.ivJoin.setVisibility(VISIBLE);
