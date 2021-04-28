@@ -13,6 +13,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.agora.data.BaseError;
 import com.agora.data.SimpleRoomEventCallback;
+import com.agora.data.manager.RTMManager;
 import com.agora.data.manager.RoomManager;
 import com.agora.data.manager.UserManager;
 import com.agora.data.model.Room;
@@ -89,6 +90,8 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
 
     @Override
     protected void iniData() {
+        RTMManager.Instance(this).init();
+
         UserManager.Instance(this).setupDataRepositroy(DataRepositroy.Instance(this));
         RoomManager.Instance(this).setupDataRepositroy(DataRepositroy.Instance(this));
 
@@ -200,11 +203,6 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
 
         Intent intent = ChatRoomActivity.newIntent(this, data);
         startActivity(intent);
-    }
-
-    @Override
-    public void onBackPressed() {
-        moveTaskToBack(false);
     }
 
     @Override

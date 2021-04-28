@@ -1,4 +1,4 @@
-if (isModule) {
+if (isModule.toBoolean()) {
     apply plugin: 'com.android.application'
 } else {
     apply plugin: 'com.android.library'
@@ -14,7 +14,7 @@ android {
     buildToolsVersion BUILDTOOLSVERSION
 
     defaultConfig {
-        if (isModule) {
+        if (isModule.toBoolean()) {
             applicationId "io.agora.marriageinterview"
         }
         minSdkVersion MINSDKVERSION
@@ -52,9 +52,11 @@ android {
         }
     }
 
-    applicationVariants.all { variant ->
-        variant.outputs.all {
-            outputFileName = "Marry-${versionName}-${variant.buildType.name}.apk"
+    if (isModule.toBoolean()) {
+        applicationVariants.all { variant ->
+            variant.outputs.all {
+                outputFileName = "Marry-${versionName}-${variant.buildType.name}.apk"
+            }
         }
     }
 }

@@ -1,5 +1,8 @@
 package io.agora.baselibrary.base;
 
+import android.view.LayoutInflater;
+import android.view.View;
+
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 
@@ -14,6 +17,8 @@ public abstract class DataBindBaseActivity<V extends ViewDataBinding> extends Ba
 
     @Override
     protected void setCusContentView() {
-        mDataBinding = DataBindingUtil.setContentView(this, getLayoutId());
+        View view = LayoutInflater.from(this).inflate(getLayoutId(), null);
+        mDataBinding = DataBindingUtil.bind(view);
+        setContentView(view);
     }
 }

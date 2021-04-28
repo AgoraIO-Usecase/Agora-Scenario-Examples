@@ -462,11 +462,6 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
     }
 
     @Override
-    public void onBackPressed() {
-        moveTaskToBack(false);
-    }
-
-    @Override
     protected void onDestroy() {
         RoomManager.Instance(this).removeRoomEventCallback(mSimpleRoomEventCallback);
         super.onDestroy();
