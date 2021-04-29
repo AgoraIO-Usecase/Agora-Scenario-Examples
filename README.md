@@ -1,12 +1,14 @@
 # Scene Examples
 
-囊括Agora典型场景示例的项目,该项目会随着Agora sdk的更新而不停的进化,提供最新最权威的场景最佳实践.
+查看[中文版本](README.ch.md)
 
-# 目前支持的场景一览
+Developer could check all typical usecases powered by agora RTC sdk in this single project. Furthermore, this project will evolute itself with latest Agora techincals and best practices
 
-| 场景     | 关键词                                      | 目录 |
-| -------- | ------------------------------------------- | ---- |
-| 互动播客 | 纯语音, 多人聊天室,房主麦位控制,极速直播    |      |
-| 相亲直播 | 语音文字视频聊天,美颜,房主麦位控制,极速直播 |      |
+# Integrated Use Cases
+
+| Use cases     | Key words                                      | Directory                                                         |
+| -------- | ------------------------------------------- | ------------------------------------------------------------ |
+| Interactive podcast | Pure Audio, Group Chat, Room Control, Interative Streaming Standard    | [iOS](https://github.com/AgoraIO-Usecase/Scene-Examples/tree/master/iOS/InteractivePodcast) |
+| Interactive Live Dating | Group Video Chat, Instant Message, Face Beauty, Room Control, Interative Streaming Standard | [iOS](https://github.com/AgoraIO-Usecase/Scene-Examples/tree/master/iOS/BlindDate) |
 
 
