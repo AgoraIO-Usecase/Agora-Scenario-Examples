@@ -11,12 +11,7 @@ import com.agora.data.model.Room;
 public class SimpleRoomEventCallback implements RoomEventCallback {
 
     @Override
-    public void onOwnerLeaveRoom(@NonNull Room room) {
-
-    }
-
-    @Override
-    public void onLeaveRoom(@NonNull Room room) {
+    public void onRoomClosed(@NonNull Room room, boolean fromUser) {
 
     }
 

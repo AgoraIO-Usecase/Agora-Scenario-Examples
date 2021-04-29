@@ -1,6 +1,5 @@
 package io.agora.marriageinterview.widget;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Display;
@@ -25,7 +24,6 @@ import java.util.Random;
 import io.agora.baselibrary.base.DataBindBaseDialog;
 import io.agora.baselibrary.util.ToastUtile;
 import io.agora.marriageinterview.R;
-import io.agora.marriageinterview.activity.ChatRoomActivity;
 import io.agora.marriageinterview.data.DataRepositroy;
 import io.agora.marriageinterview.databinding.MerryDialogCreateRoomBinding;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -85,7 +83,8 @@ public class CreateRoomDialog extends DataBindBaseDialog<MerryDialogCreateRoomBi
         refreshName();
     }
 
-    public void show(@NonNull FragmentManager manager) {
+    public void show(@NonNull FragmentManager manager, ICreateCallback mICreateCallback) {
+        this.mICreateCallback = mICreateCallback;
         super.show(manager, TAG);
     }
 
@@ -140,11 +139,16 @@ public class CreateRoomDialog extends DataBindBaseDialog<MerryDialogCreateRoomBi
                     public void handleSuccess(@NonNull Room room) {
                         mDataBinding.btCreate.setEnabled(true);
                         room.setAnchorId(user);
-                        Intent intent = ChatRoomActivity.newIntent(requireContext(), room);
-                        startActivity(intent);
 
+                        mICreateCallback.onRoomCreated(room);
                         dismiss();
                     }
                 });
+    }
+
+    private ICreateCallback mICreateCallback;
+
+    public interface ICreateCallback {
+        void onRoomCreated(@NonNull Room room);
     }
 }
