@@ -7,14 +7,14 @@ import androidx.annotation.NonNull;
 
 import io.agora.baselibrary.base.DataBindBaseActivity;
 import io.agora.interactivepodcast.R;
-import io.agora.interactivepodcast.databinding.ActivitySplashBinding;
+import io.agora.interactivepodcast.databinding.LivecastActivitySplashBinding;
 
 /**
  * 闪屏界面
  *
  * @author chenhengfei@agora.io
  */
-public class SplashActivity extends DataBindBaseActivity<ActivitySplashBinding> {
+public class SplashActivity extends DataBindBaseActivity<LivecastActivitySplashBinding> {
 
     @Override
     protected void iniBundle(@NonNull Bundle bundle) {
@@ -23,7 +23,7 @@ public class SplashActivity extends DataBindBaseActivity<ActivitySplashBinding> 
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_splash;
+        return R.layout.livecast_activity_splash;
     }
 
     @Override

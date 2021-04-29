@@ -1,6 +1,7 @@
 package com.agora.data.manager;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
@@ -51,8 +52,13 @@ public final class RTMManager {
     }
 
     public void init() {
+        String appid = mContext.getString(R.string.app_id);
+        if (TextUtils.isEmpty(appid)) {
+            throw new NullPointerException("please check \"strings_config.xml\"");
+        }
+
         try {
-            mRtmClient = RtmClient.createInstance(mContext, mContext.getString(R.string.app_id),
+            mRtmClient = RtmClient.createInstance(mContext, appid,
                     new RtmClientListener() {
 
                         @Override
