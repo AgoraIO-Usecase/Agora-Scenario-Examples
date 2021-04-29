@@ -22,7 +22,7 @@ pip install leancloud
 或者
 pip3 install leancloud
 ```
-4. Terminal 中执行文件 [LeanCloudHelp.py](./LeanCloudHelp.py)。
+4. Terminal 中执行文件 [LeanCloudHelp.py](https://github.com/AgoraIO-Usecase/Scene-Examples/blob/master/leanCloudHelp.py)。
 ```
 python ./LeanCloudHelp.py
 或者
