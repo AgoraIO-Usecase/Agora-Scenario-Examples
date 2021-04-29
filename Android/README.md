@@ -24,7 +24,7 @@
 ##### 注册Leanclould
 1. 前往 [Leancloud官网](https://www.leancloud.cn/) 注册项目，生产 appId、appKey、server_url。
 - 替换工程 **data** 中  **strings_config.xml** 中 **leancloud_app_id**、**leancloud_app_key**、**leancloud_server_url**。
-- 替换 [LeanCloudHelp.py](./LeanCloudHelp.py) 中 **appid** 和 **appkey**。
+- 替换 [LeanCloudHelp.py](https://github.com/AgoraIO-Usecase/Scene-Examples/blob/master/leanCloudHelp.py) 中 **appid** 和 **appkey**。
 2. 安装 [Python](https://www.python.org/)，如果已经安装请忽略。
 3. Python安装之后，控制台执行以下命令。
 ```
@@ -32,7 +32,7 @@ pip install leancloud
 或者
 pip3 install leancloud
 ```
-4. Android Studio Terminal 中执行文件 [LeanCloudHelp.py](./LeanCloudHelp.py)。
+4. Android Studio Terminal 中执行文件 [LeanCloudHelp.py](https://github.com/AgoraIO-Usecase/Scene-Examples/blob/master/leanCloudHelp.py)。
 ```
 python ./LeanCloudHelp.py
 或者
