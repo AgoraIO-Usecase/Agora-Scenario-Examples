@@ -1,6 +1,7 @@
 package com.agora.data.provider.model;
 
 import com.agora.data.model.Action;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 
 public class ActionTemp {
@@ -8,7 +9,7 @@ public class ActionTemp {
     private DocumentReference roomId;
     private int action;
     private int status;
-    private long createdAt;
+    private Timestamp createdAt;
 
     public ActionTemp() {
     }
@@ -16,7 +17,7 @@ public class ActionTemp {
     public Action create(String objectId) {
         Action action = new Action();
         action.setObjectId(objectId);
-        action.setAction(this.action);
+        action.setAction(Action.ACTION.parse(this.action));
         action.setStatus(this.status);
         return action;
     }
@@ -53,22 +54,11 @@ public class ActionTemp {
         this.status = status;
     }
 
-    public long getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(long createdAt) {
+    public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
-    }
-
-    @Override
-    public String toString() {
-        return "ActionTemp{" +
-                "memberId=" + memberId +
-                ", roomId=" + roomId +
-                ", action=" + action +
-                ", status=" + status +
-                ", createdAt=" + createdAt +
-                '}';
     }
 }

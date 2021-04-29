@@ -1,5 +1,10 @@
+if (!isModule.toBoolean()) {
+    include ':app'
+}
+
 include ':data'
 include ':baselibrary'
 include ':InteractivePodcast'
-//include ':app'
+include ':MarriageInterview'
+
 rootProject.name = "Agora-Scene-Android"

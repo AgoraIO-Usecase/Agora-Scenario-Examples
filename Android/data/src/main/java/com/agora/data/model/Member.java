@@ -5,13 +5,48 @@ import androidx.annotation.NonNull;
 import java.io.Serializable;
 
 public class Member implements Serializable, Cloneable {
+    public enum Role {
+        Listener(0), Speaker(1), Left(2), Right(3);
+
+        int value;
+
+        Role(int value) {
+            this.value = value;
+        }
+
+        public static Role parse(int value) {
+            if (value == 0) {
+                return Role.Listener;
+            } else if (value == 1) {
+                return Role.Speaker;
+            } else if (value == 2) {
+                return Role.Left;
+            } else if (value == 3) {
+                return Role.Right;
+            }
+            return Role.Listener;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+
     private String objectId;
     private Room roomId;
     private Long streamId;
     private User userId;
+
+    //是否是演讲者，区分开观众和演讲者。0-不是，1-是。
     private int isSpeaker = 0;
+    private Role role = Role.Listener;
+
+    //是否被管理员禁言，0-没，1-被禁言。
     private int isMuted = 0;
+
+    //是否自己禁言，0-没，1-禁言。
     private int isSelfMuted = 0;
+    private int isSDKVideoMuted = 0;
 
     public Member() {
     }
@@ -44,6 +79,10 @@ public class Member implements Serializable, Cloneable {
         return streamId;
     }
 
+    public int getStreamIntId() {
+        return streamId.intValue();
+    }
+
     public void setStreamId(Long streamId) {
         this.streamId = streamId;
     }
@@ -64,6 +103,14 @@ public class Member implements Serializable, Cloneable {
         this.isSpeaker = isSpeaker;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     public int getIsMuted() {
         return isMuted;
     }
@@ -78,6 +125,29 @@ public class Member implements Serializable, Cloneable {
 
     public void setIsSelfMuted(int isSelfMuted) {
         this.isSelfMuted = isSelfMuted;
+    }
+
+    public int getIsSDKVideoMuted() {
+        return isSDKVideoMuted;
+    }
+
+    public void setIsSDKVideoMuted(int isSDKVideoMuted) {
+        this.isSDKVideoMuted = isSDKVideoMuted;
+    }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "objectId='" + objectId + '\'' +
+                ", roomId=" + roomId +
+                ", streamId=" + streamId +
+                ", userId=" + userId +
+                ", isSpeaker=" + isSpeaker +
+                ", role=" + role +
+                ", isMuted=" + isMuted +
+                ", isSelfMuted=" + isSelfMuted +
+                ", isSDKVideoMuted=" + isSDKVideoMuted +
+                '}';
     }
 
     @Override
@@ -106,17 +176,4 @@ public class Member implements Serializable, Cloneable {
         return new Member();
     }
 
-    @NonNull
-    @Override
-    public String toString() {
-        return "Member{" +
-                "objectId='" + objectId + '\'' +
-                ", roomId=" + roomId +
-                ", streamId=" + streamId +
-                ", userId=" + userId +
-                ", isSpeaker=" + isSpeaker +
-                ", isMuted=" + isMuted +
-                ", isSelfMuted=" + isSelfMuted +
-                '}';
-    }
 }

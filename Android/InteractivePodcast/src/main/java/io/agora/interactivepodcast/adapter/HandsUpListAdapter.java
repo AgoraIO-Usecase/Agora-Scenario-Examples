@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.agora.data.model.Member;
+import com.agora.data.model.RequestMember;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
@@ -19,9 +20,9 @@ import io.agora.interactivepodcast.databinding.ItemHandsupListBinding;
  *
  * @author chenhengfei@agora.io
  */
-public class HandsUpListAdapter extends BaseRecyclerViewAdapter<Member, HandsUpListAdapter.ViewHolder> {
+public class HandsUpListAdapter extends BaseRecyclerViewAdapter<RequestMember, HandsUpListAdapter.ViewHolder> {
 
-    public HandsUpListAdapter(@Nullable List<Member> datas, @Nullable Object listener) {
+    public HandsUpListAdapter(@Nullable List<RequestMember> datas, @Nullable Object listener) {
         super(datas, listener);
     }
 
@@ -37,18 +38,19 @@ public class HandsUpListAdapter extends BaseRecyclerViewAdapter<Member, HandsUpL
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Member item = getItemData(position);
+        RequestMember item = getItemData(position);
         if (item == null) {
             return;
         }
 
+        Member member = item.getMember();
         Glide.with(holder.itemView.getContext())
-                .load(item.getUserId().getAvatarRes())
+                .load(member.getUserId().getAvatarRes())
                 .placeholder(R.mipmap.default_head)
                 .error(R.mipmap.default_head)
                 .circleCrop()
                 .into(holder.mDataBinding.ivUser);
-        holder.mDataBinding.tvName.setText(item.getUserId().getName());
+        holder.mDataBinding.tvName.setText(member.getUserId().getName());
     }
 
     static class ViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder<ItemHandsupListBinding> {

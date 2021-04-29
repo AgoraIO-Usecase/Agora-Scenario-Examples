@@ -155,7 +155,7 @@ public class UserSeatMenuDialog extends DataBindBaseDialog<DialogUserSeatMenuBin
     private void seatOff() {
         mDataBinding.btSeatoff.setEnabled(false);
         RoomManager.Instance(requireContext())
-                .seatOff(mMember)
+                .seatOff(mMember, Member.Role.Listener)
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(mLifecycleProvider.bindToLifecycle())
                 .subscribe(new DataCompletableObserver(requireContext()) {

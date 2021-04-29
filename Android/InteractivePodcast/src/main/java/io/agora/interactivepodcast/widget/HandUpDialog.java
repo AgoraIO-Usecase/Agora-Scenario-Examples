@@ -13,9 +13,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 
 import com.agora.data.BaseError;
-import com.agora.data.DataRepositroy;
 import com.agora.data.manager.RoomManager;
-import com.agora.data.model.Member;
+import com.agora.data.model.RequestMember;
 import com.agora.data.model.Room;
 import com.agora.data.observer.DataCompletableObserver;
 import com.agora.data.observer.DataObserver;
@@ -27,6 +26,7 @@ import io.agora.baselibrary.base.OnItemClickListener;
 import io.agora.baselibrary.util.ToastUtile;
 import io.agora.interactivepodcast.R;
 import io.agora.interactivepodcast.adapter.HandsUpListAdapter;
+import io.agora.interactivepodcast.data.DataRepositroy;
 import io.agora.interactivepodcast.databinding.DialogHandUpBinding;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
@@ -35,7 +35,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  *
  * @author chenhengfei@agora.io
  */
-public class HandUpDialog extends DataBindBaseDialog<DialogHandUpBinding> implements OnItemClickListener<Member> {
+public class HandUpDialog extends DataBindBaseDialog<DialogHandUpBinding> implements OnItemClickListener<RequestMember> {
     private static final String TAG = HandUpDialog.class.getSimpleName();
 
     private HandsUpListAdapter mAdapter;
@@ -93,10 +93,10 @@ public class HandUpDialog extends DataBindBaseDialog<DialogHandUpBinding> implem
 
     public void loadData() {
         DataRepositroy.Instance(requireContext())
-                .getHandUpList()
+                .getRequestList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(mLifecycleProvider.bindToLifecycle())
-                .subscribe(new DataObserver<List<Member>>(requireContext()) {
+                .subscribe(new DataObserver<List<RequestMember>>(requireContext()) {
 
                     @Override
                     public void handleError(@NonNull BaseError e) {
@@ -104,7 +104,7 @@ public class HandUpDialog extends DataBindBaseDialog<DialogHandUpBinding> implem
                     }
 
                     @Override
-                    public void handleSuccess(@NonNull List<Member> members) {
+                    public void handleSuccess(@NonNull List<RequestMember> members) {
                         mAdapter.setDatas(members);
                     }
                 });
@@ -118,7 +118,7 @@ public class HandUpDialog extends DataBindBaseDialog<DialogHandUpBinding> implem
     }
 
     @Override
-    public void onItemClick(@NonNull Member data, View view, int position, long id) {
+    public void onItemClick(@NonNull RequestMember data, View view, int position, long id) {
         if (view.getId() == R.id.btRefuse) {
             clickRefuse(position, data);
         } else if (view.getId() == R.id.btAgree) {
@@ -126,9 +126,9 @@ public class HandUpDialog extends DataBindBaseDialog<DialogHandUpBinding> implem
         }
     }
 
-    private void clickRefuse(int index, Member data) {
+    private void clickRefuse(int index, RequestMember data) {
         RoomManager.Instance(requireContext())
-                .refuseHandsUp(data)
+                .refuseRequest(data.getMember(), data.getAction())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(mLifecycleProvider.bindToLifecycle())
                 .subscribe(new DataCompletableObserver(requireContext()) {
@@ -144,9 +144,9 @@ public class HandUpDialog extends DataBindBaseDialog<DialogHandUpBinding> implem
                 });
     }
 
-    private void clickAgree(int index, Member data) {
+    private void clickAgree(int index, RequestMember data) {
         RoomManager.Instance(requireContext())
-                .agreeHandsUp(data)
+                .agreeRequest(data.getMember(), data.getAction())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(mLifecycleProvider.bindToLifecycle())
                 .subscribe(new DataCompletableObserver(requireContext()) {

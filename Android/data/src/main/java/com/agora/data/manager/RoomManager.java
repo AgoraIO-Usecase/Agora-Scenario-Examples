@@ -9,11 +9,14 @@ import androidx.core.util.ObjectsCompat;
 import androidx.preference.PreferenceManager;
 
 import com.agora.data.BaseError;
-import com.agora.data.DataRepositroy;
+import com.agora.data.IDataRepositroy;
 import com.agora.data.RoomEventCallback;
+import com.agora.data.SimpleRtmChannelListener;
+import com.agora.data.model.Action;
 import com.agora.data.model.Member;
 import com.agora.data.model.Room;
 import com.agora.data.observer.DataCompletableObserver;
+import com.agora.data.provider.IRoomConfigProvider;
 import com.agora.data.provider.IRoomProxy;
 import com.elvishew.xlog.Logger;
 import com.elvishew.xlog.XLog;
@@ -26,10 +29,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import io.agora.rtc.Constants;
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.models.ClientRoleOptions;
+import io.agora.rtm.RtmChannelListener;
+import io.agora.rtm.RtmChannelMember;
+import io.agora.rtm.RtmMessage;
 import io.reactivex.Completable;
+import io.reactivex.CompletableSource;
 import io.reactivex.Maybe;
-import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 /**
  * 负责房间内数据的管理以及事件通知
@@ -38,7 +45,7 @@ public final class RoomManager implements IRoomProxy {
 
     public static final String TAG_AUDIENCELATENCYLEVEL = "audienceLatencyLevel";
 
-    private Logger.Builder mLogger = XLog.tag("RoomManager");
+    private Logger.Builder mLogger = XLog.tag(RoomManager.class.getSimpleName());
 
     public static final int ERROR_REGISTER_LEANCLOUD = 1000;
     public static final int ERROR_REGISTER_LEANCLOUD_EXCEEDED_QUOTA = ERROR_REGISTER_LEANCLOUD + 1;
@@ -51,7 +58,60 @@ public final class RoomManager implements IRoomProxy {
         mContext = context.getApplicationContext();
     }
 
+    private IRoomConfigProvider roomConfig;
+
+    private IDataRepositroy iDataRepositroy;
+
     private final IRtcEngineEventHandler mIRtcEngineEventHandler = new IRtcEngineEventHandler() {
+        @Override
+        public void onLocalVideoStateChanged(int localVideoState, int error) {
+            super.onLocalVideoStateChanged(localVideoState, error);
+            Member member = getMine();
+            if (member == null) {
+                return;
+            }
+
+            if (localVideoState == Constants.LOCAL_VIDEO_STREAM_STATE_ENCODING) {
+                member.setIsSDKVideoMuted(0);
+            } else if (localVideoState == Constants.LOCAL_VIDEO_STREAM_STATE_STOPPED || localVideoState == Constants.LOCAL_VIDEO_STREAM_STATE_FAILED) {
+                member.setIsSDKVideoMuted(1);
+            }
+            mainThreadDispatch.onSDKVideoStatusChanged(member);
+        }
+
+        @Override
+        public void onRemoteVideoStateChanged(int uid, int state, int reason, int elapsed) {
+            super.onRemoteVideoStateChanged(uid, state, reason, elapsed);
+            long streamId = uid & 0xffffffffL;
+            Member member = getMemberByStramId(streamId);
+            if (member == null) {
+                return;
+            }
+
+            if (state == Constants.REMOTE_VIDEO_STATE_DECODING) {
+                member.setIsSDKVideoMuted(0);
+            } else if (state == Constants.REMOTE_VIDEO_STATE_STOPPED || state == Constants.REMOTE_VIDEO_STATE_FAILED) {
+                member.setIsSDKVideoMuted(1);
+            }
+            mainThreadDispatch.onSDKVideoStatusChanged(member);
+        }
+    };
+
+    private final RtmChannelListener mRtmChannelListener = new SimpleRtmChannelListener() {
+        @Override
+        public void onMessageReceived(RtmMessage rtmMessage, RtmChannelMember rtmChannelMember) {
+            super.onMessageReceived(rtmMessage, rtmChannelMember);
+            if (isLeaving) {
+                return;
+            }
+
+            String uid = rtmChannelMember.getUserId();
+            Member member = getMemberById(uid);
+            if (member == null) {
+                return;
+            }
+            onRoomMessageReceived(member, rtmMessage.getText());
+        }
     };
 
     public synchronized static RoomManager Instance(Context context) {
@@ -69,8 +129,9 @@ public final class RoomManager implements IRoomProxy {
      */
     public volatile static boolean isLeaving = false;
 
-    private Room mRoom;
-    private Member mMine;
+    private volatile Room mRoom;
+    private volatile Member mMine;
+    private volatile Member mOwner;
 
     /**
      * Member表中objectId和Member的键值对
@@ -84,10 +145,62 @@ public final class RoomManager implements IRoomProxy {
 
     private final MainThreadDispatch mainThreadDispatch = new MainThreadDispatch();
 
-    public Completable requestHandsUp() {
-        mLogger.d("requestHandsUp() called");
-        return DataRepositroy.Instance(mContext)
-                .requestHandsUp(mMine);
+    public void setupRoomConfig(IRoomConfigProvider roomConfig) {
+        this.roomConfig = roomConfig;
+        RtcManager.Instance(mContext).setupRoomConfig(roomConfig);
+    }
+
+    public void setupDataRepositroy(IDataRepositroy iDataRepositroy) {
+        this.iDataRepositroy = iDataRepositroy;
+    }
+
+    /**
+     * 先加入RTC房间，获取userId，然后加入到业务服务器。
+     */
+    public Completable joinRoom() {
+        mLogger.d("joinRoom() called");
+
+        Room room = getRoom();
+        if (room == null) {
+            return Completable.complete();
+        }
+
+        Member member = getMine();
+        if (member == null) {
+            return Completable.complete();
+        }
+
+        int userId = 0;
+        if (member.getStreamId() != null) {
+            userId = member.getStreamIntId();
+        }
+
+        String objectId = room.getObjectId();
+        return RtcManager.Instance(mContext).joinChannel(objectId, userId).flatMapCompletable(new Function<Integer, CompletableSource>() {
+            @Override
+            public CompletableSource apply(@NonNull Integer uid) throws Exception {
+                Long streamId = uid & 0xffffffffL;
+                member.setStreamId(streamId);
+                return iDataRepositroy.joinRoom(room, member).concatMapCompletable(new Function<Member, CompletableSource>() {
+                    @Override
+                    public CompletableSource apply(@NonNull Member member) throws Exception {
+                        mMine = member;
+                        if (ObjectsCompat.equals(room.getAnchorId(), mMine.getUserId())) {
+                            mOwner = mMine;
+                        }
+
+                        mLogger.d("joinRoom() doOnComplete called member= [%s]", mMine);
+                        return Completable.complete();
+                    }
+                });
+            }
+        });
+    }
+
+    public Completable requestConnect(@NonNull Action.ACTION action) {
+        mLogger.d("requestConnect() called with: action = [" + action + "]");
+        return iDataRepositroy
+                .requestConnect(mMine, action);
     }
 
     public Completable toggleSelfAudio() {
@@ -98,14 +211,14 @@ public final class RoomManager implements IRoomProxy {
         }
 
         int newValue = mMine.getIsSelfMuted() == 0 ? 1 : 0;
-        return DataRepositroy.Instance(mContext)
+        return iDataRepositroy
                 .muteSelfVoice(mMine, newValue)
                 .doOnComplete(new io.reactivex.functions.Action() {
                     @Override
                     public void run() throws Exception {
                         mMine.setIsSelfMuted(newValue);
 
-                        RtcManager.Instance(mContext).muteLocalAudioStream(newValue == 1);
+                        RtcManager.Instance(mContext).getRtcEngine().muteLocalAudioStream(newValue == 1);
                         onAudioStatusChanged(true, mMine);
                     }
                 });
@@ -118,27 +231,28 @@ public final class RoomManager implements IRoomProxy {
         }
 
         int newValue = member.getIsMuted() == 0 ? 1 : 0;
-        return DataRepositroy.Instance(mContext)
+        return iDataRepositroy
                 .muteVoice(member, newValue)
                 .doOnComplete(new io.reactivex.functions.Action() {
                     @Override
                     public void run() throws Exception {
                         member.setIsMuted(newValue);
 
-                        RtcManager.Instance(mContext).muteRemoteVideoStream(member.getStreamId().intValue(), newValue != 0);
+                        RtcManager.Instance(mContext).getRtcEngine().muteRemoteAudioStream(member.getStreamIntId(), newValue != 0);
                         onAudioStatusChanged(false, member);
                     }
                 });
     }
 
-    public Completable seatOff(@NonNull Member member) {
-        mLogger.d("seatOff() called with: member = [" + member + "]");
-        return DataRepositroy.Instance(mContext)
-                .seatOff(member)
+    public Completable seatOff(@NonNull Member member, @NonNull Member.Role role) {
+        mLogger.d("seatOff() called with: member = [" + member + "], role = [" + role + "]");
+        return iDataRepositroy
+                .seatOff(member, role)
                 .doOnComplete(new io.reactivex.functions.Action() {
                     @Override
                     public void run() throws Exception {
                         member.setIsSpeaker(0);
+                        member.setRole(role);
 
                         if (isMine(member)) {
                             onRoleChanged(true, member);
@@ -157,35 +271,28 @@ public final class RoomManager implements IRoomProxy {
         this.mainThreadDispatch.removeRoomEventCallback(callback);
     }
 
-    public Observable<Member> joinRoom() {
-        mLogger.d("joinRoom() called");
-        return DataRepositroy.Instance(mContext)
-                .joinRoom(mRoom, mMine)
-                .doOnNext(new Consumer<Member>() {
-                    @Override
-                    public void accept(Member member) throws Exception {
-                        mLogger.d("joinRoom() called member= [%s]", member);
-                        mMine = member;
-                    }
-                });
-    }
-
     public void onJoinRoom(Room room, Member member) {
         mLogger.d("onJoinRoom() called room= [%s] member= [%s]", room, member);
         this.mRoom = room;
         this.mMine = member;
+        this.mOwner = new Member(room.getAnchorId());
         isLeaving = false;
 
         RtcManager.Instance(mContext).addHandler(mIRtcEngineEventHandler);
+        RTMManager.Instance(mContext).addChannelListeners(mRtmChannelListener);
     }
 
     public void leaveRoom() {
-        mLogger.d("onJoinRoom() called");
+        mLogger.d("onJoinRoom() called with: isLeaving = [%s]", isLeaving);
+        if (isLeaving) {
+            return;
+        }
+
         isLeaving = true;
 
         RoomManager.Instance(mContext).stopLivePlay();
         RtcManager.Instance(mContext).leaveChannel();
-        DataRepositroy.Instance(mContext)
+        iDataRepositroy
                 .leaveRoom(mRoom, mMine)
                 .subscribe(new DataCompletableObserver(mContext) {
                     @Override
@@ -203,11 +310,13 @@ public final class RoomManager implements IRoomProxy {
     private void onLeaveRoom() {
         mLogger.d("onLeaveRoom() called");
         RtcManager.Instance(mContext).removeHandler(mIRtcEngineEventHandler);
+        RTMManager.Instance(mContext).removeChannelListeners(mRtmChannelListener);
 
         mainThreadDispatch.onLeaveRoom(getRoom());
 
         this.mRoom = null;
         this.mMine = null;
+        this.mOwner = null;
         this.membersMap.clear();
         this.streamIdMap.clear();
     }
@@ -225,6 +334,10 @@ public final class RoomManager implements IRoomProxy {
                 members.set(i, mMine);
             }
 
+            if (ObjectsCompat.equals(mRoom.getAnchorId(), member.getUserId())) {
+                mOwner = member;
+            }
+
             member.setRoomId(mRoom);
             membersMap.put(member.getObjectId(), member);
             if (member.getStreamId() != null) {
@@ -235,7 +348,7 @@ public final class RoomManager implements IRoomProxy {
 
     public Maybe<Room> getRoom(Room room) {
         mLogger.d("getRoom() called with: room = [" + room + "]");
-        return DataRepositroy.Instance(mContext)
+        return iDataRepositroy
                 .getRoom(room)
                 .doOnSuccess(new Consumer<Room>() {
                     @Override
@@ -261,22 +374,49 @@ public final class RoomManager implements IRoomProxy {
         return mRoom;
     }
 
+    @Nullable
+    @Override
+    public Member getOwner() {
+        return mOwner;
+    }
+
+    public void updateMine(@NonNull Member mine) {
+        this.mMine = mine;
+    }
+
     public void startLivePlay() {
-        RtcManager.Instance(mContext).startAudio();
-        RtcManager.Instance(mContext).setClientRole(IRtcEngineEventHandler.ClientRole.CLIENT_ROLE_BROADCASTER);
+        mLogger.d("startLivePlay() called");
+        if (roomConfig.isNeedAudio()) {
+            RtcManager.Instance(mContext).getRtcEngine().enableLocalAudio(true);
+        }
+
+        if (roomConfig.isNeedVideo()) {
+            RtcManager.Instance(mContext).getRtcEngine().enableLocalVideo(true);
+            RtcManager.Instance(mContext).getRtcEngine().startPreview();
+        }
+
+        RtcManager.Instance(mContext).getRtcEngine().setClientRole(IRtcEngineEventHandler.ClientRole.CLIENT_ROLE_BROADCASTER);
     }
 
     public void stopLivePlay() {
-        RtcManager.Instance(mContext).stopAudio();
+        mLogger.d("stopLivePlay() called");
+        if (roomConfig.isNeedAudio()) {
+            RtcManager.Instance(mContext).getRtcEngine().enableLocalAudio(false);
+        }
+
+        if (roomConfig.isNeedVideo()) {
+            RtcManager.Instance(mContext).getRtcEngine().enableLocalVideo(false);
+            RtcManager.Instance(mContext).getRtcEngine().stopPreview();
+        }
 
         int audienceLatencyLevel = PreferenceManager.getDefaultSharedPreferences(mContext).getInt(TAG_AUDIENCELATENCYLEVEL, Constants.AUDIENCE_LATENCY_LEVEL_ULTRA_LOW_LATENCY);
         ClientRoleOptions mClientRoleOptions = new ClientRoleOptions();
         mClientRoleOptions.audienceLatencyLevel = audienceLatencyLevel;
-        RtcManager.Instance(mContext).setClientRole(IRtcEngineEventHandler.ClientRole.CLIENT_ROLE_AUDIENCE, mClientRoleOptions);
+        RtcManager.Instance(mContext).getRtcEngine().setClientRole(IRtcEngineEventHandler.ClientRole.CLIENT_ROLE_AUDIENCE, mClientRoleOptions);
     }
 
     public Maybe<Member> getMember(String userId) {
-        return DataRepositroy.Instance(mContext)
+        return iDataRepositroy
                 .getMember(mRoom.getObjectId(), userId)
                 .doOnSuccess(new Consumer<Member>() {
                     @Override
@@ -288,7 +428,7 @@ public final class RoomManager implements IRoomProxy {
 
     public Completable agreeInvite(@NonNull Member member) {
         mLogger.d("agreeInvite() called with: member = [" + member + "]");
-        return DataRepositroy.Instance(mContext)
+        return iDataRepositroy
                 .agreeInvite(member)
                 .doOnComplete(new io.reactivex.functions.Action() {
                     @Override
@@ -301,7 +441,7 @@ public final class RoomManager implements IRoomProxy {
 
     public Completable refuseInvite(@NonNull Member member) {
         mLogger.d("refuseInvite() called with: member = [" + member + "]");
-        return DataRepositroy.Instance(mContext)
+        return iDataRepositroy
                 .refuseInvite(member)
                 .doOnComplete(new io.reactivex.functions.Action() {
                     @Override
@@ -311,26 +451,39 @@ public final class RoomManager implements IRoomProxy {
                 });
     }
 
-    public Completable agreeHandsUp(@NonNull Member member) {
-        mLogger.d("agreeHandsUp() called with: member = [" + member + "]");
-        return DataRepositroy.Instance(mContext)
-                .agreeHandsUp(member)
+    public Completable agreeRequest(@NonNull Member member, @NonNull Action.ACTION action) {
+        mLogger.d("agreeRequest() called with: member = [" + member + "], action = [" + action + "]");
+        return iDataRepositroy
+                .agreeRequest(member, action)
                 .doOnComplete(new io.reactivex.functions.Action() {
                     @Override
                     public void run() throws Exception {
-                        onHandUpAgree(member);
+                        Member memberLocal = getMemberById(member.getObjectId());
+                        if (memberLocal == null) {
+                            return;
+                        }
+
+                        if (action == Action.ACTION.HandsUp) {
+                            memberLocal.setIsSpeaker(1);
+                            memberLocal.setRole(Member.Role.Speaker);
+                        } else if (action == Action.ACTION.RequestLeft) {
+                            memberLocal.setRole(Member.Role.Left);
+                        } else if (action == Action.ACTION.RequestRight) {
+                            memberLocal.setRole(Member.Role.Right);
+                        }
+                        onRequestAgreed(memberLocal, action);
                     }
                 });
     }
 
-    public Completable refuseHandsUp(@NonNull Member member) {
-        mLogger.d("refuseHandsUp() called with: member = [" + member + "]");
-        return DataRepositroy.Instance(mContext)
-                .refuseHandsUp(member)
+    public Completable refuseRequest(@NonNull Member member, @NonNull Action.ACTION action) {
+        mLogger.d("refuseRequest() called with: member = [" + member + "], action = [" + action + "]");
+        return iDataRepositroy
+                .refuseRequest(member, action)
                 .doOnComplete(new io.reactivex.functions.Action() {
                     @Override
                     public void run() throws Exception {
-                        onHandUpRefuse(member);
+                        onRequestRefused(member);
                     }
                 });
     }
@@ -352,7 +505,7 @@ public final class RoomManager implements IRoomProxy {
 
     @Override
     public Maybe<Member> getMember(@NonNull String roomId, @NonNull String userId) {
-        return DataRepositroy.Instance(mContext).getMember(roomId, userId);
+        return iDataRepositroy.getMember(roomId, userId);
     }
 
     @Override
@@ -428,12 +581,19 @@ public final class RoomManager implements IRoomProxy {
             return;
         }
         old.setIsSpeaker(member.getIsSpeaker());
+        old.setRole(member.getRole());
 
         if (isMine(old)) {
             if (old.getIsSpeaker() == 1) {
                 startLivePlay();
             } else {
                 stopLivePlay();
+            }
+
+            if (old.getRole() == Member.Role.Listener) {
+                stopLivePlay();
+            } else {
+                startLivePlay();
             }
         }
         mainThreadDispatch.onRoleChanged(isMine, old);
@@ -456,33 +616,45 @@ public final class RoomManager implements IRoomProxy {
     }
 
     @Override
-    public void onReceivedHandUp(@NonNull Member member) {
-        mLogger.d("onReceivedHandUp() called with: member = [" + member + "]");
+    public void onReceivedRequest(@NonNull Member member, @NonNull Action.ACTION action) {
+        mLogger.d("onReceivedRequest() called with: member = [" + member + "], action = [" + action + "]");
         if (isLeaving) {
             return;
         }
 
-        mainThreadDispatch.onReceivedHandUp(member);
+        mainThreadDispatch.onReceivedRequest(member, action);
     }
 
     @Override
-    public void onHandUpAgree(@NonNull Member member) {
-        mLogger.d("onHandUpAgree() called with: member = [" + member + "]");
+    public void onRequestAgreed(@NonNull Member member, @NonNull Action.ACTION action) {
+        mLogger.d("onRequestAgreed() called with: member = [" + member + "], action = [" + action + "]");
         if (isLeaving) {
             return;
         }
 
-        mainThreadDispatch.onHandUpAgree(member);
+        if (action == Action.ACTION.HandsUp) {
+            member.setIsSpeaker(1);
+            member.setRole(Member.Role.Speaker);
+        } else if (action == Action.ACTION.RequestLeft) {
+            member.setRole(Member.Role.Left);
+        } else if (action == Action.ACTION.RequestRight) {
+            member.setRole(Member.Role.Right);
+        }
+
+        if (isMine(member)) {
+            startLivePlay();
+        }
+        mainThreadDispatch.onRequestAgreed(member);
     }
 
     @Override
-    public void onHandUpRefuse(@NonNull Member member) {
+    public void onRequestRefused(@NonNull Member member) {
         mLogger.d("onHandUpRefuse() called with: member = [" + member + "]");
         if (isLeaving) {
             return;
         }
 
-        mainThreadDispatch.onHandUpRefuse(member);
+        mainThreadDispatch.onRequestRefuse(member);
     }
 
     @Override
@@ -529,5 +701,11 @@ public final class RoomManager implements IRoomProxy {
     public void onRoomError(int error) {
         mLogger.d("onRoomError() called with: error = [" + error + "]");
         mainThreadDispatch.onRoomError(error);
+    }
+
+    @Override
+    public void onRoomMessageReceived(@NonNull Member member, @NonNull String message) {
+        mLogger.d("onRoomMessageReceived() called with: member = [" + member + "], message = [" + message + "]");
+        mainThreadDispatch.onRoomMessageReceived(member, message);
     }
 }

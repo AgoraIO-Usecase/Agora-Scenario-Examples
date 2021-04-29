@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 
 import com.agora.data.BaseError;
-import com.agora.data.DataRepositroy;
+import com.agora.data.model.Action;
 import com.agora.data.model.Member;
 import com.agora.data.model.User;
 import com.agora.data.observer.DataCompletableObserver;
@@ -22,6 +22,7 @@ import com.bumptech.glide.Glide;
 import io.agora.baselibrary.base.DataBindBaseDialog;
 import io.agora.baselibrary.util.ToastUtile;
 import io.agora.interactivepodcast.R;
+import io.agora.interactivepodcast.data.DataRepositroy;
 import io.agora.interactivepodcast.databinding.DialogUserInviteBinding;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
@@ -105,7 +106,7 @@ public class InviteMenuDialog extends DataBindBaseDialog<DialogUserInviteBinding
     private void invite() {
         mDataBinding.btFuntion.setEnabled(false);
         DataRepositroy.Instance(requireContext())
-                .inviteSeat(mMember)
+                .inviteConnect(mMember, Action.ACTION.Invite)
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(mLifecycleProvider.bindToLifecycle())
                 .subscribe(new DataCompletableObserver(requireContext()) {

@@ -1,11 +1,12 @@
 # 场景化Demo
-此项目包含多个场景Demo，可以输出一个整理APK，也可输出单个场景APK。在 **build.gradle** 中 **isModule** 进行设置。
+此项目包含多个场景Demo，可以输出一个整理APK，也可输出单个场景APK。在 **gradle.properties** 中 **isModule** 进行设置。
 
 目前包含以下场景
 
 |场景|工程名称|
 |----|----|
 |互动播客|[InteractivePodcast](./InteractivePodcast/README.md)|
+|相亲|[MarriageInterview](./MarriageInterview/README.md)|
 
 # 前提条件
 开始前，请确保你的开发环境满足如下条件：
@@ -21,7 +22,22 @@
 - 如果需要自己实现数据源，请参考项目 **data** 代码中实现，主要继承接口 **IDataProvider** 实现具体方法。
 
 ##### 注册Leanclould
-前往 [Leancloud官网](https://www.leancloud.cn/) 注册项目，生产 appId、appKey、server_url，然后替换工程**data**中  **strings_config.xml** 中 **leancloud_app_id**、**leancloud_app_key**、**leancloud_server_url**。
+1. 前往 [Leancloud官网](https://www.leancloud.cn/) 注册项目，生产 appId、appKey、server_url。
+- 替换工程 **data** 中  **strings_config.xml** 中 **leancloud_app_id**、**leancloud_app_key**、**leancloud_server_url**。
+- 替换 [LeanCloudHelp.py](./LeanCloudHelp.py) 中 **appid** 和 **appkey**。
+2. 安装 [Python](https://www.python.org/)，如果已经安装请忽略。
+3. Python安装之后，控制台执行以下命令。
+```
+pip install leancloud
+或者
+pip3 install leancloud
+```
+4. Android Studio Terminal 中执行文件 [LeanCloudHelp.py](./LeanCloudHelp.py)。
+```
+python ./LeanCloudHelp.py
+或者
+python3 ./LeanCloudHelp.py
+```
 
 ##### 注册Firebase
 前往 [Firebase官网](https://firebase.google.com/) 注册项目，生成文件 **google-services.json**，然后放到对应工程下面。比如使用InteractivePodcast，那目录结构 **InteractivePodcast/google-services.json**。

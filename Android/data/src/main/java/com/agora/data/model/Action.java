@@ -6,7 +6,7 @@ public class Action implements Serializable {
     private String objectId;
     private Member memberId;
     private Room roomId;
-    private int action;
+    private ACTION action;
     private int status;
 
     public Room getRoomId() {
@@ -33,11 +33,11 @@ public class Action implements Serializable {
         this.objectId = objectId;
     }
 
-    public int getAction() {
+    public ACTION getAction() {
         return action;
     }
 
-    public void setAction(int action) {
+    public void setAction(ACTION action) {
         this.action = action;
     }
 
@@ -64,8 +64,8 @@ public class Action implements Serializable {
         return objectId.hashCode();
     }
 
-    public enum ACTION {
-        HandsUp(1), Invite(2);
+    public enum ACTION implements Serializable {
+        HandsUp(1), Invite(2), RequestLeft(3), RequestRight(4);
 
         private int value;
 
@@ -75,6 +75,19 @@ public class Action implements Serializable {
 
         public int getValue() {
             return value;
+        }
+
+        public static ACTION parse(int value) {
+            if (value == 1) {
+                return HandsUp;
+            } else if (value == 2) {
+                return Invite;
+            } else if (value == 3) {
+                return RequestLeft;
+            } else if (value == 4) {
+                return RequestRight;
+            }
+            return HandsUp;
         }
     }
 

@@ -31,6 +31,21 @@ android {
     buildFeatures {
         dataBinding = true
     }
+
+    flavorDimensions "test"
+    productFlavors {
+        leancloud {
+        }
+
+        firebase {
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "Demo-${versionName}-${variant.buildType.name}.apk"
+        }
+    }
 }
 
 dependencies {
@@ -39,7 +54,6 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    if (!isModule) {
-        implementation project(':InteractivePodcast')
-    }
+    implementation project(':InteractivePodcast')
+    implementation project(':MarriageInterview')
 }

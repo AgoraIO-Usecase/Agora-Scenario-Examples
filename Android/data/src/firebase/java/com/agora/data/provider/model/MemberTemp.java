@@ -1,6 +1,7 @@
 package com.agora.data.provider.model;
 
 import com.agora.data.model.Member;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 
 public class MemberTemp {
@@ -8,9 +9,10 @@ public class MemberTemp {
     private DocumentReference userId;
     private Long streamId;
     private int isSpeaker = 0;
+    private int role = 0;
     private int isMuted = 0;
     private int isSelfMuted = 0;
-    private long createdAt;
+    private Timestamp createdAt;
 
     public MemberTemp() {
     }
@@ -22,6 +24,7 @@ public class MemberTemp {
         member.setIsSpeaker(isSpeaker);
         member.setIsMuted(isMuted);
         member.setIsSelfMuted(isSelfMuted);
+        member.setRole(Member.Role.parse(role));
 
         return member;
     }
@@ -74,24 +77,11 @@ public class MemberTemp {
         this.isSelfMuted = isSelfMuted;
     }
 
-    public long getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(long createdAt) {
+    public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
-    }
-
-    @Override
-    public String toString() {
-        return "MemberTemp{" +
-                "roomId=" + roomId +
-                ", userId=" + userId +
-                ", streamId=" + streamId +
-                ", isSpeaker=" + isSpeaker +
-                ", isMuted=" + isMuted +
-                ", isSelfMuted=" + isSelfMuted +
-                ", createdAt=" + createdAt +
-                '}';
     }
 }

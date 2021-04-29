@@ -1,12 +1,13 @@
 package com.agora.data.provider.model;
 
 import com.agora.data.model.Room;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 
 public class RoomTemp {
     private String channelName;
     private DocumentReference anchorId;
-    private long createdAt;
+    private Timestamp createdAt;
 
     public RoomTemp() {
     }
@@ -34,11 +35,11 @@ public class RoomTemp {
         this.anchorId = anchorId;
     }
 
-    public long getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(long createdAt) {
+    public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
 }

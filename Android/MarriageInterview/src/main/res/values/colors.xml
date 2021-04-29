@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#000000</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#009688</color>
+
+    <color name="grey_press_color">#E8E8E8</color>
+
+    <color name="create_dialog_title">#1C004C</color>
+    <color name="confirm_dialog_cancel_text">#9B44FD</color>
+    <color name="member_list_line">#ffdedef0</color>
+</resources>

@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -30,11 +31,12 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.schedulers.Schedulers;
 
-class StoreSource implements IStoreSource {
+class StoreSource extends BaseStoreSource {
 
     private FirebaseFirestore db;
 
-    public StoreSource() {
+    public StoreSource(@NonNull IConfigSource mIConfigSource) {
+        super(mIConfigSource);
         db = FirebaseFirestore.getInstance();
     }
 
@@ -45,11 +47,11 @@ class StoreSource implements IStoreSource {
 
             if (TextUtils.isEmpty(objectId)) {
                 HashMap<String, Object> map = new HashMap<>();
-                map.put(DataProvider.USER_NAME, user.getName());
-                map.put(DataProvider.USER_AVATAR, user.getAvatar());
-                map.put(DataProvider.USER_CREATEDAT, System.currentTimeMillis());
+                map.put(BaseDataProvider.USER_NAME, user.getName());
+                map.put(BaseDataProvider.USER_AVATAR, user.getAvatar());
+                map.put(BaseDataProvider.USER_CREATEDAT, Timestamp.now());
 
-                db.collection(DataProvider.TAG_TABLE_USER)
+                db.collection(BaseDataProvider.TAG_TABLE_USER)
                         .add(map)
                         .addOnSuccessListener(documentReference -> {
                             String objectIdNew = documentReference.getId();
@@ -59,10 +61,10 @@ class StoreSource implements IStoreSource {
                         .addOnFailureListener(e -> emitter.onError(e));
             } else {
                 HashMap<String, Object> map = new HashMap<>();
-                map.put(DataProvider.USER_NAME, user.getName());
-                map.put(DataProvider.USER_AVATAR, user.getAvatar());
+                map.put(BaseDataProvider.USER_NAME, user.getName());
+                map.put(BaseDataProvider.USER_AVATAR, user.getAvatar());
 
-                db.collection(DataProvider.TAG_TABLE_USER)
+                db.collection(BaseDataProvider.TAG_TABLE_USER)
                         .document(objectId)
                         .set(map)
                         .addOnSuccessListener(aVoid -> emitter.onNext(user))
@@ -82,10 +84,10 @@ class StoreSource implements IStoreSource {
         return Observable.create((ObservableOnSubscribe<User>) emitter -> {
             String objectId = user.getObjectId();
             HashMap<String, Object> map = new HashMap<>();
-            map.put(DataProvider.USER_NAME, user.getName());
-            map.put(DataProvider.USER_AVATAR, user.getAvatar());
+            map.put(BaseDataProvider.USER_NAME, user.getName());
+            map.put(BaseDataProvider.USER_AVATAR, user.getAvatar());
 
-            db.collection(DataProvider.TAG_TABLE_USER)
+            db.collection(BaseDataProvider.TAG_TABLE_USER)
                     .document(objectId)
                     .set(map)
                     .addOnSuccessListener(aVoid -> emitter.onNext(user))
@@ -102,7 +104,7 @@ class StoreSource implements IStoreSource {
     @Override
     public Maybe<List<Room>> getRooms() {
         return Maybe.create((MaybeOnSubscribe<List<Room>>) emitter -> {
-            db.collection(DataProvider.TAG_TABLE_ROOM)
+            db.collection(BaseDataProvider.TAG_TABLE_ROOM)
                     .get()
                     .continueWithTask(new Continuation<QuerySnapshot, Task<List<Task<?>>>>() {
                         @Override
@@ -165,7 +167,7 @@ class StoreSource implements IStoreSource {
     @Override
     public Observable<Room> getRoomCountInfo(@NonNull Room room) {
         return Observable.create((ObservableOnSubscribe<Room>) emitter -> {
-            db.collection(DataProvider.TAG_TABLE_MEMBER)
+            db.collection(BaseDataProvider.TAG_TABLE_MEMBER)
                     .get()
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
@@ -187,8 +189,8 @@ class StoreSource implements IStoreSource {
     @Override
     public Maybe<Room> getRoomSpeakersInfo(@NonNull Room room) {
         return Maybe.create((MaybeOnSubscribe<Room>) emitter -> {
-            db.collection(DataProvider.TAG_TABLE_MEMBER)
-                    .whereEqualTo(DataProvider.MEMBER_ISSPEAKER, 1)
+            db.collection(BaseDataProvider.TAG_TABLE_MEMBER)
+                    .whereEqualTo(BaseDataProvider.MEMBER_ISSPEAKER, 1)
                     .limit(3)
                     .get()
                     .addOnCompleteListener(task -> {
@@ -242,14 +244,14 @@ class StoreSource implements IStoreSource {
     @Override
     public Observable<Room> creatRoom(@NonNull Room room) {
         return Observable.create((ObservableOnSubscribe<Room>) emitter -> {
-            DocumentReference drUser = db.collection(DataProvider.TAG_TABLE_USER).document(room.getAnchorId().getObjectId());
+            DocumentReference drUser = db.collection(BaseDataProvider.TAG_TABLE_USER).document(room.getAnchorId().getObjectId());
 
             HashMap<String, Object> map = new HashMap<>();
-            map.put(DataProvider.MEMBER_CHANNELNAME, room.getChannelName());
-            map.put(DataProvider.MEMBER_ANCHORID, drUser);
-            map.put(DataProvider.MEMBER_CREATEDAT, System.currentTimeMillis());
+            map.put(BaseDataProvider.MEMBER_CHANNELNAME, room.getChannelName());
+            map.put(BaseDataProvider.MEMBER_ANCHORID, drUser);
+            map.put(BaseDataProvider.MEMBER_CREATEDAT, Timestamp.now());
 
-            db.collection(DataProvider.TAG_TABLE_ROOM)
+            db.collection(BaseDataProvider.TAG_TABLE_ROOM)
                     .add(map)
                     .addOnSuccessListener(documentReference -> {
                         String objectId = documentReference.getId();
@@ -269,7 +271,7 @@ class StoreSource implements IStoreSource {
     @Override
     public Maybe<Room> getRoom(@NonNull Room room) {
         return Maybe.create((MaybeOnSubscribe<Room>) emitter ->
-                db.collection(DataProvider.TAG_TABLE_ROOM)
+                db.collection(BaseDataProvider.TAG_TABLE_ROOM)
                         .document(room.getObjectId())
                         .get()
                         .continueWithTask(new Continuation<DocumentSnapshot, Task<Room>>() {
@@ -325,7 +327,7 @@ class StoreSource implements IStoreSource {
     public Observable<List<Member>> getMembers(@NonNull Room room) {
         return Observable.create((ObservableOnSubscribe<List<Member>>) emitter -> {
             List<Member> members = new ArrayList<>();
-            db.collection(DataProvider.TAG_TABLE_MEMBER)
+            db.collection(BaseDataProvider.TAG_TABLE_MEMBER)
                     .get()
                     .continueWithTask(new Continuation<QuerySnapshot, Task<Void>>() {
                         @Override
@@ -404,13 +406,13 @@ class StoreSource implements IStoreSource {
     @Override
     public Maybe<Member> getMember(@NonNull String roomId, @NonNull String userId) {
         return Maybe.create((MaybeOnSubscribe<Member>) emitter -> {
-            DocumentReference drRoom = db.collection(DataProvider.TAG_TABLE_ROOM).document(roomId);
-            DocumentReference drUser = db.collection(DataProvider.TAG_TABLE_USER).document(userId);
+            DocumentReference drRoom = db.collection(BaseDataProvider.TAG_TABLE_ROOM).document(roomId);
+            DocumentReference drUser = db.collection(BaseDataProvider.TAG_TABLE_USER).document(userId);
 
             List<Member> members = new ArrayList<>();
-            db.collection(DataProvider.TAG_TABLE_MEMBER)
-                    .whereEqualTo(DataProvider.MEMBER_ROOMID, drRoom)
-                    .whereEqualTo(DataProvider.MEMBER_USERID, drUser)
+            db.collection(BaseDataProvider.TAG_TABLE_MEMBER)
+                    .whereEqualTo(BaseDataProvider.MEMBER_ROOMID, drRoom)
+                    .whereEqualTo(BaseDataProvider.MEMBER_USERID, drUser)
                     .get()
                     .continueWithTask(new Continuation<QuerySnapshot, Task<Void>>() {
                         @Override
