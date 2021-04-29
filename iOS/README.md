@@ -14,7 +14,7 @@
 ##### 注册Leancloud
 1. 前往 [Leancloud官网](https://www.leancloud.cn/) 注册项目，生产 appId、appKey、server_url。
 - 替换 **Config.swift** 中 **LeanCloudAppId**、**LeanCloudAppKey**、**LeanCloudServerUrl**。
-- 替换 [LeanCloudHelp.py](./LeanCloudHelp.py) 中 **appid** 和 **appkey**。
+- 替换 [LeanCloudHelp.py](../leanCloudHelp.py) 中 **appid** 和 **appkey**。
 2. 安装 [Python](https://www.python.org/)，如果已经安装请忽略。
 3. Python安装之后，控制台执行以下命令。
 ```
