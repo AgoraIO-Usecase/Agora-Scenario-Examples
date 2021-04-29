@@ -58,8 +58,11 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
     private RoomListAdapter mAdapter;
 
     private SimpleRoomEventCallback mSimpleRoomEventCallback = new SimpleRoomEventCallback() {
+
         @Override
-        public void onOwnerLeaveRoom(@NonNull Room room) {
+        public void onRoomClosed(@NonNull Room room, boolean fromUser) {
+            super.onRoomClosed(room, fromUser);
+
             mDataBinding.btCrateRoom.setVisibility(View.VISIBLE);
             mDataBinding.llMin.setVisibility(View.GONE);
 
@@ -67,14 +70,10 @@ public class RoomListActivity extends DataBindBaseActivity<ActivityRoomListBindi
             mDataBinding.tvEmpty.setVisibility(mAdapter.getItemCount() <= 0 ? View.VISIBLE : View.GONE);
 
             if (RoomListActivity.this.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
-                ToastUtile.toastShort(RoomListActivity.this, R.string.room_closed);
+                if (!fromUser) {
+                    ToastUtile.toastShort(RoomListActivity.this, R.string.room_closed);
+                }
             }
-        }
-
-        @Override
-        public void onLeaveRoom(@NonNull Room room) {
-            mDataBinding.btCrateRoom.setVisibility(View.VISIBLE);
-            mDataBinding.llMin.setVisibility(View.GONE);
         }
 
         @Override

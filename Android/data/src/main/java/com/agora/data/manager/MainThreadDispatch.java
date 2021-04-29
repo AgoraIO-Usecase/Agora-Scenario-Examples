@@ -32,9 +32,8 @@ public class MainThreadDispatch implements RoomEventCallback {
     private static final int ON_INVITE_REFUSE = ON_INVITE_AGREE + 1;
     private static final int ON_ENTER_MIN_STATUS = ON_INVITE_REFUSE + 1;
     private static final int ON_ROOM_ERROR = ON_ENTER_MIN_STATUS + 1;
-    private static final int ON_LEAVE_ROOM = ON_ROOM_ERROR + 1;
-    private static final int ON_OWNER_LEAVE_ROOM = ON_LEAVE_ROOM + 1;
-    private static final int ON_SDK_VIDEO_STATUS_CHANGED = ON_OWNER_LEAVE_ROOM + 1;
+    private static final int ON_ROOM_CLOSED = ON_ROOM_ERROR + 1;
+    private static final int ON_SDK_VIDEO_STATUS_CHANGED = ON_ROOM_CLOSED + 1;
     private static final int ON_ROOM_MESSAGE_RECEIVED = ON_SDK_VIDEO_STATUS_CHANGED + 1;
 
     private final List<RoomEventCallback> enevtCallbacks = new ArrayList<>();
@@ -110,13 +109,12 @@ public class MainThreadDispatch implements RoomEventCallback {
                 for (RoomEventCallback callback : enevtCallbacks) {
                     callback.onRoomError((Integer) msg.obj);
                 }
-            } else if (msg.what == ON_OWNER_LEAVE_ROOM) {
+            } else if (msg.what == ON_ROOM_CLOSED) {
+                Bundle bundle = msg.getData();
+                Room room = (Room) bundle.getSerializable("room");
+                boolean fromUser = bundle.getBoolean("fromUser");
                 for (RoomEventCallback callback : enevtCallbacks) {
-                    callback.onOwnerLeaveRoom((Room) msg.obj);
-                }
-            } else if (msg.what == ON_LEAVE_ROOM) {
-                for (RoomEventCallback callback : enevtCallbacks) {
-                    callback.onLeaveRoom((Room) msg.obj);
+                    callback.onRoomClosed(room, fromUser);
                 }
             } else if (msg.what == ON_SDK_VIDEO_STATUS_CHANGED) {
                 Member member = (Member) msg.obj;
@@ -136,13 +134,14 @@ public class MainThreadDispatch implements RoomEventCallback {
     });
 
     @Override
-    public void onOwnerLeaveRoom(@NonNull Room room) {
-        mHandler.obtainMessage(ON_OWNER_LEAVE_ROOM, room).sendToTarget();
-    }
+    public void onRoomClosed(@NonNull Room room, boolean fromUser) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("room", room);
+        bundle.putBoolean("fromUser", fromUser);
 
-    @Override
-    public void onLeaveRoom(@NonNull Room room) {
-        mHandler.obtainMessage(ON_LEAVE_ROOM, room).sendToTarget();
+        Message message = mHandler.obtainMessage(ON_ROOM_CLOSED);
+        message.setData(bundle);
+        message.sendToTarget();
     }
 
     @Override
@@ -161,7 +160,7 @@ public class MainThreadDispatch implements RoomEventCallback {
         bundle.putBoolean("isMine", isMine);
         bundle.putSerializable("member", member);
 
-        Message message = mHandler.obtainMessage(ON_ROLE_CHANGED, member);
+        Message message = mHandler.obtainMessage(ON_ROLE_CHANGED);
         message.setData(bundle);
         message.sendToTarget();
     }

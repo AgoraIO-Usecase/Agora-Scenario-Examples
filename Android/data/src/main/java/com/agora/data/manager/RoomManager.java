@@ -282,8 +282,8 @@ public final class RoomManager implements IRoomProxy {
         RTMManager.Instance(mContext).addChannelListeners(mRtmChannelListener);
     }
 
-    public void leaveRoom() {
-        mLogger.d("onJoinRoom() called with: isLeaving = [%s]", isLeaving);
+    private void leaveRoom(boolean fromUser) {
+        mLogger.d("leaveRoom() called with: fromUser = [%s]", fromUser);
         if (isLeaving) {
             return;
         }
@@ -304,15 +304,25 @@ public final class RoomManager implements IRoomProxy {
                     }
                 });
 
-        onLeaveRoom();
+        onLeaveRoom(fromUser);
     }
 
-    private void onLeaveRoom() {
+    public void leaveRoom() {
+        leaveRoom(true);
+    }
+
+    private void onLeaveRoom(boolean fromUser) {
         mLogger.d("onLeaveRoom() called");
         RtcManager.Instance(mContext).removeHandler(mIRtcEngineEventHandler);
         RTMManager.Instance(mContext).removeChannelListeners(mRtmChannelListener);
 
-        mainThreadDispatch.onLeaveRoom(getRoom());
+        if (fromUser) {
+            if (isOwner()) {
+                mainThreadDispatch.onRoomClosed(mRoom, fromUser);
+            }
+        } else {
+            mainThreadDispatch.onRoomClosed(mRoom, fromUser);
+        }
 
         this.mRoom = null;
         this.mMine = null;
@@ -561,11 +571,10 @@ public final class RoomManager implements IRoomProxy {
             streamIdMap.remove(member.getStreamId());
         }
 
+        mainThreadDispatch.onMemberLeave(member);
+
         if (isOwner(member)) {
-            mainThreadDispatch.onOwnerLeaveRoom(getRoom());
-            leaveRoom();
-        } else {
-            mainThreadDispatch.onMemberLeave(member);
+            leaveRoom(false);
         }
     }
 

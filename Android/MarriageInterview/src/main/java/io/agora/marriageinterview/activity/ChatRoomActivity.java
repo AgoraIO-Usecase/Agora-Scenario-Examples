@@ -166,6 +166,19 @@ public class ChatRoomActivity extends DataBindBaseActivity<MerryActivityChatRoom
         preJoinRoom(mRoom);
     }
 
+    private void refreshMagicIcon() {
+        Member member = RoomManager.Instance(ChatRoomActivity.this).getMine();
+        if (member == null) {
+            return;
+        }
+
+        if (member.getRole() == Member.Role.Listener) {
+            mDataBinding.ivMagic.setVisibility(View.GONE);
+        } else {
+            mDataBinding.ivMagic.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void refreshAudioView() {
         Member member = RoomManager.Instance(ChatRoomActivity.this).getMine();
         if (member == null) {
@@ -418,8 +431,6 @@ public class ChatRoomActivity extends DataBindBaseActivity<MerryActivityChatRoom
     }
 
     private void onJoinRoomEnd() {
-        refreshAudioView();
-
         Member member = RoomManager.Instance(this).getMine();
         if (member == null) {
             return;
@@ -678,14 +689,11 @@ public class ChatRoomActivity extends DataBindBaseActivity<MerryActivityChatRoom
 
 
     @Override
-    public void onOwnerLeaveRoom(@NonNull Room room) {
-        ToastUtile.toastShort(this, R.string.room_closed);
-        leaveRoom();
-    }
-
-    @Override
-    public void onLeaveRoom(@NonNull Room room) {
-
+    public void onRoomClosed(@NonNull Room room, boolean fromUser) {
+        if (!fromUser) {
+            ToastUtile.toastShort(this, R.string.room_closed);
+            leaveRoom();
+        }
     }
 
     @Override
@@ -709,7 +717,10 @@ public class ChatRoomActivity extends DataBindBaseActivity<MerryActivityChatRoom
 
     @Override
     public void onRoleChanged(boolean isMine, @NonNull Member member) {
-        refreshAudioView();
+        if (isMine(member)) {
+            refreshAudioView();
+            refreshMagicIcon();
+        }
 
         boolean isLocal = isMine(member);
         if (member.getRole() == Member.Role.Listener) {
@@ -730,7 +741,9 @@ public class ChatRoomActivity extends DataBindBaseActivity<MerryActivityChatRoom
 
     @Override
     public void onAudioStatusChanged(boolean isMine, @NonNull Member member) {
-        refreshAudioView();
+        if (isMine(member)) {
+            refreshAudioView();
+        }
 
         Member mOwner = RoomManager.Instance(this).getOwner();
         if (ObjectsCompat.equals(member, mOwner)) {

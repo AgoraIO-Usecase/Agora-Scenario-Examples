@@ -54,8 +54,8 @@ public class RoomListActivity extends DataBindBaseActivity<MerryActivityRoomList
 
     private SimpleRoomEventCallback mSimpleRoomEventCallback = new SimpleRoomEventCallback() {
         @Override
-        public void onOwnerLeaveRoom(@NonNull Room room) {
-            super.onOwnerLeaveRoom(room);
+        public void onRoomClosed(@NonNull Room room, boolean fromUser) {
+            super.onRoomClosed(room, fromUser);
 
             mAdapter.deleteItem(room);
             mDataBinding.tvEmpty.setVisibility(mAdapter.getItemCount() <= 0 ? View.VISIBLE : View.GONE);
@@ -168,7 +168,13 @@ public class RoomListActivity extends DataBindBaseActivity<MerryActivityRoomList
 
     private void gotoCreateRoom() {
         if (EasyPermissions.hasPermissions(this, PERMISSTION)) {
-            new CreateRoomDialog().show(getSupportFragmentManager());
+            new CreateRoomDialog().show(getSupportFragmentManager(), new CreateRoomDialog.ICreateCallback() {
+                @Override
+                public void onRoomCreated(@NonNull Room room) {
+                    Intent intent = ChatRoomActivity.newIntent(RoomListActivity.this, room);
+                    startActivity(intent);
+                }
+            });
         } else {
             EasyPermissions.requestPermissions(this, getString(R.string.error_permisstion),
                     TAG_PERMISSTION_REQUESTCODE, PERMISSTION);

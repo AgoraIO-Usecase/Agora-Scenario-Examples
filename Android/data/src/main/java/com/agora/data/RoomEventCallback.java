@@ -10,18 +10,11 @@ import com.agora.data.model.Room;
 @MainThread
 public interface RoomEventCallback {
     /**
-     * 房主离开房间回调
+     * 房间被关闭
      *
-     * @param room
+     * @param fromUser true-是我主动关闭，false-被动关闭，比如房主退出房间
      */
-    void onOwnerLeaveRoom(@NonNull Room room);
-
-    /**
-     * 我自己主动离开房间回调
-     *
-     * @param room
-     */
-    void onLeaveRoom(@NonNull Room room);
+    void onRoomClosed(@NonNull Room room, boolean fromUser);
 
     /**
      * 用户加入房间

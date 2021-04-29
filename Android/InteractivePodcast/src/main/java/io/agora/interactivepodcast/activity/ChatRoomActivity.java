@@ -583,14 +583,11 @@ public class ChatRoomActivity extends DataBindBaseActivity<ActivityChatRoomBindi
     }
 
     @Override
-    public void onOwnerLeaveRoom(@NonNull Room room) {
-        ToastUtile.toastShort(this, R.string.room_closed);
-        finish();
-    }
-
-    @Override
-    public void onLeaveRoom(@NonNull Room room) {
-
+    public void onRoomClosed(@NonNull Room room, boolean fromUser) {
+        if (!fromUser) {
+            ToastUtile.toastShort(this, R.string.room_closed);
+            exitRoom(true);
+        }
     }
 
     @Override
