@@ -170,7 +170,8 @@ class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
     
     private func subcribeUIEvent() {
         backView.rx.tap
-            .throttle(RxTimeInterval.seconds(2), scheduler: MainScheduler.instance)
+            .debounce(RxTimeInterval.microseconds(300), scheduler: MainScheduler.instance)
+            .throttle(RxTimeInterval.seconds(1), scheduler: MainScheduler.instance)
             .concatMap { [unowned self] _ -> Observable<Bool> in
                 if (self.viewModel.isManager) {
                     return self.showAlert(title: "Close room".localized, message: "Leaving the room ends the session and removes everyone".localized)
@@ -185,6 +186,11 @@ class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
             }
             .concatMap { [unowned self] _ -> Observable<Result<Void>> in
                 return self.viewModel.leaveRoom(action: .closeRoom)
+                    .do(onSubscribe: {
+                        self.show(processing: true)
+                    }, onDispose: {
+                        self.show(processing: false)
+                    })
             }
             .filter { [unowned self] result in
                 if (!result.success) {
@@ -204,7 +210,7 @@ class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
         
         showMembersView.rx.tap
             .debounce(RxTimeInterval.microseconds(300), scheduler: MainScheduler.instance)
-            .throttle(RxTimeInterval.seconds(2), scheduler: MainScheduler.instance)
+            .throttle(RxTimeInterval.seconds(1), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [unowned self] _ in
                 RoomListenerList().show(delegate: self)
             })
