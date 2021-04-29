@@ -1,6 +1,7 @@
 package com.agora.data.provider;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
@@ -29,9 +30,15 @@ public class BaseDataProvider implements IDataProvider {
         } else {
             AVOSCloud.setLogLevel(AVLogger.Level.ERROR);
         }
-        AVOSCloud.initialize(mContext, mContext.getString(R.string.leancloud_app_id),
-                mContext.getString(R.string.leancloud_app_key),
-                mContext.getString(R.string.leancloud_server_url));
+
+        String appid = mContext.getString(R.string.leancloud_app_id);
+        String appKey = mContext.getString(R.string.leancloud_app_key);
+        String url = mContext.getString(R.string.leancloud_server_url);
+        if (TextUtils.isEmpty(appid) || TextUtils.isEmpty(appKey) || TextUtils.isEmpty(url)) {
+            throw new NullPointerException("please check \"strings_config.xml\"");
+        }
+
+        AVOSCloud.initialize(mContext, appid, appKey, url);
 
         PushService.startIfRequired(mContext);
 

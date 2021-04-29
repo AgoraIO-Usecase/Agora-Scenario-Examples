@@ -1,6 +1,7 @@
 package com.agora.data.manager;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.agora.data.Config;
@@ -49,9 +50,14 @@ public final class RtcManager {
     public void init() {
         mLogger.d("init() called");
         if (mRtcEngine == null) {
+            String appid = mContext.getString(R.string.app_id);
+            if (TextUtils.isEmpty(appid)) {
+                throw new NullPointerException("please check \"strings_config.xml\"");
+            }
+
             RtcEngineConfig config = new RtcEngineConfig();
             config.mContext = mContext;
-            config.mAppId = mContext.getString(R.string.app_id);
+            config.mAppId = appid;
             config.mEventHandler = mEventHandler;
             if (Config.isLeanCloud()) {
                 config.mAreaCode = RtcEngineConfig.AreaCode.AREA_CODE_CN;
