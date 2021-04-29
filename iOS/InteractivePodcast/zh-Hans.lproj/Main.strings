@@ -1,0 +1,66 @@
+
+/* Class = "UILabel"; text = "Voice"; ObjectID = "3hw-va-C1D"; */
+"3hw-va-C1D.text" = "Voice";
+
+/* Class = "UIButton"; normalTitle = "重新加载"; ObjectID = "7aS-qK-gaQ"; */
+"7aS-qK-gaQ.normalTitle" = "重新加载";
+
+/* Class = "UILabel"; text = "Voice"; ObjectID = "7hJ-JA-SIV"; */
+"7hJ-JA-SIV.text" = "Voice";
+
+/* Class = "UILabel"; text = "注册声网帐号"; ObjectID = "D5s-Bq-Gpw"; */
+"D5s-Bq-Gpw.text" = "注册声网帐号";
+
+/* Class = "UILabel"; text = "发版时间"; ObjectID = "G9h-gv-sQx"; */
+"G9h-gv-sQx.text" = "发版时间";
+
+/* Class = "UILabel"; text = "XXX"; ObjectID = "Izn-Tj-bos"; */
+"Izn-Tj-bos.text" = "XXX";
+
+/* Class = "UILabel"; text = "SDK 版本"; ObjectID = "J8f-ay-bOO"; */
+"J8f-ay-bOO.text" = "SDK 版本";
+
+/* Class = "UILabel"; text = "产品免责声明"; ObjectID = "N7W-rl-Mi8"; */
+"N7W-rl-Mi8.text" = "产品免责声明";
+
+/* Class = "UILabel"; text = "设置昵称"; ObjectID = "Xkx-LQ-vRC"; */
+"Xkx-LQ-vRC.text" = "设置昵称";
+
+/* Class = "UILabel"; text = "请创建一个房间"; ObjectID = "YGH-6p-gAp"; */
+"YGH-6p-gAp.text" = "请创建一个房间";
+
+/* Class = "UILabel"; text = "2021.XX.XX"; ObjectID = "YK9-6R-Lmz"; */
+"YK9-6R-Lmz.text" = "2021.XX.XX";
+
+/* Class = "UILabel"; text = "关于"; ObjectID = "YUN-rc-38z"; */
+"YUN-rc-38z.text" = "关于";
+
+/* Class = "UILabel"; text = "XXX"; ObjectID = "YXg-ve-wOo"; */
+"YXg-ve-wOo.text" = "XXX";
+
+/* Class = "UILabel"; text = "房间列表"; ObjectID = "ZZd-UN-q4e"; */
+"ZZd-UN-q4e.text" = "房间列表";
+
+/* Class = "UILabel"; text = "产品免责声明"; ObjectID = "bZi-0e-fjQ"; */
+"bZi-0e-fjQ.text" = "产品免责声明";
+
+/* Class = "UILabel"; text = "Voice的聊天世界"; ObjectID = "bxb-aY-xZF"; */
+"bxb-aY-xZF.text" = "Voice的聊天世界";
+
+/* Class = "UILabel"; text = "设置昵称"; ObjectID = "cqq-Ch-qVh"; */
+"cqq-Ch-qVh.text" = "设置昵称";
+
+/* Class = "UIButton"; normalTitle = "确定"; ObjectID = "edN-84-A8I"; */
+"edN-84-A8I.normalTitle" = "确定";
+
+/* Class = "UILabel"; text = "极速直播"; ObjectID = "hWy-WC-M3A"; */
+"hWy-WC-M3A.text" = "极速直播";
+
+/* Class = "UILabel"; text = "隐私条例"; ObjectID = "pxn-HB-3xd"; */
+"pxn-HB-3xd.text" = "隐私条例";
+
+/* Class = "UILabel"; text = "Livecast 版本"; ObjectID = "rqn-yY-eKA"; */
+"rqn-yY-eKA.text" = "Livecast 版本";
+
+/* Class = "UILabel"; text = "关于"; ObjectID = "sMs-H6-eq4"; */
+"sMs-H6-eq4.text" = "关于";

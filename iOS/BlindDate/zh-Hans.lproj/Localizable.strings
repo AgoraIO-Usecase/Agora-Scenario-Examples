@@ -1,0 +1,12 @@
+/* 
+  Localizable.strings
+  Scene-Examples
+
+  Created by XC on 2021/4/21.
+  
+*/
+
+"Room List" = "房间列表";
+"Close room" = "关闭房间";
+"Needs Network permission" = "请在设置中打开的网络权限";
+"Leaving the room ends the session and removes everyone" = "关闭房间后所有成员将被移除房间";

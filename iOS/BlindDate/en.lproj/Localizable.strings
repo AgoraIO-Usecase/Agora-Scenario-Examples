@@ -1,0 +1,12 @@
+/* 
+  Localizable.strings
+  Scene-Examples
+
+  Created by XC on 2021/4/21.
+  
+*/
+
+"Room List" = "Room List";
+"Needs Network permission" = "Needs Network permission";
+"Close room" = "Close room";
+"Leaving the room ends the session and removes everyone" = "Leaving the room ends the session and removes everyone";
