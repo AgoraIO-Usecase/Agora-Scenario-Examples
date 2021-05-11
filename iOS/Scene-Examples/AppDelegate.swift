@@ -6,21 +6,17 @@
 //
 
 import UIKit
-import LeanCloud
-import Core
+#if LEANCLOUD
+import Core_LeanCloud
+#elseif FIREBASE
+import Core_Firebase
+#endif
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        do {
-            try LCApplication.default.set(
-                id: BuildConfig.LeanCloudAppId,
-                key: BuildConfig.LeanCloudAppKey,
-                serverURL: BuildConfig.LeanCloudServerUrl)
-        } catch {
-            Logger.log(message: error.localizedDescription, level: .error)
-        }
+        Database.initConfig()
         return true
     }
 

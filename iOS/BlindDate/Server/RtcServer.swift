@@ -9,7 +9,11 @@ import Foundation
 import AgoraRtcKit
 import RxSwift
 import RxRelay
-import Core
+#if LEANCLOUD
+import Core_LeanCloud
+#elseif FIREBASE
+import Core_Firebase
+#endif
 
 enum RtcServerStateType {
     case join
@@ -194,17 +198,6 @@ class RtcServer: NSObject {
                 }
             }
         }
-        
-//        let code = rtc.joinChannel(byToken: BuildConfig.Token, channelId: channel, info: nil, uid: 0, options: AgoraRtcChannelMediaOptions())
-//        if (code != 0) {
-//            return Observable.just(Result(success: false, message: RtcServer.toErrorString(type: .join, code: code)))
-//        } else {
-//            return statePublisher.filter { (state) -> Bool in
-//                return state.data == RtcServerStateType.join || state.data == RtcServerStateType.error
-//            }.take(1).map { (state) -> Result<Void> in
-//                return Result(success: state.success, message: state.message)
-//            }
-//        }
     }
     
     func leaveChannel() -> Observable<Result<Void>> {

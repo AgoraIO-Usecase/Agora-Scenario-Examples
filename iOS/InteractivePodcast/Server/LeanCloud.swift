@@ -4,10 +4,11 @@
 //
 //  Created by XUCH on 2021/3/7.
 //
+#if LEANCLOUD
 import Foundation
 import RxSwift
 import LeanCloud
-import Core
+import Core_LeanCloud
 
 extension User {
     static func from(object: LCObject) throws -> User {
@@ -393,3 +394,4 @@ extension Action {
         }
     }
 }
+#endif

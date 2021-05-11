@@ -9,7 +9,11 @@ import Foundation
 import RxSwift
 import RxRelay
 import AgoraRtmKit
-import Core
+#if LEANCLOUD
+import Core_LeanCloud
+#elseif FIREBASE
+import Core_Firebase
+#endif
 
 class RtmServer: NSObject {
     private var rtmKit = AgoraRtmKit(appId: BuildConfig.AppId, delegate: nil)!

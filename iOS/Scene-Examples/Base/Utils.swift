@@ -15,3 +15,9 @@ class Colors {
     static let Yellow = "#E1B66A"
     static let Red = "#F1473A"
 }
+
+extension String {
+    var localized: String {
+        NSLocalizedString(self, bundle: Bundle.main, comment: "")
+    }
+}

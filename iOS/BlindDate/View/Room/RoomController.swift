@@ -10,9 +10,13 @@ import UIKit
 import RxSwift
 import RxCocoa
 import IGListKit
-import Core
+#if LEANCLOUD
+import Core_LeanCloud
+#elseif FIREBASE
+import Core_Firebase
+#endif
 
-protocol RoomControlDelegate: class {
+protocol RoomControlDelegate: AnyObject {
     func onTap(view: RoleVideoView)
 }
 

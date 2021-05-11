@@ -10,7 +10,11 @@ import RxSwift
 import RxRelay
 import RxCocoa
 import IGListKit
-import Core
+#if LEANCLOUD
+import Core_LeanCloud
+#elseif FIREBASE
+import Core_Firebase
+#endif
 
 class HomeViewModel {
     let activityIndicator = ActivityIndicator()

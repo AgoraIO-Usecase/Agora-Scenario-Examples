@@ -4,11 +4,11 @@
 //
 //  Created by XC on 2021/4/21.
 //
-
+#if LEANCLOUD
 import Foundation
 import RxSwift
 import LeanCloud
-import Core
+import Core_LeanCloud
 
 extension User {
     static func from(object: LCObject) throws -> User {
@@ -275,7 +275,7 @@ extension Member {
     
     func asLeftSpeaker(agree: Bool) -> Observable<Result<Void>> {
         return Database.save {
-            Logger.log(message: "save asSpeaker \(agree)", level: .info)
+            Logger.log(message: "save asLeftSpeaker \(agree)", level: .info)
             let object = LCObject(className: Member.TABLE, objectId: self.id)
             try object.set(Member.ROLE, value: agree ? RoomRole.leftSpeaker.rawValue : RoomRole.listener.rawValue)
             if (agree) {
@@ -289,7 +289,7 @@ extension Member {
     
     func asRightSpeaker(agree: Bool) -> Observable<Result<Void>> {
         return Database.save {
-            Logger.log(message: "save asSpeaker \(agree)", level: .info)
+            Logger.log(message: "save asRightSpeaker \(agree)", level: .info)
             let object = LCObject(className: Member.TABLE, objectId: self.id)
             try object.set(Member.ROLE, value: agree ? RoomRole.rightSpeaker.rawValue : RoomRole.listener.rawValue)
             if (agree) {
@@ -459,3 +459,4 @@ extension Action {
         }
     }
 }
+#endif

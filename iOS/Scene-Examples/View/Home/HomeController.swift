@@ -7,24 +7,41 @@
 
 import Foundation
 import UIKit
-import InteractivePodcast
-import BlindDate
+#if LEANCLOUD
+import InteractivePodcast_LeanCloud
+import BlindDate_LeanCloud
+#elseif FIREBASE
+import InteractivePodcast_Firebase
+import BlindDate_Firebase
+#endif
 
 class InteractivePodcastCard: HomeCard {
-    var title: String = "互动播客"
+    var title: String = "Interactive Podcast".localized
     var color: UIColor = UIColor(hex: Colors.Blue)
     
     func create() -> UIViewController {
-        InteractivePodcast.HomeController.instance()
+        #if LEANCLOUD
+            InteractivePodcast_LeanCloud.HomeController.instance()
+        #elseif FIREBASE
+            InteractivePodcast_Firebase.HomeController.instance()
+        #else
+            UIViewController()
+        #endif
     }
 }
 
-class DateFaceTime: HomeCard {
-    var title: String = "在线相亲"
+class InteractiveLiveDatingCard: HomeCard {
+    var title: String = "Interactive Live Dating".localized
     var color: UIColor = UIColor(hex: Colors.LightBLue)
-    
+
     func create() -> UIViewController {
-        BlindDate.BlindDateHomeController.instance()
+        #if LEANCLOUD
+            BlindDate_LeanCloud.BlindDateHomeController.instance()
+        #elseif FIREBASE
+            BlindDate_Firebase.BlindDateHomeController.instance()
+        #else
+            UIViewController()
+        #endif
     }
 }
 
@@ -32,7 +49,7 @@ class HomeController: UITableViewController {
     
     var listData: Array<HomeCard> = [
         InteractivePodcastCard(),
-        DateFaceTime()
+        InteractiveLiveDatingCard()
     ]
     
     override func viewDidLoad() {

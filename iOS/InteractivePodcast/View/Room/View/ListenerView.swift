@@ -7,7 +7,11 @@
 
 import Foundation
 import UIKit
-import Core
+#if LEANCLOUD
+import Core_LeanCloud
+#elseif FIREBASE
+import Core_Firebase
+#endif
 
 class ListenerView: BaseUICollectionViewCell<Member> {
     fileprivate static let padding: CGFloat = 10

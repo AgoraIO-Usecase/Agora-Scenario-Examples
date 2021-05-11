@@ -6,7 +6,11 @@
 //
 
 import Foundation
-import Core
+#if LEANCLOUD
+import Core_LeanCloud
+#elseif FIREBASE
+import Core_Firebase
+#endif
 
 class Room: Equatable {
     

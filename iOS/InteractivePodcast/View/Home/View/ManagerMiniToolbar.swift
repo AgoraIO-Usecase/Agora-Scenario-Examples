@@ -9,7 +9,11 @@ import Foundation
 import RxSwift
 import UIKit
 import RxCocoa
-import Core
+#if LEANCLOUD
+import Core_LeanCloud
+#elseif FIREBASE
+import Core_Firebase
+#endif
 
 class ManagerMiniToolbar: UIStackView {
     weak var delegate: MiniRoomView!

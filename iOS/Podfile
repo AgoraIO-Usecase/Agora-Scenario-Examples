@@ -9,13 +9,13 @@ def commonPods
   pod 'IGListKit', '~> 4.0.0'
 end
 
-target 'Scene-Examples' do
+# target with leancloud sdk
+target 'Scene-Examples_LeanCloud' do
   commonPods
   use_frameworks!
-  pod 'LeanCloud'
 end
 
-target 'Core' do
+target 'Core_LeanCloud' do
   use_frameworks!
   pod 'LeanCloud'
   pod 'RxSwift', '6.1.0'
@@ -23,14 +23,14 @@ target 'Core' do
   pod 'RxRelay', '6.1.0'
 end
 
-target 'InteractivePodcast' do
+target 'InteractivePodcast_LeanCloud' do
   commonPods
   use_frameworks!
   pod 'LeanCloud'
   pod 'AgoraRtcEngine_iOS'
 end
 
-target 'BlindDate' do
+target 'BlindDate_LeanCloud' do
   commonPods
   use_frameworks!
   pod 'LeanCloud'
@@ -38,3 +38,34 @@ target 'BlindDate' do
   pod 'AgoraRtcEngine_iOS'
 end
 
+# target with firebase sdk
+target 'Scene-Examples_Firebase' do
+  commonPods
+  use_frameworks!
+end
+
+target 'Core_Firebase' do
+  use_frameworks!
+  pod 'Firebase/Firestore'
+  pod 'FirebaseFirestoreSwift'
+  pod 'RxSwift', '6.1.0'
+  pod 'RxCocoa', '6.1.0'
+  pod 'RxRelay', '6.1.0'
+end
+
+target 'InteractivePodcast_Firebase' do
+  commonPods
+  use_frameworks!
+  pod 'Firebase/Firestore'
+  pod 'FirebaseFirestoreSwift'
+  pod 'AgoraRtcEngine_iOS'
+end
+
+target 'BlindDate_Firebase' do
+  commonPods
+  use_frameworks!
+  pod 'Firebase/Firestore'
+  pod 'FirebaseFirestoreSwift'
+  pod 'AgoraRtm_iOS'
+  pod 'AgoraRtcEngine_iOS'
+end

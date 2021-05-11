@@ -8,7 +8,11 @@
 import Foundation
 import UIKit
 import RxSwift
-import Core
+#if LEANCLOUD
+import Core_LeanCloud
+#elseif FIREBASE
+import Core_Firebase
+#endif
 
 protocol CreateRoomDelegate: BaseViewContoller {
     func createRoom(with: String?) -> Observable<Result<Room>>

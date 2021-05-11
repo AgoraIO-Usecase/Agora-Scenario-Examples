@@ -41,7 +41,7 @@ public class CustomTabBarItem: UIButton {
     
     private let label: UILabel = {
         let view = UILabel()
-        view.font = UIFont.systemFont(ofSize: 10, weight: .bold)
+        view.font = UIFont.systemFont(ofSize: 10)
         view.textColor = .black
         view.textAlignment = .center
         view.numberOfLines = 1
