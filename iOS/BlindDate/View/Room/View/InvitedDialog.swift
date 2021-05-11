@@ -8,7 +8,11 @@
 import Foundation
 import UIKit
 import RxSwift
-import Core
+#if LEANCLOUD
+import Core_LeanCloud
+#elseif FIREBASE
+import Core_Firebase
+#endif
 
 class InvitedDialog: Dialog {
     weak var delegate: RoomDelegate!

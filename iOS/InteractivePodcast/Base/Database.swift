@@ -4,7 +4,11 @@
 //
 //  Created by XC on 2021/4/6.
 //
-import Core
+#if LEANCLOUD
+import Core_LeanCloud
+#elseif FIREBASE
+import Core_Firebase
+#endif
 
 extension User {
     static let TABLE: String = "USER"

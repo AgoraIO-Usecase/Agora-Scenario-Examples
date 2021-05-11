@@ -7,7 +7,11 @@
 
 import Foundation
 import UIKit
-import Core
+#if LEANCLOUD
+import Core_LeanCloud
+#elseif FIREBASE
+import Core_Firebase
+#endif
 
 class IconView: UIView {
     fileprivate static let insets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)

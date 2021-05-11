@@ -8,9 +8,15 @@
 import UIKit
 import RxCocoa
 import RxSwift
-import Core
-import InteractivePodcast
-import BlindDate
+#if LEANCLOUD
+import Core_LeanCloud
+import InteractivePodcast_LeanCloud
+import BlindDate_LeanCloud
+#elseif FIREBASE
+import Core_Firebase
+import InteractivePodcast_Firebase
+import BlindDate_Firebase
+#endif
 
 class ViewController: CustomTabBarController {
     
@@ -26,16 +32,29 @@ class ViewController: CustomTabBarController {
             UIViewController(),
             SettingController.instance()
         ]
-        setTabBar(items: [
-            CustomTabBarItem(icon: UIImage(systemName: "square.grid.3x3")!, title: "全部"),
-            CustomTabBarItem(icon: UIImage(systemName: "music.mic")!, title: "互动播客") {
-                InteractivePodcast.HomeController.instance()
-            },
-            CustomTabBarItem(icon: UIImage(systemName: "video")!, title: "在线相亲") {
-                BlindDate.BlindDateHomeController.instance()
-            },
-            CustomTabBarItem(icon: UIImage(systemName: "gearshape")!, title: "设置"),
-        ])
+        #if LEANCLOUD
+            setTabBar(items: [
+                CustomTabBarItem(icon: UIImage(systemName: "square.grid.3x3")!, title: "All".localized),
+                CustomTabBarItem(icon: UIImage(systemName: "music.mic")!, title: "Podcast".localized) {
+                    InteractivePodcast_LeanCloud.HomeController.instance()
+                },
+                CustomTabBarItem(icon: UIImage(systemName: "video")!, title: "Dating".localized) {
+                    BlindDate_LeanCloud.BlindDateHomeController.instance()
+                },
+                CustomTabBarItem(icon: UIImage(systemName: "gearshape")!, title: "Settings".localized),
+            ])
+        #elseif FIREBASE
+            setTabBar(items: [
+                CustomTabBarItem(icon: UIImage(systemName: "square.grid.3x3")!, title: "All".localized),
+                CustomTabBarItem(icon: UIImage(systemName: "music.mic")!, title: "Podcast".localized) {
+                    InteractivePodcast_Firebase.HomeController.instance()
+                },
+                CustomTabBarItem(icon: UIImage(systemName: "video")!, title: "Dating".localized) {
+                    BlindDate_Firebase.BlindDateHomeController.instance()
+                },
+                CustomTabBarItem(icon: UIImage(systemName: "gearshape")!, title: "Settings".localized),
+            ])
+        #endif
     }
 }
 

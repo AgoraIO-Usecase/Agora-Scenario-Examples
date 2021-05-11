@@ -4,12 +4,23 @@
 //
 //  Created by XC on 2021/4/19.
 //
-
+#if LEANCLOUD
 import Foundation
 import LeanCloud
 import RxSwift
 
 public class Database {
+    
+    public static func initConfig() {
+        do {
+            try LCApplication.default.set(
+                id: BuildConfig.LeanCloudAppId,
+                key: BuildConfig.LeanCloudAppKey,
+                serverURL: BuildConfig.LeanCloudServerUrl)
+        } catch {
+            Logger.log(message: error.localizedDescription, level: .error)
+        }
+    }
     
     static let completionQueue = DispatchQueue(label: "Database")
     
@@ -211,3 +222,4 @@ public class Database {
         }
     }
 }
+#endif

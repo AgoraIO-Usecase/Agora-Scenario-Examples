@@ -6,13 +6,24 @@
 //
 
 import UIKit
-import Core
 
-#if BlindDate
-    import BlindDate
-#elseif InteractivePodcast
-    import InteractivePodcast
+#if LEANCLOUD
+import Core_LeanCloud
+    #if BlindDate
+    import BlindDate_LeanCloud
+    #elseif InteractivePodcast
+    import InteractivePodcast_LeanCloud
+    #endif
+#elseif FIREBASE
+import Core_Firebase
+    #if BlindDate
+    import BlindDate_Firebase
+    #elseif InteractivePodcast
+    import InteractivePodcast_Firebase
+    #endif
 #endif
+
+
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -25,10 +36,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         var rootViewController: UIViewController? = nil
-        #if BlindDate
-            rootViewController = UINavigationController(rootViewController: BlindDate.BlindDateHomeController.instance())
-        #elseif InteractivePodcast
-            rootViewController = UINavigationController(rootViewController: InteractivePodcast.HomeController.instance())
+        #if LEANCLOUD
+            #if BlindDate
+                rootViewController = UINavigationController(rootViewController: BlindDate_LeanCloud.BlindDateHomeController.instance())
+            #elseif InteractivePodcast
+                rootViewController = UINavigationController(rootViewController: InteractivePodcast_LeanCloud.HomeController.instance())
+            #endif
+        #elseif FIREBASE
+            #if BlindDate
+                rootViewController = UINavigationController(rootViewController: BlindDate_Firebase.BlindDateHomeController.instance())
+            #elseif InteractivePodcast
+                rootViewController = UINavigationController(rootViewController: InteractivePodcast_Firebase.HomeController.instance())
+            #endif
         #endif
         if let rootViewController = rootViewController {
             window = UIWindow(windowScene: windowScene)
