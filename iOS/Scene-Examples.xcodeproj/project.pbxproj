@@ -15,6 +15,10 @@
 		571AA4752629862700B82B35 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 571AA4732629862700B82B35 /* Main.storyboard */; };
 		571AA47A2629862800B82B35 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 571AA4792629862800B82B35 /* Assets.xcassets */; };
 		571AA47D2629862800B82B35 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 571AA47B2629862800B82B35 /* LaunchScreen.storyboard */; };
+		571BADD126569986004847F6 /* Database_LeanCloud.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5762F7E7265682D5003B042D /* Database_LeanCloud.framework */; };
+		571BADD226569986004847F6 /* Database_LeanCloud.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5762F7E7265682D5003B042D /* Database_LeanCloud.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		571BADD52656998F004847F6 /* Database_Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5762F80226568379003B042D /* Database_Firebase.framework */; };
+		571BADD62656998F004847F6 /* Database_Firebase.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5762F80226568379003B042D /* Database_Firebase.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5728673D26568FAE00292878 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; };
 		5728673E26568FAE00292878 /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5728674226568FB400292878 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; };
@@ -266,6 +270,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		571BADD326569986004847F6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 571AA4622629862700B82B35 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5762F7E6265682D5003B042D;
+			remoteInfo = Database_LeanCloud;
+		};
+		571BADD72656998F004847F6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 571AA4622629862700B82B35 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5762F7F726568379003B042D;
+			remoteInfo = Database_Firebase;
+		};
 		5728673F26568FAE00292878 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 571AA4622629862700B82B35 /* Project object */;
@@ -431,6 +449,7 @@
 				57F639882630098A00B45C0B /* BlindDate_LeanCloud.framework in Embed Frameworks */,
 				57E8D546264A31B2007001BC /* Core.framework in Embed Frameworks */,
 				5757D085262DA46700B4A785 /* InteractivePodcast_LeanCloud.framework in Embed Frameworks */,
+				571BADD226569986004847F6 /* Database_LeanCloud.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -441,6 +460,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				571BADD62656998F004847F6 /* Database_Firebase.framework in Embed Frameworks */,
 				57E8D618264A6460007001BC /* InteractivePodcast_Firebase.framework in Embed Frameworks */,
 				5762F80526568446003B042D /* Core.framework in Embed Frameworks */,
 				57E8D606264A5777007001BC /* BlindDate_Firebase.framework in Embed Frameworks */,
@@ -678,6 +698,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				571BADD126569986004847F6 /* Database_LeanCloud.framework in Frameworks */,
 				57F639872630098A00B45C0B /* BlindDate_LeanCloud.framework in Frameworks */,
 				5757D084262DA46700B4A785 /* InteractivePodcast_LeanCloud.framework in Frameworks */,
 				61F4CF8C8AF21996945CCF97 /* Pods_Scene_Examples_LeanCloud.framework in Frameworks */,
@@ -729,6 +750,7 @@
 				ED820D1AD716D2F4BD117805 /* Pods_Scene_Examples_Firebase.framework in Frameworks */,
 				57E8D605264A5777007001BC /* BlindDate_Firebase.framework in Frameworks */,
 				5762F80426568446003B042D /* Core.framework in Frameworks */,
+				571BADD52656998F004847F6 /* Database_Firebase.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1283,6 +1305,7 @@
 				57F639862630098A00B45C0B /* PBXTargetDependency */,
 				57E8D544264A317E007001BC /* PBXTargetDependency */,
 				57E8D548264A31B2007001BC /* PBXTargetDependency */,
+				571BADD426569986004847F6 /* PBXTargetDependency */,
 			);
 			name = "Scene-Examples_LeanCloud";
 			productName = "Scene-Examples";
@@ -1389,6 +1412,7 @@
 				57E8D608264A5777007001BC /* PBXTargetDependency */,
 				57E8D61A264A6460007001BC /* PBXTargetDependency */,
 				5762F80726568446003B042D /* PBXTargetDependency */,
+				571BADD82656998F004847F6 /* PBXTargetDependency */,
 			);
 			name = "Scene-Examples_Firebase";
 			productName = "Scene-Examples";
@@ -2093,6 +2117,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		571BADD426569986004847F6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5762F7E6265682D5003B042D /* Database_LeanCloud */;
+			targetProxy = 571BADD326569986004847F6 /* PBXContainerItemProxy */;
+		};
+		571BADD82656998F004847F6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5762F7F726568379003B042D /* Database_Firebase */;
+			targetProxy = 571BADD72656998F004847F6 /* PBXContainerItemProxy */;
+		};
 		5728674026568FAE00292878 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 5757D047262D834700B4A785 /* Core */;
@@ -2436,6 +2470,8 @@
 			baseConfigurationReference = B5B7DBC86F4511EB8992BC69 /* Pods-Core.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -2470,6 +2506,8 @@
 			baseConfigurationReference = 12B2800E60E55F24FD5B656C /* Pods-Core.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -2503,6 +2541,8 @@
 			baseConfigurationReference = 6D2AB6714D68EC1998AFC756 /* Pods-InteractivePodcast_LeanCloud.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -2536,6 +2576,8 @@
 			baseConfigurationReference = F27143BAF721366E56E1BA9B /* Pods-InteractivePodcast_LeanCloud.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -2569,6 +2611,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -2604,6 +2647,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -2638,6 +2682,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -2673,6 +2718,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -2754,6 +2800,8 @@
 			baseConfigurationReference = 51F8C0547106EBD253E46381 /* Pods-InteractivePodcast_Firebase.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -2787,6 +2835,8 @@
 			baseConfigurationReference = 15A2E68AA95F4351506F2576 /* Pods-InteractivePodcast_Firebase.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -2819,6 +2869,8 @@
 			baseConfigurationReference = EEEF62793F90DCB24F2A9209 /* Pods-BlindDate_Firebase.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -2852,6 +2904,8 @@
 			baseConfigurationReference = DC676D657C18A0F050BB2C84 /* Pods-BlindDate_Firebase.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -2884,6 +2938,8 @@
 			baseConfigurationReference = 506CF18D26D33A2258104251 /* Pods-BlindDate_LeanCloud.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -2917,6 +2973,8 @@
 			baseConfigurationReference = 87C0C09B110C805F55A2EA35 /* Pods-BlindDate_LeanCloud.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;

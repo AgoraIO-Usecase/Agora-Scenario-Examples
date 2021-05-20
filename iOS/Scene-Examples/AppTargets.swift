@@ -61,18 +61,10 @@ class FirebaseAppTarget: AppTarget {
 #endif
 
 class AppTargets {
-    fileprivate static let instance = AppTargets()
-    static func shared() -> AppTargets {
-        return instance
-    }
-    let target: AppTarget
     let coreData: CoreData = CoreData.shared
-    
-    private init() {
-        #if LEANCLOUD
-        target = LeanCloudAppTarget()
-        #elseif FIREBASE
-        target = FirebaseAppTarget()
-        #endif
-    }
+    #if LEANCLOUD
+    let target: AppTarget = LeanCloudAppTarget()
+    #elseif FIREBASE
+    let target: AppTarget = FirebaseAppTarget()
+    #endif
 }
