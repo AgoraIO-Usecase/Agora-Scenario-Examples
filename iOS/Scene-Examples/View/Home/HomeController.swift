@@ -13,7 +13,7 @@ class InteractivePodcastCard: HomeCard {
     var color: UIColor = UIColor(hex: Colors.Blue)
     
     func create() -> UIViewController {
-        AppTargets.shared().target.getAppMainViewController(app: .InteractivePodcast)
+        AppTargets().target.getAppMainViewController(app: .InteractivePodcast)
     }
 }
 
@@ -22,7 +22,7 @@ class InteractiveLiveDatingCard: HomeCard {
     var color: UIColor = UIColor(hex: Colors.LightBLue)
 
     func create() -> UIViewController {
-        AppTargets.shared().target.getAppMainViewController(app: .BlindDate)
+        AppTargets().target.getAppMainViewController(app: .BlindDate)
     }
 }
 
