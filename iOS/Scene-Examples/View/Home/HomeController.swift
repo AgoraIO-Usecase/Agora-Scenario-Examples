@@ -7,26 +7,13 @@
 
 import Foundation
 import UIKit
-#if LEANCLOUD
-import InteractivePodcast_LeanCloud
-import BlindDate_LeanCloud
-#elseif FIREBASE
-import InteractivePodcast_Firebase
-import BlindDate_Firebase
-#endif
 
 class InteractivePodcastCard: HomeCard {
     var title: String = "Interactive Podcast".localized
     var color: UIColor = UIColor(hex: Colors.Blue)
     
     func create() -> UIViewController {
-        #if LEANCLOUD
-            InteractivePodcast_LeanCloud.HomeController.instance()
-        #elseif FIREBASE
-            InteractivePodcast_Firebase.HomeController.instance()
-        #else
-            UIViewController()
-        #endif
+        AppTargets.shared().target.getAppMainViewController(app: .InteractivePodcast)
     }
 }
 
@@ -35,13 +22,7 @@ class InteractiveLiveDatingCard: HomeCard {
     var color: UIColor = UIColor(hex: Colors.LightBLue)
 
     func create() -> UIViewController {
-        #if LEANCLOUD
-            BlindDate_LeanCloud.BlindDateHomeController.instance()
-        #elseif FIREBASE
-            BlindDate_Firebase.BlindDateHomeController.instance()
-        #else
-            UIViewController()
-        #endif
+        AppTargets.shared().target.getAppMainViewController(app: .BlindDate)
     }
 }
 

@@ -8,11 +8,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
-#if LEANCLOUD
-import Core_LeanCloud
-#elseif FIREBASE
-import Core_Firebase
-#endif
+import Core
 
 protocol HomeCardDelegate: AnyObject {
     func onTapCard(with room: Room)

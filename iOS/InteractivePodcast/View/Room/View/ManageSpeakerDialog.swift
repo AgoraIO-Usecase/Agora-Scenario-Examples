@@ -9,11 +9,7 @@ import Foundation
 import UIKit
 import RxSwift
 import RxCocoa
-#if LEANCLOUD
-import Core_LeanCloud
-#elseif FIREBASE
-import Core_Firebase
-#endif
+import Core
 
 class ManageSpeakerDialog: Dialog {
     weak var delegate: RoomController!

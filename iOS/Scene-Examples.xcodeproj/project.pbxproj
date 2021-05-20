@@ -8,12 +8,21 @@
 
 /* Begin PBXBuildFile section */
 		036A3BA9C20E7ED9BA0DD836 /* Pods_InteractivePodcast_LeanCloud.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4970F4FEDBE05B422D4F2534 /* Pods_InteractivePodcast_LeanCloud.framework */; };
+		15C93B520578CA7BBD30A908 /* Pods_Database_LeanCloud.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A8F295F68F52286E70D8202 /* Pods_Database_LeanCloud.framework */; };
 		571AA46E2629862700B82B35 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 571AA46D2629862700B82B35 /* AppDelegate.swift */; };
 		571AA4702629862700B82B35 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 571AA46F2629862700B82B35 /* SceneDelegate.swift */; };
 		571AA4722629862700B82B35 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 571AA4712629862700B82B35 /* ViewController.swift */; };
 		571AA4752629862700B82B35 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 571AA4732629862700B82B35 /* Main.storyboard */; };
 		571AA47A2629862800B82B35 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 571AA4792629862800B82B35 /* Assets.xcassets */; };
 		571AA47D2629862800B82B35 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 571AA47B2629862800B82B35 /* LaunchScreen.storyboard */; };
+		5728673D26568FAE00292878 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; };
+		5728673E26568FAE00292878 /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5728674226568FB400292878 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; };
+		5728674326568FB400292878 /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5728674726568FF100292878 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; };
+		5728674826568FF100292878 /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5728674C26568FF400292878 /* Database_LeanCloud.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5762F7E7265682D5003B042D /* Database_LeanCloud.framework */; };
+		5728674D26568FF400292878 /* Database_LeanCloud.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5762F7E7265682D5003B042D /* Database_LeanCloud.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		57369B7426298EB7004CF690 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57369B6B26298EB7004CF690 /* Utils.swift */; };
 		5757D00E262D7C0F00B4A785 /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D00D262D7C0F00B4A785 /* HomeController.swift */; };
 		5757D04C262D834700B4A785 /* Core.h in Headers */ = {isa = PBXBuildFile; fileRef = 5757D04A262D834700B4A785 /* Core.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -44,7 +53,6 @@
 		5757D0FD262DB13C00B4A785 /* RoundLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D0FC262DB13C00B4A785 /* RoundLabelView.swift */; };
 		5757D105262DB18300B4A785 /* WaterfallLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D104262DB18300B4A785 /* WaterfallLayout.swift */; };
 		5757D109262DB19F00B4A785 /* RoundImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D108262DB19F00B4A785 /* RoundImageButton.swift */; };
-		5757D10E262DB1F700B4A785 /* LeanCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D10D262DB1F700B4A785 /* LeanCloud.swift */; };
 		5757D123262DB25400B4A785 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D122262DB25400B4A785 /* Model.swift */; };
 		5757D128262DB2E300B4A785 /* LeanCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D127262DB2E300B4A785 /* LeanCloud.swift */; };
 		5757D12E262DB34400B4A785 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D12D262DB34400B4A785 /* Database.swift */; };
@@ -85,6 +93,26 @@
 		5757D202262E898800B4A785 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5757D204262E898800B4A785 /* Main.storyboard */; };
 		5757D20D262E8AFC00B4A785 /* CreateRoomDialog.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5757D20F262E8AFC00B4A785 /* CreateRoomDialog.xib */; };
 		5757D21F262EB8F300B4A785 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D21E262EB8F300B4A785 /* ActivityIndicator.swift */; };
+		5762F7E026568019003B042D /* AppTargets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5762F7DC26567BAA003B042D /* AppTargets.swift */; };
+		5762F7E12656801C003B042D /* AppTargets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5762F7DC26567BAA003B042D /* AppTargets.swift */; };
+		5762F7EB265682D5003B042D /* Database.h in Headers */ = {isa = PBXBuildFile; fileRef = 5762F7E9265682D5003B042D /* Database.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5762F7F426568303003B042D /* LeanCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5762F7F326568303003B042D /* LeanCloud.swift */; };
+		5762F7F62656831B003B042D /* Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5762F7F52656831B003B042D /* Firebase.swift */; };
+		5762F7F926568379003B042D /* Database.h in Headers */ = {isa = PBXBuildFile; fileRef = 5762F7E9265682D5003B042D /* Database.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5762F7FB26568379003B042D /* Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5762F7F52656831B003B042D /* Firebase.swift */; };
+		5762F7FC26568379003B042D /* LeanCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5762F7F326568303003B042D /* LeanCloud.swift */; };
+		5762F80426568446003B042D /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; };
+		5762F80526568446003B042D /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5762F80C26568470003B042D /* Database_LeanCloud.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5762F7E7265682D5003B042D /* Database_LeanCloud.framework */; };
+		5762F80D26568470003B042D /* Database_LeanCloud.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5762F7E7265682D5003B042D /* Database_LeanCloud.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5762F818265684A3003B042D /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; };
+		5762F819265684A3003B042D /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5762F81C265684AA003B042D /* Database_Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5762F80226568379003B042D /* Database_Firebase.framework */; };
+		5762F81D265684AA003B042D /* Database_Firebase.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5762F80226568379003B042D /* Database_Firebase.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5762F820265684CC003B042D /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; };
+		5762F821265684CC003B042D /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5762F824265684D0003B042D /* Database_Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5762F80226568379003B042D /* Database_Firebase.framework */; };
+		5762F825265684D0003B042D /* Database_Firebase.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5762F80226568379003B042D /* Database_Firebase.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		57E8D501264A2C03007001BC /* HomeCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63965262EFAF100B45C0B /* HomeCardView.swift */; };
 		57E8D502264A2C03007001BC /* SettingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D06D262D8D5000B4A785 /* SettingController.swift */; };
 		57E8D503264A2C03007001BC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 571AA4712629862700B82B35 /* ViewController.swift */; };
@@ -95,35 +123,9 @@
 		57E8D50E264A2C03007001BC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 571AA47B2629862800B82B35 /* LaunchScreen.storyboard */; };
 		57E8D50F264A2C03007001BC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 571AA4792629862800B82B35 /* Assets.xcassets */; };
 		57E8D510264A2C03007001BC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 571AA4732629862700B82B35 /* Main.storyboard */; };
-		57E8D51C264A2D93007001BC /* Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57E8D51B264A2D93007001BC /* Firebase.swift */; };
 		57E8D51E264A2DE8007001BC /* Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57E8D51D264A2DE7007001BC /* Firebase.swift */; };
-		57E8D522264A30F8007001BC /* Core.h in Headers */ = {isa = PBXBuildFile; fileRef = 5757D04A262D834700B4A785 /* Core.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		57E8D524264A30F8007001BC /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D122262DB25400B4A785 /* Model.swift */; };
-		57E8D525264A30F8007001BC /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D056262D83C900B4A785 /* CustomTabBarController.swift */; };
-		57E8D526264A30F8007001BC /* BaseUICollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D0DD262DAF9900B4A785 /* BaseUICollectionViewCell.swift */; };
-		57E8D527264A30F8007001BC /* ProcessingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D066262D852200B4A785 /* ProcessingView.swift */; };
-		57E8D528264A30F8007001BC /* RoundButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F639D826304ACE00B45C0B /* RoundButton.swift */; };
-		57E8D529264A30F8007001BC /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D062262D84E400B4A785 /* Colors.swift */; };
-		57E8D52A264A30F8007001BC /* Dialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D0A0262DAC1500B4A785 /* Dialog.swift */; };
-		57E8D52B264A30F8007001BC /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D0E1262DAFDA00B4A785 /* Config.swift */; };
-		57E8D52C264A30F8007001BC /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D059262D841400B4A785 /* Extension.swift */; };
-		57E8D52D264A30F8007001BC /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5757D163262DB9DB00B4A785 /* Model.xcdatamodeld */; };
-		57E8D52E264A30F8007001BC /* Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57E8D51B264A2D93007001BC /* Firebase.swift */; };
-		57E8D52F264A30F8007001BC /* WaterfallLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D104262DB18300B4A785 /* WaterfallLayout.swift */; };
-		57E8D530264A30F8007001BC /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D0BF262DAD8D00B4A785 /* BaseViewController.swift */; };
-		57E8D531264A30F8007001BC /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D071262D8E5600B4A785 /* Logger.swift */; };
-		57E8D532264A30F8007001BC /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D05C262D84AA00B4A785 /* Notification.swift */; };
-		57E8D533264A30F8007001BC /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D15F262DB96900B4A785 /* CoreData.swift */; };
-		57E8D534264A30F8007001BC /* LeanCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D10D262DB1F700B4A785 /* LeanCloud.swift */; };
-		57E8D535264A30F8007001BC /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D05F262D84AF00B4A785 /* NotificationView.swift */; };
-		57E8D536264A30F8007001BC /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D21E262EB8F300B4A785 /* ActivityIndicator.swift */; };
-		57E8D537264A30F8007001BC /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D075262D8EBE00B4A785 /* Utils.swift */; };
-		57E8D53B264A30F8007001BC /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 57F639722630015200B45C0B /* Media.xcassets */; };
-		57E8D53C264A30F8007001BC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 57F6396F263000C300B45C0B /* Localizable.strings */; };
-		57E8D545264A31B2007001BC /* Core_LeanCloud.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core_LeanCloud.framework */; };
-		57E8D546264A31B2007001BC /* Core_LeanCloud.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core_LeanCloud.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		57E8D549264A31BC007001BC /* Core_Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57E8D540264A30F8007001BC /* Core_Firebase.framework */; };
-		57E8D54A264A31BC007001BC /* Core_Firebase.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 57E8D540264A30F8007001BC /* Core_Firebase.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		57E8D545264A31B2007001BC /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; };
+		57E8D546264A31B2007001BC /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		57E8D552264A31D1007001BC /* InteractivePodcast.h in Headers */ = {isa = PBXBuildFile; fileRef = 5757D07F262DA46700B4A785 /* InteractivePodcast.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		57E8D554264A31D1007001BC /* Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57E8D51D264A2DE7007001BC /* Firebase.swift */; };
 		57E8D555264A31D1007001BC /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D1FA262E7E2200B4A785 /* Config.swift */; };
@@ -172,12 +174,8 @@
 		57E8D584264A31D1007001BC /* disclaimer in Resources */ = {isa = PBXBuildFile; fileRef = 5757D1F5262E7D2B00B4A785 /* disclaimer */; };
 		57E8D585264A31D1007001BC /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5757D198262E77F600B4A785 /* Media.xcassets */; };
 		57E8D586264A31D1007001BC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5757D151262DB68E00B4A785 /* Localizable.strings */; };
-		57E8D58C264A31E5007001BC /* Core_Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57E8D540264A30F8007001BC /* Core_Firebase.framework */; };
-		57E8D58D264A31E5007001BC /* Core_Firebase.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 57E8D540264A30F8007001BC /* Core_Firebase.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		57E8D5C8264A356F007001BC /* Core_LeanCloud.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core_LeanCloud.framework */; };
-		57E8D5C9264A3570007001BC /* Core_LeanCloud.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core_LeanCloud.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		57E8D5CD264A3578007001BC /* Core_LeanCloud.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core_LeanCloud.framework */; };
-		57E8D5CE264A3578007001BC /* Core_LeanCloud.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core_LeanCloud.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		57E8D5C8264A356F007001BC /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; };
+		57E8D5C9264A3570007001BC /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		57E8D5D7264A4E57007001BC /* BlindDate.h in Headers */ = {isa = PBXBuildFile; fileRef = 57F639822630098A00B45C0B /* BlindDate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		57E8D5D9264A4E57007001BC /* RtcServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63A09263050E400B45C0B /* RtcServer.swift */; };
 		57E8D5DA264A4E57007001BC /* HomeCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F639E926304EB400B45C0B /* HomeCardView.swift */; };
@@ -216,13 +214,11 @@
 		57E8D606264A5777007001BC /* BlindDate_Firebase.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 57E8D603264A4E57007001BC /* BlindDate_Firebase.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		57E8D60A264A580F007001BC /* Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57E8D609264A580F007001BC /* Firebase.swift */; };
 		57E8D60B264A580F007001BC /* Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57E8D609264A580F007001BC /* Firebase.swift */; };
-		57E8D60D264A5904007001BC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 57E8D60C264A5904007001BC /* GoogleService-Info.plist */; };
-		57E8D60E264A5904007001BC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 57E8D60C264A5904007001BC /* GoogleService-Info.plist */; };
-		57E8D612264A6447007001BC /* Core_Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57E8D540264A30F8007001BC /* Core_Firebase.framework */; };
-		57E8D613264A6447007001BC /* Core_Firebase.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 57E8D540264A30F8007001BC /* Core_Firebase.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		57E8D60D264A5904007001BC /* 1GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 57E8D60C264A5904007001BC /* 1GoogleService-Info.plist */; };
+		57E8D60E264A5904007001BC /* 1GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 57E8D60C264A5904007001BC /* 1GoogleService-Info.plist */; };
 		57E8D617264A6460007001BC /* InteractivePodcast_Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57E8D58A264A31D1007001BC /* InteractivePodcast_Firebase.framework */; };
 		57E8D618264A6460007001BC /* InteractivePodcast_Firebase.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 57E8D58A264A31D1007001BC /* InteractivePodcast_Firebase.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		57E8D61B264A6A57007001BC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 57E8D60C264A5904007001BC /* GoogleService-Info.plist */; };
+		57E8D61B264A6A57007001BC /* 1GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 57E8D60C264A5904007001BC /* 1GoogleService-Info.plist */; };
 		57E8D621264A6FDC007001BC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 57E8D624264A6FDC007001BC /* Localizable.strings */; };
 		57E8D62A264A7306007001BC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 57E8D624264A6FDC007001BC /* Localizable.strings */; };
 		57F63966262EFAF100B45C0B /* HomeCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63965262EFAF100B45C0B /* HomeCardView.swift */; };
@@ -265,23 +261,93 @@
 		57F63AB42635527B00B45C0B /* MemberEnterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63AB32635527B00B45C0B /* MemberEnterView.swift */; };
 		57F63AB9263560CD00B45C0B /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63AB8263560CD00B45C0B /* MessageView.swift */; };
 		57F63ABE2635634900B45C0B /* RtmServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63ABD2635634900B45C0B /* RtmServer.swift */; };
-		5CEF265E9844877C3869CFD1 /* Pods_Core_LeanCloud.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24AFA2BBA5F520A8B6CAD7EA /* Pods_Core_LeanCloud.framework */; };
 		61F4CF8C8AF21996945CCF97 /* Pods_Scene_Examples_LeanCloud.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30620657B35E2E50F3F3BE60 /* Pods_Scene_Examples_LeanCloud.framework */; };
+		761402B6C292295B451C235C /* Pods_Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A0D7AE253FD40BFF3FC44E37 /* Pods_Core.framework */; };
 		9A6C6FBBFB87A47C3865824C /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		B383DC38A71AAF258FD4550F /* Pods_BlindDate_Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0FD9DDB0223C8305338ED51 /* Pods_BlindDate_Firebase.framework */; };
+		C73B545F2CDF6F64C9AC33A9 /* Pods_Database_Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F2E9D9950E2E75E750E77D4 /* Pods_Database_Firebase.framework */; };
 		CA0262D8BB266D1DA1EA0FDE /* Pods_BlindDate_LeanCloud.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E7CA52467C27A6A39401A7F /* Pods_BlindDate_LeanCloud.framework */; };
-		DEB44DCFD804F96AA52F7968 /* Pods_Core_Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF99141053F885BE0AF11377 /* Pods_Core_Firebase.framework */; };
 		ED820D1AD716D2F4BD117805 /* Pods_Scene_Examples_Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 265F2928DE70FF94936B9226 /* Pods_Scene_Examples_Firebase.framework */; };
 		F0734EB5EAF17FCFEACAA862 /* Pods_InteractivePodcast_Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 87BA292B4C3C38D451E19D70 /* Pods_InteractivePodcast_Firebase.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		5728673F26568FAE00292878 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 571AA4622629862700B82B35 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5757D047262D834700B4A785;
+			remoteInfo = Core;
+		};
+		5728674426568FB400292878 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 571AA4622629862700B82B35 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5757D047262D834700B4A785;
+			remoteInfo = Core;
+		};
+		5728674926568FF100292878 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 571AA4622629862700B82B35 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5757D047262D834700B4A785;
+			remoteInfo = Core;
+		};
+		5728674E26568FF400292878 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 571AA4622629862700B82B35 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5762F7E6265682D5003B042D;
+			remoteInfo = Database_LeanCloud;
+		};
 		5757D082262DA46700B4A785 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 571AA4622629862700B82B35 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 5757D07C262DA46700B4A785;
 			remoteInfo = InteractivePodcast;
+		};
+		5762F80626568446003B042D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 571AA4622629862700B82B35 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5757D047262D834700B4A785;
+			remoteInfo = Core;
+		};
+		5762F80E26568470003B042D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 571AA4622629862700B82B35 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5762F7E6265682D5003B042D;
+			remoteInfo = Database_LeanCloud;
+		};
+		5762F81A265684A3003B042D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 571AA4622629862700B82B35 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5757D047262D834700B4A785;
+			remoteInfo = Core;
+		};
+		5762F81E265684AA003B042D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 571AA4622629862700B82B35 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5762F7F726568379003B042D;
+			remoteInfo = Database_Firebase;
+		};
+		5762F822265684CC003B042D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 571AA4622629862700B82B35 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5757D047262D834700B4A785;
+			remoteInfo = Core;
+		};
+		5762F826265684D0003B042D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 571AA4622629862700B82B35 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5762F7F726568379003B042D;
+			remoteInfo = Database_Firebase;
 		};
 		57E8D543264A317E007001BC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -297,28 +363,7 @@
 			remoteGlobalIDString = 5757D047262D834700B4A785;
 			remoteInfo = Core_LeanCloud;
 		};
-		57E8D54B264A31BC007001BC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 571AA4622629862700B82B35 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 57E8D51F264A30F8007001BC;
-			remoteInfo = Core_Firebase;
-		};
-		57E8D58E264A31E5007001BC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 571AA4622629862700B82B35 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 57E8D51F264A30F8007001BC;
-			remoteInfo = Core_Firebase;
-		};
 		57E8D5CA264A3570007001BC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 571AA4622629862700B82B35 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 5757D047262D834700B4A785;
-			remoteInfo = Core_LeanCloud;
-		};
-		57E8D5CF264A3578007001BC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 571AA4622629862700B82B35 /* Project object */;
 			proxyType = 1;
@@ -331,13 +376,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 57E8D5D2264A4E57007001BC;
 			remoteInfo = BlindDate_Firebase;
-		};
-		57E8D614264A6447007001BC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 571AA4622629862700B82B35 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 57E8D51F264A30F8007001BC;
-			remoteInfo = Core_Firebase;
 		};
 		57E8D619264A6460007001BC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -356,6 +394,40 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		5728674126568FAE00292878 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				5728673E26568FAE00292878 /* Core.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5728674626568FB400292878 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				5728674326568FB400292878 /* Core.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5728674B26568FF100292878 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				5728674826568FF100292878 /* Core.framework in Embed Frameworks */,
+				5728674D26568FF400292878 /* Database_LeanCloud.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5757D030262D81C600B4A785 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -363,7 +435,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				57F639882630098A00B45C0B /* BlindDate_LeanCloud.framework in Embed Frameworks */,
-				57E8D546264A31B2007001BC /* Core_LeanCloud.framework in Embed Frameworks */,
+				57E8D546264A31B2007001BC /* Core.framework in Embed Frameworks */,
 				5757D085262DA46700B4A785 /* InteractivePodcast_LeanCloud.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -376,7 +448,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				57E8D618264A6460007001BC /* InteractivePodcast_Firebase.framework in Embed Frameworks */,
-				57E8D54A264A31BC007001BC /* Core_Firebase.framework in Embed Frameworks */,
+				5762F80526568446003B042D /* Core.framework in Embed Frameworks */,
 				57E8D606264A5777007001BC /* BlindDate_Firebase.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -388,7 +460,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				57E8D58D264A31E5007001BC /* Core_Firebase.framework in Embed Frameworks */,
+				5762F81D265684AA003B042D /* Database_Firebase.framework in Embed Frameworks */,
+				5762F819265684A3003B042D /* Core.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -399,18 +472,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				57E8D5C9264A3570007001BC /* Core_LeanCloud.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		57E8D5D1264A3578007001BC /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				57E8D5CE264A3578007001BC /* Core_LeanCloud.framework in Embed Frameworks */,
+				57E8D5C9264A3570007001BC /* Core.framework in Embed Frameworks */,
+				5762F80D26568470003B042D /* Database_LeanCloud.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -421,7 +484,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				57E8D613264A6447007001BC /* Core_Firebase.framework in Embed Frameworks */,
+				5762F825265684D0003B042D /* Database_Firebase.framework in Embed Frameworks */,
+				5762F821265684CC003B042D /* Core.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -434,14 +498,16 @@
 		12B2800E60E55F24FD5B656C /* Pods-Core.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Core.release.xcconfig"; path = "Target Support Files/Pods-Core/Pods-Core.release.xcconfig"; sourceTree = "<group>"; };
 		12C164832E8787C9C96C002B /* Pods-BlindDate.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BlindDate.debug.xcconfig"; path = "Target Support Files/Pods-BlindDate/Pods-BlindDate.debug.xcconfig"; sourceTree = "<group>"; };
 		15A2E68AA95F4351506F2576 /* Pods-InteractivePodcast_Firebase.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InteractivePodcast_Firebase.release.xcconfig"; path = "Target Support Files/Pods-InteractivePodcast_Firebase/Pods-InteractivePodcast_Firebase.release.xcconfig"; sourceTree = "<group>"; };
-		24AFA2BBA5F520A8B6CAD7EA /* Pods_Core_LeanCloud.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Core_LeanCloud.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		265F2928DE70FF94936B9226 /* Pods_Scene_Examples_Firebase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Scene_Examples_Firebase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A8F295F68F52286E70D8202 /* Pods_Database_LeanCloud.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Database_LeanCloud.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2F2E9D9950E2E75E750E77D4 /* Pods_Database_Firebase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Database_Firebase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		30620657B35E2E50F3F3BE60 /* Pods_Scene_Examples_LeanCloud.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Scene_Examples_LeanCloud.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4970F4FEDBE05B422D4F2534 /* Pods_InteractivePodcast_LeanCloud.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_InteractivePodcast_LeanCloud.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E7CA52467C27A6A39401A7F /* Pods_BlindDate_LeanCloud.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BlindDate_LeanCloud.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		506CF18D26D33A2258104251 /* Pods-BlindDate_LeanCloud.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BlindDate_LeanCloud.debug.xcconfig"; path = "Target Support Files/Pods-BlindDate_LeanCloud/Pods-BlindDate_LeanCloud.debug.xcconfig"; sourceTree = "<group>"; };
 		51F8C0547106EBD253E46381 /* Pods-InteractivePodcast_Firebase.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InteractivePodcast_Firebase.debug.xcconfig"; path = "Target Support Files/Pods-InteractivePodcast_Firebase/Pods-InteractivePodcast_Firebase.debug.xcconfig"; sourceTree = "<group>"; };
 		527096D4B407DA1FE7C4F5D4 /* Pods-Core_Firebase.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Core_Firebase.debug.xcconfig"; path = "Target Support Files/Pods-Core_Firebase/Pods-Core_Firebase.debug.xcconfig"; sourceTree = "<group>"; };
+		53A21D478558F81DF5D75531 /* Pods-Database_LeanCloud.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Database_LeanCloud.release.xcconfig"; path = "Target Support Files/Pods-Database_LeanCloud/Pods-Database_LeanCloud.release.xcconfig"; sourceTree = "<group>"; };
 		571AA46A2629862700B82B35 /* Scene-Examples_LeanCloud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Scene-Examples_LeanCloud.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		571AA46D2629862700B82B35 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		571AA46F2629862700B82B35 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -452,7 +518,7 @@
 		571AA47E2629862800B82B35 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		57369B6B26298EB7004CF690 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		5757D00D262D7C0F00B4A785 /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
-		5757D048262D834700B4A785 /* Core_LeanCloud.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Core_LeanCloud.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5757D048262D834700B4A785 /* Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5757D04A262D834700B4A785 /* Core.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Core.h; sourceTree = "<group>"; };
 		5757D04B262D834700B4A785 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5757D056262D83C900B4A785 /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
@@ -485,7 +551,6 @@
 		5757D0FC262DB13C00B4A785 /* RoundLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundLabelView.swift; sourceTree = "<group>"; };
 		5757D104262DB18300B4A785 /* WaterfallLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterfallLayout.swift; sourceTree = "<group>"; };
 		5757D108262DB19F00B4A785 /* RoundImageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundImageButton.swift; sourceTree = "<group>"; };
-		5757D10D262DB1F700B4A785 /* LeanCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeanCloud.swift; sourceTree = "<group>"; };
 		5757D122262DB25400B4A785 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		5757D127262DB2E300B4A785 /* LeanCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeanCloud.swift; sourceTree = "<group>"; };
 		5757D12D262DB34400B4A785 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
@@ -533,14 +598,19 @@
 		5757D214262E8B1600B4A785 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/CreateRoomDialog.strings; sourceTree = "<group>"; };
 		5757D21A262E8B7500B4A785 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/CreateRoomDialog.strings"; sourceTree = "<group>"; };
 		5757D21E262EB8F300B4A785 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
+		5762F7DC26567BAA003B042D /* AppTargets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTargets.swift; sourceTree = "<group>"; };
+		5762F7E7265682D5003B042D /* Database_LeanCloud.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Database_LeanCloud.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5762F7E9265682D5003B042D /* Database.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Database.h; sourceTree = "<group>"; };
+		5762F7EA265682D5003B042D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5762F7F326568303003B042D /* LeanCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeanCloud.swift; sourceTree = "<group>"; };
+		5762F7F52656831B003B042D /* Firebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firebase.swift; sourceTree = "<group>"; };
+		5762F80226568379003B042D /* Database_Firebase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Database_Firebase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		57E8D519264A2C03007001BC /* Scene-Examples_Firebase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Scene-Examples_Firebase.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		57E8D51B264A2D93007001BC /* Firebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firebase.swift; sourceTree = "<group>"; };
 		57E8D51D264A2DE7007001BC /* Firebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firebase.swift; sourceTree = "<group>"; };
-		57E8D540264A30F8007001BC /* Core_Firebase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Core_Firebase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		57E8D58A264A31D1007001BC /* InteractivePodcast_Firebase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = InteractivePodcast_Firebase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		57E8D603264A4E57007001BC /* BlindDate_Firebase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BlindDate_Firebase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		57E8D609264A580F007001BC /* Firebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firebase.swift; sourceTree = "<group>"; };
-		57E8D60C264A5904007001BC /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
+		57E8D60C264A5904007001BC /* 1GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "1GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		57E8D623264A6FDC007001BC /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		57F63965262EFAF100B45C0B /* HomeCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCardView.swift; sourceTree = "<group>"; };
 		57F6396E263000C300B45C0B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -591,6 +661,10 @@
 		7B8E4E73EB4B93DD2AA03649 /* Pods-Scene-Examples_LeanCloud.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Scene-Examples_LeanCloud.release.xcconfig"; path = "Target Support Files/Pods-Scene-Examples_LeanCloud/Pods-Scene-Examples_LeanCloud.release.xcconfig"; sourceTree = "<group>"; };
 		87BA292B4C3C38D451E19D70 /* Pods_InteractivePodcast_Firebase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_InteractivePodcast_Firebase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		87C0C09B110C805F55A2EA35 /* Pods-BlindDate_LeanCloud.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BlindDate_LeanCloud.release.xcconfig"; path = "Target Support Files/Pods-BlindDate_LeanCloud/Pods-BlindDate_LeanCloud.release.xcconfig"; sourceTree = "<group>"; };
+		9E1E16F362FBD9C432044155 /* Pods-Database_LeanCloud.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Database_LeanCloud.debug.xcconfig"; path = "Target Support Files/Pods-Database_LeanCloud/Pods-Database_LeanCloud.debug.xcconfig"; sourceTree = "<group>"; };
+		A0D7AE253FD40BFF3FC44E37 /* Pods_Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A3BBB0EA41A6E941399791B8 /* Pods-Database_Firebase.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Database_Firebase.release.xcconfig"; path = "Target Support Files/Pods-Database_Firebase/Pods-Database_Firebase.release.xcconfig"; sourceTree = "<group>"; };
+		A5D93A8BC9FA018DF820EFB2 /* Pods-Database_Firebase.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Database_Firebase.debug.xcconfig"; path = "Target Support Files/Pods-Database_Firebase/Pods-Database_Firebase.debug.xcconfig"; sourceTree = "<group>"; };
 		B0FD9DDB0223C8305338ED51 /* Pods_BlindDate_Firebase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BlindDate_Firebase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5B7DBC86F4511EB8992BC69 /* Pods-Core.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Core.debug.xcconfig"; path = "Target Support Files/Pods-Core/Pods-Core.debug.xcconfig"; sourceTree = "<group>"; };
 		BD033C7EE6C65EEBEC1A513D /* Pods-Scene-Examples_LeanCloud.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Scene-Examples_LeanCloud.debug.xcconfig"; path = "Target Support Files/Pods-Scene-Examples_LeanCloud/Pods-Scene-Examples_LeanCloud.debug.xcconfig"; sourceTree = "<group>"; };
@@ -613,7 +687,7 @@
 				57F639872630098A00B45C0B /* BlindDate_LeanCloud.framework in Frameworks */,
 				5757D084262DA46700B4A785 /* InteractivePodcast_LeanCloud.framework in Frameworks */,
 				61F4CF8C8AF21996945CCF97 /* Pods_Scene_Examples_LeanCloud.framework in Frameworks */,
-				57E8D545264A31B2007001BC /* Core_LeanCloud.framework in Frameworks */,
+				57E8D545264A31B2007001BC /* Core.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -621,7 +695,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5CEF265E9844877C3869CFD1 /* Pods_Core_LeanCloud.framework in Frameworks */,
+				761402B6C292295B451C235C /* Pods_Core.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -629,8 +703,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5762F80C26568470003B042D /* Database_LeanCloud.framework in Frameworks */,
 				036A3BA9C20E7ED9BA0DD836 /* Pods_InteractivePodcast_LeanCloud.framework in Frameworks */,
-				57E8D5C8264A356F007001BC /* Core_LeanCloud.framework in Frameworks */,
+				57E8D5C8264A356F007001BC /* Core.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5762F7E4265682D5003B042D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				15C93B520578CA7BBD30A908 /* Pods_Database_LeanCloud.framework in Frameworks */,
+				5728673D26568FAE00292878 /* Core.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5762F7FD26568379003B042D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C73B545F2CDF6F64C9AC33A9 /* Pods_Database_Firebase.framework in Frameworks */,
+				5728674226568FB400292878 /* Core.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -638,18 +731,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				57E8D549264A31BC007001BC /* Core_Firebase.framework in Frameworks */,
 				57E8D617264A6460007001BC /* InteractivePodcast_Firebase.framework in Frameworks */,
 				ED820D1AD716D2F4BD117805 /* Pods_Scene_Examples_Firebase.framework in Frameworks */,
 				57E8D605264A5777007001BC /* BlindDate_Firebase.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		57E8D538264A30F8007001BC /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DEB44DCFD804F96AA52F7968 /* Pods_Core_Firebase.framework in Frameworks */,
+				5762F80426568446003B042D /* Core.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -657,8 +742,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				57E8D58C264A31E5007001BC /* Core_Firebase.framework in Frameworks */,
 				F0734EB5EAF17FCFEACAA862 /* Pods_InteractivePodcast_Firebase.framework in Frameworks */,
+				5762F818265684A3003B042D /* Core.framework in Frameworks */,
+				5762F81C265684AA003B042D /* Database_Firebase.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -666,8 +752,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				57E8D612264A6447007001BC /* Core_Firebase.framework in Frameworks */,
 				B383DC38A71AAF258FD4550F /* Pods_BlindDate_Firebase.framework in Frameworks */,
+				5762F820265684CC003B042D /* Core.framework in Frameworks */,
+				5762F824265684D0003B042D /* Database_Firebase.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -676,8 +763,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				9A6C6FBBFB87A47C3865824C /* (null) in Frameworks */,
-				57E8D5CD264A3578007001BC /* Core_LeanCloud.framework in Frameworks */,
+				5728674726568FF100292878 /* Core.framework in Frameworks */,
 				CA0262D8BB266D1DA1EA0FDE /* Pods_BlindDate_LeanCloud.framework in Frameworks */,
+				5728674C26568FF400292878 /* Database_LeanCloud.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -691,6 +779,7 @@
 				5757D049262D834700B4A785 /* Core */,
 				5757D07E262DA46700B4A785 /* InteractivePodcast */,
 				57F639812630098A00B45C0B /* BlindDate */,
+				5762F7E8265682D5003B042D /* Database */,
 				571AA46B2629862700B82B35 /* Products */,
 				956B5ECA0381DF39035305A1 /* Pods */,
 				A63338D10A92F3710B84E0ED /* Frameworks */,
@@ -701,13 +790,14 @@
 			isa = PBXGroup;
 			children = (
 				571AA46A2629862700B82B35 /* Scene-Examples_LeanCloud.app */,
-				5757D048262D834700B4A785 /* Core_LeanCloud.framework */,
+				5757D048262D834700B4A785 /* Core.framework */,
 				5757D07D262DA46700B4A785 /* InteractivePodcast_LeanCloud.framework */,
 				57F639802630098A00B45C0B /* BlindDate_LeanCloud.framework */,
 				57E8D519264A2C03007001BC /* Scene-Examples_Firebase.app */,
-				57E8D540264A30F8007001BC /* Core_Firebase.framework */,
 				57E8D58A264A31D1007001BC /* InteractivePodcast_Firebase.framework */,
 				57E8D603264A4E57007001BC /* BlindDate_Firebase.framework */,
+				5762F7E7265682D5003B042D /* Database_LeanCloud.framework */,
+				5762F80226568379003B042D /* Database_Firebase.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -724,8 +814,9 @@
 				571AA4792629862800B82B35 /* Assets.xcassets */,
 				571AA47B2629862800B82B35 /* LaunchScreen.storyboard */,
 				571AA47E2629862800B82B35 /* Info.plist */,
-				57E8D60C264A5904007001BC /* GoogleService-Info.plist */,
+				57E8D60C264A5904007001BC /* 1GoogleService-Info.plist */,
 				57E8D624264A6FDC007001BC /* Localizable.strings */,
+				5762F7DC26567BAA003B042D /* AppTargets.swift */,
 			);
 			path = "Scene-Examples";
 			sourceTree = "<group>";
@@ -865,10 +956,8 @@
 		5757D10C262DB1E300B4A785 /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				5757D10D262DB1F700B4A785 /* LeanCloud.swift */,
 				5757D122262DB25400B4A785 /* Model.swift */,
 				5757D15F262DB96900B4A785 /* CoreData.swift */,
-				57E8D51B264A2D93007001BC /* Firebase.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -945,6 +1034,17 @@
 				5757D21E262EB8F300B4A785 /* ActivityIndicator.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		5762F7E8265682D5003B042D /* Database */ = {
+			isa = PBXGroup;
+			children = (
+				5762F7E9265682D5003B042D /* Database.h */,
+				5762F7EA265682D5003B042D /* Info.plist */,
+				5762F7F326568303003B042D /* LeanCloud.swift */,
+				5762F7F52656831B003B042D /* Firebase.swift */,
+			);
+			path = Database;
 			sourceTree = "<group>";
 		};
 		57F639812630098A00B45C0B /* BlindDate */ = {
@@ -1081,6 +1181,10 @@
 				87C0C09B110C805F55A2EA35 /* Pods-BlindDate_LeanCloud.release.xcconfig */,
 				EEEF62793F90DCB24F2A9209 /* Pods-BlindDate_Firebase.debug.xcconfig */,
 				DC676D657C18A0F050BB2C84 /* Pods-BlindDate_Firebase.release.xcconfig */,
+				A5D93A8BC9FA018DF820EFB2 /* Pods-Database_Firebase.debug.xcconfig */,
+				A3BBB0EA41A6E941399791B8 /* Pods-Database_Firebase.release.xcconfig */,
+				9E1E16F362FBD9C432044155 /* Pods-Database_LeanCloud.debug.xcconfig */,
+				53A21D478558F81DF5D75531 /* Pods-Database_LeanCloud.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1094,11 +1198,13 @@
 				265F2928DE70FF94936B9226 /* Pods_Scene_Examples_Firebase.framework */,
 				30620657B35E2E50F3F3BE60 /* Pods_Scene_Examples_LeanCloud.framework */,
 				DF99141053F885BE0AF11377 /* Pods_Core_Firebase.framework */,
-				24AFA2BBA5F520A8B6CAD7EA /* Pods_Core_LeanCloud.framework */,
 				87BA292B4C3C38D451E19D70 /* Pods_InteractivePodcast_Firebase.framework */,
 				4970F4FEDBE05B422D4F2534 /* Pods_InteractivePodcast_LeanCloud.framework */,
 				B0FD9DDB0223C8305338ED51 /* Pods_BlindDate_Firebase.framework */,
 				4E7CA52467C27A6A39401A7F /* Pods_BlindDate_LeanCloud.framework */,
+				A0D7AE253FD40BFF3FC44E37 /* Pods_Core.framework */,
+				2F2E9D9950E2E75E750E77D4 /* Pods_Database_Firebase.framework */,
+				2A8F295F68F52286E70D8202 /* Pods_Database_LeanCloud.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1122,11 +1228,19 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		57E8D521264A30F8007001BC /* Headers */ = {
+		5762F7E2265682D5003B042D /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				57E8D522264A30F8007001BC /* Core.h in Headers */,
+				5762F7EB265682D5003B042D /* Database.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5762F7F826568379003B042D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5762F7F926568379003B042D /* Database.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1181,9 +1295,9 @@
 			productReference = 571AA46A2629862700B82B35 /* Scene-Examples_LeanCloud.app */;
 			productType = "com.apple.product-type.application";
 		};
-		5757D047262D834700B4A785 /* Core_LeanCloud */ = {
+		5757D047262D834700B4A785 /* Core */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5757D051262D834700B4A785 /* Build configuration list for PBXNativeTarget "Core_LeanCloud" */;
+			buildConfigurationList = 5757D051262D834700B4A785 /* Build configuration list for PBXNativeTarget "Core" */;
 			buildPhases = (
 				2B9B2DCEC0DB5CD64A4E7565 /* [CP] Check Pods Manifest.lock */,
 				5757D043262D834700B4A785 /* Headers */,
@@ -1195,9 +1309,9 @@
 			);
 			dependencies = (
 			);
-			name = Core_LeanCloud;
+			name = Core;
 			productName = Core;
-			productReference = 5757D048262D834700B4A785 /* Core_LeanCloud.framework */;
+			productReference = 5757D048262D834700B4A785 /* Core.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		5757D07C262DA46700B4A785 /* InteractivePodcast_LeanCloud */ = {
@@ -1215,10 +1329,53 @@
 			);
 			dependencies = (
 				57E8D5CB264A3570007001BC /* PBXTargetDependency */,
+				5762F80F26568470003B042D /* PBXTargetDependency */,
 			);
 			name = InteractivePodcast_LeanCloud;
 			productName = InteractivePodcast;
 			productReference = 5757D07D262DA46700B4A785 /* InteractivePodcast_LeanCloud.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		5762F7E6265682D5003B042D /* Database_LeanCloud */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5762F7F0265682D5003B042D /* Build configuration list for PBXNativeTarget "Database_LeanCloud" */;
+			buildPhases = (
+				A6204ECC53580C58AAD631BC /* [CP] Check Pods Manifest.lock */,
+				5762F7E2265682D5003B042D /* Headers */,
+				5762F7E3265682D5003B042D /* Sources */,
+				5762F7E4265682D5003B042D /* Frameworks */,
+				5762F7E5265682D5003B042D /* Resources */,
+				5728674126568FAE00292878 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5728674026568FAE00292878 /* PBXTargetDependency */,
+			);
+			name = Database_LeanCloud;
+			productName = Database;
+			productReference = 5762F7E7265682D5003B042D /* Database_LeanCloud.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		5762F7F726568379003B042D /* Database_Firebase */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5762F7FF26568379003B042D /* Build configuration list for PBXNativeTarget "Database_Firebase" */;
+			buildPhases = (
+				0E983CFF5B912690C3B91E5D /* [CP] Check Pods Manifest.lock */,
+				5762F7F826568379003B042D /* Headers */,
+				5762F7FA26568379003B042D /* Sources */,
+				5762F7FD26568379003B042D /* Frameworks */,
+				5762F7FE26568379003B042D /* Resources */,
+				5728674626568FB400292878 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5728674526568FB400292878 /* PBXTargetDependency */,
+			);
+			name = Database_Firebase;
+			productName = Database;
+			productReference = 5762F80226568379003B042D /* Database_Firebase.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		57E8D4F8264A2C03007001BC /* Scene-Examples_Firebase */ = {
@@ -1235,33 +1392,14 @@
 			buildRules = (
 			);
 			dependencies = (
-				57E8D54C264A31BC007001BC /* PBXTargetDependency */,
 				57E8D608264A5777007001BC /* PBXTargetDependency */,
 				57E8D61A264A6460007001BC /* PBXTargetDependency */,
+				5762F80726568446003B042D /* PBXTargetDependency */,
 			);
 			name = "Scene-Examples_Firebase";
 			productName = "Scene-Examples";
 			productReference = 57E8D519264A2C03007001BC /* Scene-Examples_Firebase.app */;
 			productType = "com.apple.product-type.application";
-		};
-		57E8D51F264A30F8007001BC /* Core_Firebase */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 57E8D53D264A30F8007001BC /* Build configuration list for PBXNativeTarget "Core_Firebase" */;
-			buildPhases = (
-				57E8D520264A30F8007001BC /* [CP] Check Pods Manifest.lock */,
-				57E8D521264A30F8007001BC /* Headers */,
-				57E8D523264A30F8007001BC /* Sources */,
-				57E8D538264A30F8007001BC /* Frameworks */,
-				57E8D53A264A30F8007001BC /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = Core_Firebase;
-			productName = Core;
-			productReference = 57E8D540264A30F8007001BC /* Core_Firebase.framework */;
-			productType = "com.apple.product-type.framework";
 		};
 		57E8D54D264A31D1007001BC /* InteractivePodcast_Firebase */ = {
 			isa = PBXNativeTarget;
@@ -1277,7 +1415,8 @@
 			buildRules = (
 			);
 			dependencies = (
-				57E8D58F264A31E5007001BC /* PBXTargetDependency */,
+				5762F81B265684A3003B042D /* PBXTargetDependency */,
+				5762F81F265684AA003B042D /* PBXTargetDependency */,
 			);
 			name = InteractivePodcast_Firebase;
 			productName = InteractivePodcast;
@@ -1298,7 +1437,8 @@
 			buildRules = (
 			);
 			dependencies = (
-				57E8D615264A6447007001BC /* PBXTargetDependency */,
+				5762F823265684CC003B042D /* PBXTargetDependency */,
+				5762F827265684D0003B042D /* PBXTargetDependency */,
 			);
 			name = BlindDate_Firebase;
 			productName = BlindDate;
@@ -1314,12 +1454,13 @@
 				57F6397C2630098A00B45C0B /* Sources */,
 				57F6397D2630098A00B45C0B /* Frameworks */,
 				57F6397E2630098A00B45C0B /* Resources */,
-				57E8D5D1264A3578007001BC /* Embed Frameworks */,
+				5728674B26568FF100292878 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				57E8D5D0264A3578007001BC /* PBXTargetDependency */,
+				5728674A26568FF100292878 /* PBXTargetDependency */,
+				5728674F26568FF400292878 /* PBXTargetDependency */,
 			);
 			name = BlindDate_LeanCloud;
 			productName = BlindDate;
@@ -1346,6 +1487,10 @@
 						CreatedOnToolsVersion = 12.4;
 						LastSwiftMigration = 1240;
 					};
+					5762F7E6265682D5003B042D = {
+						CreatedOnToolsVersion = 12.5;
+						LastSwiftMigration = 1250;
+					};
 					57F6397F2630098A00B45C0B = {
 						CreatedOnToolsVersion = 12.4;
 						LastSwiftMigration = 1240;
@@ -1366,12 +1511,13 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				5757D047262D834700B4A785 /* Core */,
 				571AA4692629862700B82B35 /* Scene-Examples_LeanCloud */,
-				5757D047262D834700B4A785 /* Core_LeanCloud */,
+				5762F7E6265682D5003B042D /* Database_LeanCloud */,
 				5757D07C262DA46700B4A785 /* InteractivePodcast_LeanCloud */,
 				57F6397F2630098A00B45C0B /* BlindDate_LeanCloud */,
 				57E8D4F8264A2C03007001BC /* Scene-Examples_Firebase */,
-				57E8D51F264A30F8007001BC /* Core_Firebase */,
+				5762F7F726568379003B042D /* Database_Firebase */,
 				57E8D54D264A31D1007001BC /* InteractivePodcast_Firebase */,
 				57E8D5D2264A4E57007001BC /* BlindDate_Firebase */,
 			);
@@ -1411,24 +1557,29 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5762F7E5265682D5003B042D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5762F7FE26568379003B042D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		57E8D50D264A2C03007001BC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				57E8D621264A6FDC007001BC /* Localizable.strings in Resources */,
-				57E8D61B264A6A57007001BC /* GoogleService-Info.plist in Resources */,
+				57E8D61B264A6A57007001BC /* 1GoogleService-Info.plist in Resources */,
 				57E8D50E264A2C03007001BC /* LaunchScreen.storyboard in Resources */,
 				57E8D50F264A2C03007001BC /* Assets.xcassets in Resources */,
 				57E8D510264A2C03007001BC /* Main.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		57E8D53A264A30F8007001BC /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				57E8D53B264A30F8007001BC /* Media.xcassets in Resources */,
-				57E8D53C264A30F8007001BC /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1450,7 +1601,7 @@
 			files = (
 				57E8D5FA264A4E57007001BC /* Media.xcassets in Resources */,
 				57E8D5FB264A4E57007001BC /* Localizable.strings in Resources */,
-				57E8D60E264A5904007001BC /* GoogleService-Info.plist in Resources */,
+				57E8D60E264A5904007001BC /* 1GoogleService-Info.plist in Resources */,
 				57E8D5FC264A4E57007001BC /* CreateRoomDialog.xib in Resources */,
 				57E8D5FD264A4E57007001BC /* Main.storyboard in Resources */,
 			);
@@ -1462,7 +1613,7 @@
 			files = (
 				57F639A626300A3700B45C0B /* Media.xcassets in Resources */,
 				57F639CA2630308500B45C0B /* Localizable.strings in Resources */,
-				57E8D60D264A5904007001BC /* GoogleService-Info.plist in Resources */,
+				57E8D60D264A5904007001BC /* 1GoogleService-Info.plist in Resources */,
 				57F63A14263053D800B45C0B /* CreateRoomDialog.xib in Resources */,
 				57F639AB26301D9800B45C0B /* Main.storyboard in Resources */,
 			);
@@ -1471,6 +1622,28 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		0E983CFF5B912690C3B91E5D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Database_Firebase-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		2B9B2DCEC0DB5CD64A4E7565 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1486,7 +1659,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Core_LeanCloud-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Core-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1554,28 +1727,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Scene-Examples_Firebase/Pods-Scene-Examples_Firebase-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		57E8D520264A30F8007001BC /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Core_Firebase-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		57E8D550264A31D1007001BC /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1614,6 +1765,28 @@
 			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-BlindDate_Firebase-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A6204ECC53580C58AAD631BC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Database_LeanCloud-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1694,6 +1867,7 @@
 				571AA46E2629862700B82B35 /* AppDelegate.swift in Sources */,
 				571AA4702629862700B82B35 /* SceneDelegate.swift in Sources */,
 				57369B7426298EB7004CF690 /* Utils.swift in Sources */,
+				5762F7E026568019003B042D /* AppTargets.swift in Sources */,
 				5757D00E262D7C0F00B4A785 /* HomeController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1712,13 +1886,11 @@
 				5757D0E2262DAFDA00B4A785 /* Config.swift in Sources */,
 				5757D05A262D841400B4A785 /* Extension.swift in Sources */,
 				5757D165262DB9DB00B4A785 /* Model.xcdatamodeld in Sources */,
-				57E8D51C264A2D93007001BC /* Firebase.swift in Sources */,
 				5757D105262DB18300B4A785 /* WaterfallLayout.swift in Sources */,
 				5757D0C0262DAD8D00B4A785 /* BaseViewController.swift in Sources */,
 				5757D072262D8E5600B4A785 /* Logger.swift in Sources */,
 				5757D05D262D84AA00B4A785 /* Notification.swift in Sources */,
 				5757D160262DB96900B4A785 /* CoreData.swift in Sources */,
-				5757D10E262DB1F700B4A785 /* LeanCloud.swift in Sources */,
 				5757D060262D84AF00B4A785 /* NotificationView.swift in Sources */,
 				5757D21F262EB8F300B4A785 /* ActivityIndicator.swift in Sources */,
 				5757D076262D8EBE00B4A785 /* Utils.swift in Sources */,
@@ -1774,6 +1946,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5762F7E3265682D5003B042D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5762F7F62656831B003B042D /* Firebase.swift in Sources */,
+				5762F7F426568303003B042D /* LeanCloud.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5762F7FA26568379003B042D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5762F7FB26568379003B042D /* Firebase.swift in Sources */,
+				5762F7FC26568379003B042D /* LeanCloud.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		57E8D500264A2C03007001BC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1784,34 +1974,8 @@
 				57E8D504264A2C03007001BC /* AppDelegate.swift in Sources */,
 				57E8D505264A2C03007001BC /* SceneDelegate.swift in Sources */,
 				57E8D506264A2C03007001BC /* Utils.swift in Sources */,
+				5762F7E12656801C003B042D /* AppTargets.swift in Sources */,
 				57E8D507264A2C03007001BC /* HomeController.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		57E8D523264A30F8007001BC /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				57E8D524264A30F8007001BC /* Model.swift in Sources */,
-				57E8D525264A30F8007001BC /* CustomTabBarController.swift in Sources */,
-				57E8D526264A30F8007001BC /* BaseUICollectionViewCell.swift in Sources */,
-				57E8D527264A30F8007001BC /* ProcessingView.swift in Sources */,
-				57E8D528264A30F8007001BC /* RoundButton.swift in Sources */,
-				57E8D529264A30F8007001BC /* Colors.swift in Sources */,
-				57E8D52A264A30F8007001BC /* Dialog.swift in Sources */,
-				57E8D52B264A30F8007001BC /* Config.swift in Sources */,
-				57E8D52C264A30F8007001BC /* Extension.swift in Sources */,
-				57E8D52D264A30F8007001BC /* Model.xcdatamodeld in Sources */,
-				57E8D52E264A30F8007001BC /* Firebase.swift in Sources */,
-				57E8D52F264A30F8007001BC /* WaterfallLayout.swift in Sources */,
-				57E8D530264A30F8007001BC /* BaseViewController.swift in Sources */,
-				57E8D531264A30F8007001BC /* Logger.swift in Sources */,
-				57E8D532264A30F8007001BC /* Notification.swift in Sources */,
-				57E8D533264A30F8007001BC /* CoreData.swift in Sources */,
-				57E8D534264A30F8007001BC /* LeanCloud.swift in Sources */,
-				57E8D535264A30F8007001BC /* NotificationView.swift in Sources */,
-				57E8D536264A30F8007001BC /* ActivityIndicator.swift in Sources */,
-				57E8D537264A30F8007001BC /* Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1941,50 +2105,80 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		5728674026568FAE00292878 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5757D047262D834700B4A785 /* Core */;
+			targetProxy = 5728673F26568FAE00292878 /* PBXContainerItemProxy */;
+		};
+		5728674526568FB400292878 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5757D047262D834700B4A785 /* Core */;
+			targetProxy = 5728674426568FB400292878 /* PBXContainerItemProxy */;
+		};
+		5728674A26568FF100292878 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5757D047262D834700B4A785 /* Core */;
+			targetProxy = 5728674926568FF100292878 /* PBXContainerItemProxy */;
+		};
+		5728674F26568FF400292878 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5762F7E6265682D5003B042D /* Database_LeanCloud */;
+			targetProxy = 5728674E26568FF400292878 /* PBXContainerItemProxy */;
+		};
 		5757D083262DA46700B4A785 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 5757D07C262DA46700B4A785 /* InteractivePodcast_LeanCloud */;
 			targetProxy = 5757D082262DA46700B4A785 /* PBXContainerItemProxy */;
 		};
+		5762F80726568446003B042D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5757D047262D834700B4A785 /* Core */;
+			targetProxy = 5762F80626568446003B042D /* PBXContainerItemProxy */;
+		};
+		5762F80F26568470003B042D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5762F7E6265682D5003B042D /* Database_LeanCloud */;
+			targetProxy = 5762F80E26568470003B042D /* PBXContainerItemProxy */;
+		};
+		5762F81B265684A3003B042D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5757D047262D834700B4A785 /* Core */;
+			targetProxy = 5762F81A265684A3003B042D /* PBXContainerItemProxy */;
+		};
+		5762F81F265684AA003B042D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5762F7F726568379003B042D /* Database_Firebase */;
+			targetProxy = 5762F81E265684AA003B042D /* PBXContainerItemProxy */;
+		};
+		5762F823265684CC003B042D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5757D047262D834700B4A785 /* Core */;
+			targetProxy = 5762F822265684CC003B042D /* PBXContainerItemProxy */;
+		};
+		5762F827265684D0003B042D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5762F7F726568379003B042D /* Database_Firebase */;
+			targetProxy = 5762F826265684D0003B042D /* PBXContainerItemProxy */;
+		};
 		57E8D544264A317E007001BC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 5757D047262D834700B4A785 /* Core_LeanCloud */;
+			target = 5757D047262D834700B4A785 /* Core */;
 			targetProxy = 57E8D543264A317E007001BC /* PBXContainerItemProxy */;
 		};
 		57E8D548264A31B2007001BC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 5757D047262D834700B4A785 /* Core_LeanCloud */;
+			target = 5757D047262D834700B4A785 /* Core */;
 			targetProxy = 57E8D547264A31B2007001BC /* PBXContainerItemProxy */;
-		};
-		57E8D54C264A31BC007001BC /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 57E8D51F264A30F8007001BC /* Core_Firebase */;
-			targetProxy = 57E8D54B264A31BC007001BC /* PBXContainerItemProxy */;
-		};
-		57E8D58F264A31E5007001BC /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 57E8D51F264A30F8007001BC /* Core_Firebase */;
-			targetProxy = 57E8D58E264A31E5007001BC /* PBXContainerItemProxy */;
 		};
 		57E8D5CB264A3570007001BC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 5757D047262D834700B4A785 /* Core_LeanCloud */;
+			target = 5757D047262D834700B4A785 /* Core */;
 			targetProxy = 57E8D5CA264A3570007001BC /* PBXContainerItemProxy */;
-		};
-		57E8D5D0264A3578007001BC /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 5757D047262D834700B4A785 /* Core_LeanCloud */;
-			targetProxy = 57E8D5CF264A3578007001BC /* PBXContainerItemProxy */;
 		};
 		57E8D608264A5777007001BC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 57E8D5D2264A4E57007001BC /* BlindDate_Firebase */;
 			targetProxy = 57E8D607264A5777007001BC /* PBXContainerItemProxy */;
-		};
-		57E8D615264A6447007001BC /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 57E8D51F264A30F8007001BC /* Core_Firebase */;
-			targetProxy = 57E8D614264A6447007001BC /* PBXContainerItemProxy */;
 		};
 		57E8D61A264A6460007001BC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2251,26 +2445,29 @@
 		};
 		5757D052262D834700B4A785 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5E10D1E8C56ADBA341AB43AE /* Pods-Core_LeanCloud.debug.xcconfig */;
+			baseConfigurationReference = B5B7DBC86F4511EB8992BC69 /* Pods-Core.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = Y695MMFA83;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = Core/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -DLEANCLOUD";
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.Core;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -2282,26 +2479,29 @@
 		};
 		5757D053262D834700B4A785 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C02AC6BC7F49EF3A552CE30F /* Pods-Core_LeanCloud.release.xcconfig */;
+			baseConfigurationReference = 12B2800E60E55F24FD5B656C /* Pods-Core.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = Y695MMFA83;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = Core/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -DLEANCLOUD";
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.Core;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2315,10 +2515,10 @@
 			baseConfigurationReference = 6D2AB6714D68EC1998AFC756 /* Pods-InteractivePodcast_LeanCloud.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = Y695MMFA83;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -2332,6 +2532,8 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -DLEANCLOUD";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.InteractivePodcast;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -2346,10 +2548,10 @@
 			baseConfigurationReference = F27143BAF721366E56E1BA9B /* Pods-InteractivePodcast_LeanCloud.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = Y695MMFA83;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -2363,6 +2565,146 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -DLEANCLOUD";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.InteractivePodcast;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		5762F7F1265682D5003B042D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9E1E16F362FBD9C432044155 /* Pods-Database_LeanCloud.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Database/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -DLEANCLOUD";
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.Database;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		5762F7F2265682D5003B042D /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 53A21D478558F81DF5D75531 /* Pods-Database_LeanCloud.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Database/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -DLEANCLOUD";
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.Database;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		5762F80026568379003B042D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A5D93A8BC9FA018DF820EFB2 /* Pods-Database_Firebase.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "$(SRCROOT)/Database/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -DFIREBASE";
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.Database;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		5762F80126568379003B042D /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A3BBB0EA41A6E941399791B8 /* Pods-Database_Firebase.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "$(SRCROOT)/Database/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -DFIREBASE";
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.Database;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2419,76 +2761,15 @@
 			};
 			name = Release;
 		};
-		57E8D53E264A30F8007001BC /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 527096D4B407DA1FE7C4F5D4 /* Pods-Core_Firebase.debug.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = Y695MMFA83;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = Core/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -DFIREBASE";
-				PRODUCT_BUNDLE_IDENTIFIER = io.agora.Core;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		57E8D53F264A30F8007001BC /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = DA494E4986C66CDAF9D9F9FD /* Pods-Core_Firebase.release.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = Y695MMFA83;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = Core/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -DFIREBASE";
-				PRODUCT_BUNDLE_IDENTIFIER = io.agora.Core;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
 		57E8D588264A31D1007001BC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 51F8C0547106EBD253E46381 /* Pods-InteractivePodcast_Firebase.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = Y695MMFA83;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -2502,6 +2783,8 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -DFIREBASE";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.InteractivePodcast;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -2516,10 +2799,10 @@
 			baseConfigurationReference = 15A2E68AA95F4351506F2576 /* Pods-InteractivePodcast_Firebase.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = Y695MMFA83;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -2533,6 +2816,8 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -DFIREBASE";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.InteractivePodcast;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2546,10 +2831,10 @@
 			baseConfigurationReference = EEEF62793F90DCB24F2A9209 /* Pods-BlindDate_Firebase.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = Y695MMFA83;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -2563,6 +2848,8 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -DFIREBASE";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.BlindDate;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -2577,10 +2864,10 @@
 			baseConfigurationReference = DC676D657C18A0F050BB2C84 /* Pods-BlindDate_Firebase.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = Y695MMFA83;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -2594,6 +2881,8 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -DFIREBASE";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.BlindDate;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2607,10 +2896,10 @@
 			baseConfigurationReference = 506CF18D26D33A2258104251 /* Pods-BlindDate_LeanCloud.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = Y695MMFA83;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -2624,6 +2913,8 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -DLEANCLOUD";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.BlindDate;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -2638,10 +2929,10 @@
 			baseConfigurationReference = 87C0C09B110C805F55A2EA35 /* Pods-BlindDate_LeanCloud.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = Y695MMFA83;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -2655,6 +2946,8 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -DLEANCLOUD";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.BlindDate;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2684,7 +2977,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5757D051262D834700B4A785 /* Build configuration list for PBXNativeTarget "Core_LeanCloud" */ = {
+		5757D051262D834700B4A785 /* Build configuration list for PBXNativeTarget "Core" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5757D052262D834700B4A785 /* Debug */,
@@ -2702,20 +2995,29 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		5762F7F0265682D5003B042D /* Build configuration list for PBXNativeTarget "Database_LeanCloud" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5762F7F1265682D5003B042D /* Debug */,
+				5762F7F2265682D5003B042D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5762F7FF26568379003B042D /* Build configuration list for PBXNativeTarget "Database_Firebase" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5762F80026568379003B042D /* Debug */,
+				5762F80126568379003B042D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		57E8D516264A2C03007001BC /* Build configuration list for PBXNativeTarget "Scene-Examples_Firebase" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				57E8D517264A2C03007001BC /* Debug */,
 				57E8D518264A2C03007001BC /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		57E8D53D264A30F8007001BC /* Build configuration list for PBXNativeTarget "Core_Firebase" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				57E8D53E264A30F8007001BC /* Debug */,
-				57E8D53F264A30F8007001BC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

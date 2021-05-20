@@ -10,11 +10,7 @@ import RxSwift
 import IGListKit
 import RxRelay
 import RxCocoa
-#if LEANCLOUD
-import Core_LeanCloud
-#elseif FIREBASE
-import Core_Firebase
-#endif
+import Core
 
 enum LeaveRoomAction {
     case closeRoom

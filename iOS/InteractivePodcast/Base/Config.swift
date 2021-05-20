@@ -7,11 +7,7 @@
 
 import Foundation
 import AgoraRtcKit
-#if LEANCLOUD
-import Core_LeanCloud
-#elseif FIREBASE
-import Core_Firebase
-#endif
+import Core
 
 extension BuildConfig {
     static var PrivacyPolicy: String {

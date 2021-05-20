@@ -9,7 +9,8 @@ import Foundation
 import Firebase
 import FirebaseFirestoreSwift
 import RxSwift
-import Core_Firebase
+import Core
+import Database_Firebase
 
 extension User {
     static func from(object: DocumentSnapshot) throws -> User {

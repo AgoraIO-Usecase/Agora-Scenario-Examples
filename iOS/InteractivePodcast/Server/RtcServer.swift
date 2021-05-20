@@ -9,11 +9,7 @@ import Foundation
 import AgoraRtcKit
 import RxSwift
 import RxRelay
-#if LEANCLOUD
-import Core_LeanCloud
-#elseif FIREBASE
-import Core_Firebase
-#endif
+import Core
 
 enum RtcServerStateType {
     case join

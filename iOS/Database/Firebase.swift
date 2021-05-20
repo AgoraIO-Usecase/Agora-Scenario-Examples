@@ -1,14 +1,16 @@
 //
 //  Firebase.swift
-//  Core
+//  Database
 //
-//  Created by XC on 2021/5/11.
+//  Created by XC on 2021/5/20.
 //
+
 #if FIREBASE
 import Foundation
 import Firebase
 import FirebaseFirestoreSwift
 import RxSwift
+import Core
 
 public class Database {
     private static let db = Firestore.firestore()

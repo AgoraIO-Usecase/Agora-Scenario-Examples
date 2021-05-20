@@ -7,11 +7,7 @@
 
 import Foundation
 import RxSwift
-#if LEANCLOUD
-import Core_LeanCloud
-#elseif FIREBASE
-import Core_Firebase
-#endif
+import Core
 
 class Server: NSObject {
     fileprivate static let instance = Server()

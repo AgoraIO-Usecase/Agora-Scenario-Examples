@@ -7,11 +7,7 @@
 
 import Foundation
 import RxSwift
-#if LEANCLOUD
-import Core_LeanCloud
-#elseif FIREBASE
-import Core_Firebase
-#endif
+import Core
 
 protocol Service {
     var account: User? { get set }

@@ -10,11 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import IGListKit
-#if LEANCLOUD
-import Core_LeanCloud
-#elseif FIREBASE
-import Core_Firebase
-#endif
+import Core
 
 class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
     

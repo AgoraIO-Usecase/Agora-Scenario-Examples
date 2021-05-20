@@ -7,11 +7,7 @@
 
 import Foundation
 import UIKit
-#if LEANCLOUD
-import Core_LeanCloud
-#elseif FIREBASE
-import Core_Firebase
-#endif
+import Core
 
 class SpeakerView: BaseUICollectionViewCell<Member> {
     fileprivate static let font = UIFont.systemFont(ofSize: 12)

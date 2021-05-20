@@ -9,11 +9,7 @@ import Foundation
 import UIKit
 import RxSwift
 import RxCocoa
-#if LEANCLOUD
-import Core_LeanCloud
-#elseif FIREBASE
-import Core_Firebase
-#endif
+import Core
 
 public class BlindDateHomeController: BaseViewContoller {
     @IBOutlet weak var reloadButton: RoundButton!

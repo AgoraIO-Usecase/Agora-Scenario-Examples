@@ -9,13 +9,20 @@ def commonPods
   pod 'IGListKit', '~> 4.0.0'
 end
 
+target 'Core' do
+  use_frameworks!
+  pod 'RxSwift', '6.1.0'
+  pod 'RxCocoa', '6.1.0'
+  pod 'RxRelay', '6.1.0'
+end
+
 # target with leancloud sdk
 target 'Scene-Examples_LeanCloud' do
   commonPods
   use_frameworks!
 end
 
-target 'Core_LeanCloud' do
+target 'Database_LeanCloud' do
   use_frameworks!
   pod 'LeanCloud'
   pod 'RxSwift', '6.1.0'
@@ -44,7 +51,7 @@ target 'Scene-Examples_Firebase' do
   use_frameworks!
 end
 
-target 'Core_Firebase' do
+target 'Database_Firebase' do
   use_frameworks!
   pod 'Firebase/Firestore'
   pod 'FirebaseFirestoreSwift'

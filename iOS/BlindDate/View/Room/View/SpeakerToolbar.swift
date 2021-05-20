@@ -8,11 +8,7 @@
 import Foundation
 import UIKit
 import RxSwift
-#if LEANCLOUD
-import Core_LeanCloud
-#elseif FIREBASE
-import Core_Firebase
-#endif
+import Core
 
 class SpeakerToolbar: UIView {
     weak var delegate: RoomController!

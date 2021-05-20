@@ -7,11 +7,7 @@
 
 import Foundation
 import UIKit
-#if LEANCLOUD
-import Core_LeanCloud
-#elseif FIREBASE
-import Core_Firebase
-#endif
+import Core
 
 protocol HomeCard {
     var title: String { get }
