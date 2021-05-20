@@ -97,10 +97,8 @@
 		5762F7E12656801C003B042D /* AppTargets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5762F7DC26567BAA003B042D /* AppTargets.swift */; };
 		5762F7EB265682D5003B042D /* Database.h in Headers */ = {isa = PBXBuildFile; fileRef = 5762F7E9265682D5003B042D /* Database.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5762F7F426568303003B042D /* LeanCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5762F7F326568303003B042D /* LeanCloud.swift */; };
-		5762F7F62656831B003B042D /* Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5762F7F52656831B003B042D /* Firebase.swift */; };
 		5762F7F926568379003B042D /* Database.h in Headers */ = {isa = PBXBuildFile; fileRef = 5762F7E9265682D5003B042D /* Database.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5762F7FB26568379003B042D /* Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5762F7F52656831B003B042D /* Firebase.swift */; };
-		5762F7FC26568379003B042D /* LeanCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5762F7F326568303003B042D /* LeanCloud.swift */; };
 		5762F80426568446003B042D /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; };
 		5762F80526568446003B042D /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5762F80C26568470003B042D /* Database_LeanCloud.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5762F7E7265682D5003B042D /* Database_LeanCloud.framework */; };
@@ -123,7 +121,6 @@
 		57E8D50E264A2C03007001BC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 571AA47B2629862800B82B35 /* LaunchScreen.storyboard */; };
 		57E8D50F264A2C03007001BC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 571AA4792629862800B82B35 /* Assets.xcassets */; };
 		57E8D510264A2C03007001BC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 571AA4732629862700B82B35 /* Main.storyboard */; };
-		57E8D51E264A2DE8007001BC /* Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57E8D51D264A2DE7007001BC /* Firebase.swift */; };
 		57E8D545264A31B2007001BC /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; };
 		57E8D546264A31B2007001BC /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		57E8D552264A31D1007001BC /* InteractivePodcast.h in Headers */ = {isa = PBXBuildFile; fileRef = 5757D07F262DA46700B4A785 /* InteractivePodcast.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -161,7 +158,6 @@
 		57E8D573264A31D1007001BC /* ChangeNameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D1EB262E7CC300B4A785 /* ChangeNameController.swift */; };
 		57E8D574264A31D1007001BC /* RoundImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D0F4262DB0E700B4A785 /* RoundImageView.swift */; };
 		57E8D575264A31D1007001BC /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D15B262DB82E00B4A785 /* Server.swift */; };
-		57E8D576264A31D1007001BC /* LeanCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D127262DB2E300B4A785 /* LeanCloud.swift */; };
 		57E8D577264A31D1007001BC /* LabelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D0E6262DB06400B4A785 /* LabelCell.swift */; };
 		57E8D578264A31D1007001BC /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D12D262DB34400B4A785 /* Database.swift */; };
 		57E8D579264A31D1007001BC /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D0C4262DAEC300B4A785 /* Service.swift */; };
@@ -185,7 +181,6 @@
 		57E8D5DE264A4E57007001BC /* RoomController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63A1E263054B300B45C0B /* RoomController.swift */; };
 		57E8D5DF264A4E57007001BC /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F639B126301DB400B45C0B /* HomeController.swift */; };
 		57E8D5E0264A4E57007001BC /* ListenerToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63A792631A3B300B45C0B /* ListenerToolbar.swift */; };
-		57E8D5E1264A4E57007001BC /* LeanCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63A01263050C800B45C0B /* LeanCloud.swift */; };
 		57E8D5E2264A4E57007001BC /* HosterToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63A4326317B4A00B45C0B /* HosterToolbar.swift */; };
 		57E8D5E3264A4E57007001BC /* InvitedDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63A8D2632C28F00B45C0B /* InvitedDialog.swift */; };
 		57E8D5E4264A4E57007001BC /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F639E026304E5C00B45C0B /* Colors.swift */; };
@@ -212,13 +207,12 @@
 		57E8D5FD264A4E57007001BC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 57F639AA26301D9800B45C0B /* Main.storyboard */; };
 		57E8D605264A5777007001BC /* BlindDate_Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57E8D603264A4E57007001BC /* BlindDate_Firebase.framework */; };
 		57E8D606264A5777007001BC /* BlindDate_Firebase.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 57E8D603264A4E57007001BC /* BlindDate_Firebase.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		57E8D60A264A580F007001BC /* Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57E8D609264A580F007001BC /* Firebase.swift */; };
 		57E8D60B264A580F007001BC /* Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57E8D609264A580F007001BC /* Firebase.swift */; };
-		57E8D60D264A5904007001BC /* 1GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 57E8D60C264A5904007001BC /* 1GoogleService-Info.plist */; };
-		57E8D60E264A5904007001BC /* 1GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 57E8D60C264A5904007001BC /* 1GoogleService-Info.plist */; };
+		57E8D60D264A5904007001BC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 57E8D60C264A5904007001BC /* GoogleService-Info.plist */; };
+		57E8D60E264A5904007001BC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 57E8D60C264A5904007001BC /* GoogleService-Info.plist */; };
 		57E8D617264A6460007001BC /* InteractivePodcast_Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57E8D58A264A31D1007001BC /* InteractivePodcast_Firebase.framework */; };
 		57E8D618264A6460007001BC /* InteractivePodcast_Firebase.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 57E8D58A264A31D1007001BC /* InteractivePodcast_Firebase.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		57E8D61B264A6A57007001BC /* 1GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 57E8D60C264A5904007001BC /* 1GoogleService-Info.plist */; };
+		57E8D61B264A6A57007001BC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 57E8D60C264A5904007001BC /* GoogleService-Info.plist */; };
 		57E8D621264A6FDC007001BC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 57E8D624264A6FDC007001BC /* Localizable.strings */; };
 		57E8D62A264A7306007001BC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 57E8D624264A6FDC007001BC /* Localizable.strings */; };
 		57F63966262EFAF100B45C0B /* HomeCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63965262EFAF100B45C0B /* HomeCardView.swift */; };
@@ -610,7 +604,7 @@
 		57E8D58A264A31D1007001BC /* InteractivePodcast_Firebase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = InteractivePodcast_Firebase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		57E8D603264A4E57007001BC /* BlindDate_Firebase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BlindDate_Firebase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		57E8D609264A580F007001BC /* Firebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firebase.swift; sourceTree = "<group>"; };
-		57E8D60C264A5904007001BC /* 1GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "1GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
+		57E8D60C264A5904007001BC /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		57E8D623264A6FDC007001BC /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		57F63965262EFAF100B45C0B /* HomeCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCardView.swift; sourceTree = "<group>"; };
 		57F6396E263000C300B45C0B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -814,7 +808,7 @@
 				571AA4792629862800B82B35 /* Assets.xcassets */,
 				571AA47B2629862800B82B35 /* LaunchScreen.storyboard */,
 				571AA47E2629862800B82B35 /* Info.plist */,
-				57E8D60C264A5904007001BC /* 1GoogleService-Info.plist */,
+				57E8D60C264A5904007001BC /* GoogleService-Info.plist */,
 				57E8D624264A6FDC007001BC /* Localizable.strings */,
 				5762F7DC26567BAA003B042D /* AppTargets.swift */,
 			);
@@ -1511,7 +1505,6 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5757D047262D834700B4A785 /* Core */,
 				571AA4692629862700B82B35 /* Scene-Examples_LeanCloud */,
 				5762F7E6265682D5003B042D /* Database_LeanCloud */,
 				5757D07C262DA46700B4A785 /* InteractivePodcast_LeanCloud */,
@@ -1520,6 +1513,7 @@
 				5762F7F726568379003B042D /* Database_Firebase */,
 				57E8D54D264A31D1007001BC /* InteractivePodcast_Firebase */,
 				57E8D5D2264A4E57007001BC /* BlindDate_Firebase */,
+				5757D047262D834700B4A785 /* Core */,
 			);
 		};
 /* End PBXProject section */
@@ -1576,7 +1570,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				57E8D621264A6FDC007001BC /* Localizable.strings in Resources */,
-				57E8D61B264A6A57007001BC /* 1GoogleService-Info.plist in Resources */,
+				57E8D61B264A6A57007001BC /* GoogleService-Info.plist in Resources */,
 				57E8D50E264A2C03007001BC /* LaunchScreen.storyboard in Resources */,
 				57E8D50F264A2C03007001BC /* Assets.xcassets in Resources */,
 				57E8D510264A2C03007001BC /* Main.storyboard in Resources */,
@@ -1601,7 +1595,7 @@
 			files = (
 				57E8D5FA264A4E57007001BC /* Media.xcassets in Resources */,
 				57E8D5FB264A4E57007001BC /* Localizable.strings in Resources */,
-				57E8D60E264A5904007001BC /* 1GoogleService-Info.plist in Resources */,
+				57E8D60E264A5904007001BC /* GoogleService-Info.plist in Resources */,
 				57E8D5FC264A4E57007001BC /* CreateRoomDialog.xib in Resources */,
 				57E8D5FD264A4E57007001BC /* Main.storyboard in Resources */,
 			);
@@ -1613,7 +1607,7 @@
 			files = (
 				57F639A626300A3700B45C0B /* Media.xcassets in Resources */,
 				57F639CA2630308500B45C0B /* Localizable.strings in Resources */,
-				57E8D60D264A5904007001BC /* 1GoogleService-Info.plist in Resources */,
+				57E8D60D264A5904007001BC /* GoogleService-Info.plist in Resources */,
 				57F63A14263053D800B45C0B /* CreateRoomDialog.xib in Resources */,
 				57F639AB26301D9800B45C0B /* Main.storyboard in Resources */,
 			);
@@ -1901,7 +1895,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				57E8D51E264A2DE8007001BC /* Firebase.swift in Sources */,
 				5757D1FB262E7E2200B4A785 /* Config.swift in Sources */,
 				5757D1B2262E7A3A00B4A785 /* SpeakersController.swift in Sources */,
 				5757D1CF262E7B8200B4A785 /* HandsupListDialog.swift in Sources */,
@@ -1950,7 +1943,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5762F7F62656831B003B042D /* Firebase.swift in Sources */,
 				5762F7F426568303003B042D /* LeanCloud.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1960,7 +1952,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5762F7FB26568379003B042D /* Firebase.swift in Sources */,
-				5762F7FC26568379003B042D /* LeanCloud.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2017,7 +2008,6 @@
 				57E8D573264A31D1007001BC /* ChangeNameController.swift in Sources */,
 				57E8D574264A31D1007001BC /* RoundImageView.swift in Sources */,
 				57E8D575264A31D1007001BC /* Server.swift in Sources */,
-				57E8D576264A31D1007001BC /* LeanCloud.swift in Sources */,
 				57E8D577264A31D1007001BC /* LabelCell.swift in Sources */,
 				57E8D578264A31D1007001BC /* Database.swift in Sources */,
 				57E8D579264A31D1007001BC /* Service.swift in Sources */,
@@ -2041,7 +2031,6 @@
 				57E8D5DE264A4E57007001BC /* RoomController.swift in Sources */,
 				57E8D5DF264A4E57007001BC /* HomeController.swift in Sources */,
 				57E8D5E0264A4E57007001BC /* ListenerToolbar.swift in Sources */,
-				57E8D5E1264A4E57007001BC /* LeanCloud.swift in Sources */,
 				57E8D5E2264A4E57007001BC /* HosterToolbar.swift in Sources */,
 				57E8D5E3264A4E57007001BC /* InvitedDialog.swift in Sources */,
 				57E8D5E4264A4E57007001BC /* Colors.swift in Sources */,
@@ -2069,7 +2058,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				57E8D60A264A580F007001BC /* Firebase.swift in Sources */,
 				57F63A0A263050E400B45C0B /* RtcServer.swift in Sources */,
 				57F639EA26304EB400B45C0B /* HomeCardView.swift in Sources */,
 				57F63A842631AA1700B45C0B /* ManageSpeakerDialog.swift in Sources */,
