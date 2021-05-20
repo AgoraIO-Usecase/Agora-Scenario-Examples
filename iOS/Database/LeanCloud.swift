@@ -1,13 +1,15 @@
 //
 //  LeanCloud.swift
-//  Core
+//  Database
 //
-//  Created by XC on 2021/4/19.
+//  Created by XC on 2021/5/20.
 //
+
 #if LEANCLOUD
 import Foundation
 import LeanCloud
 import RxSwift
+import Core
 
 public class Database {
     

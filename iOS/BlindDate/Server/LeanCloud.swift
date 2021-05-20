@@ -8,7 +8,8 @@
 import Foundation
 import RxSwift
 import LeanCloud
-import Core_LeanCloud
+import Core
+import Database_LeanCloud
 
 extension User {
     static func from(object: LCObject) throws -> User {

@@ -9,11 +9,7 @@ import Foundation
 import UIKit
 import RxCocoa
 import RxSwift
-#if LEANCLOUD
-import Core_LeanCloud
-#elseif FIREBASE
-import Core_Firebase
-#endif
+import Core
 
 class MeController: BaseViewContoller {
     
