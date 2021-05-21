@@ -157,6 +157,12 @@ public class BlindDateHomeController: BaseViewContoller {
         refreshControl.sendActions(for: .valueChanged)
     }
     
+    deinit {
+        Logger.log(message: "HomeController deinit", level: .info)
+        let _ = Server.shared().leave().subscribe()
+        Server.shared().destory()
+    }
+    
     public static func instance() -> BlindDateHomeController {
         let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: Utils.bundle)
         let controller = storyBoard.instantiateViewController(withIdentifier: "HomeController") as! BlindDateHomeController

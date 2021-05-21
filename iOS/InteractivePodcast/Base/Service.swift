@@ -34,6 +34,8 @@ protocol Service {
     
     func process(invition: Action, agree: Bool) -> Observable<Result<Void>>
     func handsUp() -> Observable<Result<Void>>
+    
+    func destory()
 }
 
 protocol ErrorDescription {
