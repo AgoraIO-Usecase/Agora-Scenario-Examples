@@ -10,9 +10,15 @@ import RxSwift
 import Core
 
 class Server: NSObject {
-    fileprivate static let instance = Server()
+    fileprivate static var instance: Server?
+    private static var lock = os_unfair_lock()
     static func shared() -> Service {
-        return instance
+        os_unfair_lock_lock(&Server.lock)
+        if (instance == nil) {
+            instance = Server()
+        }
+        os_unfair_lock_unlock(&Server.lock)
+        return instance!
     }
     
     var account: User? = nil
@@ -25,6 +31,10 @@ class Server: NSObject {
 }
 
 extension Server: Service {
+    func destory() {
+        Server.instance = nil
+    }
+    
     func updateSetting() {
         if (rtcServer.isJoinChannel) {
             rtcServer.setClientRole(rtcServer.role!, setting.audienceLatency)

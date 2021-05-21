@@ -46,6 +46,8 @@ protocol Service {
     
     func subscribeMessages() -> Observable<Result<Message>>
     func sendMessage(message: String) -> Observable<Result<Void>>
+    
+    func destory()
 }
 
 protocol ErrorDescription {

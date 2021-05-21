@@ -218,6 +218,7 @@ public class HomeController: BaseViewContoller, DialogDelegate {
     deinit {
         Logger.log(message: "HomeController deinit", level: .info)
         let _ = Server.shared().leave().subscribe()
+        Server.shared().destory()
     }
 }
 
