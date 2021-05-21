@@ -17,7 +17,7 @@ class Server: NSObject {
     
     var account: User? = nil
     var member: Member? = nil
-    var setting: LocalSetting = CoreData.getSetting() ?? LocalSetting()
+    var setting: LocalSetting = AppData.getSetting() ?? LocalSetting()
     //var room: Room? = nil
     private var rtcServer: RtcServer = RtcServer()
     private var rtmServer: RtmServer = RtmServer()
@@ -33,7 +33,7 @@ extension Server: Service {
     
     func getAccount() -> Observable<Result<User>> {
         if (account == nil) {
-            let user = CoreData.getAccount()
+            let user = AppData.getAccount()
             if (user != nil) {
                 return User.getUser(by: user!.id).map { result in
                     if (result.success) {
@@ -47,7 +47,7 @@ extension Server: Service {
                 return User.randomUser().flatMap { result in
                     return result.onSuccess {
                         self.account = result.data!
-                        return CoreData.saveAccount(user: result.data!)
+                        return AppData.saveAccount(user: result.data!)
                     }
                 }
             }

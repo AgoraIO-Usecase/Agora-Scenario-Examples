@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		036A3BA9C20E7ED9BA0DD836 /* Pods_InteractivePodcast_LeanCloud.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4970F4FEDBE05B422D4F2534 /* Pods_InteractivePodcast_LeanCloud.framework */; };
 		15C93B520578CA7BBD30A908 /* Pods_Database_LeanCloud.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A8F295F68F52286E70D8202 /* Pods_Database_LeanCloud.framework */; };
+		570997CB265756EC00B87998 /* AppData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570997CA265756EC00B87998 /* AppData.swift */; };
 		571AA46E2629862700B82B35 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 571AA46D2629862700B82B35 /* AppDelegate.swift */; };
 		571AA4702629862700B82B35 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 571AA46F2629862700B82B35 /* SceneDelegate.swift */; };
 		571AA4722629862700B82B35 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 571AA4712629862700B82B35 /* ViewController.swift */; };
@@ -522,6 +523,7 @@
 		51F8C0547106EBD253E46381 /* Pods-InteractivePodcast_Firebase.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InteractivePodcast_Firebase.debug.xcconfig"; path = "Target Support Files/Pods-InteractivePodcast_Firebase/Pods-InteractivePodcast_Firebase.debug.xcconfig"; sourceTree = "<group>"; };
 		527096D4B407DA1FE7C4F5D4 /* Pods-Core_Firebase.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Core_Firebase.debug.xcconfig"; path = "Target Support Files/Pods-Core_Firebase/Pods-Core_Firebase.debug.xcconfig"; sourceTree = "<group>"; };
 		53A21D478558F81DF5D75531 /* Pods-Database_LeanCloud.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Database_LeanCloud.release.xcconfig"; path = "Target Support Files/Pods-Database_LeanCloud/Pods-Database_LeanCloud.release.xcconfig"; sourceTree = "<group>"; };
+		570997CA265756EC00B87998 /* AppData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppData.swift; sourceTree = "<group>"; };
 		571AA46A2629862700B82B35 /* Scene-Examples_LeanCloud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Scene-Examples_LeanCloud.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		571AA46D2629862700B82B35 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		571AA46F2629862700B82B35 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -974,6 +976,7 @@
 			children = (
 				5757D122262DB25400B4A785 /* Model.swift */,
 				5757D15F262DB96900B4A785 /* CoreData.swift */,
+				570997CA265756EC00B87998 /* AppData.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -1899,6 +1902,7 @@
 				5757D0DE262DAF9900B4A785 /* BaseUICollectionViewCell.swift in Sources */,
 				5757D067262D852200B4A785 /* ProcessingView.swift in Sources */,
 				57F639D926304ACE00B45C0B /* RoundButton.swift in Sources */,
+				570997CB265756EC00B87998 /* AppData.swift in Sources */,
 				5757D063262D84E400B4A785 /* Colors.swift in Sources */,
 				5757D0A1262DAC1500B4A785 /* Dialog.swift in Sources */,
 				5757D0E2262DAFDA00B4A785 /* Config.swift in Sources */,

@@ -109,7 +109,7 @@ extension HandsupListDialog: HandsupListDelegate {
     }
 }
 
-protocol HandsupListDelegate: class {
+protocol HandsupListDelegate: AnyObject {
     func reject(action: Action) -> Observable<Result<Void>>
     func agree(action: Action) -> Observable<Result<Void>>
 }

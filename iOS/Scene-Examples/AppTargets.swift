@@ -61,7 +61,6 @@ class FirebaseAppTarget: AppTarget {
 #endif
 
 class AppTargets {
-    let coreData: CoreData = CoreData.shared
     #if LEANCLOUD
     let target: AppTarget = LeanCloudAppTarget()
     #elseif FIREBASE
