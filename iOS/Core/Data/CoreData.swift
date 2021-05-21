@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 import RxSwift
 
-public class CoreData {
+class CoreData {
     public static let shared = CoreData()
     
     let identifier: String  = "io.agora.Core"

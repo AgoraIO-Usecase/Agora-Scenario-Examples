@@ -11,6 +11,22 @@ extension String {
     public var localized: String { NSLocalizedString(self, bundle: Bundle(identifier: "io.agora.Core")!, comment: "") }
 }
 
+extension UserDefaults {
+    func set<T: Encodable>(encodable: T, forKey key: String) {
+        if let data = try? JSONEncoder().encode(encodable) {
+            set(data, forKey: key)
+        }
+    }
+
+    func value<T: Decodable>(_ type: T.Type, forKey key: String) -> T? {
+        if let data = object(forKey: key) as? Data,
+            let value = try? JSONDecoder().decode(type, from: data) {
+            return value
+        }
+        return nil
+    }
+}
+
 extension UIColor {
     public convenience init(hex: String, alpha: CGFloat? = nil) {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)

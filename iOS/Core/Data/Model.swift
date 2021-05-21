@@ -36,7 +36,7 @@ public struct Result<T> {
     }
 }
 
-public class User {
+public class User: Codable {
     public var id: String
     public var name: String
     public var avatar: String?
@@ -48,7 +48,7 @@ public class User {
     }
 }
 
-public class LocalSetting {
+public class LocalSetting: Codable {
     public var audienceLatency: Bool
     
     public init(audienceLatency: Bool = false) {

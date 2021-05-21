@@ -62,7 +62,7 @@ class MeController: BaseViewContoller {
             }
             .flatMap { isOn -> Observable<Result<LocalSetting>> in
                 self.setting.audienceLatency = isOn
-                return CoreData.saveSetting(setting: self.setting)
+                return AppData.saveSetting(setting: self.setting)
             }
             .subscribe(onNext: { result in
                 if (!result.success) {
