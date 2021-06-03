@@ -10,7 +10,7 @@ import Core
 import LeanCloud
 import RxSwift
 
-class LeanCloudPodcastModelProxy: IPodcastModelManagerProxy {
+class LeanCloudPodcastModelManager: IPodcastModelManager {
     
     static func queryMemberCount(room: LCObject) throws -> Int {
         let query = LCQuery(className: PodcastMember.TABLE)
@@ -28,7 +28,7 @@ class LeanCloudPodcastModelProxy: IPodcastModelManagerProxy {
     static func from(object: LCObject) throws -> PodcastRoom {
         let objectId: String = object.objectId!.stringValue!
         let channelName: String = object.get(PodcastRoom.CHANNEL_NAME)!.stringValue!
-        let anchor: User = try LeanCloudUserProxy.from(object: object.get(PodcastRoom.ANCHOR_ID) as! LCObject)
+        let anchor: User = try LeanCloudUserManager.from(object: object.get(PodcastRoom.ANCHOR_ID) as! LCObject)
         let room = PodcastRoom(id: objectId, channelName: channelName, anchor: anchor)
         room.total = try queryMemberCount(room: object)
         room.speakersTotal = try querySpeakerCount(room: object)
@@ -40,7 +40,7 @@ class LeanCloudPodcastModelProxy: IPodcastModelManagerProxy {
     
     static func from(object: LCObject, room: PodcastRoom) throws -> PodcastMember {
         let userObject = object.get(PodcastMember.USER) as! LCObject
-        let user = try LeanCloudUserProxy.from(object: userObject)
+        let user = try LeanCloudUserManager.from(object: userObject)
         let isMuted = (object.get(PodcastMember.MUTED)?.intValue ?? 0) == 1
         let isSpeaker = (object.get(PodcastMember.IS_SPEAKER)?.intValue ?? 0) == 1
         let isSelfMuted = (object.get(PodcastMember.SELF_MUTED)?.intValue ?? 0) == 1
@@ -112,7 +112,7 @@ class LeanCloudPodcastModelProxy: IPodcastModelManagerProxy {
             try query.where("createdAt", .descending)
         } transform: { (list) -> Array<PodcastRoom> in
             let rooms: Array<PodcastRoom> = try list.map { room in
-                return try LeanCloudPodcastModelProxy.from(object: room)
+                return try LeanCloudPodcastModelManager.from(object: room)
             }
             return rooms
         }
@@ -123,7 +123,7 @@ class LeanCloudPodcastModelProxy: IPodcastModelManagerProxy {
             try query.where(PodcastRoom.ANCHOR_ID, .included)
         } transform: { (data: LCObject) -> PodcastRoom in
             let channelName: String = data.get(PodcastRoom.CHANNEL_NAME)!.stringValue!
-            let anchor = try LeanCloudUserProxy.from(object: data.get(PodcastRoom.ANCHOR_ID) as! LCObject)
+            let anchor = try LeanCloudUserManager.from(object: data.get(PodcastRoom.ANCHOR_ID) as! LCObject)
             return PodcastRoom(id: objectId, channelName: channelName, anchor: anchor)
         }
     }
@@ -145,7 +145,7 @@ class LeanCloudPodcastModelProxy: IPodcastModelManagerProxy {
             try query.where("createdAt", .ascending)
         } transform: { (list) -> Array<PodcastMember> in
             let members: Array<PodcastMember> = try list.map { data in
-                let member: PodcastMember = try LeanCloudPodcastModelProxy.from(object: data, room: room)
+                let member: PodcastMember = try LeanCloudPodcastModelManager.from(object: data, room: room)
                 member.isManager = member.user.id == room.anchor.id
                 return member
             }
@@ -162,7 +162,7 @@ class LeanCloudPodcastModelProxy: IPodcastModelManagerProxy {
             try query.where(PodcastMember.USER, .included)
         } transform: { (list) -> Array<PodcastMember> in
             let members: Array<PodcastMember> = try list.map { data in
-                let member: PodcastMember = try LeanCloudPodcastModelProxy.from(object: data, room: room)
+                let member: PodcastMember = try LeanCloudPodcastModelManager.from(object: data, room: room)
                 member.isManager = member.user.id == room.anchor.id
                 return member
             }
@@ -192,7 +192,7 @@ class LeanCloudPodcastModelProxy: IPodcastModelManagerProxy {
         .concatMap { result -> Observable<Result<Void>> in
             if (result.success) {
                 return Database.save {
-                    return try LeanCloudPodcastModelProxy.toObject(member: member)
+                    return try LeanCloudPodcastModelManager.toObject(member: member)
                 }.map { result in
                     if (result.success) {
                         member.id = result.data!
@@ -291,14 +291,14 @@ class LeanCloudPodcastModelProxy: IPodcastModelManagerProxy {
             return result.data != nil
         }
         .concatMap { result in
-            return LeanCloudPodcastModelProxy.getPodcastAction(objectId: result.data!)
+            return LeanCloudPodcastModelManager.getPodcastAction(objectId: result.data!)
         }
     }
     
     func handsup(member: PodcastMember) -> Observable<Result<Void>> {
         let action = member.action(with: .handsUp)
         return Database.save {
-            return try LeanCloudPodcastModelProxy.toActionObject(action: action)
+            return try LeanCloudPodcastModelManager.toActionObject(action: action)
         }
         .map { $0.transform() }
     }
@@ -307,7 +307,7 @@ class LeanCloudPodcastModelProxy: IPodcastModelManagerProxy {
         let action = master.action(with: .invite)
         action.member = member
         return Database.save {
-            return try LeanCloudPodcastModelProxy.toActionObject(action: action)
+            return try LeanCloudPodcastModelManager.toActionObject(action: action)
         }
         .map { $0.transform() }
     }
@@ -316,7 +316,7 @@ class LeanCloudPodcastModelProxy: IPodcastModelManagerProxy {
         let action = member.action(with: .invite)
         action.status = .refuse
         return Database.save {
-            return try LeanCloudPodcastModelProxy.toActionObject(action: action)
+            return try LeanCloudPodcastModelManager.toActionObject(action: action)
         }
         .map { $0.transform() }
     }

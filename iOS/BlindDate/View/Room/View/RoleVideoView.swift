@@ -67,17 +67,17 @@ class RoleVideoView {
     
     private func bindVideo(member: BlindDateMember) {
         if (member.isLocal) {
-            Server.shared().bindLocalVideo(view: videoView)
+            RoomManager.shared().bindLocalVideo(view: videoView)
         } else {
-            Server.shared().bindRemoteVideo(view: videoView, uid: member.streamId)
+            RoomManager.shared().bindRemoteVideo(view: videoView, uid: member.streamId)
         }
     }
     
     private func unbindVideo(member: BlindDateMember) {
         if (member.isLocal) {
-            Server.shared().bindLocalVideo(view: nil)
+            RoomManager.shared().bindLocalVideo(view: nil)
         } else {
-            Server.shared().bindRemoteVideo(view: nil, uid: member.streamId)
+            RoomManager.shared().bindRemoteVideo(view: nil, uid: member.streamId)
         }
     }
     

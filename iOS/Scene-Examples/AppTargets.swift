@@ -16,19 +16,20 @@ enum SceneApp {
     case BlindDate
 }
 
-protocol AppTarget {
-    func initDatabase() -> Void;
+protocol IAppTarget {
+    func initTarget() -> Void;
     func getAppMainViewController(app: SceneApp) -> UIViewController
 }
 
 #if LEANCLOUD
-class LeanCloudAppTarget: AppTarget {
-    func initDatabase() {
+class LeanCloudAppTarget: IAppTarget {
+    func initTarget() {
         Database.initConfig()
-        SyncManager.shared.setProxy(LeanCloudSyncProxy())
-        UserManager.shared.setProxy(LeanCloudUserProxy())
-        PodcastModelManager.shared.setProxy(LeanCloudPodcastModelProxy())
-        BlindDateModelManager.shared.setProxy(LeanCloudBlindDateModelProxy())
+        let _ = InjectionService.shared
+            .register(ISyncManager.self, instance: LeanCloudSyncManager())
+            .register(IUserManager.self, instance: LeanCloudUserManager())
+            .register(IPodcastModelManager.self, instance: LeanCloudPodcastModelManager())
+            .register(IBlindDateModelManager.self, instance: LeanCloudBlindDateModelManager())
     }
     
     func getAppMainViewController(app: SceneApp) -> UIViewController {
@@ -41,13 +42,14 @@ class LeanCloudAppTarget: AppTarget {
     }
 }
 #elseif FIREBASE
-class FirebaseAppTarget: AppTarget {
-    func initDatabase() {
+class FirebaseAppTarget: IAppTarget {
+    func initTarget() {
         Database.initConfig()
-        SyncManager.shared.setProxy(FirebaseSyncProxy())
-        UserManager.shared.setProxy(FirebaseUserProxy())
-        PodcastModelManager.shared.setProxy(FirebasePodcastModelProxy())
-        BlindDateModelManager.shared.setProxy(FirebaseBlindDateModelProxy())
+        let _ = InjectionService.shared
+            .register(ISyncManager.self, instance: FirebaseSyncManager())
+            .register(IUserManager.self, instance: FirebaseUserManager())
+            .register(IPodcastModelManager.self, instance: FirebasePodcastModelManager())
+            .register(IBlindDateModelManager.self, instance: FirebaseBlindDateModelManager())
     }
     
     func getAppMainViewController(app: SceneApp) -> UIViewController {
@@ -63,8 +65,16 @@ class FirebaseAppTarget: AppTarget {
 
 class AppTargets {
     #if LEANCLOUD
-    let target: AppTarget = LeanCloudAppTarget()
+    private static let target: IAppTarget = LeanCloudAppTarget()
     #elseif FIREBASE
-    let target: AppTarget = FirebaseAppTarget()
+    private static let target: IAppTarget = FirebaseAppTarget()
     #endif
+    
+    static func initTarget() {
+        target.initTarget()
+    }
+    
+    static func getAppMainViewController(app: SceneApp) -> UIViewController {
+        target.getAppMainViewController(app: app)
+    }
 }

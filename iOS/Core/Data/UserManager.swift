@@ -49,54 +49,27 @@ extension User {
     }
 }
 
-public protocol IUserManagerProxy {
+public protocol IUserManager {
     func randomUser() -> Observable<Result<User>>
     func create(user: User) -> Observable<Result<String>>
     func getUser(by objectId: String) -> Observable<Result<User>>
     func update(user: User, name: String) -> Observable<Result<Void>>
 }
 
-public class UserManager {
-    private var proxy: IUserManagerProxy!
-    public static var shared: UserManager = UserManager()
-    
-    private init() {}
-    
-    public func setProxy(_ proxy: IUserManagerProxy) {
-        self.proxy = proxy
-    }
-    
-    public func randomUser() -> Observable<Result<User>> {
-        return proxy.randomUser()
-    }
-    
-    public func create(user: User) -> Observable<Result<String>> {
-        return proxy.create(user: user)
-    }
-    
-    public func getUser(by objectId: String) -> Observable<Result<User>> {
-        return proxy.getUser(by: objectId)
-    }
-    
-    public func update(user: User, name: String) -> Observable<Result<Void>> {
-        return proxy.update(user: user, name: name)
-    }
-}
-
 extension User {
     public static func create(user: User) -> Observable<Result<String>> {
-        return UserManager.shared.create(user: user)
+        return InjectionService.shared.resolve(IUserManager.self).create(user: user)
     }
     
     public static func getUser(by objectId: String) -> Observable<Result<User>> {
-        return UserManager.shared.getUser(by: objectId)
+        return InjectionService.shared.resolve(IUserManager.self).getUser(by: objectId)
     }
     
     public static func randomUser() -> Observable<Result<User>>  {
-        return UserManager.shared.randomUser()
+        return InjectionService.shared.resolve(IUserManager.self).randomUser()
     }
     
     public func update(name: String) -> Observable<Result<Void>> {
-        return UserManager.shared.update(user: self, name: name)
+        return InjectionService.shared.resolve(IUserManager.self).update(user: self, name: name)
     }
 }

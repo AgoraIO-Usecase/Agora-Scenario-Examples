@@ -100,11 +100,11 @@ class RoomViewModel {
     }
     
     var account: User {
-        return Server.shared().account!
+        return RoomManager.shared().account!
     }
     
     var member: BlindDateMember {
-        return Server.shared().member!
+        return RoomManager.shared().member!
     }
     
     var roomManager: BlindDateMember? = nil
@@ -128,7 +128,7 @@ class RoomViewModel {
     var messageList: [RoomChat] = []
     
     func actionsSource() -> Observable<Result<BlindDateAction>> {
-        return Server.shared().subscribeActions()
+        return RoomManager.shared().subscribeActions()
             .map { [unowned self] result in
                 if let action = result.data {
                     if ((action.action == .handsUp || action.action == .requestLeft || action.action == .requestRight) &&
@@ -144,11 +144,11 @@ class RoomViewModel {
     }
     
     func sendMessage(message: String) -> Observable<Result<Void>> {
-        return Server.shared().sendMessage(message: message)
+        return RoomManager.shared().sendMessage(message: message)
     }
     
     func subscribeMessages() -> Observable<Result<BlindDateMessage>> {
-        return Server.shared().subscribeMessages()
+        return RoomManager.shared().subscribeMessages()
             .map { [unowned self] result in
                 if let message = result.data {
                     let member: BlindDateMember?
@@ -172,7 +172,7 @@ class RoomViewModel {
     }
     
     func roomMembersDataSource() -> Observable<Result<Bool>> {
-        return Server.shared().subscribeMembers()
+        return RoomManager.shared().subscribeMembers()
             .map { [unowned self] result in
                 var roomClosed = false
                 if (result.success) {
@@ -248,51 +248,51 @@ class RoomViewModel {
         Logger.log(message: "RoomViewModel leaveRoom action:\(action)", level: .info)
         switch action {
         case .leave:
-            return Server.shared().leave()
+            return RoomManager.shared().leave()
         case .closeRoom:
-            return Server.shared().leave()
+            return RoomManager.shared().leave()
         }
     }
     
-    let isMuted: BehaviorRelay<Bool> = BehaviorRelay<Bool>(value: Server.shared().isMicrophoneClose())
-    let isEnableBeauty: BehaviorRelay<Bool> = BehaviorRelay<Bool>(value: Server.shared().isEnableBeauty())
+    let isMuted: BehaviorRelay<Bool> = BehaviorRelay<Bool>(value: RoomManager.shared().isMicrophoneClose())
+    let isEnableBeauty: BehaviorRelay<Bool> = BehaviorRelay<Bool>(value: RoomManager.shared().isEnableBeauty())
     
     func muted() -> Bool {
-        return Server.shared().isMicrophoneClose()
+        return RoomManager.shared().isMicrophoneClose()
     }
     
     func enabledBeauty() -> Bool {
-        return Server.shared().isEnableBeauty()
+        return RoomManager.shared().isEnableBeauty()
     }
     
     func enableBeauty(enable: Bool) {
         isEnableBeauty.accept(enable)
-        Server.shared().enableBeauty(enable: enable)
+        RoomManager.shared().enableBeauty(enable: enable)
     }
     
     func selfMute(mute: Bool) -> Observable<Result<Void>>{
         isMuted.accept(mute)
-        return Server.shared().closeMicrophone(close: mute)
+        return RoomManager.shared().closeMicrophone(close: mute)
     }
     
     func handsup(left: Bool?) -> Observable<Result<Void>>{
-        return Server.shared().handsUp(left: left)
+        return RoomManager.shared().handsUp(left: left)
     }
     
     func inviteSpeaker(member: BlindDateMember) -> Observable<Result<Void>> {
-        return Server.shared().inviteSpeaker(member: member)
+        return RoomManager.shared().inviteSpeaker(member: member)
     }
     
     func muteSpeaker(member: BlindDateMember) -> Observable<Result<Void>> {
-        return Server.shared().muteSpeaker(member: member)
+        return RoomManager.shared().muteSpeaker(member: member)
     }
     
     func unMuteSpeaker(member: BlindDateMember) -> Observable<Result<Void>> {
-        return Server.shared().unMuteSpeaker(member: member)
+        return RoomManager.shared().unMuteSpeaker(member: member)
     }
     
     func kickSpeaker(member: BlindDateMember) -> Observable<Result<Void>> {
-        return Server.shared().kickSpeaker(member: member)
+        return RoomManager.shared().kickSpeaker(member: member)
     }
     
     func process(action: BlindDateAction, agree: Bool) -> Observable<Result<Void>> {
@@ -315,7 +315,7 @@ class RoomViewModel {
                 } else if (action.action == .requestRight) {
                     action.action = self.speakers.rightSpeaker == nil ? .requestRight : .requestLeft
                 }
-                return Server.shared().process(request: action, agree: agree)
+                return RoomManager.shared().process(request: action, agree: agree)
             } else {
                 return Observable.just(Result(success: true))
             }
@@ -324,9 +324,9 @@ class RoomViewModel {
                 if (self.speakers.leftSpeaker != nil && self.speakers.rightSpeaker != nil) {
                     return Observable.just(Result(success: false, message: "位置已满！"))
                 } else if (self.speakers.leftSpeaker == nil) {
-                    return Server.shared().process(invitionLeft: action, agree: agree)
+                    return RoomManager.shared().process(invitionLeft: action, agree: agree)
                 } else {
-                    return Server.shared().process(invitionRight: action, agree: agree)
+                    return RoomManager.shared().process(invitionRight: action, agree: agree)
                 }
             } else {
                 return Observable.just(Result(success: true))

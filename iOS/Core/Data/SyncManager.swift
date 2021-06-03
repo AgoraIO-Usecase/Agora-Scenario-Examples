@@ -166,7 +166,7 @@ public protocol ISyncManagerLiveQuery {
     func unsubscribe() -> Void
 }
 
-public protocol ISyncManagerProxy {
+public protocol ISyncManager {
     func createAgoraRoom(_ room: AgoraRoom, _ delegate: AgoraObjectDelegate) -> Void
     func getAgoraRooms(_ delegate: AgoraObjectListDelegate) -> Void
     func get(_ reference: AgoraDocumentReference, _ delegate: AgoraObjectDelegate) -> Void
@@ -178,47 +178,45 @@ public protocol ISyncManagerProxy {
 }
 
 public class SyncManager {
-    private var proxy: ISyncManagerProxy!
+    private var proxy: ISyncManager!
     public static var shared: SyncManager = SyncManager()
-    
-    private init() {}
-    
-    public func setProxy(_ proxy: ISyncManagerProxy) {
-        self.proxy = proxy
+
+    private init() {
+        self.proxy = InjectionService.shared.resolve(ISyncManager.self)
     }
-    
+
     public func getRoom(id: String) -> AgoraRoomReference {
         return AgoraRoomReference(id: id)
     }
-    
+
     public func createAgoraRoom(room: AgoraRoom, delegate: AgoraObjectDelegate) {
         proxy.createAgoraRoom(room, delegate)
     }
-    
+
     public func getAgoraRooms(delegate: AgoraObjectListDelegate) {
         proxy.getAgoraRooms(delegate)
     }
-    
+
     public func get(reference: AgoraDocumentReference, delegate: AgoraObjectDelegate) {
         proxy.get(reference, delegate)
     }
-    
+
     public func get(reference: AgoraCollectionReference, delegate: AgoraObjectListDelegate) {
         proxy.get(reference, delegate)
     }
-    
+
     public func add(reference: AgoraCollectionReference, data: [String: Any], delegate: AgoraObjectDelegate) {
         proxy.add(reference, data, delegate)
     }
-    
+
     public func update(reference: AgoraDocumentReference, key: String, value: Any, delegate: AgoraObjectDelegate) {
         proxy.update(reference, key, value, delegate)
     }
-    
+
     public func delete(reference: AgoraDocumentReference, delegate: AgoraDocumentReferenceDelegate) {
         proxy.delete(reference, delegate)
     }
-    
+
     public func subscribe(reference: AgoraDocumentReference, delegate: SyncManagerEventDelegate) -> ISyncManagerLiveQuery {
         return proxy.subscribe(reference, delegate)
     }

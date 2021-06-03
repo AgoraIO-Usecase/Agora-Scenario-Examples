@@ -11,7 +11,7 @@ import FirebaseFirestoreSwift
 import RxSwift
 import Core
 
-class FirebaseBlindDateModelProxy: IBlindDateModelManagerProxy {
+class FirebaseBlindDateModelManager: IBlindDateModelManager {
     
     static func queryMemberCount(roomId: String) -> Observable<Result<Int>> {
         return Database.query(className: BlindDateMember.TABLE) { collectionReference -> Query in
@@ -194,8 +194,8 @@ class FirebaseBlindDateModelProxy: IBlindDateModelManagerProxy {
                 let room: BlindDateRoom = result.data!
                 return Observable.zip(
                     User.getUser(by: room.anchor.id),
-                    FirebaseBlindDateModelProxy.queryMemberCount(roomId: room.id),
-                    FirebaseBlindDateModelProxy.querySpeakerCount(roomId: room.id)
+                    FirebaseBlindDateModelManager.queryMemberCount(roomId: room.id),
+                    FirebaseBlindDateModelManager.querySpeakerCount(roomId: room.id)
                 ).map { (data: (Result<User>, Result<Int>, Result<Int>)) -> Result<BlindDateRoom> in
                     let (userResult, memberCountResult, speakerCountResult) = data
                     if (userResult.success && memberCountResult.success && speakerCountResult.success) {
@@ -310,7 +310,7 @@ class FirebaseBlindDateModelProxy: IBlindDateModelManagerProxy {
         .concatMap { result -> Observable<Result<Void>> in
             if (result.success) {
                 return Database.save {
-                    return FirebaseBlindDateModelProxy.toData(member: member)
+                    return FirebaseBlindDateModelManager.toData(member: member)
                 }.map { result in
                     if (result.success) {
                         member.id = result.data!
@@ -438,7 +438,7 @@ class FirebaseBlindDateModelProxy: IBlindDateModelManagerProxy {
     func handsup(member: BlindDateMember) -> Observable<Result<Void>> {
         let action = member.action(with: .handsUp)
         return Database.save { () -> (String, data: [String : Any], String?) in
-            return FirebaseBlindDateModelProxy.toData(action: action)
+            return FirebaseBlindDateModelManager.toData(action: action)
         }
         .map { $0.transform() }
     }
@@ -446,7 +446,7 @@ class FirebaseBlindDateModelProxy: IBlindDateModelManagerProxy {
     func requestLeft(member: BlindDateMember) -> Observable<Result<Void>> {
         let action = member.action(with: .requestLeft)
         return Database.save {
-            return FirebaseBlindDateModelProxy.toData(action: action)
+            return FirebaseBlindDateModelManager.toData(action: action)
         }
         .map { $0.transform() }
     }
@@ -454,7 +454,7 @@ class FirebaseBlindDateModelProxy: IBlindDateModelManagerProxy {
     func requestRight(member: BlindDateMember) -> Observable<Result<Void>> {
         let action = member.action(with: .requestRight)
         return Database.save {
-            return FirebaseBlindDateModelProxy.toData(action: action)
+            return FirebaseBlindDateModelManager.toData(action: action)
         }
         .map { $0.transform() }
     }
@@ -463,7 +463,7 @@ class FirebaseBlindDateModelProxy: IBlindDateModelManagerProxy {
         let action = master.action(with: .invite)
         action.member = member
         return Database.save { () -> (String, data: [String : Any], String?) in
-            return FirebaseBlindDateModelProxy.toData(action: action)
+            return FirebaseBlindDateModelManager.toData(action: action)
         }
         .map { $0.transform() }
     }
@@ -472,7 +472,7 @@ class FirebaseBlindDateModelProxy: IBlindDateModelManagerProxy {
         let action = member.action(with: .invite)
         action.status = .refuse
         return Database.save { () -> (String, data: [String : Any], String?) in
-            return FirebaseBlindDateModelProxy.toData(action: action)
+            return FirebaseBlindDateModelManager.toData(action: action)
         }
         .map { $0.transform() }
     }

@@ -21,8 +21,8 @@ class MeController: BaseViewContoller {
     @IBOutlet weak var aboutView: UIView!
     @IBOutlet weak var audienceLatencyLevelView: UISwitch!
     
-    private var account: User = Server.shared().account!
-    private var setting: LocalSetting = Server.shared().setting
+    private var account: User = RoomManager.shared().account!
+    private var setting: LocalSetting = RoomManager.shared().setting
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,7 +68,7 @@ class MeController: BaseViewContoller {
                 if (!result.success) {
                     self.show(message: result.message ?? "unknown error".localized, type: .error)
                 } else {
-                    Server.shared().updateSetting()
+                    RoomManager.shared().updateSetting()
                 }
             })
             .disposed(by: disposeBag)

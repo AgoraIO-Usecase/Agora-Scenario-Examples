@@ -11,7 +11,7 @@ import FirebaseFirestoreSwift
 import RxSwift
 import Core
 
-class FirebaseUserProxy: IUserManagerProxy {
+class FirebaseUserManager: IUserManager {
     
     static func from(object: DocumentSnapshot) throws -> User {
         let data = object.data()!
@@ -40,7 +40,7 @@ class FirebaseUserProxy: IUserManagerProxy {
     
     func getUser(by objectId: String) -> Observable<Result<User>> {
         return Database.query(className: User.TABLE, objectId: objectId) { (data: DocumentSnapshot) -> User in
-            return try FirebaseUserProxy.from(object: data)
+            return try FirebaseUserManager.from(object: data)
         }
     }
     

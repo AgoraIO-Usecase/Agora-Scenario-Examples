@@ -24,17 +24,17 @@ class HomeViewModel {
     }
 
     func setup() -> Observable<Result<Void>> {
-        return Server.shared().getAccount().map { $0.transform() }
+        return RoomManager.shared().getAccount().map { $0.transform() }
             // UIRefreshControl bug?
             .delay(DispatchTimeInterval.microseconds(200), scheduler: scheduler)
     }
     
     func account() -> User? {
-        return Server.shared().account
+        return RoomManager.shared().account
     }
 
     func dataSource() -> Observable<Result<Array<PodcastRoom>>> {
-        return Server.shared().getRooms()
+        return RoomManager.shared().getRooms()
             .map { [unowned self] data in
                 if (data.success) {
                     self.roomList.removeAll()
@@ -57,14 +57,14 @@ class HomeViewModel {
     func createRoom(with name: String) -> Observable<Result<PodcastRoom>> {
         let account = self.account()
         if let anchor = account {
-            return Server.shared().create(room: PodcastRoom(id: "", channelName: name, anchor: anchor))
+            return RoomManager.shared().create(room: PodcastRoom(id: "", channelName: name, anchor: anchor))
         } else {
             return Observable.just(Result(success: false, message: "account is nil!"))
         }
     }
     
     func join(room: PodcastRoom) -> Observable<Result<PodcastRoom>> {
-        return Server.shared().join(room: room)
+        return RoomManager.shared().join(room: room)
     }
 }
 

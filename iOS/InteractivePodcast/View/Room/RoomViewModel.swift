@@ -82,11 +82,11 @@ class RoomViewModel {
     }
     
     var account: User {
-        return Server.shared().account!
+        return RoomManager.shared().account!
     }
     
     var member: PodcastMember {
-        return Server.shared().member!
+        return RoomManager.shared().member!
     }
     
     var roomManager: PodcastMember? = nil
@@ -100,7 +100,7 @@ class RoomViewModel {
     var onHandsupListChange: BehaviorRelay<[PodcastAction]> = BehaviorRelay(value: [])
     
     func actionsSource() -> Observable<Result<PodcastAction>> {
-        return Server.shared().subscribeActions()
+        return RoomManager.shared().subscribeActions()
             .map { [unowned self] result in
                 if let action = result.data {
                     if (action.action == .handsUp && self.handsupList.first { item in
@@ -115,7 +115,7 @@ class RoomViewModel {
     }
     
     func roomMembersDataSource() -> Observable<Result<Bool>> {
-        return Server.shared().subscribeMembers()
+        return RoomManager.shared().subscribeMembers()
             .map { [unowned self] result in
                 Logger.log(message: "member isMuted:\(member.isMuted) member:\(member.isSelfMuted)", level: .info)
                 var roomClosed = false
@@ -183,41 +183,41 @@ class RoomViewModel {
         case .mini:
             return Observable.just(Result(success: true))
         case .leave:
-            return Server.shared().leave()
+            return RoomManager.shared().leave()
         case .closeRoom:
-            return Server.shared().leave()
+            return RoomManager.shared().leave()
         }
     }
     
     let isMuted: PublishRelay<Bool> = PublishRelay<Bool>()
     
     func muted() -> Bool {
-        return Server.shared().isMicrophoneClose()
+        return RoomManager.shared().isMicrophoneClose()
     }
     
     func selfMute(mute: Bool) -> Observable<Result<Void>>{
         isMuted.accept(mute)
-        return Server.shared().closeMicrophone(close: mute)
+        return RoomManager.shared().closeMicrophone(close: mute)
     }
     
     func handsup() -> Observable<Result<Void>>{
-        return Server.shared().handsUp()
+        return RoomManager.shared().handsUp()
     }
     
     func inviteSpeaker(member: PodcastMember) -> Observable<Result<Void>> {
-        return Server.shared().inviteSpeaker(member: member)
+        return RoomManager.shared().inviteSpeaker(member: member)
     }
     
     func muteSpeaker(member: PodcastMember) -> Observable<Result<Void>> {
-        return Server.shared().muteSpeaker(member: member)
+        return RoomManager.shared().muteSpeaker(member: member)
     }
     
     func unMuteSpeaker(member: PodcastMember) -> Observable<Result<Void>> {
-        return Server.shared().unMuteSpeaker(member: member)
+        return RoomManager.shared().unMuteSpeaker(member: member)
     }
     
     func kickSpeaker(member: PodcastMember) -> Observable<Result<Void>> {
-        return Server.shared().kickSpeaker(member: member)
+        return RoomManager.shared().kickSpeaker(member: member)
     }
     
     func process(action: PodcastAction, agree: Bool) -> Observable<Result<Void>> {
@@ -231,13 +231,13 @@ class RoomViewModel {
                     handsupList.remove(at: find)
                 }
                 onHandsupListChange.accept(handsupList)
-                return Server.shared().process(handsup: action, agree: agree)
+                return RoomManager.shared().process(handsup: action, agree: agree)
             } else {
                 return Observable.just(Result(success: true))
             }
         case .invite:
             if (!isManager && !isSpeaker) {
-                return Server.shared().process(invition: action, agree: agree)
+                return RoomManager.shared().process(invition: action, agree: agree)
             } else {
                 return Observable.just(Result(success: true))
             }
