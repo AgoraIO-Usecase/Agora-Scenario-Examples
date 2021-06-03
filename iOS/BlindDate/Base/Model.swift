@@ -10,97 +10,94 @@ import RxSwift
 import Core
 
 extension BlindDateRoom {
-
     static func create(room: BlindDateRoom) -> Observable<Result<String>> {
-        return BlindDateModelManager.shared.create(room: room)
+        return InjectionService.shared.resolve(IBlindDateModelManager.self).create(room: room)
     }
     
     func delete() -> Observable<Result<Void>> {
-        return BlindDateModelManager.shared.delete(room: self)
+        return InjectionService.shared.resolve(IBlindDateModelManager.self).delete(room: self)
     }
     
     static func getRooms() -> Observable<Result<Array<BlindDateRoom>>> {
-        return BlindDateModelManager.shared.getRooms()
+        return InjectionService.shared.resolve(IBlindDateModelManager.self).getRooms()
     }
     
     static func getRoom(by objectId: String) -> Observable<Result<BlindDateRoom>> {
-        return BlindDateModelManager.shared.getRoom(by: objectId)
+        return InjectionService.shared.resolve(IBlindDateModelManager.self).getRoom(by: objectId)
     }
     
     static func update(room: BlindDateRoom) -> Observable<Result<String>> {
-        return BlindDateModelManager.shared.update(room: room)
+        return InjectionService.shared.resolve(IBlindDateModelManager.self).update(room: room)
     }
     
     func getMembers() -> Observable<Result<Array<BlindDateMember>>> {
-        return BlindDateModelManager.shared.getMembers(room: self)
+        return InjectionService.shared.resolve(IBlindDateModelManager.self).getMembers(room: self)
     }
     
     func getCoverSpeakers() -> Observable<Result<Array<BlindDateMember>>> {
-        return BlindDateModelManager.shared.getCoverSpeakers(room: self)
+        return InjectionService.shared.resolve(IBlindDateModelManager.self).getCoverSpeakers(room: self)
     }
     
     func subscribeMembers() -> Observable<Result<Array<BlindDateMember>>> {
-        return BlindDateModelManager.shared.subscribeMembers(room: self)
+        return InjectionService.shared.resolve(IBlindDateModelManager.self).subscribeMembers(room: self)
     }
 }
 
 extension BlindDateMember {
-    
     func join(streamId: UInt) -> Observable<Result<Void>>{
-        return BlindDateModelManager.shared.join(member: self, streamId: streamId)
+        return InjectionService.shared.resolve(IBlindDateModelManager.self).join(member: self, streamId: streamId)
     }
     
     func mute(mute: Bool) -> Observable<Result<Void>> {
-        return BlindDateModelManager.shared.mute(member: self, mute: mute)
+        return InjectionService.shared.resolve(IBlindDateModelManager.self).mute(member: self, mute: mute)
     }
     
     func selfMute(mute: Bool) -> Observable<Result<Void>> {
-        return BlindDateModelManager.shared.selfMute(member: self, mute: mute)
+        return InjectionService.shared.resolve(IBlindDateModelManager.self).selfMute(member: self, mute: mute)
     }
     
     func asListener() -> Observable<Result<Void>> {
-        return BlindDateModelManager.shared.asListener(member: self)
+        return InjectionService.shared.resolve(IBlindDateModelManager.self).asListener(member: self)
     }
     
     func asLeftSpeaker(agree: Bool) -> Observable<Result<Void>> {
-        return BlindDateModelManager.shared.asLeftSpeaker(member: self, agree: agree)
+        return InjectionService.shared.resolve(IBlindDateModelManager.self).asLeftSpeaker(member: self, agree: agree)
     }
     
     func asRightSpeaker(agree: Bool) -> Observable<Result<Void>> {
-        return BlindDateModelManager.shared.asRightSpeaker(member: self, agree: agree)
+        return InjectionService.shared.resolve(IBlindDateModelManager.self).asRightSpeaker(member: self, agree: agree)
     }
     
     func leave() -> Observable<Result<Void>> {
-        return BlindDateModelManager.shared.leave(member: self)
+        return InjectionService.shared.resolve(IBlindDateModelManager.self).leave(member: self)
     }
     
     func subscribeActions() -> Observable<Result<BlindDateAction>> {
-        return BlindDateModelManager.shared.subscribeActions(member: self)
+        return InjectionService.shared.resolve(IBlindDateModelManager.self).subscribeActions(member: self)
     }
     
     func handsup() -> Observable<Result<Void>> {
-        return BlindDateModelManager.shared.handsup(member: self)
+        return InjectionService.shared.resolve(IBlindDateModelManager.self).handsup(member: self)
     }
     
     func requestLeft() -> Observable<Result<Void>> {
-        return BlindDateModelManager.shared.requestLeft(member: self)
+        return InjectionService.shared.resolve(IBlindDateModelManager.self).requestLeft(member: self)
     }
     
     func requestRight() -> Observable<Result<Void>> {
-        return BlindDateModelManager.shared.requestRight(member: self)
+        return InjectionService.shared.resolve(IBlindDateModelManager.self).requestRight(member: self)
     }
     
     func inviteSpeaker(member: BlindDateMember) -> Observable<Result<Void>> {
-        return BlindDateModelManager.shared.inviteSpeaker(master: self, member: member)
+        return InjectionService.shared.resolve(IBlindDateModelManager.self).inviteSpeaker(master: self, member: member)
     }
     
     func rejectInvition() -> Observable<Result<Void>> {
-        return BlindDateModelManager.shared.rejectInvition(member: self)
+        return InjectionService.shared.resolve(IBlindDateModelManager.self).rejectInvition(member: self)
     }
 }
 
 extension BlindDateAction {
-    
     func setLeftSpeaker(agree: Bool) -> Observable<Result<Void>> {
         return member.asLeftSpeaker(agree: agree)
     }

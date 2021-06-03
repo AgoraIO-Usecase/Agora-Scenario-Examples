@@ -15,6 +15,7 @@
 		571AA47A2629862800B82B35 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 571AA4792629862800B82B35 /* Assets.xcassets */; };
 		571AA47D2629862800B82B35 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 571AA47B2629862800B82B35 /* LaunchScreen.storyboard */; };
 		57369B7426298EB7004CF690 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57369B6B26298EB7004CF690 /* Utils.swift */; };
+		574C9CA12668B62100822A95 /* ServiceLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 574C9CA02668B62100822A95 /* ServiceLocator.swift */; };
 		5757D00E262D7C0F00B4A785 /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D00D262D7C0F00B4A785 /* HomeController.swift */; };
 		5757D04C262D834700B4A785 /* Core.h in Headers */ = {isa = PBXBuildFile; fileRef = 5757D04A262D834700B4A785 /* Core.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5757D057262D83C900B4A785 /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D056262D83C900B4A785 /* CustomTabBarController.swift */; };
@@ -47,7 +48,7 @@
 		5757D123262DB25400B4A785 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D122262DB25400B4A785 /* Model.swift */; };
 		5757D148262DB62200B4A785 /* RtcServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D147262DB62200B4A785 /* RtcServer.swift */; };
 		5757D14F262DB68E00B4A785 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5757D151262DB68E00B4A785 /* Localizable.strings */; };
-		5757D15C262DB82E00B4A785 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D15B262DB82E00B4A785 /* Server.swift */; };
+		5757D15C262DB82E00B4A785 /* RoomManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D15B262DB82E00B4A785 /* RoomManager.swift */; };
 		5757D160262DB96900B4A785 /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D15F262DB96900B4A785 /* CoreData.swift */; };
 		5757D165262DB9DB00B4A785 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5757D163262DB9DB00B4A785 /* Model.xcdatamodeld */; };
 		5757D17A262DBD6700B4A785 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D179262DBD6700B4A785 /* HomeViewModel.swift */; };
@@ -87,26 +88,26 @@
 		5762F80426568446003B042D /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; };
 		5762F80526568446003B042D /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5783FE942664B571000B39F3 /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783FE932664B571000B39F3 /* SyncManager.swift */; };
-		5783FEA62666250B000B39F3 /* SyncManagerProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783FEA52666250B000B39F3 /* SyncManagerProxy.swift */; };
-		5783FEA926662555000B39F3 /* SyncManagerProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783FEA72666253D000B39F3 /* SyncManagerProxy.swift */; };
+		5783FEA62666250B000B39F3 /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783FEA52666250B000B39F3 /* SyncManager.swift */; };
+		5783FEA926662555000B39F3 /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783FEA72666253D000B39F3 /* SyncManager.swift */; };
 		5783FEAB26662859000B39F3 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783FEAA26662859000B39F3 /* UserManager.swift */; };
 		5783FEB026662D0B000B39F3 /* LeanCloudHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783FEAE26662C37000B39F3 /* LeanCloudHelper.swift */; };
 		5783FEB2266630B6000B39F3 /* PodcastModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783FEB1266630B6000B39F3 /* PodcastModelManager.swift */; };
 		5783FEB526663188000B39F3 /* PodcastModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783FEB426663188000B39F3 /* PodcastModel.swift */; };
 		5783FEBA26666B90000B39F3 /* BlindDateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783FEB926666B90000B39F3 /* BlindDateModel.swift */; };
 		5783FEBC26666C85000B39F3 /* BlindDateModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783FEBB26666C85000B39F3 /* BlindDateModelManager.swift */; };
-		5783FEBF2667338E000B39F3 /* UserManagerProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783FEAC2666299A000B39F3 /* UserManagerProxy.swift */; };
-		5783FEC0266733A9000B39F3 /* PodcastModelManagerProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783FEB6266634D7000B39F3 /* PodcastModelManagerProxy.swift */; };
-		5783FEC1266733AE000B39F3 /* BlindDateModelManagerProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783FEBD26666D50000B39F3 /* BlindDateModelManagerProxy.swift */; };
-		5783FEC926673BC8000B39F3 /* PodcastModelManagerProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783FEC726673BC5000B39F3 /* PodcastModelManagerProxy.swift */; };
-		5783FECC26676457000B39F3 /* BlindDateModelManagerProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783FECA26676453000B39F3 /* BlindDateModelManagerProxy.swift */; };
+		5783FEBF2667338E000B39F3 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783FEAC2666299A000B39F3 /* UserManager.swift */; };
+		5783FEC0266733A9000B39F3 /* PodcastModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783FEB6266634D7000B39F3 /* PodcastModelManager.swift */; };
+		5783FEC1266733AE000B39F3 /* BlindDateModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783FEBD26666D50000B39F3 /* BlindDateModelManager.swift */; };
+		5783FEC926673BC8000B39F3 /* PodcastModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783FEC726673BC5000B39F3 /* PodcastModelManager.swift */; };
+		5783FECC26676457000B39F3 /* BlindDateModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783FECA26676453000B39F3 /* BlindDateModelManager.swift */; };
 		5783FECE26677DA9000B39F3 /* InteractivePodcast.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D07D262DA46700B4A785 /* InteractivePodcast.framework */; };
 		5783FECF26677DA9000B39F3 /* InteractivePodcast.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D07D262DA46700B4A785 /* InteractivePodcast.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5783FED226677DAD000B39F3 /* BlindDate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57F639802630098A00B45C0B /* BlindDate.framework */; };
 		5783FED326677DAD000B39F3 /* BlindDate.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 57F639802630098A00B45C0B /* BlindDate.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5783FED626677E5A000B39F3 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; };
 		5783FED726677E5A000B39F3 /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		5783FEDB26678197000B39F3 /* UserManagerProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783FEC526673A0B000B39F3 /* UserManagerProxy.swift */; };
+		5783FEDB26678197000B39F3 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783FEC526673A0B000B39F3 /* UserManager.swift */; };
 		5783FEDC26678340000B39F3 /* FirebaseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783FEC2266738AC000B39F3 /* FirebaseHelper.swift */; };
 		57E8D501264A2C03007001BC /* HomeCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63965262EFAF100B45C0B /* HomeCardView.swift */; };
 		57E8D502264A2C03007001BC /* SettingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D06D262D8D5000B4A785 /* SettingController.swift */; };
@@ -143,7 +144,7 @@
 		57F639F226304F0200B45C0B /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F639F126304F0200B45C0B /* Model.swift */; };
 		57F639F72630502E00B45C0B /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F639F62630502E00B45C0B /* Service.swift */; };
 		57F63A0A263050E400B45C0B /* RtcServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63A09263050E400B45C0B /* RtcServer.swift */; };
-		57F63A0F2630511500B45C0B /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63A0E2630511500B45C0B /* Server.swift */; };
+		57F63A0F2630511500B45C0B /* RoomManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63A0E2630511500B45C0B /* RoomManager.swift */; };
 		57F63A14263053D800B45C0B /* CreateRoomDialog.xib in Resources */ = {isa = PBXBuildFile; fileRef = 57F63A13263053D800B45C0B /* CreateRoomDialog.xib */; };
 		57F63A19263053DD00B45C0B /* CreateRoomDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63A18263053DD00B45C0B /* CreateRoomDialog.swift */; };
 		57F63A1F263054B300B45C0B /* RoomController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63A1E263054B300B45C0B /* RoomController.swift */; };
@@ -307,6 +308,7 @@
 		571AA47C2629862800B82B35 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		571AA47E2629862800B82B35 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		57369B6B26298EB7004CF690 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		574C9CA02668B62100822A95 /* ServiceLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceLocator.swift; sourceTree = "<group>"; };
 		5757D00D262D7C0F00B4A785 /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
 		5757D048262D834700B4A785 /* Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5757D04A262D834700B4A785 /* Core.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Core.h; sourceTree = "<group>"; };
@@ -346,7 +348,7 @@
 		5757D154262DB79D00B4A785 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		5757D155262DB79E00B4A785 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		5757D156262DB79E00B4A785 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		5757D15B262DB82E00B4A785 /* Server.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
+		5757D15B262DB82E00B4A785 /* RoomManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomManager.swift; sourceTree = "<group>"; };
 		5757D15F262DB96900B4A785 /* CoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
 		5757D164262DB9DB00B4A785 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		5757D179262DBD6700B4A785 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
@@ -388,21 +390,21 @@
 		5757D21E262EB8F300B4A785 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		5762F7DC26567BAA003B042D /* AppTargets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTargets.swift; sourceTree = "<group>"; };
 		5783FE932664B571000B39F3 /* SyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
-		5783FEA52666250B000B39F3 /* SyncManagerProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncManagerProxy.swift; sourceTree = "<group>"; };
-		5783FEA72666253D000B39F3 /* SyncManagerProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncManagerProxy.swift; sourceTree = "<group>"; };
+		5783FEA52666250B000B39F3 /* SyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
+		5783FEA72666253D000B39F3 /* SyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
 		5783FEAA26662859000B39F3 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
-		5783FEAC2666299A000B39F3 /* UserManagerProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManagerProxy.swift; sourceTree = "<group>"; };
+		5783FEAC2666299A000B39F3 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		5783FEAE26662C37000B39F3 /* LeanCloudHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeanCloudHelper.swift; sourceTree = "<group>"; };
 		5783FEB1266630B6000B39F3 /* PodcastModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastModelManager.swift; sourceTree = "<group>"; };
 		5783FEB426663188000B39F3 /* PodcastModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastModel.swift; sourceTree = "<group>"; };
-		5783FEB6266634D7000B39F3 /* PodcastModelManagerProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastModelManagerProxy.swift; sourceTree = "<group>"; };
+		5783FEB6266634D7000B39F3 /* PodcastModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastModelManager.swift; sourceTree = "<group>"; };
 		5783FEB926666B90000B39F3 /* BlindDateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlindDateModel.swift; sourceTree = "<group>"; };
 		5783FEBB26666C85000B39F3 /* BlindDateModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlindDateModelManager.swift; sourceTree = "<group>"; };
-		5783FEBD26666D50000B39F3 /* BlindDateModelManagerProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlindDateModelManagerProxy.swift; sourceTree = "<group>"; };
+		5783FEBD26666D50000B39F3 /* BlindDateModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlindDateModelManager.swift; sourceTree = "<group>"; };
 		5783FEC2266738AC000B39F3 /* FirebaseHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseHelper.swift; sourceTree = "<group>"; };
-		5783FEC526673A0B000B39F3 /* UserManagerProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManagerProxy.swift; sourceTree = "<group>"; };
-		5783FEC726673BC5000B39F3 /* PodcastModelManagerProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastModelManagerProxy.swift; sourceTree = "<group>"; };
-		5783FECA26676453000B39F3 /* BlindDateModelManagerProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlindDateModelManagerProxy.swift; sourceTree = "<group>"; };
+		5783FEC526673A0B000B39F3 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
+		5783FEC726673BC5000B39F3 /* PodcastModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastModelManager.swift; sourceTree = "<group>"; };
+		5783FECA26676453000B39F3 /* BlindDateModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlindDateModelManager.swift; sourceTree = "<group>"; };
 		57E8D519264A2C03007001BC /* Scene-Examples_Firebase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Scene-Examples_Firebase.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		57E8D60C264A5904007001BC /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		57E8D623264A6FDC007001BC /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -426,7 +428,7 @@
 		57F639F126304F0200B45C0B /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		57F639F62630502E00B45C0B /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		57F63A09263050E400B45C0B /* RtcServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtcServer.swift; sourceTree = "<group>"; };
-		57F63A0E2630511500B45C0B /* Server.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
+		57F63A0E2630511500B45C0B /* RoomManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomManager.swift; sourceTree = "<group>"; };
 		57F63A13263053D800B45C0B /* CreateRoomDialog.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CreateRoomDialog.xib; sourceTree = "<group>"; };
 		57F63A18263053DD00B45C0B /* CreateRoomDialog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateRoomDialog.swift; sourceTree = "<group>"; };
 		57F63A1E263054B300B45C0B /* RoomController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomController.swift; sourceTree = "<group>"; };
@@ -718,7 +720,7 @@
 			isa = PBXGroup;
 			children = (
 				5757D147262DB62200B4A785 /* RtcServer.swift */,
-				5757D15B262DB82E00B4A785 /* Server.swift */,
+				5757D15B262DB82E00B4A785 /* RoomManager.swift */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -782,6 +784,7 @@
 			isa = PBXGroup;
 			children = (
 				5757D21E262EB8F300B4A785 /* ActivityIndicator.swift */,
+				574C9CA02668B62100822A95 /* ServiceLocator.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -798,11 +801,11 @@
 		5783FEA326662488000B39F3 /* LeanCloud */ = {
 			isa = PBXGroup;
 			children = (
-				5783FEA52666250B000B39F3 /* SyncManagerProxy.swift */,
-				5783FEAC2666299A000B39F3 /* UserManagerProxy.swift */,
+				5783FEA52666250B000B39F3 /* SyncManager.swift */,
+				5783FEAC2666299A000B39F3 /* UserManager.swift */,
 				5783FEAE26662C37000B39F3 /* LeanCloudHelper.swift */,
-				5783FEB6266634D7000B39F3 /* PodcastModelManagerProxy.swift */,
-				5783FEBD26666D50000B39F3 /* BlindDateModelManagerProxy.swift */,
+				5783FEB6266634D7000B39F3 /* PodcastModelManager.swift */,
+				5783FEBD26666D50000B39F3 /* BlindDateModelManager.swift */,
 			);
 			path = LeanCloud;
 			sourceTree = "<group>";
@@ -810,11 +813,11 @@
 		5783FEA42666249A000B39F3 /* Firebase */ = {
 			isa = PBXGroup;
 			children = (
-				5783FEA72666253D000B39F3 /* SyncManagerProxy.swift */,
+				5783FEA72666253D000B39F3 /* SyncManager.swift */,
 				5783FEC2266738AC000B39F3 /* FirebaseHelper.swift */,
-				5783FEC526673A0B000B39F3 /* UserManagerProxy.swift */,
-				5783FEC726673BC5000B39F3 /* PodcastModelManagerProxy.swift */,
-				5783FECA26676453000B39F3 /* BlindDateModelManagerProxy.swift */,
+				5783FEC526673A0B000B39F3 /* UserManager.swift */,
+				5783FEC726673BC5000B39F3 /* PodcastModelManager.swift */,
+				5783FECA26676453000B39F3 /* BlindDateModelManager.swift */,
 			);
 			path = Firebase;
 			sourceTree = "<group>";
@@ -897,7 +900,7 @@
 			isa = PBXGroup;
 			children = (
 				57F63A09263050E400B45C0B /* RtcServer.swift */,
-				57F63A0E2630511500B45C0B /* Server.swift */,
+				57F63A0E2630511500B45C0B /* RoomManager.swift */,
 				57F63ABD2635634900B45C0B /* RtmServer.swift */,
 			);
 			path = Server;
@@ -1394,17 +1397,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5783FEC1266733AE000B39F3 /* BlindDateModelManagerProxy.swift in Sources */,
+				5783FEC1266733AE000B39F3 /* BlindDateModelManager.swift in Sources */,
 				57F63966262EFAF100B45C0B /* HomeCardView.swift in Sources */,
 				5757D06E262D8D5000B4A785 /* SettingController.swift in Sources */,
 				571AA4722629862700B82B35 /* ViewController.swift in Sources */,
 				5783FEB026662D0B000B39F3 /* LeanCloudHelper.swift in Sources */,
-				5783FEBF2667338E000B39F3 /* UserManagerProxy.swift in Sources */,
+				5783FEBF2667338E000B39F3 /* UserManager.swift in Sources */,
 				571AA46E2629862700B82B35 /* AppDelegate.swift in Sources */,
 				571AA4702629862700B82B35 /* SceneDelegate.swift in Sources */,
 				57369B7426298EB7004CF690 /* Utils.swift in Sources */,
-				5783FEA62666250B000B39F3 /* SyncManagerProxy.swift in Sources */,
-				5783FEC0266733A9000B39F3 /* PodcastModelManagerProxy.swift in Sources */,
+				5783FEA62666250B000B39F3 /* SyncManager.swift in Sources */,
+				5783FEC0266733A9000B39F3 /* PodcastModelManager.swift in Sources */,
 				5762F7E026568019003B042D /* AppTargets.swift in Sources */,
 				5757D00E262D7C0F00B4A785 /* HomeController.swift in Sources */,
 			);
@@ -1418,6 +1421,7 @@
 				5757D057262D83C900B4A785 /* CustomTabBarController.swift in Sources */,
 				5757D0DE262DAF9900B4A785 /* BaseUICollectionViewCell.swift in Sources */,
 				5757D067262D852200B4A785 /* ProcessingView.swift in Sources */,
+				574C9CA12668B62100822A95 /* ServiceLocator.swift in Sources */,
 				57F639D926304ACE00B45C0B /* RoundButton.swift in Sources */,
 				5783FEBA26666B90000B39F3 /* BlindDateModel.swift in Sources */,
 				570997CB265756EC00B87998 /* AppData.swift in Sources */,
@@ -1478,7 +1482,7 @@
 				5757D1A1262E78CA00B4A785 /* Utils.swift in Sources */,
 				5757D1EC262E7CC300B4A785 /* ChangeNameController.swift in Sources */,
 				5757D0F5262DB0E700B4A785 /* RoundImageView.swift in Sources */,
-				5757D15C262DB82E00B4A785 /* Server.swift in Sources */,
+				5757D15C262DB82E00B4A785 /* RoomManager.swift in Sources */,
 				5757D0E7262DB06400B4A785 /* LabelCell.swift in Sources */,
 				5757D0C5262DAEC400B4A785 /* Service.swift in Sources */,
 				5757D1E0262E7C6900B4A785 /* MeController.swift in Sources */,
@@ -1492,18 +1496,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5783FECC26676457000B39F3 /* BlindDateModelManagerProxy.swift in Sources */,
-				5783FEDB26678197000B39F3 /* UserManagerProxy.swift in Sources */,
+				5783FECC26676457000B39F3 /* BlindDateModelManager.swift in Sources */,
+				5783FEDB26678197000B39F3 /* UserManager.swift in Sources */,
 				57E8D501264A2C03007001BC /* HomeCardView.swift in Sources */,
 				57E8D502264A2C03007001BC /* SettingController.swift in Sources */,
 				57E8D503264A2C03007001BC /* ViewController.swift in Sources */,
 				57E8D504264A2C03007001BC /* AppDelegate.swift in Sources */,
-				5783FEC926673BC8000B39F3 /* PodcastModelManagerProxy.swift in Sources */,
+				5783FEC926673BC8000B39F3 /* PodcastModelManager.swift in Sources */,
 				57E8D505264A2C03007001BC /* SceneDelegate.swift in Sources */,
 				57E8D506264A2C03007001BC /* Utils.swift in Sources */,
 				5783FEDC26678340000B39F3 /* FirebaseHelper.swift in Sources */,
 				5762F7E12656801C003B042D /* AppTargets.swift in Sources */,
-				5783FEA926662555000B39F3 /* SyncManagerProxy.swift in Sources */,
+				5783FEA926662555000B39F3 /* SyncManager.swift in Sources */,
 				57E8D507264A2C03007001BC /* HomeController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1523,7 +1527,7 @@
 				57F63A4426317B4A00B45C0B /* HosterToolbar.swift in Sources */,
 				57F63A8E2632C28F00B45C0B /* InvitedDialog.swift in Sources */,
 				57F639E126304E5C00B45C0B /* Colors.swift in Sources */,
-				57F63A0F2630511500B45C0B /* Server.swift in Sources */,
+				57F63A0F2630511500B45C0B /* RoomManager.swift in Sources */,
 				57F63AB9263560CD00B45C0B /* MessageView.swift in Sources */,
 				57F63A532631847700B45C0B /* SpeakerToolbar.swift in Sources */,
 				57F639F226304F0200B45C0B /* Model.swift in Sources */,

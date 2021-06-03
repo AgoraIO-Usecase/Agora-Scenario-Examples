@@ -10,7 +10,7 @@ import Core
 import LeanCloud
 import RxSwift
 
-class LeanCloudBlindDateModelProxy: IBlindDateModelManagerProxy {
+class LeanCloudBlindDateModelManager: IBlindDateModelManager {
     
     static func queryMemberCount(room: LCObject) throws -> Int {
         let query = LCQuery(className: BlindDateMember.TABLE)
@@ -28,7 +28,7 @@ class LeanCloudBlindDateModelProxy: IBlindDateModelManagerProxy {
     static func from(object: LCObject) throws -> BlindDateRoom {
         let objectId: String = object.objectId!.stringValue!
         let channelName: String = object.get(BlindDateRoom.CHANNEL_NAME)!.stringValue!
-        let anchor: User = try LeanCloudUserProxy.from(object: object.get(BlindDateRoom.ANCHOR_ID) as! LCObject)
+        let anchor: User = try LeanCloudUserManager.from(object: object.get(BlindDateRoom.ANCHOR_ID) as! LCObject)
         let room = BlindDateRoom(id: objectId, channelName: channelName, anchor: anchor)
         room.total = try queryMemberCount(room: object)
         room.speakersTotal = try querySpeakerCount(room: object)
@@ -40,7 +40,7 @@ class LeanCloudBlindDateModelProxy: IBlindDateModelManagerProxy {
     
     static func from(object: LCObject, room: BlindDateRoom) throws -> BlindDateMember {
         let userObject = object.get(BlindDateMember.USER) as! LCObject
-        let user = try LeanCloudUserProxy.from(object: userObject)
+        let user = try LeanCloudUserManager.from(object: userObject)
         let isMuted = (object.get(BlindDateMember.MUTED)?.intValue ?? 0) == 1
         let _role = object.get(BlindDateMember.ROLE)?.intValue ?? 0
         let role: BlindDateRoomRole
@@ -125,7 +125,7 @@ class LeanCloudBlindDateModelProxy: IBlindDateModelManagerProxy {
             try query.where("createdAt", .descending)
         } transform: { (list) -> Array<BlindDateRoom> in
             let rooms: Array<BlindDateRoom> = try list.map { room in
-                return try LeanCloudBlindDateModelProxy.from(object: room)
+                return try LeanCloudBlindDateModelManager.from(object: room)
             }
             return rooms
         }
@@ -136,7 +136,7 @@ class LeanCloudBlindDateModelProxy: IBlindDateModelManagerProxy {
             try query.where(BlindDateRoom.ANCHOR_ID, .included)
         } transform: { (data: LCObject) -> BlindDateRoom in
             let channelName: String = data.get(BlindDateRoom.CHANNEL_NAME)!.stringValue!
-            let anchor = try LeanCloudUserProxy.from(object: data.get(BlindDateRoom.ANCHOR_ID) as! LCObject)
+            let anchor = try LeanCloudUserManager.from(object: data.get(BlindDateRoom.ANCHOR_ID) as! LCObject)
             return BlindDateRoom(id: objectId, channelName: channelName, anchor: anchor)
         }
     }
@@ -158,7 +158,7 @@ class LeanCloudBlindDateModelProxy: IBlindDateModelManagerProxy {
             try query.where("createdAt", .ascending)
         } transform: { (list) -> Array<BlindDateMember> in
             let members: Array<BlindDateMember> = try list.map { data in
-                let member: BlindDateMember = try LeanCloudBlindDateModelProxy.from(object: data, room: room)
+                let member: BlindDateMember = try LeanCloudBlindDateModelManager.from(object: data, room: room)
                 member.isManager = member.user.id == room.anchor.id
                 return member
             }
@@ -175,7 +175,7 @@ class LeanCloudBlindDateModelProxy: IBlindDateModelManagerProxy {
             try query.where(BlindDateMember.USER, .included)
         } transform: { (list) -> Array<BlindDateMember> in
             let members: Array<BlindDateMember> = try list.map { data in
-                let member = try LeanCloudBlindDateModelProxy.from(object: data, room: room)
+                let member = try LeanCloudBlindDateModelManager.from(object: data, room: room)
                 member.isManager = member.user.id == room.anchor.id
                 return member
             }
@@ -205,7 +205,7 @@ class LeanCloudBlindDateModelProxy: IBlindDateModelManagerProxy {
         .concatMap { result -> Observable<Result<Void>> in
             if (result.success) {
                 return Database.save {
-                    return try LeanCloudBlindDateModelProxy.toObject(member: member)
+                    return try LeanCloudBlindDateModelManager.toObject(member: member)
                 }.map { result in
                     if (result.success) {
                         member.id = result.data!
@@ -328,14 +328,14 @@ class LeanCloudBlindDateModelProxy: IBlindDateModelManagerProxy {
             return result.data != nil
         }
         .concatMap { result in
-            return LeanCloudBlindDateModelProxy.getBlindDateAction(objectId: result.data!)
+            return LeanCloudBlindDateModelManager.getBlindDateAction(objectId: result.data!)
         }
     }
     
     func handsup(member: BlindDateMember) -> Observable<Result<Void>> {
         let action = member.action(with: .handsUp)
         return Database.save {
-            return try LeanCloudBlindDateModelProxy.toActionObject(action: action)
+            return try LeanCloudBlindDateModelManager.toActionObject(action: action)
         }
         .map { $0.transform() }
     }
@@ -343,7 +343,7 @@ class LeanCloudBlindDateModelProxy: IBlindDateModelManagerProxy {
     func requestLeft(member: BlindDateMember) -> Observable<Result<Void>> {
         let action = member.action(with: .requestLeft)
         return Database.save {
-            return try LeanCloudBlindDateModelProxy.toActionObject(action: action)
+            return try LeanCloudBlindDateModelManager.toActionObject(action: action)
         }
         .map { $0.transform() }
     }
@@ -351,7 +351,7 @@ class LeanCloudBlindDateModelProxy: IBlindDateModelManagerProxy {
     func requestRight(member: BlindDateMember) -> Observable<Result<Void>> {
         let action = member.action(with: .requestRight)
         return Database.save {
-            return try LeanCloudBlindDateModelProxy.toActionObject(action: action)
+            return try LeanCloudBlindDateModelManager.toActionObject(action: action)
         }
         .map { $0.transform() }
     }
@@ -360,7 +360,7 @@ class LeanCloudBlindDateModelProxy: IBlindDateModelManagerProxy {
         let action = master.action(with: .invite)
         action.member = member
         return Database.save {
-            return try LeanCloudBlindDateModelProxy.toActionObject(action: action)
+            return try LeanCloudBlindDateModelManager.toActionObject(action: action)
         }
         .map { $0.transform() }
     }
@@ -369,7 +369,7 @@ class LeanCloudBlindDateModelProxy: IBlindDateModelManagerProxy {
         let action = member.action(with: .invite)
         action.status = .refuse
         return Database.save {
-            return try LeanCloudBlindDateModelProxy.toActionObject(action: action)
+            return try LeanCloudBlindDateModelManager.toActionObject(action: action)
         }
         .map { $0.transform() }
     }

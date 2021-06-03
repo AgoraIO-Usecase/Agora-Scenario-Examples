@@ -159,8 +159,8 @@ public class BlindDateHomeController: BaseViewContoller {
     
     deinit {
         Logger.log(message: "HomeController deinit", level: .info)
-        let _ = Server.shared().leave().subscribe()
-        Server.shared().destory()
+        let _ = RoomManager.shared().leave().subscribe()
+        RoomManager.shared().destory()
     }
     
     public static func instance() -> BlindDateHomeController {

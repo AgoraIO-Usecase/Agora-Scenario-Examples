@@ -1,40 +1,41 @@
 //
 //  Server.swift
-//  BlindDate
+//  InteractivePodcast
 //
-//  Created by XC on 2021/4/21.
+//  Created by XUCH on 2021/3/7.
 //
 
 import Foundation
 import RxSwift
 import Core
 
-class Server: NSObject {
-    fileprivate static var instance: Server?
+class RoomManager: NSObject {
+    fileprivate static var instance: RoomManager?
     private static var lock = os_unfair_lock()
-    static func shared() -> Service {
-        os_unfair_lock_lock(&Server.lock)
+    static func shared() -> RoomManager {
+        os_unfair_lock_lock(&RoomManager.lock)
         if (instance == nil) {
-            instance = Server()
+            instance = RoomManager()
         }
-        os_unfair_lock_unlock(&Server.lock)
+        os_unfair_lock_unlock(&RoomManager.lock)
         return instance!
     }
     
     var account: User? = nil
-    var member: BlindDateMember? = nil
+    var member: PodcastMember? = nil
     var setting: LocalSetting = AppData.getSetting() ?? LocalSetting()
     //var room: Room? = nil
     private var rtcServer: RtcServer = RtcServer()
-    private var rtmServer: RtmServer = RtmServer()
     private var scheduler = SerialDispatchQueueScheduler(internalSerialQueueName: "rtc")
+    
+    private override init() {}
 }
 
-extension Server: Service {
+extension RoomManager: Service {
     func destory() {
-        Server.instance = nil
+        RoomManager.instance = nil
     }
-    
+
     func updateSetting() {
         if (rtcServer.isJoinChannel) {
             rtcServer.setClientRole(rtcServer.role!, setting.audienceLatency)
@@ -48,6 +49,8 @@ extension Server: Service {
                 return User.getUser(by: user!.id).map { result in
                     if (result.success) {
                         self.account = result.data!
+                    } else {
+                        
                     }
                     return result
                 }
@@ -64,14 +67,14 @@ extension Server: Service {
         }
     }
     
-    func getRooms() -> Observable<Result<Array<BlindDateRoom>>> {
-        return BlindDateRoom.getRooms()
+    func getRooms() -> Observable<Result<Array<PodcastRoom>>> {
+        return PodcastRoom.getRooms()
     }
     
-    func create(room: BlindDateRoom) -> Observable<Result<BlindDateRoom>> {
+    func create(room: PodcastRoom) -> Observable<Result<PodcastRoom>> {
         if let user = account {
             room.anchor = user
-            return BlindDateRoom.create(room: room)
+            return PodcastRoom.create(room: room)
                 .map { result in
                     if (result.success) {
                         room.id = result.data!
@@ -85,12 +88,11 @@ extension Server: Service {
         }
     }
     
-    func join(room: BlindDateRoom) -> Observable<Result<BlindDateRoom>> {
+    func join(room: PodcastRoom) -> Observable<Result<PodcastRoom>> {
         if let user = account {
             if (member == nil) {
-                member = BlindDateMember(id: "", isMuted: false, isSelfMuted: false, role: .listener, room: room, streamId: 0, user: user)
+                member = PodcastMember(id: "", isMuted: false, isSelfMuted: false, isSpeaker: false, room: room, streamId: 0, user: user)
             }
-            member?.isLocal = true
             guard let member = member else {
                 return Observable.just(Result(success: false, message: "member is nil!"))
             }
@@ -109,7 +111,7 @@ extension Server: Service {
                         return result.onSuccess {
                             // set default status when join room
                             member.isMuted = false
-                            member.role = room.anchor.id == user.id ? .manager : .listener
+                            member.isSpeaker = room.anchor.id == user.id
                             member.isManager = room.anchor.id == user.id
                             member.isSelfMuted = false
                             //member.room = room
@@ -117,8 +119,8 @@ extension Server: Service {
                             return Observable.just(result)
                         }
                     }
-                    .concatMap { result -> Observable<Result<BlindDateRoom>> in
-                        return result.onSuccess { BlindDateRoom.getRoom(by: room.id) }
+                    .concatMap { result -> Observable<Result<PodcastRoom>> in
+                        return result.onSuccess { PodcastRoom.getRoom(by: room.id) }
                     }
                     .concatMap { result -> Observable<Result<Void>> in
                         return result.onSuccess { self.rtcServer.joinChannel(member: member, channel: room.id, setting: self.setting) }
@@ -127,7 +129,7 @@ extension Server: Service {
                         member.room = room
                         return result.onSuccess { self.member!.join(streamId: self.rtcServer.uid) }
                     }
-                    .concatMap { result -> Observable<Result<BlindDateRoom>> in
+                    .concatMap { result -> Observable<Result<PodcastRoom>> in
                         if (result.success) {
                             member.room = room
                             return Observable.just(Result(success: true, data: room))
@@ -150,13 +152,9 @@ extension Server: Service {
     func leave() -> Observable<Result<Void>> {
         if let member = member {
             if (rtcServer.isJoinChannel) {
-                return Observable.zip(
-                    self.rtcServer.leaveChannel(),
-                    member.leave(),
-                    self.rtmServer.logout()
-                ).map { result0, result1, result2 in
-                    if (!result0.success || !result1.success || !result2.success) {
-                        Logger.log(message: "leaveRoom error: \(result0.message ?? "") \(result1.message ?? "") \(result2.message ?? "")", level: .error)
+                return Observable.zip(self.rtcServer.leaveChannel(), member.leave()).map { result0, result1 in
+                    if (!result0.success || !result1.success) {
+                        Logger.log(message: "leaveRoom error: \(result0.message ?? "") \(result1.message ?? "")", level: .error)
                     }
                     return Result(success: true)
                 }
@@ -168,7 +166,7 @@ extension Server: Service {
         }
     }
     
-    func subscribeActions() -> Observable<Result<BlindDateAction>> {
+    func subscribeActions() -> Observable<Result<PodcastAction>> {
         if let member = member {
             return member.subscribeActions()
         } else {
@@ -176,7 +174,7 @@ extension Server: Service {
         }
     }
     
-    func subscribeMembers() -> Observable<Result<Array<BlindDateMember>>> {
+    func subscribeMembers() -> Observable<Result<Array<PodcastMember>>> {
         guard let room = member?.room else {
             return Observable.just(Result(success: false, message: "room is nil!"))
         }
@@ -188,8 +186,8 @@ extension Server: Service {
                 self.rtcServer.isJoinChannel
             }
             .throttle(RxTimeInterval.milliseconds(20), latest: true, scheduler: scheduler)
-            .map { [unowned self] (args) -> Result<Array<BlindDateMember>> in
-                let (result, _) = args
+            .map { [unowned self] (args) -> Result<Array<PodcastMember>> in
+                let (result, uids) = args
                 if (result.success) {
                     if let list = result.data {
                         // sync local user status
@@ -197,11 +195,10 @@ extension Server: Service {
                             return member.id == self.member?.id
                         }
                         if let me = findCurrentUser, let old = member {
-                            me.isLocal = true
                             me.isSelfMuted = old.isSelfMuted
                             old.isMuted = me.isMuted
-                            old.role = me.role
-                            self.rtcServer.setClientRole(me.role != .listener ? .broadcaster : .audience, self.setting.audienceLatency)
+                            old.isSpeaker = me.isSpeaker
+                            self.rtcServer.setClientRole(me.isSpeaker ? .broadcaster : .audience, self.setting.audienceLatency)
                             self.rtcServer.muteLocalMicrophone(mute: me.isMuted || me.isSelfMuted)
                         }
 //                        uids.forEach { speaker in
@@ -217,7 +214,7 @@ extension Server: Service {
             }
     }
     
-    func inviteSpeaker(member: BlindDateMember) -> Observable<Result<Void>> {
+    func inviteSpeaker(member: PodcastMember) -> Observable<Result<Void>> {
         if let user = self.member {
             if (rtcServer.isJoinChannel && user.isManager) {
                 return user.inviteSpeaker(member: member)
@@ -226,7 +223,7 @@ extension Server: Service {
         return Observable.just(Result(success: true))
     }
     
-    func muteSpeaker(member: BlindDateMember) -> Observable<Result<Void>> {
+    func muteSpeaker(member: PodcastMember) -> Observable<Result<Void>> {
         if let user = self.member {
             if (rtcServer.isJoinChannel && user.isManager) {
                 return member.mute(mute: true)
@@ -235,7 +232,7 @@ extension Server: Service {
         return Observable.just(Result(success: true))
     }
     
-    func unMuteSpeaker(member: BlindDateMember) -> Observable<Result<Void>> {
+    func unMuteSpeaker(member: PodcastMember) -> Observable<Result<Void>> {
         if let user = self.member {
             if (rtcServer.isJoinChannel && user.isManager) {
                 return member.mute(mute: false)
@@ -244,46 +241,27 @@ extension Server: Service {
         return Observable.just(Result(success: true))
     }
     
-    func kickSpeaker(member: BlindDateMember) -> Observable<Result<Void>> {
+    func kickSpeaker(member: PodcastMember) -> Observable<Result<Void>> {
         if let user = self.member {
             if (rtcServer.isJoinChannel && user.isManager) {
-                return member.asListener()
+                return member.asSpeaker(agree: false)
             }
         }
         return Observable.just(Result(success: true))
     }
     
-    func process(request: BlindDateAction, agree: Bool) -> Observable<Result<Void>> {
-        switch request.action {
-        case .requestLeft:
-            return request.setLeftSpeaker(agree: agree)
-        case .requestRight:
-            return request.setRightSpeaker(agree: agree)
-        default:
-            return Observable.just(Result(success: true))
-        }
+    func process(handsup: PodcastAction, agree: Bool) -> Observable<Result<Void>> {
+        return handsup.setSpeaker(agree: agree)
     }
     
-    func process(invitionLeft: BlindDateAction, agree: Bool) -> Observable<Result<Void>> {
-        return invitionLeft.setLeftInvition(agree: agree)
+    func process(invition: PodcastAction, agree: Bool) -> Observable<Result<Void>> {
+        return invition.setInvition(agree: agree)
     }
     
-    func process(invitionRight: BlindDateAction, agree: Bool) -> Observable<Result<Void>> {
-        return invitionRight.setRightInvition(agree: agree)
-    }
-    
-    func handsUp(left: Bool?) -> Observable<Result<Void>> {
+    func handsUp() -> Observable<Result<Void>> {
         if let member = member {
             if (rtcServer.isJoinChannel) {
-                if let left = left {
-                    if (left) {
-                        return member.requestLeft()
-                    } else {
-                        return member.requestRight()
-                    }
-                } else {
-                    return member.handsup()
-                }
+                return member.handsup()
             }
         }
         return Observable.just(Result(success: true))
@@ -305,59 +283,5 @@ extension Server: Service {
     
     func isMicrophoneClose() -> Bool {
         return rtcServer.muted
-    }
-    
-    func bindLocalVideo(view: UIView?) {
-        if let view = view {
-            rtcServer.bindLocalVideo(view: view)
-        } else {
-            rtcServer.unbindLocalVideo()
-        }
-    }
-    
-    func bindRemoteVideo(view: UIView?, uid: UInt) {
-        if let view = view {
-            rtcServer.bindRemoteVideo(view: view, uid: uid)
-        } else {
-            rtcServer.unbindRemoteVideo(uid: uid)
-        }
-    }
-    
-    func subscribeMessages() -> Observable<Result<BlindDateMessage>> {
-        if let member = member {
-            return rtmServer.login(user: member.id)
-                .concatMap { [unowned self] result in
-                    return result.onSuccess {
-                        return self.rtmServer.join(room: member.room.id)
-                    }
-                }
-                .concatMap { [unowned self] result in
-                    return result.onSuccess {
-                        return self.rtmServer.subscribeMessages(room: member.room.id)
-                    }
-                }
-        } else {
-            return Observable.just(Result(success: false, message: "member is nil!"))
-        }
-    }
-    
-    func sendMessage(message: String) -> Observable<Result<Void>> {
-        if let member = member {
-            return rtmServer.sendMessage(room: member.room.id, message: message)
-        } else {
-            return Observable.just(Result(success: false, message: "member is nil!"))
-        }
-    }
-    
-    func enableBeauty(enable: Bool) {
-        if enable {
-            rtcServer.enableBeauty()
-        } else {
-            rtcServer.diableBeauty()
-        }
-    }
-    
-    func isEnableBeauty() -> Bool {
-        return rtcServer.isEnableBeauty
     }
 }

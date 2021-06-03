@@ -10,7 +10,7 @@ import Core
 import LeanCloud
 import RxSwift
 
-class LeanCloudUserProxy: IUserManagerProxy {
+class LeanCloudUserManager: IUserManager {
     
     static func from(object: LCObject) throws -> User {
         let name: String = object.get(User.NAME)!.stringValue!
@@ -45,7 +45,7 @@ class LeanCloudUserProxy: IUserManagerProxy {
             objectId: objectId,
             queryWhere: nil,
             transform: { (data: LCObject) -> User in
-                return try LeanCloudUserProxy.from(object: data)
+                return try LeanCloudUserManager.from(object: data)
             }
         )
     }

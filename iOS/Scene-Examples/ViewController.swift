@@ -27,10 +27,10 @@ class ViewController: CustomTabBarController {
         setTabBar(items: [
             CustomTabBarItem(icon: UIImage(systemName: "square.grid.3x3")!, title: "All".localized),
             CustomTabBarItem(icon: UIImage(systemName: "music.mic")!, title: "Podcast".localized) {
-                AppTargets().target.getAppMainViewController(app: .InteractivePodcast)
+                AppTargets.getAppMainViewController(app: .InteractivePodcast)
             },
             CustomTabBarItem(icon: UIImage(systemName: "video")!, title: "Dating".localized) {
-                AppTargets().target.getAppMainViewController(app: .BlindDate)
+                AppTargets.getAppMainViewController(app: .BlindDate)
             },
             CustomTabBarItem(icon: UIImage(systemName: "gearshape")!, title: "Settings".localized),
         ])

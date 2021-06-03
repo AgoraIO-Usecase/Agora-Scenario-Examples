@@ -32,7 +32,7 @@ extension BlindDateAction {
     public static let STATUS: String = "status"
 }
 
-public protocol IBlindDateModelManagerProxy {
+public protocol IBlindDateModelManager {
     func create(room: BlindDateRoom) -> Observable<Result<String>>
     func delete(room: BlindDateRoom) -> Observable<Result<Void>>
     func getRooms() -> Observable<Result<Array<BlindDateRoom>>>
@@ -55,99 +55,4 @@ public protocol IBlindDateModelManagerProxy {
     func requestRight(member: BlindDateMember) -> Observable<Result<Void>>
     func inviteSpeaker(master: BlindDateMember, member: BlindDateMember) -> Observable<Result<Void>>
     func rejectInvition(member: BlindDateMember) -> Observable<Result<Void>>
-}
-
-public class BlindDateModelManager {
-    private var proxy: IBlindDateModelManagerProxy!
-    public static var shared: BlindDateModelManager = BlindDateModelManager()
-    
-    private init() {}
-    
-    public func setProxy(_ proxy: IBlindDateModelManagerProxy) {
-        self.proxy = proxy
-    }
-    
-    public func create(room: BlindDateRoom) -> Observable<Result<String>> {
-        return proxy.create(room: room)
-    }
-    
-    public func delete(room: BlindDateRoom) -> Observable<Result<Void>> {
-        return proxy.delete(room: room)
-    }
-    
-    public func getRooms() -> Observable<Result<Array<BlindDateRoom>>> {
-        return proxy.getRooms()
-    }
-    
-    public func getRoom(by objectId: String) -> Observable<Result<BlindDateRoom>> {
-        return proxy.getRoom(by: objectId)
-    }
-    
-    public func update(room: BlindDateRoom) -> Observable<Result<String>> {
-        return proxy.update(room: room)
-    }
-    
-    public func getMembers(room: BlindDateRoom) -> Observable<Result<Array<BlindDateMember>>> {
-        return proxy.getMembers(room: room)
-    }
-    
-    public func getCoverSpeakers(room: BlindDateRoom) -> Observable<Result<Array<BlindDateMember>>> {
-        return proxy.getCoverSpeakers(room: room)
-    }
-    
-    public func subscribeMembers(room: BlindDateRoom) -> Observable<Result<Array<BlindDateMember>>> {
-        return proxy.subscribeMembers(room: room)
-    }
-    
-    public func join(member: BlindDateMember, streamId: UInt) -> Observable<Result<Void>> {
-        return proxy.join(member: member, streamId: streamId)
-    }
-    
-    public func mute(member: BlindDateMember, mute: Bool) -> Observable<Result<Void>> {
-        return proxy.mute(member: member, mute: mute)
-    }
-    
-    public func selfMute(member: BlindDateMember, mute: Bool) -> Observable<Result<Void>> {
-        return proxy.selfMute(member: member, mute: mute)
-    }
-    
-    public func asListener(member: BlindDateMember) -> Observable<Result<Void>> {
-        return proxy.asListener(member: member)
-    }
-    
-    public func asLeftSpeaker(member: BlindDateMember, agree: Bool) -> Observable<Result<Void>> {
-        return proxy.asLeftSpeaker(member: member, agree: agree)
-    }
-    
-    public func asRightSpeaker(member: BlindDateMember, agree: Bool) -> Observable<Result<Void>> {
-        return proxy.asRightSpeaker(member: member, agree: agree)
-    }
-    
-    public func leave(member: BlindDateMember) -> Observable<Result<Void>> {
-        return proxy.leave(member: member)
-    }
-    
-    public func subscribeActions(member: BlindDateMember) -> Observable<Result<BlindDateAction>> {
-        return proxy.subscribeActions(member: member)
-    }
-    
-    public func handsup(member: BlindDateMember) -> Observable<Result<Void>> {
-        return proxy.handsup(member: member)
-    }
-    
-    public func requestLeft(member: BlindDateMember) -> Observable<Result<Void>> {
-        return proxy.requestLeft(member: member)
-    }
-    
-    public func requestRight(member: BlindDateMember) -> Observable<Result<Void>> {
-        return proxy.requestRight(member: member)
-    }
-    
-    public func inviteSpeaker(master: BlindDateMember, member: BlindDateMember) -> Observable<Result<Void>> {
-        return proxy.inviteSpeaker(master: master, member: member)
-    }
-    
-    public func rejectInvition(member: BlindDateMember) -> Observable<Result<Void>> {
-        return proxy.rejectInvition(member: member)
-    }
 }

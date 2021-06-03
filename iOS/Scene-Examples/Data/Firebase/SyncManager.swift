@@ -38,7 +38,7 @@ class AgoraLiveQuery: ISyncManagerLiveQuery {
     }
 }
 
-class FirebaseSyncProxy: ISyncManagerProxy {
+class FirebaseSyncManager: ISyncManager {
     
     func createAgoraRoom(_ room: AgoraRoom, _ delegate: AgoraObjectDelegate) {
         let className = AgoraRoom.TABLE

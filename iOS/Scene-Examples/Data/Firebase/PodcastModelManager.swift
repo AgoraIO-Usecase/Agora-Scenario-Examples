@@ -11,7 +11,7 @@ import FirebaseFirestoreSwift
 import RxSwift
 import Core
 
-class FirebasePodcastModelProxy: IPodcastModelManagerProxy {
+class FirebasePodcastModelManager: IPodcastModelManager {
     
     static func queryMemberCount(roomId: String) -> Observable<Result<Int>> {
         return Database.query(className: PodcastMember.TABLE) { collectionReference -> Query in
@@ -181,8 +181,8 @@ class FirebasePodcastModelProxy: IPodcastModelManagerProxy {
                 let room: PodcastRoom = result.data!
                 return Observable.zip(
                     User.getUser(by: room.anchor.id),
-                    FirebasePodcastModelProxy.queryMemberCount(roomId: room.id),
-                    FirebasePodcastModelProxy.querySpeakerCount(roomId: room.id)
+                    FirebasePodcastModelManager.queryMemberCount(roomId: room.id),
+                    FirebasePodcastModelManager.querySpeakerCount(roomId: room.id)
                 ).map { (data: (Result<User>, Result<Int>, Result<Int>)) -> Result<PodcastRoom> in
                     let (userResult, memberCountResult, speakerCountResult) = data
                     if (userResult.success && memberCountResult.success && speakerCountResult.success) {
@@ -297,7 +297,7 @@ class FirebasePodcastModelProxy: IPodcastModelManagerProxy {
         .concatMap { result -> Observable<Result<Void>> in
             if (result.success) {
                 return Database.save {
-                    return FirebasePodcastModelProxy.toData(member: member)
+                    return FirebasePodcastModelManager.toData(member: member)
                 }.map { result in
                     if (result.success) {
                         member.id = result.data!
@@ -397,7 +397,7 @@ class FirebasePodcastModelProxy: IPodcastModelManagerProxy {
     func handsup(member: PodcastMember) -> Observable<Result<Void>> {
         let action = member.action(with: .handsUp)
         return Database.save { () -> (String, data: [String : Any], String?) in
-            return FirebasePodcastModelProxy.toData(action: action)
+            return FirebasePodcastModelManager.toData(action: action)
         }
         .map { $0.transform() }
     }
@@ -406,7 +406,7 @@ class FirebasePodcastModelProxy: IPodcastModelManagerProxy {
         let action = member.action(with: .invite)
         action.member = member
         return Database.save { () -> (String, data: [String : Any], String?) in
-            return FirebasePodcastModelProxy.toData(action: action)
+            return FirebasePodcastModelManager.toData(action: action)
         }
         .map { $0.transform() }
     }
@@ -415,7 +415,7 @@ class FirebasePodcastModelProxy: IPodcastModelManagerProxy {
         let action = member.action(with: .invite)
         action.status = .refuse
         return Database.save { () -> (String, data: [String : Any], String?) in
-            return FirebasePodcastModelProxy.toData(action: action)
+            return FirebasePodcastModelManager.toData(action: action)
         }
         .map { $0.transform() }
     }

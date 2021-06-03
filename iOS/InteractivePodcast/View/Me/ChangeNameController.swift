@@ -35,7 +35,7 @@ class ChangeNameController: BaseViewContoller {
                 if let name = self.inputNameView.text {
                     if (!name.isEmpty) {
                         self.show(processing: true)
-                        return Server.shared().account!.update(name: name.trimmingCharacters(in: [" "]))
+                        return RoomManager.shared().account!.update(name: name.trimmingCharacters(in: [" "]))
                     } else {
                         return Observable.just(Result(success: false, message: "please input profile name".localized))
                     }

@@ -50,7 +50,7 @@ class AgoraLiveQuery: ISyncManagerLiveQuery {
     }
 }
 
-class LeanCloudSyncProxy: ISyncManagerProxy {
+class LeanCloudSyncManager: ISyncManager {
     
     func createAgoraRoom(_ room: AgoraRoom, _ delegate: AgoraObjectDelegate) {
         let object = LCObject(className: AgoraRoom.TABLE)
