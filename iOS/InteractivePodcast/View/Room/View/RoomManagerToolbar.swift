@@ -129,7 +129,7 @@ class RoomManagerToolbar: UIView {
         self.delegate.viewModel.syncLocalUIStatus()
     }
     
-    func onReceivedAction(_ result: Result<Action>) {
+    func onReceivedAction(_ result: Result<PodcastAction>) {
         if (!result.success) {
             Logger.log(message: result.message ?? "unknown error".localized, level: .error)
         } else {

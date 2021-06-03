@@ -15,7 +15,7 @@ import Core
 class HomeViewModel {
     let activityIndicator = ActivityIndicator()
     let showMiniRoom: PublishRelay<Bool>
-    var roomList: [Room] = []
+    var roomList: [PodcastRoom] = []
     
     private var scheduler = SerialDispatchQueueScheduler(internalSerialQueueName: "io")
 
@@ -33,7 +33,7 @@ class HomeViewModel {
         return Server.shared().account
     }
 
-    func dataSource() -> Observable<Result<Array<Room>>> {
+    func dataSource() -> Observable<Result<Array<PodcastRoom>>> {
         return Server.shared().getRooms()
             .map { [unowned self] data in
                 if (data.success) {
@@ -54,28 +54,28 @@ class HomeViewModel {
 //        ])).delay(DispatchTimeInterval.seconds(3), scheduler: scheduler)
 //    }
     
-    func createRoom(with name: String) -> Observable<Result<Room>> {
+    func createRoom(with name: String) -> Observable<Result<PodcastRoom>> {
         let account = self.account()
         if let anchor = account {
-            return Server.shared().create(room: Room(id: "", channelName: name, anchor: anchor))
+            return Server.shared().create(room: PodcastRoom(id: "", channelName: name, anchor: anchor))
         } else {
             return Observable.just(Result(success: false, message: "account is nil!"))
         }
     }
     
-    func join(room: Room) -> Observable<Result<Room>> {
+    func join(room: PodcastRoom) -> Observable<Result<PodcastRoom>> {
         return Server.shared().join(room: room)
     }
 }
 
-extension Room: ListDiffable {
-    func diffIdentifier() -> NSObjectProtocol {
+extension PodcastRoom: ListDiffable {
+    public func diffIdentifier() -> NSObjectProtocol {
         return id as NSObjectProtocol
     }
     
-    func isEqual(toDiffableObject object: ListDiffable?) -> Bool {
+    public func isEqual(toDiffableObject object: ListDiffable?) -> Bool {
         guard self !== object else { return true }
-        guard let object = object as? Room else { return false }
+        guard let object = object as? PodcastRoom else { return false }
         return id == object.id &&
             channelName == object.channelName &&
             total == object.total &&

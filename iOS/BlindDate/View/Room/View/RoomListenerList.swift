@@ -97,7 +97,7 @@ extension RoomListenerList: UITableViewDataSource {
 }
 
 extension RoomListenerList: ListenerListDelegate {
-    func invate(member: Member) -> Observable<Result<Void>> {
+    func invate(member: BlindDateMember) -> Observable<Result<Void>> {
         return self.delegate.viewModel.inviteSpeaker(member: member)
             .flatMap { result -> Observable<Result<Void>> in
                 return result.onSuccess { () -> Observable<Result<Void>> in
@@ -108,13 +108,13 @@ extension RoomListenerList: ListenerListDelegate {
 }
 
 protocol ListenerListDelegate: AnyObject {
-    func invate(member: Member) -> Observable<Result<Void>>
+    func invate(member: BlindDateMember) -> Observable<Result<Void>>
 }
 
 class ListenerCellView: UITableViewCell {
     weak var delegate: ListenerListDelegate!
     private let disposeBag = DisposeBag()
-    var item: Member! {
+    var item: BlindDateMember! {
         didSet {
             name.text = item.user.name
             avatar.image = UIImage(named: item.user.getLocalAvatar(), in: Bundle(identifier: "io.agora.InteractivePodcast")!, with: nil)

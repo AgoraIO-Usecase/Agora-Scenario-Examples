@@ -345,7 +345,7 @@ class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
             .disposed(by: disposeBag)
     }
     
-    private func onMemberEnter(member: Member) {
+    private func onMemberEnter(member: BlindDateMember) {
         Logger.log(message: "\(member.user.name) enter the live room", level: .info)
         let view = MemberEnterView()
         view.member = member

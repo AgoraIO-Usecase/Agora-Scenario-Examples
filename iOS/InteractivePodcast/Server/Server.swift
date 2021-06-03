@@ -22,7 +22,7 @@ class Server: NSObject {
     }
     
     var account: User? = nil
-    var member: Member? = nil
+    var member: PodcastMember? = nil
     var setting: LocalSetting = AppData.getSetting() ?? LocalSetting()
     //var room: Room? = nil
     private var rtcServer: RtcServer = RtcServer()
@@ -67,14 +67,14 @@ extension Server: Service {
         }
     }
     
-    func getRooms() -> Observable<Result<Array<Room>>> {
-        return Room.getRooms()
+    func getRooms() -> Observable<Result<Array<PodcastRoom>>> {
+        return PodcastRoom.getRooms()
     }
     
-    func create(room: Room) -> Observable<Result<Room>> {
+    func create(room: PodcastRoom) -> Observable<Result<PodcastRoom>> {
         if let user = account {
             room.anchor = user
-            return Room.create(room: room)
+            return PodcastRoom.create(room: room)
                 .map { result in
                     if (result.success) {
                         room.id = result.data!
@@ -88,10 +88,10 @@ extension Server: Service {
         }
     }
     
-    func join(room: Room) -> Observable<Result<Room>> {
+    func join(room: PodcastRoom) -> Observable<Result<PodcastRoom>> {
         if let user = account {
             if (member == nil) {
-                member = Member(id: "", isMuted: false, isSelfMuted: false, isSpeaker: false, room: room, streamId: 0, user: user)
+                member = PodcastMember(id: "", isMuted: false, isSelfMuted: false, isSpeaker: false, room: room, streamId: 0, user: user)
             }
             guard let member = member else {
                 return Observable.just(Result(success: false, message: "member is nil!"))
@@ -119,8 +119,8 @@ extension Server: Service {
                             return Observable.just(result)
                         }
                     }
-                    .concatMap { result -> Observable<Result<Room>> in
-                        return result.onSuccess { Room.getRoom(by: room.id) }
+                    .concatMap { result -> Observable<Result<PodcastRoom>> in
+                        return result.onSuccess { PodcastRoom.getRoom(by: room.id) }
                     }
                     .concatMap { result -> Observable<Result<Void>> in
                         return result.onSuccess { self.rtcServer.joinChannel(member: member, channel: room.id, setting: self.setting) }
@@ -129,7 +129,7 @@ extension Server: Service {
                         member.room = room
                         return result.onSuccess { self.member!.join(streamId: self.rtcServer.uid) }
                     }
-                    .concatMap { result -> Observable<Result<Room>> in
+                    .concatMap { result -> Observable<Result<PodcastRoom>> in
                         if (result.success) {
                             member.room = room
                             return Observable.just(Result(success: true, data: room))
@@ -166,7 +166,7 @@ extension Server: Service {
         }
     }
     
-    func subscribeActions() -> Observable<Result<Action>> {
+    func subscribeActions() -> Observable<Result<PodcastAction>> {
         if let member = member {
             return member.subscribeActions()
         } else {
@@ -174,7 +174,7 @@ extension Server: Service {
         }
     }
     
-    func subscribeMembers() -> Observable<Result<Array<Member>>> {
+    func subscribeMembers() -> Observable<Result<Array<PodcastMember>>> {
         guard let room = member?.room else {
             return Observable.just(Result(success: false, message: "room is nil!"))
         }
@@ -186,7 +186,7 @@ extension Server: Service {
                 self.rtcServer.isJoinChannel
             }
             .throttle(RxTimeInterval.milliseconds(20), latest: true, scheduler: scheduler)
-            .map { [unowned self] (args) -> Result<Array<Member>> in
+            .map { [unowned self] (args) -> Result<Array<PodcastMember>> in
                 let (result, uids) = args
                 if (result.success) {
                     if let list = result.data {
@@ -214,7 +214,7 @@ extension Server: Service {
             }
     }
     
-    func inviteSpeaker(member: Member) -> Observable<Result<Void>> {
+    func inviteSpeaker(member: PodcastMember) -> Observable<Result<Void>> {
         if let user = self.member {
             if (rtcServer.isJoinChannel && user.isManager) {
                 return user.inviteSpeaker(member: member)
@@ -223,7 +223,7 @@ extension Server: Service {
         return Observable.just(Result(success: true))
     }
     
-    func muteSpeaker(member: Member) -> Observable<Result<Void>> {
+    func muteSpeaker(member: PodcastMember) -> Observable<Result<Void>> {
         if let user = self.member {
             if (rtcServer.isJoinChannel && user.isManager) {
                 return member.mute(mute: true)
@@ -232,7 +232,7 @@ extension Server: Service {
         return Observable.just(Result(success: true))
     }
     
-    func unMuteSpeaker(member: Member) -> Observable<Result<Void>> {
+    func unMuteSpeaker(member: PodcastMember) -> Observable<Result<Void>> {
         if let user = self.member {
             if (rtcServer.isJoinChannel && user.isManager) {
                 return member.mute(mute: false)
@@ -241,7 +241,7 @@ extension Server: Service {
         return Observable.just(Result(success: true))
     }
     
-    func kickSpeaker(member: Member) -> Observable<Result<Void>> {
+    func kickSpeaker(member: PodcastMember) -> Observable<Result<Void>> {
         if let user = self.member {
             if (rtcServer.isJoinChannel && user.isManager) {
                 return member.asSpeaker(agree: false)
@@ -250,11 +250,11 @@ extension Server: Service {
         return Observable.just(Result(success: true))
     }
     
-    func process(handsup: Action, agree: Bool) -> Observable<Result<Void>> {
+    func process(handsup: PodcastAction, agree: Bool) -> Observable<Result<Void>> {
         return handsup.setSpeaker(agree: agree)
     }
     
-    func process(invition: Action, agree: Bool) -> Observable<Result<Void>> {
+    func process(invition: PodcastAction, agree: Bool) -> Observable<Result<Void>> {
         return invition.setInvition(agree: agree)
     }
     

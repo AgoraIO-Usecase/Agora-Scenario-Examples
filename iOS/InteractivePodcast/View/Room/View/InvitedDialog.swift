@@ -12,7 +12,7 @@ import Core
 
 class InvitedDialog: Dialog {
     weak var delegate: RoomDelegate!
-    var action: Action! {
+    var action: PodcastAction! {
         didSet {
             message.text = "\(self.delegate.viewModel.roomManager?.user.name ?? "") \("invite you to speak".localized)"
         }
@@ -112,7 +112,7 @@ class InvitedDialog: Dialog {
         shadow()
     }
     
-    func show(with action: Action, delegate: RoomDelegate) {
+    func show(with action: PodcastAction, delegate: RoomDelegate) {
         self.delegate = delegate
         self.action = action
         self.show(controller: delegate, style: .top, padding: 16)

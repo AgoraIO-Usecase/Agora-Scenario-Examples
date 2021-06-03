@@ -15,7 +15,7 @@
 
 import UIKit
 
-public protocol WaterfallLayoutDelegate: class {
+public protocol WaterfallLayoutDelegate: AnyObject {
     // MARK: - Required
     func collectionViewLayout(for section: Int) -> WaterfallLayout.Layout
     func collectionView(_ collectionView: UICollectionView, layout: WaterfallLayout, sizeForItemAt indexPath: IndexPath) -> CGSize

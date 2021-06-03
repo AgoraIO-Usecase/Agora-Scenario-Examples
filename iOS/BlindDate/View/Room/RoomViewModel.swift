@@ -19,11 +19,11 @@ enum LeaveRoomAction {
 }
 
 class SpeakerGroup {
-    var hoster: Member?
-    var leftSpeaker: Member?
-    var rightSpeaker: Member?
+    var hoster: BlindDateMember?
+    var leftSpeaker: BlindDateMember?
+    var rightSpeaker: BlindDateMember?
     
-    func sync(list: Array<Member>) {
+    func sync(list: Array<BlindDateMember>) {
         hoster = list.first { member in
             member.role == .manager
         }
@@ -38,13 +38,13 @@ class SpeakerGroup {
 
 class MemberGroup {
     private var first = true
-    var list: Array<Member>
+    var list: Array<BlindDateMember>
     
     init() {
         self.list = []
     }
     
-    func sync(list: Array<Member>) -> (Bool, Array<Member>) {
+    func sync(list: Array<BlindDateMember>) -> (Bool, Array<BlindDateMember>) {
         let add = first ? [] : list.filter { member -> Bool in
             return self.list.count == 0 || self.list.first(where: { _member -> Bool in
                 _member.id == member.id
@@ -72,10 +72,10 @@ class MemberGroup {
 }
 
 class RoomChat {
-    var member: Member
+    var member: BlindDateMember
     var message: String
     
-    init(member: Member, message: String) {
+    init(member: BlindDateMember, message: String) {
         self.message = message
         self.member = member
     }
@@ -83,7 +83,7 @@ class RoomChat {
 
 class RoomViewModel {
     
-    var room: Room {
+    var room: BlindDateRoom {
         return member.room
     }
     
@@ -95,7 +95,7 @@ class RoomViewModel {
         return member.isManager
     }
     
-    var role: RoomRole {
+    var role: BlindDateRoomRole {
         return member.role
     }
     
@@ -103,11 +103,11 @@ class RoomViewModel {
         return Server.shared().account!
     }
     
-    var member: Member {
+    var member: BlindDateMember {
         return Server.shared().member!
     }
     
-    var roomManager: Member? = nil
+    var roomManager: BlindDateMember? = nil
     
     //var count: Int = 0
     //var speakersCount: Int = 0
@@ -120,14 +120,14 @@ class RoomViewModel {
     var onListenersListChange: BehaviorRelay<Bool> = BehaviorRelay(value: false)
     var listeners: MemberGroup = MemberGroup()
     
-    var handsupList: [Action] = []
-    var onHandsupListChange: BehaviorRelay<[Action]> = BehaviorRelay(value: [])
+    var handsupList: [BlindDateAction] = []
+    var onHandsupListChange: BehaviorRelay<[BlindDateAction]> = BehaviorRelay(value: [])
 
-    var onMemberEnter: BehaviorRelay<Member?> = BehaviorRelay(value: nil)
+    var onMemberEnter: BehaviorRelay<BlindDateMember?> = BehaviorRelay(value: nil)
     
     var messageList: [RoomChat] = []
     
-    func actionsSource() -> Observable<Result<Action>> {
+    func actionsSource() -> Observable<Result<BlindDateAction>> {
         return Server.shared().subscribeActions()
             .map { [unowned self] result in
                 if let action = result.data {
@@ -147,11 +147,11 @@ class RoomViewModel {
         return Server.shared().sendMessage(message: message)
     }
     
-    func subscribeMessages() -> Observable<Result<Message>> {
+    func subscribeMessages() -> Observable<Result<BlindDateMessage>> {
         return Server.shared().subscribeMessages()
             .map { [unowned self] result in
                 if let message = result.data {
-                    let member: Member?
+                    let member: BlindDateMember?
                     if (message.userId == self.speakers.hoster?.id) {
                         member = self.speakers.hoster
                     } else if (message.userId == self.speakers.leftSpeaker?.id) {
@@ -279,23 +279,23 @@ class RoomViewModel {
         return Server.shared().handsUp(left: left)
     }
     
-    func inviteSpeaker(member: Member) -> Observable<Result<Void>> {
+    func inviteSpeaker(member: BlindDateMember) -> Observable<Result<Void>> {
         return Server.shared().inviteSpeaker(member: member)
     }
     
-    func muteSpeaker(member: Member) -> Observable<Result<Void>> {
+    func muteSpeaker(member: BlindDateMember) -> Observable<Result<Void>> {
         return Server.shared().muteSpeaker(member: member)
     }
     
-    func unMuteSpeaker(member: Member) -> Observable<Result<Void>> {
+    func unMuteSpeaker(member: BlindDateMember) -> Observable<Result<Void>> {
         return Server.shared().unMuteSpeaker(member: member)
     }
     
-    func kickSpeaker(member: Member) -> Observable<Result<Void>> {
+    func kickSpeaker(member: BlindDateMember) -> Observable<Result<Void>> {
         return Server.shared().kickSpeaker(member: member)
     }
     
-    func process(action: Action, agree: Bool) -> Observable<Result<Void>> {
+    func process(action: BlindDateAction, agree: Bool) -> Observable<Result<Void>> {
         switch action.action {
         case .handsUp, .requestLeft, .requestRight:
             if (isManager) {

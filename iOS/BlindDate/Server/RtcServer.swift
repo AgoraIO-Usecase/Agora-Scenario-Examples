@@ -161,7 +161,7 @@ class RtcServer: NSObject {
         }
     }
     
-    func joinChannel(member: Member, channel: String, setting: LocalSetting) -> Observable<Result<Void>> {
+    func joinChannel(member: BlindDateMember, channel: String, setting: LocalSetting) -> Observable<Result<Void>> {
         guard let rtc = self.rtcEngine else {
             return Observable.just(Result(success: false, message: "rtcEngine is nil!"))
         }

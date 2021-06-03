@@ -199,7 +199,7 @@ extension BlindDateHomeController: WaterfallLayoutDelegate {
 }
 
 extension BlindDateHomeController: HomeCardDelegate {
-    func onTapCard(with room: Room) {
+    func onTapCard(with room: BlindDateRoom) {
         viewModel.join(room: room)
             .observe(on: MainScheduler.instance)
             .do(onSubscribe: {
@@ -228,7 +228,7 @@ extension BlindDateHomeController: CreateRoomDelegate {
         createRoomDialog = nil
     }
     
-    func onCreateSuccess(with room: Room) {
+    func onCreateSuccess(with room: BlindDateRoom) {
         if let dialog = createRoomDialog {
             dialog.dismiss()
                 .subscribe(onSuccess: { [unowned self] _ in
@@ -239,11 +239,11 @@ extension BlindDateHomeController: CreateRoomDelegate {
         }
     }
     
-    func createRoom(with name: String?) -> Observable<Result<Room>> {
+    func createRoom(with name: String?) -> Observable<Result<BlindDateRoom>> {
         if (name?.isEmpty == false) {
             return viewModel.createRoom(with: name!)
         } else {
-            return Observable.just(Result<Room>(success: false, message: "Enter a room name".localized))
+            return Observable.just(Result<BlindDateRoom>(success: false, message: "Enter a room name".localized))
         }
     }
 }

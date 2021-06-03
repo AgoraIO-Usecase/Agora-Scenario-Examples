@@ -11,14 +11,14 @@ import Core
 
 protocol Service {
     var account: User? { get set }
-    var member: Member? { get set }
+    var member: BlindDateMember? { get set }
     var setting: LocalSetting { get set }
     func updateSetting()
     
     func getAccount() -> Observable<Result<User>>
-    func getRooms() -> Observable<Result<Array<Room>>>
-    func create(room: Room) -> Observable<Result<Room>>
-    func join(room: Room) -> Observable<Result<Room>>
+    func getRooms() -> Observable<Result<Array<BlindDateRoom>>>
+    func create(room: BlindDateRoom) -> Observable<Result<BlindDateRoom>>
+    func join(room: BlindDateRoom) -> Observable<Result<BlindDateRoom>>
     func leave() -> Observable<Result<Void>>
     
     func closeMicrophone(close: Bool) -> Observable<Result<Void>>
@@ -27,24 +27,24 @@ protocol Service {
     func enableBeauty(enable: Bool)
     func isEnableBeauty() -> Bool
     
-    func subscribeMembers() -> Observable<Result<Array<Member>>>
-    func subscribeActions() -> Observable<Result<Action>>
+    func subscribeMembers() -> Observable<Result<Array<BlindDateMember>>>
+    func subscribeActions() -> Observable<Result<BlindDateAction>>
     
-    func inviteSpeaker(member: Member) -> Observable<Result<Void>>
-    func muteSpeaker(member: Member) -> Observable<Result<Void>>
-    func unMuteSpeaker(member: Member) -> Observable<Result<Void>>
-    func kickSpeaker(member: Member) -> Observable<Result<Void>>
+    func inviteSpeaker(member: BlindDateMember) -> Observable<Result<Void>>
+    func muteSpeaker(member: BlindDateMember) -> Observable<Result<Void>>
+    func unMuteSpeaker(member: BlindDateMember) -> Observable<Result<Void>>
+    func kickSpeaker(member: BlindDateMember) -> Observable<Result<Void>>
     
-    func process(request: Action, agree: Bool) -> Observable<Result<Void>>
-    func process(invitionLeft: Action, agree: Bool) -> Observable<Result<Void>>
-    func process(invitionRight: Action, agree: Bool) -> Observable<Result<Void>>
+    func process(request: BlindDateAction, agree: Bool) -> Observable<Result<Void>>
+    func process(invitionLeft: BlindDateAction, agree: Bool) -> Observable<Result<Void>>
+    func process(invitionRight: BlindDateAction, agree: Bool) -> Observable<Result<Void>>
     
     func handsUp(left: Bool?) -> Observable<Result<Void>>
     
     func bindLocalVideo(view: UIView?)
     func bindRemoteVideo(view: UIView?, uid: UInt)
     
-    func subscribeMessages() -> Observable<Result<Message>>
+    func subscribeMessages() -> Observable<Result<BlindDateMessage>>
     func sendMessage(message: String) -> Observable<Result<Void>>
     
     func destory()

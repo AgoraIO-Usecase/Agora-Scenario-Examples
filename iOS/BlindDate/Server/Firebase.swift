@@ -4,7 +4,7 @@
 //
 //  Created by XC on 2021/5/11.
 //
-#if FIREBASE
+#if test
 import Foundation
 import Firebase
 import FirebaseFirestoreSwift

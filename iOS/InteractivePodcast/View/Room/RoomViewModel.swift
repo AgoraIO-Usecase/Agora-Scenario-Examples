@@ -25,9 +25,9 @@ enum RoomRole {
 }
 
 class SpeakerGroup: NSObject, ListDiffable {
-    let list: Array<Member>
+    let list: Array<PodcastMember>
     
-    init(list: Array<Member>) {
+    init(list: Array<PodcastMember>) {
         var managers = list.filter { member in
             return member.isManager
         }
@@ -48,9 +48,9 @@ class SpeakerGroup: NSObject, ListDiffable {
 }
 
 class MemberGroup: NSObject, ListDiffable {
-    var list: Array<Member>
+    var list: Array<PodcastMember>
     
-    init(list: Array<Member>) {
+    init(list: Array<PodcastMember>) {
         self.list = list
     }
     
@@ -65,7 +65,7 @@ class MemberGroup: NSObject, ListDiffable {
 
 class RoomViewModel {
     
-    var room: Room {
+    var room: PodcastRoom {
         return member.room
     }
     
@@ -85,21 +85,21 @@ class RoomViewModel {
         return Server.shared().account!
     }
     
-    var member: Member {
+    var member: PodcastMember {
         return Server.shared().member!
     }
     
-    var roomManager: Member? = nil
+    var roomManager: PodcastMember? = nil
     
     var count: Int = 0
     var speakersCount: Int = 0
     
     var coverCharacters: [User] = []
     var memberList: [Any] = []
-    var handsupList: [Action] = []
-    var onHandsupListChange: BehaviorRelay<[Action]> = BehaviorRelay(value: [])
+    var handsupList: [PodcastAction] = []
+    var onHandsupListChange: BehaviorRelay<[PodcastAction]> = BehaviorRelay(value: [])
     
-    func actionsSource() -> Observable<Result<Action>> {
+    func actionsSource() -> Observable<Result<PodcastAction>> {
         return Server.shared().subscribeActions()
             .map { [unowned self] result in
                 if let action = result.data {
@@ -204,23 +204,23 @@ class RoomViewModel {
         return Server.shared().handsUp()
     }
     
-    func inviteSpeaker(member: Member) -> Observable<Result<Void>> {
+    func inviteSpeaker(member: PodcastMember) -> Observable<Result<Void>> {
         return Server.shared().inviteSpeaker(member: member)
     }
     
-    func muteSpeaker(member: Member) -> Observable<Result<Void>> {
+    func muteSpeaker(member: PodcastMember) -> Observable<Result<Void>> {
         return Server.shared().muteSpeaker(member: member)
     }
     
-    func unMuteSpeaker(member: Member) -> Observable<Result<Void>> {
+    func unMuteSpeaker(member: PodcastMember) -> Observable<Result<Void>> {
         return Server.shared().unMuteSpeaker(member: member)
     }
     
-    func kickSpeaker(member: Member) -> Observable<Result<Void>> {
+    func kickSpeaker(member: PodcastMember) -> Observable<Result<Void>> {
         return Server.shared().kickSpeaker(member: member)
     }
     
-    func process(action: Action, agree: Bool) -> Observable<Result<Void>> {
+    func process(action: PodcastAction, agree: Bool) -> Observable<Result<Void>> {
         switch action.action {
         case .handsUp:
             if (isManager) {
