@@ -19,9 +19,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         var rootViewController: UIViewController? = nil
         #if BlindDate
-        rootViewController = UINavigationController(rootViewController: AppTargets.shared().target.getAppMainViewController(app: .BlindDate))
+            rootViewController = UINavigationController(rootViewController: AppTargets().target.getAppMainViewController(app: .BlindDate))
         #elseif InteractivePodcast
-            rootViewController = UINavigationController(rootViewController: AppTargets.shared().target.getAppMainViewController(app: .InteractivePodcast))
+            rootViewController = UINavigationController(rootViewController: AppTargets().target.getAppMainViewController(app: .InteractivePodcast))
         #endif
         if let rootViewController = rootViewController {
             window = UIWindow(windowScene: windowScene)
