@@ -6,132 +6,122 @@
 //
 
 import Foundation
+import RxSwift
 import Core
 
-class Room: Equatable {
-    
-    static func == (lhs: Room, rhs: Room) -> Bool {
-        return lhs.id == rhs.id
+extension BlindDateRoom {
+
+    static func create(room: BlindDateRoom) -> Observable<Result<String>> {
+        return BlindDateModelManager.shared.create(room: room)
     }
     
-    var id: String
-    let channelName: String
-    var anchor: User
-    var total: Int = 0
-    var speakersTotal: Int = 0
-    var coverCharacters: [User] = []
+    func delete() -> Observable<Result<Void>> {
+        return BlindDateModelManager.shared.delete(room: self)
+    }
     
-    init(id: String, channelName: String, anchor: User) {
-        self.id = id
-        self.channelName = channelName
-        self.anchor = anchor
+    static func getRooms() -> Observable<Result<Array<BlindDateRoom>>> {
+        return BlindDateModelManager.shared.getRooms()
+    }
+    
+    static func getRoom(by objectId: String) -> Observable<Result<BlindDateRoom>> {
+        return BlindDateModelManager.shared.getRoom(by: objectId)
+    }
+    
+    static func update(room: BlindDateRoom) -> Observable<Result<String>> {
+        return BlindDateModelManager.shared.update(room: room)
+    }
+    
+    func getMembers() -> Observable<Result<Array<BlindDateMember>>> {
+        return BlindDateModelManager.shared.getMembers(room: self)
+    }
+    
+    func getCoverSpeakers() -> Observable<Result<Array<BlindDateMember>>> {
+        return BlindDateModelManager.shared.getCoverSpeakers(room: self)
+    }
+    
+    func subscribeMembers() -> Observable<Result<Array<BlindDateMember>>> {
+        return BlindDateModelManager.shared.subscribeMembers(room: self)
     }
 }
 
-enum RoomRole: Int {
-    case listener = 0
-    case manager = 1
-    case leftSpeaker = 2
-    case rightSpeaker = 3
-}
-
-class Member {
-    var id: String
-    var isMuted: Bool
-    var isSelfMuted: Bool
-    var role: RoomRole = .listener
-    //var isSpeaker: Bool = false
-    var room: Room
-    var streamId: UInt
-    var user: User
+extension BlindDateMember {
     
-    var isManager: Bool = false
-    var isLocal: Bool = false
-    
-    init(id: String, isMuted: Bool, isSelfMuted: Bool, role: RoomRole, room: Room, streamId: UInt, user: User) {
-        self.id = id
-        self.isMuted = isMuted
-        self.isSelfMuted = isSelfMuted
-        self.role = role
-        self.room = room
-        self.streamId = streamId
-        self.user = user
-        self.isManager = room.anchor.id == id
+    func join(streamId: UInt) -> Observable<Result<Void>>{
+        return BlindDateModelManager.shared.join(member: self, streamId: streamId)
     }
     
-    func isSpeaker() -> Bool {
-        return isManager || role != .listener
+    func mute(mute: Bool) -> Observable<Result<Void>> {
+        return BlindDateModelManager.shared.mute(member: self, mute: mute)
+    }
+    
+    func selfMute(mute: Bool) -> Observable<Result<Void>> {
+        return BlindDateModelManager.shared.selfMute(member: self, mute: mute)
+    }
+    
+    func asListener() -> Observable<Result<Void>> {
+        return BlindDateModelManager.shared.asListener(member: self)
+    }
+    
+    func asLeftSpeaker(agree: Bool) -> Observable<Result<Void>> {
+        return BlindDateModelManager.shared.asLeftSpeaker(member: self, agree: agree)
+    }
+    
+    func asRightSpeaker(agree: Bool) -> Observable<Result<Void>> {
+        return BlindDateModelManager.shared.asRightSpeaker(member: self, agree: agree)
+    }
+    
+    func leave() -> Observable<Result<Void>> {
+        return BlindDateModelManager.shared.leave(member: self)
+    }
+    
+    func subscribeActions() -> Observable<Result<BlindDateAction>> {
+        return BlindDateModelManager.shared.subscribeActions(member: self)
+    }
+    
+    func handsup() -> Observable<Result<Void>> {
+        return BlindDateModelManager.shared.handsup(member: self)
+    }
+    
+    func requestLeft() -> Observable<Result<Void>> {
+        return BlindDateModelManager.shared.requestLeft(member: self)
+    }
+    
+    func requestRight() -> Observable<Result<Void>> {
+        return BlindDateModelManager.shared.requestRight(member: self)
+    }
+    
+    func inviteSpeaker(member: BlindDateMember) -> Observable<Result<Void>> {
+        return BlindDateModelManager.shared.inviteSpeaker(master: self, member: member)
+    }
+    
+    func rejectInvition() -> Observable<Result<Void>> {
+        return BlindDateModelManager.shared.rejectInvition(member: self)
     }
 }
 
-enum ActionType: Int {
-    case handsUp = 1
-    case invite = 2
-    case requestLeft = 3
-    case requestRight = 4
-    case error
+extension BlindDateAction {
     
-    static func from(value: Int) -> ActionType {
-        switch value {
-        case 1:
-            return .handsUp
-        case 2:
-            return .invite
-        case 3:
-            return .requestLeft
-        case 4:
-            return .requestRight
-        default:
-            return .error
+    func setLeftSpeaker(agree: Bool) -> Observable<Result<Void>> {
+        return member.asLeftSpeaker(agree: agree)
+    }
+    
+    func setRightSpeaker(agree: Bool) -> Observable<Result<Void>> {
+        return member.asRightSpeaker(agree: agree)
+    }
+    
+    func setLeftInvition(agree: Bool) -> Observable<Result<Void>> {
+        if (agree) {
+            return member.asLeftSpeaker(agree: agree)
+        } else {
+            return member.rejectInvition()
         }
     }
-}
-
-enum ActionStatus: Int {
-    case ing = 1
-    case agree = 2
-    case refuse = 3
-    case error
     
-    static func from(value: Int) -> ActionStatus {
-        switch value {
-        case 1:
-            return .ing
-        case 2:
-            return .agree
-        case 3:
-            return .refuse
-        default:
-            return .error
+    func setRightInvition(agree: Bool) -> Observable<Result<Void>> {
+        if (agree) {
+            return member.asRightSpeaker(agree: agree)
+        } else {
+            return member.rejectInvition()
         }
-    }
-}
-
-class Action {
-    var id: String
-    var action: ActionType
-    var status: ActionStatus
-    
-    var member: Member
-    var room: Room
-    
-    init(id: String, action: ActionType, status: ActionStatus, member: Member, room: Room) {
-        self.id = id
-        self.action = action
-        self.status = status
-        self.member = member
-        self.room = room
-    }
-}
-
-class Message {
-    var channelId: String
-    var userId: String
-    var value: String
-    
-    init(channelId: String, userId: String, value: String) {
-        self.channelId = channelId
-        self.userId = userId
-        self.value = value
     }
 }

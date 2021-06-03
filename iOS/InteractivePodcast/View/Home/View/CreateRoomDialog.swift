@@ -11,8 +11,8 @@ import RxSwift
 import Core
 
 protocol CreateRoomDelegate: BaseViewContoller {
-    func createRoom(with: String?) -> Observable<Result<Room>>
-    func onCreateSuccess(with: Room)
+    func createRoom(with: String?) -> Observable<Result<PodcastRoom>>
+    func onCreateSuccess(with: PodcastRoom)
 }
 
 class CreateRoomDialog: UIView {
@@ -36,7 +36,7 @@ class CreateRoomDialog: UIView {
         }
     }
     
-    private func onCreateRoom() -> Observable<Result<Room>> {
+    private func onCreateRoom() -> Observable<Result<PodcastRoom>> {
         return createButton.rx.tap
             .throttle(RxTimeInterval.seconds(2), scheduler: MainScheduler.instance)
             .filter { [unowned self] in

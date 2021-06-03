@@ -12,7 +12,7 @@ import Core
 
 class MiniRoomView: Dialog {
     weak var delegate: HomeController!
-    var leaveAction: ((LeaveRoomAction, Room?) -> Void)? = nil
+    var leaveAction: ((LeaveRoomAction, PodcastRoom?) -> Void)? = nil
     static var ICON_WIDTH: CGFloat = 36
     var viewModel: RoomViewModel = RoomViewModel()
     
@@ -272,7 +272,7 @@ class MiniRoomView: Dialog {
         self.dismiss(controller: delegate)
     }
     
-    func onChange(room: Room) -> Observable<Bool> {
+    func onChange(room: PodcastRoom) -> Observable<Bool> {
         if (viewModel.isManager && viewModel.room.id != room.id) {
             return showAlert(title: "Leave room".localized, message: "Leaving the room ends the session and removes everyone".localized)
                 .filter { close in close }

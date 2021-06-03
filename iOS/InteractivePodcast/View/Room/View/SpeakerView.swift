@@ -9,14 +9,14 @@ import Foundation
 import UIKit
 import Core
 
-class SpeakerView: BaseUICollectionViewCell<Member> {
+class SpeakerView: BaseUICollectionViewCell<PodcastMember> {
     fileprivate static let font = UIFont.systemFont(ofSize: 12)
     fileprivate static let padding: CGFloat = 10
     fileprivate static let avatarWidth: CGFloat = 80
     
     weak var delegate: RoomControlDelegate?
     
-    override var model: Member! {
+    override var model: PodcastMember! {
         didSet {
             roleName.text = model.user.name
             avatar.image = UIImage(named: model.user.getLocalAvatar(), in: Utils.bundle, with: nil)

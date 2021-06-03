@@ -9,13 +9,13 @@ import Foundation
 import UIKit
 import Core
 
-class ListenerView: BaseUICollectionViewCell<Member> {
+class ListenerView: BaseUICollectionViewCell<PodcastMember> {
     fileprivate static let padding: CGFloat = 10
     fileprivate static let avatarWidth: CGFloat = 50
     
     weak var delegate: RoomControlDelegate?
     
-    override var model: Member! {
+    override var model: PodcastMember! {
         didSet {
             name.text = model.user.name
             avatar.image = UIImage(named: model.user.getLocalAvatar(), in: Utils.bundle, with: nil)

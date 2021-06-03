@@ -69,7 +69,7 @@ class HandsupListDialog: Dialog {
     
     func show(delegate: RoomDelegate) {
         self.delegate = delegate
-        let id = NSStringFromClass(Action.self)
+        let id = NSStringFromClass(BlindDateAction.self)
         listView.register(HandsupCellView.self, forCellReuseIdentifier: id)
         listView.dataSource = self
         listView.rowHeight = 64
@@ -91,7 +91,7 @@ extension HandsupListDialog: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let identifier = NSStringFromClass(Action.self)
+        let identifier = NSStringFromClass(BlindDateAction.self)
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! HandsupCellView
         cell.item = self.delegate.viewModel.handsupList[indexPath.row]
         cell.delegate = self
@@ -100,24 +100,24 @@ extension HandsupListDialog: UITableViewDataSource {
 }
 
 extension HandsupListDialog: HandsupListDelegate {
-    func reject(action: Action) -> Observable<Result<Void>> {
+    func reject(action: BlindDateAction) -> Observable<Result<Void>> {
         return self.delegate.viewModel.process(action: action, agree: false)
     }
     
-    func agree(action: Action) -> Observable<Result<Void>> {
+    func agree(action: BlindDateAction) -> Observable<Result<Void>> {
         return self.delegate.viewModel.process(action: action, agree: true)
     }
 }
 
 protocol HandsupListDelegate: AnyObject {
-    func reject(action: Action) -> Observable<Result<Void>>
-    func agree(action: Action) -> Observable<Result<Void>>
+    func reject(action: BlindDateAction) -> Observable<Result<Void>>
+    func agree(action: BlindDateAction) -> Observable<Result<Void>>
 }
 
 class HandsupCellView: UITableViewCell {
     weak var delegate: HandsupListDelegate!
     private let disposeBag = DisposeBag()
-    var item: Action! {
+    var item: BlindDateAction! {
         didSet {
             name.text = item.member.user.name
             avatar.image = UIImage(named: item.member.user.getLocalAvatar(), in: Bundle(identifier: "io.agora.InteractivePodcast")!, with: nil)

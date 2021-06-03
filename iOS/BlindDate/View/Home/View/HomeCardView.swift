@@ -11,7 +11,7 @@ import RxCocoa
 import Core
 
 protocol HomeCardDelegate: AnyObject {
-    func onTapCard(with room: Room)
+    func onTapCard(with room: BlindDateRoom)
 }
 
 final class HomeCardView: UICollectionViewCell {
@@ -39,7 +39,7 @@ final class HomeCardView: UICollectionViewCell {
         return attributes
     }()
     
-    var room: Room! {
+    var room: BlindDateRoom! {
         didSet {
             //title.text = room.channelName
             title.attributedText = NSAttributedString(string: room.channelName, attributes: textStyle)
@@ -158,7 +158,7 @@ final class HomeCardView: UICollectionViewCell {
         }
     }
 
-    static func sizeForItem(room: Room, width: CGFloat) -> CGSize {
+    static func sizeForItem(room: BlindDateRoom, width: CGFloat) -> CGSize {
         return CGSize(width: width, height: width)
     }
 }

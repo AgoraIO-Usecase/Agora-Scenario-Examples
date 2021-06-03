@@ -31,7 +31,7 @@ public enum DialogStyle: Int {
     }
 }
 
-public protocol DialogDelegate: class {
+public protocol DialogDelegate: AnyObject {
     func show(dialog: UIView, style: DialogStyle, padding: CGFloat, relation: UIView.Relation, onDismiss: (() -> Void)?) -> Single<Bool>
     func dismiss(dialog: UIView) -> Single<Bool>
     func show(message: String, type: NotificationType, duration: CGFloat)

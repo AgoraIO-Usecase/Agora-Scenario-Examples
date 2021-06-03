@@ -13,7 +13,7 @@ import Core
 
 class ManageSpeakerDialog: Dialog {
     weak var delegate: RoomController!
-    var model: Member! {
+    var model: PodcastMember! {
         didSet {
             name.text = model.user.name
             avatar.image = UIImage(named: model.user.getLocalAvatar(), in: Utils.bundle, with: nil)
@@ -131,7 +131,7 @@ class ManageSpeakerDialog: Dialog {
             .active()
     }
     
-    func show(with member: Member, delegate: RoomController) {
+    func show(with member: PodcastMember, delegate: RoomController) {
         self.delegate = delegate
         self.model = member
         self.show(controller: delegate)

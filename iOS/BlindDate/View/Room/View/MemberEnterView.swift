@@ -11,7 +11,7 @@ import Core
 
 class MemberEnterView: UIView {
     
-    var member: Member! {
+    var member: BlindDateMember! {
         didSet {
             let name = NSAttributedString(
                 string: member.user.name,

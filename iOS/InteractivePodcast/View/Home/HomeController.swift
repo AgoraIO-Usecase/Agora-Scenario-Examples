@@ -77,7 +77,7 @@ public class HomeController: BaseViewContoller, DialogDelegate {
         viewModel
             .showMiniRoom
             .startWith(false)
-            .distinctUntilChanged()
+            //.distinctUntilChanged()
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [unowned self] showMiniRoom in
                 self.showCreatRoomView(!showMiniRoom)
@@ -133,6 +133,7 @@ public class HomeController: BaseViewContoller, DialogDelegate {
         super.viewDidLoad()
         backView.onTap().rx.event
             .subscribe(onNext: { [unowned self] _ in
+                self.showMiniRoom(false)
                 self.navigationController?.popViewController(animated: true)
             })
             .disposed(by: disposeBag)
@@ -157,11 +158,6 @@ public class HomeController: BaseViewContoller, DialogDelegate {
         }
         
         subcribeUIEvent()
-    }
-    
-    public override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        showMiniRoom(false)
     }
     
     private func showCreatRoomView(_ show: Bool) {
@@ -197,7 +193,7 @@ public class HomeController: BaseViewContoller, DialogDelegate {
         refreshControl.sendActions(for: .valueChanged)
     }
     
-    func onLeaveRoomController(action: LeaveRoomAction, room: Room?) {
+    func onLeaveRoomController(action: LeaveRoomAction, room: PodcastRoom?) {
         //self.refresh()
         switch action {
         case .closeRoom:
@@ -249,7 +245,7 @@ extension HomeController: WaterfallLayoutDelegate {
         return .waterfall(column: 2, distributionMethod: .balanced)
     }
     
-    func checkMiniRoom(with room: Room) -> Observable<Bool> {
+    func checkMiniRoom(with room: PodcastRoom) -> Observable<Bool> {
         if let miniRoom = miniRoomView {
             return miniRoom.onChange(room: room).map { [unowned self] close in
                 if (close) { self.viewModel.showMiniRoom.accept(false) }
@@ -261,9 +257,9 @@ extension HomeController: WaterfallLayoutDelegate {
 }
 
 extension HomeController: HomeCardDelegate {
-    func onTapCard(with room: Room) {
+    func onTapCard(with room: PodcastRoom) {
         checkMiniRoom(with: room)
-            .concatMap { [unowned self] _ -> Observable<Result<Room>> in
+            .concatMap { [unowned self] _ -> Observable<Result<PodcastRoom>> in
                 self.show(processing: true)
                 return self.viewModel.join(room: room)
             }
@@ -284,7 +280,7 @@ extension HomeController: HomeCardDelegate {
 }
 
 extension HomeController: CreateRoomDelegate {
-    func onCreateSuccess(with room: Room) {
+    func onCreateSuccess(with room: PodcastRoom) {
         if let dialog = createRoomDialog {
             dialog.dismiss()
                 .subscribe(onSuccess: { [unowned self] _ in
@@ -295,11 +291,11 @@ extension HomeController: CreateRoomDelegate {
         }
     }
     
-    func createRoom(with name: String?) -> Observable<Result<Room>> {
+    func createRoom(with name: String?) -> Observable<Result<PodcastRoom>> {
         if (name?.isEmpty == false) {
             return viewModel.createRoom(with: name!)
         } else {
-            return Observable.just(Result<Room>(success: false, message: "Enter a room name".localized))
+            return Observable.just(Result<PodcastRoom>(success: false, message: "Enter a room name".localized))
         }
     }
     

@@ -252,14 +252,15 @@ extension UIView {
 }
 
 extension UIViewController {
-    public func addViewTop(_ view: UIView) -> UIView {
-        if let window: UIWindow = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first {
-            window.addSubview(view)
-            return window
-        } else {
-            self.view.addSubview(view)
-            return self.view
+    public func addViewTop(_ view: UIView, window: Bool = true) -> UIView {
+        if (window) {
+            if let window: UIWindow = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first {
+                window.addSubview(view)
+                return window
+            }
         }
+        self.view.addSubview(view)
+        return self.view
     }
     
     public func showToast(message: String?, type: NotificationType = .info, duration: CGFloat = 1.5) {

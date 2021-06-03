@@ -4,7 +4,7 @@
 //
 //  Created by XC on 2021/5/11.
 //
-#if FIREBASE
+#if test
 import Foundation
 import Firebase
 import FirebaseFirestoreSwift
@@ -12,50 +12,50 @@ import RxSwift
 import Core
 import Database_Firebase
 
-extension User {
-    static func from(object: DocumentSnapshot) throws -> User {
-        let data = object.data()!
-        let name: String = data[NAME] as! String
-        let avatar: String = data[AVATAR] as! String
-        return User(id: object.documentID, name: name, avatar: avatar)
-    }
-    
-    static func create(user: User) -> Observable<Result<String>> {
-        return Database.save { () -> (String, data: [String : Any], String?) in
-            return (TABLE, [NAME: user.name, AVATAR: user.avatar as Any], nil)
-        }
-    }
-    
-    static func getUser(by objectId: String) -> Observable<Result<User>> {
-        return Database.query(className: TABLE, objectId: objectId) { (data: DocumentSnapshot) -> User in
-            return try User.from(object: data)
-        }
-    }
-    
-    static func randomUser() -> Observable<Result<User>>  {
-        let user = User(id: "", name: Utils.randomString(length: 8), avatar: Utils.randomAvatar())
-        return create(user: user).map { result in
-            if (result.success) {
-                user.id = result.data!
-                return Result(success: true, data: user)
-            } else {
-                return Result(success: false, message: result.message)
-            }
-        }
-    }
-    
-    func update(name: String) -> Observable<Result<Void>> {
-        return Database.save { () -> (String, data: [String : Any], String?) in
-            return (User.TABLE, [User.NAME: name], self.id)
-        }
-        .map { result in
-            if (result.success) {
-                self.name = name
-            }
-            return Result(success: result.success, message: result.message)
-        }
-    }
-}
+//extension User {
+//    static func from(object: DocumentSnapshot) throws -> User {
+//        let data = object.data()!
+//        let name: String = data[NAME] as! String
+//        let avatar: String = data[AVATAR] as! String
+//        return User(id: object.documentID, name: name, avatar: avatar)
+//    }
+//
+//    static func create(user: User) -> Observable<Result<String>> {
+//        return Database.save { () -> (String, data: [String : Any], String?) in
+//            return (TABLE, [NAME: user.name, AVATAR: user.avatar as Any], nil)
+//        }
+//    }
+//
+//    static func getUser(by objectId: String) -> Observable<Result<User>> {
+//        return Database.query(className: TABLE, objectId: objectId) { (data: DocumentSnapshot) -> User in
+//            return try User.from(object: data)
+//        }
+//    }
+//
+//    static func randomUser() -> Observable<Result<User>>  {
+//        let user = User(id: "", name: Utils.randomString(length: 8), avatar: Utils.randomAvatar())
+//        return create(user: user).map { result in
+//            if (result.success) {
+//                user.id = result.data!
+//                return Result(success: true, data: user)
+//            } else {
+//                return Result(success: false, message: result.message)
+//            }
+//        }
+//    }
+//
+//    func update(name: String) -> Observable<Result<Void>> {
+//        return Database.save { () -> (String, data: [String : Any], String?) in
+//            return (User.TABLE, [User.NAME: name], self.id)
+//        }
+//        .map { result in
+//            if (result.success) {
+//                self.name = name
+//            }
+//            return Result(success: result.success, message: result.message)
+//        }
+//    }
+//}
 
 extension Room {
     static func queryMemberCount(roomId: String) -> Observable<Result<Int>> {

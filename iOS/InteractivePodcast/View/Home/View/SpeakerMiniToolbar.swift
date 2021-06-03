@@ -105,6 +105,6 @@ class SpeakerMiniToolbar: UIStackView {
         self.delegate.viewModel.syncLocalUIStatus()
     }
     
-    func onReceivedAction(_ result: Result<Action>) {}
+    func onReceivedAction(_ result: Result<PodcastAction>) {}
     func subcribeRoomEvent() {}
 }

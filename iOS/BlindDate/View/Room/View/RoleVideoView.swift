@@ -14,7 +14,7 @@ import Core
 class RoleVideoView {
     let disposeBag = DisposeBag()
     weak var delegate: RoomControlDelegate?
-    var member: Member? {
+    var member: BlindDateMember? {
         didSet {
             if let member = member {
                 addView?.isHidden = true
@@ -65,7 +65,7 @@ class RoleVideoView {
             .disposed(by: disposeBag)
     }
     
-    private func bindVideo(member: Member) {
+    private func bindVideo(member: BlindDateMember) {
         if (member.isLocal) {
             Server.shared().bindLocalVideo(view: videoView)
         } else {
@@ -73,7 +73,7 @@ class RoleVideoView {
         }
     }
     
-    private func unbindVideo(member: Member) {
+    private func unbindVideo(member: BlindDateMember) {
         if (member.isLocal) {
             Server.shared().bindLocalVideo(view: nil)
         } else {

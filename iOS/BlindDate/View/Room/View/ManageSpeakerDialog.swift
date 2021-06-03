@@ -13,7 +13,7 @@ import Core
 
 class ManageSpeakerDialog: Dialog {
     weak var delegate: RoomController!
-    var model: Member! {
+    var model: BlindDateMember! {
         didSet {
             name.text = model.user.name
             avatar.image = UIImage(named: model.user.getLocalAvatar(), in: Bundle(identifier: "io.agora.InteractivePodcast")!, with: nil)
@@ -170,7 +170,7 @@ class ManageSpeakerDialog: Dialog {
         clipsToBounds = false
     }
     
-    func show(with member: Member, delegate: RoomController) {
+    func show(with member: BlindDateMember, delegate: RoomController) {
         self.delegate = delegate
         self.model = member
         self.show(controller: delegate, padding: 6)

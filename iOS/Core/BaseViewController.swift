@@ -132,7 +132,7 @@ open class BaseViewContoller: UIViewController {
                     single(.success(finish))
                 })
             case .topNoMask:
-                let root = addViewTop(dialog)
+                let root = addViewTop(dialog, window: false)
                 //self.view.addSubview(dialog)
                 dialog.marginLeading(anchor: root.leadingAnchor, constant: padding, relation: relation)
                     .centerX(anchor: root.centerXAnchor)
@@ -149,7 +149,7 @@ open class BaseViewContoller: UIViewController {
                     single(.success(finish))
                 })
             case .bottomNoMask:
-                let root = addViewTop(dialog)
+                let root = addViewTop(dialog, window: false)
                 //self.view.addSubview(dialog)
                 if (padding > 0) {
                     dialog.marginLeading(anchor: root.leadingAnchor, constant: padding, relation: relation)

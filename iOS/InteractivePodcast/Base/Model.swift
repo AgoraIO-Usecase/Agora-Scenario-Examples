@@ -6,101 +6,93 @@
 //
 
 import Foundation
+import RxSwift
 import Core
 
-class Room: Equatable {
-    
-    static func == (lhs: Room, rhs: Room) -> Bool {
-        return lhs.id == rhs.id
+extension PodcastRoom {
+    static func create(room: PodcastRoom) -> Observable<Result<String>> {
+        return PodcastModelManager.shared.create(room: room)
     }
     
-    var id: String
-    let channelName: String
-    var anchor: User
-    var total: Int = 0
-    var speakersTotal: Int = 0
-    var coverCharacters: [User] = []
-    
-    init(id: String, channelName: String, anchor: User) {
-        self.id = id
-        self.channelName = channelName
-        self.anchor = anchor
+    func delete() -> Observable<Result<Void>> {
+        return PodcastModelManager.shared.delete(room: self)
     }
-}
-
-class Member {
-    var id: String
-    var isMuted: Bool
-    var isSelfMuted: Bool
-    var isSpeaker: Bool = false
-    var room: Room
-    var streamId: UInt
-    var user: User
     
-    var isManager: Bool = false
+    static func getRooms() -> Observable<Result<Array<PodcastRoom>>> {
+        return PodcastModelManager.shared.getRooms()
+    }
     
-    init(id: String, isMuted: Bool, isSelfMuted: Bool, isSpeaker: Bool, room: Room, streamId: UInt, user: User) {
-        self.id = id
-        self.isMuted = isMuted
-        self.isSelfMuted = isSelfMuted
-        self.isSpeaker = isSpeaker
-        self.room = room
-        self.streamId = streamId
-        self.user = user
-        self.isManager = room.anchor.id == id
+    static func getRoom(by objectId: String) -> Observable<Result<PodcastRoom>> {
+        return PodcastModelManager.shared.getRoom(by: objectId)
+    }
+    
+    static func update(room: PodcastRoom) -> Observable<Result<String>> {
+        return PodcastModelManager.shared.update(room: room)
+    }
+    
+    func getMembers() -> Observable<Result<Array<PodcastMember>>> {
+        return PodcastModelManager.shared.getMembers(room: self)
+    }
+    
+    func getCoverSpeakers() -> Observable<Result<Array<PodcastMember>>> {
+        return PodcastModelManager.shared.getCoverSpeakers(room: self)
+    }
+    
+    func subscribeMembers() -> Observable<Result<Array<PodcastMember>>> {
+        return PodcastModelManager.shared.subscribeMembers(room: self)
     }
 }
 
-enum ActionType: Int {
-    case handsUp = 1
-    case invite = 2
-    case error
+extension PodcastMember {
     
-    static func from(value: Int) -> ActionType {
-        switch value {
-        case 1:
-            return .handsUp
-        case 2:
-            return .invite
-        default:
-            return .error
+    func join(streamId: UInt) -> Observable<Result<Void>>{
+        return PodcastModelManager.shared.join(member: self, streamId: streamId)
+    }
+    
+    func mute(mute: Bool) -> Observable<Result<Void>> {
+        return PodcastModelManager.shared.mute(member: self, mute: mute)
+    }
+    
+    func selfMute(mute: Bool) -> Observable<Result<Void>> {
+        return PodcastModelManager.shared.selfMute(member: self, mute: mute)
+    }
+    
+    func asSpeaker(agree: Bool) -> Observable<Result<Void>> {
+        return PodcastModelManager.shared.asSpeaker(member: self, agree: agree)
+    }
+    
+    func leave() -> Observable<Result<Void>> {
+        return PodcastModelManager.shared.leave(member: self)
+    }
+    
+    func subscribeActions() -> Observable<Result<PodcastAction>> {
+        return PodcastModelManager.shared.subscribeActions(member: self)
+    }
+    
+    func handsup() -> Observable<Result<Void>> {
+        return PodcastModelManager.shared.handsup(member: self)
+    }
+    
+    func inviteSpeaker(member: PodcastMember) -> Observable<Result<Void>> {
+        return PodcastModelManager.shared.inviteSpeaker(master: self, member: member)
+    }
+    
+    func rejectInvition() -> Observable<Result<Void>> {
+        return PodcastModelManager.shared.rejectInvition(member: self)
+    }
+}
+
+extension PodcastAction {
+    
+    func setSpeaker(agree: Bool) -> Observable<Result<Void>> {
+        return member.asSpeaker(agree: agree)
+    }
+    
+    func setInvition(agree: Bool) -> Observable<Result<Void>> {
+        if (agree) {
+            return member.asSpeaker(agree: agree)
+        } else {
+            return member.rejectInvition()
         }
-    }
-}
-
-enum ActionStatus: Int {
-    case ing = 1
-    case agree = 2
-    case refuse = 3
-    case error
-    
-    static func from(value: Int) -> ActionStatus {
-        switch value {
-        case 1:
-            return .ing
-        case 2:
-            return .agree
-        case 3:
-            return .refuse
-        default:
-            return .error
-        }
-    }
-}
-
-class Action {
-    var id: String
-    var action: ActionType
-    var status: ActionStatus
-    
-    var member: Member
-    var room: Room
-    
-    init(id: String, action: ActionType, status: ActionStatus, member: Member, room: Room) {
-        self.id = id
-        self.action = action
-        self.status = status
-        self.member = member
-        self.room = room
     }
 }

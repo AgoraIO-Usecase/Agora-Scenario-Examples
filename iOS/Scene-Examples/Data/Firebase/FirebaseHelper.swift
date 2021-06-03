@@ -1,10 +1,9 @@
 //
-//  Firebase.swift
-//  Database
+//  FirebaseHelper.swift
+//  Core
 //
-//  Created by XC on 2021/5/20.
+//  Created by XC on 2021/6/2.
 //
-
 #if FIREBASE
 import Foundation
 import Firebase
@@ -13,7 +12,7 @@ import RxSwift
 import Core
 
 public class Database {
-    private static let db = Firestore.firestore()
+    public static let db = Firestore.firestore()
     
     public static func initConfig() {
         FirebaseApp.configure()

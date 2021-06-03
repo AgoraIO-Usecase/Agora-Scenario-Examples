@@ -41,7 +41,7 @@ class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
     private var roomSpeakerToolbar: RoomSpeakerToolbar?
     private var roomListenerToolbar: RoomListenerToolbar?
         
-    var leaveAction: ((LeaveRoomAction, Room?) -> Void)? = nil
+    var leaveAction: ((LeaveRoomAction, PodcastRoom?) -> Void)? = nil
     private lazy var adapter: ListAdapter = {
         return ListAdapter(updater: ListAdapterUpdater(), viewController: self)
     }()
@@ -250,7 +250,7 @@ class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
     
-    static func instance(leaveAction: @escaping ((LeaveRoomAction, Room?) -> Void)) -> RoomController {
+    static func instance(leaveAction: @escaping ((LeaveRoomAction, PodcastRoom?) -> Void)) -> RoomController {
         let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: Utils.bundle)
         let controller = storyBoard.instantiateViewController(withIdentifier: "RoomController") as! RoomController
         controller.leaveAction = leaveAction
@@ -259,12 +259,12 @@ class RoomController: BaseViewContoller, DialogDelegate, RoomDelegate {
     }
 }
 
-protocol RoomControlDelegate: class {
-    func onTap(member: Member)
+protocol RoomControlDelegate: AnyObject {
+    func onTap(member: PodcastMember)
 }
 
 extension RoomController: RoomControlDelegate {
-    func onTap(member: Member) {
+    func onTap(member: PodcastMember) {
         if (viewModel.isManager) {
             if (!member.isSpeaker) {
                 InviteSpeakerDialog().show(with: member, delegate: self)

@@ -17,7 +17,7 @@ class RtmServer: NSObject {
     private var channelId: String?
     private var channel: AgoraRtmChannel?
     
-    private var messageReceivedRelay: BehaviorRelay<Message?> = BehaviorRelay(value: nil)
+    private var messageReceivedRelay: BehaviorRelay<BlindDateMessage?> = BehaviorRelay(value: nil)
     
     override init() {
         super.init()
@@ -133,13 +133,13 @@ class RtmServer: NSObject {
         }.asObservable()
     }
     
-    func subscribeMessages(room: String) -> Observable<Result<Message>> {
+    func subscribeMessages(room: String) -> Observable<Result<BlindDateMessage>> {
         if (userId == nil) {
             return Observable.just(Result(success: false, message: "login first!"))
         } else {
             return messageReceivedRelay.filter { message -> Bool in
                 return message?.channelId == room
-            }.map { message -> Result<Message> in
+            }.map { message -> Result<BlindDateMessage> in
                 Result(success: true, data: message)
             }
         }
@@ -159,7 +159,7 @@ class RtmServer: NSObject {
                     }
                     single(.success(Result(success: true)))
                     if let userId = self.userId {
-                        self.messageReceivedRelay.accept(Message(channelId: room, userId: userId, value: message))
+                        self.messageReceivedRelay.accept(BlindDateMessage(channelId: room, userId: userId, value: message))
                     }
                     Logger.log(message: "send message: \(message) success", level: .info)
                 }
@@ -180,7 +180,7 @@ extension RtmServer: AgoraRtmChannelDelegate {
         Logger.log(message: "messageReceived: \(message.text)", level: .info)
         if (channel == self.channel) {
             if let id = channelId {
-                messageReceivedRelay.accept(Message(channelId: id, userId: member.userId, value: message.text))
+                messageReceivedRelay.accept(BlindDateMessage(channelId: id, userId: member.userId, value: message.text))
             }
         }
     }

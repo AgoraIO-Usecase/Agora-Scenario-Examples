@@ -128,7 +128,7 @@ class SpeakerToolbar: UIView {
             .disposed(by: disposeBag)
     }
     
-    func onReceivedAction(_ result: Result<Action>) {}
+    func onReceivedAction(_ result: Result<BlindDateAction>) {}
     func subcribeRoomEvent() {}
 }
 

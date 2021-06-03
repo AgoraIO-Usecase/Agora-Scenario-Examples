@@ -11,7 +11,7 @@ import RxCocoa
 import Core
 
 protocol HomeCardDelegate: AnyObject {
-    func onTapCard(with room: Room)
+    func onTapCard(with room: PodcastRoom)
 }
 
 final class HomeCardView: UICollectionViewCell {
@@ -20,11 +20,11 @@ final class HomeCardView: UICollectionViewCell {
     fileprivate static let font = UIFont.systemFont(ofSize: 16)
     fileprivate static let lineHeight: CGFloat = 26.5
     
-    fileprivate let onRoomChanged: PublishRelay<Room> = PublishRelay()
+    fileprivate let onRoomChanged: PublishRelay<PodcastRoom> = PublishRelay()
     weak var delegate: HomeCardDelegate?
     let disposeBag = DisposeBag()
     
-    var room: Room! {
+    var room: PodcastRoom! {
         didSet {
             //title.text = room.channelName
             let style = NSMutableParagraphStyle()
@@ -232,7 +232,7 @@ final class HomeCardView: UICollectionViewCell {
         }
     }
 
-    static func sizeForItem(room: Room, width: CGFloat) -> CGSize {
+    static func sizeForItem(room: PodcastRoom, width: CGFloat) -> CGSize {
         let count: CGFloat = CGFloat(room.speakersTotal <= 0 ? 1 : room.speakersTotal)
         let height = padding + font.lineHeight + lineSpacing + lineHeight + 10 + MiniRoomView.ICON_WIDTH * count * 0.8 + padding
         return CGSize(width: width, height: height)

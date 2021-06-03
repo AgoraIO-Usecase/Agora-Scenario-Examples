@@ -7,15 +7,8 @@
 
 import Foundation
 import UIKit
-#if LEANCLOUD
-import BlindDate_LeanCloud
-import InteractivePodcast_LeanCloud
-import Database_LeanCloud
-#elseif FIREBASE
-import BlindDate_Firebase
-import InteractivePodcast_Firebase
-import Database_Firebase
-#endif
+import BlindDate
+import InteractivePodcast
 import Core
 
 enum SceneApp {
@@ -32,14 +25,18 @@ protocol AppTarget {
 class LeanCloudAppTarget: AppTarget {
     func initDatabase() {
         Database.initConfig()
+        SyncManager.shared.setProxy(LeanCloudSyncProxy())
+        UserManager.shared.setProxy(LeanCloudUserProxy())
+        PodcastModelManager.shared.setProxy(LeanCloudPodcastModelProxy())
+        BlindDateModelManager.shared.setProxy(LeanCloudBlindDateModelProxy())
     }
     
     func getAppMainViewController(app: SceneApp) -> UIViewController {
         switch app {
         case .InteractivePodcast:
-            return InteractivePodcast_LeanCloud.HomeController.instance()
+            return InteractivePodcast.HomeController.instance()
         case .BlindDate:
-            return BlindDate_LeanCloud.BlindDateHomeController.instance()
+            return BlindDate.BlindDateHomeController.instance()
         }
     }
 }
@@ -47,14 +44,18 @@ class LeanCloudAppTarget: AppTarget {
 class FirebaseAppTarget: AppTarget {
     func initDatabase() {
         Database.initConfig()
+        SyncManager.shared.setProxy(FirebaseSyncProxy())
+        UserManager.shared.setProxy(FirebaseUserProxy())
+        PodcastModelManager.shared.setProxy(FirebasePodcastModelProxy())
+        BlindDateModelManager.shared.setProxy(FirebaseBlindDateModelProxy())
     }
     
     func getAppMainViewController(app: SceneApp) -> UIViewController {
         switch app {
         case .InteractivePodcast:
-            return InteractivePodcast_Firebase.HomeController.instance()
+            return InteractivePodcast.HomeController.instance()
         case .BlindDate:
-            return BlindDate_Firebase.BlindDateHomeController.instance()
+            return BlindDate.BlindDateHomeController.instance()
         }
     }
 }
