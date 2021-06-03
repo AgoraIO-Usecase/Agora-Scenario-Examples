@@ -45,7 +45,6 @@
 		5757D105262DB18300B4A785 /* WaterfallLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D104262DB18300B4A785 /* WaterfallLayout.swift */; };
 		5757D109262DB19F00B4A785 /* RoundImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D108262DB19F00B4A785 /* RoundImageButton.swift */; };
 		5757D123262DB25400B4A785 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D122262DB25400B4A785 /* Model.swift */; };
-		5757D128262DB2E300B4A785 /* LeanCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D127262DB2E300B4A785 /* LeanCloud.swift */; };
 		5757D148262DB62200B4A785 /* RtcServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D147262DB62200B4A785 /* RtcServer.swift */; };
 		5757D14F262DB68E00B4A785 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5757D151262DB68E00B4A785 /* Localizable.strings */; };
 		5757D15C262DB82E00B4A785 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5757D15B262DB82E00B4A785 /* Server.swift */; };
@@ -143,7 +142,6 @@
 		57F639EA26304EB400B45C0B /* HomeCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F639E926304EB400B45C0B /* HomeCardView.swift */; };
 		57F639F226304F0200B45C0B /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F639F126304F0200B45C0B /* Model.swift */; };
 		57F639F72630502E00B45C0B /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F639F62630502E00B45C0B /* Service.swift */; };
-		57F63A02263050C800B45C0B /* LeanCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63A01263050C800B45C0B /* LeanCloud.swift */; };
 		57F63A0A263050E400B45C0B /* RtcServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63A09263050E400B45C0B /* RtcServer.swift */; };
 		57F63A0F2630511500B45C0B /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F63A0E2630511500B45C0B /* Server.swift */; };
 		57F63A14263053D800B45C0B /* CreateRoomDialog.xib in Resources */ = {isa = PBXBuildFile; fileRef = 57F63A13263053D800B45C0B /* CreateRoomDialog.xib */; };
@@ -344,7 +342,6 @@
 		5757D104262DB18300B4A785 /* WaterfallLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterfallLayout.swift; sourceTree = "<group>"; };
 		5757D108262DB19F00B4A785 /* RoundImageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundImageButton.swift; sourceTree = "<group>"; };
 		5757D122262DB25400B4A785 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
-		5757D127262DB2E300B4A785 /* LeanCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeanCloud.swift; sourceTree = "<group>"; };
 		5757D147262DB62200B4A785 /* RtcServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtcServer.swift; sourceTree = "<group>"; };
 		5757D154262DB79D00B4A785 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		5757D155262DB79E00B4A785 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
@@ -407,8 +404,6 @@
 		5783FEC726673BC5000B39F3 /* PodcastModelManagerProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastModelManagerProxy.swift; sourceTree = "<group>"; };
 		5783FECA26676453000B39F3 /* BlindDateModelManagerProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlindDateModelManagerProxy.swift; sourceTree = "<group>"; };
 		57E8D519264A2C03007001BC /* Scene-Examples_Firebase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Scene-Examples_Firebase.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		57E8D51D264A2DE7007001BC /* Firebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firebase.swift; sourceTree = "<group>"; };
-		57E8D609264A580F007001BC /* Firebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firebase.swift; sourceTree = "<group>"; };
 		57E8D60C264A5904007001BC /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		57E8D623264A6FDC007001BC /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		57F63965262EFAF100B45C0B /* HomeCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCardView.swift; sourceTree = "<group>"; };
@@ -430,7 +425,6 @@
 		57F639E926304EB400B45C0B /* HomeCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCardView.swift; sourceTree = "<group>"; };
 		57F639F126304F0200B45C0B /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		57F639F62630502E00B45C0B /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
-		57F63A01263050C800B45C0B /* LeanCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeanCloud.swift; sourceTree = "<group>"; };
 		57F63A09263050E400B45C0B /* RtcServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtcServer.swift; sourceTree = "<group>"; };
 		57F63A0E2630511500B45C0B /* Server.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
 		57F63A13263053D800B45C0B /* CreateRoomDialog.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CreateRoomDialog.xib; sourceTree = "<group>"; };
@@ -723,10 +717,8 @@
 		5757D126262DB2CE00B4A785 /* Server */ = {
 			isa = PBXGroup;
 			children = (
-				5757D127262DB2E300B4A785 /* LeanCloud.swift */,
 				5757D147262DB62200B4A785 /* RtcServer.swift */,
 				5757D15B262DB82E00B4A785 /* Server.swift */,
-				57E8D51D264A2DE7007001BC /* Firebase.swift */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -904,11 +896,9 @@
 		57F63A00263050A400B45C0B /* Server */ = {
 			isa = PBXGroup;
 			children = (
-				57F63A01263050C800B45C0B /* LeanCloud.swift */,
 				57F63A09263050E400B45C0B /* RtcServer.swift */,
 				57F63A0E2630511500B45C0B /* Server.swift */,
 				57F63ABD2635634900B45C0B /* RtmServer.swift */,
-				57E8D609264A580F007001BC /* Firebase.swift */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -1489,7 +1479,6 @@
 				5757D1EC262E7CC300B4A785 /* ChangeNameController.swift in Sources */,
 				5757D0F5262DB0E700B4A785 /* RoundImageView.swift in Sources */,
 				5757D15C262DB82E00B4A785 /* Server.swift in Sources */,
-				5757D128262DB2E300B4A785 /* LeanCloud.swift in Sources */,
 				5757D0E7262DB06400B4A785 /* LabelCell.swift in Sources */,
 				5757D0C5262DAEC400B4A785 /* Service.swift in Sources */,
 				5757D1E0262E7C6900B4A785 /* MeController.swift in Sources */,
@@ -1531,7 +1520,6 @@
 				57F63A1F263054B300B45C0B /* RoomController.swift in Sources */,
 				57F639B226301DB400B45C0B /* HomeController.swift in Sources */,
 				57F63A7A2631A3B300B45C0B /* ListenerToolbar.swift in Sources */,
-				57F63A02263050C800B45C0B /* LeanCloud.swift in Sources */,
 				57F63A4426317B4A00B45C0B /* HosterToolbar.swift in Sources */,
 				57F63A8E2632C28F00B45C0B /* InvitedDialog.swift in Sources */,
 				57F639E126304E5C00B45C0B /* Colors.swift in Sources */,
