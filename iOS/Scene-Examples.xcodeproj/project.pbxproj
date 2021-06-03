@@ -123,7 +123,6 @@
 		57E8D546264A31B2007001BC /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		57E8D5C8264A356F007001BC /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; };
 		57E8D5C9264A3570007001BC /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5757D048262D834700B4A785 /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		57E8D60D264A5904007001BC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 57E8D60C264A5904007001BC /* GoogleService-Info.plist */; };
 		57E8D61B264A6A57007001BC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 57E8D60C264A5904007001BC /* GoogleService-Info.plist */; };
 		57E8D621264A6FDC007001BC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 57E8D624264A6FDC007001BC /* Localizable.strings */; };
 		57E8D62A264A7306007001BC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 57E8D624264A6FDC007001BC /* Localizable.strings */; };
@@ -174,6 +173,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		574C9C9A26689AE200822A95 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 571AA4622629862700B82B35 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5757D047262D834700B4A785;
+			remoteInfo = Core;
+		};
 		5757D082262DA46700B4A785 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 571AA4622629862700B82B35 /* Project object */;
@@ -208,20 +214,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 5757D047262D834700B4A785;
 			remoteInfo = Core;
-		};
-		57E8D543264A317E007001BC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 571AA4622629862700B82B35 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 5757D047262D834700B4A785;
-			remoteInfo = Core_LeanCloud;
-		};
-		57E8D547264A31B2007001BC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 571AA4622629862700B82B35 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 5757D047262D834700B4A785;
-			remoteInfo = Core_LeanCloud;
 		};
 		57E8D5CA264A3570007001BC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1060,10 +1052,9 @@
 			buildRules = (
 			);
 			dependencies = (
+				574C9C9B26689AE200822A95 /* PBXTargetDependency */,
 				5757D083262DA46700B4A785 /* PBXTargetDependency */,
 				57F639862630098A00B45C0B /* PBXTargetDependency */,
-				57E8D544264A317E007001BC /* PBXTargetDependency */,
-				57E8D548264A31B2007001BC /* PBXTargetDependency */,
 			);
 			name = "Scene-Examples_LeanCloud";
 			productName = "Scene-Examples";
@@ -1254,7 +1245,6 @@
 			files = (
 				57F639A626300A3700B45C0B /* Media.xcassets in Resources */,
 				57F639CA2630308500B45C0B /* Localizable.strings in Resources */,
-				57E8D60D264A5904007001BC /* GoogleService-Info.plist in Resources */,
 				57F63A14263053D800B45C0B /* CreateRoomDialog.xib in Resources */,
 				57F639AB26301D9800B45C0B /* Main.storyboard in Resources */,
 			);
@@ -1567,6 +1557,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		574C9C9B26689AE200822A95 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5757D047262D834700B4A785 /* Core */;
+			targetProxy = 574C9C9A26689AE200822A95 /* PBXContainerItemProxy */;
+		};
 		5757D083262DA46700B4A785 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 5757D07C262DA46700B4A785 /* InteractivePodcast */;
@@ -1591,16 +1586,6 @@
 			isa = PBXTargetDependency;
 			target = 5757D047262D834700B4A785 /* Core */;
 			targetProxy = 5783FED826677E5A000B39F3 /* PBXContainerItemProxy */;
-		};
-		57E8D544264A317E007001BC /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 5757D047262D834700B4A785 /* Core */;
-			targetProxy = 57E8D543264A317E007001BC /* PBXContainerItemProxy */;
-		};
-		57E8D548264A31B2007001BC /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 5757D047262D834700B4A785 /* Core */;
-			targetProxy = 57E8D547264A31B2007001BC /* PBXContainerItemProxy */;
 		};
 		57E8D5CB264A3570007001BC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
