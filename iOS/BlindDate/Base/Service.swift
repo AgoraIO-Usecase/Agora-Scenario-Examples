@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 import Core
 
-protocol Service {
+protocol IRoomManager {
     var account: User? { get set }
     var member: BlindDateMember? { get set }
     var setting: LocalSetting { get set }

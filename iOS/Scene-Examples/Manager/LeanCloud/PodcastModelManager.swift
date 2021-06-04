@@ -9,6 +9,7 @@ import Foundation
 import Core
 import LeanCloud
 import RxSwift
+import InteractivePodcast
 
 class LeanCloudPodcastModelManager: IPodcastModelManager {
     

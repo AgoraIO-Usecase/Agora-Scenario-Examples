@@ -9,6 +9,7 @@ import Foundation
 import Core
 import LeanCloud
 import RxSwift
+import BlindDate
 
 class LeanCloudBlindDateModelManager: IBlindDateModelManager {
     

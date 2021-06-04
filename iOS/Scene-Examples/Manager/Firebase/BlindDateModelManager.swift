@@ -10,6 +10,7 @@ import Firebase
 import FirebaseFirestoreSwift
 import RxSwift
 import Core
+import BlindDate
 
 class FirebaseBlindDateModelManager: IBlindDateModelManager {
     

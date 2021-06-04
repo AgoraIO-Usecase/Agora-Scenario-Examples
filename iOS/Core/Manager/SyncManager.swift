@@ -178,12 +178,13 @@ public protocol ISyncManager {
 }
 
 public class SyncManager {
-    private var proxy: ISyncManager!
     public static var shared: SyncManager = SyncManager()
-
-    private init() {
-        self.proxy = InjectionService.shared.resolve(ISyncManager.self)
+    
+    private var proxy: ISyncManager {
+        InjectionService.shared.resolve(ISyncManager.self)
     }
+
+    private init() {}
 
     public func getRoom(id: String) -> AgoraRoomReference {
         return AgoraRoomReference(id: id)

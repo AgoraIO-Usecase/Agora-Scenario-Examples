@@ -12,7 +12,7 @@ import Core
 class RoomManager: NSObject {
     fileprivate static var instance: RoomManager?
     private static var lock = os_unfair_lock()
-    static func shared() -> Service {
+    static func shared() -> IRoomManager {
         os_unfair_lock_lock(&RoomManager.lock)
         if (instance == nil) {
             instance = RoomManager()
@@ -23,14 +23,14 @@ class RoomManager: NSObject {
     
     var account: User? = nil
     var member: BlindDateMember? = nil
-    var setting: LocalSetting = AppData.getSetting() ?? LocalSetting()
+    var setting: LocalSetting = AppDataManager.getSetting() ?? LocalSetting()
     //var room: Room? = nil
     private var rtcServer: RtcServer = RtcServer()
     private var rtmServer: RtmServer = RtmServer()
     private var scheduler = SerialDispatchQueueScheduler(internalSerialQueueName: "rtc")
 }
 
-extension RoomManager: Service {
+extension RoomManager: IRoomManager {
     func destory() {
         RoomManager.instance = nil
     }
@@ -43,7 +43,7 @@ extension RoomManager: Service {
     
     func getAccount() -> Observable<Result<User>> {
         if (account == nil) {
-            let user = AppData.getAccount()
+            let user = AppDataManager.getAccount()
             if (user != nil) {
                 return User.getUser(by: user!.id).map { result in
                     if (result.success) {
@@ -55,7 +55,7 @@ extension RoomManager: Service {
                 return User.randomUser().flatMap { result in
                     return result.onSuccess {
                         self.account = result.data!
-                        return AppData.saveAccount(user: result.data!)
+                        return AppDataManager.saveAccount(user: result.data!)
                     }
                 }
             }
