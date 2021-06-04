@@ -1,12 +1,13 @@
 //
-//  BlindDateModelManager.swift
-//  Core
+//  ModelManager.swift
+//  BlindDate
 //
-//  Created by XC on 2021/6/1.
+//  Created by XC on 2021/6/4.
 //
 
 import Foundation
 import RxSwift
+import Core
 
 extension BlindDateRoom {
     public static let TABLE: String = "ROOM_MARRY"

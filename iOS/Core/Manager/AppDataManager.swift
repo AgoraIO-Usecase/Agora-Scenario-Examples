@@ -8,7 +8,7 @@
 import Foundation
 import RxSwift
 
-public class AppData {
+public class AppDataManager {
     public static func getAccount() -> User? {
         return UserDefaults.standard.value(User.self, forKey: "Account")
     }

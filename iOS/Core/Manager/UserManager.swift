@@ -57,19 +57,23 @@ public protocol IUserManager {
 }
 
 extension User {
+    private static var manager: IUserManager {
+        InjectionService.shared.resolve(IUserManager.self)
+    }
+    
     public static func create(user: User) -> Observable<Result<String>> {
-        return InjectionService.shared.resolve(IUserManager.self).create(user: user)
+        return User.manager.create(user: user)
     }
     
     public static func getUser(by objectId: String) -> Observable<Result<User>> {
-        return InjectionService.shared.resolve(IUserManager.self).getUser(by: objectId)
+        return User.manager.getUser(by: objectId)
     }
     
     public static func randomUser() -> Observable<Result<User>>  {
-        return InjectionService.shared.resolve(IUserManager.self).randomUser()
+        return User.manager.randomUser()
     }
     
     public func update(name: String) -> Observable<Result<Void>> {
-        return InjectionService.shared.resolve(IUserManager.self).update(user: self, name: name)
+        return User.manager.update(user: self, name: name)
     }
 }

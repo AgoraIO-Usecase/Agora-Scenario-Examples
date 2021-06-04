@@ -9,8 +9,8 @@ import Foundation
 import CoreData
 import RxSwift
 
-class CoreData {
-    public static let shared = CoreData()
+class CoreDataManager {
+    public static let shared = CoreDataManager()
     
     let identifier: String  = "io.agora.Core"
     let model: String = "Model"
