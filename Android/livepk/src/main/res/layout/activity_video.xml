@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    tools:context=".LivePKMainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@+id/fl_local_container"
+            android:layout_width="0dp"
+            android:layout_height="320dp"
+            android:layout_weight="1"/>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="320dp"
+            android:background="@color/white"/>
+
+        <FrameLayout
+            android:id="@+id/fl_remote_container"
+            android:layout_width="0dp"
+            android:layout_height="320dp"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="32dp"
+        android:visibility="gone"
+        android:text="PK"/>
+
+    <Button
+        android:id="@+id/btn2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        android:text="Exit PK"/>
+
+</LinearLayout>
