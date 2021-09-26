@@ -30,7 +30,6 @@
 		260FC13D2700BF6B001FB850 /* MainVM+Handle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC1322700BF6B001FB850 /* MainVM+Handle.swift */; };
 		260FC13E2700BF6B001FB850 /* MainVM+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC1332700BF6B001FB850 /* MainVM+Event.swift */; };
 		260FC13F2700BF6B001FB850 /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC1342700BF6B001FB850 /* MainVC.swift */; };
-		260FC1402700BFDC001FB850 /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC1342700BF6B001FB850 /* MainVC.swift */; };
 		570997CB265756EC00B87998 /* AppDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570997CA265756EC00B87998 /* AppDataManager.swift */; };
 		571AA46E2629862700B82B35 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 571AA46D2629862700B82B35 /* AppDelegate.swift */; };
 		571AA4702629862700B82B35 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 571AA46F2629862700B82B35 /* SceneDelegate.swift */; };
@@ -1655,7 +1654,6 @@
 				5762F7E12656801C003B042D /* AppTargets.swift in Sources */,
 				5783FEA926662555000B39F3 /* SyncManager.swift in Sources */,
 				57E8D507264A2C03007001BC /* HomeController.swift in Sources */,
-				260FC1402700BFDC001FB850 /* MainVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
