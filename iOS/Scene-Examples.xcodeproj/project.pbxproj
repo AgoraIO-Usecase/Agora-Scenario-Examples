@@ -7,6 +7,30 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		260FC1052700BC5D001FB850 /* MainVM+RTC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC0F92700BC5D001FB850 /* MainVM+RTC.swift */; };
+		260FC1062700BC5D001FB850 /* MainVM+Invoke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC0FA2700BC5D001FB850 /* MainVM+Invoke.swift */; };
+		260FC1072700BC5D001FB850 /* MainVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC0FB2700BC5D001FB850 /* MainVM.swift */; };
+		260FC1082700BC5D001FB850 /* PKSyncManager+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC0FC2700BC5D001FB850 /* PKSyncManager+Error.swift */; };
+		260FC1092700BC5D001FB850 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC0FD2700BC5D001FB850 /* LoginVC.swift */; };
+		260FC10A2700BC5D001FB850 /* VideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC0FE2700BC5D001FB850 /* VideoCell.swift */; };
+		260FC10B2700BC5D001FB850 /* PKSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC0FF2700BC5D001FB850 /* PKSyncManager.swift */; };
+		260FC10C2700BC5D001FB850 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC1002700BC5D001FB850 /* MainView.swift */; };
+		260FC10D2700BC5D001FB850 /* MainVM+Handle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC1012700BC5D001FB850 /* MainVM+Handle.swift */; };
+		260FC10E2700BC5D001FB850 /* MainVM+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC1022700BC5D001FB850 /* MainVM+Event.swift */; };
+		260FC10F2700BC5D001FB850 /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC1032700BC5D001FB850 /* MainVC.swift */; };
+		260FC1102700BC5D001FB850 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC1042700BC5D001FB850 /* SceneDelegate.swift */; };
+		260FC1352700BF6B001FB850 /* MainVM+RTC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC12A2700BF6B001FB850 /* MainVM+RTC.swift */; };
+		260FC1362700BF6B001FB850 /* MainVM+Invoke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC12B2700BF6B001FB850 /* MainVM+Invoke.swift */; };
+		260FC1372700BF6B001FB850 /* MainVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC12C2700BF6B001FB850 /* MainVM.swift */; };
+		260FC1382700BF6B001FB850 /* PKSyncManager+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC12D2700BF6B001FB850 /* PKSyncManager+Error.swift */; };
+		260FC1392700BF6B001FB850 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC12E2700BF6B001FB850 /* LoginVC.swift */; };
+		260FC13A2700BF6B001FB850 /* VideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC12F2700BF6B001FB850 /* VideoCell.swift */; };
+		260FC13B2700BF6B001FB850 /* PKSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC1302700BF6B001FB850 /* PKSyncManager.swift */; };
+		260FC13C2700BF6B001FB850 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC1312700BF6B001FB850 /* MainView.swift */; };
+		260FC13D2700BF6B001FB850 /* MainVM+Handle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC1322700BF6B001FB850 /* MainVM+Handle.swift */; };
+		260FC13E2700BF6B001FB850 /* MainVM+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC1332700BF6B001FB850 /* MainVM+Event.swift */; };
+		260FC13F2700BF6B001FB850 /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC1342700BF6B001FB850 /* MainVC.swift */; };
+		260FC1402700BFDC001FB850 /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FC1342700BF6B001FB850 /* MainVC.swift */; };
 		570997CB265756EC00B87998 /* AppDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570997CA265756EC00B87998 /* AppDataManager.swift */; };
 		571AA46E2629862700B82B35 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 571AA46D2629862700B82B35 /* AppDelegate.swift */; };
 		571AA4702629862700B82B35 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 571AA46F2629862700B82B35 /* SceneDelegate.swift */; };
@@ -286,6 +310,36 @@
 		12C164832E8787C9C96C002B /* Pods-BlindDate.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BlindDate.debug.xcconfig"; path = "Target Support Files/Pods-BlindDate/Pods-BlindDate.debug.xcconfig"; sourceTree = "<group>"; };
 		15A2E68AA95F4351506F2576 /* Pods-InteractivePodcast_Firebase.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InteractivePodcast_Firebase.release.xcconfig"; path = "Target Support Files/Pods-InteractivePodcast_Firebase/Pods-InteractivePodcast_Firebase.release.xcconfig"; sourceTree = "<group>"; };
 		253F33EA56921C98B6B241DD /* Pods_BlindDate.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BlindDate.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		260FC0F92700BC5D001FB850 /* MainVM+RTC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MainVM+RTC.swift"; sourceTree = "<group>"; };
+		260FC0FA2700BC5D001FB850 /* MainVM+Invoke.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MainVM+Invoke.swift"; sourceTree = "<group>"; };
+		260FC0FB2700BC5D001FB850 /* MainVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainVM.swift; sourceTree = "<group>"; };
+		260FC0FC2700BC5D001FB850 /* PKSyncManager+Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PKSyncManager+Error.swift"; sourceTree = "<group>"; };
+		260FC0FD2700BC5D001FB850 /* LoginVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
+		260FC0FE2700BC5D001FB850 /* VideoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoCell.swift; sourceTree = "<group>"; };
+		260FC0FF2700BC5D001FB850 /* PKSyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PKSyncManager.swift; sourceTree = "<group>"; };
+		260FC1002700BC5D001FB850 /* MainView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		260FC1012700BC5D001FB850 /* MainVM+Handle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MainVM+Handle.swift"; sourceTree = "<group>"; };
+		260FC1022700BC5D001FB850 /* MainVM+Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MainVM+Event.swift"; sourceTree = "<group>"; };
+		260FC1032700BC5D001FB850 /* MainVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
+		260FC1042700BC5D001FB850 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		260FC1172700BCE9001FB850 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		260FC1192700BCE9001FB850 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		260FC11B2700BCE9001FB850 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		260FC11E2700BCE9001FB850 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		260FC1202700BCEC001FB850 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		260FC1232700BCEC001FB850 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		260FC1252700BCEC001FB850 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		260FC12A2700BF6B001FB850 /* MainVM+RTC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MainVM+RTC.swift"; sourceTree = "<group>"; };
+		260FC12B2700BF6B001FB850 /* MainVM+Invoke.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MainVM+Invoke.swift"; sourceTree = "<group>"; };
+		260FC12C2700BF6B001FB850 /* MainVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainVM.swift; sourceTree = "<group>"; };
+		260FC12D2700BF6B001FB850 /* PKSyncManager+Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PKSyncManager+Error.swift"; sourceTree = "<group>"; };
+		260FC12E2700BF6B001FB850 /* LoginVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
+		260FC12F2700BF6B001FB850 /* VideoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoCell.swift; sourceTree = "<group>"; };
+		260FC1302700BF6B001FB850 /* PKSyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PKSyncManager.swift; sourceTree = "<group>"; };
+		260FC1312700BF6B001FB850 /* MainView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		260FC1322700BF6B001FB850 /* MainVM+Handle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MainVM+Handle.swift"; sourceTree = "<group>"; };
+		260FC1332700BF6B001FB850 /* MainVM+Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MainVM+Event.swift"; sourceTree = "<group>"; };
+		260FC1342700BF6B001FB850 /* MainVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
 		265F2928DE70FF94936B9226 /* Pods_Scene_Examples_Firebase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Scene_Examples_Firebase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A8F295F68F52286E70D8202 /* Pods_Database_LeanCloud.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Database_LeanCloud.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F2E9D9950E2E75E750E77D4 /* Pods_Database_Firebase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Database_Firebase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -522,6 +576,57 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		260FC0F82700BC5D001FB850 /* PKLive */ = {
+			isa = PBXGroup;
+			children = (
+				260FC0F92700BC5D001FB850 /* MainVM+RTC.swift */,
+				260FC0FA2700BC5D001FB850 /* MainVM+Invoke.swift */,
+				260FC0FB2700BC5D001FB850 /* MainVM.swift */,
+				260FC0FC2700BC5D001FB850 /* PKSyncManager+Error.swift */,
+				260FC0FD2700BC5D001FB850 /* LoginVC.swift */,
+				260FC0FE2700BC5D001FB850 /* VideoCell.swift */,
+				260FC0FF2700BC5D001FB850 /* PKSyncManager.swift */,
+				260FC1002700BC5D001FB850 /* MainView.swift */,
+				260FC1012700BC5D001FB850 /* MainVM+Handle.swift */,
+				260FC1022700BC5D001FB850 /* MainVM+Event.swift */,
+				260FC1032700BC5D001FB850 /* MainVC.swift */,
+				260FC1042700BC5D001FB850 /* SceneDelegate.swift */,
+			);
+			path = PKLive;
+			sourceTree = "<group>";
+		};
+		260FC1162700BCE9001FB850 /* PKLive */ = {
+			isa = PBXGroup;
+			children = (
+				260FC1172700BCE9001FB850 /* AppDelegate.swift */,
+				260FC1192700BCE9001FB850 /* SceneDelegate.swift */,
+				260FC11B2700BCE9001FB850 /* ViewController.swift */,
+				260FC11D2700BCE9001FB850 /* Main.storyboard */,
+				260FC1202700BCEC001FB850 /* Assets.xcassets */,
+				260FC1222700BCEC001FB850 /* LaunchScreen.storyboard */,
+				260FC1252700BCEC001FB850 /* Info.plist */,
+			);
+			path = PKLive;
+			sourceTree = "<group>";
+		};
+		260FC1292700BF6B001FB850 /* PKLive */ = {
+			isa = PBXGroup;
+			children = (
+				260FC12A2700BF6B001FB850 /* MainVM+RTC.swift */,
+				260FC12B2700BF6B001FB850 /* MainVM+Invoke.swift */,
+				260FC12C2700BF6B001FB850 /* MainVM.swift */,
+				260FC12D2700BF6B001FB850 /* PKSyncManager+Error.swift */,
+				260FC12E2700BF6B001FB850 /* LoginVC.swift */,
+				260FC12F2700BF6B001FB850 /* VideoCell.swift */,
+				260FC1302700BF6B001FB850 /* PKSyncManager.swift */,
+				260FC1312700BF6B001FB850 /* MainView.swift */,
+				260FC1322700BF6B001FB850 /* MainVM+Handle.swift */,
+				260FC1332700BF6B001FB850 /* MainVM+Event.swift */,
+				260FC1342700BF6B001FB850 /* MainVC.swift */,
+			);
+			path = PKLive;
+			sourceTree = SOURCE_ROOT;
+		};
 		571AA4612629862700B82B35 = {
 			isa = PBXGroup;
 			children = (
@@ -529,6 +634,7 @@
 				5757D049262D834700B4A785 /* Core */,
 				5757D07E262DA46700B4A785 /* InteractivePodcast */,
 				57F639812630098A00B45C0B /* BlindDate */,
+				260FC1162700BCE9001FB850 /* PKLive */,
 				571AA46B2629862700B82B35 /* Products */,
 				956B5ECA0381DF39035305A1 /* Pods */,
 				A63338D10A92F3710B84E0ED /* Frameworks */,
@@ -550,6 +656,7 @@
 		571AA46C2629862700B82B35 /* Scene-Examples */ = {
 			isa = PBXGroup;
 			children = (
+				260FC1292700BF6B001FB850 /* PKLive */,
 				5783FE952664B741000B39F3 /* Manager */,
 				5757D009262D7BE400B4A785 /* UI */,
 				57369B6326298E73004CF690 /* Base */,
@@ -650,6 +757,7 @@
 		5757D049262D834700B4A785 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				260FC0F82700BC5D001FB850 /* PKLive */,
 				574C9CA92669D83800822A95 /* Controller */,
 				574C9CA82669D77400822A95 /* Model */,
 				5757D21D262EB8E600B4A785 /* Services */,
@@ -1162,7 +1270,7 @@
 		571AA4622629862700B82B35 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1240;
+				LastSwiftUpdateCheck = 1300;
 				LastUpgradeCheck = 1240;
 				TargetAttributes = {
 					571AA4692629862700B82B35 = {
@@ -1416,18 +1524,29 @@
 			buildActionMask = 2147483647;
 			files = (
 				5783FEC1266733AE000B39F3 /* BlindDateModelManager.swift in Sources */,
+				260FC13C2700BF6B001FB850 /* MainView.swift in Sources */,
+				260FC1362700BF6B001FB850 /* MainVM+Invoke.swift in Sources */,
 				57F63966262EFAF100B45C0B /* HomeCardView.swift in Sources */,
 				5757D06E262D8D5000B4A785 /* SettingController.swift in Sources */,
 				571AA4722629862700B82B35 /* ViewController.swift in Sources */,
+				260FC13E2700BF6B001FB850 /* MainVM+Event.swift in Sources */,
 				5783FEB026662D0B000B39F3 /* LeanCloudHelper.swift in Sources */,
+				260FC1382700BF6B001FB850 /* PKSyncManager+Error.swift in Sources */,
 				5783FEBF2667338E000B39F3 /* UserManager.swift in Sources */,
 				571AA46E2629862700B82B35 /* AppDelegate.swift in Sources */,
 				571AA4702629862700B82B35 /* SceneDelegate.swift in Sources */,
 				57369B7426298EB7004CF690 /* Utils.swift in Sources */,
+				260FC13F2700BF6B001FB850 /* MainVC.swift in Sources */,
 				5783FEA62666250B000B39F3 /* SyncManager.swift in Sources */,
 				5783FEC0266733A9000B39F3 /* PodcastModelManager.swift in Sources */,
+				260FC13B2700BF6B001FB850 /* PKSyncManager.swift in Sources */,
+				260FC13A2700BF6B001FB850 /* VideoCell.swift in Sources */,
 				5762F7E026568019003B042D /* AppTargets.swift in Sources */,
+				260FC1392700BF6B001FB850 /* LoginVC.swift in Sources */,
 				5757D00E262D7C0F00B4A785 /* HomeController.swift in Sources */,
+				260FC13D2700BF6B001FB850 /* MainVM+Handle.swift in Sources */,
+				260FC1352700BF6B001FB850 /* MainVM+RTC.swift in Sources */,
+				260FC1372700BF6B001FB850 /* MainVM.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1436,17 +1555,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				5757D123262DB25400B4A785 /* BaseModel.swift in Sources */,
+				260FC10A2700BC5D001FB850 /* VideoCell.swift in Sources */,
+				260FC10E2700BC5D001FB850 /* MainVM+Event.swift in Sources */,
 				5757D057262D83C900B4A785 /* CustomTabBarController.swift in Sources */,
+				260FC10F2700BC5D001FB850 /* MainVC.swift in Sources */,
 				5757D0DE262DAF9900B4A785 /* BaseUICollectionViewCell.swift in Sources */,
 				5757D067262D852200B4A785 /* ProcessingView.swift in Sources */,
+				260FC1102700BC5D001FB850 /* SceneDelegate.swift in Sources */,
 				574C9CA12668B62100822A95 /* ServiceLocator.swift in Sources */,
 				57F639D926304ACE00B45C0B /* RoundButton.swift in Sources */,
+				260FC1072700BC5D001FB850 /* MainVM.swift in Sources */,
+				260FC1052700BC5D001FB850 /* MainVM+RTC.swift in Sources */,
+				260FC10B2700BC5D001FB850 /* PKSyncManager.swift in Sources */,
 				570997CB265756EC00B87998 /* AppDataManager.swift in Sources */,
 				5757D063262D84E400B4A785 /* Colors.swift in Sources */,
 				5757D0A1262DAC1500B4A785 /* Dialog.swift in Sources */,
+				260FC10C2700BC5D001FB850 /* MainView.swift in Sources */,
 				5757D0E2262DAFDA00B4A785 /* Config.swift in Sources */,
 				5783FEAB26662859000B39F3 /* UserManager.swift in Sources */,
 				5757D05A262D841400B4A785 /* Extension.swift in Sources */,
+				260FC1062700BC5D001FB850 /* MainVM+Invoke.swift in Sources */,
 				5757D165262DB9DB00B4A785 /* Model.xcdatamodeld in Sources */,
 				5757D105262DB18300B4A785 /* WaterfallLayout.swift in Sources */,
 				5757D0C0262DAD8D00B4A785 /* BaseViewController.swift in Sources */,
@@ -1455,7 +1583,10 @@
 				5757D160262DB96900B4A785 /* CoreDataManager.swift in Sources */,
 				5783FE942664B571000B39F3 /* SyncManager.swift in Sources */,
 				5757D060262D84AF00B4A785 /* NotificationView.swift in Sources */,
+				260FC1092700BC5D001FB850 /* LoginVC.swift in Sources */,
+				260FC10D2700BC5D001FB850 /* MainVM+Handle.swift in Sources */,
 				5757D21F262EB8F300B4A785 /* ActivityIndicator.swift in Sources */,
+				260FC1082700BC5D001FB850 /* PKSyncManager+Error.swift in Sources */,
 				5757D076262D8EBE00B4A785 /* Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1524,6 +1655,7 @@
 				5762F7E12656801C003B042D /* AppTargets.swift in Sources */,
 				5783FEA926662555000B39F3 /* SyncManager.swift in Sources */,
 				57E8D507264A2C03007001BC /* HomeController.swift in Sources */,
+				260FC1402700BFDC001FB850 /* MainVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1608,6 +1740,22 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		260FC11D2700BCE9001FB850 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				260FC11E2700BCE9001FB850 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		260FC1222700BCEC001FB850 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				260FC1232700BCEC001FB850 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
 		571AA4732629862700B82B35 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
