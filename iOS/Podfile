@@ -32,6 +32,7 @@ target 'Scene-Examples_LeanCloud' do
   commonPods
   use_frameworks!
   pod 'LeanCloud'
+  pod 'LivePKCore',  :path => 'LivePKCore/LivePKCore.podspec'
 end
 
 # target with firebase sdk

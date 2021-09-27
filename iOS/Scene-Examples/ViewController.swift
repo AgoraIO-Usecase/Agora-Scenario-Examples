@@ -9,6 +9,7 @@ import UIKit
 import RxCocoa
 import RxSwift
 import Core
+import LivePKCore
 
 class ViewController: CustomTabBarController {
     
@@ -18,8 +19,10 @@ class ViewController: CustomTabBarController {
     }
     
     override func setupView() {
+        let entryVC = EntryVC()
+        entryVC.appId = BuildConfig.AppId
         viewControllers = [
-            HomeController.instance(),
+            entryVC,
             UIViewController(),
             UIViewController(),
             SettingController.instance()
