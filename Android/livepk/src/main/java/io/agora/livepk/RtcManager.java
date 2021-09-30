@@ -25,7 +25,6 @@ import io.agora.rtc.video.VideoEncoderConfiguration;
 import static io.agora.rtc.video.VideoCanvas.RENDER_MODE_HIDDEN;
 import static io.agora.rtc.video.VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15;
 import static io.agora.rtc.video.VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_ADAPTIVE;
-import static io.agora.rtc.video.VideoEncoderConfiguration.STANDARD_BITRATE;
 import static io.agora.rtc.video.VideoEncoderConfiguration.VD_640x360;
 
 public class RtcManager {
@@ -39,7 +38,7 @@ public class RtcManager {
     private final VideoEncoderConfiguration encoderConfiguration = new VideoEncoderConfiguration(
             VD_640x360,
             FRAME_RATE_FPS_15,
-            STANDARD_BITRATE,
+            700,
             ORIENTATION_MODE_ADAPTIVE
     );
 
@@ -77,6 +76,10 @@ public class RtcManager {
             engine.setParameters("{\"rtc.enable_quick_rexfer_keyframe\":true}");
             engine.setParameters("{\"che.audio.opensl\":true}");
             engine.setParameters("{\"che.video.h264.hwenc\":0}");
+            engine.enableVideo();
+            engine.enableAudio();
+            engine.setDefaultAudioRoutetoSpeakerphone(true);
+            engine.setVideoEncoderConfiguration(encoderConfiguration);
             isInitialized = true;
         } catch (Exception e) {
             if(listener != null){
@@ -93,12 +96,6 @@ public class RtcManager {
         container.addView(videoView);
         engine.setupLocalVideo(new VideoCanvas(videoView, RENDER_MODE_HIDDEN, 0));
         engine.startPreview();
-        engine.setDefaultAudioRoutetoSpeakerphone(false);
-
-        engine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
-        engine.setClientRole(IRtcEngineEventHandler.ClientRole.CLIENT_ROLE_BROADCASTER);
-        engine.enableVideo();
-        engine.setVideoEncoderConfiguration(encoderConfiguration);
     }
 
     public void renderRemoteVideo(FrameLayout container, String channelId, int uid){
