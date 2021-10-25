@@ -1,4 +1,4 @@
-package io.agora.livepk;
+package io.agora.livepk.manager;
 
 import android.content.Context;
 import android.util.Log;
@@ -29,10 +29,12 @@ import static io.agora.rtc.video.VideoEncoderConfiguration.VD_640x360;
 
 public class RtcManager {
     private static final String TAG = "RtcManager";
+    private static final int LOCAL_RTC_UID = 0;
 
     private volatile boolean isInitialized = false;
     private RtcEngine engine;
     private final Map<String, RtcChannel> mRtcChannels = new HashMap<>();
+    private final Map<Integer, Runnable> firstVideoFramePendingRuns = new HashMap<>();
     private Context mContext;
 
     private final VideoEncoderConfiguration encoderConfiguration = new VideoEncoderConfiguration(
@@ -48,6 +50,7 @@ public class RtcManager {
         }
         mContext = context;
         try {
+            // 0. create engine
             engine = RtcEngine.create(mContext.getApplicationContext(), appId, new IRtcEngineEventHandler() {
                 @Override
                 public void onWarning(int warn) {
@@ -70,12 +73,26 @@ public class RtcManager {
                     }
                 }
 
+                @Override
+                public void onFirstLocalVideoFrame(int width, int height, int elapsed) {
+                    super.onFirstLocalVideoFrame(width, height, elapsed);
+
+                    Log.d(TAG, "onFirstLocalVideoFrame");
+                    Runnable runnable = firstVideoFramePendingRuns.get(LOCAL_RTC_UID);
+                    if(runnable != null){
+                        runnable.run();
+                        firstVideoFramePendingRuns.remove(LOCAL_RTC_UID);
+                    }
+                }
+
             });
             engine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
             engine.setParameters("{\"che.video.setQuickVideoHighFec\":true}");
             engine.setParameters("{\"rtc.enable_quick_rexfer_keyframe\":true}");
             engine.setParameters("{\"che.audio.opensl\":true}");
             engine.setParameters("{\"che.video.h264.hwenc\":0}");
+            engine.setParameters("{\"rtc.min_playout_delay_speaker\":0}");
+            engine.setParameters("{\"rtc.min_playout_delay\":0}");
             engine.enableVideo();
             engine.enableAudio();
             engine.setDefaultAudioRoutetoSpeakerphone(true);
@@ -88,26 +105,16 @@ public class RtcManager {
         }
     }
 
-    public void renderLocalVideo(FrameLayout container) {
+    public void renderLocalVideo(FrameLayout container, Runnable firstFrame) {
         if (engine == null) {
             return;
         }
         View videoView = RtcEngine.CreateTextureView(mContext);
         container.addView(videoView);
-        engine.setupLocalVideo(new VideoCanvas(videoView, RENDER_MODE_HIDDEN, 0));
+        firstVideoFramePendingRuns.put(LOCAL_RTC_UID, firstFrame);
+        engine.setupLocalVideo(new VideoCanvas(videoView, RENDER_MODE_HIDDEN, LOCAL_RTC_UID));
         engine.startPreview();
     }
-
-    public void renderRemoteVideo(FrameLayout container, String channelId, int uid){
-        if (engine == null) {
-            return;
-        }
-        View videoView = RtcEngine.CreateRendererView(mContext);
-        container.addView(videoView);
-
-        engine.setupRemoteVideo(new VideoCanvas(videoView, RENDER_MODE_HIDDEN, channelId, uid));
-    }
-
 
     public void joinChannel(String channelId, boolean publish, OnChannelListener listener){
         if (engine == null) {
@@ -116,7 +123,9 @@ public class RtcManager {
         if(mRtcChannels.get(channelId) != null){
             return;
         }
+        // 1. create channel
         RtcChannel rtcChannel = engine.createRtcChannel(channelId);
+        // 2. set role
         rtcChannel.setClientRole(publish ? Constants.CLIENT_ROLE_BROADCASTER: Constants.CLIENT_ROLE_AUDIENCE);
         mRtcChannels.put(channelId, rtcChannel);
 
@@ -171,6 +180,20 @@ public class RtcManager {
                     listener.onUserJoined(channelId, uid);
                 }
             }
+
+            @Override
+            public void onRemoteVideoStateChanged(RtcChannel rtcChannel, int uid, int state, int reason, int elapsed) {
+                super.onRemoteVideoStateChanged(rtcChannel, uid, state, reason, elapsed);
+                Log.d(TAG, "onRemoteVideoStateChanged uid=" + uid + ", state=" + state);
+                if(state == Constants.REMOTE_VIDEO_STATE_DECODING){
+                    Runnable runnable = firstVideoFramePendingRuns.get(uid);
+                    if(runnable != null){
+                        runnable.run();
+                        firstVideoFramePendingRuns.remove(uid);
+                    }
+                }
+            }
+
         });
 
         ChannelMediaOptions mediaOptions = new ChannelMediaOptions();
@@ -178,9 +201,21 @@ public class RtcManager {
         mediaOptions.autoSubscribeVideo = true;
         mediaOptions.publishLocalAudio = publish;
         mediaOptions.publishLocalVideo = publish;
-        // 4. Join channel
+        // 3. Join channel
         int ret = rtcChannel.joinChannel("", "", 0, mediaOptions);
         Log.i(TAG, String.format("joinChannel channel %s ret %d", channelId, ret));
+    }
+
+    public void renderRemoteVideo(FrameLayout container, String channelId, int uid, Runnable firstFrame){
+        if (engine == null) {
+            return;
+        }
+        // 4. render video
+        View videoView = RtcEngine.CreateRendererView(mContext);
+        container.addView(videoView);
+        firstVideoFramePendingRuns.put(uid, firstFrame);
+        engine.setupRemoteVideo(new VideoCanvas(videoView, RENDER_MODE_HIDDEN, channelId, uid));
+
     }
 
     public void leaveChannel(String channelId){
@@ -220,7 +255,7 @@ public class RtcManager {
     }
 
     private static String getPushRtmpUrl(String pushName) {
-        return String.format(Locale.US, "rtmp://mdetest.push.agoramde.agoraio.cn/live/%s", pushName);
+        return String.format(Locale.US, "rtmp://webdemo-push.agora.io/lbhd/%s", pushName);
     }
 
 

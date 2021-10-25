@@ -1,4 +1,4 @@
-package io.agora.livepk;
+package io.agora.livepk.manager;
 
 import android.content.Context;
 import android.util.Log;

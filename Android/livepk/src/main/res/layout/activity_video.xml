@@ -1,54 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@android:color/white"
-    tools:context=".LivePKMainActivity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/darker_gray"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:background="@drawable/dark_background"
+        tools:context=".activity.HostPKActivity">
 
         <FrameLayout
-            android:id="@+id/fl_local_container"
-            android:layout_width="0dp"
-            android:layout_height="320dp"
-            android:layout_weight="1"/>
+            android:id="@+id/fl_local_full_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
 
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="320dp"
-            android:background="@color/white"/>
-
-        <FrameLayout
-            android:id="@+id/fl_remote_container"
-            android:layout_width="0dp"
-            android:layout_height="320dp"
-            android:layout_weight="1"/>
-
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/iv_loading_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:visibility="gone" />
 
 
-    <Button
-        android:id="@+id/btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="32dp"
-        android:visibility="gone"
-        android:text="PK"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btn2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="8dp"
-        android:visibility="gone"
-        android:text="Exit PK"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="8dp">
 
-</LinearLayout>
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_avatar_round_frame"
+                    android:padding="0.5dp">
+
+                    <ImageView
+                        android:id="@+id/iv_room_avatar"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center" />
+
+                </FrameLayout>
+
+
+                <TextView
+                    android:id="@+id/tv_room_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:textColor="@color/white"
+                    tools:text="1111" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/iv_close"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/bg_btn"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_baseline_close_24" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_pk_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/darker_gray"
+                    android:orientation="horizontal">
+
+                    <FrameLayout
+                        android:layout_width="0dp"
+                        android:layout_height="320dp"
+                        android:layout_weight="1">
+
+                        <FrameLayout
+                            android:id="@+id/fl_local_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                        <ImageView
+                            android:id="@+id/iv_local_cover"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:visibility="gone" />
+
+                    </FrameLayout>
+
+                    <View
+                        android:layout_width="0.5dp"
+                        android:layout_height="320dp" />
+
+                    <FrameLayout
+                        android:layout_width="0dp"
+                        android:layout_height="320dp"
+                        android:layout_weight="1">
+
+                        <FrameLayout
+                            android:id="@+id/fl_remote_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                        <ImageView
+                            android:id="@+id/iv_remote_cover"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:visibility="gone" />
+
+                    </FrameLayout>
+
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="-30dp"
+                    android:src="@drawable/icon_pk_vs" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/start_pk_button"
+            android:layout_width="@dimen/live_pk_start_button_size"
+            android:layout_height="@dimen/live_pk_start_button_size"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="25dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/start_pk_button" />
+
+    </FrameLayout>
+</layout>
