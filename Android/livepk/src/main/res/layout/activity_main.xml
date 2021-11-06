@@ -6,7 +6,7 @@
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:paddingHorizontal="12dp"
-    tools:context=".activity.LivePKMainActivity">
+    tools:context=".view.LivePKMainActivity">
 
     <EditText
         android:id="@+id/et_room_name"

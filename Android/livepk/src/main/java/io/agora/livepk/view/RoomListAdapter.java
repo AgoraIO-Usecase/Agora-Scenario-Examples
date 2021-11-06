@@ -1,4 +1,4 @@
-package io.agora.livepk.adapter;
+package io.agora.livepk.view;
 
 import android.view.LayoutInflater;
 import android.view.View;

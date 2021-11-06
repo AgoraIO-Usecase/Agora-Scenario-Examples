@@ -1,72 +1,107 @@
 package io.agora.livepk.manager;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.util.Log;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
-import io.agora.rtc.Constants;
-import io.agora.rtc.IRtcChannelEventHandler;
-import io.agora.rtc.IRtcEngineEventHandler;
-import io.agora.rtc.RtcChannel;
-import io.agora.rtc.RtcEngine;
-import io.agora.rtc.live.LiveTranscoding;
-import io.agora.rtc.models.ChannelMediaOptions;
-import io.agora.rtc.video.VideoCanvas;
-import io.agora.rtc.video.VideoEncoderConfiguration;
+import io.agora.mediaplayer.IMediaPlayer;
+import io.agora.mediaplayer.IMediaPlayerObserver;
+import io.agora.mediaplayer.data.PlayerUpdatedInfo;
+import io.agora.mediaplayer.data.SrcInfo;
+import io.agora.rtc2.ChannelMediaOptions;
+import io.agora.rtc2.Constants;
+import io.agora.rtc2.DirectCdnStreamingError;
+import io.agora.rtc2.DirectCdnStreamingMediaOptions;
+import io.agora.rtc2.DirectCdnStreamingState;
+import io.agora.rtc2.DirectCdnStreamingStats;
+import io.agora.rtc2.IAgoraEventHandler;
+import io.agora.rtc2.IDirectCdnStreamingEventHandler;
+import io.agora.rtc2.IRtcEngineEventHandler;
+import io.agora.rtc2.RtcEngine;
+import io.agora.rtc2.RtcEngineConfig;
+import io.agora.rtc2.UserInfo;
+import io.agora.rtc2.live.LiveTranscoding;
+import io.agora.rtc2.video.CameraCapturerConfiguration;
+import io.agora.rtc2.video.VideoCanvas;
+import io.agora.rtc2.video.VideoEncoderConfiguration;
 
-import static io.agora.rtc.video.VideoCanvas.RENDER_MODE_HIDDEN;
-import static io.agora.rtc.video.VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15;
-import static io.agora.rtc.video.VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_ADAPTIVE;
-import static io.agora.rtc.video.VideoEncoderConfiguration.VD_640x360;
+import static io.agora.rtc2.Constants.CLIENT_ROLE_BROADCASTER;
+import static io.agora.rtc2.video.VideoCanvas.RENDER_MODE_HIDDEN;
+import static io.agora.rtc2.video.VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15;
+import static io.agora.rtc2.video.VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_PORTRAIT;
+import static io.agora.rtc2.video.VideoEncoderConfiguration.VD_640x360;
 
 public class RtcManager {
     private static final String TAG = "RtcManager";
     private static final int LOCAL_RTC_UID = 0;
+    private static final String AGORA_CDN_CHANNEL_PUSH_PREFIX = "rtmp://mdetest.push.agoramde.agoraio.cn/live/%s";
+    private static final String AGORA_CDN_CHANNEL_PULL_PREFIX = "rtmp://mdetest2.pull.agoramde.agoraio.cn/live/%s";
 
     private volatile boolean isInitialized = false;
-    private RtcEngine engine;
-    private final Map<String, RtcChannel> mRtcChannels = new HashMap<>();
     private final Map<Integer, Runnable> firstVideoFramePendingRuns = new HashMap<>();
     private Context mContext;
+
+    private RtcEngine engine;
+    private static CameraCapturerConfiguration.CAMERA_DIRECTION currCameraDirection = CameraCapturerConfiguration.CAMERA_DIRECTION.CAMERA_FRONT;
 
     private final VideoEncoderConfiguration encoderConfiguration = new VideoEncoderConfiguration(
             VD_640x360,
             FRAME_RATE_FPS_15,
             700,
-            ORIENTATION_MODE_ADAPTIVE
+            ORIENTATION_MODE_FIXED_PORTRAIT
     );
 
-    public void init(Context context, String appId, OnInitializeListener listener){
-        if(isInitialized){
+    private LiveTranscoding liveTranscoding = new LiveTranscoding();
+    private int canvas_width = 480;
+    private int canvas_height = 640;
+
+    private int localUid = 0;
+    private Runnable pendingDirectCDNStoppedRun = null;
+
+    public void init(Context context, String appId, OnInitializeListener listener) {
+        if (isInitialized) {
             return;
         }
         mContext = context;
         try {
             // 0. create engine
-            engine = RtcEngine.create(mContext.getApplicationContext(), appId, new IRtcEngineEventHandler() {
-                @Override
-                public void onWarning(int warn) {
-                    super.onWarning(warn);
-                    Log.w(TAG, String.format("onWarning code %d message %s", warn, RtcEngine.getErrorDescription(warn)));
-                }
-
+            RtcEngineConfig config = new RtcEngineConfig();
+            /**
+             * The context of Android Activity
+             */
+            config.mContext = context.getApplicationContext();
+            /**
+             * The App ID issued to you by Agora. See <a href="https://docs.agora.io/en/Agora%20Platform/token#get-an-app-id"> How to get the App ID</a>
+             */
+            config.mAppId = appId;
+            /** Sets the channel profile of the Agora RtcEngine.
+             CHANNEL_PROFILE_COMMUNICATION(0): (Default) The Communication profile.
+             Use this profile in one-on-one calls or group calls, where all users can talk freely.
+             CHANNEL_PROFILE_LIVE_BROADCASTING(1): The Live-Broadcast profile. Users in a live-broadcast
+             channel have a role as either broadcaster or audience. A broadcaster can both send and receive streams;
+             an audience can only receive streams.*/
+            config.mChannelProfile = Constants.CHANNEL_PROFILE_LIVE_BROADCASTING;
+            /**
+             * IRtcEngineEventHandler is an abstract class providing default implementation.
+             * The SDK uses this class to report to the app on SDK runtime events.
+             */
+            config.mEventHandler = new IRtcEngineEventHandler() {
                 @Override
                 public void onError(int err) {
                     super.onError(err);
                     Log.e(TAG, String.format("onError code %d", err));
-                    if(err == ErrorCode.ERR_OK){
+                    if (err == ErrorCode.ERR_OK) {
                         if (listener != null) {
                             listener.onSuccess();
                         }
-                    }else{
+                    } else {
                         if (listener != null) {
                             listener.onError(err, err == ErrorCode.ERR_INVALID_TOKEN ? "invalid token" : "");
                         }
@@ -74,33 +109,61 @@ public class RtcManager {
                 }
 
                 @Override
-                public void onFirstLocalVideoFrame(int width, int height, int elapsed) {
-                    super.onFirstLocalVideoFrame(width, height, elapsed);
-
-                    Log.d(TAG, "onFirstLocalVideoFrame");
-                    Runnable runnable = firstVideoFramePendingRuns.get(LOCAL_RTC_UID);
-                    if(runnable != null){
-                        runnable.run();
-                        firstVideoFramePendingRuns.remove(LOCAL_RTC_UID);
-                    }
+                public void onLeaveChannel(RtcStats stats) {
+                    super.onLeaveChannel(stats);
                 }
 
-            });
-            engine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
-            engine.setParameters("{\"che.video.setQuickVideoHighFec\":true}");
-            engine.setParameters("{\"rtc.enable_quick_rexfer_keyframe\":true}");
-            engine.setParameters("{\"che.audio.opensl\":true}");
-            engine.setParameters("{\"che.video.h264.hwenc\":0}");
-            engine.setParameters("{\"rtc.min_playout_delay_speaker\":0}");
-            engine.setParameters("{\"rtc.min_playout_delay\":0}");
-            engine.enableVideo();
-            engine.enableAudio();
+                @Override
+                public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
+                    super.onJoinChannelSuccess(channel, uid, elapsed);
+                    localUid = uid;
+                    LiveTranscoding.TranscodingUser user = new LiveTranscoding.TranscodingUser();
+                    user.x = 0;
+                    user.y = 0;
+                    user.width = canvas_width;
+                    user.height = canvas_height;
+                    user.uid = localUid;
+                    liveTranscoding.addUser(user);
+                    engine.setLiveTranscoding(liveTranscoding);
+                }
+
+                @Override
+                public void onUserJoined(int uid, int elapsed) {
+                    super.onUserJoined(uid, elapsed);
+                    if (listener != null) {
+                        listener.onUserJoined(uid);
+                    }
+                    LiveTranscoding.TranscodingUser user1 = new LiveTranscoding.TranscodingUser();
+                    user1.x = canvas_width / 2;
+                    user1.y = 0;
+                    user1.width = canvas_width / 2;
+                    user1.height = canvas_height / 2;
+                    user1.uid = uid;
+                    liveTranscoding.addUser(user1);
+                    engine.setLiveTranscoding(liveTranscoding);
+                }
+            };
+            engine = RtcEngine.create(config);
             engine.setDefaultAudioRoutetoSpeakerphone(true);
+            engine.setClientRole(IRtcEngineEventHandler.ClientRole.CLIENT_ROLE_BROADCASTER);
+            engine.enableVideo();
+            canvas_height = Math.max(encoderConfiguration.dimensions.height, encoderConfiguration.dimensions.width);
+            canvas_width = Math.min(encoderConfiguration.dimensions.height, encoderConfiguration.dimensions.width);
             engine.setVideoEncoderConfiguration(encoderConfiguration);
+            engine.setDirectCdnStreamingVideoConfiguration(encoderConfiguration);
             isInitialized = true;
         } catch (Exception e) {
-            if(listener != null){
+            if (listener != null) {
                 listener.onError(-1, "RtcEngine create exception : " + e.toString());
+            }
+        }
+    }
+
+    public void setCurrCameraDirection(CameraCapturerConfiguration.CAMERA_DIRECTION direction) {
+        if (currCameraDirection != direction) {
+            currCameraDirection = direction;
+            if (engine != null) {
+                engine.switchCamera();
             }
         }
     }
@@ -109,104 +172,88 @@ public class RtcManager {
         if (engine == null) {
             return;
         }
-        View videoView = RtcEngine.CreateTextureView(mContext);
+        engine.setClientRole(Constants.CLIENT_ROLE_BROADCASTER);
+        engine.enableLocalVideo(true);
+        engine.setCameraCapturerConfiguration(new CameraCapturerConfiguration(currCameraDirection));
+        View videoView = RtcEngine.CreateRendererView(mContext);
         container.addView(videoView);
         firstVideoFramePendingRuns.put(LOCAL_RTC_UID, firstFrame);
-        engine.setupLocalVideo(new VideoCanvas(videoView, RENDER_MODE_HIDDEN, LOCAL_RTC_UID));
-        engine.startPreview();
+        int ret = engine.setupLocalVideo(new VideoCanvas(videoView, RENDER_MODE_HIDDEN, LOCAL_RTC_UID));
+        Log.d(TAG, "setupLocalVideo ret=" + ret);
+        ret = engine.startPreview();
+        Log.d(TAG, "startPreview ret=" + ret);
     }
 
-    public void joinChannel(String channelId, boolean publish, OnChannelListener listener){
+    public void switchCamera() {
         if (engine == null) {
             return;
         }
-        if(mRtcChannels.get(channelId) != null){
+        engine.switchCamera();
+        if (currCameraDirection == CameraCapturerConfiguration.CAMERA_DIRECTION.CAMERA_FRONT) {
+            currCameraDirection = CameraCapturerConfiguration.CAMERA_DIRECTION.CAMERA_REAR;
+        } else {
+            currCameraDirection = CameraCapturerConfiguration.CAMERA_DIRECTION.CAMERA_FRONT;
+        }
+    }
+
+    public void startDirectCDNStreaming(String channelId) {
+        if (engine == null) {
             return;
         }
-        // 1. create channel
-        RtcChannel rtcChannel = engine.createRtcChannel(channelId);
-        // 2. set role
-        rtcChannel.setClientRole(publish ? Constants.CLIENT_ROLE_BROADCASTER: Constants.CLIENT_ROLE_AUDIENCE);
-        mRtcChannels.put(channelId, rtcChannel);
-
-        rtcChannel.setRtcChannelEventHandler(new IRtcChannelEventHandler() {
+        engine.setDirectCdnStreamingVideoConfiguration(encoderConfiguration);
+        DirectCdnStreamingMediaOptions directCdnStreamingMediaOptions = new DirectCdnStreamingMediaOptions();
+        directCdnStreamingMediaOptions.publishCameraTrack = true;
+        directCdnStreamingMediaOptions.publishMicrophoneTrack = true;
+        engine.startDirectCdnStreaming(new IDirectCdnStreamingEventHandler() {
             @Override
-            public void onChannelError(RtcChannel rtcChannel, int err) {
-                super.onChannelError(rtcChannel, err);
-                Log.e(TAG, String.format("onChannelError code %d", err));
-                if(listener != null){
-                    listener.onError(err,
-                            err == IRtcEngineEventHandler.ErrorCode.ERR_INVALID_TOKEN ? "invalid token -- channelId " + channelId : "");
-                }
-            }
-
-            @Override
-            public void onJoinChannelSuccess(RtcChannel rtcChannel, int uid, int elapsed) {
-                super.onJoinChannelSuccess(rtcChannel, uid, elapsed);
-                if(publish){
-                    LiveTranscoding transcoding = new LiveTranscoding();
-                    LiveTranscoding.TranscodingUser user = new LiveTranscoding.TranscodingUser();
-                    user.uid = uid;
-                    user.width = encoderConfiguration.dimensions.height;
-                    user.height = encoderConfiguration.dimensions.width;
-                    transcoding.addUser(user);
-
-                    rtcChannel.setLiveTranscoding(transcoding);
-                    int publishCode = rtcChannel.addPublishStreamUrl(getPushRtmpUrl(channelId), true);
-                    Log.i(TAG, String.format("onJoinChannelSuccess channel %s uid %d publishCode %d", channelId, uid, publishCode));
-
-                }
-                if(listener != null){
-                    listener.onJoinSuccess(uid);
-                }
-            }
-
-            @Override
-            public void onRtmpStreamingEvent(RtcChannel rtcChannel, String url, int errCode) {
-                super.onRtmpStreamingEvent(rtcChannel, url, errCode);
-                Log.i(TAG, String.format("onRtmpStreamingEvent url=%s, errorCode=%d", url, errCode));
-            }
-
-            @Override
-            public void onRtmpStreamingStateChanged(RtcChannel rtcChannel, String url, int state, int errCode) {
-                super.onRtmpStreamingStateChanged(rtcChannel, url, state, errCode);
-                Log.i(TAG, String.format("onRtmpStreamingStateChanged url=%s, state=%d, errorCode=%d", url, state, errCode));
-            }
-
-            @Override
-            public void onUserJoined(RtcChannel rtcChannel, int uid, int elapsed) {
-                super.onUserJoined(rtcChannel, uid, elapsed);
-                if(listener != null){
-                    listener.onUserJoined(channelId, uid);
-                }
-            }
-
-            @Override
-            public void onRemoteVideoStateChanged(RtcChannel rtcChannel, int uid, int state, int reason, int elapsed) {
-                super.onRemoteVideoStateChanged(rtcChannel, uid, state, reason, elapsed);
-                Log.d(TAG, "onRemoteVideoStateChanged uid=" + uid + ", state=" + state);
-                if(state == Constants.REMOTE_VIDEO_STATE_DECODING){
-                    Runnable runnable = firstVideoFramePendingRuns.get(uid);
-                    if(runnable != null){
-                        runnable.run();
-                        firstVideoFramePendingRuns.remove(uid);
+            public void onDirectCdnStreamingStateChanged(DirectCdnStreamingState directCdnStreamingState, DirectCdnStreamingError directCdnStreamingError, String s) {
+                if(directCdnStreamingState == DirectCdnStreamingState.STOPPED){
+                    if(pendingDirectCDNStoppedRun != null){
+                        pendingDirectCDNStoppedRun.run();
+                        pendingDirectCDNStoppedRun = null;
                     }
                 }
             }
 
-        });
+            @Override
+            public void onDirectCdnStreamingStats(DirectCdnStreamingStats directCdnStreamingStats) {
 
-        ChannelMediaOptions mediaOptions = new ChannelMediaOptions();
-        mediaOptions.autoSubscribeAudio = true;
-        mediaOptions.autoSubscribeVideo = true;
-        mediaOptions.publishLocalAudio = publish;
-        mediaOptions.publishLocalVideo = publish;
-        // 3. Join channel
-        int ret = rtcChannel.joinChannel("", "", 0, mediaOptions);
-        Log.i(TAG, String.format("joinChannel channel %s ret %d", channelId, ret));
+            }
+        }, String.format(Locale.US, AGORA_CDN_CHANNEL_PUSH_PREFIX, channelId), directCdnStreamingMediaOptions);
     }
 
-    public void renderRemoteVideo(FrameLayout container, String channelId, int uid, Runnable firstFrame){
+    public void stopDirectCDNStreaming(Runnable onDirectCDNStopped) {
+        if (engine == null) {
+            return;
+        }
+        pendingDirectCDNStoppedRun = onDirectCDNStopped;
+        engine.stopDirectCdnStreaming();
+    }
+
+    public void startRtcStreaming(String channelId, boolean publish) {
+        if (engine == null) {
+            return;
+        }
+
+        ChannelMediaOptions channelMediaOptions = new ChannelMediaOptions();
+        channelMediaOptions.publishAudioTrack = true;
+        channelMediaOptions.publishCameraTrack = true;
+        channelMediaOptions.clientRoleType = CLIENT_ROLE_BROADCASTER;
+        engine.joinChannel(null, channelId, 0, channelMediaOptions);
+        if(publish){
+            engine.setLiveTranscoding(liveTranscoding);
+            engine.addPublishStreamUrl(String.format(Locale.US, AGORA_CDN_CHANNEL_PUSH_PREFIX, channelId), true);
+        }
+    }
+
+    public void stopRtcStreaming() {
+        if (engine == null) {
+            return;
+        }
+        engine.leaveChannel();
+    }
+
+    public void renderRemoteVideo(FrameLayout container, int uid, Runnable firstFrame) {
         if (engine == null) {
             return;
         }
@@ -214,59 +261,107 @@ public class RtcManager {
         View videoView = RtcEngine.CreateRendererView(mContext);
         container.addView(videoView);
         firstVideoFramePendingRuns.put(uid, firstFrame);
-        engine.setupRemoteVideo(new VideoCanvas(videoView, RENDER_MODE_HIDDEN, channelId, uid));
-
-    }
-
-    public void leaveChannel(String channelId){
-        if (engine == null) {
-            return;
-        }
-        RtcChannel rtcChannel = mRtcChannels.get(channelId);
-        if(rtcChannel != null){
-            return;
-        }
-        rtcChannel.leaveChannel();
-        mRtcChannels.remove(channelId);
-    }
-
-    public void leaveChannelExcept(String channelId){
-        if (engine == null) {
-            return;
-        }
-        List<String> keys = new ArrayList<>(mRtcChannels.keySet());
-        for (String key : keys) {
-            if(!key.equals(channelId)){
-                mRtcChannels.get(key).leaveChannel();
-                mRtcChannels.remove(key);
-            }
-        }
+        engine.setupRemoteVideo(new VideoCanvas(videoView, RENDER_MODE_HIDDEN, uid));
     }
 
     public void release() {
-        Set<String> keys = mRtcChannels.keySet();
-        for (String key : keys) {
-            mRtcChannels.get(key).leaveChannel();
-        }
-        mRtcChannels.clear();
+        //Set<String> keys = mRtcChannels.keySet();
+        //for (String key : keys) {
+        //    mRtcChannels.get(key).leaveChannel();
+        //}
+        //mRtcChannels.clear();
+        engine.stopPreview();
         if (engine != null) {
             RtcEngine.destroy();
         }
     }
 
-    private static String getPushRtmpUrl(String pushName) {
-        return String.format(Locale.US, "rtmp://webdemo-push.agora.io/lbhd/%s", pushName);
+    public void startDirectCDNPlayer(FrameLayout container, String channelId, Runnable completedRun) {
+        if (engine == null) {
+            return;
+        }
+
+        IMediaPlayer mediaPlayer = engine.createMediaPlayer();
+        mediaPlayer.registerPlayerObserver(new IMediaPlayerObserver() {
+            @Override
+            public void onPlayerStateChanged(io.agora.mediaplayer.Constants.MediaPlayerState mediaPlayerState, io.agora.mediaplayer.Constants.MediaPlayerError mediaPlayerError) {
+                if (mediaPlayerState == io.agora.mediaplayer.Constants.MediaPlayerState.PLAYER_STATE_OPEN_COMPLETED) {
+                    mediaPlayer.play();
+                    if (completedRun != null) {
+                        completedRun.run();
+                    }
+                }
+            }
+
+            @Override
+            public void onPositionChanged(long l) {
+
+            }
+
+            @Override
+            public void onPlayerEvent(io.agora.mediaplayer.Constants.MediaPlayerEvent mediaPlayerEvent, long l, String s) {
+
+            }
+
+            @Override
+            public void onMetaData(io.agora.mediaplayer.Constants.MediaPlayerMetadataType mediaPlayerMetadataType, byte[] bytes) {
+
+            }
+
+            @Override
+            public void onPlayBufferUpdated(long l) {
+
+            }
+
+            @Override
+            public void onPreloadEvent(String s, io.agora.mediaplayer.Constants.MediaPlayerPreloadEvent mediaPlayerPreloadEvent) {
+
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onAgoraCDNTokenWillExpire() {
+
+            }
+
+            @Override
+            public void onPlayerSrcInfoChanged(SrcInfo srcInfo, SrcInfo srcInfo1) {
+
+            }
+
+            @Override
+            public void onPlayerInfoUpdated(PlayerUpdatedInfo playerUpdatedInfo) {
+
+            }
+
+        });
+        SurfaceView surfaceView = new SurfaceView(container.getContext());
+        surfaceView.setZOrderMediaOverlay(false);
+        container.addView(surfaceView);
+
+        engine.setupLocalVideo(new VideoCanvas(surfaceView,
+                Constants.RENDER_MODE_HIDDEN,
+                Constants.VIDEO_MIRROR_MODE_AUTO,
+                Constants.VIDEO_SOURCE_MEDIA_PLAYER,
+                mediaPlayer.getMediaPlayerId(),
+                LOCAL_RTC_UID
+        ));
+        engine.startPreview();
+        engine.setDefaultAudioRoutetoSpeakerphone(true);
+        mediaPlayer.openWithAgoraCDNSrc(String.format(Locale.US, AGORA_CDN_CHANNEL_PULL_PREFIX, channelId), LOCAL_RTC_UID);
     }
 
 
     public interface OnInitializeListener {
         void onError(int code, String message);
+
         void onSuccess();
+
+        void onUserJoined(int uid);
     }
 
-    public interface OnChannelListener {
-        void onError(int code, String message);
-        void onJoinSuccess(int uid);
-        void onUserJoined(String channelId, int uid);
-    }
 }

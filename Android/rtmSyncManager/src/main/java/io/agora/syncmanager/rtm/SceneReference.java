@@ -10,8 +10,8 @@ public class SceneReference extends DocumentReference {
 
     private CollectionReference mCollectionReference;
 
-    public SceneReference(String id) {
-        super(new CollectionReference(null, Scene.TABLE_NAME), id);
+    public SceneReference(String id, String className) {
+        super(new CollectionReference(null, className), id);
     }
 
     public CollectionReference collection(@NonNull String collectionKey) {

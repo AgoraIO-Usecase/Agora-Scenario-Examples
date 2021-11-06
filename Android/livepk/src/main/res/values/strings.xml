@@ -17,4 +17,41 @@
     <string name="error_leak_permission">Need corresponding permissions, please open firstly.</string>
 
     <string name="room_create_dialog_title">Create Room</string>
+
+    <!-- Live Prepare Activity -->
+    <string name="live_prepare_hint">Channel Name</string>
+    <string name="go_live_text">Go Live</string>
+    <string name="live_prepare_name_too_long_toast_format">Room name cannot be longer than %d characters</string>
+    <string name="live_prepare_no_room_name">Please enter your room name</string>
+    <string name="no_fu_auth_notice">No FaceUnity authentication found</string>
+
+    <!-- Policies -->
+    <string name="live_prepare_room_restriction">This is a testing product. Please refrain from using it commercially. The max duration per session is 10 minutes, and the max number of participants per channel is 10. </string>
+    <string name="live_prepare_mode_direct_cdn" translatable="false">客户端\n直推模式</string>
+    <string name="live_prepare_mode_rtc" translatable="false">服务端\n旁推模式</string>
+
+
+    <string-array name="random_channel_names">
+        <item>Cheer</item>
+        <item>Vibe</item>
+        <item>Devine</item>
+        <item>Duo</item>
+        <item>Ablaze</item>
+        <item>Amaze</item>
+        <item>Harmony</item>
+        <item>Verse</item>
+        <item>Vigilant</item>
+        <item>Contender</item>
+        <item>Vista</item>
+        <item>Wander</item>
+        <item>Collections</item>
+        <item>Moon</item>
+        <item>Boho</item>
+        <item>Everest</item>
+    </string-array>
+
+    <string name="live_room_all_online_user_action_sheet_title">Member Listing</string>
+    <string name="live_room_online_user_invite_call_btn">Invite</string>
+
+
 </resources>

@@ -47,7 +47,7 @@ public final class SyncManager implements ISyncManager {
     }
 
     public SceneReference getScene(String id) {
-        return new SceneReference(id);
+        return new SceneReference(id, mISyncManager.getSceneClass());
     }
 
     public CollectionReference collection(String key) {
@@ -55,8 +55,8 @@ public final class SyncManager implements ISyncManager {
     }
 
     @Override
-    public Scene joinScene(Scene room) {
-        return mISyncManager.joinScene(room);
+    public Scene joinScene(Scene room, SyncManager.Callback callback) {
+        return mISyncManager.joinScene(room, callback);
     }
 
     @Override
@@ -114,12 +114,17 @@ public final class SyncManager implements ISyncManager {
         mISyncManager.unsubscribe(listener);
     }
 
+    @Override
+    public String getSceneClass() {
+        return null;
+    }
+
     public interface EventListener {
         void onCreated(IObject item);
 
         void onUpdated(IObject item);
 
-        void onDeleted(String objectId);
+        void onDeleted(IObject item);
 
         void onSubscribeError(SyncManagerException ex);
     }

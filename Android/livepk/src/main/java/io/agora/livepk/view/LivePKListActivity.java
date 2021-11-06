@@ -1,19 +1,10 @@
-package io.agora.livepk.activity;
+package io.agora.livepk.view;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -21,18 +12,15 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 import io.agora.baselibrary.base.DataBindBaseActivity;
 import io.agora.livepk.R;
-import io.agora.livepk.adapter.RoomListAdapter;
 import io.agora.livepk.databinding.ActivityListBinding;
 import io.agora.livepk.model.RoomInfo;
 import io.agora.livepk.util.DataListCallback;
-import io.agora.livepk.widget.CreateRoomDialog;
 import io.agora.livepk.widget.SpaceItemDecoration;
 import io.agora.syncmanager.rtm.IObject;
 import io.agora.syncmanager.rtm.Scene;
@@ -40,6 +28,9 @@ import io.agora.syncmanager.rtm.SceneReference;
 import io.agora.syncmanager.rtm.SyncManager;
 import io.agora.syncmanager.rtm.SyncManagerException;
 import pub.devrel.easypermissions.EasyPermissions;
+
+import static io.agora.livepk.Constants.SYNC_COLLECTION_ROOM_INFO;
+import static io.agora.livepk.Constants.SYNC_SCENE_ID;
 
 public class LivePKListActivity extends DataBindBaseActivity<ActivityListBinding> {
     private static final String TAG = LivePKListActivity.class.getSimpleName();
@@ -115,14 +106,7 @@ public class LivePKListActivity extends DataBindBaseActivity<ActivityListBinding
 
     private void alertCreateDialog() {
         if (EasyPermissions.hasPermissions(this, PERMISSTION)) {
-            new CreateRoomDialog()
-                    .show(getSupportFragmentManager(), new CreateRoomDialog.ICreateCallback() {
-                        @Override
-                        public void onRoomCreate(@NonNull String roomName) {
-                            long currTime = System.currentTimeMillis();
-                            createRoom(new RoomInfo(currTime, currTime + "", roomName));
-                        }
-                    });
+            startActivity(new Intent(this, PreviewActivity.class));
         } else {
             EasyPermissions.requestPermissions(this, getString(R.string.error_leak_permission),
                     TAG_PERMISSTION_REQUESTCODE, PERMISSTION);
@@ -131,8 +115,6 @@ public class LivePKListActivity extends DataBindBaseActivity<ActivityListBinding
 
     // ====== business method ======
 
-    public final static String SYNC_SCENE_ID = "LivePK";
-    public final static String SYNC_COLLECTION_ROOM_INFO = "RoomInfo";
     private String syncUserId;
 
 
@@ -146,12 +128,21 @@ public class LivePKListActivity extends DataBindBaseActivity<ActivityListBinding
         Scene room = new Scene();
         room.setId(SYNC_SCENE_ID);
         room.setUserId(syncUserId);
-        SyncManager.Instance().joinScene(room);
+        SyncManager.Instance().joinScene(room, new SyncManager.Callback() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onFail(SyncManagerException exception) {
+
+            }
+        });
     }
 
     private void loadRoomList(DataListCallback<RoomInfo> callback){
-        SceneReference livePK = SyncManager.Instance().getScene(SYNC_SCENE_ID);
-        livePK.collection(SYNC_COLLECTION_ROOM_INFO).get(new SyncManager.DataListCallback() {
+        SyncManager.Instance().getScene(SYNC_SCENE_ID).collection(SYNC_COLLECTION_ROOM_INFO).get(new SyncManager.DataListCallback() {
             @Override
             public void onSuccess(List<IObject> result) {
                 List<RoomInfo> list = new ArrayList<>();
@@ -170,19 +161,7 @@ public class LivePKListActivity extends DataBindBaseActivity<ActivityListBinding
         });
     }
 
-    private void createRoom(RoomInfo roomInfo){
-        SyncManager.Instance().getScene(SYNC_SCENE_ID).collection(SYNC_COLLECTION_ROOM_INFO).add(roomInfo.toMap(), new SyncManager.DataItemCallback() {
-            @Override
-            public void onSuccess(IObject result) {
-                startActivity(HostPKActivity.launch(LivePKListActivity.this, roomInfo));
-            }
 
-            @Override
-            public void onFail(SyncManagerException exception) {
-                Toast.makeText(LivePKListActivity.this, "Room create failed -- " + exception.toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
 
 

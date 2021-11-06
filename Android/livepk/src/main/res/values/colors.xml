@@ -16,7 +16,11 @@
     <color name="gray_light">#a3a3a3</color>
     <color name="gray_lighter">#cccccc</color>
     <color name="grey_press_color">#E8E8E8</color>
+    <color name="gray_lightest">#efefef</color>
 
     <color name="transparent_70_per">#4D000000</color>
+
+    <color name="blue_original">#00AFF4</color>
+    <color name="blue_alpha">#aa00AFF4</color>
 
 </resources>

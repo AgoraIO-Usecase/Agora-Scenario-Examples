@@ -19,4 +19,36 @@
 
     <string name="room_create_dialog_title">创建房间</string>
 
+    <!-- Live Prepare Activity -->
+    <string name="live_prepare_hint">直播间名字</string>
+    <string name="go_live_text">开始直播</string>
+    <string name="live_prepare_name_too_long_toast_format">房间名称不能超过%d个字符</string>
+    <string name="live_prepare_no_room_name">请输入您的房间名称</string>
+    <string name="no_fu_auth_notice">没有找到相芯美颜的授权信息</string>
+
+    <!-- Policies -->
+    <string name="live_prepare_room_restriction">本应用为测试产品，请勿商用。单次直播最长10分钟，每个频道最多10人。</string>
+
+    <string-array name="random_channel_names">
+        <item>陌上花开等你来</item>
+        <item>天天爱你</item>
+        <item>我爱你们</item>
+        <item>有人可以</item>
+        <item>风情万种</item>
+        <item>强势归来</item>
+        <item>哈哈哈</item>
+        <item>聊聊</item>
+        <item>美人舞江山</item>
+        <item>最美的回忆</item>
+        <item>遇见你</item>
+        <item>最长情的告白</item>
+        <item>全力以赴</item>
+        <item>简单点</item>
+        <item>早上好</item>
+        <item>春风十里不如你</item>
+    </string-array>
+
+    <string name="live_room_all_online_user_action_sheet_title">在线用户</string>
+    <string name="live_room_online_user_invite_call_btn">邀请</string>
+
 </resources>

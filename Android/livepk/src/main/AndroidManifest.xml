@@ -22,15 +22,16 @@
             android:name="android.max_aspect"
             android:value="2.4" />
 
-        <activity android:name=".activity.LivePKListActivity">
+        <activity android:name=".view.LivePKListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.HostPKActivity"/>
-        <activity android:name=".activity.AudienceActivity"/>
+        <activity android:name=".view.HostPKActivity"/>
+        <activity android:name=".view.AudienceActivity"/>
+        <activity android:name=".view.PreviewActivity"/>
     </application>
 
 </manifest>

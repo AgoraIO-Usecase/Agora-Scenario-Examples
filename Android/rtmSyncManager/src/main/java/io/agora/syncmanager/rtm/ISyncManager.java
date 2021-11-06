@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface ISyncManager {
-    Scene joinScene(Scene room);
+    Scene joinScene(Scene room, SyncManager.Callback callback);
 
     void getScenes(SyncManager.DataListCallback callback);
 
@@ -27,4 +27,6 @@ public interface ISyncManager {
     void subscribe(CollectionReference reference, SyncManager.EventListener listener);
 
     void unsubscribe(SyncManager.EventListener listener);
+
+    String getSceneClass();
 }

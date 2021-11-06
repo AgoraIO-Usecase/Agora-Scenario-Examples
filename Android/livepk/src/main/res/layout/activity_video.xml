@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/dark_background"
-        tools:context=".activity.HostPKActivity">
+        tools:context=".view.HostPKActivity">
 
         <FrameLayout
             android:id="@+id/fl_local_full_container"
@@ -21,34 +21,72 @@
             android:scaleType="centerCrop"
             android:visibility="gone" />
 
+        <RelativeLayout
+            android:id="@+id/remote_call_layout"
+            android:layout_width="@dimen/ecommerce_remote_video_layout_width"
+            android:layout_height="@dimen/ecommerce_remote_video_layout_height"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="58dp"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <RelativeLayout
+                android:layout_width="@dimen/ecommerce_remote_video_width"
+                android:layout_height="@dimen/ecommerce_remote_video_height"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true">
+
+                <FrameLayout
+                    android:id="@+id/remote_call_video_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/remote_call_peer_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/mask_background"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/text_size_small"
+                    android:paddingBottom="@dimen/text_size_small"
+                    android:textAlignment="gravity"
+                    android:textColor="@android:color/white" />
+            </RelativeLayout>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/remote_call_close_btn"
+                android:layout_width="@dimen/ecommerce_remote_video_close_btn_size"
+                android:layout_height="@dimen/ecommerce_remote_video_close_btn_size"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/icon_video_close_gray" />
+        </RelativeLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:fitsSystemWindows="true"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginVertical="8dp">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/round_sclable_gray_bg"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="8dp">
+                android:orientation="horizontal">
 
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_avatar_round_frame"
-                    android:padding="0.5dp">
-
-                    <ImageView
-                        android:id="@+id/iv_room_avatar"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="center" />
-
-                </FrameLayout>
+                <ImageView
+                    android:id="@+id/iv_room_avatar"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center" />
 
 
                 <TextView
@@ -56,105 +94,78 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
+                    android:layout_marginEnd="20dp"
+                    android:maxWidth="150dp"
                     android:textColor="@color/white"
-                    tools:text="1111" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1" />
-
-                <ImageView
-                    android:id="@+id/iv_close"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/bg_btn"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/ic_baseline_close_24" />
+                    tools:text="111111111111" />
 
             </LinearLayout>
+
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
 
             <LinearLayout
-                android:id="@+id/ll_pk_layout"
-                android:layout_width="match_parent"
+                android:id="@+id/ll_participant"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:orientation="vertical"
-                android:visibility="gone"
-                tools:visibility="visible">
+                android:background="@drawable/round_sclable_gray_bg"
+                android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/darker_gray"
-                    android:orientation="horizontal">
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/participant_icon"
+                    android:layout_width="@dimen/live_participant_count_height"
+                    android:layout_height="@dimen/live_participant_count_height"
+                    android:layout_marginStart="@dimen/live_participant_margin_start"
+                    android:layout_marginEnd="@dimen/live_participant_margin_end"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/icon_participants" />
 
-                    <FrameLayout
-                        android:layout_width="0dp"
-                        android:layout_height="320dp"
-                        android:layout_weight="1">
-
-                        <FrameLayout
-                            android:id="@+id/fl_local_container"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
-
-                        <ImageView
-                            android:id="@+id/iv_local_cover"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:scaleType="centerCrop"
-                            android:visibility="gone" />
-
-                    </FrameLayout>
-
-                    <View
-                        android:layout_width="0.5dp"
-                        android:layout_height="320dp" />
-
-                    <FrameLayout
-                        android:layout_width="0dp"
-                        android:layout_height="320dp"
-                        android:layout_weight="1">
-
-                        <FrameLayout
-                            android:id="@+id/fl_remote_container"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
-
-                        <ImageView
-                            android:id="@+id/iv_remote_cover"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:scaleType="centerCrop"
-                            android:visibility="gone" />
-
-                    </FrameLayout>
-
-
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="-30dp"
-                    android:src="@drawable/icon_pk_vs" />
-
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/live_participant_count_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/live_participant_count_height"
+                    android:layout_marginEnd="@dimen/live_participant_text_margin_end"
+                    android:gravity="center_vertical"
+                    android:textAlignment="gravity"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_medium"
+                    tools:text="200" />
             </LinearLayout>
-
 
         </LinearLayout>
 
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/start_pk_button"
-            android:layout_width="@dimen/live_pk_start_button_size"
-            android:layout_height="@dimen/live_pk_start_button_size"
-            android:layout_gravity="bottom|end"
-            android:layout_marginBottom="25dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/start_pk_button" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="end"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/live_bottom_btn_more"
+                android:layout_width="@dimen/live_bottom_layout_height"
+                android:layout_height="@dimen/live_bottom_layout_height"
+                android:layout_marginEnd="@dimen/live_bottom_btn_margin"
+                android:layout_toStartOf="@id/live_bottom_btn_close"
+                android:background="@drawable/round_dark_gray_bg"
+                android:src="@drawable/live_bottom_btn_more" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/live_bottom_btn_close"
+                android:layout_width="@dimen/live_bottom_layout_height"
+                android:layout_height="@dimen/live_bottom_layout_height"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/round_dark_gray_bg"
+                android:src="@drawable/live_bottom_btn_close" />
+
+
+        </LinearLayout>
 
     </FrameLayout>
 </layout>
