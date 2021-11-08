@@ -82,4 +82,20 @@
     <dimen name="live_room_action_sheet_button_radius">28dp</dimen>
     <dimen name="live_room_action_sheet_button_border">1dp</dimen>
 
+    <dimen name="live_room_action_sheet_tool_icon_size">54dp</dimen>
+    <dimen name="live_room_action_sheet_tool_icon_margin">6dp</dimen>
+
+    <!-- My profile Fragment -->
+    <dimen name="profile_background_height">252dp</dimen>
+    <dimen name="profile_item_height">54dp</dimen>
+    <dimen name="profile_item_divider_height">1dp</dimen>
+    <dimen name="profile_portrait_background_size">102dp</dimen>
+    <dimen name="profile_portrait_size">96dp</dimen>
+    <dimen name="profile_user_nickname_margin">22dp</dimen>
+    <dimen name="modify_user_name_title_height">42dp</dimen>
+    <dimen name="modify_user_name_done_btn_width">62dp</dimen>
+    <dimen name="modify_user_name_done_btn_height">28dp</dimen>
+    <dimen name="modify_user_name_done_btn_corner">4dp</dimen>
+    <dimen name="about_activity_title_height">54dp</dimen>
+
 </resources>

@@ -3,10 +3,12 @@ package io.agora.livepk.view;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,7 +40,6 @@ import io.agora.livepk.model.RoomInfo;
 import io.agora.livepk.model.UserInfo;
 import io.agora.livepk.util.DataCallback;
 import io.agora.livepk.util.UserUtil;
-import io.agora.rtm.RtmChannelAttribute;
 import io.agora.syncmanager.rtm.IObject;
 import io.agora.syncmanager.rtm.SyncManager;
 import io.agora.syncmanager.rtm.SyncManagerException;
@@ -89,6 +91,10 @@ public class HostPKActivity extends DataBindBaseActivity<ActivityVideoBinding> {
 
         mDataBinding.tvRoomName.setText(mRoomInfo.roomName);
         updateRoomUserCountTv();
+
+        mDataBinding.liveBottomBtnMore.setOnClickListener(v -> {
+                showMoreChoiceDialog();
+        });
     }
 
     private void updateRoomUserCountTv() {
@@ -106,13 +112,13 @@ public class HostPKActivity extends DataBindBaseActivity<ActivityVideoBinding> {
         initSyncManager();
 
         initRTCManager();
-        setupLocalFullVideo();
+        setupLocalFullView();
         startStreaming();
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        //super.onBackPressed();
         checkIsPKing(getLocalRoomId(),
                 () -> cleanCurrRoomInfo(this::finish),
                 data -> showPKEndDialog());
@@ -127,6 +133,81 @@ public class HostPKActivity extends DataBindBaseActivity<ActivityVideoBinding> {
 
     //============================UI Logic===============================================
 
+    private void showMoreChoiceDialog() {
+        final int itemPadding = getResources().getDimensionPixelSize(R.dimen.activity_vertical_margin);
+        final int gridSpan = 4;
+        final int[] toolIcons = {
+                R.drawable.icon_rotate,
+                R.drawable.action_sheet_tool_speaker
+        };
+        final String[] toolNames = getResources().getStringArray(R.array.live_room_action_sheet_tool_names);
+
+        final class ViewHolder extends RecyclerView.ViewHolder{
+            final ImageView iconIv;
+            final TextView toolNameTv;
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+                iconIv = itemView.findViewById(R.id.live_room_action_sheet_tool_item_icon);
+                toolNameTv = itemView.findViewById(R.id.live_room_action_sheet_tool_item_name);
+            }
+        }
+
+        RelativeLayout dialogView = new RelativeLayout(this);
+        LayoutInflater.from(this).inflate(R.layout.action_tool, dialogView, true);
+        RecyclerView recyclerView = dialogView.findViewById(R.id.live_room_action_sheet_tool_recycler);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, gridSpan));
+        recyclerView.setAdapter(new RecyclerView.Adapter<ViewHolder>() {
+            @NonNull
+            @Override
+            public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.action_tool_item, parent, false));
+            }
+
+            @Override
+            public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+                holder.toolNameTv.setText(toolNames[position]);
+                holder.iconIv.setImageResource(toolIcons[position]);
+                switch (position){
+                    case 1:
+                        // 静音
+                        holder.iconIv.setActivated(!RtcManager.isMuteLocalAudio);
+                        break;
+                }
+
+                holder.iconIv.setOnClickListener(v -> {
+                    switch (position){
+                        case 0:
+                            // 翻转摄像头
+                            rtcManager.switchCamera();
+                            break;
+                        case 1:
+                            // 静音
+                            rtcManager.muteLocalAudio(!RtcManager.isMuteLocalAudio);
+                            holder.iconIv.setActivated(!RtcManager.isMuteLocalAudio);
+                            break;
+                    }
+                });
+            }
+
+            @Override
+            public int getItemCount() {
+                return toolNames.length;
+            }
+        });
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                outRect.top = itemPadding;
+                outRect.bottom = itemPadding;
+            }
+        });
+
+        BottomSheetDialog dialog = new BottomSheetDialog(this);
+        dialog.setContentView(dialogView);
+        dialog.setCanceledOnTouchOutside(true);
+        hideStatusBar(dialog.getWindow(), false);
+        dialog.show();
+    }
 
     private void showOnLineUserListDialog(List<UserInfo> userInfoList) {
         if (userInfoList == null || userInfoList.size() <= 0) {
@@ -214,7 +295,7 @@ public class HostPKActivity extends DataBindBaseActivity<ActivityVideoBinding> {
     }
 
 
-    private void setupLocalFullVideo() {
+    private void setupLocalFullView() {
         mDataBinding.flLocalFullContainer.setVisibility(View.VISIBLE);
 
         // remove old video view
@@ -223,14 +304,20 @@ public class HostPKActivity extends DataBindBaseActivity<ActivityVideoBinding> {
         rtcManager.renderLocalVideo(mDataBinding.flLocalFullContainer, () -> mDataBinding.ivLoadingBg.setVisibility(View.GONE));
     }
 
-    private void setupRemoteVideo(int uid) {
+    private void setupRemoteView(int uid) {
         runOnUiThread(() -> {
             mDataBinding.remoteCallLayout.setVisibility(View.VISIBLE);
             rtcManager.renderRemoteVideo(mDataBinding.remoteCallVideoLayout, uid, () -> runOnUiThread(() -> {
 
             }));
         });
+    }
 
+    private void resetRemoteView(){
+        runOnUiThread(() -> {
+            mDataBinding.remoteCallLayout.setVisibility(View.GONE);
+            mDataBinding.remoteCallVideoLayout.removeAllViews();
+        });
     }
 
 
@@ -266,7 +353,12 @@ public class HostPKActivity extends DataBindBaseActivity<ActivityVideoBinding> {
 
             @Override
             public void onUserJoined(int uid) {
-                setupRemoteVideo(uid);
+                setupRemoteView(uid);
+            }
+
+            @Override
+            public void onUserLeaved(int uid, int reason) {
+                resetRemoteView();
             }
         });
     }
@@ -281,12 +373,11 @@ public class HostPKActivity extends DataBindBaseActivity<ActivityVideoBinding> {
     }
 
     private void startStreamingByCDN() {
-        rtcManager.stopRtcStreaming();
         rtcManager.startDirectCDNStreaming(getLocalRoomId());
     }
 
     private void startStreamingByRtc() {
-        rtcManager.startRtcStreaming(getLocalRoomId(), true);
+        runOnUiThread(() -> rtcManager.startRtcStreaming(getLocalRoomId(), true));
     }
 
     private void startRTCPK() {
@@ -297,7 +388,7 @@ public class HostPKActivity extends DataBindBaseActivity<ActivityVideoBinding> {
 
     private void stopRTCPK() {
         if(mRoomInfo.mode == RoomInfo.PUSH_MODE_DIRECT_CDN){
-            startStreamingByCDN();
+            rtcManager.stopRtcStreaming(mRoomInfo.roomId, this::startStreamingByCDN);
         }
     }
 
@@ -321,12 +412,13 @@ public class HostPKActivity extends DataBindBaseActivity<ActivityVideoBinding> {
                 .subscribe(new SyncManager.EventListener() {
                     @Override
                     public void onCreated(IObject item) {
-                        onRoomInfoChanged(item);
+                        runOnUiThread(() -> onRoomInfoChanged(item));
+
                     }
 
                     @Override
                     public void onUpdated(IObject item) {
-                        onRoomInfoChanged(item);
+                        runOnUiThread(() -> onRoomInfoChanged(item));
                     }
 
                     @Override
@@ -395,13 +487,16 @@ public class HostPKActivity extends DataBindBaseActivity<ActivityVideoBinding> {
         if (newPkStatue != oldPkStatue) {
             if (newPkStatue) {
                 // 开始PK
+                Toast.makeText(this, "Start PK", Toast.LENGTH_LONG).show();
                 startRTCPK();
                 getUserInfoById(roomInfo.userIdPK, data -> {
                     resetRemoteViewLayout(data.userName);
                 });
             } else {
                 // 停止PK
+                Toast.makeText(this, "Stop PK", Toast.LENGTH_LONG).show();
                 stopRTCPK();
+                resetRemoteView();
             }
         }
 

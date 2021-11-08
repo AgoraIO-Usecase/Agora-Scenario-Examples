@@ -53,5 +53,43 @@
     <string name="live_room_all_online_user_action_sheet_title">Member Listing</string>
     <string name="live_room_online_user_invite_call_btn">Invite</string>
 
+    <string name="live_room_tool_action_sheet_title">Tool</string>
+    <string-array name="live_room_action_sheet_tool_names">
+        <item>Rotate</item>
+        <item>Speaker</item>
+    </string-array>
+
+
+    <!-- My Profile Fragment -->
+    <string name="profile_item_title_avatar">Profile</string>
+    <string name="profile_item_title_nickname">Nickname</string>
+    <string name="about_title">About</string>
+    <string name="privacy_policy_title">Privacy Policy</string>
+    <string name="privacy_website_link">https://www.agora.io/en/privacy-policy/</string>
+    <string name="terms_service_title">Terms of Services</string>
+    <string name="terms_service_link">https://www.agora.io/en/terms-of-service/</string>
+
+    <string-array name="random_names">
+        <item>Alexander</item>
+        <item>Halley</item>
+        <item>Rickey</item>
+        <item>Xavior</item>
+        <item>Yolanda</item>
+        <item>Corynn</item>
+        <item>Daniel</item>
+        <item>Kelly</item>
+        <item>Lauren</item>
+    </string-array>
+
+    <string-array name="random_surnames">
+        <item>Atkinson</item>
+        <item>Edwards</item>
+        <item>Gibson</item>
+        <item>Holmes</item>
+        <item>Kelvin</item>
+        <item>Lloyd</item>
+        <item>Payne</item>
+        <item>White</item>
+    </string-array>
 
 </resources>

@@ -51,4 +51,43 @@
     <string name="live_room_all_online_user_action_sheet_title">在线用户</string>
     <string name="live_room_online_user_invite_call_btn">邀请</string>
 
+    <string name="live_room_tool_action_sheet_title">工具</string>
+
+    <string-array name="live_room_action_sheet_tool_names">
+        <item>翻转</item>
+        <item>麦克风</item>
+    </string-array>
+
+    <!-- My Profile Fragment -->
+    <string name="profile_item_title_avatar">设置头像</string>
+    <string name="profile_item_title_nickname">设置昵称</string>
+    <string name="about_title">关于</string>
+    <string name="privacy_policy_title">隐私条例</string>
+    <string name="privacy_website_link">https://www.agora.io/cn/privacy-policy/</string>
+    <string name="terms_service_title">用户协议</string>
+    <string name="terms_service_link">https://www.agora.io/cn/terms-of-service/</string>
+
+    <string-array name="random_names">
+        <item>富贵</item>
+        <item>国强</item>
+        <item>建国</item>
+        <item>林</item>
+        <item>麒麟</item>
+        <item>宝强</item>
+        <item>强</item>
+        <item>相如</item>
+        <item>欢喜</item>
+    </string-array>
+
+    <string-array name="random_surnames">
+        <item>赵</item>
+        <item>钱</item>
+        <item>孙</item>
+        <item>李</item>
+        <item>周</item>
+        <item>吴</item>
+        <item>郑</item>
+        <item>王</item>
+    </string-array>
+
 </resources>

@@ -21,6 +21,7 @@ import io.agora.livepk.R;
 import io.agora.livepk.databinding.ActivityListBinding;
 import io.agora.livepk.model.RoomInfo;
 import io.agora.livepk.util.DataListCallback;
+import io.agora.livepk.util.PreferenceUtil;
 import io.agora.livepk.widget.SpaceItemDecoration;
 import io.agora.syncmanager.rtm.IObject;
 import io.agora.syncmanager.rtm.Scene;
@@ -83,10 +84,14 @@ public class LivePKListActivity extends DataBindBaseActivity<ActivityListBinding
             alertCreateDialog();
         });
         mAdapter.setItemClickListener(item -> startActivity(AudienceActivity.launch(LivePKListActivity.this, item)));
+        mDataBinding.ivHead.setOnClickListener(v -> {
+            startActivity(new Intent(LivePKListActivity.this, UserProfileActivity.class));
+        });
     }
 
     @Override
     protected void iniData() {
+        PreferenceUtil.init(getApplicationContext());
         initSyncManager();
         mDataBinding.hostInSwipe.setRefreshing(true);
         loadRoomList(data -> {
