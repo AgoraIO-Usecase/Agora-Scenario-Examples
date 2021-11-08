@@ -22,6 +22,7 @@ import io.agora.rtc2.DirectCdnStreamingState;
 import io.agora.rtc2.IAgoraEventHandler;
 import io.agora.rtc2.IDirectCdnStreamingEventHandler;
 import io.agora.rtc2.IRtcEngineEventHandler;
+import io.agora.rtc2.LeaveChannelOptions;
 import io.agora.rtc2.RtcEngine;
 import io.agora.rtc2.RtcEngineConfig;
 import io.agora.rtc2.UserInfo;
@@ -135,7 +136,10 @@ public class RtcManager {
                 public void onStreamUnpublished(String url) {
                     super.onStreamUnpublished(url);
                     Log.d(TAG, String.format("Stream Publish: onStreamUnpublished url=%s", url));
-                    engine.leaveChannel();
+                    LeaveChannelOptions leaveChannelOptions = new LeaveChannelOptions();
+                    leaveChannelOptions.stopMicrophoneRecording = false;
+                    engine.leaveChannel(leaveChannelOptions);
+                    engine.startPreview();
                     if(pendingLeaveChannelRun != null){
                         pendingLeaveChannelRun.run();
                         pendingLeaveChannelRun = null;
@@ -321,9 +325,12 @@ public class RtcManager {
         pendingDirectCDNStoppedRun = null;
         pendingLeaveChannelRun = null;
         firstVideoFramePendingRuns.clear();
+        engine.leaveChannel();
+        engine.stopDirectCdnStreaming();
         engine.stopPreview();
         if (engine != null) {
             RtcEngine.destroy();
+            engine = null;
         }
     }
 
@@ -331,74 +338,75 @@ public class RtcManager {
         if (engine == null) {
             return;
         }
-        if(mMediaPlayer != null){
-            mMediaPlayer.destroy();
-        }
-
-        mMediaPlayer = engine.createMediaPlayer();
-        mMediaPlayer.registerPlayerObserver(new IMediaPlayerObserver() {
-            @Override
-            public void onPlayerStateChanged(io.agora.mediaplayer.Constants.MediaPlayerState mediaPlayerState, io.agora.mediaplayer.Constants.MediaPlayerError mediaPlayerError) {
-                Log.d(TAG, "MediaPlayer onPlayerStateChanged -- url=" + mMediaPlayer.getPlaySrc() + "state=" + mediaPlayerState + ", error=" + mediaPlayerError);
-                if (mediaPlayerState == io.agora.mediaplayer.Constants.MediaPlayerState.PLAYER_STATE_OPEN_COMPLETED) {
-                    if (mMediaPlayer != null) {
-                        mMediaPlayer.play();
-                    }
-                    if (completedRun != null) {
-                        completedRun.run();
+        if(mMediaPlayer == null){
+            mMediaPlayer = engine.createMediaPlayer();
+            mMediaPlayer.registerPlayerObserver(new IMediaPlayerObserver() {
+                @Override
+                public void onPlayerStateChanged(io.agora.mediaplayer.Constants.MediaPlayerState mediaPlayerState, io.agora.mediaplayer.Constants.MediaPlayerError mediaPlayerError) {
+                    Log.d(TAG, "MediaPlayer onPlayerStateChanged -- url=" + mMediaPlayer.getPlaySrc() + "state=" + mediaPlayerState + ", error=" + mediaPlayerError);
+                    if (mediaPlayerState == io.agora.mediaplayer.Constants.MediaPlayerState.PLAYER_STATE_OPEN_COMPLETED) {
+                        if (mMediaPlayer != null) {
+                            mMediaPlayer.play();
+                        }
+                        if (completedRun != null) {
+                            completedRun.run();
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onPositionChanged(long l) {
+                @Override
+                public void onPositionChanged(long l) {
 
-            }
+                }
 
-            @Override
-            public void onPlayerEvent(io.agora.mediaplayer.Constants.MediaPlayerEvent mediaPlayerEvent, long l, String s) {
+                @Override
+                public void onPlayerEvent(io.agora.mediaplayer.Constants.MediaPlayerEvent mediaPlayerEvent, long l, String s) {
 
-            }
+                }
 
-            @Override
-            public void onMetaData(io.agora.mediaplayer.Constants.MediaPlayerMetadataType mediaPlayerMetadataType, byte[] bytes) {
+                @Override
+                public void onMetaData(io.agora.mediaplayer.Constants.MediaPlayerMetadataType mediaPlayerMetadataType, byte[] bytes) {
 
-            }
+                }
 
-            @Override
-            public void onPlayBufferUpdated(long l) {
+                @Override
+                public void onPlayBufferUpdated(long l) {
 
-            }
+                }
 
-            @Override
-            public void onPreloadEvent(String s, io.agora.mediaplayer.Constants.MediaPlayerPreloadEvent mediaPlayerPreloadEvent) {
+                @Override
+                public void onPreloadEvent(String s, io.agora.mediaplayer.Constants.MediaPlayerPreloadEvent mediaPlayerPreloadEvent) {
 
-            }
+                }
 
-            @Override
-            public void onCompleted() {
+                @Override
+                public void onCompleted() {
 
-            }
+                }
 
-            @Override
-            public void onAgoraCDNTokenWillExpire() {
+                @Override
+                public void onAgoraCDNTokenWillExpire() {
 
-            }
+                }
 
-            @Override
-            public void onPlayerSrcInfoChanged(SrcInfo srcInfo, SrcInfo srcInfo1) {
+                @Override
+                public void onPlayerSrcInfoChanged(SrcInfo srcInfo, SrcInfo srcInfo1) {
 
-            }
+                }
 
-            @Override
-            public void onPlayerIdsRenew(String s) {
+                @Override
+                public void onPlayerIdsRenew(String s) {
 
-            }
+                }
 
-        });
+            });
+            engine.setDefaultAudioRoutetoSpeakerphone(true);
+        }
+
         SurfaceView surfaceView = new SurfaceView(container.getContext());
         surfaceView.setZOrderMediaOverlay(false);
         container.addView(surfaceView);
+
 
         engine.setupLocalVideo(new VideoCanvas(surfaceView,
                 Constants.RENDER_MODE_HIDDEN,
@@ -408,7 +416,6 @@ public class RtcManager {
                 LOCAL_RTC_UID
         ));
         engine.startPreview();
-        engine.setDefaultAudioRoutetoSpeakerphone(true);
     }
 
     public void openPlayerSrc(String channelId, boolean isCdn){
