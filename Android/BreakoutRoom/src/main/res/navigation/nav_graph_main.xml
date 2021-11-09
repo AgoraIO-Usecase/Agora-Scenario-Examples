@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_main.xml"
+    app:startDestination="@id/sceneListFragment">
+
+    <fragment
+        android:id="@+id/sceneListFragment"
+        android:name="io.agora.sample.breakoutroom.ui.list.RoomListFragment"
+        tools:layout="@layout/fragment_room_list"
+        android:label="SceneListFragment" >
+        <action
+            android:id="@+id/action_sceneListFragment_to_roomFragment"
+            app:destination="@id/roomFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/roomFragment"
+        android:name="io.agora.sample.breakoutroom.ui.room.RoomFragment"
+        android:label="RoomFragment" />
+</navigation>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">小班课</string>
+
+    <string name="fab_add_room">添加房间</string>
+    <string name="fab_add_sub_room">添加子房间</string>
+    <string name="please_input_name">请输入房间名称</string>
+
+    <string name="room_name_invalid">请输入正确的房间名</string>
+
+
+    <string name="click_to_refresh">点击刷新</string>
+    <string name="page_data_empty">页面数据为空</string>
+
+</resources>
