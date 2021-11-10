@@ -33,7 +33,7 @@ public abstract class BaseActivity<B extends ViewBinding> extends AppCompatActiv
         super.onCreate(savedInstanceState);
         mBinding = getViewBindingByReflect(getLayoutInflater());
         if(mBinding == null) {
-            BaseUtil.toast("Inflate Error");
+            BaseUtil.toast(this, "Inflate Error");
             finish();
         }else
             setContentView(mBinding.getRoot());

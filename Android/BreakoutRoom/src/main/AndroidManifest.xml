@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="io.agora.sample.breakoutroom">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:name="io.agora.example.BaseApplication"
         android:icon="@mipmap/ic_launcher"

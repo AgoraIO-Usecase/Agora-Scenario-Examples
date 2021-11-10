@@ -30,14 +30,14 @@ import java.lang.reflect.Type;
 @Keep
 public class BaseUtil {
 
-    public static void toast(String msg){
-        toast(msg, false);
+    public static void toast(Context context, String msg){
+        toast(context, msg, false);
     }
 
-    public static void toast(String msg, boolean longTime){
+    public static void toast(Context context, String msg, boolean longTime){
         int time = Toast.LENGTH_SHORT;
         if ( longTime) time = Toast.LENGTH_LONG;
-//        Toast.makeText(BaseApplication.getInstance().getBaseContext(), msg, time).show();
+        Toast.makeText(context, msg, time).show();
     }
 
     public static void logD(String msg) {

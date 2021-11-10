@@ -16,8 +16,8 @@
             android:id="@+id/tab_layout_fg_room"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="0dp"
-            android:paddingEnd="48dp"
+            app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
+            android:layout_marginHorizontal="48dp"
             app:tabIndicatorColor="@color/colorAccent" />
 
     </com.google.android.material.appbar.AppBarLayout>

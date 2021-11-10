@@ -20,3 +20,5 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -keepnames class androidx.navigation.fragment.NavHostFragment
+
+-keep class io.agora.sample.breakoutroom.bean.**{*;}

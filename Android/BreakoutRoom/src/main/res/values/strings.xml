@@ -2,14 +2,20 @@
 <resources>
     <string name="app_name">小班课</string>
 
-    <string name="fab_add_room">添加房间</string>
+    <string name="fab_add_room">创建房间</string>
     <string name="fab_add_sub_room">添加子房间</string>
     <string name="please_input_name">请输入房间名称</string>
 
     <string name="room_name_invalid">请输入正确的房间名</string>
+    <string name="room_name_duplicated">存在重名的房间哦</string>
+    <string name="room_count_limited">子房间数已达上限哦</string>
 
 
     <string name="click_to_refresh">点击刷新</string>
+    <string name="error_desc">RTM初始化出错</string>
+    <string name="error_happened_click_to_refresh">出错了，再试一次</string>
     <string name="page_data_empty">页面数据为空</string>
 
+    <string name="portrait_format">portrait%02d</string>
+    <string name="room_name_format">%s\n房主：User_%s</string>
 </resources>
