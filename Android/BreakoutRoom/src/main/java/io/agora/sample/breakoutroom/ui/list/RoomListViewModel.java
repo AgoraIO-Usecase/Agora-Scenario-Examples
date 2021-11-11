@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 import io.agora.example.base.BaseUtil;
+import io.agora.sample.breakoutroom.RoomConstant;
 import io.agora.sample.breakoutroom.ViewStatus;
 import io.agora.sample.breakoutroom.bean.RoomInfo;
 import io.agora.sample.breakoutroom.repo.RoomListApi;
@@ -44,6 +45,11 @@ public class RoomListViewModel extends ViewModel implements RoomListApi {
     private final MutableLiveData<List<RoomInfo>> _roomList = new MutableLiveData<>();
     public LiveData<List<RoomInfo>> roomList() {
         return _roomList;
+    }
+
+    public RoomListViewModel() {
+        fetchRoomList();
+        subscribeRoomList();
     }
 
     @Override
@@ -130,6 +136,78 @@ public class RoomListViewModel extends ViewModel implements RoomListApi {
                 _viewStatus.postValue(new ViewStatus.Error(exception));
             }
         });
+    }
+
+
+    @Override
+    public void subscribeRoomList() {
+
+        Scene globalScene = new Scene();
+        globalScene.setId(RoomConstant.globalChannel);
+        globalScene.setUserId(RoomConstant.userId);
+
+        // 加入频道后才可以订阅频道
+        SyncManager.Instance().joinScene(globalScene, new SyncManager.Callback() {
+            @Override
+            public void onSuccess() {
+                BaseUtil.logD("subscribeRoomList->onSuccess");
+                RoomListViewModel.this.doSubscribeRoomList();
+            }
+
+            @Override
+            public void onFail(SyncManagerException exception) {
+                BaseUtil.logD(exception.getMessage());
+            }
+        });
+    }
+
+    private void doSubscribeRoomList(){
+        SyncManager.Instance().getScene(RoomConstant.globalChannel).subscribe(new SyncManager.EventListener() {
+            @Override
+            public void onCreated(IObject item) {
+                BaseUtil.logD("created"+item.toString());
+                try {
+                    addRoom(item.toObject(RoomInfo.class));
+                } catch (Exception ignored) {
+                }
+            }
+
+            @Override
+            public void onUpdated(IObject item) {
+                BaseUtil.logD("onUpdated"+item.toString());
+            }
+
+            @Override
+            public void onDeleted(IObject item) {
+                BaseUtil.logD("onDeleted"+item.toString());
+                try {
+                    removeRoom(item.toObject(RoomInfo.class));
+                } catch (Exception ignored) {
+                }
+            }
+
+            @Override
+            public void onSubscribeError(SyncManagerException ex) {
+                BaseUtil.logD(ex.getMessage());
+            }
+        });
+
+    }
+
+    private void addRoom(@NonNull RoomInfo roomInfo){
+        List<RoomInfo> list = _roomList.getValue();
+        if (list == null)
+            list = new ArrayList<>();
+        list.add(roomInfo);
+        _roomList.postValue(list);
+    }
+
+    private void removeRoom(@NonNull RoomInfo roomInfo){
+        List<RoomInfo> list = _roomList.getValue();
+        if (list != null) {
+            list.remove(roomInfo);
+            _roomList.postValue(list);
+        }
     }
 
     private Scene getSceneFromRoomInfo(@NonNull RoomInfo roomInfo){

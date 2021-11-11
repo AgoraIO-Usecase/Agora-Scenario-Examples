@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Size;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 
@@ -20,7 +21,7 @@ import java.util.List;
  *
  * @author chenhengfei@agora.io
  */
-public class BaseRecyclerViewAdapter<B extends ViewBinding, T,H extends BaseRecyclerViewAdapter.BaseViewHolder<B,T>> extends RecyclerView.Adapter<H> {
+public class BaseRecyclerViewAdapter<B extends ViewBinding, T, H extends BaseRecyclerViewAdapter.BaseViewHolder<B, T>> extends RecyclerView.Adapter<H> {
 
     public List<T> dataList;
     private final OnItemClickListener<T> mOnItemClickListener;
@@ -66,7 +67,7 @@ public class BaseRecyclerViewAdapter<B extends ViewBinding, T,H extends BaseRecy
 
         assert holder != null;
 
-        if(mOnItemClickListener != null) {
+        if (mOnItemClickListener != null) {
             holder.mListener = (view, position, itemViewType) -> {
                 T itemData = getItemData(position);
                 if (itemData == null)
@@ -105,7 +106,7 @@ public class BaseRecyclerViewAdapter<B extends ViewBinding, T,H extends BaseRecy
     public B getViewBindingByReflect(@NonNull LayoutInflater inflater, @Nullable ViewGroup container) {
         ensureBindingClass();
         try {
-            return BaseUtil.getViewBinding(bindingClass,inflater,container);
+            return BaseUtil.getViewBinding(bindingClass, inflater, container);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -127,7 +128,38 @@ public class BaseRecyclerViewAdapter<B extends ViewBinding, T,H extends BaseRecy
         return dataList.indexOf(data);
     }
 
-    public void setDataList(@NonNull List<T> dataList) {
+    // TODO
+    public void setDataListWithDiffUtil(@NonNull List<T> dataList) {
+        DiffUtil.Callback callback = new DiffUtil.Callback() {
+
+            @Override
+            public int getOldListSize() {
+                return BaseRecyclerViewAdapter.this.dataList.size();
+            }
+
+            @Override
+            public int getNewListSize() {
+                return dataList.size();
+            }
+
+            @Override
+            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                return BaseRecyclerViewAdapter.this.dataList.get(oldItemPosition)
+                        == dataList.get(newItemPosition);
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                return BaseRecyclerViewAdapter.this.dataList.get(oldItemPosition)
+                        .equals(dataList.get(newItemPosition));
+            }
+        };
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(callback);
+        diffResult.dispatchUpdatesTo(this);
+        this.dataList = dataList;
+    }
+
+    public void setDataWithPurge(@NonNull List<T> dataList) {
         this.dataList = dataList;
         notifyDataSetChanged();
     }
@@ -202,11 +234,13 @@ public class BaseRecyclerViewAdapter<B extends ViewBinding, T,H extends BaseRecy
             notifyItemRemoved(index);
         }
     }
+
     //</editor-fold>
-    public void ensureBindingClass(){
+    public void ensureBindingClass() {
         if (bindingClass == null)
             bindingClass = BaseUtil.getGenericClass(viewHolderClass, 0);
     }
+
     public static abstract class BaseViewHolder<B extends ViewBinding, T> extends RecyclerView.ViewHolder {
         public OnHolderItemClickListener mListener;
         public final B mBinding;
@@ -226,6 +260,7 @@ public class BaseRecyclerViewAdapter<B extends ViewBinding, T,H extends BaseRecy
         interface OnHolderItemClickListener {
             void onItemClick(View view, int position, int itemViewType);
         }
+
         public abstract void binding(@Nullable T data, int selectedIndex);
     }
 }

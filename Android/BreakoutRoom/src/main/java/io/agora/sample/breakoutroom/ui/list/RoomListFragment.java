@@ -1,24 +1,31 @@
 package io.agora.sample.breakoutroom.ui.list;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import io.agora.example.base.BaseFragment;
@@ -26,6 +33,7 @@ import io.agora.example.base.BaseRecyclerViewAdapter;
 import io.agora.example.base.BaseUtil;
 import io.agora.example.base.DividerDecoration;
 import io.agora.example.base.OnItemClickListener;
+import io.agora.sample.breakoutroom.BuildConfig;
 import io.agora.sample.breakoutroom.R;
 import io.agora.sample.breakoutroom.RoomConstant;
 import io.agora.sample.breakoutroom.RoomUtil;
@@ -34,13 +42,39 @@ import io.agora.sample.breakoutroom.bean.RoomInfo;
 import io.agora.sample.breakoutroom.databinding.FragmentRoomListBinding;
 import io.agora.sample.breakoutroom.databinding.ItemSceneListBinding;
 import io.agora.sample.breakoutroom.ui.MainViewModel;
+import io.agora.syncmanager.rtm.SyncManager;
+import io.agora.syncmanager.rtm.SyncManagerException;
 
 public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> implements OnItemClickListener<RoomInfo> {
+
+    public static final String[] permissions = {Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA};
 
     private MainViewModel mainViewModel;
     private RoomListViewModel mViewModel;
 
     private BaseRecyclerViewAdapter<ItemSceneListBinding, RoomInfo, ListViewHolder> listAdapter;
+
+    // 新的权限申请方式 ——  注册申请回调
+    // Register the permission callback, which handles the user's response to the
+    // system permissions dialog. Save the return value, an instance of
+    // ActivityResultLauncher, as an instance variable.
+    ActivityResultLauncher<String[]> requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), res -> {
+        List<String> permissionsRefused = new ArrayList<>();
+        for (String s : res.keySet()) {
+            if (Boolean.TRUE != res.get(s))
+                permissionsRefused.add(s);
+        }
+        if (!permissionsRefused.isEmpty()) {
+            // Explain to the user that the feature is unavailable because the
+            // features requires a permission that the user has denied. At the
+            // same time, respect the user's decision. Don't link to system
+            // settings in an effort to convince the user to change their decision.
+            showPermissionAlertDialog();
+        } else {
+            // Permission is granted. Continue the action or workflow in your app.
+            goToRoomPage();
+        }
+    });
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -61,7 +95,6 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
 
         initView();
         initListener();
-        mViewModel.fetchRoomList();
     }
 
     private void initView() {
@@ -83,6 +116,17 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
     }
 
     private void initListener() {
+        // 清除所有房间
+        if(BuildConfig.DEBUG) {
+            mBinding.toolbarFgList.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    SyncManager.Instance().getScene(RoomConstant.globalChannel).delete(null);
+                    return true;
+                }
+            });
+        }
+
         // Inner Dialog stuff
         mBinding.viewInputFgList.getRoot().setOnClickListener(this::clearFocus);
         mBinding.viewInputFgList.btnConfirmViewLayout.setOnClickListener(this::createRoom);
@@ -113,7 +157,7 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
                     onErrorStatus();
                 }
             } else {
-                listAdapter.setDataList(resList);
+                listAdapter.setDataListWithDiffUtil(resList);
                 if (resList.isEmpty()) {
                     onEmptyStatus();
                 } else {
@@ -129,9 +173,12 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
             mainViewModel.currentRoom = roomInfo;
             if (mBinding.scrimFgList.getVisibility() == View.VISIBLE)
                 mBinding.scrimFgList.performClick();
-            goToRoomPage();
-
+            mBinding.fabFgList.setExpanded(false);
             mViewModel.clearPendingRoomInfo();
+
+
+            checkPermissionBeforeGoNextPage();
+
         });
     }
 
@@ -163,8 +210,50 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
     }
 
     private void goToRoomPage() {
-        mBinding.fabFgList.setExpanded(false);
         Navigation.findNavController(mBinding.getRoot()).navigate(R.id.action_roomListFragment_to_roomFragment);
+    }
+    private void checkPermissionBeforeGoNextPage() {
+        // 小于 M 无需控制
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            goToRoomPage();
+            return;
+        }
+
+        // 检查权限是否通过
+        boolean needRequest = false;
+
+        for (String permission : permissions) {
+            if (requireContext().checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+                needRequest = true;
+                break;
+            }
+        }
+        if (!needRequest) {
+            goToRoomPage();
+            return;
+        }
+
+        boolean requestDirectly = true;
+        for (String requiredPermission : permissions)
+            if (shouldShowRequestPermissionRationale(requiredPermission)) {
+                requestDirectly = false;
+                break;
+            }
+        // 直接申请
+        if (requestDirectly) requestPermissionLauncher.launch(permissions);
+            // 显示申请理由
+        else showPermissionAlertDialog(permissions);
+    }
+
+    private void showPermissionAlertDialog() {
+        new AlertDialog.Builder(requireContext()).setMessage(R.string.permission_refused)
+                .setPositiveButton(android.R.string.ok, null).show();
+    }
+
+
+    private void showPermissionAlertDialog(@NonNull String[] permissions) {
+        new AlertDialog.Builder(requireContext()).setMessage(R.string.permission_alert).setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(android.R.string.ok, ((dialogInterface, i) -> requestPermissionLauncher.launch(permissions))).show();
     }
 
     private void onEmptyStatus() {

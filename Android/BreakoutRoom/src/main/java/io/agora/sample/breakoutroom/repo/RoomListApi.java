@@ -6,7 +6,8 @@ import io.agora.sample.breakoutroom.bean.RoomInfo;
 
 public interface RoomListApi {
 
-    default void joinRoom(@NonNull RoomInfo roomInfo){}
-    default void createRoom(@NonNull RoomInfo roomInfo){}
-    default void fetchRoomList(){}
+    void joinRoom(@NonNull RoomInfo roomInfo);
+    void createRoom(@NonNull RoomInfo roomInfo);
+    void fetchRoomList();
+    void subscribeRoomList();
 }

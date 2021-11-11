@@ -2,6 +2,8 @@ package io.agora.sample.breakoutroom.bean;
 
 import androidx.annotation.NonNull;
 
+import java.util.Objects;
+
 public class RoomInfo {
     private @NonNull final String id;
     private @NonNull final String userId;
@@ -26,5 +28,27 @@ public class RoomInfo {
     @NonNull
     public String getBackgroundId() {
         return backgroundId;
+    }
+
+    @Override
+    public String toString() {
+        return "RoomInfo{" +
+                "id='" + id + '\'' +
+                ", userId='" + userId + '\'' +
+                ", backgroundId='" + backgroundId + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RoomInfo roomInfo = (RoomInfo) o;
+        return id.equals(roomInfo.id) && userId.equals(roomInfo.userId) && backgroundId.equals(roomInfo.backgroundId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, userId, backgroundId);
     }
 }

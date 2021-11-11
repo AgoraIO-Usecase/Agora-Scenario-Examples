@@ -56,6 +56,9 @@ public class BaseUtil {
     public static float dp2px(int dp) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, Resources.getSystem().getDisplayMetrics());
     }
+    public static float sp2px(int sp) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, Resources.getSystem().getDisplayMetrics());
+    }
     public static void hideKeyboard(Window window, View view) {
         WindowInsetsControllerCompat con = WindowCompat.getInsetsController(window, view);
         if (con != null) con.hide(WindowInsetsCompat.Type.ime());

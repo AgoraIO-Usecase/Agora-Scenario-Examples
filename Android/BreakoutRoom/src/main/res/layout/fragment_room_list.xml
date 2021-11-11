@@ -7,6 +7,7 @@
     android:clipToPadding="false">
 
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_fg_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:title="@string/app_name" />
@@ -46,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_normal"
-            android:text="@string/click_to_refresh" />
+            android:text="@string/empty_click_to_refresh" />
     </LinearLayout>
 
     <!-- A scrim that appears when the FAB is expanded. -->

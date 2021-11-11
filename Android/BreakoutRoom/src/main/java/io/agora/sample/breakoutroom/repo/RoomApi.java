@@ -10,6 +10,7 @@ import io.agora.sample.breakoutroom.bean.RoomInfo;
 
 public interface RoomApi {
 
-    default void createSubRoom(@NonNull String name){}
-    default void fetchAllSubRooms(){}
+    void createSubRoom(@NonNull String name);
+    void fetchAllSubRooms();
+    void subscribeSubRooms();
 }

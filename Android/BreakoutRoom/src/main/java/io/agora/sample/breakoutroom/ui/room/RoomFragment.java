@@ -3,36 +3,43 @@ package io.agora.sample.breakoutroom.ui.room;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.util.Random;
+import java.util.List;
+import java.util.Objects;
 
 import io.agora.example.base.BaseFragment;
 import io.agora.example.base.BaseUtil;
+import io.agora.rtc.IRtcEngineEventHandler;
+import io.agora.rtc.RtcEngine;
 import io.agora.sample.breakoutroom.R;
+import io.agora.sample.breakoutroom.RoomConstant;
 import io.agora.sample.breakoutroom.RoomUtil;
 import io.agora.sample.breakoutroom.ViewStatus;
 import io.agora.sample.breakoutroom.bean.SubRoomInfo;
 import io.agora.sample.breakoutroom.databinding.FragmentRoomBinding;
 import io.agora.sample.breakoutroom.ui.MainViewModel;
-import io.agora.sample.breakoutroom.view.ScrollableLinearLayout;
-
 
 /**
  * @author lq
- *
+ * <p>
  * Fragment 监听 数据 展示 UI
  * RoomViewModel 获取并发送数据
  * MainViewModel 用于通用逻辑管理（退出频道等)
@@ -62,6 +69,37 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         initListener();
 
         mViewModel.fetchAllSubRooms();
+        mViewModel.subscribeSubRooms();
+        mViewModel.initRTC(requireContext(), new IRtcEngineEventHandler() {
+            @Override
+            public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
+                mViewModel.mute(mBinding.checkboxMicFgRoom.isChecked());
+                mViewModel.setupLocalView((ViewGroup) mBinding.dynamicViewFgRoom.flexContainer.getChildAt(0));
+            }
+
+            @Override
+            public void onError(int err) {
+                BaseUtil.logE(RtcEngine.getErrorDescription(err));
+            }
+
+            /**
+             * {@see <a href="https://docs.agora.io/cn/Interactive%20Broadcast/API%20Reference/java/classio_1_1agora_1_1rtc_1_1_i_rtc_engine_event_handler.html?platform=Android#a31b2974a574ec45e62bb768e17d1f49e">}
+             */
+            @Override
+            public void onConnectionStateChanged(int state, int reason) {
+                BaseUtil.logD("onConnectionStateChanged:" + state + "," + reason);
+            }
+
+            @Override
+            public void onUserJoined(int uid, int elapsed) {
+                mBinding.getRoot().post(() -> doAddUser(uid));
+            }
+
+            @Override
+            public void onUserOffline(int uid, int reason) {
+                mBinding.getRoot().post(() -> doRemoveUser(uid));
+            }
+        });
     }
 
     private void initView() {
@@ -73,6 +111,10 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         TabLayout.Tab tab = mBinding.tabLayoutFgRoom.newTab();
         mBinding.tabLayoutFgRoom.addTab(tab);
         tab.setText(mViewModel.currentRoomInfo.getId());
+
+    }
+
+    private void initListener() {
 
         // Adjust view pos
         mOnPreDrawListener = new ViewTreeObserver.OnPreDrawListener() {
@@ -98,9 +140,26 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
             }
         };
         fixPosition();
-    }
 
-    private void initListener() {
+
+        mBinding.tabLayoutFgRoom.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                CharSequence tabText = tab.getText();
+                if (tabText != null) pendingSwitchRoom(tabText.toString().trim());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+
+        mBinding.checkboxMicFgRoom.setOnCheckedChangeListener((buttonView, isChecked) -> mViewModel.mute(isChecked));
+
         // Inner Dialog
         mBinding.viewInputFgRoom.btnConfirmViewLayout.setOnClickListener(this::pendingCreateSubRoom);
         mBinding.viewInputFgRoom.getRoot().setOnClickListener(this::clearFocus);
@@ -113,30 +172,46 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         mViewModel.viewStatus().observe(getViewLifecycleOwner(), viewStatus -> {
             if (viewStatus instanceof ViewStatus.Loading)
                 showLoading();
-            else if (viewStatus instanceof ViewStatus.Done)
+            else if (viewStatus instanceof ViewStatus.Done) {
                 dismissLoading();
-            else if (viewStatus instanceof ViewStatus.Error) {
+                if (mBinding.scrimFgRoom.getVisibility() == View.VISIBLE) {
+                    mBinding.scrimFgRoom.performClick();
+                    mBinding.getRoot().postDelayed(() -> BaseUtil.hideKeyboard(requireActivity().getWindow(), mBinding.viewInputFgRoom.editTextViewInput), 500);
+                }
+            } else if (viewStatus instanceof ViewStatus.Error) {
                 dismissLoading();
                 BaseUtil.toast(requireContext(), ((ViewStatus.Error) viewStatus).msg);
             }
         });
 
         // Observe SubRoom
-        mViewModel.subRoomList().observe(getViewLifecycleOwner(), list -> {
-            for (SubRoomInfo subRoomInfo : list) {
-                addTab(subRoomInfo);
-            }
-        });
+        mViewModel.subRoomList().observe(getViewLifecycleOwner(), this::onSubRoomListUpdated);
 
-        // 创建子房间成功 或者清除成功
-        mViewModel.pendingSubRoom().observe(getViewLifecycleOwner(), subRoomInfo -> {
-            if (subRoomInfo == null) return;
-            if (mBinding.scrimFgRoom.getVisibility() == View.VISIBLE)
-                mBinding.scrimFgRoom.performClick();
-            mBinding.getRoot().postDelayed(() -> BaseUtil.hideKeyboard(requireActivity().getWindow(), mBinding.viewInputFgRoom.editTextViewInput),500);
-            addTab(subRoomInfo);
-            mViewModel.clearPendingSubRoom();
+        // RTC init 成功
+        mViewModel.mEngine().observe(getViewLifecycleOwner(), engine -> {
+            // RTC 创建失败 ==》返回上一页面
+            if (engine == null) Navigation.findNavController(mBinding.getRoot()).popBackStack();
+                // RTC 创建成功 ==》创建本地视图，准备加入频道
+            else onInitRTCSucceed();
         });
+    }
+
+    /**
+     * Remove all sub every time it updated
+     */
+    private void onSubRoomListUpdated(List<SubRoomInfo> list) {
+        int desiredTabPos = 0;
+        for (int i = 1; i < mBinding.tabLayoutFgRoom.getTabCount(); i++) {
+            mBinding.tabLayoutFgRoom.removeTabAt(i);
+        }
+
+        for (SubRoomInfo subRoomInfo : list) {
+            if (Objects.equals(subRoomInfo.getSubRoom(), mViewModel.currentSubRoom))
+                desiredTabPos = list.indexOf(subRoomInfo) + 1;
+            addTab(subRoomInfo);
+        }
+
+        mBinding.tabLayoutFgRoom.selectTab(mBinding.tabLayoutFgRoom.getTabAt(desiredTabPos));
     }
 
     /**
@@ -167,14 +242,44 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         tab.setText(subRoomInfo.getSubRoom());
     }
 
-    private void addView() {
-        mBinding.dynamicViewFgRoom.dynamicAddView(ScrollableLinearLayout.getChildAudioCardView(requireContext(), null, "User_" + new Random(System.currentTimeMillis()).nextInt(9999)));
+    private void onInitRTCSucceed() {
+        CardView childVideoCardView = RoomViewModel.getChildVideoCardView(requireContext(), Integer.parseInt(RoomConstant.userId));
+        mBinding.dynamicViewFgRoom.dynamicAddView(childVideoCardView);
+
+        mViewModel.setupLocalView(childVideoCardView);
+        mViewModel.joinRoom(mViewModel.currentRoomInfo.getId());
+    }
+
+    private void pendingSwitchRoom(@NonNull String roomName) {
+        ConstraintLayout container = mBinding.dynamicViewFgRoom.flexContainer;
+        int childCount = container.getChildCount();
+        for (int i = 1; i < childCount; i++) {
+            mBinding.dynamicViewFgRoom.dynamicRemoveView(container.getChildAt(i));
+        }
+        mViewModel.joinSubRoom(roomName);
+    }
+
+    @MainThread
+    private void doAddUser(int uid) {
+        CardView childVideoCardView = RoomViewModel.getChildVideoCardView(requireContext(), uid);
+        mBinding.dynamicViewFgRoom.dynamicAddView(childVideoCardView);
+
+        mViewModel.setupRemoteView(childVideoCardView, uid);
+    }
+
+    /**
+     * 切记在主线程操作，否则UI会卡住
+     */
+    @MainThread
+    private void doRemoveUser(int uid) {
+        BaseUtil.logD("doRemoveUser");
+        mBinding.dynamicViewFgRoom.dynamicRemoveView(mBinding.dynamicViewFgRoom.findViewWithTag(uid));
     }
 
     @StringRes
-    private int isValidRoomName(@NonNull String name){
+    private int isValidRoomName(@NonNull String name) {
         int tabCount = mBinding.tabLayoutFgRoom.getTabCount();
-        if (tabCount > 2) return R.string.room_count_limited;
+        if (tabCount > 3) return R.string.room_count_limited;
 
         // Skip the first one
         for (int i = 1; i < tabCount; i++) {
@@ -189,6 +294,7 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         }
         return 0;
     }
+
     private void clearFocus(View v) {
         mBinding.viewInputFgRoom.inputLayoutViewInput.clearFocus();
         BaseUtil.hideKeyboard(requireActivity().getWindow(), mBinding.viewInputFgRoom.inputLayoutViewInput);
@@ -198,9 +304,9 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         mBinding.appBarFgRoom.getViewTreeObserver().addOnPreDrawListener(mOnPreDrawListener);
     }
 
-    private void showNameIllegalError(@StringRes int illegalReason){
+    private void showNameIllegalError(@StringRes int illegalReason) {
         TextInputLayout input = mBinding.viewInputFgRoom.inputLayoutViewInput;
-        if(input.isErrorEnabled())
+        if (input.isErrorEnabled())
             BaseUtil.shakeViewAndVibrateToAlert(input);
         else
             input.setError(getString(illegalReason));

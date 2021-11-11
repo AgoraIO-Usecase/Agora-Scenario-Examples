@@ -2,6 +2,8 @@ package io.agora.sample.breakoutroom.bean;
 
 import androidx.annotation.NonNull;
 
+import java.util.Objects;
+
 public class SubRoomInfo {
     // 子房间名
     private @NonNull final String subRoom;
@@ -26,5 +28,27 @@ public class SubRoomInfo {
     @NonNull
     public String getCreateTime() {
         return createTime;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "SubRoomInfo{" +
+                "subRoom='" + subRoom + '\'' +
+                ", createTime='" + createTime + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SubRoomInfo that = (SubRoomInfo) o;
+        return subRoom.equals(that.getSubRoom()) && createTime.equals(that.getCreateTime());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(subRoom, createTime);
     }
 }
