@@ -40,10 +40,9 @@ import io.agora.sample.breakoutroom.RoomUtil;
 import io.agora.sample.breakoutroom.ViewStatus;
 import io.agora.sample.breakoutroom.bean.RoomInfo;
 import io.agora.sample.breakoutroom.databinding.FragmentRoomListBinding;
-import io.agora.sample.breakoutroom.databinding.ItemSceneListBinding;
+import io.agora.sample.breakoutroom.databinding.ItemRoomListBinding;
 import io.agora.sample.breakoutroom.ui.MainViewModel;
 import io.agora.syncmanager.rtm.SyncManager;
-import io.agora.syncmanager.rtm.SyncManagerException;
 
 public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> implements OnItemClickListener<RoomInfo> {
 
@@ -52,7 +51,7 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
     private MainViewModel mainViewModel;
     private RoomListViewModel mViewModel;
 
-    private BaseRecyclerViewAdapter<ItemSceneListBinding, RoomInfo, ListViewHolder> listAdapter;
+    private BaseRecyclerViewAdapter<ItemRoomListBinding, RoomInfo, ListViewHolder> listAdapter;
 
     // 新的权限申请方式 ——  注册申请回调
     // Register the permission callback, which handles the user's response to the
@@ -85,11 +84,17 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
         ViewCompat.setOnApplyWindowInsetsListener(mBinding.getRoot(), (v, insets) -> {
             Insets inset = insets.getInsets(WindowInsetsCompat.Type.systemBars());
 
-            int desiredBottom = Math.max(insets.getInsets(WindowInsetsCompat.Type.ime()).bottom, inset.bottom);
+            int desiredBottom = Math.max(insets.getInsets(WindowInsetsCompat.Type.ime()).bottom, inset.bottom) + (int) BaseUtil.dp2px(12);
 
-            v.setPadding(inset.left, inset.top, inset.right, desiredBottom);
-            // FIXME find a better way to achieve this.
-            ((CoordinatorLayout.LayoutParams) mBinding.scrimFgList.getLayoutParams()).setMargins(-inset.left, -inset.top - 1, -inset.right, -desiredBottom);
+            int attrResId = BaseUtil.getAttrResId(requireContext(), android.R.attr.actionBarSize);
+            int sizeOfDefaultToolbar = getResources().getDimensionPixelSize(attrResId);
+
+            mBinding.appBarFgRoomList.setPadding(0,inset.top,0,0);
+            mBinding.recyclerViewFgList.setPadding(0,inset.top + sizeOfDefaultToolbar,0,0);
+
+            CoordinatorLayout.LayoutParams lpFab = (CoordinatorLayout.LayoutParams) mBinding.fabFgList.getLayoutParams();
+            lpFab.bottomMargin = desiredBottom;
+
             return WindowInsetsCompat.CONSUMED;
         });
 

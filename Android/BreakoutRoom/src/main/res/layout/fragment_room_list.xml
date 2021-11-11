@@ -6,18 +6,25 @@
     android:layout_height="match_parent"
     android:clipToPadding="false">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_fg_list"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_fg_room_list"
+        app:liftOnScroll="true"
+        android:backgroundTint="@android:color/white"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:title="@string/app_name" />
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_fg_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="@string/app_name" />
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_fg_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:fadingEdge="vertical"
+        tools:padding="?attr/actionBarSize"
+        tools:listitem="@layout/item_room_list"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="2"
         tools:itemCount="12" />

@@ -7,11 +7,11 @@ import io.agora.example.base.BaseRecyclerViewAdapter;
 import io.agora.sample.breakoutroom.R;
 import io.agora.sample.breakoutroom.RoomUtil;
 import io.agora.sample.breakoutroom.bean.RoomInfo;
-import io.agora.sample.breakoutroom.databinding.ItemSceneListBinding;
+import io.agora.sample.breakoutroom.databinding.ItemRoomListBinding;
 
-public class ListViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder<ItemSceneListBinding, RoomInfo> {
+public class ListViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder<ItemRoomListBinding, RoomInfo> {
 
-    public ListViewHolder(@NonNull ItemSceneListBinding mBinding) {
+    public ListViewHolder(@NonNull ItemRoomListBinding mBinding) {
         super(mBinding);
     }
 
