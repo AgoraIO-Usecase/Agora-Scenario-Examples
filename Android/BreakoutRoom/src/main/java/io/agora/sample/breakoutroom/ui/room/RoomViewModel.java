@@ -17,6 +17,7 @@ import androidx.cardview.widget.CardView;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,6 +38,7 @@ import io.agora.sample.breakoutroom.ViewStatus;
 import io.agora.sample.breakoutroom.bean.RoomInfo;
 import io.agora.sample.breakoutroom.bean.SubRoomInfo;
 import io.agora.sample.breakoutroom.repo.RoomApi;
+import io.agora.sample.breakoutroom.ui.MainViewModel;
 import io.agora.syncmanager.rtm.IObject;
 import io.agora.syncmanager.rtm.SyncManager;
 import io.agora.syncmanager.rtm.SyncManagerException;
@@ -71,6 +73,12 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         return _subRoomList;
     }
 
+    public RoomViewModel(RoomInfo currentRoomInfo) {
+        this.currentRoomInfo = currentRoomInfo;
+        fetchAllSubRooms();
+        subscribeSubRooms();
+    }
+
     @Override
     protected void onCleared() {
         super.onCleared();
@@ -93,13 +101,13 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         SyncManager.Instance().getScene(currentRoomInfo.getId()).collection(RoomConstant.globalSubRoom).add(map, new SyncManager.DataItemCallback() {
             @Override
             public void onSuccess(IObject result) {
-                List<SubRoomInfo> list = _subRoomList.getValue();
-                if (list == null) {
-                    list = new ArrayList<>();
-                }
-                list.add(pendingSubRoom);
+//                List<SubRoomInfo> list = _subRoomList.getValue();
+//                if (list == null) {
+//                    list = new ArrayList<>();
+//                }
+//                list.add(pendingSubRoom);
 
-                _subRoomList.postValue(list);
+//                _subRoomList.postValue(list);
             }
 
             @Override

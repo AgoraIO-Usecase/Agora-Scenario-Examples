@@ -9,5 +9,4 @@ public interface RoomListApi {
     void joinRoom(@NonNull RoomInfo roomInfo);
     void createRoom(@NonNull RoomInfo roomInfo);
     void fetchRoomList();
-    void subscribeRoomList();
 }

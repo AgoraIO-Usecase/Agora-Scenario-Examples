@@ -33,6 +33,7 @@ import io.agora.sample.breakoutroom.R;
 import io.agora.sample.breakoutroom.RoomConstant;
 import io.agora.sample.breakoutroom.RoomUtil;
 import io.agora.sample.breakoutroom.ViewStatus;
+import io.agora.sample.breakoutroom.bean.RoomInfo;
 import io.agora.sample.breakoutroom.bean.SubRoomInfo;
 import io.agora.sample.breakoutroom.databinding.FragmentRoomBinding;
 import io.agora.sample.breakoutroom.ui.MainViewModel;
@@ -45,18 +46,18 @@ import io.agora.sample.breakoutroom.ui.MainViewModel;
  * MainViewModel 用于通用逻辑管理（退出频道等)
  */
 public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
+    public static final String currentRoom = "CurrentRoom";
 
-    private MainViewModel mainViewModel;
     private RoomViewModel mViewModel;
     private ViewTreeObserver.OnPreDrawListener mOnPreDrawListener;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-        mViewModel = new ViewModelProvider(getViewModelStore(), new ViewModelProvider.NewInstanceFactory()).get(RoomViewModel.class);
-        mViewModel.currentRoomInfo = mainViewModel.currentRoom;
+        assert getArguments() != null;
+        RoomInfo roomInfo = (RoomInfo) getArguments().getSerializable(currentRoom);
+        assert roomInfo != null;
+        mViewModel = new ViewModelProvider(getViewModelStore(), new RoomViewModelFactory(roomInfo)).get(RoomViewModel.class);
 
         ViewCompat.setOnApplyWindowInsetsListener(mBinding.getRoot(), (v, insets) -> {
             Insets inset = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -68,8 +69,6 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         initView();
         initListener();
 
-        mViewModel.fetchAllSubRooms();
-        mViewModel.subscribeSubRooms();
         mViewModel.initRTC(requireContext(), new IRtcEngineEventHandler() {
             @Override
             public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
@@ -200,10 +199,22 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
      * Remove all sub every time it updated
      */
     private void onSubRoomListUpdated(List<SubRoomInfo> list) {
-        int desiredTabPos = 0;
-        for (int i = 1; i < mBinding.tabLayoutFgRoom.getTabCount(); i++) {
-            mBinding.tabLayoutFgRoom.removeTabAt(i);
+        // remove duplicated SubRoom
+        // 移除重复的子房间
+        if (list.size() > 1) {
+            for (int i = list.size() - 1; i > 0; i--) {
+                for (int j = i -1; j >= 0; j--) {
+                    if (Objects.equals(list.get(i).getSubRoom(), list.get(j).getSubRoom())) {
+                        list.remove(i);
+                        break;
+                    }
+                }
+            }
         }
+
+        int desiredTabPos = 0;
+        while (mBinding.tabLayoutFgRoom.getTabCount()>1)
+            mBinding.tabLayoutFgRoom.removeTabAt(1);
 
         for (SubRoomInfo subRoomInfo : list) {
             if (Objects.equals(subRoomInfo.getSubRoom(), mViewModel.currentSubRoom))

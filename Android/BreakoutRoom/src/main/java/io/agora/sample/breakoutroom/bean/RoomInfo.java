@@ -2,9 +2,10 @@ package io.agora.sample.breakoutroom.bean;
 
 import androidx.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class RoomInfo {
+public class RoomInfo implements Serializable {
     private @NonNull final String id;
     private @NonNull final String userId;
     private @NonNull final String backgroundId;

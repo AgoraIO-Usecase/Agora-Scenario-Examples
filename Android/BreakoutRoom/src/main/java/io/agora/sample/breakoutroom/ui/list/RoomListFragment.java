@@ -42,6 +42,7 @@ import io.agora.sample.breakoutroom.bean.RoomInfo;
 import io.agora.sample.breakoutroom.databinding.FragmentRoomListBinding;
 import io.agora.sample.breakoutroom.databinding.ItemRoomListBinding;
 import io.agora.sample.breakoutroom.ui.MainViewModel;
+import io.agora.sample.breakoutroom.ui.room.RoomFragment;
 import io.agora.syncmanager.rtm.SyncManager;
 
 public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> implements OnItemClickListener<RoomInfo> {
@@ -215,7 +216,9 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
     }
 
     private void goToRoomPage() {
-        Navigation.findNavController(mBinding.getRoot()).navigate(R.id.action_roomListFragment_to_roomFragment);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(RoomFragment.currentRoom, mainViewModel.currentRoom);
+        Navigation.findNavController(mBinding.getRoot()).navigate(R.id.action_roomListFragment_to_roomFragment, bundle);
     }
     private void checkPermissionBeforeGoNextPage() {
         // 小于 M 无需控制
