@@ -8,10 +8,11 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_fg_room_list"
-        app:liftOnScroll="true"
-        android:backgroundTint="@android:color/white"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/white"
+        app:liftOnScroll="true">
+
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_fg_list"
             android:layout_width="match_parent"
@@ -19,15 +20,23 @@
             app:title="@string/app_name" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_fg_list"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_fg_list"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:padding="?attr/actionBarSize"
-        tools:listitem="@layout/item_room_list"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="2"
-        tools:itemCount="12" />
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_fg_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2"
+            tools:itemCount="12"
+            tools:listitem="@layout/item_room_list"
+            tools:paddingTop="?attr/actionBarSize" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:id="@+id/empty_view_fg_list"
@@ -38,8 +47,8 @@
         android:gravity="center"
         android:orientation="vertical"
         android:padding="@dimen/space_normal"
-        tools:visibility="visible"
-        android:visibility="invisible">
+        android:visibility="invisible"
+        tools:visibility="visible">
 
         <ImageView
             android:id="@+id/empty_image_fg_list"
@@ -54,7 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_normal"
-            android:text="@string/empty_click_to_refresh" />
+            tools:text="@string/empty_click_to_refresh" />
     </LinearLayout>
 
     <!-- A scrim that appears when the FAB is expanded. -->

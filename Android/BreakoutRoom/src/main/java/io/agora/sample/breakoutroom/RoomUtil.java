@@ -1,11 +1,22 @@
 package io.agora.sample.breakoutroom;
 
+import static android.view.Gravity.BOTTOM;
+import static android.view.Gravity.CENTER;
+
+import android.content.Context;
+import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.TextureView;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 
 import com.google.android.material.circularreveal.cardview.CircularRevealCardView;
 import com.google.android.material.textfield.TextInputLayout;
@@ -15,6 +26,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.HashMap;
 
 import io.agora.example.base.BaseUtil;
+import io.agora.rtc.RtcEngine;
 
 public class RoomUtil {
 
@@ -26,7 +38,8 @@ public class RoomUtil {
 
     public static void configTextInputLayout(TextInputLayout layout) {
         EditText editText = layout.getEditText();
-        if (editText != null)
+        if (editText != null) {
+            // clear error
             editText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -44,6 +57,7 @@ public class RoomUtil {
 
                 }
             });
+        }
     }
 
     public static <T,K,V> HashMap<K,V> convertObjToHashMap(T obj, Gson gson){
@@ -58,7 +72,7 @@ public class RoomUtil {
         try {
             if (name != null)
                 i = Integer.parseInt(name.toLowerCase().substring(8,10));
-        } catch (NumberFormatException ignored) { }
+        } catch (Exception ignored) { }
         switch (i){
             case 1: return R.drawable.portrait01;
             case 2: return R.drawable.portrait02;
@@ -76,4 +90,36 @@ public class RoomUtil {
             default: return R.drawable.portrait14;
         }
     }
+    public static CardView getChildVideoCardView(@NonNull Context context,boolean isLocal, int uid) {
+        CardView cardView = new CardView(context);
+
+        // title
+        TextView titleText = new TextView(context);
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        lp.gravity = BOTTOM;
+        lp.bottomMargin = (int) BaseUtil.dp2px(12);
+        titleText.setLayoutParams(lp);
+        titleText.setGravity(CENTER | BOTTOM);
+        titleText.setText(context.getString(R.string.user_name_format, uid));
+        titleText.setTextColor(uid == Integer.parseInt(RoomConstant.userId) ? Color.RED : Color.WHITE);
+
+
+        // container
+        FrameLayout frameLayout = new FrameLayout(context);
+        frameLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        TextureView textureView = RtcEngine.CreateTextureView(context);
+
+        frameLayout.addView(textureView);
+        frameLayout.addView(titleText);
+
+
+        cardView.setRadius(BaseUtil.dp2px(16));
+        cardView.setCardBackgroundColor(Color.WHITE);
+        cardView.setTag(isLocal ? -uid : uid);
+
+        cardView.addView(frameLayout);
+        return cardView;
+    }
+
 }

@@ -16,5 +16,11 @@ public class ViewStatus {
     }
 
     public static class Done extends ViewStatus{}
-    public static class Loading extends ViewStatus{}
+    public static class Loading extends ViewStatus{
+        public boolean showLoading;
+
+        public Loading(boolean showLoading) {
+            this.showLoading = showLoading;
+        }
+    }
 }

@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import io.agora.example.base.BaseUtil;
-import io.agora.sample.breakoutroom.RoomConstant;
 import io.agora.sample.breakoutroom.ViewStatus;
 import io.agora.sample.breakoutroom.bean.RoomInfo;
 import io.agora.sample.breakoutroom.repo.RoomListApi;
@@ -53,7 +51,7 @@ public class RoomListViewModel extends ViewModel implements RoomListApi {
 
     @Override
     public void fetchRoomList() {
-        _viewStatus.postValue(new ViewStatus.Loading());
+        _viewStatus.postValue(new ViewStatus.Loading(false));
         SyncManager.Instance().getScenes(new SyncManager.DataListCallback() {
             @Override
             public void onSuccess(List<IObject> result) {
@@ -70,6 +68,10 @@ public class RoomListViewModel extends ViewModel implements RoomListApi {
                     if (roomInfo != null)
                         res.add(roomInfo);
                 }
+//                for (int i = 0; i < 20; i++) {
+//                    roomInfo = new RoomInfo("room_"+i,""+i,""+i);
+//                    res.add(roomInfo);
+//                }
                 _roomList.postValue(res);
                 _viewStatus.postValue(new ViewStatus.Done());
             }
@@ -93,7 +95,7 @@ public class RoomListViewModel extends ViewModel implements RoomListApi {
      */
     @Override
     public void joinRoom(@NonNull RoomInfo roomInfo){
-        _viewStatus.postValue(new ViewStatus.Loading());
+        _viewStatus.postValue(new ViewStatus.Loading(true));
 
         SyncManager.Instance().joinScene(getSceneFromRoomInfo(roomInfo), new SyncManager.Callback() {
             @Override
@@ -116,7 +118,7 @@ public class RoomListViewModel extends ViewModel implements RoomListApi {
      */
     @Override
     public void createRoom(@NonNull RoomInfo roomInfo) {
-        _viewStatus.postValue(new ViewStatus.Loading());
+        _viewStatus.postValue(new ViewStatus.Loading(true));
 
         SyncManager.Instance().joinScene(getSceneFromRoomInfo(roomInfo), new SyncManager.Callback() {
             @Override

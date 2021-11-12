@@ -21,6 +21,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -43,6 +44,7 @@ import io.agora.sample.breakoutroom.databinding.FragmentRoomListBinding;
 import io.agora.sample.breakoutroom.databinding.ItemRoomListBinding;
 import io.agora.sample.breakoutroom.ui.MainViewModel;
 import io.agora.sample.breakoutroom.ui.room.RoomFragment;
+import io.agora.syncmanager.rtm.DocumentReference;
 import io.agora.syncmanager.rtm.SyncManager;
 
 public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> implements OnItemClickListener<RoomInfo> {
@@ -54,10 +56,8 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
 
     private BaseRecyclerViewAdapter<ItemRoomListBinding, RoomInfo, ListViewHolder> listAdapter;
 
-    // 新的权限申请方式 ——  注册申请回调
-    // Register the permission callback, which handles the user's response to the
-    // system permissions dialog. Save the return value, an instance of
-    // ActivityResultLauncher, as an instance variable.
+    private RoomInfo tempRoom;
+
     ActivityResultLauncher<String[]> requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), res -> {
         List<String> permissionsRefused = new ArrayList<>();
         for (String s : res.keySet()) {
@@ -65,13 +65,8 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
                 permissionsRefused.add(s);
         }
         if (!permissionsRefused.isEmpty()) {
-            // Explain to the user that the feature is unavailable because the
-            // features requires a permission that the user has denied. At the
-            // same time, respect the user's decision. Don't link to system
-            // settings in an effort to convince the user to change their decision.
             showPermissionAlertDialog();
         } else {
-            // Permission is granted. Continue the action or workflow in your app.
             goToRoomPage();
         }
     });
@@ -87,11 +82,7 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
 
             int desiredBottom = Math.max(insets.getInsets(WindowInsetsCompat.Type.ime()).bottom, inset.bottom) + (int) BaseUtil.dp2px(12);
 
-            int attrResId = BaseUtil.getAttrResId(requireContext(), android.R.attr.actionBarSize);
-            int sizeOfDefaultToolbar = getResources().getDimensionPixelSize(attrResId);
-
-            mBinding.appBarFgRoomList.setPadding(0,inset.top,0,0);
-            mBinding.recyclerViewFgList.setPadding(0,inset.top + sizeOfDefaultToolbar,0,0);
+            mBinding.appBarFgRoomList.setPadding(0, inset.top, 0, 0);
 
             CoordinatorLayout.LayoutParams lpFab = (CoordinatorLayout.LayoutParams) mBinding.fabFgList.getLayoutParams();
             lpFab.bottomMargin = desiredBottom;
@@ -113,7 +104,7 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
         listAdapter = new BaseRecyclerViewAdapter<>(null, this, ListViewHolder.class);
         mBinding.recyclerViewFgList.setAdapter(listAdapter);
         mBinding.recyclerViewFgList.addItemDecoration(new DividerDecoration(2));
-
+        mBinding.swipeFgList.setProgressViewOffset(true, 0, mBinding.swipeFgList.getProgressViewEndOffset());
     }
 
     @Override
@@ -123,13 +114,10 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
 
     private void initListener() {
         // 清除所有房间
-        if(BuildConfig.DEBUG) {
-            mBinding.toolbarFgList.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    SyncManager.Instance().getScene(RoomConstant.globalChannel).delete(null);
-                    return true;
-                }
+        if (BuildConfig.DEBUG) {
+            mBinding.toolbarFgList.setOnLongClickListener(v -> {
+                SyncManager.Instance().getScene(RoomConstant.globalChannel).delete(null);
+                return true;
             });
         }
 
@@ -142,13 +130,18 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
         mBinding.scrimFgList.setOnClickListener(v -> mBinding.fabFgList.setExpanded(false));
 
         // Empty View stuff
-        mBinding.btnRefreshFgList.setOnClickListener(this::fetchRoomList);
+        mBinding.btnRefreshFgList.setOnClickListener((v)->mViewModel.fetchRoomList());
+        // swipe
+        mBinding.swipeFgList.setOnRefreshListener(() -> mViewModel.fetchRoomList());
 
 
         mViewModel.viewStatus().observe(getViewLifecycleOwner(), viewStatus -> {
-            if (viewStatus instanceof ViewStatus.Loading)
-                showLoading();
-            else if (viewStatus instanceof ViewStatus.Done)
+            if (viewStatus instanceof ViewStatus.Loading) {
+                if (((ViewStatus.Loading) viewStatus).showLoading)
+                    showLoading();
+                else
+                    onLoadingStatus(true);
+            } else if (viewStatus instanceof ViewStatus.Done)
                 dismissLoading();
             else if (viewStatus instanceof ViewStatus.Error) {
                 dismissLoading();
@@ -167,7 +160,7 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
                 if (resList.isEmpty()) {
                     onEmptyStatus();
                 } else {
-                    mBinding.emptyViewFgList.setVisibility(View.GONE);
+                    onContentStatus();
                 }
             }
         });
@@ -176,7 +169,7 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
         mViewModel.pendingRoomInfo().observe(getViewLifecycleOwner(), roomInfo -> {
             if (roomInfo == null) return;
 
-            mainViewModel.currentRoom = roomInfo;
+            tempRoom = roomInfo;
             if (mBinding.scrimFgList.getVisibility() == View.VISIBLE)
                 mBinding.scrimFgList.performClick();
             mBinding.fabFgList.setExpanded(false);
@@ -186,10 +179,6 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
             checkPermissionBeforeGoNextPage();
 
         });
-    }
-
-    private void fetchRoomList(View v) {
-        mViewModel.fetchRoomList();
     }
 
     private void clearFocus(View v) {
@@ -217,9 +206,10 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
 
     private void goToRoomPage() {
         Bundle bundle = new Bundle();
-        bundle.putSerializable(RoomFragment.currentRoom, mainViewModel.currentRoom);
+        bundle.putSerializable(RoomFragment.currentRoom, tempRoom);
         Navigation.findNavController(mBinding.getRoot()).navigate(R.id.action_roomListFragment_to_roomFragment, bundle);
     }
+
     private void checkPermissionBeforeGoNextPage() {
         // 小于 M 无需控制
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
@@ -264,16 +254,29 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
                 .setPositiveButton(android.R.string.ok, ((dialogInterface, i) -> requestPermissionLauncher.launch(permissions))).show();
     }
 
+    private void onLoadingStatus(boolean on) {
+        mBinding.swipeFgList.setRefreshing(on);
+        mBinding.emptyImageFgList.setVisibility(on ? View.GONE : View.VISIBLE);
+    }
+
     private void onEmptyStatus() {
+        onLoadingStatus(false);
         int colorAccent = ContextCompat.getColor(requireContext(), R.color.colorAccent);
         mBinding.emptyViewFgList.setVisibility(View.VISIBLE);
         mBinding.emptyImageFgList.setImageTintList(ColorStateList.valueOf(colorAccent));
         mBinding.btnRefreshFgList.setTextColor(colorAccent);
+        mBinding.btnRefreshFgList.setText(R.string.empty_click_to_refresh);
     }
 
     private void onErrorStatus() {
+        onLoadingStatus(false);
         mBinding.emptyViewFgList.setVisibility(View.VISIBLE);
         mBinding.emptyImageFgList.setImageTintList(ColorStateList.valueOf(Color.RED));
         mBinding.btnRefreshFgList.setTextColor(Color.RED);
+        mBinding.btnRefreshFgList.setText(R.string.error_click_to_refresh);
+    }
+    private void onContentStatus(){
+        mBinding.swipeFgList.setRefreshing(false);
+        mBinding.emptyImageFgList.setVisibility(View.GONE);
     }
 }

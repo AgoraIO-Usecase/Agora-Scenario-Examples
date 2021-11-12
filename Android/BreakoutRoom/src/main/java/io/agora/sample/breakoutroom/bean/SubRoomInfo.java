@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 
 import java.util.Objects;
 
-public class SubRoomInfo {
+import io.agora.example.base.BaseUtil;
+
+public class SubRoomInfo implements Comparable<SubRoomInfo> {
     // 子房间名
     private @NonNull final String subRoom;
     // 13位时间戳
@@ -50,5 +52,15 @@ public class SubRoomInfo {
     @Override
     public int hashCode() {
         return Objects.hash(subRoom, createTime);
+    }
+
+    @Override
+    public int compareTo(SubRoomInfo o) {
+        try {
+            return (int) (Long.parseLong(this.getCreateTime()) - Long.parseLong(o.getCreateTime()));
+        } catch (NumberFormatException e) {
+            BaseUtil.logE(e);
+        }
+        return -1;
     }
 }

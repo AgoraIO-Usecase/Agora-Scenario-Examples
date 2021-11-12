@@ -1,28 +1,23 @@
 package io.agora.sample.breakoutroom.ui.room;
 
-import static android.view.Gravity.BOTTOM;
-import static android.view.Gravity.CENTER;
-
 import android.content.Context;
-import android.graphics.Color;
-import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import io.agora.example.base.BaseUtil;
 import io.agora.rtc.Constants;
@@ -38,7 +33,6 @@ import io.agora.sample.breakoutroom.ViewStatus;
 import io.agora.sample.breakoutroom.bean.RoomInfo;
 import io.agora.sample.breakoutroom.bean.SubRoomInfo;
 import io.agora.sample.breakoutroom.repo.RoomApi;
-import io.agora.sample.breakoutroom.ui.MainViewModel;
 import io.agora.syncmanager.rtm.IObject;
 import io.agora.syncmanager.rtm.SyncManager;
 import io.agora.syncmanager.rtm.SyncManagerException;
@@ -49,34 +43,70 @@ import io.agora.syncmanager.rtm.SyncManagerException;
 public class RoomViewModel extends ViewModel implements RoomApi {
 
     public RoomInfo currentRoomInfo;
+    public @Nullable String currentSubRoom;
 
-    public @Nullable
-    String currentSubRoom;
+    private boolean isMuted = false;
 
     private final MutableLiveData<RtcEngine> _mEngine = new MutableLiveData<>();
-
     public LiveData<RtcEngine> mEngine() {
         return _mEngine;
     }
 
     // UI状态
     private final MutableLiveData<ViewStatus> _viewStatus = new MutableLiveData<>();
-
     public LiveData<ViewStatus> viewStatus() {
         return _viewStatus;
     }
 
+    // RTC User list
+    private final MutableLiveData<Set<Integer>> _rtcUserSet = new MutableLiveData<>();
+    public LiveData<Set<Integer>> rtcUserList(){ return _rtcUserSet; }
+
     // 子房间列表
     private final MutableLiveData<List<SubRoomInfo>> _subRoomList = new MutableLiveData<>();
-
     public LiveData<List<SubRoomInfo>> subRoomList() {
         return _subRoomList;
     }
 
-    public RoomViewModel(RoomInfo currentRoomInfo) {
+    public RoomViewModel(Context context, RoomInfo currentRoomInfo) {
+        BaseUtil.logD("RoomViewModel-> init:" + currentRoomInfo.toString());
         this.currentRoomInfo = currentRoomInfo;
         fetchAllSubRooms();
         subscribeSubRooms();
+        initRTC(context, new IRtcEngineEventHandler() {
+            @Override
+            public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
+                BaseUtil.logD("onJoinChannelSuccess:"+channel);
+                handleMuteStuff();
+//                setupLocalView((ViewGroup) mBinding.dynamicViewFgRoom.flexContainer.getChildAt(0));
+            }
+            @Override
+            public void onError(int err) {
+                BaseUtil.logE(RtcEngine.getErrorDescription(err));
+            }
+            /**
+             * {@see <a href="https://docs.agora.io/cn/Interactive%20Broadcast/API%20Reference/java/classio_1_1agora_1_1rtc_1_1_i_rtc_engine_event_handler.html?platform=Android#a31b2974a574ec45e62bb768e17d1f49e">}
+             */
+            @Override
+            public void onConnectionStateChanged(int state, int reason) {
+                BaseUtil.logD("onConnectionStateChanged:" + state + "," + reason);
+            }
+            @Override
+            public void onUserJoined(int uid, int elapsed) {
+                Set<Integer> set = _rtcUserSet.getValue();
+                if (set == null) set = new LinkedHashSet<>();
+                set.add(uid);
+                _rtcUserSet.postValue(set);
+            }
+
+            @Override
+            public void onUserOffline(int uid, int reason) {
+                Set<Integer> set = _rtcUserSet.getValue();
+                if (set != null && set.remove(uid)){
+                    _rtcUserSet.postValue(set);
+                }
+            }
+        });
     }
 
     @Override
@@ -90,24 +120,15 @@ public class RoomViewModel extends ViewModel implements RoomApi {
             }
         }).start();
     }
-    /**
-     * @param roomName
-     */
+
     @Override
     public void createSubRoom(@NonNull String roomName) {
-        _viewStatus.postValue(new ViewStatus.Loading());
+        _viewStatus.postValue(new ViewStatus.Loading(false));
         SubRoomInfo pendingSubRoom = new SubRoomInfo(roomName);
         HashMap<String, Object> map = RoomUtil.convertObjToHashMap(pendingSubRoom, RoomConstant.gson);
         SyncManager.Instance().getScene(currentRoomInfo.getId()).collection(RoomConstant.globalSubRoom).add(map, new SyncManager.DataItemCallback() {
             @Override
             public void onSuccess(IObject result) {
-//                List<SubRoomInfo> list = _subRoomList.getValue();
-//                if (list == null) {
-//                    list = new ArrayList<>();
-//                }
-//                list.add(pendingSubRoom);
-
-//                _subRoomList.postValue(list);
             }
 
             @Override
@@ -136,12 +157,14 @@ public class RoomViewModel extends ViewModel implements RoomApi {
                     if (subRoomInfo != null && subRoomInfo.getSubRoom() != subRoomInfo.getCreateTime())
                         res.add(subRoomInfo);
                 }
+                Collections.sort(res);
                 _subRoomList.postValue(res);
             }
 
             @Override
             public void onFail(SyncManagerException e) {
                 _subRoomList.postValue(new ArrayList<>());
+                // TODO optimized it
                 if (!Objects.equals(e.getMessage(), "empty attributes")) {
                     _viewStatus.postValue(new ViewStatus.Error(e));
                 }
@@ -158,7 +181,8 @@ public class RoomViewModel extends ViewModel implements RoomApi {
                     SubRoomInfo subRoomInfo = item.toObject(SubRoomInfo.class);
                     addSubRoom(subRoomInfo);
                     _viewStatus.postValue(new ViewStatus.Done());
-                } catch (Exception ignored) { }
+                } catch (Exception ignored) {
+                }
             }
 
             @Override
@@ -168,10 +192,10 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
             @Override
             public void onDeleted(IObject item) {
-
                 try {
                     deleteSubRoom(item.toObject(SubRoomInfo.class));
-                } catch (Exception ignored) { }
+                } catch (Exception ignored) {
+                }
             }
 
             @Override
@@ -181,20 +205,22 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         });
     }
 
-    private void addSubRoom(@NonNull SubRoomInfo subRoomInfo){
+    private void addSubRoom(@NonNull SubRoomInfo subRoomInfo) {
         List<SubRoomInfo> res = _subRoomList.getValue();
         if (res == null) res = new ArrayList<>();
-        if(!res.contains(subRoomInfo)) {
+        if (!res.contains(subRoomInfo)) {
             res.add(subRoomInfo);
+            Collections.sort(res);
             _subRoomList.postValue(res);
         }
     }
 
-    private void deleteSubRoom(@NonNull SubRoomInfo subRoomInfo){
+    private void deleteSubRoom(@NonNull SubRoomInfo subRoomInfo) {
         List<SubRoomInfo> res = _subRoomList.getValue();
-        if (res != null)
-            res.remove(subRoomInfo);
-        _subRoomList.postValue(res);
+        if (res != null && res.remove(subRoomInfo)) {
+            Collections.sort(res);
+            _subRoomList.postValue(res);
+        }
     }
 
     //<editor-fold desc="RTC related">
@@ -234,7 +260,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         RtcEngine engine = _mEngine.getValue();
         if (engine != null) {
             Context context = ((RtcEngineImpl) engine).getContext();
-            engine.joinChannel(context.getString(R.string.rtc_app_token), roomName, null, Integer.parseInt(RoomConstant.userId));
+            engine.joinChannel(context.getString(R.string.rtc_app_token), currentRoomInfo.getUserId() + roomName, null, Integer.parseInt(RoomConstant.userId));
         }
     }
 
@@ -271,42 +297,15 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     }
     //</editor-fold>
 
-    public static CardView getChildVideoCardView(@NonNull Context context, int uid) {
-        CardView cardView = new CardView(context);
-
-        // title
-        TextView titleText = new TextView(context);
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-        lp.gravity = BOTTOM;
-        lp.bottomMargin = (int) BaseUtil.dp2px(12);
-        titleText.setLayoutParams(lp);
-        titleText.setGravity(CENTER | BOTTOM);
-        titleText.setText(context.getString(R.string.user_name_format, uid));
-        titleText.setTextColor(uid == Integer.parseInt(RoomConstant.userId) ? Color.RED : Color.WHITE);
-
-
-        // container
-        FrameLayout frameLayout = new FrameLayout(context);
-        frameLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
-        TextureView textureView = RtcEngine.CreateTextureView(context);
-
-        frameLayout.addView(textureView);
-        frameLayout.addView(titleText);
-
-
-        cardView.setRadius(BaseUtil.dp2px(16));
-        cardView.setCardBackgroundColor(Color.WHITE);
-        cardView.setTag(uid);
-
-        cardView.addView(frameLayout);
-        return cardView;
+    public void mute(boolean shouldMute) {
+        isMuted = shouldMute;
+        handleMuteStuff();
     }
 
-    public void mute(boolean shouldMute) {
+    private void handleMuteStuff(){
         RtcEngine engine = _mEngine.getValue();
         if (engine != null) {
-            engine.muteLocalAudioStream(shouldMute);
+            engine.muteLocalAudioStream(isMuted);
         }
     }
 }

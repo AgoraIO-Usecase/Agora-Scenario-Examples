@@ -3,7 +3,6 @@ package io.agora.sample.breakoutroom.ui.room;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
 import androidx.annotation.MainThread;
@@ -22,12 +21,14 @@ import androidx.navigation.Navigation;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import io.agora.example.base.BaseFragment;
 import io.agora.example.base.BaseUtil;
-import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
 import io.agora.sample.breakoutroom.R;
 import io.agora.sample.breakoutroom.RoomConstant;
@@ -36,7 +37,6 @@ import io.agora.sample.breakoutroom.ViewStatus;
 import io.agora.sample.breakoutroom.bean.RoomInfo;
 import io.agora.sample.breakoutroom.bean.SubRoomInfo;
 import io.agora.sample.breakoutroom.databinding.FragmentRoomBinding;
-import io.agora.sample.breakoutroom.ui.MainViewModel;
 
 /**
  * @author lq
@@ -57,48 +57,21 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         assert getArguments() != null;
         RoomInfo roomInfo = (RoomInfo) getArguments().getSerializable(currentRoom);
         assert roomInfo != null;
-        mViewModel = new ViewModelProvider(getViewModelStore(), new RoomViewModelFactory(roomInfo)).get(RoomViewModel.class);
+        mViewModel = new ViewModelProvider(getViewModelStore(), new RoomViewModelFactory(requireContext(), roomInfo)).get(RoomViewModel.class);
 
+        // Set mic control CheckBox's position
+        // 设置麦克风控制按钮的位置
         ViewCompat.setOnApplyWindowInsetsListener(mBinding.getRoot(), (v, insets) -> {
             Insets inset = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             int desiredBottom = Math.max(insets.getInsets(WindowInsetsCompat.Type.ime()).bottom, inset.bottom);
-            v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), desiredBottom);
+            CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) mBinding.checkboxMicFgRoom.getLayoutParams();
+            lp.bottomMargin = desiredBottom;
+            // Keep dispatch to inner view
             return insets;
         });
 
         initView();
         initListener();
-
-        mViewModel.initRTC(requireContext(), new IRtcEngineEventHandler() {
-            @Override
-            public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
-                mViewModel.mute(mBinding.checkboxMicFgRoom.isChecked());
-                mViewModel.setupLocalView((ViewGroup) mBinding.dynamicViewFgRoom.flexContainer.getChildAt(0));
-            }
-
-            @Override
-            public void onError(int err) {
-                BaseUtil.logE(RtcEngine.getErrorDescription(err));
-            }
-
-            /**
-             * {@see <a href="https://docs.agora.io/cn/Interactive%20Broadcast/API%20Reference/java/classio_1_1agora_1_1rtc_1_1_i_rtc_engine_event_handler.html?platform=Android#a31b2974a574ec45e62bb768e17d1f49e">}
-             */
-            @Override
-            public void onConnectionStateChanged(int state, int reason) {
-                BaseUtil.logD("onConnectionStateChanged:" + state + "," + reason);
-            }
-
-            @Override
-            public void onUserJoined(int uid, int elapsed) {
-                mBinding.getRoot().post(() -> doAddUser(uid));
-            }
-
-            @Override
-            public void onUserOffline(int uid, int reason) {
-                mBinding.getRoot().post(() -> doRemoveUser(uid));
-            }
-        });
     }
 
     private void initView() {
@@ -116,28 +89,6 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
     private void initListener() {
 
         // Adjust view pos
-        mOnPreDrawListener = new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                if (mBinding.appBarFgRoom.getViewTreeObserver().isAlive())
-                    mBinding.appBarFgRoom.getViewTreeObserver().removeOnPreDrawListener(this);
-
-                int appBarHeight = mBinding.appBarFgRoom.getMeasuredHeight();
-                int fabHeight = mBinding.fabFgRoom.getMeasuredHeight();
-
-                CoordinatorLayout.LayoutParams lpFab = (CoordinatorLayout.LayoutParams) mBinding.fabFgRoom.getLayoutParams();
-                CoordinatorLayout.LayoutParams lpDynamic = (CoordinatorLayout.LayoutParams) mBinding.dynamicViewFgRoom.getLayoutParams();
-
-                if (appBarHeight != lpDynamic.topMargin) {
-                    lpFab.topMargin = (int) (appBarHeight - fabHeight + BaseUtil.dp2px(12));
-                    mBinding.fabFgRoom.setLayoutParams(lpFab);
-
-                    lpDynamic.topMargin = appBarHeight;
-                    mBinding.dynamicViewFgRoom.setLayoutParams(lpDynamic);
-                }
-                return false;
-            }
-        };
         fixPosition();
 
 
@@ -168,31 +119,76 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         mBinding.scrimFgRoom.setOnClickListener(v -> mBinding.fabFgRoom.setExpanded(false));
 
         // View Status
-        mViewModel.viewStatus().observe(getViewLifecycleOwner(), viewStatus -> {
-            if (viewStatus instanceof ViewStatus.Loading)
-                showLoading();
-            else if (viewStatus instanceof ViewStatus.Done) {
-                dismissLoading();
-                if (mBinding.scrimFgRoom.getVisibility() == View.VISIBLE) {
-                    mBinding.scrimFgRoom.performClick();
-                    mBinding.getRoot().postDelayed(() -> BaseUtil.hideKeyboard(requireActivity().getWindow(), mBinding.viewInputFgRoom.editTextViewInput), 500);
-                }
-            } else if (viewStatus instanceof ViewStatus.Error) {
-                dismissLoading();
-                BaseUtil.toast(requireContext(), ((ViewStatus.Error) viewStatus).msg);
-            }
-        });
+        mViewModel.viewStatus().observe(getViewLifecycleOwner(), this::onViewStatusChanged);
 
         // Observe SubRoom
         mViewModel.subRoomList().observe(getViewLifecycleOwner(), this::onSubRoomListUpdated);
-
         // RTC init 成功
-        mViewModel.mEngine().observe(getViewLifecycleOwner(), engine -> {
-            // RTC 创建失败 ==》返回上一页面
-            if (engine == null) Navigation.findNavController(mBinding.getRoot()).popBackStack();
-                // RTC 创建成功 ==》创建本地视图，准备加入频道
-            else onInitRTCSucceed();
-        });
+        mViewModel.mEngine().observe(getViewLifecycleOwner(), this::onEngineInit);
+        // 用户加入 RTC 频道
+        mViewModel.rtcUserList().observe(getViewLifecycleOwner(), this::onRtcUserSetUpdated);
+    }
+
+    private void onViewStatusChanged(ViewStatus viewStatus) {
+        if (viewStatus instanceof ViewStatus.Loading)
+            showLoading();
+        else if (viewStatus instanceof ViewStatus.Done) {
+            dismissLoading();
+            if (mBinding.scrimFgRoom.getVisibility() == View.VISIBLE) {
+                mBinding.scrimFgRoom.performClick();
+                mBinding.getRoot().postDelayed(() -> BaseUtil.hideKeyboard(requireActivity().getWindow(), mBinding.viewInputFgRoom.editTextViewInput), 500);
+            }
+        } else if (viewStatus instanceof ViewStatus.Error) {
+            dismissLoading();
+            BaseUtil.toast(requireContext(), ((ViewStatus.Error) viewStatus).msg);
+        }
+    }
+
+    private void onEngineInit(RtcEngine engine){
+        // RTC 创建失败 ==》返回上一页面
+        if (engine == null) Navigation.findNavController(mBinding.getRoot()).popBackStack();
+            // RTC 创建成功 ==》创建本地视图，准备加入频道
+        else onInitRTCSucceed();
+    }
+
+    /**
+     * We use LinkedHashSet to keep the order.
+     */
+    private void onRtcUserSetUpdated(Set<Integer> set) {
+        Map<Integer, Boolean> diffMap = getDiffMap(set);
+        for (Integer i : diffMap.keySet()) {
+            Boolean res = diffMap.get(i);
+            if (res == null) continue;
+            if (res){
+                doAddUser(i);
+            }else{
+                doRemoveUser(i);
+            }
+        }
+    }
+
+    /**
+     * @return map key 为 uid，value 为 是否添加
+     * value = null,不改变
+     * value = true,添加
+     * value = false,删除
+     */
+    private Map<Integer,Boolean> getDiffMap(Set<Integer> dataSet){
+        Map<Integer, Boolean> resMap = new HashMap<>();
+        ConstraintLayout container = mBinding.dynamicViewFgRoom.flexContainer;
+        int childCount = container.getChildCount();
+
+        // 将现有 View 的 Tag 添加到 map,赋值为false
+        for (int i = 1; i < childCount; i++) {
+            resMap.put((Integer) container.getChildAt(i).getTag(), false);
+        }
+        // 将新的即将呈现的 uid 添加到 map
+        // 如果已经存在，则赋值为 null
+        for (Integer data : dataSet) {
+            Boolean previous = resMap.put(data, true);
+            if (previous != null) resMap.put(data, null);
+        }
+        return resMap;
     }
 
     /**
@@ -254,7 +250,8 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
     }
 
     private void onInitRTCSucceed() {
-        CardView childVideoCardView = RoomViewModel.getChildVideoCardView(requireContext(), Integer.parseInt(RoomConstant.userId));
+        // 为了区分本地与远端，我们给本地加上 负号 Tag
+        CardView childVideoCardView = RoomUtil.getChildVideoCardView(requireContext(), true, Integer.parseInt(RoomConstant.userId));
         mBinding.dynamicViewFgRoom.dynamicAddView(childVideoCardView);
 
         mViewModel.setupLocalView(childVideoCardView);
@@ -272,7 +269,7 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
 
     @MainThread
     private void doAddUser(int uid) {
-        CardView childVideoCardView = RoomViewModel.getChildVideoCardView(requireContext(), uid);
+        CardView childVideoCardView = RoomUtil.getChildVideoCardView(requireContext(),false, uid);
         mBinding.dynamicViewFgRoom.dynamicAddView(childVideoCardView);
 
         mViewModel.setupRemoteView(childVideoCardView, uid);
@@ -285,6 +282,7 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
     private void doRemoveUser(int uid) {
         BaseUtil.logD("doRemoveUser");
         mBinding.dynamicViewFgRoom.dynamicRemoveView(mBinding.dynamicViewFgRoom.findViewWithTag(uid));
+        mViewModel.onUserLeft(uid);
     }
 
     @StringRes
@@ -312,6 +310,28 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
     }
 
     private void fixPosition() {
+        mOnPreDrawListener = new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                if (mBinding.appBarFgRoom.getViewTreeObserver().isAlive())
+                    mBinding.appBarFgRoom.getViewTreeObserver().removeOnPreDrawListener(this);
+
+                int appBarHeight = mBinding.appBarFgRoom.getMeasuredHeight();
+                int fabHeight = mBinding.fabFgRoom.getMeasuredHeight();
+
+                CoordinatorLayout.LayoutParams lpFab = (CoordinatorLayout.LayoutParams) mBinding.fabFgRoom.getLayoutParams();
+                CoordinatorLayout.LayoutParams lpDynamic = (CoordinatorLayout.LayoutParams) mBinding.dynamicViewFgRoom.getLayoutParams();
+
+                if (appBarHeight != lpDynamic.topMargin) {
+                    lpFab.topMargin = (int) (appBarHeight - fabHeight + BaseUtil.dp2px(12));
+                    mBinding.fabFgRoom.setLayoutParams(lpFab);
+
+                    lpDynamic.topMargin = appBarHeight;
+                    mBinding.dynamicViewFgRoom.setLayoutParams(lpDynamic);
+                }
+                return false;
+            }
+        };
         mBinding.appBarFgRoom.getViewTreeObserver().addOnPreDrawListener(mOnPreDrawListener);
     }
 

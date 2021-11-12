@@ -19,8 +19,6 @@ import io.agora.syncmanager.rtm.SyncManager;
  */
 public class MainViewModel extends ViewModel {
 
-    public RoomInfo currentRoom;
-
     private final MutableLiveData<Boolean> _isRTMInit = new MutableLiveData<>();
     public LiveData<Boolean> isRTMInit(){
         return _isRTMInit;
@@ -41,6 +39,10 @@ public class MainViewModel extends ViewModel {
             }
             _isRTMInit.postValue(true);
         }).start();
+    }
+
+    public void destroySyncManager(){
+//        SyncManager.Instance()
     }
 
     public void leaveRoom() {
