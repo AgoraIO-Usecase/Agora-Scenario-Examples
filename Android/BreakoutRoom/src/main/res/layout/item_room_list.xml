@@ -14,6 +14,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearance="@style/cornerNormalStyle"
+        app:tint="@color/selector_color_scrim"
+        app:tintMode="src_atop"
         tools:src="@mipmap/ic_launcher" />
 
     <TextView
@@ -21,6 +23,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="12dp"
+        android:shadowColor="@android:color/black"
+        android:shadowRadius="10"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="@+id/bgd_item_room_list"
         app:layout_constraintEnd_toEndOf="@+id/bgd_item_room_list"
