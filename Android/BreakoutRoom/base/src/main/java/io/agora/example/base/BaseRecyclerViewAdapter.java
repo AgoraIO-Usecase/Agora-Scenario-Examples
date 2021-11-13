@@ -1,5 +1,6 @@
 package io.agora.example.base;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,8 @@ import java.util.List;
  */
 public class BaseRecyclerViewAdapter<B extends ViewBinding, T, H extends BaseRecyclerViewAdapter.BaseViewHolder<B, T>> extends RecyclerView.Adapter<H> {
 
-    public List<T> dataList;
+    public @NonNull List<T> dataList;
+
     private final OnItemClickListener<T> mOnItemClickListener;
     public int selectedIndex = -1;
 
@@ -87,14 +89,11 @@ public class BaseRecyclerViewAdapter<B extends ViewBinding, T, H extends BaseRec
 
     @Override
     public int getItemCount() {
-        return dataList == null ? 0 : dataList.size();
+        return dataList.size();
     }
 
     @Nullable
     public T getItemData(int position) {
-        if (dataList == null) {
-            return null;
-        }
 
         if (position < 0 || dataList.size() <= position) {
             return null;
@@ -115,59 +114,26 @@ public class BaseRecyclerViewAdapter<B extends ViewBinding, T, H extends BaseRec
 
     //<editor-fold desc="CURD">
     public boolean contains(@NonNull T data) {
-        if (dataList == null) {
-            return false;
-        }
         return dataList.contains(data);
     }
 
     public int indexOf(@NonNull T data) {
-        if (dataList == null) {
-            return -1;
-        }
         return dataList.indexOf(data);
     }
 
-    // TODO
-    public void setDataListWithDiffUtil(@NonNull List<T> dataList) {
-        DiffUtil.Callback callback = new DiffUtil.Callback() {
-
-            @Override
-            public int getOldListSize() {
-                return BaseRecyclerViewAdapter.this.dataList.size();
-            }
-
-            @Override
-            public int getNewListSize() {
-                return dataList.size();
-            }
-
-            @Override
-            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                return BaseRecyclerViewAdapter.this.dataList.get(oldItemPosition)
-                        == dataList.get(newItemPosition);
-            }
-
-            @Override
-            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                return BaseRecyclerViewAdapter.this.dataList.get(oldItemPosition)
-                        .equals(dataList.get(newItemPosition));
-            }
-        };
+    public void submitListWithDiffCallback(@NonNull BaseDiffCallback<T> callback) {
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(callback);
+        this.dataList = callback.getNewList();
         diffResult.dispatchUpdatesTo(this);
-        this.dataList = dataList;
     }
 
-    public void setDataWithPurge(@NonNull List<T> dataList) {
+    @SuppressLint("NotifyDataSetChanged")
+    public void submitListAndPurge(@NonNull List<T> dataList) {
         this.dataList = dataList;
         notifyDataSetChanged();
     }
 
     public void addItem(@NonNull T data) {
-        if (dataList == null) {
-            dataList = new ArrayList<>();
-        }
 
         int index = dataList.indexOf(data);
         if (index < 0) {
@@ -180,54 +146,29 @@ public class BaseRecyclerViewAdapter<B extends ViewBinding, T, H extends BaseRec
     }
 
     public void addItem(@NonNull T data, int index) {
-        if (dataList == null) {
-            dataList = new ArrayList<>();
-        }
-
-        int indexTemp = dataList.indexOf(data);
-        if (indexTemp < 0) {
-            dataList.add(index, data);
-            notifyItemRangeChanged(index, dataList.size() - index);
-        } else {
-            dataList.set(index, data);
-            notifyItemChanged(index);
-        }
+        dataList.add(index, data);
+        notifyItemRangeChanged(index, dataList.size() - index);
     }
 
     public void update(int index, @NonNull T data) {
-        if (dataList == null) {
-            dataList = new ArrayList<>();
-        }
-
         dataList.set(index, data);
         notifyItemChanged(index);
     }
 
     public void clear() {
-        if (dataList == null || dataList.isEmpty()) {
-            return;
-        }
-
+        int formalCount = dataList.size();
         dataList.clear();
-        notifyDataSetChanged();
+        notifyItemRangeRemoved(0, formalCount);
     }
 
-    public void deleteItem(@Size(min = 0) int posion) {
-        if (dataList == null || dataList.isEmpty()) {
-            return;
-        }
-
-        if (0 <= posion && posion < dataList.size()) {
-            dataList.remove(posion);
-            notifyItemRemoved(posion);
+    public void deleteItem(@Size(min = 0) int pos) {
+        if (0 <= pos && pos < dataList.size()) {
+            dataList.remove(pos);
+            notifyItemRemoved(pos);
         }
     }
 
     public void deleteItem(@NonNull T data) {
-        if (dataList == null || dataList.isEmpty()) {
-            return;
-        }
-
         int index = dataList.indexOf(data);
         if (0 <= index && index < dataList.size()) {
             dataList.remove(data);

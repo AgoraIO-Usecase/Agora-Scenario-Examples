@@ -21,7 +21,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -44,7 +43,6 @@ import io.agora.sample.breakoutroom.databinding.FragmentRoomListBinding;
 import io.agora.sample.breakoutroom.databinding.ItemRoomListBinding;
 import io.agora.sample.breakoutroom.ui.MainViewModel;
 import io.agora.sample.breakoutroom.ui.room.RoomFragment;
-import io.agora.syncmanager.rtm.DocumentReference;
 import io.agora.syncmanager.rtm.SyncManager;
 
 public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> implements OnItemClickListener<RoomInfo> {
@@ -156,7 +154,7 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
                     onErrorStatus();
                 }
             } else {
-                listAdapter.setDataListWithDiffUtil(resList);
+                listAdapter.submitListWithDiffCallback(new RoomListDiffCallback(listAdapter.dataList, resList));
                 if (resList.isEmpty()) {
                     onEmptyStatus();
                 } else {
