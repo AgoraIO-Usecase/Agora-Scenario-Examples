@@ -66,8 +66,10 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
             int desiredBottom = Math.max(insets.getInsets(WindowInsetsCompat.Type.ime()).bottom, inset.bottom);
             CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) mBinding.checkboxMicFgRoom.getLayoutParams();
             lp.bottomMargin = desiredBottom;
-            // Keep dispatch to inner view
-            return insets;
+
+            mBinding.tabLayoutFgRoom.setPadding(0, inset.top, 0, 0);
+
+            return WindowInsetsCompat.CONSUMED;
         });
 
         initView();
