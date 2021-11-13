@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import io.agora.example.base.BaseFragment;
 import io.agora.example.base.BaseUtil;
@@ -233,15 +234,12 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         if (text != null) inputText = text.toString().trim();
 
         if (inputText != null && !inputText.isEmpty()) {
-            int err = isValidRoomName(inputText);
-            if (err == 0)
+            int error = isValidRoomName(inputText);
+            if (error == 0)
                 mViewModel.createSubRoom(inputText);
-            else showNameIllegalError(err);
+            else RoomUtil.showNameIllegalError(inputLayout, error);
         } else {
-            if (inputLayout.isErrorEnabled())
-                BaseUtil.shakeViewAndVibrateToAlert(inputLayout);
-            else
-                inputLayout.setError(getString(R.string.room_name_invalid));
+            RoomUtil.showNameIllegalError(inputLayout, R.string.please_input_name);
         }
     }
 
@@ -303,6 +301,9 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
             if (tabText.toString().trim().equals(name))
                 return R.string.room_name_duplicated;
         }
+        Pattern pattern = Pattern.compile(requireContext().getString(R.string.room_name_regex));
+        if (!pattern.matcher(name).matches())
+            return R.string.room_name_restrict;
         return 0;
     }
 
@@ -335,14 +336,6 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
             }
         };
         mBinding.appBarFgRoom.getViewTreeObserver().addOnPreDrawListener(mOnPreDrawListener);
-    }
-
-    private void showNameIllegalError(@StringRes int illegalReason) {
-        TextInputLayout input = mBinding.viewInputFgRoom.inputLayoutViewInput;
-        if (input.isErrorEnabled())
-            BaseUtil.shakeViewAndVibrateToAlert(input);
-        else
-            input.setError(getString(illegalReason));
     }
 
     @Override

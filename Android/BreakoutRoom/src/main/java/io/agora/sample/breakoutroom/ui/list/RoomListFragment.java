@@ -13,6 +13,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
@@ -22,11 +23,13 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 import io.agora.example.base.BaseFragment;
 import io.agora.example.base.BaseRecyclerViewAdapter;
@@ -128,7 +131,7 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
         mBinding.scrimFgList.setOnClickListener(v -> mBinding.fabFgList.setExpanded(false));
 
         // Empty View stuff
-        mBinding.btnRefreshFgList.setOnClickListener((v)->mViewModel.fetchRoomList());
+        mBinding.btnRefreshFgList.setOnClickListener((v) -> mViewModel.fetchRoomList());
         // swipe
         mBinding.swipeFgList.setOnRefreshListener(() -> mViewModel.fetchRoomList());
 
@@ -192,15 +195,18 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
         if (text != null) inputText = text.toString().trim();
 
         if (inputText != null && !inputText.isEmpty()) {
-            String bgdId = requireContext().getString(R.string.portrait_format, (new Random(System.currentTimeMillis()).nextInt(13) + 1));
-            mViewModel.createRoom(new RoomInfo(inputText, RoomConstant.userId, bgdId));
+            int error = isValidRoomName(inputText);
+            if (error != 0) {
+                RoomUtil.showNameIllegalError(inputLayout, error);
+            } else {
+                String bgdId = requireContext().getString(R.string.portrait_format, (new Random().nextInt(14) + 1));
+                mViewModel.createRoom(new RoomInfo(inputText, RoomConstant.userId, bgdId));
+            }
         } else {
-            if (inputLayout.isErrorEnabled())
-                BaseUtil.shakeViewAndVibrateToAlert(inputLayout);
-            else
-                inputLayout.setError(getString(R.string.room_name_invalid));
+            RoomUtil.showNameIllegalError(inputLayout, R.string.please_input_name);
         }
     }
+
 
     private void goToRoomPage() {
         Bundle bundle = new Bundle();
@@ -252,6 +258,15 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
                 .setPositiveButton(android.R.string.ok, ((dialogInterface, i) -> requestPermissionLauncher.launch(permissions))).show();
     }
 
+    @StringRes
+    private int isValidRoomName(@NonNull String name) {
+
+        Pattern pattern = Pattern.compile(requireContext().getString(R.string.room_name_regex));
+        if (!pattern.matcher(name).matches())
+            return R.string.room_name_restrict;
+        return 0;
+    }
+
     private void onLoadingStatus(boolean on) {
         mBinding.swipeFgList.setRefreshing(on);
         mBinding.emptyImageFgList.setVisibility(on ? View.GONE : View.VISIBLE);
@@ -273,7 +288,8 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
         mBinding.btnRefreshFgList.setTextColor(Color.RED);
         mBinding.btnRefreshFgList.setText(R.string.error_click_to_refresh);
     }
-    private void onContentStatus(){
+
+    private void onContentStatus() {
         mBinding.swipeFgList.setRefreshing(false);
         mBinding.emptyImageFgList.setVisibility(View.GONE);
     }

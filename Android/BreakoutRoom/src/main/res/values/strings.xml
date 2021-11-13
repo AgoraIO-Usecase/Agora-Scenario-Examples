@@ -6,9 +6,10 @@
     <string name="fab_add_sub_room">添加子房间</string>
     <string name="please_input_name">请输入房间名称</string>
 
-    <string name="room_name_invalid">请输入正确的房间名</string>
-    <string name="room_name_duplicated">存在重名的房间哦</string>
-    <string name="room_count_limited">子房间数已达上限哦</string>
+    <string name="room_name_regex">^[\\s-\\$\\(\\)\\+-\\.0-\\[\\]-\\_a-\\~]+$</string>
+    <string name="room_name_duplicated">存在重名的房间哦😂</string>
+    <string name="room_name_restrict">RTC暂不支持名称中的某些字符哦😣</string>
+    <string name="room_count_limited">子房间数已达上限哦🤪</string>
 
 
     <string name="empty_click_to_refresh">暂无可用房间，点击刷新</string>
@@ -18,7 +19,7 @@
     <string name="page_data_empty">页面数据为空</string>
 
     <string name="portrait_format">portrait%02d</string>
-    <string name="room_name_format">%s\n房主：User_%s</string>
+    <string name="room_name_format">🏠 %s\n👱 User_%s</string>
     <string name="user_name_format">User_%d</string>
 
 <!--    权限-->

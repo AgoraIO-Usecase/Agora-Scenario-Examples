@@ -35,6 +35,8 @@
             app:boxCornerRadiusBottomStart="4dp"
             app:boxCornerRadiusTopEnd="4dp"
             app:boxCornerRadiusTopStart="4dp"
+            app:endIconDrawable="@drawable/ic_close"
+            app:endIconMode="clear_text"
             app:errorEnabled="false"
             app:layout_constraintTop_toBottomOf="@id/title_view_input">
 

@@ -782,7 +782,7 @@ public class ScrollableLinearLayout extends LinearLayoutCompat {
 
         cardView.setTag(tag);
         cardView.setRadius(dp2pxSystem(16));
-        cardView.setCardBackgroundColor(Color.rgb(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255)));
+        cardView.setCardBackgroundColor(Color.rgb(new Random().nextInt(256), new Random().nextInt(256), new Random().nextInt(256)));
         cardView.addView(titleText);
         return cardView;
     }

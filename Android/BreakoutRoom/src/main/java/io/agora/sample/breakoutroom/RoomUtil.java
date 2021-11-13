@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.cardview.widget.CardView;
 
 import com.google.android.material.circularreveal.cardview.CircularRevealCardView;
@@ -58,6 +59,13 @@ public class RoomUtil {
                 }
             });
         }
+    }
+
+    public static void showNameIllegalError(TextInputLayout inputLayout, @StringRes int stringRes){
+        if (inputLayout.isErrorEnabled())
+            BaseUtil.shakeViewAndVibrateToAlert(inputLayout);
+        else
+            inputLayout.setError(inputLayout.getContext().getString(stringRes));
     }
 
     public static <T,K,V> HashMap<K,V> convertObjToHashMap(T obj, Gson gson){
