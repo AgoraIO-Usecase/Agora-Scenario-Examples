@@ -155,7 +155,7 @@ class BaseTableViewLayout: UIView {
 
 extension BaseTableViewLayout: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        dataArray?.count ?? 10
+        dataArray?.count ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = delegate?.tableView(tableView, cellForRowAt: indexPath)
