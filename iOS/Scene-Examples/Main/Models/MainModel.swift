@@ -45,7 +45,7 @@ struct MainModel {
         model = MainModel()
         model.title = "超级小班课"
         model.desc = "多人会议, 可建立小会议室讨论"
-        model.imageNmae = "pic-virtual"
+        model.imageNmae = "pic-multiple"
         model.sceneType = .breakoutRoom
         dataArray.append(model)
         
