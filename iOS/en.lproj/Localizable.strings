@@ -1,0 +1,192 @@
+/* 
+  Localizable.strings
+  AgoraLive
+
+  Created by CavanSu on 2020/2/11.
+  Copyright © 2020 Agora. All rights reserved.
+*/
+
+Cancel="Cancel";
+Done="Done";
+Confirm="Confirm";
+Reject="Reject";
+End="End";
+Accept="Accept";
+Music="Music";
+
+Lost_Connection="Network error";
+Lost_Connection_Description="We cannot connect to network now. Please retry later";
+
+Lost_Connection_Retry="Connection lost. Please retry later.";
+Use_Cellular_Data="Use cellular data instead of WIFI. May incur data charges.";
+
+Upload_Log="Upload Log";
+
+// Main Page
+Multi_Broadcasters="Multi Hosts";
+Multi_Broadcasters_Description="Invite others to co-host in live streaming channel";
+Single_Broadcaster="Single Host";
+Single_Broadcaster_Description="Live streaming by single host";
+PK_Live="PK Host-in";
+PK_Live_Description="Merge 2 streams from different channels";
+Virtual_Live="Virtual Hosts";
+Virtual_Live_Description="Avatar-based simulation for call or live streaming";
+Live_Shopping="Live Shopping";
+Live_Shopping_Description="Engage audience and other hosts in online shopping";
+
+// Create Room Page
+Create_A_Live_Room="Create a room to start";
+Create_Start="Go Live";
+Create_NameLabel="Channel name: ";
+
+Virtual_Appearance_Select="Please select an avatar";
+
+Limit_Toast="Please refrain from using it commercially. The max duration per session is 10 minutes, and the max number of participants per channel is 10.";
+
+// Mine
+Mine_Head="Profile";
+Mine_Name="Nickname";
+Input_Name="Input";
+About="About";
+Privacy_Item="Privacy";
+Disclaimer="Disclaimer";
+Register_Agora_Account="Agora Account";
+Version_Release_Date="Release Date";
+RTC_SDK_Version="SDK Version";
+AL_Version="Agora Live Version";
+
+Test_Product_Disclaimer="Product disclaimer ";
+
+Disclaimer_Detail="Agora Live (\"this product\") is a product provided by Agora. Agora enjoys the copyright and ownership of this product. It is hereby granted free of charge to anyone who obtains a copy of this product and related documentation (hereinafter referred to as \"software\") to try the software without limitation, including but not limited to trial, copy, modify, merge, publish, distribute, but this product shall not be used For any commercial use, you may not sublicense and / or sell copies of the software.
+
+This product is provided \"as is\" without any express warranty, including but not limited to guarantees of suitability, suitability for specific purposes, and non-infringement. Whether it is due to any contract, infringement or other forms of conduct related to this product or the trial of this product or other methods, Agora will not be responsible for any claims, damages or other liabilities.
+
+You are free to choose whether to try the services provided by this product. If you download, install, or try the services provided in this product, it means that you trust the owner of the product, and Agora shall not be responsible for any form of loss or injury caused by yourself or others when you try the services provided in this product for any reason.";
+
+// Media
+Resolution="Resolution";
+FrameRate="Frame rate";
+BitRate="Bitrate";
+
+Switch_Camera="Switch";
+Camera="Camera";
+Mic="Mic";
+Audio_Loop="Mic loop";
+
+Beauty="Image enhancement";
+BlurLevel="Smooth";
+ColorLevel="Brighten";
+CheekThining="Thinning";
+EyeEnlarging="Eye";
+
+// Live Room
+Live_Room="Channel";
+Live_Text_Input_Placeholder="Say something...";
+Live_Room_Settings="Settings";
+BGM="Background music";
+Tool="Tools";
+Real_Data="Statistics";
+
+Join_Live_Room="entered the room";
+Leave_Live_Room="left the room";
+
+Send_Chat_Message_Fail="send message fail";
+Give_Owner_A_Gift="gives";
+Present_Gift_Fail="gives gift fail";
+User_List="Member listing";
+Live_End="Live End";
+Confirm_End_Live="Do you want to end this live streaming?";
+Confirm_End_Broadcasting="End Live Streaming?";
+Please_Input_Headset="Plug in a headphone";
+Super_Resolution_Enabled="Super Resolution enabled";
+
+// Live Seat
+Seat_Ban="Mute";
+Seat_Unban="Un-mute";
+Seat_Close="Block";
+Seat_Release="Unblock";
+End_Broadcasting="End";
+
+Seat_Release_Description="Unblock this seat";
+
+Invitation_Rejected="Invitation Rejected";
+Invitation_Rejected_Description="Your Invitation has been rejected by";
+
+Invite_Broadcasting="Invite";
+Owner_Forces_You_End_Broadcasting="Owner forced you to become a audience";
+Apply_For_Broadcasting="Become a host";
+Force_To_Audience="End hosting";
+Became_A_Host="became a host";
+Stopped_Hosting="stopped hosting";
+
+Owner_Reject_Broadcasting_Application="Owner reject your application";
+Audience_Reject_Broadcasting="Audience reject";
+Invite_Broadcasting_Fail="Invite a host fail";
+Apply_For_Broadcasting_Fail="Apply to be a host fail";
+Seat_Command_Fail="Command fail";
+
+// Gift
+Gift="Gift";
+Small_Bell="Bell";
+Ice_Cream="Ice cream";
+Wine="Wine";
+Cake="Cake";
+Ring="Ring";
+Watch="Watch";
+Crystal="Diamond";
+Rocket="Rocket";
+Coin="Coin";
+Present="Give";
+
+// PK
+Invite_PK="Invitation";
+PK_Recieved_Invite="Received PK invitation";
+PK_Invite_Fail="PK hosts failed to connect";
+PK_Invite_Reject="Your invitation is by rejected";
+PK_Remaining="PK remaining";
+Join_Other_Live_Room_Fail="Join the other channel fail";
+PK_End="PK End";
+End_PK="End PK";
+End_PK_Message="（The countdown is not over yet）";
+
+// Virtual
+Confirm_Accept_Broadcasting="申请上麦，是否接受？";
+Confirm_Apply_For_Broadcasting="Do you send a application?";
+
+Broadcasting_Invitation="Invite host";
+Confirm_Accept_Broadcasting_Invitation="Do you agree to become a host？";
+
+End_Broadcasting="End";
+Confirm_End_Broadcasting="Are you sure to end this?";
+
+// Live Shopping
+Product_List="Product list";
+Product_Pending="Pending";
+Product_OnShelf="On shelf";
+Product_Has_Been_Added_On_Shelf="Product has been added on shelf";
+Product_Is_No_Longer_Available="Product is no longer available";
+Product_Launch="Launch";
+Product_Off_Shelf="Off shelf";
+Product_Go="Go";
+Product_On_Shelf_Notification="is available!";
+PK_Invitation="PK invitation";
+PK_Application="PK application";
+Online_User="Online user";
+All="All";
+ApplicationOfBroadcasting="Application";
+Invite="invite";
+Inviting="inviting";
+Buy_This_Product="Do you want to buy this pruduct?";
+Buy_Now="By now";
+Product_Purchased_Successfully="Product purchased successfully";
+User_Invitation_Timeout="Invitation time out";
+
+Lipstick="Lipstick";
+Rucksack="Rucksack";
+iPad="iPad";
+Pants="Pants";
+
+Lipstick_Description="Revlon Super Lustrous Lipstick, High Impact Lipcolor";
+Rucksack_Description="Keepall 55 Monogram Eclipse Canvas M40605";
+iPad_Description="New Apple iPad Pro (12.9-inch, Wi-Fi, 128GB) - Silver";
+Pants_Description="Men's K87 Workwear Pocket Short Sleeve T-Shirt";
