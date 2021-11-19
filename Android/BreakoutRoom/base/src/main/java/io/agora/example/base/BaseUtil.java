@@ -1,5 +1,6 @@
 package io.agora.example.base;
 
+import android.accessibilityservice.AccessibilityService;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Resources;
@@ -26,9 +27,15 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+import io.agora.example.BaseApplication;
+
 @SuppressWarnings("unchecked")
 @Keep
 public class BaseUtil {
+
+    public static void toast(String msg){
+        toast(BaseApplication.getInstance(), msg, false);
+    }
 
     public static void toast(Context context, String msg){
         toast(context, msg, false);

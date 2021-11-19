@@ -9,7 +9,7 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        instance = new BaseApplication();
+        instance = this;
     }
 
     public static BaseApplication getInstance() {

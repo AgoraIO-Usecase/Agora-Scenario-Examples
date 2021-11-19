@@ -1,0 +1,34 @@
+package io.agora.sample.rtegame.bean;
+
+import androidx.annotation.NonNull;
+
+import java.util.Random;
+
+public class LocalUser {
+    //    随机Int转string获得, 用来作为加rtc的uid
+    private @NonNull
+    final String userId;
+
+    //    格式为 "User-"+id
+    private @NonNull
+    final String name;
+
+    public LocalUser() {
+        this(String.valueOf(new Random().nextInt(10000)));
+    }
+
+    public LocalUser(@NonNull String userId) {
+        this.userId = userId;
+        this.name = "User-" + userId;
+    }
+
+    @NonNull
+    public String getUserId() {
+        return userId;
+    }
+
+    @NonNull
+    public String getName() {
+        return name;
+    }
+}

@@ -12,3 +12,4 @@ include ':rtmSyncManager'
 rootProject.name = "Agora-Scene-Android"
 include ':BreakoutRoom'
 include ':BreakoutRoom:base'
+include ':RTEGame'
