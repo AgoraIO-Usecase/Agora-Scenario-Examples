@@ -35,7 +35,6 @@ class PKLiveController: LivePlayerController {
     }()
     
     private lazy var timer = GCDTimer()
-    public var pkInfoModel: PKInfoModel?
     private var targetChannelName: String = ""
     private var pkApplyInfoModel: PKApplyInfoModel?
     

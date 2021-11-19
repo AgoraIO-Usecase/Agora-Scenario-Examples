@@ -10,7 +10,6 @@ import UIKit
 class LivePlayerCell: UICollectionViewCell {
     private lazy var liveView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
         return view
     }()
     override init(frame: CGRect) {

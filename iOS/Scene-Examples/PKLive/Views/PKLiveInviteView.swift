@@ -25,6 +25,8 @@ class PKLiveInviteView: UIView {
         let view = BaseTableViewLayout()
         view.estimatedRowHeight = 44
         view.delegate = self
+        view.emptyTitle = "暂时没有主播"
+        view.emptyImage = nil
         view.register(PKLiveInviteViewCell.self,
                       forCellWithReuseIdentifier: PKLiveInviteViewCell.description())
         return view

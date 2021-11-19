@@ -50,7 +50,7 @@ class LiveRoomListCell: UICollectionViewCell {
             bgImageView.image = UIImage(named: info.backgroundId)
         }
         if let info = info as? LiveRoomInfo {
-            titleLabel.text = info.roomId
+            titleLabel.text = info.roomName
             bgImageView.image = UIImage(named: info.backgroundId)
         }
     }

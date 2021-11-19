@@ -29,6 +29,12 @@ extension String {
         let millisecond = CLongLong(timeInterval * 1000)
         return "\(millisecond)"
     }
+    var timeStamp16: String {
+        let date = Date()
+        let timeInterval = date.timeIntervalSince1970
+        let millisecond = CLongLong(timeInterval * 1000000)
+        return "\(millisecond)"
+    }
     func isChinese(str: String) -> Bool{
         let match: String = "(^[\\u4e00-\\u9fa5]+$)"
         let predicate = NSPredicate(format: "SELF matches %@", match)
@@ -36,10 +42,10 @@ extension String {
     }
     
     func timeFormat(secounds: TimeInterval,
-                           h: String = ":",
-                           m: String = ":",
-                           s: String = "",
-                           isShowHour: Bool = false) -> String {
+                    h: String = ":",
+                    m: String = ":",
+                    s: String = "",
+                    isShowHour: Bool = false) -> String {
         guard !secounds.isNaN else { return "00\(m)00" }
         var minTime = Int(secounds / 60)
         let second = Int(secounds.truncatingRemainder(dividingBy: 60))

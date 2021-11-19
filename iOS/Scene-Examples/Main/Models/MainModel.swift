@@ -18,6 +18,14 @@ enum SceneType: String {
     case pkApply = "PKApplyInfo"
     /// PKInfo
     case pkInfo = "PKInfo"
+    
+    var alertTitle: String {
+        switch self {
+        case .game: return "PK_Recieved_Game_Invite".localized
+        case .pkApply: return "PK_Recieved_Invite".localized
+        default: return ""
+        }
+    }
 }
 
 struct MainModel {
@@ -47,6 +55,13 @@ struct MainModel {
         model.desc = "多人会议, 可建立小会议室讨论"
         model.imageNmae = "pic-multiple"
         model.sceneType = .breakoutRoom
+        dataArray.append(model)
+        
+        model = MainModel()
+        model.title = "游戏直播"
+        model.desc = "你画我猜"
+        model.imageNmae = "pic-Virtual"
+        model.sceneType = .game
         dataArray.append(model)
         
         return dataArray
