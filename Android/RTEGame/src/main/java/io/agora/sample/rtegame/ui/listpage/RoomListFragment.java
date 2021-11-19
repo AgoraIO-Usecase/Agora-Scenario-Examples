@@ -34,6 +34,7 @@ import io.agora.sample.rtegame.base.BaseFragment;
 import io.agora.sample.rtegame.bean.RoomInfo;
 import io.agora.sample.rtegame.databinding.FragmentRoomListBinding;
 import io.agora.sample.rtegame.databinding.ItemRoomListBinding;
+import io.agora.sample.rtegame.util.Event;
 import io.agora.sample.rtegame.util.ViewStatus;
 
 public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> implements OnItemClickListener<RoomInfo> {
@@ -59,13 +60,12 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
     ////////////////////////////////////// -- DATA --//////////////////////////////////////////////////////////////
     private BaseRecyclerViewAdapter<ItemRoomListBinding, RoomInfo, RoomListHolder> mAdapter;
     private RoomInfo tempRoom;
-    private boolean hasSyncManagerInit;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mGlobalModel = new ViewModelProvider(requireActivity()).get(GlobalViewModel.class);
-        mGlobalModel.roomInfo.setValue(null);
+        mGlobalModel.clearRoomInfo();
         mViewModel = new ViewModelProvider(getViewModelStore(), new ViewModelProvider.NewInstanceFactory()).get(RoomListViewModel.class);
         initView();
         initListener();
@@ -100,15 +100,11 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
 
         // 房间列表数据监听
         mViewModel.roomList().observe(getViewLifecycleOwner(), resList -> {
-            mAdapter.submitListAndPurge(resList);
-            onListStatus(resList.isEmpty());
-        });
-
-        mGlobalModel.isRTMInit().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-
+            for (RoomInfo roomInfo : resList) {
+                BaseUtil.logD(roomInfo.toString());
             }
+            onListStatus(resList.isEmpty());
+            mAdapter.submitListAndPurge(resList);
         });
 
     }
@@ -166,11 +162,11 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
         if (requestDirectly) requestPermissionLauncher.launch(permissions);
             // 显示申请理由
         else showPermissionRequestDialog();
-
     }
 
     private void toNextPage() {
-        mGlobalModel.roomInfo.setValue(tempRoom);
+        if (tempRoom != null)
+            mGlobalModel.roomInfo.setValue(new Event<>(tempRoom));
 
         findNavController().navigate(R.id.action_roomListFragment_to_roomFragment);
     }

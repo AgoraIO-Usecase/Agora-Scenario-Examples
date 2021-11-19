@@ -23,10 +23,32 @@ public class GameUtil {
             "九霄云外",
             "十全十美",
     };
+
     @DrawableRes
     public static int getBgdFromRoomBgdId(String bgdId){
-        return R.mipmap.ic_launcher;
+        int i = 1;
+        try {
+            if (bgdId != null)
+                i = Integer.parseInt(bgdId.toLowerCase().substring(8,10));
+        } catch (Exception ignored) { }
+        switch (i){
+            case 1: return R.drawable.portrait01;
+            case 2: return R.drawable.portrait02;
+            case 3: return R.drawable.portrait03;
+            case 4: return R.drawable.portrait04;
+            case 5: return R.drawable.portrait05;
+            case 6: return R.drawable.portrait06;
+            case 7: return R.drawable.portrait07;
+            case 8: return R.drawable.portrait08;
+            case 9: return R.drawable.portrait09;
+            case 10: return R.drawable.portrait10;
+            case 11: return R.drawable.portrait11;
+            case 12: return R.drawable.portrait12;
+            case 13: return R.drawable.portrait13;
+            default: return R.drawable.portrait14;
+        }
     }
+
     @DrawableRes
     public static int getAvatarFromUserId(String userId){
         return R.mipmap.ic_launcher;
@@ -34,11 +56,13 @@ public class GameUtil {
 
     public static Scene getSceneFromRoomInfo(@NonNull RoomInfo roomInfo){
         Scene scene = new Scene();
-        scene.setId(roomInfo.getRoomId());
+        scene.setId(roomInfo.getId());
         scene.setUserId(roomInfo.getUserId());
 
         HashMap<String, String> map = new HashMap<>();
         map.put("backgroundId", roomInfo.getBackgroundId());
+        map.put("roomName", roomInfo.getRoomName());
+
         scene.setProperty(map);
         return scene;
     }

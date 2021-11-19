@@ -20,6 +20,7 @@ import io.agora.sample.rtegame.R;
 import io.agora.sample.rtegame.base.BaseFragment;
 import io.agora.sample.rtegame.bean.RoomInfo;
 import io.agora.sample.rtegame.databinding.FragmentCreateRoomBinding;
+import io.agora.sample.rtegame.util.EventObserver;
 import io.agora.sample.rtegame.util.GameUtil;
 
 public class RoomCreateFragment extends BaseFragment<FragmentCreateRoomBinding> {
@@ -57,6 +58,7 @@ public class RoomCreateFragment extends BaseFragment<FragmentCreateRoomBinding> 
         mBinding.toolbarFgCreate.setNavigationOnClickListener((v) -> navigateToStartPage());
         mBinding.btnRandomFgCreate.setOnClickListener((v) -> setupRandomName());
         mBinding.btnLiveFgCreate.setOnClickListener((v) -> startLive());
+        mGlobalModel.roomInfo.observe(getViewLifecycleOwner(), new EventObserver<>(this::onRoomInfoChanged));
     }
 
     /**
@@ -64,8 +66,8 @@ public class RoomCreateFragment extends BaseFragment<FragmentCreateRoomBinding> 
      */
     private void startLive() {
         showLoading();
-        RoomInfo roomInfo = new RoomInfo(mBinding.nameFgCreate.getText().toString(), "");
-        mGlobalModel.createRoom(roomInfo).observe(getViewLifecycleOwner(), this::onRoomInfoChanged);
+        RoomInfo roomInfo = new RoomInfo(mBinding.nameFgCreate.getText().toString(), mGlobalModel.getLocalUser().getUserId());
+        mGlobalModel.createRoom(roomInfo);
     }
 
     private void onRoomInfoChanged(RoomInfo roomInfo) {

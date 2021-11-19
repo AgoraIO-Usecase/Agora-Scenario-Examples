@@ -3,19 +3,15 @@ package io.agora.sample.rtegame.ui.roompage;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
-import androidx.core.view.OnApplyWindowInsetsListener;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +39,9 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mGlobalModel = new ViewModelProvider(requireActivity()).get(GlobalViewModel.class);
-        currentRoom = mGlobalModel.roomInfo.getValue();
+
+        if (mGlobalModel.roomInfo.getValue() != null)
+            currentRoom = mGlobalModel.roomInfo.getValue().peekContent();
         if (currentRoom == null) {
             findNavController().navigate(R.id.action_roomFragment_to_roomCreateFragment);
         } else {

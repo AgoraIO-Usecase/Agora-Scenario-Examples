@@ -3,13 +3,14 @@ package io.agora.sample.rtegame.bean;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
+import java.util.Locale;
 import java.util.Random;
 
 @Keep
 public class RoomInfo {
     //    channel名,用来join rtc channel 随机生成6位数字
     private @NonNull
-    final String roomId;
+    final String id;
     //    随机生成的汉字
     private @NonNull
     final String roomName;
@@ -24,23 +25,20 @@ public class RoomInfo {
         this( String.valueOf(new Random().nextInt(10000)), roomName, userId);
     }
 
-    public RoomInfo(@NonNull String roomId, @NonNull String roomName, @NonNull String userId) {
-        this.roomId = roomId;
-        this.roomName = roomName;
-        this.userId = userId;
-        this.backgroundId = "";
+    public RoomInfo(@NonNull String id, @NonNull String roomName, @NonNull String userId) {
+        this(id, roomName, userId, String.format(Locale.getDefault(), "portrait%02d", new Random().nextInt()));
     }
 
-    public RoomInfo(@NonNull String roomId, @NonNull String roomName, @NonNull String userId, @NonNull String backgroundId) {
-        this.roomId = roomId;
+    public RoomInfo(@NonNull String id, @NonNull String roomName, @NonNull String userId, @NonNull String backgroundId) {
+        this.id = id;
         this.roomName = roomName;
         this.userId = userId;
         this.backgroundId = backgroundId;
     }
 
     @NonNull
-    public String getRoomId() {
-        return roomId;
+    public String getId() {
+        return id;
     }
 
     @NonNull
@@ -60,5 +58,15 @@ public class RoomInfo {
     @NonNull
     public String getBackgroundId() {
         return backgroundId;
+    }
+
+    @Override
+    public String toString() {
+        return "RoomInfo{" +
+                "id='" + id + '\'' +
+                ", roomName='" + roomName + '\'' +
+                ", userId='" + userId + '\'' +
+                ", backgroundId='" + backgroundId + '\'' +
+                '}';
     }
 }

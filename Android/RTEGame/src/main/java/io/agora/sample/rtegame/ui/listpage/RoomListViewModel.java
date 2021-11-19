@@ -9,9 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
-import io.agora.example.base.BaseUtil;
 import io.agora.sample.rtegame.bean.RoomInfo;
 import io.agora.sample.rtegame.repo.RoomListApi;
 import io.agora.sample.rtegame.util.ViewStatus;
@@ -93,18 +91,6 @@ public class RoomListViewModel extends ViewModel implements RoomListApi {
                 }
             }
         });
-    }
-
-
-    private Scene getSceneFromRoomInfo(@NonNull RoomInfo roomInfo) {
-        Scene scene = new Scene();
-        scene.setId(roomInfo.getRoomId());
-        scene.setUserId(roomInfo.getUserId());
-
-        HashMap<String, String> map = new HashMap<>();
-        map.put("backgroundId", roomInfo.getBackgroundId());
-        scene.setProperty(map);
-        return scene;
     }
 
 }

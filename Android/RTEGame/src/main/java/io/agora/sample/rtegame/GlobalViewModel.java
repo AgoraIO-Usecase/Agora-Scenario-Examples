@@ -12,6 +12,7 @@ import java.util.HashMap;
 import io.agora.sample.rtegame.bean.LocalUser;
 import io.agora.sample.rtegame.bean.RoomInfo;
 import io.agora.sample.rtegame.repo.RoomCreateApi;
+import io.agora.sample.rtegame.util.Event;
 import io.agora.sample.rtegame.util.GameConstants;
 import io.agora.sample.rtegame.util.GameUtil;
 import io.agora.syncmanager.rtm.SyncManager;
@@ -23,33 +24,40 @@ public class GlobalViewModel extends ViewModel implements RoomCreateApi {
     public LiveData<LocalUser> user(){
         return _user;
     }
-
+    public LocalUser getLocalUser(){
+        return _user.getValue();
+    }
 
     private final MutableLiveData<Boolean> _isRTMInit = new MutableLiveData<>();
     public LiveData<Boolean> isRTMInit(){
         return _isRTMInit;
     }
 
-    public final MutableLiveData<RoomInfo> roomInfo = new MutableLiveData<>();
+    public final MutableLiveData<Event<RoomInfo>> roomInfo = new MutableLiveData<>();
 
     public GlobalViewModel() {
         _user.setValue(new LocalUser());
     }
 
+    public void clearRoomInfo(){
+        Event<RoomInfo> roomInfoEvent = new Event<>(null);
+        roomInfoEvent.getContentIfNotHandled();
+        roomInfo.setValue(roomInfoEvent);
+    }
+
     @Override
-    public LiveData<RoomInfo> createRoom(@NonNull RoomInfo room) {
+    public void createRoom(@NonNull RoomInfo room) {
         SyncManager.Instance().joinScene(GameUtil.getSceneFromRoomInfo(room), new SyncManager.Callback() {
             @Override
             public void onSuccess() {
-                roomInfo.postValue(room);
+                roomInfo.postValue(new Event<>(room));
             }
 
             @Override
             public void onFail(SyncManagerException exception) {
-                roomInfo.postValue(null);
+                roomInfo.postValue(new Event<>(null));
             }
         });
-        return roomInfo;
     }
 
     public LiveData<Boolean> initSyncManager(Context context) {
