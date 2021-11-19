@@ -9,7 +9,7 @@ include ':InteractivePodcast'
 include ':MarriageInterview'
 include ':rtmSyncManager'
 
-rootProject.name = "Agora-Scene-Android"
+rootProject.name = "SceneExample"
 include ':BreakoutRoom'
 include ':BreakoutRoom:base'
 include ':RTEGame'
