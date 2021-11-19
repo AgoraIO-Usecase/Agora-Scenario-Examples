@@ -1,5 +1,6 @@
 package io.agora.sample.rtegame.ui.roompage;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,6 +70,9 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         }
         mMessageAdapter = new BaseRecyclerViewAdapter<>(mList, MessageHolder.class);
         mBinding.recyclerViewFgRoom.setAdapter(mMessageAdapter);
+        // Android 12 over_scroll animation is phenomenon
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S)
+            mBinding.recyclerViewFgRoom.setOverScrollMode(View.OVER_SCROLL_NEVER);
     }
 
     private void initListener() {
