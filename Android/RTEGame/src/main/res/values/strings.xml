@@ -2,6 +2,10 @@
     <string name="app_name">RTEGame</string>
 
     <string name="exit">退出</string>
+
+    Splash page
+    <string name="error_desc">RTM初始化出错</string>
+    <string name="error_happened_click_to_refresh">出错了，再试一次</string>
 <!--    Room List-->
     <string name="please_create_a_room">请创建一个直播间</string>
     <string name="desc_create_room">创建直播间</string>

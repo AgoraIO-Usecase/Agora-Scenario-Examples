@@ -20,11 +20,11 @@ import androidx.navigation.fragment.NavHostFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.agora.example.base.BaseFragment;
 import io.agora.example.base.BaseRecyclerViewAdapter;
 import io.agora.example.base.BaseUtil;
 import io.agora.sample.rtegame.GlobalViewModel;
 import io.agora.sample.rtegame.R;
+import io.agora.sample.rtegame.base.BaseFragment;
 import io.agora.sample.rtegame.bean.RoomInfo;
 import io.agora.sample.rtegame.databinding.FragmentRoomBinding;
 import io.agora.sample.rtegame.databinding.ItemRoomMessageBinding;
@@ -35,7 +35,6 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
     private GlobalViewModel mGlobalModel;
     private RoomViewModel mViewModel;
 
-    private NavController navController;
     private BaseRecyclerViewAdapter<ItemRoomMessageBinding, String, MessageHolder> mMessageAdapter;
 
     private RoomInfo currentRoom;
@@ -44,10 +43,9 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mGlobalModel = new ViewModelProvider(requireActivity()).get(GlobalViewModel.class);
-        navController = NavHostFragment.findNavController(this);
         currentRoom = mGlobalModel.roomInfo.getValue();
         if (currentRoom == null) {
-            navController.navigate(R.id.action_roomFragment_to_roomCreateFragment);
+            findNavController().navigate(R.id.action_roomFragment_to_roomCreateFragment);
         } else {
             mViewModel = new ViewModelProvider(getViewModelStore(), new ViewModelProvider.NewInstanceFactory()).get(RoomViewModel.class);
             initView();
@@ -96,8 +94,7 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
             public void handleOnBackPressed() {
                 mGlobalModel.roomInfo.removeObservers(getViewLifecycleOwner());
                 mGlobalModel.roomInfo.setValue(null);
-                BaseUtil.logD("Back");
-                navController.popBackStack();
+                findNavController().popBackStack();
             }
         });
         mBinding.btnExitFgRoom.setOnClickListener((v) -> requireActivity().onBackPressed());

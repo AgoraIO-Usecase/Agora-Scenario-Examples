@@ -14,10 +14,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
-import io.agora.example.base.BaseFragment;
 import io.agora.example.base.BaseUtil;
 import io.agora.sample.rtegame.GlobalViewModel;
 import io.agora.sample.rtegame.R;
+import io.agora.sample.rtegame.base.BaseFragment;
 import io.agora.sample.rtegame.bean.RoomInfo;
 import io.agora.sample.rtegame.databinding.FragmentCreateRoomBinding;
 import io.agora.sample.rtegame.util.GameUtil;
@@ -73,7 +73,7 @@ public class RoomCreateFragment extends BaseFragment<FragmentCreateRoomBinding> 
         if (roomInfo == null) {
             BaseUtil.toast("create failed");
         } else {
-            Navigation.findNavController(mBinding.getRoot()).popBackStack();
+            findNavController().popBackStack();
         }
     }
 
@@ -83,7 +83,6 @@ public class RoomCreateFragment extends BaseFragment<FragmentCreateRoomBinding> 
     }
 
     private void navigateToStartPage() {
-        NavHostFragment.findNavController(this).popBackStack(R.id.roomListFragment, false);
-//        NavHostFragment.findNavController(this).navigate(R.id.action_roomCreateFragment_to_roomListFragment);
+        findNavController().popBackStack(R.id.roomListFragment, false);
     }
 }

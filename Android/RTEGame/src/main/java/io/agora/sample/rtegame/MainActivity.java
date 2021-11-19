@@ -15,4 +15,11 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
         super.onCreate(savedInstanceState);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+//        RTMDestroy
+//        RTCDestroy
+    }
 }

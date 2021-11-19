@@ -16,6 +16,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -23,13 +24,13 @@ import androidx.navigation.Navigation;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.agora.example.base.BaseFragment;
 import io.agora.example.base.BaseRecyclerViewAdapter;
 import io.agora.example.base.BaseUtil;
 import io.agora.example.base.DividerDecoration;
 import io.agora.example.base.OnItemClickListener;
 import io.agora.sample.rtegame.GlobalViewModel;
 import io.agora.sample.rtegame.R;
+import io.agora.sample.rtegame.base.BaseFragment;
 import io.agora.sample.rtegame.bean.RoomInfo;
 import io.agora.sample.rtegame.databinding.FragmentRoomListBinding;
 import io.agora.sample.rtegame.databinding.ItemRoomListBinding;
@@ -58,6 +59,7 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
     ////////////////////////////////////// -- DATA --//////////////////////////////////////////////////////////////
     private BaseRecyclerViewAdapter<ItemRoomListBinding, RoomInfo, RoomListHolder> mAdapter;
     private RoomInfo tempRoom;
+    private boolean hasSyncManagerInit;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -100,6 +102,13 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
         mViewModel.roomList().observe(getViewLifecycleOwner(), resList -> {
             mAdapter.submitListAndPurge(resList);
             onListStatus(resList.isEmpty());
+        });
+
+        mGlobalModel.isRTMInit().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+
+            }
         });
 
     }
@@ -162,9 +171,8 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
 
     private void toNextPage() {
         mGlobalModel.roomInfo.setValue(tempRoom);
-        NavController navController = Navigation.findNavController(mBinding.getRoot());
 
-        navController.navigate(R.id.action_roomListFragment_to_roomFragment);
+        findNavController().navigate(R.id.action_roomListFragment_to_roomFragment);
     }
 
     private void showPermissionAlertDialog() {

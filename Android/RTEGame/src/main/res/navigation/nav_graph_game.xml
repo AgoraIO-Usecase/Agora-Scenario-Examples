@@ -3,7 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph_game.xml"
-    app:startDestination="@id/roomListFragment">
+    app:startDestination="@id/splashFragment">
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="io.agora.sample.rtegame.ui.splashpage.SplashFragment"
+        android:label="SplashFragment"
+        tools:layout="@layout/fragment_splash">
+        <action
+            android:id="@+id/action_splashFragment_to_roomListFragment"
+            app:destination="@id/roomListFragment"/>
+    </fragment>
     <fragment
         android:id="@+id/roomListFragment"
         android:name="io.agora.sample.rtegame.ui.listpage.RoomListFragment"

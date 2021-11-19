@@ -8,13 +8,17 @@ import androidx.lifecycle.ViewModel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 import io.agora.example.base.BaseUtil;
 import io.agora.sample.rtegame.bean.RoomInfo;
 import io.agora.sample.rtegame.repo.RoomListApi;
 import io.agora.sample.rtegame.util.ViewStatus;
+import io.agora.syncmanager.rtm.IObject;
 import io.agora.syncmanager.rtm.Scene;
+import io.agora.syncmanager.rtm.SyncManager;
+import io.agora.syncmanager.rtm.SyncManagerException;
 
 
 /**
@@ -37,64 +41,58 @@ public class RoomListViewModel extends ViewModel implements RoomListApi {
     }
 
     public RoomListViewModel() {
-        BaseUtil.logD("fetchRoomList");
         fetchRoomList();
     }
 
     @Override
     public void fetchRoomList() {
         _viewStatus.postValue(new ViewStatus.Loading(false));
-        new Thread(() -> {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            List<RoomInfo> res = new ArrayList<>();
-            RoomInfo roomInfo;
-            if (new Random().nextBoolean())
-                for (int i = 0; i < 20; i++) {
-                    roomInfo = new RoomInfo("room_" + i, "" + i, "" + i);
-                    res.add(roomInfo);
-                }
-            _roomList.postValue(res);
-            _viewStatus.postValue(new ViewStatus.Done());
-        }).start();
-//        SyncManager.Instance().getScenes(new SyncManager.DataListCallback() {
-//            @Override
-//            public void onSuccess(List<IObject> result) {
-//                List<RoomInfo> res = new ArrayList<>();
-//                RoomInfo roomInfo;
-//
-//                for (IObject iObject : result) {
-//                    try {
-//                        roomInfo = iObject.toObject(RoomInfo.class);
-//                    } catch (Exception e) {
-//                        roomInfo = null;
-//                        e.printStackTrace();
-//                    }
-//                    if (roomInfo != null)
-//                        res.add(roomInfo);
-//                }
+//        new Thread(() -> {
+//            try {
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//            List<RoomInfo> res = new ArrayList<>();
+//            RoomInfo roomInfo;
+//            if (new Random().nextBoolean())
 //                for (int i = 0; i < 20; i++) {
-//                    roomInfo = new RoomInfo("room_"+i,""+i,""+i);
+//                    roomInfo = new RoomInfo("room_" + i, "" + i, "" + i);
 //                    res.add(roomInfo);
 //                }
-//                _roomList.postValue(res);
-//                _viewStatus.postValue(new ViewStatus.Done());
-//            }
-//
-//            @Override
-//            public void onFail(SyncManagerException exception) {
-//                if (Objects.equals(exception.getMessage(), "empty scene")) {
-//                    _roomList.postValue(new ArrayList<>());
-//                    _viewStatus.postValue(new ViewStatus.Done());
-//                }else{
-////                    _roomList.postValue(null);
-//                    _viewStatus.postValue(new ViewStatus.Error(exception));
-//                }
-//            }
-//        });
+//            _roomList.postValue(res);
+//            _viewStatus.postValue(new ViewStatus.Done());
+//        }).start();
+        SyncManager.Instance().getScenes(new SyncManager.DataListCallback() {
+            @Override
+            public void onSuccess(List<IObject> result) {
+                List<RoomInfo> res = new ArrayList<>();
+                RoomInfo roomInfo;
+
+                for (IObject iObject : result) {
+                    try {
+                        roomInfo = iObject.toObject(RoomInfo.class);
+                    } catch (Exception e) {
+                        roomInfo = null;
+                        e.printStackTrace();
+                    }
+                    if (roomInfo != null)
+                        res.add(roomInfo);
+                }
+                _roomList.postValue(res);
+                _viewStatus.postValue(new ViewStatus.Done());
+            }
+
+            @Override
+            public void onFail(SyncManagerException exception) {
+                if (Objects.equals(exception.getMessage(), "empty scene")) {
+                    _roomList.postValue(new ArrayList<>());
+                    _viewStatus.postValue(new ViewStatus.Done());
+                }else{
+                    _viewStatus.postValue(new ViewStatus.Error(exception));
+                }
+            }
+        });
     }
 
 
