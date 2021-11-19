@@ -15,18 +15,32 @@ class LiveBottomView: UIView {
         case tool = 1
         case close = 2
         case gift = 3
+        case pk = 4
+        case game = 5
+        case exitgame = 6
         var imageName: String {
             switch self {
             case .tool: return "icon-more-gray"
             case .close: return "icon-close-gray"
             case .gift: return "icon-gift"
+            case .pk: return "PK/pic-PK"
+            case .game: return "Game/gameicon"
+            case .exitgame: return ""
+            }
+        }
+        
+        var title: String {
+            switch self {
+            case .exitgame: return "退出游戏"
+            default: return ""
             }
         }
         
         var size: CGSize {
             switch self {
+            case .exitgame: return CGSize(width: 80.fit, height: 38)
             default:
-                return CGSize(width: 40.fit, height: 40.fit)
+                return CGSize(width: 38, height: 38)
             }
         }
     }
@@ -47,7 +61,7 @@ class LiveBottomView: UIView {
         button.setTitle("Live_Text_Input_Placeholder".localized, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 14)
-        button.layer.cornerRadius = 20.fit
+        button.layer.cornerRadius = 19
         button.layer.masksToBounds = true
         button.setContentHuggingPriority(.defaultLow, for: .horizontal)
         button.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
@@ -97,13 +111,13 @@ class LiveBottomView: UIView {
         addSubview(statckView)
         chatButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15).isActive = true
         chatButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -15).isActive = true
-        chatButton.heightAnchor.constraint(equalToConstant: 40.fit).isActive = true
+        chatButton.heightAnchor.constraint(equalToConstant: 38).isActive = true
         chatButton.topAnchor.constraint(equalTo: topAnchor).isActive = true
 //        chatButton.widthAnchor.constraint(equalToConstant: 100.fit).isActive = true
         
         statckView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15).isActive = true
         statckView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        statckView.heightAnchor.constraint(equalToConstant: 40.fit).isActive = true
+        statckView.heightAnchor.constraint(equalToConstant: 38).isActive = true
         statckView.leadingAnchor.constraint(equalTo: chatButton.trailingAnchor, constant: 15).isActive = true
     }
     
@@ -111,10 +125,13 @@ class LiveBottomView: UIView {
         guard !type.isEmpty else { return }
         type.forEach({
             let button = UIButton()
-            button.layer.cornerRadius = 20.fit
+            button.layer.cornerRadius = 19
             button.layer.masksToBounds = true
             button.backgroundColor = UIColor(hex: "#000000", alpha: 0.6)
             button.setImage(UIImage(named: $0.imageName), for: .normal)
+            button.setTitle($0.title, for: .normal)
+            button.setTitleColor(.white, for: .normal)
+            button.titleLabel?.font = .systemFont(ofSize: 14)
             button.tag = $0.rawValue
             button.addTarget(self, action: #selector(clickButtonHandler(sender:)), for: .touchUpInside)
             statckView.addArrangedSubview(button)

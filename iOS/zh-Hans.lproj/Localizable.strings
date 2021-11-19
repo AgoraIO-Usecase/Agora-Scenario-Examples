@@ -142,6 +142,7 @@ Gift="礼物";
 Invite_PK="PK邀请";
 PK_Remaining="PK剩余";
 PK_Recieved_Invite="收到邀请";
+PK_Recieved_Game_Invite="游戏PK邀请";
 PK_Invite_Fail="PK邀请失败";
 PK_Invite_Reject="你的PK邀请被拒绝";
 Join_Other_Live_Room_Fail="进入另一个直播间失败";

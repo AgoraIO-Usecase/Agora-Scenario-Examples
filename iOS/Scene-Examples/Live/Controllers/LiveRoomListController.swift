@@ -110,6 +110,10 @@ extension LiveRoomListController: IObjectDelegate {
             let breakoutRoomVC = BORRoomDetailController(channelName: channelName ?? "", ownerId: ownerId ?? "")
             navigationController?.pushViewController(breakoutRoomVC, animated: true)
             
+        case .game:
+            let dgLiveVC = GameLiveController(channelName: channelName ?? "", sceneType: sceneType, userId: ownerId ?? "")
+            navigationController?.pushViewController(dgLiveVC, animated: true)
+            
         default: break
         }
         

@@ -8,8 +8,8 @@
 import UIKit
 
 class PKInfoDelegate: ISyncManagerEventDelegate {
-    private var vc: PKLiveController
-    init(vc: PKLiveController) {
+    private var vc: LivePlayerController
+    init(vc: LivePlayerController) {
         self.vc = vc
     }
     func onCreated(object: IObject) {

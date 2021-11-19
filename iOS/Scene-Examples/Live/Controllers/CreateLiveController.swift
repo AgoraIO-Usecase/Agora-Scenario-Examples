@@ -120,7 +120,8 @@ class CreateLiveController: BaseViewController {
         
         ToastView.show(text: "Limit_Toast".localized,
                        tagImage: UIImage(named: "icon-yellow-caution"),
-                       postion: .bottom)
+                       postion: .bottom,
+                       view: view)
     }
     
     private func setupAgoraKit() {
@@ -197,6 +198,13 @@ extension CreateLiveController: IObjectDelegate {
                                             userId: "\(UserInfo.userId)",
                                             agoraKit: agoraKit)
             navigationController?.pushViewController(pkLiveVC, animated: true)
+            
+        case .game:
+            let dgLiveVC = GameLiveController(channelName: channelName ?? "",
+                                            sceneType: sceneType,
+                                            userId: "\(UserInfo.userId)",
+                                            agoraKit: agoraKit)
+            navigationController?.pushViewController(dgLiveVC, animated: true)
             
         default: break
         }

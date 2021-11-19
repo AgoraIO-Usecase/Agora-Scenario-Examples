@@ -69,16 +69,16 @@ class ToastView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    static func show(text: String, duration: CGFloat = 2.5) {
-        show(text: text, tagImage: nil, textColor: .white, font: nil, duration: duration, postion: .center)
+    static func show(text: String, duration: CGFloat = 2.5, view: UIView? = nil) {
+        show(text: text, tagImage: nil, textColor: .white, font: nil, duration: duration, postion: .center, view: view)
     }
     
-    static func show(text: String, postion: ToastViewPostion = .center) {
-        show(text: text, tagImage: nil, textColor: .white, font: nil, duration: 2.5, postion: postion)
+    static func show(text: String, postion: ToastViewPostion = .center, duration: CGFloat = 2.5, view: UIView? = nil) {
+        show(text: text, tagImage: nil, textColor: .white, font: nil, duration: duration, postion: postion, view: view)
     }
     
-    static func show(text: String, tagImage: UIImage? = nil, postion: ToastViewPostion = .center) {
-        show(text: text, tagImage: tagImage, textColor: .white, font: nil, duration: 2.5, postion: postion)
+    static func show(text: String, tagImage: UIImage? = nil, postion: ToastViewPostion = .center, view: UIView? = nil) {
+        show(text: text, tagImage: tagImage, textColor: .white, font: nil, duration: 2.5, postion: postion, view: view)
     }
     
     static func show(text: String,
@@ -86,8 +86,9 @@ class ToastView: UIView {
                      textColor: UIColor = .white,
                      font: UIFont? = nil,
                      duration: CGFloat = 2.5,
-                     postion: ToastViewPostion = .center) {
-        guard let currentView = UIApplication.topMostViewController?.view else { return }
+                     postion: ToastViewPostion = .center,
+                     view: UIView?) {
+        guard let currentView = view ?? UIApplication.keyWindow else { return }
         let toastView = ToastView()
         toastView.backgroundColor = UIColor.black.withAlphaComponent(0)
         toastView.cornerRadius = 10

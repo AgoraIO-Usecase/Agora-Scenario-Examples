@@ -37,7 +37,7 @@ class LivePlayerController: BaseViewController {
         return option
     }()
     /// 顶部头像昵称
-    private lazy var avatarview = LiveAvatarView()
+    public lazy var avatarview = LiveAvatarView()
     /// 聊天
     public lazy var chatView = LiveChatView()
     /// 设置直播的工具弹窗
@@ -58,6 +58,7 @@ class LivePlayerController: BaseViewController {
     private(set) var channleName: String = ""
     private(set) var currentUserId: String = ""
     public var canvasDataArray = [LiveCanvasModel]()
+    public var pkInfoModel: PKInfoModel?
     private(set) var sceneType: SceneType = .singleLive
     private var canvasLeadingConstraint: NSLayoutConstraint?
     private var canvasTopConstraint: NSLayoutConstraint?
@@ -213,6 +214,13 @@ class LivePlayerController: BaseViewController {
                                            delegate: nil)
                 }
                 AlertManager.show(view: self.giftView, alertPostion: .bottom)
+            case .pk: break
+                
+            case .game:
+                self.gamePKHandler()
+                
+            case .exitgame:
+                self.exitGameHandler()
             }
         }
         
@@ -233,6 +241,12 @@ class LivePlayerController: BaseViewController {
         }
     }
     
+    /// 游戏PK
+    public func gamePKHandler() {}
+    
+    /// 退出游戏
+    public func exitGameHandler() { }
+    
     /// 更新直播布局
     public func updateLiveLayout(postion: LiveLayoutPostion) {
         var leading: CGFloat = 0
@@ -245,11 +259,11 @@ class LivePlayerController: BaseViewController {
         case .bottom:
             let viewW = Screen.width
             itemWidth = (viewW - 150 - 15) / 2
-            itemHeight = viewW / 2 * 0.8
-            let topMargin = view.frame.height - itemHeight - 80
+            itemHeight = viewW / 2 * 0.7
+            let topMargin = view.frame.height - itemHeight - 78
             leading = 150
             top = topMargin
-            bottom = -80
+            bottom = -70
             trailing = -15
         case .center:
             let viewW = Screen.width

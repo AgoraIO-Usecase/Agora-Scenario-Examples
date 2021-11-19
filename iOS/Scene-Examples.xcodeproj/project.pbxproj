@@ -44,6 +44,13 @@
 		E79BEF8627463FA5009FA838 /* BORRoomDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF8327463FA4009FA838 /* BORRoomDetailController.swift */; };
 		E79BEF88274640A6009FA838 /* BORVideoRoomDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF87274640A6009FA838 /* BORVideoRoomDetailCell.swift */; };
 		E79BEF8A274644A9009FA838 /* BORLiveModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF89274644A9009FA838 /* BORLiveModel.swift */; };
+		E79BEF9427474C36009FA838 /* GameLiveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF9327474C36009FA838 /* GameLiveController.swift */; };
+		E79BEF9627475239009FA838 /* GameWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF9527475239009FA838 /* GameWebView.swift */; };
+		E79BEF9827475677009FA838 /* GameModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF9727475677009FA838 /* GameModeView.swift */; };
+		E79BEF9A274776F8009FA838 /* GameModeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF99274776F8009FA838 /* GameModeModel.swift */; };
+		E79BEF9C27477E16009FA838 /* GameCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF9B27477E16009FA838 /* GameCenterView.swift */; };
+		E79BEF9E27477F66009FA838 /* GameCenterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF9D27477F66009FA838 /* GameCenterModel.swift */; };
+		E79BEFA1274796F7009FA838 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEFA0274796F7009FA838 /* NetworkManager.swift */; };
 		E79C25DF273B67DB00909CD4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C25DE273B67DB00909CD4 /* AppDelegate.swift */; };
 		E79C25E1273B67DB00909CD4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C25E0273B67DB00909CD4 /* SceneDelegate.swift */; };
 		E79C25E3273B67DB00909CD4 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C25E2273B67DB00909CD4 /* MainViewController.swift */; };
@@ -120,6 +127,13 @@
 		E79BEF8327463FA4009FA838 /* BORRoomDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BORRoomDetailController.swift; sourceTree = "<group>"; };
 		E79BEF87274640A6009FA838 /* BORVideoRoomDetailCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BORVideoRoomDetailCell.swift; sourceTree = "<group>"; };
 		E79BEF89274644A9009FA838 /* BORLiveModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BORLiveModel.swift; sourceTree = "<group>"; };
+		E79BEF9327474C36009FA838 /* GameLiveController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameLiveController.swift; sourceTree = "<group>"; };
+		E79BEF9527475239009FA838 /* GameWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameWebView.swift; sourceTree = "<group>"; };
+		E79BEF9727475677009FA838 /* GameModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameModeView.swift; sourceTree = "<group>"; };
+		E79BEF99274776F8009FA838 /* GameModeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameModeModel.swift; sourceTree = "<group>"; };
+		E79BEF9B27477E16009FA838 /* GameCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterView.swift; sourceTree = "<group>"; };
+		E79BEF9D27477F66009FA838 /* GameCenterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterModel.swift; sourceTree = "<group>"; };
+		E79BEFA0274796F7009FA838 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		E79C25DB273B67DB00909CD4 /* Scene-Examples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Scene-Examples.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E79C25DE273B67DB00909CD4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E79C25E0273B67DB00909CD4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -298,6 +312,59 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
+		E79BEF8E2746729D009FA838 /* Game-draw-guess */ = {
+			isa = PBXGroup;
+			children = (
+				E79BEF9227474C0E009FA838 /* Models */,
+				E79BEF9127474C07009FA838 /* Views */,
+				E79BEF9027474C01009FA838 /* Cells */,
+				E79BEF8F27474BF5009FA838 /* Controllers */,
+			);
+			path = "Game-draw-guess";
+			sourceTree = "<group>";
+		};
+		E79BEF8F27474BF5009FA838 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				E79BEF9327474C36009FA838 /* GameLiveController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		E79BEF9027474C01009FA838 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		E79BEF9127474C07009FA838 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E79BEF9527475239009FA838 /* GameWebView.swift */,
+				E79BEF9727475677009FA838 /* GameModeView.swift */,
+				E79BEF9B27477E16009FA838 /* GameCenterView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		E79BEF9227474C0E009FA838 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				E79BEF99274776F8009FA838 /* GameModeModel.swift */,
+				E79BEF9D27477F66009FA838 /* GameCenterModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		E79BEF9F274796E1009FA838 /* NetworkManager */ = {
+			isa = PBXGroup;
+			children = (
+				E79BEFA0274796F7009FA838 /* NetworkManager.swift */,
+			);
+			path = NetworkManager;
+			sourceTree = "<group>";
+		};
 		E79C25D2273B67DB00909CD4 = {
 			isa = PBXGroup;
 			children = (
@@ -320,6 +387,7 @@
 		E79C25DD273B67DB00909CD4 /* Scene-Examples */ = {
 			isa = PBXGroup;
 			children = (
+				E79BEF9F274796E1009FA838 /* NetworkManager */,
 				E79C2630273BC16700909CD4 /* Extension */,
 				E79C262B273BC0B500909CD4 /* ToastView */,
 				E79C25F9273B689A00909CD4 /* RtmSyncManager */,
@@ -330,6 +398,7 @@
 				E79C25F2273B685100909CD4 /* BreakOutRoom */,
 				E79C2620273B7B5C00909CD4 /* Live */,
 				E79BEF612741FCEB009FA838 /* PKLive */,
+				E79BEF8E2746729D009FA838 /* Game-draw-guess */,
 				E79C25E4273B67DB00909CD4 /* Main.storyboard */,
 				E79C25E7273B67DD00909CD4 /* Assets.xcassets */,
 				E79C25E9273B67DD00909CD4 /* LaunchScreen.storyboard */,
@@ -675,19 +744,26 @@
 				E79BEF8527463FA5009FA838 /* BORHomeViewController.swift in Sources */,
 				E79C2636273BC6C400909CD4 /* LiveRandomNameView.swift in Sources */,
 				E79C2642273BE5C500909CD4 /* AlertManager.swift in Sources */,
+				E79BEFA1274796F7009FA838 /* NetworkManager.swift in Sources */,
 				E79BEF772745036E009FA838 /* PKLiveProgressView.swift in Sources */,
+				E79BEF9427474C36009FA838 /* GameLiveController.swift in Sources */,
 				E79BEF8427463FA5009FA838 /* BORCreateRoomController.swift in Sources */,
 				E79C2628273B7D3700909CD4 /* LiveRandomName.swift in Sources */,
 				E79BEF41273E0C3A009FA838 /* LiveToolModel.swift in Sources */,
 				E79BEF31273D0EA4009FA838 /* LivePlayerController.swift in Sources */,
+				E79BEF9A274776F8009FA838 /* GameModeModel.swift in Sources */,
 				E79C2632273BC17B00909CD4 /* String+Extension.swift in Sources */,
 				E79C262A273B7D8900909CD4 /* DeviceAssistant.swift in Sources */,
 				E79BEF43273E3709009FA838 /* LiveGiftView.swift in Sources */,
+				E79BEF9827475677009FA838 /* GameModeView.swift in Sources */,
 				E79C260F273B689B00909CD4 /* JSONObject.swift in Sources */,
 				E79C25DF273B67DB00909CD4 /* AppDelegate.swift in Sources */,
 				E79C260E273B689B00909CD4 /* AgoraExtension.swift in Sources */,
 				E79C2646273CBA2700909CD4 /* LiveSettingModel.swift in Sources */,
+				E79BEF9C27477E16009FA838 /* GameCenterView.swift in Sources */,
+				E79BEF9627475239009FA838 /* GameWebView.swift in Sources */,
 				E79C260D273B689B00909CD4 /* Config.swift in Sources */,
+				E79BEF9E27477F66009FA838 /* GameCenterModel.swift in Sources */,
 				E79C25E1273B67DB00909CD4 /* SceneDelegate.swift in Sources */,
 				E79BEF88274640A6009FA838 /* BORVideoRoomDetailCell.swift in Sources */,
 				E79C260C273B689B00909CD4 /* MBHUD.swift in Sources */,

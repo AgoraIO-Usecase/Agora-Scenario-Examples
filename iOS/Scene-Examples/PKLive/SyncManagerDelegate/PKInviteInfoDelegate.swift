@@ -13,8 +13,8 @@ var pkLiveStartClosure: ((PKApplyInfoModel) -> Void)?
 var pkLiveEndClosure: ((PKApplyInfoModel) -> Void)?
 
 class PKInviteInfoDelegate: ISyncManagerEventDelegate {
-    private var vc: PKLiveController
-    init(vc: PKLiveController) {
+    private var vc: LivePlayerController
+    init(vc: LivePlayerController) {
         self.vc = vc
     }
     func onCreated(object: IObject) {
@@ -56,7 +56,7 @@ class PKInviteInfoDelegate: ISyncManagerEventDelegate {
                                    delegate: PKInfoAddDataDelegate(vc: vc))
             
         } else if model.status == .invite && "\(UserInfo.userId)" != model.userId {
-            vc.showAlert(title: "PK_Recieved_Invite".localized, message: "") {
+            vc.showAlert(title: vc.sceneType.alertTitle, message: "") {
                 model.status = .refuse
                 SyncUtil.updateCollection(id: model.targetRoomId ?? "",
                                           className: SceneType.pkApply.rawValue,
@@ -89,8 +89,8 @@ class PKInviteInfoDelegate: ISyncManagerEventDelegate {
 }
 
 class PKInviteInfoTargetDelegate: ISyncManagerEventDelegate {
-    private var vc: PKLiveController
-    init(vc: PKLiveController) {
+    private var vc: LivePlayerController
+    init(vc: LivePlayerController) {
         self.vc = vc
     }
     
@@ -152,8 +152,8 @@ class PKInviteInfoTargetDelegate: ISyncManagerEventDelegate {
 }
 
 class PKInfoAddDataDelegate: IObjectDelegate {
-    private var vc: PKLiveController
-    init(vc: PKLiveController) {
+    private var vc: LivePlayerController
+    init(vc: LivePlayerController) {
         self.vc = vc
     }
     
