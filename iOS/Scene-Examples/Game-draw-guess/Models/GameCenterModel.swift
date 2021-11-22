@@ -7,7 +7,7 @@
 
 import UIKit
 
-enum GameCenterType {
+enum GameCenterType: Codable {
     /// 你画我猜
     case you_draw_i_guess
 

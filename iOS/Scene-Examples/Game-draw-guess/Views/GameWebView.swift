@@ -43,6 +43,10 @@ class GameWebView: UIView {
         webView.load(request)
     }
     
+    func reset() {
+        webView.loadHTMLString("https://", baseURL: nil)
+    }
+    
     private func setupUI() {
         webView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(webView)

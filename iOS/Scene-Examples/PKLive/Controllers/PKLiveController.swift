@@ -129,14 +129,9 @@ class PKLiveController: LivePlayerController {
     override func didOfflineOfUid(uid: UInt) {
         super.didOfflineOfUid(uid: uid)
         LogUtils.log(message: "pklive leave == \(uid)", level: .info)
-        guard var applyModel = pkApplyInfoModel else { return }
+        guard var applyModel = pkApplyInfoModel, !targetChannelName.isEmpty else { return }
         guard applyModel.userId == "\(uid)" || applyModel.targetUserId == "\(uid)" else { return }
         applyModel.status = .end
-        SyncUtil.updateCollection(id: channleName,
-                                  className: sceneType.rawValue,
-                                  objectId: applyModel.objectId,
-                                  params: JSONObject.toJson(applyModel),
-                                  delegate: nil)
         SyncUtil.updateCollection(id: targetChannelName,
                                   className: sceneType.rawValue,
                                   objectId: applyModel.objectId,
@@ -147,12 +142,6 @@ class PKLiveController: LivePlayerController {
             return
         }
         pkInfoModel.status = .end
-        SyncUtil.updateCollection(id: channleName,
-                                  className: SceneType.pkInfo.rawValue,
-                                  objectId: pkInfoModel.objectId,
-                                  params: JSONObject.toJson(pkInfoModel),
-                                  delegate: nil)
-        
         SyncUtil.updateCollection(id: targetChannelName,
                                   className: SceneType.pkInfo.rawValue,
                                   objectId: pkInfoModel.objectId,
