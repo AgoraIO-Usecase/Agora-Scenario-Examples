@@ -8,11 +8,16 @@
 import UIKit
 
 class PKLiveController: LivePlayerController {
-    public lazy var pkInviteButton: UIButton = {
+    public lazy var stopBroadcastButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "PK/pic-PK"), for: .normal)
-        button.addTarget(self, action: #selector(clickPKInviteButton), for: .touchUpInside)
-        button.isHidden = self.getRole(uid: "\(UserInfo.userId)") == .audience
+        button.setTitle("停止连麦", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 13)
+        button.backgroundColor = .init(hex: "#000000", alpha: 0.7)
+        button.layer.cornerRadius = 19
+        button.layer.masksToBounds = true
+        button.isHidden = true
+        button.addTarget(self, action: #selector(clickStopBroadcast), for: .touchUpInside)
         return button
     }()
     private lazy var vsImageView: UIImageView = {
@@ -44,13 +49,19 @@ class PKLiveController: LivePlayerController {
     }
     
     private func setupUI() {
-        pkInviteButton.translatesAutoresizingMaskIntoConstraints = false
+        let bottomType: [LiveBottomView.LiveBottomType] = currentUserId == "\(UserInfo.userId)" ? [.pk, .tool, .close] : [.gift, .close]
+        bottomView.updateButtonType(type: bottomType)
+        
+        stopBroadcastButton.translatesAutoresizingMaskIntoConstraints = false
         vsImageView.translatesAutoresizingMaskIntoConstraints = false
         countTimeLabel.translatesAutoresizingMaskIntoConstraints = false
         pkProgressView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(pkInviteButton)
-        pkInviteButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15).isActive = true
-        pkInviteButton.bottomAnchor.constraint(equalTo: bottomView.topAnchor, constant: -20).isActive = true
+        view.addSubview(stopBroadcastButton)
+        stopBroadcastButton.translatesAutoresizingMaskIntoConstraints = false
+        stopBroadcastButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15).isActive = true
+        stopBroadcastButton.widthAnchor.constraint(equalToConstant: 83).isActive = true
+        stopBroadcastButton.heightAnchor.constraint(equalToConstant: 38).isActive = true
+        stopBroadcastButton.bottomAnchor.constraint(equalTo: bottomView.topAnchor, constant: -10).isActive = true
         
         view.addSubview(vsImageView)
         vsImageView.centerXAnchor.constraint(equalTo: liveCanvasView.centerXAnchor).isActive = true
@@ -104,7 +115,14 @@ class PKLiveController: LivePlayerController {
         vsImageView.isHidden = !isStart
         countTimeLabel.isHidden = !isStart
         pkProgressView.isHidden = !isStart
-        pkInviteButton.isHidden = getRole(uid: "\(UserInfo.userId)") == .audience ? true : isStart
+        if currentUserId == "\(UserInfo.userId)" && isStart {
+            bottomView.updateButtonType(type: [.tool, .close])
+        } else if currentUserId == "\(UserInfo.userId)" && !isStart {
+            bottomView.updateButtonType(type: [.pk, .tool, .close])
+        } else {
+            bottomView.updateButtonType(type: [.gift, .close])
+        }
+        stopBroadcastButton.isHidden = getRole(uid: "\(UserInfo.userId)") == .audience ? true : !isStart
         if isStart {
             vsImageView.centerYAnchor.constraint(equalTo: view.topAnchor,
                                                  constant: liveCanvasViewHeight).isActive = true
@@ -162,8 +180,7 @@ class PKLiveController: LivePlayerController {
         timer.destoryTimer(withName: sceneType.rawValue)
     }
     
-    @objc
-    private func clickPKInviteButton() {
+    override func gamePKHandler() {
         let pkInviteListView = PKLiveInviteView(channelName: channleName)
         pkInviteListView.pkInviteSubscribe = { [weak self] id in
             guard let self = self else { return }
@@ -179,5 +196,11 @@ class PKLiveController: LivePlayerController {
                                          delegate: LiveGiftDelegate(vc: self, type: .target))
         }
         AlertManager.show(view: pkInviteListView, alertPostion: .bottom)
+    }
+    
+    @objc
+    private func clickStopBroadcast() { /// 停止连麦
+        didOfflineOfUid(uid: UserInfo.userId)
+        deleteSubscribe()
     }
 }

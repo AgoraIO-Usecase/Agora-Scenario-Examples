@@ -30,7 +30,7 @@ class GameLiveController: LivePlayerController {
         view.isHidden = true
         return view
     }()
-    public lazy var stopBroadcast: UIButton = {
+    public lazy var stopBroadcastButton: UIButton = {
         let button = UIButton()
         button.setTitle("停止连麦", for: .normal)
         button.setTitleColor(.white, for: .normal)
@@ -88,12 +88,12 @@ class GameLiveController: LivePlayerController {
         pkProgressView.bottomAnchor.constraint(equalTo: liveCanvasView.bottomAnchor).isActive = true
         pkProgressView.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
-        view.addSubview(stopBroadcast)
-        stopBroadcast.translatesAutoresizingMaskIntoConstraints = false
-        stopBroadcast.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15).isActive = true
-        stopBroadcast.widthAnchor.constraint(equalToConstant: 83).isActive = true
-        stopBroadcast.heightAnchor.constraint(equalToConstant: 38).isActive = true
-        stopBroadcast.bottomAnchor.constraint(equalTo: bottomView.topAnchor, constant: -10).isActive = true
+        view.addSubview(stopBroadcastButton)
+        stopBroadcastButton.translatesAutoresizingMaskIntoConstraints = false
+        stopBroadcastButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15).isActive = true
+        stopBroadcastButton.widthAnchor.constraint(equalToConstant: 83).isActive = true
+        stopBroadcastButton.heightAnchor.constraint(equalToConstant: 38).isActive = true
+        stopBroadcastButton.bottomAnchor.constraint(equalTo: bottomView.topAnchor, constant: -10).isActive = true
     }
     
     // 游戏PK
@@ -221,7 +221,7 @@ class GameLiveController: LivePlayerController {
             pkProgressView.reset()
             deleteSubscribe()
         }
-        stopBroadcast.isHidden = isStart
+        stopBroadcastButton.isHidden = isStart
         updateGameInfoStatus(isStart: isStart)
     }
     
