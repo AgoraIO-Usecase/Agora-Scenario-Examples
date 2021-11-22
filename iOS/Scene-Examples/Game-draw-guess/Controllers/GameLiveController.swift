@@ -112,14 +112,15 @@ class GameLiveController: LivePlayerController {
     override func exitGameHandler() {
 //        updatePKUIStatus(isStart: false)
         let roleType: GameRoleType = targetChannelName.isEmpty ? .audience : .broadcast
-        var params: [String: Any] = ["user_id": "\(UserInfo.userId)",
-                                     "app_id": KeyCenter.gameAppId,
-                                     "room_id": channleName,
+        var params: [String: Any] = ["user_id": UserInfo.userId,
+                                     "app_id": Int(KeyCenter.gameAppId) ?? 0,
                                      "identity": roleType.rawValue,
+                                     "room_id": Int(channleName) ?? 0,
                                      "token": KeyCenter.gameToken,
                                      "timestamp": "".timeStamp,
                                      "nonce_str": "".timeStamp16]
-        let sign = NetworkManager.shared.generateSignature(params: params, token: KeyCenter.gameAppSecrets)
+        let sign = NetworkManager.shared.generateSignature(params: params,
+                                                           token: KeyCenter.gameAppSecrets)
         params["sign"] = sign
         
         NetworkManager.shared.postRequest(urlString: "http://testgame.yuanqihuyu.com/guess/leave", params: params) { result in

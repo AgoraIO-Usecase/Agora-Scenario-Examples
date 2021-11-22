@@ -12,7 +12,7 @@ class NetworkManager {
         case GET = "GET"
         case POST = "POST"
     }
-    typealias successful = (String) -> Void
+    typealias successful = ([String: Any]) -> Void
     typealias failure = (String) -> Void
     
     private lazy var sessionConfig: URLSessionConfiguration = {
@@ -41,9 +41,12 @@ class NetworkManager {
     /// 生成签名
     func generateSignature(params: [String: Any]?, token: String) -> String {
         guard let params = params else { return "" }
-        var value = params.map({ String(format: "%@", "\($0.value)") }).joined(separator: "")
+        var value = Array(params.keys)
+            .sorted()
+            .compactMap({ String(format: "%@", "\(params[$0] ?? "")") })
+            .joined(separator: "")
         value += token
-        return value.md5
+        return value.md5Encrypt
     }
     
     private func request(urlString: String,
@@ -93,7 +96,7 @@ class NetworkManager {
                 if let resultData = data {
                     let result = String(data: resultData, encoding: .utf8)
                     print(result ?? "")
-                    success?(result ?? "")
+                    success?(JSONObject.toDictionary(jsonString: result ?? ""))
                 } else {
                     failure?("Error in the request status code \(httpResponse.statusCode), response: \(String(describing: response))")
                 }
