@@ -374,6 +374,7 @@ class LivePlayerController: BaseViewController {
             canvasDataArray.remove(at: index)
             liveCanvasView.dataArray = canvasDataArray
         }
+        guard "\(uid)" != currentUserId else { return }
         chatView.sendMessage(message: "\(uid)离开房间")
     }
 }

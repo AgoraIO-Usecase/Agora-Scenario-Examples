@@ -30,10 +30,25 @@ class GameLiveController: LivePlayerController {
         view.isHidden = true
         return view
     }()
+    public lazy var stopBroadcast: UIButton = {
+        let button = UIButton()
+        button.setTitle("停止连麦", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 13)
+        button.backgroundColor = .init(hex: "#000000", alpha: 0.7)
+        button.layer.cornerRadius = 19
+        button.layer.masksToBounds = true
+        button.isHidden = true
+        button.addTarget(self, action: #selector(clickStopBroadcast), for: .touchUpInside)
+        return button
+    }()
+    private lazy var viewModel = GameViewModel(channleName: channleName,
+                                               ownerId: currentUserId)
     
     private lazy var timer = GCDTimer()
-    private var targetChannelName: String = ""
+    public var targetChannelName: String = ""
     private var pkApplyInfoModel: PKApplyInfoModel?
+    public var gameInfoModel: GameInfoModel?
     
     private var gameCenterModel: GameCenterModel?
     override func viewDidLoad() {
@@ -72,6 +87,13 @@ class GameLiveController: LivePlayerController {
         pkProgressView.trailingAnchor.constraint(equalTo: liveCanvasView.trailingAnchor).isActive = true
         pkProgressView.bottomAnchor.constraint(equalTo: liveCanvasView.bottomAnchor).isActive = true
         pkProgressView.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        view.addSubview(stopBroadcast)
+        stopBroadcast.translatesAutoresizingMaskIntoConstraints = false
+        stopBroadcast.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15).isActive = true
+        stopBroadcast.widthAnchor.constraint(equalToConstant: 83).isActive = true
+        stopBroadcast.heightAnchor.constraint(equalToConstant: 38).isActive = true
+        stopBroadcast.bottomAnchor.constraint(equalTo: bottomView.topAnchor, constant: -10).isActive = true
     }
     
     // 游戏PK
@@ -104,50 +126,30 @@ class GameLiveController: LivePlayerController {
             SyncUtil.subscribeCollection(id: id,
                                          className: SYNC_MANAGER_GIFT_INFO,
                                          delegate: LiveGiftDelegate(vc: self, type: .target))
+            // 订阅对方的游戏
+            SyncUtil.subscribeCollection(id: id,
+                                         className: SceneType.game.rawValue,
+                                         delegate: GameInfoDelegate(vc: self))
         }
         AlertManager.show(view: pkInviteListView, alertPostion: .bottom)
     }
     
-    // 退出游戏
-    override func exitGameHandler() {
-//        updatePKUIStatus(isStart: false)
-        let roleType: GameRoleType = targetChannelName.isEmpty ? .audience : .broadcast
-        var params: [String: Any] = ["user_id": UserInfo.userId,
-                                     "app_id": Int(KeyCenter.gameAppId) ?? 0,
-                                     "identity": roleType.rawValue,
-                                     "room_id": Int(channleName) ?? 0,
-                                     "token": KeyCenter.gameToken,
-                                     "timestamp": "".timeStamp,
-                                     "nonce_str": "".timeStamp16]
-        let sign = NetworkManager.shared.generateSignature(params: params,
-                                                           token: KeyCenter.gameAppSecrets)
-        params["sign"] = sign
-        
-        NetworkManager.shared.postRequest(urlString: "http://testgame.yuanqihuyu.com/guess/leave", params: params) { result in
-            print("result == \(result)")
-        } failure: { error in
-            print("error == \(error)")
-        }
-        
-        // 发弹幕
-//        let barrage = GameBarrageType.allCases.randomElement() ?? .salvo
-//        let params: [String: Any] = ["user_id": "\(UserInfo.userId)",
-//                                     "app_id": KeyCenter.gameAppId,
-//                                     "room_id": channleName,
-//                                     "name": "User-\(UserInfo.userId)",
-//                                     "token": KeyCenter.gameAppSecrets,
-//                                     "timestamp": "".timeStamp,
-//                                     "nonce_str": "".timeStamp,
-//                                     "barrage": barrage.rowValue,
-//                                     "count": 1, "player": currentUserId,
-//                                     "sign": KeyCenter.gameAppSecrets]
-//        NetworkManager.shared.postRequest(urlString: "http://testgame.yuanqihuyu.com/guess/barrage", params: params, success: { result in
-//
-//        }, failure: { error in
-//
-//        })
+    @objc
+    private func clickStopBroadcast() { /// 停止连麦
+        didOfflineOfUid(uid: UserInfo.userId)
+        deleteSubscribe()
     }
     
+    // 退出游戏
+    override func exitGameHandler() {
+        let roleType: GameRoleType = targetChannelName.isEmpty ? .audience : .broadcast
+        viewModel.postBarrage()
+        viewModel.leaveGame(roleType: roleType)
+        updatePKUIStatus(isStart: false)
+//        viewModel.postGiftHandler(type: .delay)
+        webView.reset()
+    }
+        
     override func eventHandler() {
         super.eventHandler()
         // 监听主播发起PK
@@ -160,6 +162,11 @@ class GameLiveController: LivePlayerController {
                                      className: SceneType.pkInfo.rawValue,
                                      delegate: PKInfoDelegate(vc: self))
 
+        // 监听游戏
+        SyncUtil.subscribeCollection(id: channleName,
+                                     className: SceneType.game.rawValue,
+                                     delegate: GameInfoDelegate(vc: self))
+        
         // pk开始回调
         pkLiveStartClosure = { [weak self] applyModel in
             guard let self = self else { return }
@@ -171,18 +178,20 @@ class GameLiveController: LivePlayerController {
         pkLiveEndClosure = { [weak self] applyModel in
             self?.pkApplyInfoModel = applyModel
             self?.updatePKUIStatus(isStart: false)
+            self?.updateLiveLayout(postion: .full)
         }
         // 收到礼物回调
         LiveReceivedGiftClosure = { [weak self] giftModel, type in
             if type == .me {
                 self?.pkProgressView.updateProgressValue(at: giftModel.coin)
+                self?.viewModel.postGiftHandler(type: giftModel.giftType)
             } else {
                 self?.pkProgressView.updateTargetProgressValue(at: giftModel.coin)
             }
         }
     }
     
-    private func updatePKUIStatus(isStart: Bool) {
+    public func updatePKUIStatus(isStart: Bool) {
         countTimeLabel.isHidden = !isStart
         pkProgressView.isHidden = !isStart
         webView.isHidden = !isStart
@@ -212,6 +221,29 @@ class GameLiveController: LivePlayerController {
             pkProgressView.reset()
             deleteSubscribe()
         }
+        stopBroadcast.isHidden = isStart
+        updateGameInfoStatus(isStart: isStart)
+    }
+    
+    /// 更新游戏状态
+    private func updateGameInfoStatus(isStart: Bool) {
+        guard !targetChannelName.isEmpty else { return }
+        if isStart {
+            var gameInfoModel = GameInfoModel()
+            gameInfoModel.status = .playing
+            SyncUtil.addCollection(id: targetChannelName,
+                                   className: SceneType.game.rawValue,
+                                   params: JSONObject.toJson(gameInfoModel),
+                                   delegate: nil)
+            return
+        }
+        gameInfoModel?.status =  .end
+        let params = JSONObject.toJson(gameInfoModel)
+        SyncUtil.updateCollection(id: targetChannelName,
+                                  className: SceneType.game.rawValue,
+                                  objectId: gameInfoModel?.objectId ?? "",
+                                  params: params,
+                                  delegate: nil)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -223,14 +255,9 @@ class GameLiveController: LivePlayerController {
     override func didOfflineOfUid(uid: UInt) {
         super.didOfflineOfUid(uid: uid)
         LogUtils.log(message: "pklive leave == \(uid)", level: .info)
-        guard var applyModel = pkApplyInfoModel else { return }
+        guard var applyModel = pkApplyInfoModel, !targetChannelName.isEmpty else { return }
         guard applyModel.userId == "\(uid)" || applyModel.targetUserId == "\(uid)" else { return }
         applyModel.status = .end
-        SyncUtil.updateCollection(id: channleName,
-                                  className: sceneType.rawValue,
-                                  objectId: applyModel.objectId,
-                                  params: JSONObject.toJson(applyModel),
-                                  delegate: nil)
         SyncUtil.updateCollection(id: targetChannelName,
                                   className: sceneType.rawValue,
                                   objectId: applyModel.objectId,
@@ -241,12 +268,6 @@ class GameLiveController: LivePlayerController {
             return
         }
         pkInfoModel.status = .end
-        SyncUtil.updateCollection(id: channleName,
-                                  className: SceneType.pkInfo.rawValue,
-                                  objectId: pkInfoModel.objectId,
-                                  params: JSONObject.toJson(pkInfoModel),
-                                  delegate: nil)
-        
         SyncUtil.updateCollection(id: targetChannelName,
                                   className: SceneType.pkInfo.rawValue,
                                   objectId: pkInfoModel.objectId,
@@ -257,6 +278,7 @@ class GameLiveController: LivePlayerController {
     private func deleteSubscribe() {
         SyncUtil.deleteCollection(id: targetChannelName, className: sceneType.rawValue, delegate: nil)
         SyncUtil.deleteCollection(id: channleName, className: sceneType.rawValue, delegate: nil)
+        SyncUtil.unsubscribe(id: channleName, className: SceneType.game.rawValue)
         
         if !targetChannelName.isEmpty {
             leaveChannel(uid: UserInfo.userId, channelName: targetChannelName)
