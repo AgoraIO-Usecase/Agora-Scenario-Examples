@@ -14,6 +14,6 @@ struct KeyCenter {
     
     /// 游戏
     static let gameAppSecrets = "rXYVXqcj28uG3AiPL3t4zfbe8TZ20muf"
-    static let gameToken = "rXYVXqcj28uG3AiPL3t4zfbe8TZ20muf"
+    static let gameToken = "aa"
     static let gameAppId = "10020"
 }

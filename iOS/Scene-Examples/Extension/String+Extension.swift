@@ -6,6 +6,38 @@
 //
 
 import UIKit
+import CommonCrypto
+
+public extension String {
+    var md5Encrypt: String {
+        guard self.count > 0 else {
+            print("⚠️⚠️⚠️md5加密无效的字符串⚠️⚠️⚠️")
+            return ""
+        }
+        let str = self.cString(using: String.Encoding.utf8)
+        let strLen = CUnsignedInt(self.lengthOfBytes(using: String.Encoding.utf8))
+        let digestLen = Int(CC_MD5_DIGEST_LENGTH)
+        let result = UnsafeMutablePointer<CUnsignedChar>.allocate(capacity: digestLen)
+//        CC_SHA256(str!, strLen, result)
+        CC_MD5(str!, strLen, result)
+        result.deallocate()
+        
+        let hash = NSMutableString()
+        for i in 0..<digestLen {
+            hash.appendFormat("%02x", result[i])
+        }
+        let value = hash as String
+        return value//[1, 16]
+    }
+    
+    subscript (index:Int , length:Int) -> String {
+          get {
+              let startIndex = self.index(startIndex, offsetBy: index)
+              let endIndex = self.index(startIndex, offsetBy: length)
+              return String(self[startIndex..<endIndex])
+          }
+      }
+}
 
 extension String {
     func size(font: UIFont, drawRange size: CGSize) -> CGSize {
