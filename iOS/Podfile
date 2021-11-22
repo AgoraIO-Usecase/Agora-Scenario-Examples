@@ -9,6 +9,13 @@ target 'Scene-Examples' do
   pod 'AgoraRtm_iOS', '~> 1.4.8'
   pod 'MBProgressHUD', '~> 1.2.0'
   pod 'AgoraRtcEngine_iOS_Preview', '4.0.0.preview.3'
+  pod 'AgoraScreenShare', :path => 'sdk'
   # Pods for Scene-Examples
 
+end
+
+target 'Agora-ScreenShare-Extension(Socket)' do
+  use_frameworks!
+  pod 'AgoraScreenShare', :path => 'sdk'
+  pod 'CocoaAsyncSocket', '7.6.5'
 end

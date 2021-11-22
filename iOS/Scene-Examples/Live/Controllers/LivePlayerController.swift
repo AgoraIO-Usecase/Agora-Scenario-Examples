@@ -25,7 +25,7 @@ class LivePlayerController: BaseViewController {
                       forCellWithReuseIdentifier: LivePlayerCell.description())
         return view
     }()
-    private var agoraKit: AgoraRtcEngineKit?
+    public var agoraKit: AgoraRtcEngineKit?
     private lazy var rtcEngineConfig: AgoraRtcEngineConfig = {
         let config = AgoraRtcEngineConfig()
         config.appId = KeyCenter.AppId
