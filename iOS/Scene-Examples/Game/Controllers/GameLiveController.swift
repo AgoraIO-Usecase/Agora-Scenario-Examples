@@ -6,6 +6,9 @@
 //
 
 import UIKit
+import AgoraRtcKit
+import ReplayKit
+import AgoraScreenShare
 
 class GameLiveController: PKLiveController {
     private lazy var webView: GameWebView = {
@@ -29,6 +32,7 @@ class GameLiveController: PKLiveController {
     public lazy var viewModel = GameViewModel(channleName: channleName,
                                               ownerId: currentUserId)
     
+    private lazy var screenConnection = AgoraRtcConnection()
     private lazy var timer = GCDTimer()
     private var pkApplyInfoModel: PKApplyInfoModel?
     public var gameApplyInfoModel: GameApplyInfoModel?
@@ -39,7 +43,7 @@ class GameLiveController: PKLiveController {
     private var gameCenterModel: GameCenterModel?
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         setupUI()
     }
     
@@ -211,6 +215,59 @@ class GameLiveController: PKLiveController {
             if getRole(uid: "\(UserInfo.userId)") == .broadcaster {
                 viewModel.leaveGame(roleType: gameRoleType)
             }
+        }
+    }
+    private func joinScreenShare(channelName: String) {
+        // 屏幕共享辅频道
+        let optionEx = AgoraRtcChannelMediaOptions()
+        optionEx.clientRoleType = AgoraRtcIntOptional.of(Int32(AgoraClientRole.broadcaster.rawValue))
+        // 不订阅
+        optionEx.autoSubscribeAudio = AgoraRtcBoolOptional.of(false)
+        optionEx.autoSubscribeVideo = AgoraRtcBoolOptional.of(false)
+        // 关闭辅频道麦克风(通过主频道开启即可)
+        optionEx.publishAudioTrack = AgoraRtcBoolOptional.of(false)
+        optionEx.publishCustomVideoTrack = AgoraRtcBoolOptional.of(true)
+        optionEx.publishCustomAudioTrack = AgoraRtcBoolOptional.of(true)
+        screenConnection = AgoraRtcConnection()
+        screenConnection.localUid = UserInfo.userId + 1
+        screenConnection.channelId = channelName
+        
+        let resultEx = agoraKit?.joinChannelEx(byToken: KeyCenter.Token,
+                                               connection: screenConnection,
+                                               delegate: nil,
+                                               mediaOptions: optionEx,
+                                               joinSuccess: nil)
+        if resultEx != 0 {
+            showAlert(title: "Error", message: "joinChannelEx call failed: \(resultEx ?? 0), please check your params")
+        }
+        
+        // mute 辅频道流
+        agoraKit?.muteRemoteAudioStream(UserInfo.userId + 1, mute: true)
+        agoraKit?.muteRemoteVideoStream(UserInfo.userId + 1, mute: true)
+    }
+    
+    /// 屏幕共享
+    private func onClickScreenShareButton() {
+        guard let agoraKit = agoraKit else { return }
+        joinScreenShare(channelName: channleName)
+        AgoraScreenShare.shareInstance().startService(with: agoraKit, connection: screenConnection)
+        if #available(iOS 12.0, *) {
+            let systemBroadcastPicker = RPSystemBroadcastPickerView(frame: .zero)
+            systemBroadcastPicker.showsMicrophoneButton = false
+            systemBroadcastPicker.autoresizingMask = [.flexibleTopMargin, .flexibleRightMargin]
+            if let url = Bundle.main.url(forResource: "Agora-ScreenShare-Extension(Socket)", withExtension: "appex", subdirectory: "PlugIns") {
+                if let bundle = Bundle(url: url) {
+                    systemBroadcastPicker.preferredExtension = bundle.bundleIdentifier
+                }
+            }
+            let button = systemBroadcastPicker.subviews.first { view in
+                view.isKind(of: UIButton.self)
+            }
+            if let button = button {
+                (button as! UIButton).sendActions(for: .allTouchEvents)
+            }
+        } else {
+            self.showAlert(message: "Minimum support iOS version is 12.0")
         }
     }
     
