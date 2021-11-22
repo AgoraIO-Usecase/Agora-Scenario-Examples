@@ -4,7 +4,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -13,11 +13,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.agora.example.base.BaseRecyclerViewAdapter;
 import io.agora.example.base.BaseUtil;
+import io.agora.rtc2.RtcEngine;
 import io.agora.sample.rtegame.GlobalViewModel;
 import io.agora.sample.rtegame.R;
 import io.agora.sample.rtegame.base.BaseFragment;
@@ -25,6 +23,8 @@ import io.agora.sample.rtegame.bean.RoomInfo;
 import io.agora.sample.rtegame.databinding.FragmentRoomBinding;
 import io.agora.sample.rtegame.databinding.ItemRoomMessageBinding;
 import io.agora.sample.rtegame.util.GameUtil;
+import io.agora.sample.rtegame.view.LiveHostCardView;
+import io.agora.sample.rtegame.view.LiveHostLayout;
 
 public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
 
@@ -34,6 +34,7 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
     private BaseRecyclerViewAdapter<ItemRoomMessageBinding, String, MessageHolder> mMessageAdapter;
 
     private RoomInfo currentRoom;
+    private boolean aMHost;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -45,7 +46,8 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         if (currentRoom == null) {
             findNavController().navigate(R.id.action_roomFragment_to_roomCreateFragment);
         } else {
-            mViewModel = new ViewModelProvider(getViewModelStore(), new ViewModelProvider.NewInstanceFactory()).get(RoomViewModel.class);
+            aMHost = currentRoom.getUserId().equals(mGlobalModel.getLocalUser().getUserId());
+            mViewModel = new ViewModelProvider(getViewModelStore(), new RoomViewModelFactory(requireContext())).get(RoomViewModel.class);
             initView();
             initListener();
         }
@@ -55,16 +57,7 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         mBinding.avatarHostFgRoom.setImageResource(GameUtil.getAvatarFromUserId(currentRoom.getUserId()));
         mBinding.nameHostFgRoom.setText(currentRoom.getTempUserName());
 
-        // TEST
-        List<String> mList = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            StringBuilder sb = new StringBuilder("Message:");
-            for (int j = 0; j < i; j++) {
-                sb.append(i);
-            }
-            mList.add(sb.toString());
-        }
-        mMessageAdapter = new BaseRecyclerViewAdapter<>(mList, MessageHolder.class);
+        mMessageAdapter = new BaseRecyclerViewAdapter<>(null, MessageHolder.class);
         mBinding.recyclerViewFgRoom.setAdapter(mMessageAdapter);
         // Android 12 over_scroll animation is phenomenon
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S)
@@ -74,12 +67,12 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
     private void initListener() {
         ViewCompat.setOnApplyWindowInsetsListener(mBinding.getRoot(), (v, insets) -> {
             Insets inset = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-//            int desiredBottom = Math.max(insets.getInsets(WindowInsetsCompat.Type.ime()).bottom, inset.bottom);
-            int desiredBottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom;
+            int desiredBottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom - inset.bottom;
             // 整体
             mBinding.containerOverlayFgRoom.setPadding(inset.left, inset.top, inset.right, inset.bottom);
             // 输入框
-            mBinding.inputLayoutFgRoom.setVisibility(insets.isVisible(WindowInsetsCompat.Type.ime())?View.VISIBLE:View.GONE);
+            mBinding.inputLayoutFgRoom.setVisibility(insets.isVisible(WindowInsetsCompat.Type.ime()) ? View.VISIBLE : View.GONE);
+
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mBinding.inputLayoutFgRoom.getLayoutParams();
             layoutParams.bottomMargin = desiredBottom;
             mBinding.inputLayoutFgRoom.setLayoutParams(layoutParams);
@@ -87,18 +80,82 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
             return WindowInsetsCompat.CONSUMED;
         });
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                mGlobalModel.roomInfo.removeObservers(getViewLifecycleOwner());
-                mGlobalModel.roomInfo.setValue(null);
-                findNavController().popBackStack();
-            }
-        });
         mBinding.btnExitFgRoom.setOnClickListener((v) -> requireActivity().onBackPressed());
-
         mBinding.inputFgRoom.setOnClickListener(v -> BaseUtil.showKeyboard(requireActivity().getWindow(), mBinding.editTextFgRoom));
+        // RTC engine
+        mViewModel.mEngine().observe(getViewLifecycleOwner(), this::onRTCInit);
+        // 连麦成功
+        mViewModel.subRoomInfo().observe(getViewLifecycleOwner(), this::onHostOnline);
+        // 主播上线
+        if (!aMHost)
+            mViewModel.hostUID().observe(getViewLifecycleOwner(), (uid) -> {
+                if (String.valueOf(uid).equals(mGlobalModel.getLocalUser().getUserId())) {
+                    onHostOnline(currentRoom);
+                }
+            });
+
     }
 
+    /**
+     * RTC 初始化成功
+     */
+    private void onRTCInit(RtcEngine engine) {
+        if (engine == null) findNavController().popBackStack();
+        else {
+            mMessageAdapter.addItem("RTC 初始化成功");
+            // 如果是房主，创建View开始直播
+            if (aMHost) initLocalView();
+
+            mViewModel.joinRoom(currentRoom, mGlobalModel.getLocalUser());
+        }
+    }
+
+    /**
+     * 本地 View 初始化
+     * 仅主播本人调用
+     */
+    @MainThread
+    private void initLocalView() {
+        LiveHostCardView view = mBinding.hostContainerFgRoom.createHostView();
+        mBinding.hostContainerFgRoom.setType(LiveHostLayout.Type.HOST_ONLY);
+        mViewModel.setupLocalView(view.renderTextureView, mGlobalModel.getLocalUser());
+        mMessageAdapter.addItem("画面加载完成");
+    }
+
+
+    /**
+     * 有主播上线
+     */
+    @MainThread
+    private void onHostOnline(RoomInfo roomInfo) {
+        if (mBinding.hostContainerFgRoom.hostView == null)
+            onHostJoin();
+        if (!roomInfo.getId().equals(currentRoom.getId()))
+            onSubHostJoin(roomInfo);
+    }
+
+    /**
+     * 主播上线
+     */
+    @MainThread
+    private void onHostJoin() {
+        mMessageAdapter.addItem("正在加载主播【"+ currentRoom.getTempUserName() +"】视频");
+        LiveHostLayout liveHost = mBinding.hostContainerFgRoom;
+
+        LiveHostCardView view = liveHost.createHostView();
+        liveHost.setType(liveHost.getChildCount() == 1 ? LiveHostLayout.Type.HOST_ONLY : liveHost.getType());
+        mViewModel.setupRemoteView(view.renderTextureView, currentRoom, true);
+    }
+
+    /**
+     * 连麦主播上线
+     */
+    @MainThread
+    private void onSubHostJoin(RoomInfo subRoomInfo) {
+        mMessageAdapter.addItem("正在加载连麦主播【"+ subRoomInfo.getTempUserName() +"】视频");
+        LiveHostCardView view = mBinding.hostContainerFgRoom.createSubHostView();
+        mBinding.hostContainerFgRoom.setType(LiveHostLayout.Type.DOUBLE_IN_GAME);
+        mViewModel.setupRemoteView(view.renderTextureView, subRoomInfo, false);
+    }
 
 }

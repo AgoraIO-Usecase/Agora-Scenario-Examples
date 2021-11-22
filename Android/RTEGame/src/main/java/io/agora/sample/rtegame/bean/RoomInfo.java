@@ -26,7 +26,7 @@ public class RoomInfo {
     }
 
     public RoomInfo(@NonNull String id, @NonNull String roomName, @NonNull String userId) {
-        this(id, roomName, userId, String.format(Locale.getDefault(), "portrait%02d", new Random().nextInt()));
+        this(id, roomName, userId, String.format(Locale.getDefault(), "portrait%02d", new Random().nextInt(13) + 1));
     }
 
     public RoomInfo(@NonNull String id, @NonNull String roomName, @NonNull String userId, @NonNull String backgroundId) {

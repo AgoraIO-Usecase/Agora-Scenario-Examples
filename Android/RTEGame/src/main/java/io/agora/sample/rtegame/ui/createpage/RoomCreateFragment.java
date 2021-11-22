@@ -49,7 +49,7 @@ public class RoomCreateFragment extends BaseFragment<FragmentCreateRoomBinding> 
             return WindowInsetsCompat.CONSUMED;
         });
         // 监听"返回键"
-        requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
                 navigateToStartPage();

@@ -20,6 +20,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,13 +92,12 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
 
             return WindowInsetsCompat.CONSUMED;
         });
+        // "创建房间"按钮
         mBinding.btnCreateFgList.setOnClickListener((v) -> checkPermissionBeforeToNextPage(null));
         // 下拉刷新监听
         mBinding.swipeFgList.setOnRefreshListener(() -> mViewModel.fetchRoomList());
-
         // 状态监听
         mViewModel.viewStatus().observe(getViewLifecycleOwner(), this::onViewStatusChanged);
-
         // 房间列表数据监听
         mViewModel.roomList().observe(getViewLifecycleOwner(), resList -> {
             for (RoomInfo roomInfo : resList) {

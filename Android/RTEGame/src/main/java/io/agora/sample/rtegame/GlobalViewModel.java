@@ -1,14 +1,21 @@
 package io.agora.sample.rtegame;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceDataStore;
 
 import androidx.annotation.NonNull;
+import androidx.datastore.core.DataStore;
+import androidx.datastore.core.DataStoreFactory;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.HashMap;
+import java.util.prefs.PreferencesFactory;
 
+import io.agora.example.BaseApplication;
+import io.agora.example.base.BaseUtil;
 import io.agora.sample.rtegame.bean.LocalUser;
 import io.agora.sample.rtegame.bean.RoomInfo;
 import io.agora.sample.rtegame.repo.RoomCreateApi;
@@ -36,7 +43,31 @@ public class GlobalViewModel extends ViewModel implements RoomCreateApi {
     public final MutableLiveData<Event<RoomInfo>> roomInfo = new MutableLiveData<>();
 
     public GlobalViewModel() {
-        _user.setValue(new LocalUser());
+        LocalUser localUser = checkLocalOrGenerate();
+        _user.setValue(localUser);
+    }
+
+    private LocalUser checkLocalOrGenerate() {
+        SharedPreferences sp = BaseApplication.getInstance().getSharedPreferences("sp_rte_game", Context.MODE_PRIVATE);
+        String userId = sp.getString("id", "-1");
+
+        boolean isValidUser = true;
+
+        try {
+            int i = Integer.parseInt(userId);
+            if (i == -1) isValidUser = false;
+        } catch (NumberFormatException e) {
+            isValidUser = false;
+        }
+
+        LocalUser localUser;
+        if (isValidUser)
+            localUser = new LocalUser(userId);
+        else
+            localUser = new LocalUser();
+        sp.edit().putString("id", localUser.getUserId()).apply();
+
+        return localUser;
     }
 
     public void clearRoomInfo(){
@@ -60,11 +91,13 @@ public class GlobalViewModel extends ViewModel implements RoomCreateApi {
         });
     }
 
-    public LiveData<Boolean> initSyncManager(Context context) {
+    //<editor-fold desc="SyncManager">
+    public void initSyncManager(Context context) {
         HashMap<String, String> map = new HashMap<>();
         map.put("appid", context.getString(R.string.rtm_app_id));
         map.put("token", context.getString(R.string.rtm_app_token));
         map.put("defaultChannel", GameConstants.globalChannel);
+        BaseUtil.logD("initSyncManager");
         SyncManager.Instance().init(context, map);
         // FIXME
         new Thread(() -> {
@@ -75,7 +108,6 @@ public class GlobalViewModel extends ViewModel implements RoomCreateApi {
             }
             _isRTMInit.postValue(true);
         }).start();
-        return _isRTMInit;
     }
 
     public void destroySyncManager(){
@@ -88,5 +120,6 @@ public class GlobalViewModel extends ViewModel implements RoomCreateApi {
 //            _scene.setValue(null);
 //        }
     }
+    //</editor-fold>
 
 }

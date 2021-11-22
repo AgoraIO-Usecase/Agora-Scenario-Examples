@@ -5,6 +5,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
@@ -13,6 +14,7 @@ import io.agora.sample.rtegame.GlobalViewModel;
 import io.agora.sample.rtegame.R;
 import io.agora.sample.rtegame.base.BaseFragment;
 import io.agora.sample.rtegame.databinding.FragmentSplashBinding;
+import io.agora.sample.rtegame.util.EventObserver;
 
 
 public class SplashFragment extends BaseFragment<FragmentSplashBinding> {
@@ -23,12 +25,13 @@ public class SplashFragment extends BaseFragment<FragmentSplashBinding> {
         globalViewModel = new ViewModelProvider(requireActivity()).get(GlobalViewModel.class);
 
         initListener();
+        globalViewModel.initSyncManager(requireContext());
     }
 
     private void initListener() {
-        globalViewModel.initSyncManager(requireContext()).observe(getViewLifecycleOwner(), succeed -> {
-            if (!succeed) showError();
-            else toRoomListPage();
+        globalViewModel.isRTMInit().observe(getViewLifecycleOwner(), succeed -> {
+            if (succeed == Boolean.TRUE) toRoomListPage();
+            else showError();
         });
     }
 

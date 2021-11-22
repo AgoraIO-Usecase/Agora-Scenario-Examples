@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clipToPadding="false">
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_fg_list"
@@ -56,6 +55,7 @@
         android:gravity="center"
         android:text="@string/please_create_a_room"
         android:textColor="@color/colorHint"
+        android:visibility="gone"
         app:drawableTopCompat="@drawable/ic_empty_list" />
 
     <ImageButton
