@@ -355,7 +355,12 @@ class LivePlayerController: BaseViewController {
     public func joinAudienceChannel(channelName: String, pkUid: UInt = 0) {
         
         let isContainer = canvasDataArray.contains(where: { $0.channelName == channelName && $0.hostUserId == pkUid })
-        guard !isContainer else { return }
+        guard !isContainer else {
+            LogUtils.log(message: "当前用户存在 channelName == \(channelName) pkUid == \(pkUid)", level: .warning)
+            LogUtils.log(message: "所有用户 \(canvasDataArray.compactMap({ String(format: "channelName == %@ userID == %@", $0.channelName, $0.hostUserId) }))",
+                         level: .warning)
+            return
+        }
         
         let canvasModel = LiveCanvasModel()
         canvasModel.canvas = LiveCanvasModel.createCanvas(uid: pkUid)
