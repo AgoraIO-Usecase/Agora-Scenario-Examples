@@ -39,6 +39,9 @@ class GameLiveController: PKLiveController {
     private var gameRoleType: GameRoleType {
         targetChannelName.isEmpty ? .audience : .broadcast
     }
+    private var screenUserID: UInt {
+        UserInfo.userId + 10000
+    }
     
     private var gameCenterModel: GameCenterModel?
     override func viewDidLoad() {
@@ -197,7 +200,10 @@ class GameLiveController: PKLiveController {
                                 roomId: channelName,
                                 roleType: gameRoleType)
             } else { // 观众拉取屏幕共享流
-                
+                let canvas = AgoraRtcVideoCanvas()
+                canvas.uid = screenUserID
+                canvas.view = webView
+                agoraKit?.setupRemoteVideoEx(canvas, connection: screenConnection)
             }
             
             updateLiveLayout(postion: .bottom)
@@ -217,6 +223,7 @@ class GameLiveController: PKLiveController {
             }
         }
     }
+    
     private func joinScreenShare(channelName: String) {
         // 屏幕共享辅频道
         let optionEx = AgoraRtcChannelMediaOptions()
@@ -229,7 +236,7 @@ class GameLiveController: PKLiveController {
         optionEx.publishCustomVideoTrack = AgoraRtcBoolOptional.of(true)
         optionEx.publishCustomAudioTrack = AgoraRtcBoolOptional.of(true)
         screenConnection = AgoraRtcConnection()
-        screenConnection.localUid = UserInfo.userId + 1
+        screenConnection.localUid = screenUserID
         screenConnection.channelId = channelName
         
         let resultEx = agoraKit?.joinChannelEx(byToken: KeyCenter.Token,
@@ -242,8 +249,8 @@ class GameLiveController: PKLiveController {
         }
         
         // mute 辅频道流
-        agoraKit?.muteRemoteAudioStream(UserInfo.userId + 1, mute: true)
-        agoraKit?.muteRemoteVideoStream(UserInfo.userId + 1, mute: true)
+        agoraKit?.muteRemoteAudioStream(screenUserID, mute: true)
+        agoraKit?.muteRemoteVideoStream(screenUserID, mute: true)
     }
     
     /// 屏幕共享
@@ -267,7 +274,7 @@ class GameLiveController: PKLiveController {
                 (button as! UIButton).sendActions(for: .allTouchEvents)
             }
         } else {
-            self.showAlert(message: "Minimum support iOS version is 12.0")
+            showAlert(message: "Minimum support iOS version is 12.0")
         }
     }
     
