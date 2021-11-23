@@ -419,7 +419,9 @@ extension LivePlayerController: BaseCollectionViewLayoutDelegate {
             
         } else { // 观众
             if let connection = model.connection, let canvas = model.canvas {
-                agoraKit?.setupRemoteVideoEx(canvas, connection: connection)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                    self.agoraKit?.setupRemoteVideoEx(canvas, connection: connection)
+                }
             }
         }
         return cell
