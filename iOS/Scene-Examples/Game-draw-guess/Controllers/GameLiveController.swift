@@ -139,6 +139,7 @@ class GameLiveController: LivePlayerController {
         showAlert(title: "终止连麦", message: "", cancel: nil) { [weak self] in
             self?.updatePKInfoStatusToEnd()
             self?.deleteSubscribe()
+            self?.updateGameInfoStatus(isStart: false)
             self?.stopBroadcastButton.isHidden = true
         }
     }
@@ -150,6 +151,7 @@ class GameLiveController: LivePlayerController {
             self?.viewModel.leaveGame(roleType: roleType)
             self?.updatePKUIStatus(isStart: false)
             self?.webView.reset()
+            self?.updateGameInfoStatus(isStart: false)
         }
 //        self?.viewModel.postBarrage()
 //        viewModel.postGiftHandler(type: .delay)
@@ -180,6 +182,7 @@ class GameLiveController: LivePlayerController {
             guard let self = self else { return }
             self.pkApplyInfoModel = applyModel
             self.updatePKUIStatus(isStart: true)
+            self.updateGameInfoStatus(isStart: true)
         }
         
         // pk 结束回调
@@ -234,11 +237,11 @@ class GameLiveController: LivePlayerController {
             pkProgressView.reset()
             deleteSubscribe()
         }
-        updateGameInfoStatus(isStart: isStart)
     }
     
     /// 更新游戏状态
     private func updateGameInfoStatus(isStart: Bool) {
+        stopBroadcastButton.isHidden = isStart
         let channelName = targetChannelName.isEmpty ? channleName : targetChannelName
         if isStart {
             var gameInfoModel = GameInfoModel()
@@ -267,6 +270,9 @@ class GameLiveController: LivePlayerController {
     override func didOfflineOfUid(uid: UInt) {
         super.didOfflineOfUid(uid: uid)
         LogUtils.log(message: "pklive leave == \(uid)", level: .info)
+        guard let applyModel = pkApplyInfoModel,
+              applyModel.userId == "\(uid)" || applyModel.targetUserId == "\(uid)" else { return }
+        updatePKInfoStatusToEnd()
     }
     
     private func updatePKInfoStatusToEnd() {

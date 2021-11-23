@@ -15,12 +15,13 @@ class GameInfoDelegate: ISyncManagerEventDelegate {
     func onCreated(object: IObject) {
         LogUtils.log(message: "onCreated game == \(String(describing: object.toJson()))", level: .info)
         guard let model = JSONObject.toModel(GameInfoModel.self, value: object.toJson()) else { return }
-        self.vc.gameInfoModel = model
+        vc.gameInfoModel = model
     }
     
     func onUpdated(object: IObject) {
         LogUtils.log(message: "onUpdated game == \(String(describing: object.toJson()))", level: .info)
         guard let model = JSONObject.toModel(GameInfoModel.self, value: object.toJson()) else { return }
+        vc.gameInfoModel = model
         if model.status == .no_start {
             vc.updatePKUIStatus(isStart: false)
         } else if model.status == .playing {
@@ -32,7 +33,6 @@ class GameInfoDelegate: ISyncManagerEventDelegate {
                                       className: SYNC_MANAGER_GAME_INFO,
                                       delegate: nil)
         }
-        vc.stopBroadcastButton.isHidden = model.status != .end
     }
     
     func onDeleted(object: IObject?) {

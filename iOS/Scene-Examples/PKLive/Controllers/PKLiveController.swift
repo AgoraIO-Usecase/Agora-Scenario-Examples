@@ -152,6 +152,9 @@ class PKLiveController: LivePlayerController {
     override func didOfflineOfUid(uid: UInt) {
         super.didOfflineOfUid(uid: uid)
         LogUtils.log(message: "pklive leave == \(uid)", level: .info)
+        guard let applyModel = pkApplyInfoModel,
+              applyModel.userId == "\(uid)" || applyModel.targetUserId == "\(uid)" else { return }
+        updatePKInfoStatusToEnd()
     }
     
     private func updatePKInfoStatusToEnd() {
