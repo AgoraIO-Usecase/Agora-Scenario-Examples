@@ -136,18 +136,22 @@ class GameLiveController: LivePlayerController {
     
     @objc
     private func clickStopBroadcast() { /// 停止连麦
-        didOfflineOfUid(uid: UserInfo.userId)
-        deleteSubscribe()
+        showAlert(title: "终止连麦", message: "", cancel: nil) { [weak self] in
+            self?.didOfflineOfUid(uid: UserInfo.userId)
+            self?.deleteSubscribe()
+        }
     }
     
     // 退出游戏
     override func exitGameHandler() {
         let roleType: GameRoleType = targetChannelName.isEmpty ? .audience : .broadcast
-        viewModel.postBarrage()
-        viewModel.leaveGame(roleType: roleType)
-        updatePKUIStatus(isStart: false)
+        showAlert(title: "退出游戏", message: "退出游戏将会终止游戏PK", cancel: nil) { [weak self] in
+            self?.viewModel.postBarrage()
+            self?.viewModel.leaveGame(roleType: roleType)
+            self?.updatePKUIStatus(isStart: false)
+            self?.webView.reset()
+        }
 //        viewModel.postGiftHandler(type: .delay)
-        webView.reset()
     }
         
     override func eventHandler() {
@@ -204,10 +208,14 @@ class GameLiveController: LivePlayerController {
         }
         if isStart {
             ToastView.show(text: "游戏开始", postion: .top, duration: 3)
-            let roleType: GameRoleType = targetChannelName.isEmpty ? .audience : .broadcast
-            webView.loadUrl(urlString: gameCenterModel?.type.gameUrl ?? "https://imgsecond.yuanqiyouxi.com/test/DrawAndGuess/index.html",
-                            roomId: channleName,
-                            roleType: roleType)
+            if getRole(uid: "\(UserInfo.userId)") == .broadcaster {
+                let roleType: GameRoleType = targetChannelName.isEmpty ? .audience : .broadcast
+                webView.loadUrl(urlString: gameCenterModel?.type.gameUrl ?? "https://imgsecond.yuanqiyouxi.com/test/DrawAndGuess/index.html",
+                                roomId: channleName,
+                                roleType: roleType)
+            } else { // 观众拉取屏幕共享流
+                
+            }
             
             updateLiveLayout(postion: .bottom)
             timer.scheduledSecondsTimer(withName: sceneType.rawValue, timeInterval: 900, queue: .main) { [weak self] _, duration in
@@ -258,6 +266,11 @@ class GameLiveController: LivePlayerController {
         guard var applyModel = pkApplyInfoModel, !targetChannelName.isEmpty else { return }
         guard applyModel.userId == "\(uid)" || applyModel.targetUserId == "\(uid)" else { return }
         applyModel.status = .end
+        SyncUtil.updateCollection(id: channleName,
+                                  className: sceneType.rawValue,
+                                  objectId: applyModel.objectId,
+                                  params: JSONObject.toJson(applyModel),
+                                  delegate: nil)
         SyncUtil.updateCollection(id: targetChannelName,
                                   className: sceneType.rawValue,
                                   objectId: applyModel.objectId,
@@ -268,6 +281,11 @@ class GameLiveController: LivePlayerController {
             return
         }
         pkInfoModel.status = .end
+        SyncUtil.updateCollection(id: channleName,
+                                  className: SceneType.pkInfo.rawValue,
+                                  objectId: pkInfoModel.objectId,
+                                  params: JSONObject.toJson(pkInfoModel),
+                                  delegate: nil)
         SyncUtil.updateCollection(id: targetChannelName,
                                   className: SceneType.pkInfo.rawValue,
                                   objectId: pkInfoModel.objectId,
