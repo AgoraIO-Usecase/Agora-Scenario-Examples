@@ -31,6 +31,7 @@ class GameInfoDelegate: ISyncManagerEventDelegate {
                                       className: SceneType.game.rawValue,
                                       delegate: nil)
         }
+        vc.stopBroadcastButton.isHidden = model.status != .end
     }
     
     func onDeleted(object: IObject?) {

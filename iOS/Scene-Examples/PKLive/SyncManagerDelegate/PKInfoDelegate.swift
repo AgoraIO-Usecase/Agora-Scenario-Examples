@@ -29,7 +29,7 @@ class PKInfoDelegate: ISyncManagerEventDelegate {
             vc.leaveChannel(uid: UInt(model.userId) ?? 0, channelName: model.roomId)
             // 删除PKInfo数据
             SyncUtil.deleteCollection(id: model.roomId,
-                                      className: SceneType.pkInfo.rawValue,
+                                      className: SYNC_MANAGER_PK_INFO,
                                       delegate: nil)
         } else {
             vc.joinAudienceChannel(channelName: model.roomId, pkUid:  UInt(model.userId) ?? 0)

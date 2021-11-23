@@ -21,6 +21,12 @@ enum PKApplyInfoStatus: Int, Codable {
 enum PKGameType: Int, Codable {
     /// 你画我猜
     case draw = 1
+    
+    var title: String {
+        switch self {
+        case .draw: return "你画我猜"
+        }
+    }
 }
 
 struct PKApplyInfoModel: Codable {

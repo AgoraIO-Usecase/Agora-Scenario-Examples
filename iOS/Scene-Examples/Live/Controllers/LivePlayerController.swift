@@ -185,7 +185,7 @@ class LivePlayerController: BaseViewController {
             guard let self = self else { return }
             switch type {
             case .close:
-                self.closeLiveHandler()
+                self.clickCloseLive()
                 
             case .tool:
                 self.liveToolView.clickItemClosure = { itemType, isSelected in
@@ -245,16 +245,21 @@ class LivePlayerController: BaseViewController {
                                      delegate: LiveGiftDelegate(vc: self, type: .me))
     }
     
-    public func closeLiveHandler() {
+    private func clickCloseLive() {
         if getRole(uid: "\(UserInfo.userId)") == .broadcaster {
             showAlert(title: "Live_End".localized, message: "Confirm_End_Live".localized) { [weak self] in
+                self?.closeLiveHandler()
                 self?.navigationController?.popViewController(animated: true)
             }
 
         } else {
+            closeLiveHandler()
             navigationController?.popViewController(animated: true)
         }
     }
+    
+    /// 关闭直播
+    public func closeLiveHandler() { }
     
     /// 主播PK
     public func clickPKHandler() {}
