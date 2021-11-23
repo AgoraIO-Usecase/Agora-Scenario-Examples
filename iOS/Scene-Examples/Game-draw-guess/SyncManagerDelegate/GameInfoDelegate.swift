@@ -27,8 +27,9 @@ class GameInfoDelegate: ISyncManagerEventDelegate {
             vc.updatePKUIStatus(isStart: true)
         } else {
             vc.updatePKUIStatus(isStart: false)
-            SyncUtil.deleteCollection(id: vc.targetChannelName,
-                                      className: SceneType.game.rawValue,
+            let channelName = vc.targetChannelName.isEmpty ? vc.channleName : vc.targetChannelName
+            SyncUtil.deleteCollection(id: channelName,
+                                      className: SYNC_MANAGER_GAME_INFO,
                                       delegate: nil)
         }
         vc.stopBroadcastButton.isHidden = model.status != .end
