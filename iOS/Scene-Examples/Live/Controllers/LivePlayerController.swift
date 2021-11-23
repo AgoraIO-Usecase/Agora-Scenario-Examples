@@ -29,7 +29,6 @@ class LivePlayerController: BaseViewController {
         config.appId = KeyCenter.AppId
         config.channelProfile = .liveBroadcasting
         config.areaCode = .global
-        config.channelProfile = .liveBroadcasting
         return config
     }()
     private lazy var channelMediaOptions: AgoraRtcChannelMediaOptions = {
@@ -110,7 +109,12 @@ class LivePlayerController: BaseViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        agoraKit?.stopPreview()
+        agoraKit?.disableAudio()
+        agoraKit?.disableVideo()
+        agoraKit?.muteAllRemoteAudioStreams(true)
+        agoraKit?.muteAllRemoteVideoStreams(true)
+        agoraKit?.destroyMediaPlayer(nil)
+        
         leaveChannel(uid: UserInfo.userId, channelName: channleName)
         SyncUtil.unsubscribe(id: channleName, className: sceneType.rawValue)
         SyncUtil.unsubscribe(id: channleName, className: SYNC_MANAGER_GIFT_INFO)
@@ -189,7 +193,12 @@ class LivePlayerController: BaseViewController {
                     case .switch_camera:
                         self.agoraKit?.switchCamera()
                     case .camera:
-                        self.agoraKit?.muteLocalVideoStream(isSelected)
+//                        self.agoraKit?.muteLocalVideoStream(isSelected)
+                        if isSelected {
+                            self.agoraKit?.disableVideo()
+                        } else {
+                            self.agoraKit?.enableVideo()
+                        }
                         self.liveCanvasView.isHidden = isSelected
                         if isSelected {
                             self.liveCanvasView.emptyImage = nil
@@ -198,7 +207,12 @@ class LivePlayerController: BaseViewController {
                             self.agoraKit?.startPreview()
                         }
                     case .mic:
-                        self.agoraKit?.muteLocalAudioStream(isSelected)
+                        if isSelected {
+                            self.agoraKit?.disableAudio()
+                        } else {
+                            self.agoraKit?.enableAudio()
+                        }
+                        
                     }
                 }
                 AlertManager.show(view: self.liveToolView, alertPostion: .bottom)
@@ -214,10 +228,11 @@ class LivePlayerController: BaseViewController {
                                            delegate: nil)
                 }
                 AlertManager.show(view: self.giftView, alertPostion: .bottom)
-            case .pk: break
+            case .pk:
+                self.clickPKHandler()
                 
             case .game:
-                self.gamePKHandler()
+                self.clickGamePKHandler()
                 
             case .exitgame:
                 self.exitGameHandler()
@@ -241,8 +256,11 @@ class LivePlayerController: BaseViewController {
         }
     }
     
+    /// 主播PK
+    public func clickPKHandler() {}
+    
     /// 游戏PK
-    public func gamePKHandler() {}
+    public func clickGamePKHandler() {}
     
     /// 退出游戏
     public func exitGameHandler() { }
@@ -369,13 +387,17 @@ class LivePlayerController: BaseViewController {
     }
     
     public func didOfflineOfUid(uid: UInt) {
-        let index = canvasDataArray.firstIndex(where: { $0.hostUserId == uid && $0.channelName != self.channleName }) ?? -1
+        let index = canvasDataArray.firstIndex(where: { $0.hostUserId == uid && $0.channelName != channleName }) ?? -1
         if index > -1 && canvasDataArray.count > 1 {
             canvasDataArray.remove(at: index)
             liveCanvasView.dataArray = canvasDataArray
         }
         guard "\(uid)" != currentUserId else { return }
         chatView.sendMessage(message: "\(uid)离开房间")
+    }
+    
+    deinit {
+        LogUtils.log(message: "释放 === \(self)", level: .info)
     }
 }
 

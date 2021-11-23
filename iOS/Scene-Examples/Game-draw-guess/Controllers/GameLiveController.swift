@@ -97,7 +97,7 @@ class GameLiveController: LivePlayerController {
     }
     
     // 游戏PK
-    override func gamePKHandler() {
+    override func clickGamePKHandler() {
         updatePKUIStatus(isStart: true)
         return
         let modeView = GameModeView()

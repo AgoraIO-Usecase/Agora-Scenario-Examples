@@ -190,7 +190,7 @@ class PKLiveController: LivePlayerController {
         timer.destoryTimer(withName: sceneType.rawValue)
     }
     
-    override func gamePKHandler() {
+    override func clickPKHandler() {
         let pkInviteListView = PKLiveInviteView(channelName: channleName)
         pkInviteListView.pkInviteSubscribe = { [weak self] id in
             guard let self = self else { return }
