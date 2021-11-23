@@ -150,6 +150,11 @@ class PKLiveController: LivePlayerController {
         guard var applyModel = pkApplyInfoModel, !targetChannelName.isEmpty else { return }
         guard applyModel.userId == "\(uid)" || applyModel.targetUserId == "\(uid)" else { return }
         applyModel.status = .end
+        SyncUtil.updateCollection(id: channleName,
+                                  className: sceneType.rawValue,
+                                  objectId: applyModel.objectId,
+                                  params: JSONObject.toJson(applyModel),
+                                  delegate: nil)
         SyncUtil.updateCollection(id: targetChannelName,
                                   className: sceneType.rawValue,
                                   objectId: applyModel.objectId,
@@ -160,6 +165,11 @@ class PKLiveController: LivePlayerController {
             return
         }
         pkInfoModel.status = .end
+        SyncUtil.updateCollection(id: channleName,
+                                  className: SceneType.pkInfo.rawValue,
+                                  objectId: pkInfoModel.objectId,
+                                  params: JSONObject.toJson(pkInfoModel),
+                                  delegate: nil)
         SyncUtil.updateCollection(id: targetChannelName,
                                   className: SceneType.pkInfo.rawValue,
                                   objectId: pkInfoModel.objectId,
@@ -200,7 +210,9 @@ class PKLiveController: LivePlayerController {
     
     @objc
     private func clickStopBroadcast() { /// 停止连麦
-        didOfflineOfUid(uid: UserInfo.userId)
-        deleteSubscribe()
+        showAlert(title: "终止连麦", message: "", cancel: nil) { [weak self] in
+            self?.didOfflineOfUid(uid: UserInfo.userId)
+            self?.deleteSubscribe()
+        }
     }
 }
