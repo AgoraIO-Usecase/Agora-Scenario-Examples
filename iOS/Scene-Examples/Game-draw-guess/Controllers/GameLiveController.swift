@@ -138,7 +138,6 @@ class GameLiveController: LivePlayerController {
     private func clickStopBroadcast() { /// 停止连麦
         showAlert(title: "终止连麦", message: "", cancel: nil) { [weak self] in
             self?.updatePKInfoStatusToEnd()
-            self?.deleteSubscribe()
             self?.updateGameInfoStatus(isStart: false)
             self?.stopBroadcastButton.isHidden = true
         }
@@ -190,6 +189,8 @@ class GameLiveController: LivePlayerController {
             self?.pkApplyInfoModel = applyModel
             self?.updatePKUIStatus(isStart: false)
             self?.updateLiveLayout(postion: .full)
+            self?.stopBroadcastButton.isHidden = true
+            self?.deleteSubscribe()
         }
         // 收到礼物回调
         LiveReceivedGiftClosure = { [weak self] giftModel, type in
@@ -240,7 +241,6 @@ class GameLiveController: LivePlayerController {
     
     /// 更新游戏状态
     private func updateGameInfoStatus(isStart: Bool) {
-        stopBroadcastButton.isHidden = isStart
         let channelName = targetChannelName.isEmpty ? channleName : targetChannelName
         if isStart {
             var gameInfoModel = GameInfoModel()
@@ -297,9 +297,6 @@ class GameLiveController: LivePlayerController {
     }
     
     private func deleteSubscribe() {
-        let channelName = targetChannelName.isEmpty ? channleName : targetChannelName
-        SyncUtil.deleteCollection(id: channelName, className: SYNC_MANAGER_GAME_INFO, delegate: nil)
-        
         if !targetChannelName.isEmpty {
             leaveChannel(uid: UserInfo.userId, channelName: targetChannelName)
             SyncUtil.unsubscribe(id: targetChannelName, className: sceneType.rawValue)

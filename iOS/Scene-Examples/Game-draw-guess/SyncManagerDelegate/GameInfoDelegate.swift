@@ -33,6 +33,8 @@ class GameInfoDelegate: ISyncManagerEventDelegate {
                                       className: SYNC_MANAGER_GAME_INFO,
                                       delegate: nil)
         }
+        guard vc.getRole(uid: "\(UserInfo.userId)") == .broadcaster else { return }
+        vc.stopBroadcastButton.isHidden = model.status != .end
     }
     
     func onDeleted(object: IObject?) {

@@ -105,6 +105,8 @@ class PKLiveController: LivePlayerController {
         pkLiveEndClosure = { [weak self] applyModel in
             self?.pkApplyInfoModel = applyModel
             self?.updatePKUIStatus(isStart: false)
+            self?.deleteSubscribe()
+            self?.stopBroadcastButton.isHidden = true
         }
         // 收到礼物回调
         LiveReceivedGiftClosure = { [weak self] giftModel, type in
@@ -134,18 +136,19 @@ class PKLiveController: LivePlayerController {
             timer.scheduledSecondsTimer(withName: sceneType.rawValue, timeInterval: 180, queue: .main) { [weak self] _, duration in
                 self?.countTimeLabel.text = "".timeFormat(secounds: duration)
                 if duration <= 0 {
-                    self?.deleteSubscribe()
+                    self?.updatePKInfoStatusToEnd()
                 }
             }
         } else {
             pkProgressView.reset()
-            deleteSubscribe()
         }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        SyncUtil.unsubscribe(id: channleName, className: SYNC_MANAGER_PK_INFO)
+        let channelName = targetChannelName.isEmpty ? channleName : targetChannelName
+        SyncUtil.unsubscribe(id: channelName, className: SYNC_MANAGER_PK_INFO)
+        SyncUtil.deleteCollection(id: channelName, className: sceneType.rawValue, delegate: nil)
         deleteSubscribe()
     }
     
@@ -179,9 +182,6 @@ class PKLiveController: LivePlayerController {
     }
     
     private func deleteSubscribe() {
-        let channelName = targetChannelName.isEmpty ? channleName : targetChannelName
-        SyncUtil.deleteCollection(id: channelName, className: sceneType.rawValue, delegate: nil)
-        
         if !targetChannelName.isEmpty {
             leaveChannel(uid: UserInfo.userId, channelName: targetChannelName)
             SyncUtil.unsubscribe(id: targetChannelName, className: sceneType.rawValue)
@@ -213,7 +213,6 @@ class PKLiveController: LivePlayerController {
     private func clickStopBroadcast() { /// 停止连麦
         showAlert(title: "终止连麦", message: "", cancel: nil) { [weak self] in
             self?.updatePKInfoStatusToEnd()
-            self?.deleteSubscribe()
             self?.stopBroadcastButton.isHidden = true
         }
     }
