@@ -33,10 +33,12 @@ class PKLiveInviteView: UIView {
     }()
     private lazy var fetchPKInfoDataDelegate = FetchPKinfoDataDelegate()
     private var channelName: String = ""
+    private var sceneType: SceneType = .singleLive
     
-    init(channelName: String) {
+    init(channelName: String, sceneType: SceneType) {
         super.init(frame: .zero)
         self.channelName = channelName
+        self.sceneType = sceneType
         setupUI()
         fetchPKInfoData()
     }
@@ -89,7 +91,9 @@ class PKLiveInviteView: UIView {
 extension PKLiveInviteView: BaseTableViewLayoutDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: PKLiveInviteViewCell.description(), for: indexPath) as! PKLiveInviteViewCell
-        cell.setPKInfoData(with: tableViewLayout.dataArray?[indexPath.row], channelName: channelName)
+        cell.setPKInfoData(with: tableViewLayout.dataArray?[indexPath.row],
+                           channelName: channelName,
+                           sceneType: sceneType)
         cell.pkInviteSubscribe = pkInviteSubscribe
         return cell
     }
@@ -126,6 +130,7 @@ class PKLiveInviteViewCell: UITableViewCell {
     }()
     public var currendModel: LiveRoomInfo?
     public var channelName: String = ""
+    public var sceneType: SceneType = .singleLive
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -136,9 +141,10 @@ class PKLiveInviteViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setPKInfoData(with item: Any?, channelName: String) {
+    func setPKInfoData(with item: Any?, channelName: String, sceneType: SceneType) {
         guard let model = item as? LiveRoomInfo else { return }
         self.channelName = channelName
+        self.sceneType = sceneType
         currendModel = model
         nameLabel.text = "User-\(model.userId)"
         avatarImage.image = UIImage(named: model.backgroundId)
@@ -214,7 +220,7 @@ class GetPKLiveDataDelegate: IObjectListDelegate {
                 info.targetUserId = cell.currendModel?.userId
                 let params = JSONObject.toJson(info)
                 SyncUtil.updateCollection(id: cell.currendModel?.roomId ?? "",
-                                          className: SceneType.pkApply.rawValue,
+                                          className: cell.sceneType.rawValue,
                                           objectId: info.objectId, params: params, delegate: nil)
             } else {
                 pkApplyInfoHandler(channelName: cell.currendModel?.roomId ?? "")
@@ -229,13 +235,13 @@ class GetPKLiveDataDelegate: IObjectListDelegate {
     }
     
     private func pkApplyInfoHandler(channelName: String) {
-        cell.pkInviteSubscribe?(cell.currendModel?.roomId ?? "")
+        cell.pkInviteSubscribe?(channelName)
         var pkModel = PKApplyInfoModel()
         pkModel.roomId = cell.channelName
         pkModel.targetRoomId = channelName
         pkModel.targetUserId = cell.currendModel?.userId ?? ""
         pkModel.status = .invite
         let params = JSONObject.toJson(pkModel)
-        SyncUtil.addCollection(id: channelName, className: SceneType.pkApply.rawValue, params: params, delegate: nil)
+        SyncUtil.addCollection(id: channelName, className: cell.sceneType.rawValue, params: params, delegate: nil)
     }
 }

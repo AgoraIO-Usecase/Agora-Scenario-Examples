@@ -32,7 +32,10 @@ class PKInviteInfoDelegate: ISyncManagerEventDelegate {
             
             // 删除PK邀请数据
             SyncUtil.deleteCollection(id: model.targetRoomId ?? "",
-                                      className: SceneType.pkApply.rawValue,
+                                      className: vc.sceneType.rawValue,
+                                      delegate: nil)
+            SyncUtil.deleteCollection(id: model.roomId,
+                                      className: vc.sceneType.rawValue,
                                       delegate: nil)
             
             pkLiveEndClosure?(model)
@@ -51,23 +54,26 @@ class PKInviteInfoDelegate: ISyncManagerEventDelegate {
             pkInfo.roomId = model.roomId
             pkInfo.userId = model.userId
             SyncUtil.addCollection(id: model.targetRoomId ?? "",
-                                   className: SceneType.pkInfo.rawValue,
+                                   className: SYNC_MANAGER_PK_INFO,
                                    params: JSONObject.toJson(pkInfo),
                                    delegate: PKInfoAddDataDelegate(vc: vc))
             
         } else if model.status == .invite && "\(UserInfo.userId)" != model.userId {
-            vc.showAlert(title: vc.sceneType.alertTitle, message: "") {
+            let message = vc.sceneType == .game ? "您的好友\(model.userName)邀请\n您加入\(model.gameId.title)游戏" : ""
+            vc.showAlert(title: vc.sceneType.alertTitle, message: message) { [weak self] in
+                guard let self = self else { return }
                 model.status = .refuse
                 SyncUtil.updateCollection(id: model.targetRoomId ?? "",
-                                          className: SceneType.pkApply.rawValue,
+                                          className: self.vc.sceneType.rawValue,
                                           objectId: model.objectId,
                                           params: JSONObject.toJson(model),
                                           delegate: nil)
                 
-            } confirm: {
+            } confirm: { [weak self] in
+                guard let self = self else { return }
                 model.status = .accept
                 SyncUtil.updateCollection(id: model.targetRoomId ?? "",
-                                          className: SceneType.pkApply.rawValue,
+                                          className: self.vc.sceneType.rawValue,
                                           objectId: model.objectId,
                                           params: JSONObject.toJson(model),
                                           delegate: nil)
@@ -96,7 +102,7 @@ class PKInviteInfoTargetDelegate: ISyncManagerEventDelegate {
     
     func onCreated(object: IObject) {
         LogUtils.log(message: "onCreated target invite == \(String(describing: object.toJson()))", level: .info)
-        guard let model = JSONObject.toModel(PKApplyInfoModel.self, value: object.toJson()) else { return }
+        guard let _ = JSONObject.toModel(PKApplyInfoModel.self, value: object.toJson()) else { return }
     }
     
     func onUpdated(object: IObject) {
@@ -110,9 +116,11 @@ class PKInviteInfoTargetDelegate: ISyncManagerEventDelegate {
             
             // 删除pk 邀请数据
             SyncUtil.deleteCollection(id: model.roomId,
-                                      className: SceneType.pkApply.rawValue,
+                                      className: vc.sceneType.rawValue,
                                       delegate: nil)
-            
+            SyncUtil.deleteCollection(id: model.targetRoomId ?? "",
+                                      className: vc.sceneType.rawValue,
+                                      delegate: nil)
             pkLiveEndClosure?(model)
             
         } else if model.status == .accept {
@@ -129,7 +137,7 @@ class PKInviteInfoTargetDelegate: ISyncManagerEventDelegate {
             pkInfo.roomId = model.targetRoomId ?? ""
             pkInfo.userId = model.targetUserId ?? ""
             SyncUtil.addCollection(id: model.roomId,
-                                   className: SceneType.pkInfo.rawValue,
+                                   className: SYNC_MANAGER_PK_INFO,
                                    params: JSONObject.toJson(pkInfo),
                                    delegate: PKInfoAddDataDelegate(vc: vc))
             

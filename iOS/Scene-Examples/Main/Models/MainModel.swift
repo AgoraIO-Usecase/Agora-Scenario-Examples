@@ -16,8 +16,6 @@ enum SceneType: String {
     case game = "interactiveGame"
     /// PKApply
     case pkApply = "PKApplyInfo"
-    /// PKInfo
-    case pkInfo = "PKInfo"
     
     var alertTitle: String {
         switch self {
