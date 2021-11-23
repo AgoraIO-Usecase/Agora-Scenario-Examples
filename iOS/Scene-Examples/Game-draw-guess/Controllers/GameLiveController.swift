@@ -235,7 +235,6 @@ class GameLiveController: LivePlayerController {
         } else {
             updateLiveLayout(postion: .center)
             pkProgressView.reset()
-            deleteSubscribe()
         }
     }
     
@@ -264,6 +263,7 @@ class GameLiveController: LivePlayerController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         SyncUtil.unsubscribe(id: channleName, className: SYNC_MANAGER_PK_INFO)
+        SyncUtil.unsubscribe(id: channleName, className: SYNC_MANAGER_GAME_INFO)
         deleteSubscribe()
     }
     
@@ -299,12 +299,12 @@ class GameLiveController: LivePlayerController {
     private func deleteSubscribe() {
         let channelName = targetChannelName.isEmpty ? channleName : targetChannelName
         SyncUtil.deleteCollection(id: channelName, className: SYNC_MANAGER_GAME_INFO, delegate: nil)
-        SyncUtil.unsubscribe(id: channelName, className: SYNC_MANAGER_GAME_INFO)
         
         if !targetChannelName.isEmpty {
             leaveChannel(uid: UserInfo.userId, channelName: targetChannelName)
             SyncUtil.unsubscribe(id: targetChannelName, className: sceneType.rawValue)
             SyncUtil.unsubscribe(id: targetChannelName, className: SYNC_MANAGER_GIFT_INFO)
+            SyncUtil.unsubscribe(id: targetChannelName, className: SYNC_MANAGER_GAME_INFO)
             SyncUtil.leaveScene(id: targetChannelName)
         }
         timer.destoryTimer(withName: sceneType.rawValue)
