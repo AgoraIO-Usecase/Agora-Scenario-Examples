@@ -20,24 +20,24 @@ struct GameModeModel {
     
     static func createDatas() -> [GameModeModel] {
         var dataArray = [GameModeModel]()
-        var model = GameModeModel(iconName: "Game/pkgame-icon",
+        let model = GameModeModel(iconName: "Game/pkgame-icon",
                                   title: "连麦PK",
                                   bgColor: .init(hex: "#F5A623"),
                                   type: .game_pk)
         dataArray.append(model)
         
-        model = GameModeModel(iconName: "Game/pkgame-icon",
-                              title: "连麦PK",
-                              bgColor: .init(hex: "#F5A623"),
-                              type: .game_pk)
-        dataArray.append(model)
-        
-        model = GameModeModel(iconName: "Game/pkgame-icon",
-                              title: "连麦PK",
-                              bgColor: .init(hex: "#F5A623"),
-                              type: .game_pk)
-        dataArray.append(model)
-        
+//        model = GameModeModel(iconName: "Game/pkgame-icon",
+//                              title: "连麦PK",
+//                              bgColor: .init(hex: "#F5A623"),
+//                              type: .game_pk)
+//        dataArray.append(model)
+//        
+//        model = GameModeModel(iconName: "Game/pkgame-icon",
+//                              title: "连麦PK",
+//                              bgColor: .init(hex: "#F5A623"),
+//                              type: .game_pk)
+//        dataArray.append(model)
+//        
         return dataArray
     }
 }

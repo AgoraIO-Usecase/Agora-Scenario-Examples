@@ -76,13 +76,13 @@ class GameCenterView: UIView {
         
         lineView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15).isActive = true
         lineView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 15).isActive = true
-        lineView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 15).isActive = true
+        lineView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15).isActive = true
         lineView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
         collectionLayout.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         collectionLayout.topAnchor.constraint(equalTo: lineView.bottomAnchor, constant: 15).isActive = true
         collectionLayout.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        collectionLayout.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        collectionLayout.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
         collectionLayout.heightAnchor.constraint(equalToConstant: 123).isActive = true
     }
     
