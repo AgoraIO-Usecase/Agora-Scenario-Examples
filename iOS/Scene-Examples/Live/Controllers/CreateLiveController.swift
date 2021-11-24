@@ -89,6 +89,7 @@ class CreateLiveController: BaseViewController {
     }
     
     private func setupUI() {
+        view.backgroundColor = .init(hex: "#404B54")
         randomNameView.translatesAutoresizingMaskIntoConstraints = false
         startLiveButton.translatesAutoresizingMaskIntoConstraints = false
         settingButton.translatesAutoresizingMaskIntoConstraints = false

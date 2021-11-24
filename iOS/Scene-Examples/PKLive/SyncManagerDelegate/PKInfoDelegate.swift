@@ -26,9 +26,9 @@ class PKInfoDelegate: ISyncManagerEventDelegate {
         if model.userId == "\(UserInfo.userId)" { return }
         vc.pkInfoModel = model
         if model.status == .end {
-            vc.leaveChannel(uid: UInt(model.userId) ?? 0, channelName: model.roomId)
+            vc.leaveChannel(uid: UserInfo.userId, channelName: model.roomId)
             // 删除PKInfo数据
-            SyncUtil.deleteCollection(id: model.roomId,
+            SyncUtil.deleteCollection(id: vc.channleName,
                                       className: SYNC_MANAGER_PK_INFO,
                                       delegate: nil)
         } else {

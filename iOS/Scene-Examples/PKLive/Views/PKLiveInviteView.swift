@@ -214,6 +214,7 @@ class GetPKLiveDataDelegate: IObjectListDelegate {
             if info.status == .accept {
                 ToastView.show(text: "PK_Invite_Fail".localized, duration: 3)
             } else if info.status == .end {
+                cell.pkInviteSubscribe?(cell.currendModel?.roomId ?? "")
                 info.status = .invite
                 info.roomId = cell.channelName
                 info.targetRoomId = cell.currendModel?.roomId

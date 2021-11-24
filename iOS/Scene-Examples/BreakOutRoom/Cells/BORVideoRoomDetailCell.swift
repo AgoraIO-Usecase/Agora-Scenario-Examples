@@ -56,7 +56,7 @@ class BORVideoRoomDetailCell: UICollectionViewCell {
     
     func setupItemData(with item: Any?) {
         guard let model = item as? LiveCanvasModel else { return }
-        titleLabel.text = "User-\(model.hostUserId)"
+        titleLabel.text = "User-\(model.canvas?.uid ?? 0)"
         model.canvas?.view = videoView
     }
     

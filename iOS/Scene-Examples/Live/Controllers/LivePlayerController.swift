@@ -19,20 +19,23 @@ class LivePlayerController: BaseViewController {
         view.minLineSpacing = 0
         view.delegate = self
         view.scrollDirection = .vertical
+        view.showsVerticalScrollIndicator = false
         view.register(LivePlayerCell.self,
                       forCellWithReuseIdentifier: LivePlayerCell.description())
         return view
     }()
     private var agoraKit: AgoraRtcEngineKit?
     private lazy var rtcEngineConfig: AgoraRtcEngineConfig = {
-       let config = AgoraRtcEngineConfig()
+        let config = AgoraRtcEngineConfig()
         config.appId = KeyCenter.AppId
         config.channelProfile = .liveBroadcasting
         config.areaCode = .global
         return config
     }()
     private lazy var channelMediaOptions: AgoraRtcChannelMediaOptions = {
-       let option = AgoraRtcChannelMediaOptions()
+        let option = AgoraRtcChannelMediaOptions()
+        option.autoSubscribeAudio = .of(true)
+        option.autoSubscribeVideo = .of(true)
         return option
     }()
     /// 顶部头像昵称
@@ -115,7 +118,7 @@ class LivePlayerController: BaseViewController {
         agoraKit?.muteAllRemoteVideoStreams(true)
         agoraKit?.destroyMediaPlayer(nil)
         
-        leaveChannel(uid: UserInfo.userId, channelName: channleName)
+        leaveChannel(uid: UserInfo.userId, channelName: channleName, isExit: true)
         SyncUtil.unsubscribe(id: channleName, className: sceneType.rawValue)
         SyncUtil.unsubscribe(id: channleName, className: SYNC_MANAGER_GIFT_INFO)
         SyncUtil.leaveScene(id: channleName)
@@ -193,12 +196,7 @@ class LivePlayerController: BaseViewController {
                     case .switch_camera:
                         self.agoraKit?.switchCamera()
                     case .camera:
-//                        self.agoraKit?.muteLocalVideoStream(isSelected)
-                        if isSelected {
-                            self.agoraKit?.disableVideo()
-                        } else {
-                            self.agoraKit?.enableVideo()
-                        }
+                        self.agoraKit?.muteLocalVideoStream(isSelected)
                         self.liveCanvasView.isHidden = isSelected
                         if isSelected {
                             self.liveCanvasView.emptyImage = nil
@@ -207,12 +205,7 @@ class LivePlayerController: BaseViewController {
                             self.agoraKit?.startPreview()
                         }
                     case .mic:
-                        if isSelected {
-                            self.agoraKit?.disableAudio()
-                        } else {
-                            self.agoraKit?.enableAudio()
-                        }
-                        
+                        self.agoraKit?.muteLocalAudioStream(isSelected)
                     }
                 }
                 AlertManager.show(view: self.liveToolView, alertPostion: .bottom)
@@ -274,7 +267,7 @@ class LivePlayerController: BaseViewController {
     public func updateLiveLayout(postion: LiveLayoutPostion) {
         var leading: CGFloat = 0
         var top: CGFloat = -Screen.kNavHeight
-        var bottom: CGFloat = 0
+        var bottom: CGFloat = Screen.safeAreaBottomHeight()
         var trailing: CGFloat = 0
         var itemWidth: CGFloat = Screen.width
         var itemHeight: CGFloat = Screen.height
@@ -330,7 +323,6 @@ class LivePlayerController: BaseViewController {
         let connection = LiveCanvasModel.createConnection(channelName: channelName, uid: uid)
         canvasModel.connection = connection
         canvasModel.channelName = channelName
-        canvasModel.hostUserId = UInt(currentUserId) ?? 0
         canvasDataArray.append(canvasModel)
         liveCanvasView.dataArray = canvasDataArray
         
@@ -341,10 +333,10 @@ class LivePlayerController: BaseViewController {
             channelMediaOptions.autoSubscribeVideo = .of(true)
             channelMediaOptions.autoSubscribeAudio = .of(true)
         }
-        
-        agoraKit?.joinChannelEx(byToken: KeyCenter.Token, connection: connection, delegate: self, mediaOptions: channelMediaOptions, joinSuccess: { result, uid, code in
-            LogUtils.log(message: "result == \(result) uid == \(uid)  code == \(code)", level: .info)
-        })
+        let result = agoraKit?.joinChannel(byToken: KeyCenter.Token, channelId: channelName, uid: uid, mediaOptions: channelMediaOptions, joinSuccess: nil)
+        if result == 0 {
+            LogUtils.log(message: "主播进入房间", level: .info)
+        }
         chatView.sendMessage(message: "\(UserInfo.userId)加入房间")
     }
     
@@ -354,11 +346,12 @@ class LivePlayerController: BaseViewController {
     ///   - pkUid: pk主播的UserID
     public func joinAudienceChannel(channelName: String, pkUid: UInt = 0) {
         
-        let isContainer = canvasDataArray.contains(where: { $0.channelName == channelName && $0.hostUserId == pkUid })
+        let isContainer = canvasDataArray.contains(where: { $0.channelName == channelName && $0.canvas?.uid == pkUid })
         guard !isContainer else {
             LogUtils.log(message: "当前用户存在 channelName == \(channelName) pkUid == \(pkUid)", level: .warning)
-            LogUtils.log(message: "所有用户 \(canvasDataArray.compactMap({ String(format: "channelName == %@ userID == %@", $0.channelName, $0.hostUserId) }))",
-                         level: .warning)
+            let value = canvasDataArray.map({ "channleName == \($0.channelName) userId == \($0.connection?.localUid ?? 0)" })
+            LogUtils.log(message: "所有用户 \(value))", level: .warning)
+            liveCanvasView.reloadData()
             return
         }
         
@@ -367,37 +360,42 @@ class LivePlayerController: BaseViewController {
         let connection = LiveCanvasModel.createConnection(channelName: channelName, uid: UserInfo.userId)
         canvasModel.connection = connection
         canvasModel.channelName = channelName
-        canvasModel.hostUserId = pkUid
         canvasDataArray.append(canvasModel)
         liveCanvasView.dataArray = canvasDataArray
         
         channelMediaOptions.clientRoleType = .of((Int32)(AgoraClientRole.audience.rawValue))
-        agoraKit?.joinChannelEx(byToken: KeyCenter.Token, connection: connection, delegate: self, mediaOptions: channelMediaOptions, joinSuccess: { result, uid, code in
-            LogUtils.log(message: "join audience result == \(result) uid == \(uid)  code == \(code)", level: .info)
-        })
-        let userId = pkUid == (UInt(currentUserId) ?? 0) ? UserInfo.userId : pkUid
-        chatView.sendMessage(message: "\(userId)加入房间")
+        let joinResult = agoraKit?.joinChannelEx(byToken: KeyCenter.Token, connection: connection, delegate: self, mediaOptions: channelMediaOptions, joinSuccess: nil) ?? -1000
+        if joinResult == 0 {
+            LogUtils.log(message: "join audience success uid == \(pkUid) channelName == \(channelName)", level: .info)
+            let userId = pkUid == (UInt(currentUserId) ?? 0) ? UserInfo.userId : pkUid
+            chatView.sendMessage(message: "\(userId)加入房间")
+            return
+        }
+        LogUtils.log(message: "join audience error uid == \(pkUid) channelName == \(channelName)", level: .error)
     }
-    public func leaveChannel(uid: UInt, channelName: String) {
-        if uid <= 0 {
+    public func leaveChannel(uid: UInt, channelName: String, isExit: Bool = false) {
+        if isExit && "\(uid)" == currentUserId {
             canvasDataArray.forEach({
                 if let connection = $0.connection {
                     agoraKit?.leaveChannelEx(connection, leaveChannelBlock: nil)
                 }
             })
         }
-        if let connection = canvasDataArray.filter({ $0.hostUserId == uid && $0.channelName == channelName }).first?.connection {
+        guard canvasDataArray.count > 1 else { return }
+        if let connection = canvasDataArray.filter({ $0.connection?.localUid == uid && $0.channelName == channelName }).first?.connection {
             agoraKit?.leaveChannelEx(connection, leaveChannelBlock: { state in
-                LogUtils.log(message: "left channel, duration: \(state.duration)", level: .info)
+                LogUtils.log(message: "left channel: \(connection.channelId) uid == \(connection.localUid)",
+                             level: .info)
             })
         }
-        if let connectionIndex = canvasDataArray.firstIndex(where: { $0.hostUserId == uid && $0.channelName == channelName }) {
+        if let connectionIndex = canvasDataArray.firstIndex(where: { $0.connection?.localUid == uid && $0.channelName == channelName }) {
             canvasDataArray.remove(at: connectionIndex)
+            liveCanvasView.dataArray = canvasDataArray
         }
     }
     
     public func didOfflineOfUid(uid: UInt) {
-        let index = canvasDataArray.firstIndex(where: { $0.hostUserId == uid && $0.channelName != channleName }) ?? -1
+        let index = canvasDataArray.firstIndex(where: { $0.connection?.localUid == uid && $0.channelName != channleName }) ?? -1
         if index > -1 && canvasDataArray.count > 1 {
             canvasDataArray.remove(at: index)
             liveCanvasView.dataArray = canvasDataArray
@@ -415,6 +413,9 @@ extension LivePlayerController: BaseCollectionViewLayoutDelegate {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LivePlayerCell.description(),
                                                       for: indexPath) as! LivePlayerCell
+        if indexPath.item >= canvasDataArray.count {
+            return cell
+        }
         let model = canvasDataArray[indexPath.item]
         cell.setupPlayerCanvas(with: model)
         

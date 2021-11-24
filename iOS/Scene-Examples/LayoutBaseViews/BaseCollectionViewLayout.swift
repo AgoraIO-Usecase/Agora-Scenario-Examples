@@ -41,6 +41,11 @@ class BaseCollectionViewLayout: UIView {
             collectionView.showsVerticalScrollIndicator = showsVerticalScrollIndicator
         }
     }
+    var isPagingEnabled: Bool = false {
+        didSet {
+            collectionView.isPagingEnabled = isPagingEnabled
+        }
+    }
     weak open var delegate: BaseCollectionViewLayoutDelegate?
     var dataArray: [Any]? {
         didSet {
@@ -97,6 +102,7 @@ class BaseCollectionViewLayout: UIView {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.backgroundColor = .clear
+        collectionView.isPagingEnabled = true
         return collectionView
     }()
     private lazy var refreshControl: UIRefreshControl = {
