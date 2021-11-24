@@ -110,7 +110,13 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
             // 整体
             mBinding.containerOverlayFgRoom.setPadding(inset.left, inset.top, inset.right, inset.bottom);
             // 输入框
-            mBinding.inputLayoutFgRoom.setVisibility(insets.isVisible(WindowInsetsCompat.Type.ime()) ? View.VISIBLE : View.GONE);
+
+            boolean imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime());
+            mBinding.inputLayoutFgRoom.setVisibility(imeVisible ? View.VISIBLE : View.GONE);
+            if (imeVisible)
+                mBinding.inputLayoutFgRoom.requestFocus();
+            else
+                mBinding.inputLayoutFgRoom.clearFocus();
 
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mBinding.inputLayoutFgRoom.getLayoutParams();
             layoutParams.bottomMargin = desiredBottom;
