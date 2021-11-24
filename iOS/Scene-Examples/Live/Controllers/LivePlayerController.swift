@@ -61,7 +61,6 @@ class LivePlayerController: BaseViewController {
     private(set) var channleName: String = ""
     private(set) var currentUserId: String = ""
     public var canvasDataArray = [LiveCanvasModel]()
-    public var pkInfoModel: PKInfoModel?
     private(set) var sceneType: SceneType = .singleLive
     private var canvasLeadingConstraint: NSLayoutConstraint?
     private var canvasTopConstraint: NSLayoutConstraint?
@@ -241,6 +240,11 @@ class LivePlayerController: BaseViewController {
         SyncUtil.subscribeCollection(id: channleName,
                                      className: SYNC_MANAGER_GIFT_INFO,
                                      delegate: LiveGiftDelegate(vc: self, type: .me))
+        
+        // 收到礼物
+        LiveReceivedGiftClosure = { [weak self] giftModel, type in
+            self?.receiveGiftHandler(giftModel: giftModel, type: type)
+        }
     }
     
     private func clickCloseLive() {
@@ -267,6 +271,9 @@ class LivePlayerController: BaseViewController {
     
     /// 退出游戏
     public func exitGameHandler() { }
+    
+    /// 收到礼物
+    public func receiveGiftHandler(giftModel: LiveGiftModel, type: PKLiveType) {}
     
     /// 更新直播布局
     public func updateLiveLayout(postion: LiveLayoutPostion) {

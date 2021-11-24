@@ -20,7 +20,7 @@ class PKLiveController: LivePlayerController {
         button.addTarget(self, action: #selector(clickStopBroadcast), for: .touchUpInside)
         return button
     }()
-    private lazy var vsImageView: UIImageView = {
+    public lazy var vsImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "PK/pic-VS"))
         imageView.isHidden = true
         return imageView
@@ -33,12 +33,13 @@ class PKLiveController: LivePlayerController {
         label.isHidden = true
         return label
     }()
-    private lazy var pkProgressView: PKLiveProgressView = {
+    public lazy var pkProgressView: PKLiveProgressView = {
         let view = PKLiveProgressView()
         view.isHidden = true
         return view
     }()
     
+    public var pkInfoModel: PKInfoModel?
     private lazy var timer = GCDTimer()
     private var targetChannelName: String = ""
     private var pkApplyInfoModel: PKApplyInfoModel?
@@ -98,27 +99,36 @@ class PKLiveController: LivePlayerController {
         pkLiveStartClosure = { [weak self] applyModel in
             guard let self = self else { return }
             self.pkApplyInfoModel = applyModel
-            self.updatePKUIStatus(isStart: true)
+            self.pkLiveStartHandler()
         }
         
         // pk 结束回调
         pkLiveEndClosure = { [weak self] applyModel in
             self?.pkApplyInfoModel = applyModel
-            self?.updatePKUIStatus(isStart: false)
-            self?.deleteSubscribe()
-            self?.stopBroadcastButton.isHidden = true
-        }
-        // 收到礼物回调
-        LiveReceivedGiftClosure = { [weak self] giftModel, type in
-            if type == .me {
-                self?.pkProgressView.updateProgressValue(at: giftModel.coin)
-            } else {
-                self?.pkProgressView.updateTargetProgressValue(at: giftModel.coin)
-            }
+            self?.pkLiveEndHandler()
         }
     }
     
-    private func updatePKUIStatus(isStart: Bool) {
+    /// pk开始
+    public func pkLiveStartHandler() {
+        updatePKUIStatus(isStart: true)
+    }
+    /// pk结束
+    public func pkLiveEndHandler() {
+        updatePKUIStatus(isStart: false)
+        deleteSubscribe()
+        stopBroadcastButton.isHidden = true
+    }
+    /// 收到礼物
+    override func receiveGiftHandler(giftModel: LiveGiftModel, type: PKLiveType) {
+        if type == .me {
+            pkProgressView.updateProgressValue(at: giftModel.coin)
+        } else {
+            pkProgressView.updateTargetProgressValue(at: giftModel.coin)
+        }
+    }
+    
+    public func updatePKUIStatus(isStart: Bool) {
         vsImageView.isHidden = !isStart
         countTimeLabel.isHidden = !isStart
         pkProgressView.isHidden = !isStart
@@ -147,7 +157,7 @@ class PKLiveController: LivePlayerController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         let channelName = targetChannelName.isEmpty ? channleName : targetChannelName
-        SyncUtil.unsubscribe(id: channelName, className: SYNC_MANAGER_PK_INFO)
+        SyncUtil.unsubscribe(id: channleName, className: SYNC_MANAGER_PK_INFO)
         SyncUtil.deleteCollection(id: channelName, className: sceneType.rawValue, delegate: nil)
         deleteSubscribe()
     }
@@ -168,7 +178,7 @@ class PKLiveController: LivePlayerController {
                                   delegate: nil)
     }
     
-    private func deleteSubscribe() {
+    public func deleteSubscribe() {
         timer.destoryTimer(withName: sceneType.rawValue)
         if !targetChannelName.isEmpty {
             leaveChannel(uid: UserInfo.userId, channelName: targetChannelName)

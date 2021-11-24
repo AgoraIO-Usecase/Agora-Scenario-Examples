@@ -13,8 +13,8 @@ var pkLiveStartClosure: ((PKApplyInfoModel) -> Void)?
 var pkLiveEndClosure: ((PKApplyInfoModel) -> Void)?
 
 class PKInviteInfoDelegate: ISyncManagerEventDelegate {
-    private var vc: LivePlayerController
-    init(vc: LivePlayerController) {
+    private var vc: PKLiveController
+    init(vc: PKLiveController) {
         self.vc = vc
     }
     func onCreated(object: IObject) {
@@ -106,8 +106,8 @@ class PKInviteInfoDelegate: ISyncManagerEventDelegate {
 }
 
 class PKInfoAddDataDelegate: IObjectDelegate {
-    private var vc: LivePlayerController
-    init(vc: LivePlayerController) {
+    private var vc: PKLiveController
+    init(vc: PKLiveController) {
         self.vc = vc
     }
     

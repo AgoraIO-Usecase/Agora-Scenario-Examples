@@ -7,7 +7,7 @@
 
 import UIKit
 
-class GameLiveController: LivePlayerController {
+class GameLiveController: PKLiveController {
     private lazy var webView: GameWebView = {
         let view = GameWebView()
         view.isHidden = true
@@ -25,23 +25,7 @@ class GameLiveController: LivePlayerController {
         button.isHidden = true
         return button
     }()
-    private lazy var pkProgressView: PKLiveProgressView = {
-        let view = PKLiveProgressView()
-        view.isHidden = true
-        return view
-    }()
-    public lazy var stopBroadcastButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("停止连麦", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 13)
-        button.backgroundColor = .init(hex: "#000000", alpha: 0.7)
-        button.layer.cornerRadius = 19
-        button.layer.masksToBounds = true
-        button.isHidden = true
-        button.addTarget(self, action: #selector(clickStopBroadcast), for: .touchUpInside)
-        return button
-    }()
+
     public lazy var viewModel = GameViewModel(channleName: channleName,
                                               ownerId: currentUserId)
     
@@ -82,18 +66,14 @@ class GameLiveController: LivePlayerController {
         countTimeLabel.bottomAnchor.constraint(equalTo: liveCanvasView.topAnchor, constant: -6).isActive = true
         countTimeLabel.widthAnchor.constraint(equalToConstant: 83).isActive = true
         
+        pkProgressView.removeConstraints(pkProgressView.constraints)
+        pkProgressView.removeFromSuperview()
+        pkProgressView.reset()
         liveCanvasView.addSubview(pkProgressView)
         pkProgressView.leadingAnchor.constraint(equalTo: liveCanvasView.leadingAnchor).isActive = true
         pkProgressView.trailingAnchor.constraint(equalTo: liveCanvasView.trailingAnchor).isActive = true
         pkProgressView.bottomAnchor.constraint(equalTo: liveCanvasView.bottomAnchor).isActive = true
         pkProgressView.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        
-        view.addSubview(stopBroadcastButton)
-        stopBroadcastButton.translatesAutoresizingMaskIntoConstraints = false
-        stopBroadcastButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15).isActive = true
-        stopBroadcastButton.widthAnchor.constraint(equalToConstant: 83).isActive = true
-        stopBroadcastButton.heightAnchor.constraint(equalToConstant: 38).isActive = true
-        stopBroadcastButton.bottomAnchor.constraint(equalTo: bottomView.topAnchor, constant: -10).isActive = true
     }
     
     // 游戏PK
@@ -132,13 +112,6 @@ class GameLiveController: LivePlayerController {
         AlertManager.show(view: pkInviteListView, alertPostion: .bottom)
     }
     
-    @objc
-    private func clickStopBroadcast() { /// 停止连麦
-        showAlert(title: "终止连麦", message: "", cancel: nil) { [weak self] in
-            self?.updatePKInfoStatusToEnd()
-            self?.stopBroadcastButton.isHidden = true
-        }
-    }
     
     // 退出游戏
     override func exitGameHandler() {
@@ -149,55 +122,37 @@ class GameLiveController: LivePlayerController {
 //        self?.viewModel.postBarrage()
 //        viewModel.postGiftHandler(type: .delay)
     }
-        
-    override func closeLiveHandler() {
-        updatePKInfoStatusToEnd()
-    }
+
     override func eventHandler() {
         super.eventHandler()
-        // 监听主播发起PK
-        SyncUtil.subscribeCollection(id: channleName,
-                                     className: sceneType.rawValue,
-                                     delegate: PKInviteInfoDelegate(vc: self))
-        
-        // 监听PKinfo 让观众加入到PK的channel
-        SyncUtil.subscribeCollection(id: channleName,
-                                     className: SYNC_MANAGER_PK_INFO,
-                                     delegate: PKInfoDelegate(vc: self))
-
         // 监听游戏
         SyncUtil.subscribeCollection(id: channleName,
                                      className: SYNC_MANAGER_GAME_INFO,
                                      delegate: GameInfoDelegate(vc: self))
-        
-        // pk开始回调
-        pkLiveStartClosure = { [weak self] applyModel in
-            guard let self = self else { return }
-            self.pkApplyInfoModel = applyModel
-            self.updatePKUIStatus(isStart: true)
-            self.updateGameInfoStatus(isStart: true)
-        }
-        
-        // pk 结束回调
-        pkLiveEndClosure = { [weak self] applyModel in
-            self?.pkApplyInfoModel = applyModel
-            self?.updatePKUIStatus(isStart: false)
-            self?.updateLiveLayout(postion: .full)
-            self?.stopBroadcastButton.isHidden = true
-            self?.deleteSubscribe()
-        }
-        // 收到礼物回调
-        LiveReceivedGiftClosure = { [weak self] giftModel, type in
-            if type == .me {
-                self?.pkProgressView.updateProgressValue(at: giftModel.coin)
-                self?.viewModel.postGiftHandler(type: giftModel.giftType)
-            } else {
-                self?.pkProgressView.updateTargetProgressValue(at: giftModel.coin)
-            }
+    }
+    
+    /// pk开始
+    override func pkLiveStartHandler() {
+        super.pkLiveStartHandler()
+        updateGameInfoStatus(isStart: true)
+    }
+    
+    /// pk结束
+    override func pkLiveEndHandler() {
+        super.pkLiveEndHandler()
+        updateLiveLayout(postion: .full)
+    }
+    
+    /// 收到礼物
+    override func receiveGiftHandler(giftModel: LiveGiftModel, type: PKLiveType) {
+        super.receiveGiftHandler(giftModel: giftModel, type: type)
+        if type == .me {
+            viewModel.postGiftHandler(type: giftModel.giftType)
         }
     }
     
-    public func updatePKUIStatus(isStart: Bool) {
+    override func updatePKUIStatus(isStart: Bool) {
+        vsImageView.isHidden = true
         countTimeLabel.isHidden = !isStart
         pkProgressView.isHidden = !isStart
         webView.isHidden = !isStart
@@ -259,39 +214,16 @@ class GameLiveController: LivePlayerController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        SyncUtil.unsubscribe(id: channleName, className: SYNC_MANAGER_PK_INFO)
         SyncUtil.unsubscribe(id: channleName, className: SYNC_MANAGER_GAME_INFO)
-        deleteSubscribe()
-    }
-    
-    override func didOfflineOfUid(uid: UInt) {
-        super.didOfflineOfUid(uid: uid)
-        LogUtils.log(message: "pklive leave == \(uid)", level: .info)
-    }
-    
-    private func updatePKInfoStatusToEnd() {
-        guard var applyModel = pkApplyInfoModel, currentUserId == "\(UserInfo.userId)" else { return }
-        applyModel.status = .end
-        let channelName = targetChannelName.isEmpty ? channleName : targetChannelName
-        SyncUtil.updateCollection(id: channelName,
-                                  className: sceneType.rawValue,
-                                  objectId: applyModel.objectId,
-                                  params: JSONObject.toJson(applyModel),
-                                  delegate: nil)
-    }
-    
-    private func deleteSubscribe() {
-        timer.destoryTimer(withName: sceneType.rawValue)
         if !targetChannelName.isEmpty {
-            leaveChannel(uid: UserInfo.userId, channelName: targetChannelName)
-            SyncUtil.unsubscribe(id: targetChannelName, className: sceneType.rawValue)
-            SyncUtil.unsubscribe(id: targetChannelName, className: SYNC_MANAGER_GIFT_INFO)
             SyncUtil.unsubscribe(id: targetChannelName, className: SYNC_MANAGER_GAME_INFO)
-            SyncUtil.leaveScene(id: targetChannelName)
-        } else {
-            guard let applyModel = pkApplyInfoModel else { return }
-            // 在对方channel中移除
-            leaveChannel(uid: UserInfo.userId, channelName: applyModel.roomId)
+        }
+    }
+    
+    override func deleteSubscribe() {
+        super.deleteSubscribe()
+        if !targetChannelName.isEmpty {
+            SyncUtil.unsubscribe(id: targetChannelName, className: SYNC_MANAGER_GAME_INFO)
         }
     }
 }

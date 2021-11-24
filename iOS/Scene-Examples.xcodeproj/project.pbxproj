@@ -318,7 +318,7 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
-		E79BEF8E2746729D009FA838 /* Game-draw-guess */ = {
+		E79BEF8E2746729D009FA838 /* Game */ = {
 			isa = PBXGroup;
 			children = (
 				E79BF02C274B824C009FA838 /* SyncManagerDelegate */,
@@ -328,7 +328,7 @@
 				E79BEF9027474C01009FA838 /* Cells */,
 				E79BEF8F27474BF5009FA838 /* Controllers */,
 			);
-			path = "Game-draw-guess";
+			path = Game;
 			sourceTree = "<group>";
 		};
 		E79BEF8F27474BF5009FA838 /* Controllers */ = {
@@ -423,7 +423,7 @@
 				E79C25F2273B685100909CD4 /* BreakOutRoom */,
 				E79C2620273B7B5C00909CD4 /* Live */,
 				E79BEF612741FCEB009FA838 /* PKLive */,
-				E79BEF8E2746729D009FA838 /* Game-draw-guess */,
+				E79BEF8E2746729D009FA838 /* Game */,
 				E79C25E4273B67DB00909CD4 /* Main.storyboard */,
 				E79C25E7273B67DD00909CD4 /* Assets.xcassets */,
 				E79C25E9273B67DD00909CD4 /* LaunchScreen.storyboard */,
