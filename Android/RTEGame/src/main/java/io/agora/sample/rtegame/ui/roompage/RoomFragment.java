@@ -1,19 +1,19 @@
 package io.agora.sample.rtegame.ui.roompage;
 
+import android.annotation.SuppressLint;
+import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.Observer;
 
 import io.agora.example.base.BaseRecyclerViewAdapter;
 import io.agora.example.base.BaseUtil;
@@ -24,15 +24,18 @@ import io.agora.sample.rtegame.R;
 import io.agora.sample.rtegame.base.BaseFragment;
 import io.agora.sample.rtegame.bean.GameInfo;
 import io.agora.sample.rtegame.bean.PKApplyInfo;
-import io.agora.sample.rtegame.bean.PKInfo;
 import io.agora.sample.rtegame.bean.RoomInfo;
 import io.agora.sample.rtegame.databinding.FragmentRoomBinding;
 import io.agora.sample.rtegame.databinding.ItemRoomMessageBinding;
 import io.agora.sample.rtegame.ui.roompage.hostdialog.HostListDialog;
 import io.agora.sample.rtegame.ui.roompage.moredialog.MoreDialog;
 import io.agora.sample.rtegame.util.GameUtil;
+import io.agora.sample.rtegame.util.ViewStatus;
 import io.agora.sample.rtegame.view.LiveHostCardView;
 import io.agora.sample.rtegame.view.LiveHostLayout;
+import io.agora.syncmanager.rtm.IObject;
+import io.agora.syncmanager.rtm.SyncManager;
+import io.agora.syncmanager.rtm.SyncManagerException;
 
 public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
 
@@ -43,11 +46,11 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
     private RoomInfo currentRoom;
     private boolean aMHost;
 
-    private AlertDialog currentDialog;
-
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         GlobalViewModel mGlobalModel = GameUtil.getViewModel(requireActivity(), GlobalViewModel.class);
 
         if (mGlobalModel.roomInfo.getValue() != null)
@@ -60,6 +63,12 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
             initView();
             initListener();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
     }
 
     private void initView() {
@@ -103,89 +112,60 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         // "游戏"弹窗
         mBinding.btnGameFgRoom.setOnClickListener((v) -> new HostListDialog().show(getChildFragmentManager(), HostListDialog.TAG));
         // "退出直播间"按钮点击事件
-        mBinding.btnExitFgRoom.setOnClickListener((v) -> requireActivity().onBackPressed());
+//        mBinding.btnExitFgRoom.setOnClickListener((v) -> requireActivity().onBackPressed());
         // 显示键盘按钮
+        mBinding.btnExitFgRoom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SyncManager.Instance().getScene(currentRoom.getId()).get(new SyncManager.DataItemCallback() {
+                    @Override
+                    public void onSuccess(IObject result) {
+                        BaseUtil.logD(result.toString());
+                    }
+
+                    @Override
+                    public void onFail(SyncManagerException exception) {
+                        exception.printStackTrace();
+                        BaseUtil.logD(exception.getMessage());
+                    }
+                });
+            }
+        });
         mBinding.inputFgRoom.setOnClickListener(v -> BaseUtil.showKeyboard(requireActivity().getWindow(), mBinding.editTextFgRoom));
         // RTC engine 初始化监听
         mViewModel.mEngine().observe(getViewLifecycleOwner(), this::onRTCInit);
         // 连麦成功《==》主播上线
-        mViewModel.subRoomInfo().observe(getViewLifecycleOwner(), this::onHostOnline);
+        mViewModel.subRoomInfo().observe(getViewLifecycleOwner(), this::onSubHostJoin);
+        // 游戏开始
+        mViewModel.gameInfo().observe(getViewLifecycleOwner(), this::onGameChanged);
 
         if (aMHost) {
             // 主播，监听连麦信息
-            mViewModel.pkApplyInfo().observe(getViewLifecycleOwner(), this::onPKApplyInfoChanged);
+//            mViewModel.pkApplyInfo().observe(getViewLifecycleOwner(), this::onPKApplyInfoChanged);
         } else {
-            // 观众，监听主播上线
-            mViewModel.hostUID().observe(getViewLifecycleOwner(), (uid) -> {
-                if (String.valueOf(uid).equals(GameApplication.getInstance().user.getUserId())) {
-                    onHostOnline(currentRoom);
-                }
-            });
+            mViewModel.localHostId().observe(getViewLifecycleOwner(), this::onLocalHostJoin);
         }
+        // 观众，监听主播上线
+//            mViewModel.hostUID().observe(getViewLifecycleOwner(), (uid) -> {
+//                if (String.valueOf(uid).equals(GameApplication.getInstance().user.getUserId())) {
+//                    onHostOnline(currentRoom);
+//                }
+//            });
+//        }
         // 监听PK信息
-        mViewModel.pkInfo().observe(getViewLifecycleOwner(), this::onPKInfoChanged);
-        mViewModel.gameInfo().observe(getViewLifecycleOwner(), this::onGameChanged);
+//        mViewModel.pkInfo().observe(getViewLifecycleOwner(), this::onPKInfoChanged);
 
+        mViewModel.viewStatus().observe(getViewLifecycleOwner(), new Observer<ViewStatus>() {
+            @Override
+            public void onChanged(ViewStatus viewStatus) {
+                if (viewStatus instanceof ViewStatus.Error)
+                    mMessageAdapter.addItem(((ViewStatus.Error) viewStatus).msg);
+            }
+        });
     }
 
-    /**
-     * 观众：{@link GameInfo#PLAYING} 订阅视频流 ,{@link GameInfo#END} 取消订阅
-     * 主播：@{@link GameInfo#IDLE} 加载WebView， {@link GameInfo#END} 卸载 WebView
-     */
     private void onGameChanged(GameInfo gameInfo) {
-        if (gameInfo == null) return;
-        if (gameInfo.getStatus() == GameInfo.IDLE) {
-//            if (aMHost) addWebView();
-        } else if (gameInfo.getStatus() == GameInfo.PLAYING) {
-//            if (!aMHost) addScreenShare();
-        } else if (gameInfo.getStatus() == GameInfo.END) {
-//            if (aMHost) removeWebView();
-//            else removeScreenShare();
-        }
-    }
 
-    /**
-     * {@link PKInfo#AGREED} 加入对方频道，拉流 | {@link PKInfo#END} 退出频道
-     */
-    private void onPKInfoChanged(PKInfo pkInfo) {
-        if (pkInfo == null) return;
-        if (pkInfo.getStatus() == PKInfo.AGREED) {
-            // this variable will only for join channel so room name doesn't matter.
-            RoomInfo subRoom = new RoomInfo(pkInfo.getRoomId(), "", pkInfo.getUserId());
-            mViewModel.joinSubRoom(subRoom, GameApplication.getInstance().user);
-        } else if (pkInfo.getStatus() == PKInfo.END) {
-            mViewModel.leaveSubRoom(pkInfo.getRoomId());
-        }
-    }
-
-    /**
-     * 仅主播调用
-     */
-    private void onPKApplyInfoChanged(PKApplyInfo pkApplyInfo) {
-        if (pkApplyInfo == null) return;
-
-        switch (pkApplyInfo.getStatus()) {
-            case PKApplyInfo.APPLYING: {
-                showPKDialog(pkApplyInfo);
-                break;
-            }
-            case PKApplyInfo.REFUSED: {
-                // 发起方提示
-                if (pkApplyInfo.getRoomId().equals(currentRoom.getId())) {
-                    if (currentDialog != null) currentDialog.dismiss();
-                    mMessageAdapter.addItem("玩家拒绝");
-                }
-                break;
-            }
-            case PKApplyInfo.AGREED: {
-                mViewModel.startPK(pkApplyInfo);
-                break;
-            }
-            case PKApplyInfo.END: {
-                mViewModel.endPK(pkApplyInfo.getTargetRoomId());
-                break;
-            }
-        }
     }
 
     /**
@@ -199,16 +179,16 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
 //                        mViewModel.cancelPK(pkApplyInfo);
 //                        dialog.dismiss();
 //                    }).show();
-        else
-            currentDialog = new AlertDialog.Builder(requireContext()).setMessage("您的好友邀请您加入游戏").setCancelable(false)
-                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                        mViewModel.acceptPK(pkApplyInfo);
-                        dialog.dismiss();
-                    })
-                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-                        mViewModel.cancelPK(pkApplyInfo);
-                        dialog.dismiss();
-                    }).show();
+//        else
+//            currentDialog = new AlertDialog.Builder(requireContext()).setMessage("您的好友邀请您加入游戏").setCancelable(false)
+//                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+//                        mViewModel.acceptPK(pkApplyInfo);
+//                        dialog.dismiss();
+//                    })
+//                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+//                        mViewModel.cancelPK(pkApplyInfo);
+//                        dialog.dismiss();
+//                    }).show();
     }
 
     /**
@@ -238,21 +218,11 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
     }
 
     /**
-     * 有主播上线
-     */
-    @MainThread
-    private void onHostOnline(RoomInfo roomInfo) {
-        if (mBinding.hostContainerFgRoom.hostView == null)
-            onHostJoin();
-        if (!roomInfo.getId().equals(currentRoom.getId()))
-            onSubHostJoin(roomInfo);
-    }
-
-    /**
      * 主播上线
      */
     @MainThread
-    private void onHostJoin() {
+    private void onLocalHostJoin(Integer uid) {
+        if (uid == null) return;
         mMessageAdapter.addItem("正在加载主播【" + currentRoom.getTempUserName() + "】视频");
         LiveHostLayout liveHost = mBinding.hostContainerFgRoom;
 
@@ -265,11 +235,22 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
      * 连麦主播上线
      */
     @MainThread
-    private void onSubHostJoin(RoomInfo subRoomInfo) {
-        mMessageAdapter.addItem("正在加载连麦主播【" + subRoomInfo.getTempUserName() + "】视频");
-        LiveHostCardView view = mBinding.hostContainerFgRoom.createSubHostView();
-        mBinding.hostContainerFgRoom.setType(LiveHostLayout.Type.DOUBLE_IN_GAME);
-        mViewModel.setupRemoteView(view.renderTextureView, subRoomInfo, false);
+    private void onSubHostJoin(@Nullable RoomInfo subRoomInfo) {
+        LiveHostLayout container = mBinding.hostContainerFgRoom;
+        // remove subHostView
+        if (subRoomInfo == null) {
+            mMessageAdapter.addItem("连麦结束");
+            container.removeView(container.subHostView);
+            container.setType(LiveHostLayout.Type.HOST_ONLY);
+        } else {
+            mMessageAdapter.addItem("正在加载连麦主播【" + subRoomInfo.getTempUserName() + "】视频");
+            LiveHostCardView view = container.createSubHostView();
+            if (container.isCurrentlyInGame())
+                container.setType(LiveHostLayout.Type.DOUBLE_IN_GAME);
+            else
+                container.setType(LiveHostLayout.Type.DOUBLE);
+            mViewModel.setupRemoteView(view.renderTextureView, subRoomInfo, false);
+        }
     }
 
 }

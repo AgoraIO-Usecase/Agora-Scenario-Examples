@@ -31,4 +31,12 @@ public class LocalUser {
     public String getName() {
         return name;
     }
+
+    @Override
+    public String toString() {
+        return "LocalUser{" +
+                "userId='" + userId + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

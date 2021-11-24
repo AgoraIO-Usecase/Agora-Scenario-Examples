@@ -27,6 +27,7 @@ import io.agora.sample.rtegame.bean.PKInfo;
 import io.agora.sample.rtegame.bean.RoomInfo;
 import io.agora.sample.rtegame.repo.RoomApi;
 import io.agora.sample.rtegame.util.GameConstants;
+import io.agora.sample.rtegame.util.GameUtil;
 import io.agora.sample.rtegame.util.ViewStatus;
 import io.agora.syncmanager.rtm.IObject;
 import io.agora.syncmanager.rtm.SyncManager;
@@ -46,6 +47,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
     private final MutableLiveData<RtcEngineEx> _mEngine = new MutableLiveData<>();
 
+    @NonNull
     public LiveData<RtcEngineEx> mEngine() {
         return _mEngine;
     }
@@ -53,45 +55,39 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     // UI状态
     private final MutableLiveData<ViewStatus> _viewStatus = new MutableLiveData<>();
 
+    @NonNull
     public LiveData<ViewStatus> viewStatus() {
         return _viewStatus;
     }
 
-    private final MutableLiveData<Integer> _hostUID = new MutableLiveData<>();
-
-    public LiveData<Integer> hostUID() {
-        return _hostUID;
+    ///////////////////// Audience need to know when host is ready/////////////////////////
+    private final MutableLiveData<Integer> _LocalHostId = new MutableLiveData<>();
+    @NonNull
+    public LiveData<Integer> localHostId() {
+        return _LocalHostId;
     }
+
+    /////////////////////OUR presentation only concerns 2 things/////////////////////////
+    ////////////1. 当前是否有其他主播////////////////// 2. 是否在游戏 ////////////////////////
 
     // 连麦房间信息
     private final MutableLiveData<RoomInfo> _subRoomInfo = new MutableLiveData<>();
 
+    @NonNull
     public LiveData<RoomInfo> subRoomInfo() {
         return _subRoomInfo;
     }
 
-    // 发现 pkApplyInfo 发生改变(可能为自己，可能为他人)
-    private final MutableLiveData<PKApplyInfo> _pkApplyInfo = new MutableLiveData<>();
-
-    public LiveData<PKApplyInfo> pkApplyInfo() {
-        return _pkApplyInfo;
-    }
-
-    // pkInfo 发生改变
-    private final MutableLiveData<PKInfo> _pkInfo = new MutableLiveData<>();
-
-    public LiveData<PKInfo> pkInfo() {
-        return _pkInfo;
-    }
-
-    // pkInfo 发生改变
+    // 连麦房间信息
     private final MutableLiveData<GameInfo> _gameInfo = new MutableLiveData<>();
 
+    @NonNull
     public LiveData<GameInfo> gameInfo() {
         return _gameInfo;
     }
 
-    public RoomViewModel(Context context, RoomInfo roomInfo) {
+
+    public RoomViewModel(@NonNull Context context, @NonNull RoomInfo roomInfo) {
         this.currentRoom = roomInfo;
 
         // 保证进来时没有PK相关数据
@@ -100,17 +96,25 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         clearGameInfo(currentRoom.getId());
 
 
-        if (currentRoom.getUserId().equals(GameApplication.getInstance().user.getUserId())) {
-            subscribeApplyPKInfo(currentRoom);
-        }
-
-        subscribePKInfo();
-        subscribeGameInfo();
 
         initRTC(context, new IRtcEngineEventHandler() {
+
             @Override
             public void onUserJoined(int uid, int elapsed) {
-                _hostUID.postValue(uid);
+                if (String.valueOf(uid).equals(currentRoom.getUserId()))
+                    RoomViewModel.this._LocalHostId.postValue(uid);
+            }
+        });
+        SyncManager.Instance().joinScene(GameUtil.getSceneFromRoomInfo(currentRoom), new SyncManager.Callback() {
+            @Override
+            public void onSuccess() {
+                _viewStatus.postValue(new ViewStatus.Error("加入RTM成功"));
+                subscribeRTMAttr(currentRoom);
+            }
+
+            @Override
+            public void onFail(SyncManagerException exception) {
+
             }
         });
     }
@@ -129,74 +133,36 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
     //<editor-fold desc="SyncManager related">
 
-    public void subscribeGameInfo() {
-        SyncManager.Instance().getScene(currentRoom.getId()).subscribe(new SyncManager.EventListener() {
-            @Override
-            public void onCreated(IObject item) {
-                BaseUtil.logD("subscribePKInfo#onCreated:" + item.toString());
-                tryHandleGameInfo(item);
-            }
-
-            @Override
-            public void onUpdated(IObject item) {
-                BaseUtil.logD("subscribePKInfo#onUpdated:" + item.toString());
-                tryHandleGameInfo(item);
-            }
-
-            @Override
-            public void onDeleted(IObject item) {
-
-            }
-
-            @Override
-            public void onSubscribeError(SyncManagerException ex) {
-
-            }
-        });
-    }
-
-    public void subscribePKInfo() {
-        SyncManager.Instance().getScene(currentRoom.getId()).subscribe(new SyncManager.EventListener() {
-            @Override
-            public void onCreated(IObject item) {
-                BaseUtil.logD("subscribePKInfo#onCreated:" + item.toString());
-                tryHandlePKInfo(item);
-            }
-
-            @Override
-            public void onUpdated(IObject item) {
-                BaseUtil.logD("subscribePKInfo#onUpdated:" + item.toString());
-                tryHandlePKInfo(item);
-            }
-
-            @Override
-            public void onDeleted(IObject item) {
-
-            }
-
-            @Override
-            public void onSubscribeError(SyncManagerException ex) {
-
-            }
-        });
-    }
-
-    /**
-     * PKApplyInfo监听
-     * 仅主播调用
-     */
-    public void subscribeApplyPKInfo(@NonNull RoomInfo targetRoom) {
+    public void subscribeRTMAttr(@NonNull RoomInfo targetRoom) {
         SyncManager.Instance().getScene(targetRoom.getId()).subscribe(new SyncManager.EventListener() {
             @Override
             public void onCreated(IObject item) {
-                BaseUtil.logD("subScribeApplyPKInfo#onCreated:" + item.toString());
-                tryHandleApplyPKInfo(item);
+                BaseUtil.logD("subscribeRTMAttr#onCreated:" +item.getId() + item.toString());
+                // 是当前房间
+                if (targetRoom.getId().equals(currentRoom.getId())) {
+                    tryHandlePKInfo(item);
+                    tryHandleGameInfo(item);
+                    // 主播额外监听
+                    if (currentRoom.getUserId().equals(GameApplication.getInstance().user.getUserId()))
+                        tryHandleApplyPKInfo(item);
+                }else{
+                    tryHandleApplyPKInfo(item);
+                }
             }
 
             @Override
             public void onUpdated(IObject item) {
-                BaseUtil.logD("subScribeApplyPKInfo#onUpdated:" + item.toString());
-                tryHandleApplyPKInfo(item);
+                BaseUtil.logD("subscribeRTMAttr#onUpdated:" +item.getId() + item.toString());
+                // 是当前房间
+                if (targetRoom.getId().equals(currentRoom.getId())) {
+                    tryHandlePKInfo(item);
+                    tryHandleGameInfo(item);
+                    // 主播额外监听
+                    if (currentRoom.getUserId().equals(GameApplication.getInstance().user.getUserId()))
+                        tryHandleApplyPKInfo(item);
+                }else{
+                    tryHandleApplyPKInfo(item);
+                }
             }
 
             @Override
@@ -218,7 +184,8 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         } catch (Exception ignored) {
         }
         if (gameInfo != null)
-            _gameInfo.postValue(gameInfo);
+            onGameChanged(gameInfo);
+//            _gameInfo.postValue(gameInfo);
     }
 
     private void tryHandlePKInfo(IObject item) {
@@ -227,8 +194,8 @@ public class RoomViewModel extends ViewModel implements RoomApi {
             pkInfo = item.toObject(PKInfo.class);
         } catch (Exception ignored) {
         }
-        if (pkInfo != null)
-            _pkInfo.postValue(pkInfo);
+        if (pkInfo != null) onPKInfoChanged(pkInfo);
+//            _pkInfo.postValue(pkInfo);
     }
 
     private void tryHandleApplyPKInfo(IObject item) {
@@ -238,7 +205,70 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         } catch (Exception ignored) {
         }
         if (pkApplyInfo != null) {
-            _pkApplyInfo.postValue(pkApplyInfo);
+            onPKApplyInfoChanged(pkApplyInfo);
+//            _pkApplyInfo.postValue(pkApplyInfo);
+        }
+    }
+
+    /**
+     * 观众：{@link GameInfo#PLAYING} 订阅视频流 ,{@link GameInfo#END} 取消订阅
+     * 主播：@{@link GameInfo#IDLE} 加载WebView， {@link GameInfo#END} 卸载 WebView
+     */
+    private void onGameChanged(GameInfo gameInfo) {
+        if (gameInfo == null) return;
+        if (gameInfo.getStatus() == GameInfo.IDLE) {
+//            if (aMHost) addWebView();
+        } else if (gameInfo.getStatus() == GameInfo.PLAYING) {
+//            if (!aMHost) addScreenShare();
+        } else if (gameInfo.getStatus() == GameInfo.END) {
+//            if (aMHost) removeWebView();
+//            else removeScreenShare();
+        }
+    }
+
+    /**
+     * {@link PKInfo#AGREED} 加入对方频道，拉流 | {@link PKInfo#END} 退出频道
+     */
+    private void onPKInfoChanged(PKInfo pkInfo) {
+        if (pkInfo == null) return;
+        if (pkInfo.getStatus() == PKInfo.AGREED) {
+            // 只用来加入频道，只使用 roomId 字段
+            // this variable will only for join channel so room name doesn't matter.
+            RoomInfo subRoom = new RoomInfo(pkInfo.getRoomId(), "", pkInfo.getUserId());
+            joinSubRoom(subRoom, GameApplication.getInstance().user);
+        } else if (pkInfo.getStatus() == PKInfo.END) {
+            leaveSubRoom(pkInfo.getRoomId());
+        }
+    }
+
+    /**
+     * 仅主播调用
+     */
+    private void onPKApplyInfoChanged(PKApplyInfo pkApplyInfo) {
+        if (pkApplyInfo == null) return;
+
+        switch (pkApplyInfo.getStatus()) {
+            case PKApplyInfo.APPLYING: {
+//                showPKDialog(pkApplyInfo);
+                break;
+            }
+            case PKApplyInfo.REFUSED: {
+                _viewStatus.postValue(new ViewStatus.Error("玩家拒绝"));
+                // 发起方提示
+//                if (pkApplyInfo.getRoomId().equals(currentRoom.getId())) {
+//                    if (currentDialog != null) currentDialog.dismiss();
+//                    mMessageAdapter.addItem("玩家拒绝");
+//                }
+                break;
+            }
+            case PKApplyInfo.AGREED: {
+                startPK(pkApplyInfo);
+                break;
+            }
+            case PKApplyInfo.END: {
+                endPK(pkApplyInfo.getTargetRoomId());
+                break;
+            }
         }
     }
 
@@ -248,7 +278,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     }
 
     public void cancelPK(@NonNull PKApplyInfo pkApplyInfo) {
-        _pkApplyInfo.postValue(null);
+//        _pkApplyInfo.postValue(null);
         pkApplyInfo.setStatus(PKApplyInfo.REFUSED);
         SyncManager.Instance().getScene(pkApplyInfo.getTargetRoomId()).update(GameConstants.PK_APPLY_INFO, pkApplyInfo, null);
     }
@@ -263,7 +293,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         PKInfo pkInfo;
         if (pkApplyInfo.getRoomId().equals(currentRoom.getId())) {//      客户端为发起方
             pkInfo = new PKInfo(PKInfo.AGREED, pkApplyInfo.getTargetRoomId(), pkApplyInfo.getTargetUserId());
-        }else{//      客户端为接收方
+        } else {//      客户端为接收方
             pkInfo = new PKInfo(PKInfo.AGREED, pkApplyInfo.getRoomId(), pkApplyInfo.getUserId());
         }
 
@@ -273,7 +303,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     /**
      * 仅主播调用
      */
-    public void endPK(String channelId) {
+    public void endPK(@NonNull String channelId) {
         SyncManager.Instance().getScene(channelId).update(GameConstants.PK_INFO, null, new SyncManager.DataItemCallback() {
             @Override
             public void onSuccess(IObject result) {
@@ -287,44 +317,16 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         });
     }
 
-    public void clearPKApplyInfo(String channelId){
-        SyncManager.Instance().getScene(channelId).update(GameConstants.PK_APPLY_INFO, null, new SyncManager.DataItemCallback() {
-            @Override
-            public void onSuccess(IObject result) {
-
-            }
-
-            @Override
-            public void onFail(SyncManagerException exception) {
-
-            }
-        });
+    public void clearPKApplyInfo(@NonNull String channelId) {
+        SyncManager.Instance().getScene(channelId).update(GameConstants.PK_APPLY_INFO, null, null);
     }
-    public void clearPKInfo(String channelId){
-        SyncManager.Instance().getScene(channelId).update(GameConstants.PK_INFO, null, new SyncManager.DataItemCallback() {
-            @Override
-            public void onSuccess(IObject result) {
 
-            }
-
-            @Override
-            public void onFail(SyncManagerException exception) {
-
-            }
-        });
+    public void clearPKInfo(@NonNull String channelId) {
+        SyncManager.Instance().getScene(channelId).update(GameConstants.PK_INFO, null, null);
     }
-    public void clearGameInfo(String channelId){
-        SyncManager.Instance().getScene(channelId).update(GameConstants.GAME_INFO, null, new SyncManager.DataItemCallback() {
-            @Override
-            public void onSuccess(IObject result) {
 
-            }
-
-            @Override
-            public void onFail(SyncManagerException exception) {
-
-            }
-        });
+    public void clearGameInfo(@NonNull String channelId) {
+        SyncManager.Instance().getScene(channelId).update(GameConstants.GAME_INFO, null, null);
     }
     //</editor-fold>
 
@@ -356,19 +358,26 @@ public class RoomViewModel extends ViewModel implements RoomApi {
      * 加入当前房间
      */
     @Override
-    public void joinRoom(LocalUser localUser) {
+    public void joinRoom(@NonNull LocalUser localUser) {
         RtcEngineEx engine = _mEngine.getValue();
         if (engine != null) {
+            ChannelMediaOptions options = new ChannelMediaOptions();
+            options.autoSubscribeAudio = true;
+            options.autoSubscribeVideo = true;
             if (localUser.getUserId().equals(currentRoom.getUserId())) {
                 engine.enableAudio();
                 engine.enableVideo();
                 engine.startPreview();
+                options.channelProfile = Constants.CHANNEL_PROFILE_LIVE_BROADCASTING;
+                options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
             } else {
-                engine.disableAudio();
-                engine.disableVideo();
+                options.channelProfile = Constants.CHANNEL_PROFILE_LIVE_BROADCASTING;
+                options.clientRoleType = Constants.CLIENT_ROLE_AUDIENCE;
             }
+
+            engine.joinChannel(((RtcEngineImpl) engine).getContext().getString(R.string.rtc_app_token), currentRoom.getId(), Integer.parseInt(localUser.getUserId()), options);
 //            joinChannel(String token, String channelName, String optionalInfo, int optionalUid);
-            engine.joinChannel(((RtcEngineImpl) engine).getContext().getString(R.string.rtc_app_token), currentRoom.getId(), null, Integer.parseInt(localUser.getUserId()));
+//            engine.joinChannel(((RtcEngineImpl) engine).getContext().getString(R.string.rtc_app_token), currentRoom.getId(), null, Integer.parseInt(localUser.getUserId()));
         }
     }
 
@@ -377,10 +386,10 @@ public class RoomViewModel extends ViewModel implements RoomApi {
      * 加入成功监听到对方主播上线《==》UI更新
      */
     @Override
-    public void joinSubRoom(@NonNull RoomInfo subRoomInfo, LocalUser localUser) {
+    public void joinSubRoom(@NonNull RoomInfo subRoomInfo, @NonNull LocalUser localUser) {
 
         RoomInfo tempRoom = _subRoomInfo.getValue();
-        if (tempRoom != null){
+        if (tempRoom != null) {
             leaveSubRoom(tempRoom.getId());
         }
 
@@ -404,7 +413,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         }
     }
 
-    public void leaveSubRoom(String channelId) {
+    public void leaveSubRoom(@NonNull String channelId) {
         _subRoomInfo.setValue(null);
         RtcEngineEx engine = _mEngine.getValue();
         if (engine != null) {
@@ -414,7 +423,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         }
     }
 
-    public void initRTC(Context mContext, IRtcEngineEventHandler mEventHandler) {
+    public void initRTC(@NonNull Context mContext, @NonNull IRtcEngineEventHandler mEventHandler) {
         String appID = mContext.getString(R.string.rtc_app_id);
         if (appID.length() != 32) {
             _viewStatus.postValue(new ViewStatus.Error("APPID is not valid"));
@@ -438,7 +447,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         }
     }
 
-    public void setupLocalView(TextureView view, LocalUser localUser) {
+    public void setupLocalView(@NonNull TextureView view, @NonNull LocalUser localUser) {
         RtcEngineEx engine = _mEngine.getValue();
         if (engine != null) {
             engine.setupLocalVideo(new VideoCanvas(view, Constants.RENDER_MODE_HIDDEN, Integer.parseInt(localUser.getUserId())));
@@ -446,15 +455,16 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     }
 
     /**
-     * @param view     用来构造 videoCanvas
-     * @param roomInfo isHost => current RoomInfo，!isHost => 对方的 RoomInfo
-     * @param isHost   是否是当前房间主播
+     * @param view        用来构造 videoCanvas
+     * @param roomInfo    isLocalHost => current RoomInfo，!isLocalHost => 对方的 RoomInfo
+     * @param isLocalHost 是否是当前房间主播
      */
-    public void setupRemoteView(TextureView view, RoomInfo roomInfo, boolean isHost) {
+    public void setupRemoteView(@NonNull TextureView view, @NonNull RoomInfo roomInfo, boolean isLocalHost) {
         RtcEngineEx engine = _mEngine.getValue();
         if (engine != null) {
+            BaseUtil.logD(roomInfo.toString());
             VideoCanvas videoCanvas = new VideoCanvas(view, Constants.RENDER_MODE_HIDDEN, Integer.parseInt(roomInfo.getUserId()));
-            if (isHost) {
+            if (isLocalHost) {
                 engine.setupRemoteVideo(videoCanvas);
             } else {
                 RtcConnection connection = new RtcConnection();

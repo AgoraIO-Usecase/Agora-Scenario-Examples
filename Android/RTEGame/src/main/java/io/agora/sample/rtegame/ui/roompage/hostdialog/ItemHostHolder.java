@@ -17,7 +17,8 @@ public class ItemHostHolder extends BaseRecyclerViewAdapter.BaseViewHolder<ItemD
     public void binding(@Nullable RoomInfo roomInfo, int selectedIndex) {
         if (roomInfo != null){
             mBinding.avatarItemHost.setImageResource(R.drawable.portrait01);
-            mBinding.nameItemHost.setText(roomInfo.getTempUserName());
+//            mBinding.nameItemHost.setText(roomInfo.getTempUserName());
+            mBinding.nameItemHost.setText(roomInfo.getRoomName() + " " + roomInfo.getTempUserName());
             mBinding.buttonItemHost.setOnClickListener(this::onItemClick);
         }
     }

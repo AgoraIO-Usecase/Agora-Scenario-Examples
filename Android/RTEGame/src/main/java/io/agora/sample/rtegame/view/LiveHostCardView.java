@@ -11,6 +11,7 @@ import androidx.cardview.widget.CardView;
 
 public class LiveHostCardView extends CardView {
 
+    @NonNull
     public TextureView renderTextureView;
 
     public LiveHostCardView(@NonNull Context context) {
@@ -27,11 +28,11 @@ public class LiveHostCardView extends CardView {
         init(context);
     }
 
-    public void init(Context context){
+    public void init(@NonNull Context context){
         if (!isInEditMode()) {
             setCardElevation(0);
             setRadius(0);
-            setCardBackgroundColor(Color.TRANSPARENT);
+            setCardBackgroundColor(Color.RED);
         }
         renderTextureView = new TextureView(context);
         addView(renderTextureView);

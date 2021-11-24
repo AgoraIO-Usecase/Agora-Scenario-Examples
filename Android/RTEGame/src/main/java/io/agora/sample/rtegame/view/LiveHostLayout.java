@@ -3,8 +3,8 @@ package io.agora.sample.rtegame.view;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
-import android.view.TextureView;
 import android.view.View;
+import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,11 +16,21 @@ import io.agora.example.base.BaseUtil;
 public class LiveHostLayout extends ConstraintLayout {
 
     public int bottomMarginInGameType = 0;
+    public int topMarginForGameView = 0;
+    public int heightForGameView = 0;
 
+    @Nullable
     public LiveHostCardView hostView;
+    @Nullable
     public LiveHostCardView subHostView;
+    @Nullable
+    public LiveHostCardView gameHostView;
+    @Nullable
+    public WebView webViewHostView;
 
-    private Type type;
+    private Type type = Type.HOST_ONLY;
+
+    private boolean watchGame = false;
 
     public LiveHostLayout(@NonNull Context context) {
         this(context, null);
@@ -43,31 +53,54 @@ public class LiveHostLayout extends ConstraintLayout {
         }
     }
 
+    public void initParams(boolean watchGame, int topMarginForGameView, int heightForGameView, int bottomMarginInGameType){
+        this.watchGame = watchGame;
+        this.topMarginForGameView = topMarginForGameView;
+        this.heightForGameView = heightForGameView;
+        this.bottomMarginInGameType = bottomMarginInGameType;
+    }
+
+    @NonNull
     public LiveHostCardView createHostView(){
-        if (hostView != null)
+        if (hostView != null && hostView.getParent() == this)
             this.removeView(hostView);
 
         hostView = new LiveHostCardView(getContext());
         hostView.setId(View.generateViewId());
-        this.addView(hostView , new ConstraintLayout.LayoutParams(0, 0));
+        this.addView(hostView , new LayoutParams(0, 0));
         return hostView;
     }
 
+    @NonNull
     public LiveHostCardView createSubHostView(){
-        if (subHostView != null)
+        if (subHostView != null && subHostView.getParent() == this)
             this.removeView(subHostView);
 
         subHostView = new LiveHostCardView(getContext());
         subHostView.setId(View.generateViewId());
-        this.addView(subHostView, new ConstraintLayout.LayoutParams(0 ,0));
+        this.addView(subHostView, new LayoutParams(0 ,0));
         return subHostView;
+    }
+
+    public void createDefaultGameView(){
+        if (watchGame){
+            if (webViewHostView != null && webViewHostView.getParent() == this)
+                removeView(webViewHostView);
+            webViewHostView = new WebView(getContext());
+            webViewHostView.setBackgroundColor(Color.TRANSPARENT);
+            this.addView(webViewHostView, new LayoutParams(0, heightForGameView));
+        }else{
+            if (gameHostView != null && gameHostView.getParent() == this)
+                removeView(gameHostView);
+            gameHostView = new LiveHostCardView(getContext());
+            this.addView(gameHostView, new LayoutParams(0, heightForGameView));
+        }
     }
 
     private void onDoubleInGamePerformed() {
         if (subHostView != null && subHostView.getParent() == this) {
-            BaseUtil.logD("subHostView");
             subHostView.setVisibility(VISIBLE);
-            ConstraintLayout.LayoutParams lp = (LayoutParams) subHostView.getLayoutParams();
+            LayoutParams lp = (LayoutParams) subHostView.getLayoutParams();
             clearRequiredViewParams(lp);
             int width = getContext().getResources().getDisplayMetrics().widthPixels;
             int height = getContext().getResources().getDisplayMetrics().heightPixels;
@@ -79,8 +112,7 @@ public class LiveHostLayout extends ConstraintLayout {
             subHostView.setLayoutParams(lp);
         }
         if (hostView != null && hostView.getParent() == this) {
-            BaseUtil.logD("hostView");
-            ConstraintLayout.LayoutParams lp = (LayoutParams) hostView.getLayoutParams();
+            LayoutParams lp = (LayoutParams) hostView.getLayoutParams();
             clearRequiredViewParams(lp);
 
             int width = getContext().getResources().getDisplayMetrics().widthPixels;
@@ -98,12 +130,33 @@ public class LiveHostLayout extends ConstraintLayout {
             }
             hostView.setLayoutParams(lp);
         }
+
+        if (watchGame){
+            if (gameHostView != null && gameHostView.getParent() == this) {
+                gameHostView.setVisibility(VISIBLE);
+                setUpGameView(gameHostView);
+            }
+            if (webViewHostView != null)
+                webViewHostView.setVisibility(GONE);
+        }else{
+            if (gameHostView != null && gameHostView.getParent() == this)
+                gameHostView.setVisibility(GONE);
+            if (webViewHostView != null) {
+                webViewHostView.setVisibility(VISIBLE);
+                setUpGameView(webViewHostView);
+            }
+        }
+
     }
 
     private void onDoublePerformed() {
+
+        if (webViewHostView != null) webViewHostView.setVisibility(GONE);
+        if (gameHostView != null) gameHostView.setVisibility(GONE);
+
         if (subHostView != null && subHostView.getParent() == this) {
             subHostView.setVisibility(VISIBLE);
-            ConstraintLayout.LayoutParams lp = (LayoutParams) subHostView.getLayoutParams();
+            LayoutParams lp = (LayoutParams) subHostView.getLayoutParams();
             clearRequiredViewParams(lp);
 
             lp.dimensionRatio = "1:1";
@@ -115,7 +168,7 @@ public class LiveHostLayout extends ConstraintLayout {
             subHostView.setLayoutParams(lp);
         }
         if (hostView != null && hostView.getParent() == this) {
-            ConstraintLayout.LayoutParams lp = (LayoutParams) hostView.getLayoutParams();
+            LayoutParams lp = (LayoutParams) hostView.getLayoutParams();
             clearRequiredViewParams(lp);
 
             lp.dimensionRatio = "1:1";
@@ -131,8 +184,11 @@ public class LiveHostLayout extends ConstraintLayout {
 
     private void onHostOnlyPerformed() {
         if (subHostView != null) subHostView.setVisibility(GONE);
+        if (webViewHostView != null) webViewHostView.setVisibility(GONE);
+        if (gameHostView != null) gameHostView.setVisibility(GONE);
+
         if (hostView != null && hostView.getParent() == this) {
-            ConstraintLayout.LayoutParams lp = (LayoutParams) hostView.getLayoutParams();
+            LayoutParams lp = (LayoutParams) hostView.getLayoutParams();
             lp.leftToLeft = ConstraintSet.PARENT_ID;
             lp.rightToRight = ConstraintSet.PARENT_ID;
             lp.topToTop = ConstraintSet.PARENT_ID;
@@ -141,8 +197,17 @@ public class LiveHostLayout extends ConstraintLayout {
         }
     }
 
+    private void setUpGameView(@NonNull View view){
+        LayoutParams lp = (LayoutParams) view.getLayoutParams();
+        clearRequiredViewParams(lp);
+        lp.leftToLeft = ConstraintSet.PARENT_ID;
+        lp.rightToRight = ConstraintSet.PARENT_ID;
+        lp.topToTop = ConstraintSet.PARENT_ID;
+        lp.topMargin = topMarginForGameView;
+        view.setLayoutParams(lp);
+    }
 
-    public void clearRequiredViewParams(ConstraintLayout.LayoutParams lp) {
+    public void clearRequiredViewParams(@NonNull LayoutParams lp) {
         lp.horizontalBias = 0.5f;
         lp.verticalBias = 0.5f;
         lp.dimensionRatio = null;
@@ -162,11 +227,16 @@ public class LiveHostLayout extends ConstraintLayout {
         lp.bottomToTop = ConstraintSet.UNSET;
     }
 
+    public boolean isCurrentlyInGame(){
+        return webViewHostView != null && gameHostView != null;
+    }
+
+    @NonNull
     public Type getType() {
         return type;
     }
 
-    public void setType(Type type) {
+    public void setType(@NonNull Type type) {
         this.type = type;
         switch (this.type) {
             case HOST_ONLY: {

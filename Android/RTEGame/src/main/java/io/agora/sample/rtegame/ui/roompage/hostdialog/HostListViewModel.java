@@ -1,9 +1,11 @@
 package io.agora.sample.rtegame.ui.roompage.hostdialog;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import io.agora.example.base.BaseUtil;
 import io.agora.sample.rtegame.GameApplication;
 import io.agora.sample.rtegame.bean.PKApplyInfo;
 import io.agora.sample.rtegame.bean.RoomInfo;
@@ -19,15 +21,18 @@ public class HostListViewModel extends ViewModel {
 
     private final MutableLiveData<Event<Boolean>> _pkResult = new MutableLiveData<>();
 
+    @NonNull
     public LiveData<Event<Boolean>> pkResult() {
         return _pkResult;
     }
 
-    public void sendPKInvite(RoomViewModel roomViewModel, RoomInfo targetRoom, int gameId) {
+    public void sendPKInvite(@NonNull RoomViewModel roomViewModel, @NonNull RoomInfo targetRoom, int gameId) {
         SyncManager.Instance().joinScene(GameUtil.getSceneFromRoomInfo(targetRoom), new SyncManager.Callback() {
             @Override
             public void onSuccess() {
-                roomViewModel.subscribeApplyPKInfo(targetRoom);
+                BaseUtil.logD("join:"+targetRoom.getId()+" succeed");
+
+                roomViewModel.subscribeRTMAttr(targetRoom);
 
                 PKApplyInfo pkApplyInfo = new PKApplyInfo(roomViewModel.currentRoom.getUserId(), targetRoom.getUserId(), GameApplication.getInstance().user.getName(), PKApplyInfo.APPLYING, gameId,
                         roomViewModel.currentRoom.getId(), targetRoom.getId());
@@ -35,11 +40,13 @@ public class HostListViewModel extends ViewModel {
                 SyncManager.Instance().getScene(targetRoom.getId()).update(GameConstants.PK_APPLY_INFO, pkApplyInfo, new SyncManager.DataItemCallback() {
                     @Override
                     public void onSuccess(IObject result) {
+                        BaseUtil.logD("onSucceed:"+result.getId()+","+result.toString());
                         _pkResult.postValue(new Event<>(true));
                     }
 
                     @Override
                     public void onFail(SyncManagerException exception) {
+                        BaseUtil.logD("onFail"+exception.getMessage());
                         _pkResult.postValue(new Event<>(false));
                     }
                 });
@@ -47,6 +54,7 @@ public class HostListViewModel extends ViewModel {
 
             @Override
             public void onFail(SyncManagerException exception) {
+                BaseUtil.logD("onFail1"+exception.getMessage());
                 _pkResult.postValue(new Event<>(false));
             }
         });

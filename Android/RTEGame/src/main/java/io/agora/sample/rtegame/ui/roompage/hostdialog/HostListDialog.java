@@ -75,14 +75,11 @@ public class HostListDialog extends BaseBottomSheetDialogFragment<DialogHostList
 
         roomListViewModel.viewStatus().observe(getViewLifecycleOwner(), this::onViewStatusChanged);
         roomListViewModel.roomList().observe(getViewLifecycleOwner(), this::onFetchedRoomList);
-        hostListViewModel.pkResult().observe(getViewLifecycleOwner(), new EventObserver<>(new EventObserver.OnChangedListener<Boolean>() {
-            @Override
-            public void onChanged(Boolean data) {
-                if (data == Boolean.TRUE)
-                    dismiss();
-                else if (data == Boolean.FALSE)
-                    BaseUtil.toast(requireContext(), "PK error.");
-            }
+        hostListViewModel.pkResult().observe(getViewLifecycleOwner(), new EventObserver<>(data -> {
+            if (data == Boolean.TRUE)
+                dismiss();
+            else if (data == Boolean.FALSE)
+                BaseUtil.toast(requireContext(), "PK error.");
         }));
         mBinding.appBarDialogHostList.setOnClickListener(v -> mBinding.recyclerViewDialogHostList.smoothScrollToPosition(0));
     }
@@ -97,7 +94,8 @@ public class HostListDialog extends BaseBottomSheetDialogFragment<DialogHostList
                 rooms.remove(i);
             }else i++;
         }
-//        for (int i = 0; i < 100; i++) {
+        // TODO TEST
+//        for (int i = 0; i < 20; i++) {
 //            rooms.add(new RoomInfo("room_test:"+i, ""+i));
 //        }
         mAdapter.submitListAndPurge(rooms);

@@ -6,6 +6,6 @@ import io.agora.sample.rtegame.bean.LocalUser;
 import io.agora.sample.rtegame.bean.RoomInfo;
 
 public interface RoomApi {
-    void joinRoom(LocalUser localUser);
-    void joinSubRoom(@NonNull RoomInfo roomInfo, LocalUser localUser);
+    void joinRoom(@NonNull LocalUser localUser);
+    void joinSubRoom(@NonNull RoomInfo roomInfo, @NonNull LocalUser localUser);
 }
