@@ -20,6 +20,7 @@ class LivePlayerController: BaseViewController {
         view.delegate = self
         view.scrollDirection = .vertical
         view.showsVerticalScrollIndicator = false
+        view.isUserInteractionEnabled = false
         view.register(LivePlayerCell.self,
                       forCellWithReuseIdentifier: LivePlayerCell.description())
         return view
@@ -176,7 +177,11 @@ class LivePlayerController: BaseViewController {
     public func eventHandler() {
         // gif播放完成回调
         playGifView.gifAnimationFinishedClosure = { [weak self] in
-            self?.playGifView.isHidden = true
+            guard let self = self else { return }
+            self.playGifView.isHidden = true
+            SyncUtil.deleteCollection(id: self.channleName,
+                                      className: SYNC_MANAGER_GIFT_INFO,
+                                      delegate: nil)
         }
         // 聊天发送
         bottomView.clickChatButtonClosure = { [weak self] message in

@@ -46,6 +46,11 @@ class BaseCollectionViewLayout: UIView {
             collectionView.isPagingEnabled = isPagingEnabled
         }
     }
+    var isScrollEnabled: Bool = false {
+        didSet {
+            collectionView.isScrollEnabled = isScrollEnabled
+        }
+    }
     weak open var delegate: BaseCollectionViewLayoutDelegate?
     var dataArray: [Any]? {
         didSet {
