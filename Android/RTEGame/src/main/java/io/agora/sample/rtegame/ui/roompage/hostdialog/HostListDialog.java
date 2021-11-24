@@ -12,11 +12,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import io.agora.example.base.BaseBottomSheetDialogFragment;
 import io.agora.example.base.BaseRecyclerViewAdapter;
@@ -59,9 +61,11 @@ public class HostListDialog extends BaseBottomSheetDialogFragment<DialogHostList
 
     private void initView() {
         mAdapter = new BaseRecyclerViewAdapter<>(null, this, ItemHostHolder.class);
-        mBinding.recyclerViewDialogHostList.setAdapter(mAdapter);
         GameUtil.setBottomDialogBackground(mBinding.getRoot());
         GameUtil.setBottomDialogBackground(mBinding.appBarDialogHostList);
+        mBinding.recyclerViewDialogHostList.setAdapter(mAdapter);
+        mBinding.appBarDialogHostList.setLiftable(true);
+        mBinding.appBarDialogHostList.setLifted(false);
     }
 
     private void initListener() {
@@ -72,6 +76,14 @@ public class HostListDialog extends BaseBottomSheetDialogFragment<DialogHostList
         });
 
         mBinding.btnRefreshDialogHostList.setOnClickListener((v) -> roomListViewModel.fetchRoomList());
+        mBinding.appBarDialogHostList.setOnClickListener(v -> mBinding.recyclerViewDialogHostList.smoothScrollToPosition(0));
+        mBinding.recyclerViewDialogHostList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                mBinding.appBarDialogHostList.setLifted(recyclerView.canScrollVertically(-1));
+            }
+        });
 
         roomListViewModel.viewStatus().observe(getViewLifecycleOwner(), this::onViewStatusChanged);
         roomListViewModel.roomList().observe(getViewLifecycleOwner(), this::onFetchedRoomList);
@@ -81,26 +93,27 @@ public class HostListDialog extends BaseBottomSheetDialogFragment<DialogHostList
             else if (data == Boolean.FALSE)
                 BaseUtil.toast(requireContext(), "PK error.");
         }));
-        mBinding.appBarDialogHostList.setOnClickListener(v -> mBinding.recyclerViewDialogHostList.smoothScrollToPosition(0));
     }
 
     /**
      * 获取房间列表成功
      */
     private void onFetchedRoomList(List<RoomInfo> rooms) {
+        List<RoomInfo> tempRoomInfoList = new ArrayList<>(rooms);
         // 排除自己
-        for (int i = 0; i < rooms.size();) {
-            if (rooms.get(i).getUserId().equals(GameApplication.getInstance().user.getUserId())){
-                rooms.remove(i);
+        for (int i = 0; i < tempRoomInfoList.size();) {
+            if (tempRoomInfoList.get(i).getUserId().equals(GameApplication.getInstance().user.getUserId())){
+                tempRoomInfoList.remove(i);
             }else i++;
         }
         // TODO TEST
-//        for (int i = 0; i < 20; i++) {
-//            rooms.add(new RoomInfo("room_test:"+i, ""+i));
-//        }
-        mAdapter.submitListAndPurge(rooms);
-        mBinding.recyclerViewDialogHostList.setVisibility(rooms.isEmpty() ? GONE : VISIBLE);
-        mBinding.emptyDialogHostList.setVisibility(rooms.isEmpty() ? VISIBLE : GONE);
+        if (new Random().nextBoolean())
+        for (int i = 0; i < 20; i++) {
+            tempRoomInfoList.add(new RoomInfo("room_test:"+i, ""+i));
+        }else tempRoomInfoList.clear();
+        mAdapter.submitListAndPurge(tempRoomInfoList);
+        mBinding.recyclerViewDialogHostList.setVisibility(tempRoomInfoList.isEmpty() ? GONE : VISIBLE);
+        mBinding.emptyDialogHostList.setVisibility(tempRoomInfoList.isEmpty() ? VISIBLE : GONE);
     }
 
     /**

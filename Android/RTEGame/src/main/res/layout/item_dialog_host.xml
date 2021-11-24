@@ -21,7 +21,7 @@
         android:id="@+id/name_item_host"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textIsSelectable="true"
+        android:textIsSelectable="false"
         android:layout_marginStart="@dimen/space_normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/avatar_item_host"

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,8 +9,7 @@
         android:id="@+id/app_bar_dialog_host_list"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:gravity="center"
-        app:liftOnScroll="true">
+        android:gravity="center">
 
         <TextView
             android:layout_width="wrap_content"
@@ -24,12 +23,11 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_dialog_host_list"
+        android:layout_marginTop="?attr/actionBarSize"
         android:layout_width="match_parent"
-        android:layout_height="360dp"
-        android:paddingBottom="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:itemCount="20"
         tools:listitem="@layout/item_dialog_host" />
 
@@ -43,8 +41,8 @@
         android:id="@+id/empty_dialog_host_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="?attr/actionBarSize"
         android:layout_gravity="center"
+        android:layout_marginTop="?attr/actionBarSize"
         android:clipToPadding="false"
         android:gravity="center"
         android:orientation="vertical"
@@ -67,4 +65,4 @@
             android:layout_marginTop="@dimen/space_normal"
             android:text="@string/empty_host_list" />
     </LinearLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</FrameLayout>
