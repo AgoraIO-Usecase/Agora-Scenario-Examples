@@ -26,7 +26,9 @@
     <string name="empty_host_list">没有可邀请的主播,刷新试试</string>
     <string name="tools">工具</string>
     <string name="camera">摄像头</string>
+    <string name="camera_tip">是否发布本地视频流</string>
     <string name="mic">麦克风</string>
+    <string name="mic_tip">是否发布本地音频流</string>
 
     <string name="donate">赠送</string>
     <string name="gift">礼物</string>

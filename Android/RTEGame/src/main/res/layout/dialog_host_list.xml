@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:clipToPadding="false">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_dialog_host_list"
@@ -23,9 +24,9 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_dialog_host_list"
-        android:layout_marginTop="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="?attr/actionBarSize"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="20"
@@ -46,7 +47,7 @@
         android:clipToPadding="false"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="@dimen/space_normal"
+        android:padding="@dimen/space_big"
         android:visibility="invisible"
         tools:visibility="visible">
 

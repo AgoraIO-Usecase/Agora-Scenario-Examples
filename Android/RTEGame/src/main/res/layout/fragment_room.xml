@@ -112,8 +112,10 @@
             android:contentDescription="@string/exit"
             android:scaleType="fitXY"
             android:src="@drawable/ic_gift"
+            android:tintMode="src_atop"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btn_game_fg_room" />
+            app:layout_constraintEnd_toStartOf="@id/btn_game_fg_room"
+            app:tint="@color/selector_color_scrim" />
 
         <ImageButton
             android:id="@+id/btn_game_fg_room"
@@ -124,8 +126,10 @@
             android:contentDescription="@string/exit"
             android:scaleType="fitXY"
             android:src="@drawable/ic_game"
+            android:tintMode="src_atop"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btn_more_fg_room" />
+            app:layout_constraintEnd_toStartOf="@id/btn_more_fg_room"
+            app:tint="@color/selector_color_scrim" />
 
         <ImageButton
             android:id="@+id/btn_more_fg_room"
@@ -136,8 +140,10 @@
             android:contentDescription="@string/exit"
             android:scaleType="fitXY"
             android:src="@drawable/ic_more"
+            android:tintMode="src_atop"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btn_exit_fg_room" />
+            app:layout_constraintEnd_toStartOf="@id/btn_exit_fg_room"
+            app:tint="@color/selector_color_scrim" />
 
         <ImageButton
             android:id="@+id/btn_exit_fg_room"
@@ -148,13 +154,16 @@
             android:contentDescription="@string/exit"
             android:scaleType="fitXY"
             android:src="@drawable/ic_close"
+            android:tintMode="src_atop"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/selector_color_scrim" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <ImageView
         android:id="@+id/gift_image_fg_room"
-        android:clickable="false"
-        android:focusable="false"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:clickable="false"
+        android:focusable="false" />
 </FrameLayout>
