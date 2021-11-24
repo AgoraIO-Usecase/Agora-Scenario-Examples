@@ -352,7 +352,7 @@ public class DataSyncImpl implements ISyncManager {
             client.addOrUpdateChannelAttributes(channel, list, options, new ResultCallback<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
-                    IObject item = new Attribute(reference.getId(), json);
+                    IObject item = new Attribute(key, json);
                     SyncManager.EventListener listener = eventListeners.get(channel);
                     if(listener !=null){
                         listener.onUpdated(item);
