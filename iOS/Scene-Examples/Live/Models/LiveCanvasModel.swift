@@ -11,8 +11,6 @@ import AgoraRtcKit
 class LiveCanvasModel {
     /// 显示直播的画布
     var canvas: AgoraRtcVideoCanvas?
-    /// 主播id
-    var hostUserId: UInt = 0
     /// 频道名
     var channelName: String = ""
     /// 加入channel

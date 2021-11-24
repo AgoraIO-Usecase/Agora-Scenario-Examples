@@ -175,7 +175,6 @@ class BORRoomDetailController: BaseViewController {
         canvas.renderMode = .hidden
         let model = LiveCanvasModel()
         model.canvas = canvas
-        model.hostUserId = uid
         dataArray.append(model)
         videoView.dataArray = dataArray
     }
@@ -257,7 +256,7 @@ extension BORRoomDetailController: AgoraRtcEngineDelegate {
     func rtcEngine(_ engine: AgoraRtcEngineKit, didOfflineOfUid uid: UInt, reason: AgoraUserOfflineReason) {
         LogUtils.log(message: "remote user leval: \(uid) reason \(reason)", level: .info)
         guard !dataArray.isEmpty else { return }
-        let index = dataArray.firstIndex(where: { $0.hostUserId == uid }) ?? 0
+        let index = dataArray.firstIndex(where: { $0.canvas?.uid == uid }) ?? 0
         dataArray.remove(at: index)
         videoView.dataArray = dataArray
         // update online number

@@ -185,7 +185,7 @@ public class RtmSyncManager: NSObject, ISyncManager {
         }
         let option = AgoraRtmChannelAttributeOptions()
         option.enableNotificationToChannelMembers = true
-        rtmKit?.deleteChannel(channel + reference.className, attributesByKeys: nil, options: option, completion: { [weak self] error in
+        rtmKit?.clearChannel(channel + reference.className, options: option, attributesWithCompletion: { [weak self] error in
             guard let self = self else { return }
             if let channel = self.channels[channel + reference.className] {
                 if let delegate = self.delegates[channel] {
@@ -195,7 +195,6 @@ public class RtmSyncManager: NSObject, ISyncManager {
             }
             delegate?.onSuccess()
         })
-        
     }
     
     public func subscribe(_ reference: DocumentReference, _ delegate: ISyncManagerEventDelegate?) -> ISyncManagerLiveQuery {

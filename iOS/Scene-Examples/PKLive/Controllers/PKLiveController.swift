@@ -155,9 +155,6 @@ class PKLiveController: LivePlayerController {
     override func didOfflineOfUid(uid: UInt) {
         super.didOfflineOfUid(uid: uid)
         LogUtils.log(message: "pklive leave == \(uid)", level: .info)
-        guard let applyModel = pkApplyInfoModel,
-              applyModel.userId == "\(uid)" || applyModel.targetUserId == "\(uid)" else { return }
-        updatePKInfoStatusToEnd()
     }
     
     private func updatePKInfoStatusToEnd() {
@@ -169,26 +166,19 @@ class PKLiveController: LivePlayerController {
                                   objectId: applyModel.objectId,
                                   params: JSONObject.toJson(applyModel),
                                   delegate: nil)
-        
-        guard var pkInfoModel = pkInfoModel else {
-            return
-        }
-        pkInfoModel.status = .end
-        SyncUtil.updateCollection(id: channelName,
-                                  className: SYNC_MANAGER_PK_INFO,
-                                  objectId: pkInfoModel.objectId,
-                                  params: JSONObject.toJson(pkInfoModel),
-                                  delegate: nil)
     }
     
     private func deleteSubscribe() {
+        timer.destoryTimer(withName: sceneType.rawValue)
         if !targetChannelName.isEmpty {
             leaveChannel(uid: UserInfo.userId, channelName: targetChannelName)
             SyncUtil.unsubscribe(id: targetChannelName, className: sceneType.rawValue)
             SyncUtil.unsubscribe(id: targetChannelName, className: SYNC_MANAGER_GIFT_INFO)
             SyncUtil.leaveScene(id: targetChannelName)
+        } else {
+            guard let applyModel = pkApplyInfoModel else { return }
+            leaveChannel(uid: UserInfo.userId, channelName: applyModel.roomId)
         }
-        timer.destoryTimer(withName: sceneType.rawValue)
     }
     
     override func clickPKHandler() {
@@ -199,7 +189,7 @@ class PKLiveController: LivePlayerController {
             // 加入到对方的channel 订阅对方
             SyncUtil.subscribeCollection(id: id,
                                          className: self.sceneType.rawValue,
-                                         delegate: PKInviteInfoTargetDelegate(vc: self))
+                                         delegate: PKInviteInfoDelegate(vc: self))
             
             // 订阅对方收到的礼物
             SyncUtil.subscribeCollection(id: id,
