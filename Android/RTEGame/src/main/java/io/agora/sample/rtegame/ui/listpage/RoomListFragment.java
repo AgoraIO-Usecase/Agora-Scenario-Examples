@@ -78,7 +78,7 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
         mBinding.recyclerViewFgList.setAdapter(mAdapter);
         mBinding.recyclerViewFgList.addItemDecoration(new DividerDecoration(2));
         mBinding.swipeFgList.setProgressViewOffset(true, 0, mBinding.swipeFgList.getProgressViewEndOffset());
-        mBinding.swipeFgList.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark);
+        mBinding.swipeFgList.setColorSchemeResources(R.color.btn_gradient_end_color, R.color.btn_gradient_start_color);
     }
 
     private void initListener() {
