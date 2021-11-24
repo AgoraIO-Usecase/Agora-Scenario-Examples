@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@android:color/white"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface">
 
     <io.agora.sample.rtegame.view.LiveHostLayout
         android:id="@+id/host_container_fg_room"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container_overlay_fg_room"
@@ -61,24 +61,24 @@
             android:layout_height="0dp"
             android:layout_marginStart="@dimen/space_normal"
             android:fadingEdge="vertical"
-            android:requiresFadingEdge="vertical"
-            tools:listitem="@layout/item_room_message"
             android:orientation="vertical"
-            app:stackFromEnd="true"
+            android:requiresFadingEdge="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/input_layout_fg_room"
             app:layout_constraintHeight_percent="0.3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintWidth_percent="0.4"
-            app:layout_goneMarginBottom="50dp" />
+            app:layout_goneMarginBottom="50dp"
+            app:stackFromEnd="true"
+            tools:listitem="@layout/item_room_message" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/input_layout_fg_room"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/input_hint"
-            app:hintAnimationEnabled="false"
             android:visibility="gone"
+            app:hintAnimationEnabled="false"
             app:layout_constraintBottom_toBottomOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -104,23 +104,49 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <ImageButton
-            android:id="@+id/btn_more_fg_room"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/btn_donate_fg_room"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_margin="@dimen/space_normal"
             android:background="@android:color/transparent"
             android:contentDescription="@string/exit"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_gift"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_game_fg_room" />
+
+        <ImageButton
+            android:id="@+id/btn_game_fg_room"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_margin="@dimen/space_normal"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/exit"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_game"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_more_fg_room" />
+
+        <ImageButton
+            android:id="@+id/btn_more_fg_room"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_margin="@dimen/space_normal"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/exit"
+            android:scaleType="fitXY"
             android:src="@drawable/ic_more"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btn_exit_fg_room" />
 
         <ImageButton
             android:id="@+id/btn_exit_fg_room"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_margin="@dimen/space_normal"
             android:background="@android:color/transparent"
             android:contentDescription="@string/exit"
+            android:scaleType="fitXY"
             android:src="@drawable/ic_close"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

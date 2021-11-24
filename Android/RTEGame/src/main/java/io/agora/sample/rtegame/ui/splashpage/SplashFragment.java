@@ -15,6 +15,7 @@ import io.agora.sample.rtegame.R;
 import io.agora.sample.rtegame.base.BaseFragment;
 import io.agora.sample.rtegame.databinding.FragmentSplashBinding;
 import io.agora.sample.rtegame.util.EventObserver;
+import io.agora.sample.rtegame.util.GameUtil;
 
 
 public class SplashFragment extends BaseFragment<FragmentSplashBinding> {
@@ -22,7 +23,7 @@ public class SplashFragment extends BaseFragment<FragmentSplashBinding> {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        globalViewModel = new ViewModelProvider(requireActivity()).get(GlobalViewModel.class);
+        globalViewModel = GameUtil.getViewModel(requireActivity(), GlobalViewModel.class);
 
         initListener();
         globalViewModel.initSyncManager(requireContext());

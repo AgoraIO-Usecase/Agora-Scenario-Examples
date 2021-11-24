@@ -2,19 +2,14 @@ package io.agora.sample.rtegame;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceDataStore;
 
 import androidx.annotation.NonNull;
-import androidx.datastore.core.DataStore;
-import androidx.datastore.core.DataStoreFactory;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.HashMap;
-import java.util.prefs.PreferencesFactory;
 
-import io.agora.example.BaseApplication;
 import io.agora.example.base.BaseUtil;
 import io.agora.sample.rtegame.bean.LocalUser;
 import io.agora.sample.rtegame.bean.RoomInfo;
@@ -31,9 +26,6 @@ public class GlobalViewModel extends ViewModel implements RoomCreateApi {
     public LiveData<LocalUser> user(){
         return _user;
     }
-    public LocalUser getLocalUser(){
-        return _user.getValue();
-    }
 
     private final MutableLiveData<Boolean> _isRTMInit = new MutableLiveData<>();
     public LiveData<Boolean> isRTMInit(){
@@ -44,11 +36,16 @@ public class GlobalViewModel extends ViewModel implements RoomCreateApi {
 
     public GlobalViewModel() {
         LocalUser localUser = checkLocalOrGenerate();
+        GameApplication.getInstance().user = localUser;
         _user.setValue(localUser);
     }
 
+    /**
+     * 本地存在==> 本地生成
+     * 本地不存在==> 随机生成
+     */
     private LocalUser checkLocalOrGenerate() {
-        SharedPreferences sp = BaseApplication.getInstance().getSharedPreferences("sp_rte_game", Context.MODE_PRIVATE);
+        SharedPreferences sp = GameApplication.getInstance().getSharedPreferences("sp_rte_game", Context.MODE_PRIVATE);
         String userId = sp.getString("id", "-1");
 
         boolean isValidUser = true;

@@ -36,6 +36,7 @@ import io.agora.sample.rtegame.bean.RoomInfo;
 import io.agora.sample.rtegame.databinding.FragmentRoomListBinding;
 import io.agora.sample.rtegame.databinding.ItemRoomListBinding;
 import io.agora.sample.rtegame.util.Event;
+import io.agora.sample.rtegame.util.GameUtil;
 import io.agora.sample.rtegame.util.ViewStatus;
 
 public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> implements OnItemClickListener<RoomInfo> {
@@ -65,9 +66,9 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mGlobalModel = new ViewModelProvider(requireActivity()).get(GlobalViewModel.class);
+        mGlobalModel = GameUtil.getViewModel(requireActivity(), GlobalViewModel.class);
         mGlobalModel.clearRoomInfo();
-        mViewModel = new ViewModelProvider(getViewModelStore(), new ViewModelProvider.NewInstanceFactory()).get(RoomListViewModel.class);
+        mViewModel = GameUtil.getViewModel(this, RoomListViewModel.class);
         initView();
         initListener();
     }

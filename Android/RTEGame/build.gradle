@@ -35,7 +35,6 @@ dependencies {
     implementation project(path: ':rtmSyncManager')
     implementation('com.github.agorabuilder:agora-full-preview:4.0.0.preview.3')
 
-    implementation("androidx.datastore:datastore:1.0.0")
     implementation("androidx.navigation:navigation-fragment:2.3.5")
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 }

@@ -64,6 +64,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/space_big"
+        android:elevation="4dp"
+        android:outlineProvider="background"
         android:background="@android:color/transparent"
         android:contentDescription="@string/desc_create_room"
         android:src="@drawable/ic_create_room"

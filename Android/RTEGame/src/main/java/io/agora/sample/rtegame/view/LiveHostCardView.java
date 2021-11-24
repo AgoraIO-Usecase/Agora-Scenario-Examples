@@ -31,7 +31,7 @@ public class LiveHostCardView extends CardView {
         if (!isInEditMode()) {
             setCardElevation(0);
             setRadius(0);
-            setCardBackgroundColor(Color.RED);
+            setCardBackgroundColor(Color.TRANSPARENT);
         }
         renderTextureView = new TextureView(context);
         addView(renderTextureView);

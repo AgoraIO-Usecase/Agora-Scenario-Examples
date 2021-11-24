@@ -1,12 +1,10 @@
 package io.agora.sample.rtegame.ui.listpage;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,7 +12,6 @@ import io.agora.sample.rtegame.bean.RoomInfo;
 import io.agora.sample.rtegame.repo.RoomListApi;
 import io.agora.sample.rtegame.util.ViewStatus;
 import io.agora.syncmanager.rtm.IObject;
-import io.agora.syncmanager.rtm.Scene;
 import io.agora.syncmanager.rtm.SyncManager;
 import io.agora.syncmanager.rtm.SyncManagerException;
 

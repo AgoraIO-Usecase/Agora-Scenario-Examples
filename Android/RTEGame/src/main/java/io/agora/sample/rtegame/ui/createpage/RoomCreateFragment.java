@@ -11,10 +11,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 
 import io.agora.example.base.BaseUtil;
+import io.agora.sample.rtegame.GameApplication;
 import io.agora.sample.rtegame.GlobalViewModel;
 import io.agora.sample.rtegame.R;
 import io.agora.sample.rtegame.base.BaseFragment;
@@ -30,7 +29,7 @@ public class RoomCreateFragment extends BaseFragment<FragmentCreateRoomBinding> 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mGlobalModel = new ViewModelProvider(requireActivity()).get(GlobalViewModel.class);
+        mGlobalModel = GameUtil.getViewModel(requireActivity(), GlobalViewModel.class);
         initListener();
 
         setupRandomName();
@@ -66,14 +65,14 @@ public class RoomCreateFragment extends BaseFragment<FragmentCreateRoomBinding> 
      */
     private void startLive() {
         showLoading();
-        RoomInfo roomInfo = new RoomInfo(mBinding.nameFgCreate.getText().toString(), mGlobalModel.getLocalUser().getUserId());
+        RoomInfo roomInfo = new RoomInfo(mBinding.nameFgCreate.getText().toString(), GameApplication.getInstance().user.getUserId());
         mGlobalModel.createRoom(roomInfo);
     }
 
     private void onRoomInfoChanged(RoomInfo roomInfo) {
         dismissLoading();
         if (roomInfo == null) {
-            BaseUtil.toast("create failed");
+            BaseUtil.toast(GameApplication.getInstance(),"create failed");
         } else {
             findNavController().popBackStack();
         }

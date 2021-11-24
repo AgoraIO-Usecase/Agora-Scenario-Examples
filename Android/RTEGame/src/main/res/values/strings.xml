@@ -3,7 +3,7 @@
 
     <string name="exit">退出</string>
 
-    Splash page
+<!--    Splash page-->
     <string name="error_desc">RTM初始化出错</string>
     <string name="error_happened_click_to_refresh">出错了，再试一次</string>
 <!--    Room List-->
@@ -19,8 +19,14 @@
     <string name="beauty">美颜</string>
     <string name="setting">设置</string>
 
+<!--    ROOM-->
     <string name="input_hint">说点什么…</string>
-
+    <string name="host_list">主播列表</string>
+    <string name="invite_host_pk">游戏PK邀请</string>
+    <string name="empty_host_list">没有可邀请的主播,刷新试试</string>
+    <string name="tools">工具</string>
+    <string name="camera">摄像头</string>
+    <string name="mic">麦克风</string>
 
 
 
