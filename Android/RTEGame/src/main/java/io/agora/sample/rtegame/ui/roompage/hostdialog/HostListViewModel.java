@@ -30,8 +30,6 @@ public class HostListViewModel extends ViewModel {
         SyncManager.Instance().joinScene(GameUtil.getSceneFromRoomInfo(targetRoom), new SyncManager.Callback() {
             @Override
             public void onSuccess() {
-                BaseUtil.logD("join:"+targetRoom.getId()+" succeed");
-
                 roomViewModel.subscribeRTMAttr(targetRoom);
 
                 PKApplyInfo pkApplyInfo = new PKApplyInfo(roomViewModel.currentRoom.getUserId(), targetRoom.getUserId(), GameApplication.getInstance().user.getName(), PKApplyInfo.APPLYING, gameId,
@@ -40,13 +38,11 @@ public class HostListViewModel extends ViewModel {
                 SyncManager.Instance().getScene(targetRoom.getId()).update(GameConstants.PK_APPLY_INFO, pkApplyInfo, new SyncManager.DataItemCallback() {
                     @Override
                     public void onSuccess(IObject result) {
-                        BaseUtil.logD("onSucceed:"+result.getId()+","+result.toString());
                         _pkResult.postValue(new Event<>(true));
                     }
 
                     @Override
                     public void onFail(SyncManagerException exception) {
-                        BaseUtil.logD("onFail"+exception.getMessage());
                         _pkResult.postValue(new Event<>(false));
                     }
                 });
@@ -54,7 +50,6 @@ public class HostListViewModel extends ViewModel {
 
             @Override
             public void onFail(SyncManagerException exception) {
-                BaseUtil.logD("onFail1"+exception.getMessage());
                 _pkResult.postValue(new Event<>(false));
             }
         });

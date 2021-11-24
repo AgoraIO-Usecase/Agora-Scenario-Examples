@@ -21,6 +21,8 @@ import io.agora.rtc2.video.VideoCanvas;
 import io.agora.sample.rtegame.GameApplication;
 import io.agora.sample.rtegame.R;
 import io.agora.sample.rtegame.bean.GameInfo;
+import io.agora.sample.rtegame.bean.Gift;
+import io.agora.sample.rtegame.bean.GiftInfo;
 import io.agora.sample.rtegame.bean.LocalUser;
 import io.agora.sample.rtegame.bean.PKApplyInfo;
 import io.agora.sample.rtegame.bean.PKInfo;
@@ -46,7 +48,6 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
 
     private final MutableLiveData<RtcEngineEx> _mEngine = new MutableLiveData<>();
-
     @NonNull
     public LiveData<RtcEngineEx> mEngine() {
         return _mEngine;
@@ -54,7 +55,6 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
     // UI状态
     private final MutableLiveData<ViewStatus> _viewStatus = new MutableLiveData<>();
-
     @NonNull
     public LiveData<ViewStatus> viewStatus() {
         return _viewStatus;
@@ -70,6 +70,13 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     /////////////////////OUR presentation only concerns 2 things/////////////////////////
     ////////////1. 当前是否有其他主播////////////////// 2. 是否在游戏 ////////////////////////
 
+    // 连麦房间信息
+    private final MutableLiveData<GiftInfo> _gift = new MutableLiveData<>();
+
+    @NonNull
+    public LiveData<GiftInfo> gift() {
+        return _gift;
+    }
     // 连麦房间信息
     private final MutableLiveData<RoomInfo> _subRoomInfo = new MutableLiveData<>();
 
@@ -131,6 +138,12 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         }).start();
     }
 
+    //<editor-fold desc="Gift related">
+    public void donateGift(@NonNull GiftInfo gift){
+        SyncManager.Instance().getScene(currentRoom.getId()).update(GameConstants.GIFT_INFO, gift, null);
+    }
+    //</editor-fold>
+
     //<editor-fold desc="SyncManager related">
 
     public void subscribeRTMAttr(@NonNull RoomInfo targetRoom) {
@@ -142,6 +155,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
                 if (targetRoom.getId().equals(currentRoom.getId())) {
                     tryHandlePKInfo(item);
                     tryHandleGameInfo(item);
+                    tryHandleGiftInfo(item);
                     // 主播额外监听
                     if (currentRoom.getUserId().equals(GameApplication.getInstance().user.getUserId()))
                         tryHandleApplyPKInfo(item);
@@ -157,6 +171,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
                 if (targetRoom.getId().equals(currentRoom.getId())) {
                     tryHandlePKInfo(item);
                     tryHandleGameInfo(item);
+                    tryHandleGiftInfo(item);
                     // 主播额外监听
                     if (currentRoom.getUserId().equals(GameApplication.getInstance().user.getUserId()))
                         tryHandleApplyPKInfo(item);
@@ -207,6 +222,19 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         if (pkApplyInfo != null) {
             onPKApplyInfoChanged(pkApplyInfo);
 //            _pkApplyInfo.postValue(pkApplyInfo);
+        }
+    }
+
+
+    private void tryHandleGiftInfo(IObject item) {
+        BaseUtil.logD("tryHandleGiftInfo:"+item.getId()+"->"+item.toString());
+        GiftInfo giftInfo = null;
+        try {
+            giftInfo = item.toObject(GiftInfo.class);
+        } catch (Exception ignored) {
+        }
+        if (giftInfo != null) {
+            _gift.postValue(giftInfo);
         }
     }
 

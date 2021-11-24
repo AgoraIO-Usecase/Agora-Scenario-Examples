@@ -151,4 +151,10 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <ImageView
+        android:id="@+id/gift_image_fg_room"
+        android:clickable="false"
+        android:focusable="false"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </FrameLayout>

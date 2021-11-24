@@ -99,6 +99,7 @@ public class HostListDialog extends BaseBottomSheetDialogFragment<DialogHostList
 //            rooms.add(new RoomInfo("room_test:"+i, ""+i));
 //        }
         mAdapter.submitListAndPurge(rooms);
+        mBinding.recyclerViewDialogHostList.setVisibility(rooms.isEmpty() ? GONE : VISIBLE);
         mBinding.emptyDialogHostList.setVisibility(rooms.isEmpty() ? VISIBLE : GONE);
     }
 
@@ -106,9 +107,10 @@ public class HostListDialog extends BaseBottomSheetDialogFragment<DialogHostList
      * View状态改变成功
      */
     private void onViewStatusChanged(ViewStatus viewStatus) {
-        if (viewStatus instanceof ViewStatus.Loading)
+        if (viewStatus instanceof ViewStatus.Loading) {
+            mBinding.recyclerViewDialogHostList.setVisibility(GONE);
             mBinding.loadingDialogHostList.setVisibility(VISIBLE);
-        else if (viewStatus instanceof ViewStatus.Done)
+        }else if (viewStatus instanceof ViewStatus.Done)
             mBinding.loadingDialogHostList.setVisibility(GONE);
     }
 
@@ -116,7 +118,7 @@ public class HostListDialog extends BaseBottomSheetDialogFragment<DialogHostList
      * 游戏PK邀请
      */
     @Override
-    public void onItemClick(@NonNull RoomInfo targetRoom, View view, int position, long viewType) {
+    public void onItemClick(@NonNull RoomInfo targetRoom, @NonNull View view, int position, long viewType) {
         if (view instanceof MaterialButton){
             hostListViewModel.sendPKInvite(roomViewModel, targetRoom, 1);
         }

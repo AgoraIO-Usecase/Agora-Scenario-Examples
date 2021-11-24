@@ -69,7 +69,7 @@ public class BaseUtil {
         WindowInsetsControllerCompat con = WindowCompat.getInsetsController(window, view);
         if (con != null) con.show(WindowInsetsCompat.Type.ime());
     }
-    public static void shakeViewAndVibrateToAlert(TextInputLayout view) {
+    public static void shakeViewAndVibrateToAlert(View view) {
         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
         view.postDelayed(() -> view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY), 100);
         view.postDelayed(() -> view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY), 300);

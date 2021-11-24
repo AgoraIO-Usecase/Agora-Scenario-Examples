@@ -122,7 +122,7 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
     }
 
     @Override
-    public void onItemClick(@NonNull RoomInfo data, View view, int position, long viewType) {
+    public void onItemClick(@NonNull RoomInfo data, @NonNull View view, int position, long viewType) {
         checkPermissionBeforeToNextPage(data);
     }
 

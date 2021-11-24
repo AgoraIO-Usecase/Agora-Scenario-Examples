@@ -2,6 +2,7 @@ package io.agora.sample.rtegame.ui.roompage;
 
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +15,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
+import androidx.vectordrawable.graphics.drawable.Animatable2Compat;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import io.agora.example.base.BaseRecyclerViewAdapter;
 import io.agora.example.base.BaseUtil;
@@ -23,13 +32,16 @@ import io.agora.sample.rtegame.GlobalViewModel;
 import io.agora.sample.rtegame.R;
 import io.agora.sample.rtegame.base.BaseFragment;
 import io.agora.sample.rtegame.bean.GameInfo;
+import io.agora.sample.rtegame.bean.GiftInfo;
 import io.agora.sample.rtegame.bean.PKApplyInfo;
 import io.agora.sample.rtegame.bean.RoomInfo;
 import io.agora.sample.rtegame.databinding.FragmentRoomBinding;
 import io.agora.sample.rtegame.databinding.ItemRoomMessageBinding;
+import io.agora.sample.rtegame.ui.roompage.donatedialog.DonateDialog;
 import io.agora.sample.rtegame.ui.roompage.hostdialog.HostListDialog;
 import io.agora.sample.rtegame.ui.roompage.moredialog.MoreDialog;
 import io.agora.sample.rtegame.util.GameUtil;
+import io.agora.sample.rtegame.util.GiftUtil;
 import io.agora.sample.rtegame.util.ViewStatus;
 import io.agora.sample.rtegame.view.LiveHostCardView;
 import io.agora.sample.rtegame.view.LiveHostLayout;
@@ -111,26 +123,27 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         mBinding.btnMoreFgRoom.setOnClickListener((v) -> new MoreDialog().show(getChildFragmentManager(), MoreDialog.TAG));
         // "游戏"弹窗
         mBinding.btnGameFgRoom.setOnClickListener((v) -> new HostListDialog().show(getChildFragmentManager(), HostListDialog.TAG));
+        mBinding.btnDonateFgRoom.setOnClickListener((v) -> new DonateDialog().show(getChildFragmentManager(), DonateDialog.TAG));
         // "退出直播间"按钮点击事件
-//        mBinding.btnExitFgRoom.setOnClickListener((v) -> requireActivity().onBackPressed());
+        mBinding.btnExitFgRoom.setOnClickListener((v) -> requireActivity().onBackPressed());
         // 显示键盘按钮
-        mBinding.btnExitFgRoom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SyncManager.Instance().getScene(currentRoom.getId()).get(new SyncManager.DataItemCallback() {
-                    @Override
-                    public void onSuccess(IObject result) {
-                        BaseUtil.logD(result.toString());
-                    }
-
-                    @Override
-                    public void onFail(SyncManagerException exception) {
-                        exception.printStackTrace();
-                        BaseUtil.logD(exception.getMessage());
-                    }
-                });
-            }
-        });
+//        mBinding.btnExitFgRoom.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                SyncManager.Instance().getScene(currentRoom.getId()).get(new SyncManager.DataItemCallback() {
+//                    @Override
+//                    public void onSuccess(IObject result) {
+//                        BaseUtil.logD(result.toString());
+//                    }
+//
+//                    @Override
+//                    public void onFail(SyncManagerException exception) {
+//                        exception.printStackTrace();
+//                        BaseUtil.logD(exception.getMessage());
+//                    }
+//                });
+//            }
+//        });
         mBinding.inputFgRoom.setOnClickListener(v -> BaseUtil.showKeyboard(requireActivity().getWindow(), mBinding.editTextFgRoom));
         // RTC engine 初始化监听
         mViewModel.mEngine().observe(getViewLifecycleOwner(), this::onRTCInit);
@@ -138,6 +151,8 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         mViewModel.subRoomInfo().observe(getViewLifecycleOwner(), this::onSubHostJoin);
         // 游戏开始
         mViewModel.gameInfo().observe(getViewLifecycleOwner(), this::onGameChanged);
+        // 礼物监听
+        mViewModel.gift().observe(getViewLifecycleOwner(), this::onGiftUpdated);
 
         if (aMHost) {
             // 主播，监听连麦信息
@@ -155,13 +170,45 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         // 监听PK信息
 //        mViewModel.pkInfo().observe(getViewLifecycleOwner(), this::onPKInfoChanged);
 
-        mViewModel.viewStatus().observe(getViewLifecycleOwner(), new Observer<ViewStatus>() {
-            @Override
-            public void onChanged(ViewStatus viewStatus) {
-                if (viewStatus instanceof ViewStatus.Error)
-                    mMessageAdapter.addItem(((ViewStatus.Error) viewStatus).msg);
-            }
+        mViewModel.viewStatus().observe(getViewLifecycleOwner(), viewStatus -> {
+            if (viewStatus instanceof ViewStatus.Error)
+                insertNewMessage(((ViewStatus.Error) viewStatus).msg);
         });
+    }
+
+    private void onGiftUpdated(GiftInfo giftInfo) {
+        if (giftInfo == null) return;
+
+        mBinding.giftImageFgRoom.setVisibility(View.VISIBLE);
+
+        if (aMHost) {
+            String giftDesc = GiftUtil.getGiftDesc(requireContext(), giftInfo);
+            if (giftDesc != null) insertNewMessage(giftDesc);
+        } else {
+            int giftId = GiftUtil.getGiftIdFromGiftInfo(requireContext(), giftInfo);
+            Glide.with(requireContext()).asGif().load(GiftUtil.getGifByGiftId(giftId))
+                    .listener(new RequestListener<GifDrawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<GifDrawable> target, boolean isFirstResource) {
+                            mBinding.giftImageFgRoom.setVisibility(View.GONE);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(GifDrawable resource, Object model, Target<GifDrawable> target, DataSource dataSource, boolean isFirstResource) {
+                            resource.setLoopCount(1);
+                            resource.registerAnimationCallback(new Animatable2Compat.AnimationCallback() {
+                                @Override
+                                public void onAnimationEnd(Drawable drawable) {
+                                    super.onAnimationEnd(drawable);
+                                    mBinding.giftImageFgRoom.setVisibility(View.GONE);
+                                }
+                            });
+                            return false;
+                        }
+                    })
+                    .into(mBinding.giftImageFgRoom);
+        }
     }
 
     private void onGameChanged(GameInfo gameInfo) {
@@ -173,7 +220,7 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
      */
     private void showPKDialog(PKApplyInfo pkApplyInfo) {
         if (pkApplyInfo.getRoomId().equals(currentRoom.getId()))
-            mMessageAdapter.addItem("你画我猜即将开始，等待其他玩家...");
+            insertNewMessage("你画我猜即将开始，等待其他玩家...");
 //            currentDialog = new AlertDialog.Builder(requireContext()).setMessage("你画我猜即将开始，等待其他玩家...").setCancelable(false)
 //                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
 //                        mViewModel.cancelPK(pkApplyInfo);
@@ -197,7 +244,7 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
     private void onRTCInit(RtcEngine engine) {
         if (engine == null) findNavController().popBackStack();
         else {
-            mMessageAdapter.addItem("RTC 初始化成功");
+            insertNewMessage("RTC 初始化成功");
             // 如果是房主，创建View开始直播
             if (aMHost) initLocalView();
 
@@ -214,7 +261,7 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         LiveHostCardView view = mBinding.hostContainerFgRoom.createHostView();
         mBinding.hostContainerFgRoom.setType(LiveHostLayout.Type.HOST_ONLY);
         mViewModel.setupLocalView(view.renderTextureView, GameApplication.getInstance().user);
-        mMessageAdapter.addItem("画面加载完成");
+        insertNewMessage("画面加载完成");
     }
 
     /**
@@ -223,7 +270,7 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
     @MainThread
     private void onLocalHostJoin(Integer uid) {
         if (uid == null) return;
-        mMessageAdapter.addItem("正在加载主播【" + currentRoom.getTempUserName() + "】视频");
+        insertNewMessage("正在加载主播【" + currentRoom.getTempUserName() + "】视频");
         LiveHostLayout liveHost = mBinding.hostContainerFgRoom;
 
         LiveHostCardView view = liveHost.createHostView();
@@ -239,11 +286,11 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         LiveHostLayout container = mBinding.hostContainerFgRoom;
         // remove subHostView
         if (subRoomInfo == null) {
-            mMessageAdapter.addItem("连麦结束");
+            insertNewMessage("连麦结束");
             container.removeView(container.subHostView);
             container.setType(LiveHostLayout.Type.HOST_ONLY);
         } else {
-            mMessageAdapter.addItem("正在加载连麦主播【" + subRoomInfo.getTempUserName() + "】视频");
+            insertNewMessage("正在加载连麦主播【" + subRoomInfo.getTempUserName() + "】视频");
             LiveHostCardView view = container.createSubHostView();
             if (container.isCurrentlyInGame())
                 container.setType(LiveHostLayout.Type.DOUBLE_IN_GAME);
@@ -251,6 +298,13 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
                 container.setType(LiveHostLayout.Type.DOUBLE);
             mViewModel.setupRemoteView(view.renderTextureView, subRoomInfo, false);
         }
+    }
+
+    private void insertNewMessage(String msg) {
+        mMessageAdapter.addItem(msg);
+        int count = mMessageAdapter.getItemCount();
+        if (count > 0)
+            mBinding.recyclerViewFgRoom.smoothScrollToPosition(count - 1);
     }
 
 }

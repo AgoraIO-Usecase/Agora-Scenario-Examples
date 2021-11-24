@@ -3,15 +3,15 @@
 
     <string name="exit">退出</string>
 
-<!--    Splash page-->
+    <!--    Splash page-->
     <string name="error_desc">RTM初始化出错</string>
     <string name="error_happened_click_to_refresh">出错了，再试一次</string>
-<!--    Room List-->
+    <!--    Room List-->
     <string name="please_create_a_room">请创建一个直播间</string>
     <string name="desc_create_room">创建直播间</string>
     <string name="desc_room_list_empty">房间列表为空</string>
 
-<!--    Create Room-->
+    <!--    Create Room-->
     <string name="flip_camera">翻转相机</string>
     <string name="random_room_name">随机生成房间名</string>
     <string name="title_room_name">直播间名字:</string>
@@ -19,7 +19,7 @@
     <string name="beauty">美颜</string>
     <string name="setting">设置</string>
 
-<!--    ROOM-->
+    <!--    ROOM-->
     <string name="input_hint">说点什么…</string>
     <string name="host_list">主播列表</string>
     <string name="invite_host_pk">游戏PK邀请</string>
@@ -28,9 +28,43 @@
     <string name="camera">摄像头</string>
     <string name="mic">麦克风</string>
 
+    <string name="donate">赠送</string>
+    <string name="gift">礼物</string>
+    <string name="gift_received">收到%s赠送的%s%s</string>
 
 
     <!--    权限-->
     <string name="permission_refused">APP运行所必需的权限被拒绝</string>
     <string name="permission_alert">此APP功能为视频通话，录音及摄像头权限为功能必需，是否继续？</string>
+
+    <string-array name="gift_name_list">
+        <item>铃铛</item>
+        <item>冰淇淋</item>
+        <item>红酒</item>
+        <item>蛋糕</item>
+        <item>戒指</item>
+        <item>手表</item>
+        <item>钻石</item>
+        <item>火箭</item>
+    </string-array>
+    <string-array name="gift_name_list_emoji">
+        <item>🔔</item>
+        <item>🍦</item>
+        <item>🍷</item>
+        <item>🍰</item>
+        <item>💍</item>
+        <item>⌚️</item>
+        <item>💎</item>
+        <item>🚀</item>
+    </string-array>
+    <string-array name="gift_name_list_eng">
+        <item>bell</item>
+        <item>icecream</item>
+        <item>wine</item>
+        <item>cake</item>
+        <item>ring</item>
+        <item>watch</item>
+        <item>diamond</item>
+        <item>rocket</item>
+    </string-array>
 </resources>
