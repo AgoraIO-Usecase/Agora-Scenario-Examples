@@ -31,7 +31,7 @@ class PKLiveInviteView: UIView {
                       forCellWithReuseIdentifier: PKLiveInviteViewCell.description())
         return view
     }()
-    private lazy var fetchPKInfoDataDelegate = FetchPKinfoDataDelegate()
+    private lazy var fetchPKInfoDataDelegate = FetchAllBroadcastDataDelegate()
     private var channelName: String = ""
     private var sceneType: SceneType = .singleLive
     
@@ -190,9 +190,9 @@ class PKLiveInviteViewCell: UITableViewCell {
 extension PKLiveInviteViewCell: IObjectDelegate {
     func onSuccess(result: IObject) {
         let channelName = try? result.getPropertyWith(key: "roomId", type: String.self) as? String
-        SyncUtil.fetchCollection(id: channelName ?? "",
-                                 className: SceneType.pkApply.rawValue,
-                                 delegate: GetPKLiveDataDelegate(cell: self))
+        SyncUtil.fetch(id: channelName ?? "",
+                       key: SceneType.pkApply.rawValue,
+                       delegate: GetPKLiveDataDelegate(cell: self))
     }
     
     func onFailed(code: Int, msg: String) {
@@ -200,29 +200,18 @@ extension PKLiveInviteViewCell: IObjectDelegate {
     }
 }
 
-class GetPKLiveDataDelegate: IObjectListDelegate {
+class GetPKLiveDataDelegate: IObjectDelegate {
     private var cell: PKLiveInviteViewCell
     init(cell: PKLiveInviteViewCell) {
         self.cell = cell
     }
-    func onSuccess(result: [IObject]) {
-        let pkApplyInfos = result.compactMap({ $0.toJson() }).compactMap({ JSONObject.toModel(PKApplyInfoModel.self, value: $0) })
-        if pkApplyInfos.isEmpty {
+    func onSuccess(result: IObject) {
+        let pkApplyInfo = JSONObject.toModel(PKApplyInfoModel.self, value: result.toJson())
+        if pkApplyInfo == nil {
             pkApplyInfoHandler(channelName: cell.currendModel?.roomId ?? "")
         } else {
-            guard var info = pkApplyInfos.first(where: { $0.targetRoomId == cell.currendModel?.roomId }) else { return }
-            if info.status == .accept {
+            if pkApplyInfo?.status == .accept {
                 ToastView.show(text: "PK_Invite_Fail".localized, duration: 3)
-            } else if info.status == .end {
-                cell.pkInviteSubscribe?(cell.currendModel?.roomId ?? "")
-                info.status = .invite
-                info.roomId = cell.channelName
-                info.targetRoomId = cell.currendModel?.roomId
-                info.targetUserId = cell.currendModel?.userId
-                let params = JSONObject.toJson(info)
-                SyncUtil.updateCollection(id: cell.currendModel?.roomId ?? "",
-                                          className: cell.sceneType.rawValue,
-                                          objectId: info.objectId, params: params, delegate: nil)
             } else {
                 pkApplyInfoHandler(channelName: cell.currendModel?.roomId ?? "")
             }
@@ -243,6 +232,6 @@ class GetPKLiveDataDelegate: IObjectListDelegate {
         pkModel.targetUserId = cell.currendModel?.userId ?? ""
         pkModel.status = .invite
         let params = JSONObject.toJson(pkModel)
-        SyncUtil.addCollection(id: channelName, className: cell.sceneType.rawValue, params: params, delegate: nil)
+        SyncUtil.update(id: channelName, key: cell.sceneType.rawValue, params: params, delegate: nil)
     }
 }

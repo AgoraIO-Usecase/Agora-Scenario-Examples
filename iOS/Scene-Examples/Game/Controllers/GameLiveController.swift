@@ -30,10 +30,8 @@ class GameLiveController: PKLiveController {
                                               ownerId: currentUserId)
     
     private lazy var timer = GCDTimer()
-    public var targetChannelName: String = ""
     private var pkApplyInfoModel: PKApplyInfoModel?
     public var gameApplyInfoModel: GameApplyInfoModel?
-    public var gameInfoModel: GameInfoModel?
     private var gameRoleType: GameRoleType {
         targetChannelName.isEmpty ? .audience : .broadcast
     }
@@ -51,9 +49,9 @@ class GameLiveController: PKLiveController {
         
         webView.translatesAutoresizingMaskIntoConstraints = false
         view.insertSubview(webView, at: 0)
-        webView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15).isActive = true
+        webView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         webView.topAnchor.constraint(equalTo: avatarview.bottomAnchor, constant: 15).isActive = true
-        webView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15).isActive = true
+        webView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         webView.bottomAnchor.constraint(equalTo: chatView.topAnchor, constant: -10).isActive = true
         
 //        webView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
@@ -81,8 +79,6 @@ class GameLiveController: PKLiveController {
     
     // 游戏PK
     override func clickGamePKHandler() {
-        updatePKUIStatus(isStart: true)
-        return
         let modeView = GameModeView()
         modeView.didGameModeItemClosure = { model in
             let gameCenterView = GameCenterView()
@@ -101,18 +97,19 @@ class GameLiveController: PKLiveController {
             guard let self = self else { return }
             self.targetChannelName = id
             // 加入到对方的channel 订阅对方
-            SyncUtil.subscribeCollection(id: id,
-                                         className: self.sceneType.rawValue,
-                                         delegate: PKInviteInfoDelegate(vc: self))
+            SyncUtil.subscribe(id: id,
+                               key: self.sceneType.rawValue,
+                               delegate: PKInviteInfoDelegate(vc: self))
             
             // 订阅对方收到的礼物
-            SyncUtil.subscribeCollection(id: id,
-                                         className: SYNC_MANAGER_GIFT_INFO,
-                                         delegate: LiveGiftDelegate(vc: self, type: .target))
+            SyncUtil.subscribe(id: id,
+                               key: SYNC_MANAGER_GIFT_INFO,
+                               delegate: LiveGiftDelegate(vc: self, type: .target))
+            
             // 订阅对方的游戏
-            SyncUtil.subscribeCollection(id: id,
-                                         className: SYNC_MANAGER_GAME_APPLY_INFO,
-                                         delegate: GameApplyInfoDelegate(vc: self))
+            SyncUtil.subscribe(id: id,
+                               key: SYNC_MANAGER_GAME_APPLY_INFO,
+                               delegate: GameApplyInfoDelegate(vc: self))
         }
         AlertManager.show(view: pkInviteListView, alertPostion: .bottom)
     }
@@ -132,15 +129,17 @@ class GameLiveController: PKLiveController {
         super.eventHandler()
         if getRole(uid: "\(UserInfo.userId)") == .broadcaster {
             // 监听游戏
-            SyncUtil.subscribeCollection(id: channleName,
-                                         className: SYNC_MANAGER_GAME_APPLY_INFO,
-                                         delegate: GameApplyInfoDelegate(vc: self))
+            SyncUtil.subscribe(id: channleName,
+                               key: SYNC_MANAGER_GAME_APPLY_INFO,
+                               delegate: GameApplyInfoDelegate(vc: self))
         }
         
-        // 更新观众游戏状态
-        SyncUtil.subscribeCollection(id: channleName,
-                                     className: SYNC_MANAGER_GAME_INFO,
-                                     delegate: GameInfoDelegate(vc: self))
+        if getRole(uid: "\(UserInfo.userId)") == .audience {
+            // 更新观众游戏状态
+            SyncUtil.subscribe(id: channleName,
+                               key: SYNC_MANAGER_GAME_INFO,
+                               delegate: GameInfoDelegate(vc: self))
+        }
     }
     
     /// pk开始
@@ -210,34 +209,33 @@ class GameLiveController: PKLiveController {
         if isStart {
             var gameApplyModel = GameApplyInfoModel()
             gameApplyModel.status = .playing
-            SyncUtil.addCollection(id: channelName,
-                                   className: SYNC_MANAGER_GAME_APPLY_INFO,
-                                   params: JSONObject.toJson(gameApplyModel),
-                                   delegate: nil)
+            SyncUtil.update(id: channelName,
+                            key: SYNC_MANAGER_GAME_APPLY_INFO,
+                            params: JSONObject.toJson(gameApplyModel),
+                            delegate: nil)
             return
         }
         gameApplyInfoModel?.status = .end
         let params = JSONObject.toJson(gameApplyInfoModel)
-        SyncUtil.updateCollection(id: channelName,
-                                  className: SYNC_MANAGER_GAME_APPLY_INFO,
-                                  objectId: gameApplyInfoModel?.objectId ?? "",
-                                  params: params,
-                                  delegate: nil)
+        SyncUtil.update(id: channelName,
+                        key: SYNC_MANAGER_GAME_APPLY_INFO,
+                        params: params,
+                        delegate: nil)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        SyncUtil.unsubscribe(id: channleName, className: SYNC_MANAGER_GAME_APPLY_INFO)
-        SyncUtil.unsubscribe(id: channleName, className: SYNC_MANAGER_GAME_INFO)
+        SyncUtil.unsubscribe(id: channleName, key: SYNC_MANAGER_GAME_APPLY_INFO)
+        SyncUtil.unsubscribe(id: channleName, key: SYNC_MANAGER_GAME_INFO)
         if !targetChannelName.isEmpty {
-            SyncUtil.unsubscribe(id: targetChannelName, className: SYNC_MANAGER_GAME_APPLY_INFO)
+            SyncUtil.unsubscribe(id: targetChannelName, key: SYNC_MANAGER_GAME_APPLY_INFO)
         }
     }
     
     override func deleteSubscribe() {
         super.deleteSubscribe()
         if !targetChannelName.isEmpty {
-            SyncUtil.unsubscribe(id: targetChannelName, className: SYNC_MANAGER_GAME_APPLY_INFO)
+            SyncUtil.unsubscribe(id: targetChannelName, key: SYNC_MANAGER_GAME_APPLY_INFO)
         }
     }
 }

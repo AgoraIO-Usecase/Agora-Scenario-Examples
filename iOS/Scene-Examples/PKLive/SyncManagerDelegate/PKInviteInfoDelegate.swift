@@ -31,22 +31,16 @@ class PKInviteInfoDelegate: ISyncManagerEventDelegate {
             vc.leaveChannel(uid: UserInfo.userId, channelName: channelName ?? "")
             vc.updateLiveLayout(postion: .full)
             
-            // 删除PK邀请数据
-            SyncUtil.deleteCollection(id: model.targetRoomId ?? "",
-                                      className: vc.sceneType.rawValue,
-                                      delegate: nil)
-            
             pkLiveEndClosure?(model)
             
             guard var pkInfoModel = vc.pkInfoModel else {
                 return
             }
             pkInfoModel.status = .end
-            SyncUtil.updateCollection(id: vc.channleName,
-                                      className: SYNC_MANAGER_PK_INFO,
-                                      objectId: pkInfoModel.objectId,
-                                      params: JSONObject.toJson(pkInfoModel),
-                                      delegate: nil)
+            SyncUtil.update(id: vc.channleName,
+                            key: SYNC_MANAGER_PK_INFO,
+                            params: JSONObject.toJson(pkInfoModel),
+                            delegate: nil)
             
         } else if model.status == .accept {
             vc.updateLiveLayout(postion: .center)
@@ -62,30 +56,28 @@ class PKInviteInfoDelegate: ISyncManagerEventDelegate {
             pkInfo.status = model.status
             pkInfo.roomId = channelName ?? ""
             pkInfo.userId = model.userId
-            SyncUtil.addCollection(id: vc.channleName,
-                                   className: SYNC_MANAGER_PK_INFO,
-                                   params: JSONObject.toJson(pkInfo),
-                                   delegate: PKInfoAddDataDelegate(vc: vc))
+            SyncUtil.update(id: vc.channleName,
+                            key: SYNC_MANAGER_PK_INFO,
+                            params: JSONObject.toJson(pkInfo),
+                            delegate: PKInfoAddDataDelegate(vc: vc))
             
         } else if model.status == .invite && "\(UserInfo.userId)" != model.userId {
             let message = vc.sceneType == .game ? "您的好友\(model.userName)邀请\n您加入\(model.gameId.title)游戏" : ""
             vc.showAlert(title: vc.sceneType.alertTitle, message: message) { [weak self] in
                 guard let self = self else { return }
                 model.status = .refuse
-                SyncUtil.updateCollection(id: model.targetRoomId ?? "",
-                                          className: self.vc.sceneType.rawValue,
-                                          objectId: model.objectId,
-                                          params: JSONObject.toJson(model),
-                                          delegate: nil)
+                SyncUtil.update(id: model.targetRoomId ?? "",
+                                key: self.vc.sceneType.rawValue,
+                                params: JSONObject.toJson(model),
+                                delegate: nil)
                 
             } confirm: { [weak self] in
                 guard let self = self else { return }
                 model.status = .accept
-                SyncUtil.updateCollection(id: model.targetRoomId ?? "",
-                                          className: self.vc.sceneType.rawValue,
-                                          objectId: model.objectId,
-                                          params: JSONObject.toJson(model),
-                                          delegate: nil)
+                SyncUtil.update(id: model.targetRoomId ?? "",
+                                key: self.vc.sceneType.rawValue,
+                                params: JSONObject.toJson(model),
+                                delegate: nil)
             }
         } else if model.status == .refuse && "\(UserInfo.userId)" == model.userId {
             vc.showAlert(title: "PK_Invite_Reject".localized, message: "")

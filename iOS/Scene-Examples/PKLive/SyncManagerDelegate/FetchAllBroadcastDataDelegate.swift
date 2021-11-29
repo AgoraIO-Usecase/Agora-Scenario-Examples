@@ -7,7 +7,7 @@
 
 import UIKit
 
-class FetchPKinfoDataDelegate: IObjectListDelegate {
+class FetchAllBroadcastDataDelegate: IObjectListDelegate {
     var onSuccess: (([IObject]) -> Void)?
     func onSuccess(result: [IObject]) {
         onSuccess?(result)

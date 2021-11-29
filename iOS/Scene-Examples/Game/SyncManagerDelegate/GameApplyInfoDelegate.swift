@@ -32,23 +32,17 @@ class GameApplyInfoDelegate: ISyncManagerEventDelegate {
         } else if model.status == .playing {
             vc.updatePKUIStatus(isStart: true)
             // 通知观众拉取屏幕流
-            SyncUtil.addCollection(id: vc.channleName,
-                                   className: SYNC_MANAGER_GAME_INFO,
-                                   params: JSONObject.toJson(gameInfoModel),
-                                   delegate: nil)
+            SyncUtil.update(id: vc.channleName,
+                            key: SYNC_MANAGER_GAME_INFO,
+                            params: JSONObject.toJson(gameInfoModel),
+                            delegate: nil)
         } else {
             vc.updatePKUIStatus(isStart: false)
-            let channelName = vc.targetChannelName.isEmpty ? vc.channleName : vc.targetChannelName
-            
-            SyncUtil.deleteCollection(id: channelName,
-                                      className: SYNC_MANAGER_GAME_APPLY_INFO,
-                                      delegate: nil)
-            
             // 更新观众状态
-            SyncUtil.updateCollection(id: vc.channleName,
-                                      className: SYNC_MANAGER_GAME_INFO,
-                                      objectId: vc.gameInfoModel?.objectId ?? "",
-                                      params: JSONObject.toJson(gameInfoModel), delegate: nil)
+            SyncUtil.update(id: vc.channleName,
+                            key: SYNC_MANAGER_GAME_INFO,
+                            params: JSONObject.toJson(gameInfoModel),
+                            delegate: nil)
         }
 
         guard vc.getRole(uid: "\(UserInfo.userId)") == .broadcaster else { return }
@@ -76,23 +70,18 @@ class GameInfoDelegate: ISyncManagerEventDelegate {
     }
     func onCreated(object: IObject) {
         LogUtils.log(message: "onCreated game info == \(String(describing: object.toJson()))", level: .info)
-        guard let model = JSONObject.toModel(GameInfoModel.self, value: object.toJson()) else { return }
-        vc.gameInfoModel = model
+//        guard let model = JSONObject.toModel(GameInfoModel.self, value: object.toJson()) else { return }
     }
     
     func onUpdated(object: IObject) {
         LogUtils.log(message: "onUpdated game info == \(String(describing: object.toJson()))", level: .info)
         guard let model = JSONObject.toModel(GameInfoModel.self, value: object.toJson()) else { return }
-        vc.gameInfoModel = model
         if model.status == .no_start {
             vc.updatePKUIStatus(isStart: false)
         } else if model.status == .playing {
             vc.updatePKUIStatus(isStart: true)
         } else {
             vc.updatePKUIStatus(isStart: false)
-            SyncUtil.deleteCollection(id: vc.channleName,
-                                      className: SYNC_MANAGER_GAME_INFO,
-                                      delegate: nil)
         }
         vc.stopBroadcastButton.isHidden = true
     }

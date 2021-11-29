@@ -8,7 +8,7 @@ target 'Scene-Examples' do
   
   pod 'AgoraRtm_iOS', '~> 1.4.8'
   pod 'MBProgressHUD', '~> 1.2.0'
-  pod 'AgoraFFmpegPlayer_iOS_Preview', '4.0.0'
+  pod 'AgoraRtcEngine_iOS_Preview', '4.0.0.preview.3'
   # Pods for Scene-Examples
 
 end

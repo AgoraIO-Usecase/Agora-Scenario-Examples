@@ -110,7 +110,7 @@ class BORRoomDetailController: BaseViewController {
         super.viewWillDisappear(animated)
         agoraKit?.stopPreview()
         leaveChannel()
-        SyncUtil.unsubscribe(id: id, className: SYNC_COLLECTION_SUB_ROOM)
+        SyncUtil.unsubscribeCollection(id: id, className: SYNC_COLLECTION_SUB_ROOM)
         SyncUtil.leaveScene(id: id)
     }
     

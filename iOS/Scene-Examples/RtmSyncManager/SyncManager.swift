@@ -100,20 +100,21 @@ public class DocumentReference {
         manager.get(reference: self, delegate: delegate)
     }
 
-    public func update(data: [String: Any?], delegate: IObjectDelegate?) {
-        manager.update(reference: self, data: data, delegate: delegate)
+    public func update(data: [String: Any?], key: String?, delegate: IObjectDelegate?) {
+        manager.update(reference: self, data: data, key: key, delegate: delegate)
     }
 
     public func delete(delegate: IDocumentReferenceDelegate?) {
         manager.delete(reference: self, delegate: delegate)
     }
 
-    public func subscribe(delegate: ISyncManagerEventDelegate) -> ISyncManagerLiveQuery {
-        return manager.subscribe(reference: self, delegate: delegate)
+    @discardableResult
+    public func subscribe(key: String?, delegate: ISyncManagerEventDelegate) -> ISyncManagerLiveQuery {
+        return manager.subscribe(reference: self, key: key, delegate: delegate)
     }
     
-    public func unsubscribe() {
-        return manager.unsubscribe(reference: self)
+    public func unsubscribe(key: String?) {
+        return manager.unsubscribe(reference: self, key: key)
     }
 }
 
@@ -177,11 +178,11 @@ public protocol ISyncManager {
     func get(_ reference: DocumentReference, _ delegate: IObjectDelegate) -> Void
     func get(_ reference: CollectionReference, _ delegate: IObjectListDelegate) -> Void
     func add(_ reference: CollectionReference, _ data: [String: Any?], _ delegate: IObjectDelegate?) -> Void
-    func update(_ reference: DocumentReference, _ data: [String: Any?], _ delegate: IObjectDelegate?) -> Void
+    func update(_ reference: DocumentReference, _ key: String?, _ data: [String: Any?], _ delegate: IObjectDelegate?) -> Void
     func delete(_ reference: DocumentReference, _ delegate: IDocumentReferenceDelegate?) -> Void
     func delete(_ reference: CollectionReference, _ delegate: IDocumentReferenceDelegate?) -> Void
-    func subscribe(_ reference: DocumentReference, _ delegate: ISyncManagerEventDelegate?) -> ISyncManagerLiveQuery
-    func unsubscribe(_ reference: DocumentReference) -> Void
+    func subscribe(_ reference: DocumentReference, key: String?, _ delegate: ISyncManagerEventDelegate?) -> ISyncManagerLiveQuery
+    func unsubscribe(_ reference: DocumentReference, key: String?) -> Void
 }
 
 public class SyncManager: NSObject {
@@ -211,8 +212,8 @@ public class SyncManager: NSObject {
         proxy.add(reference, data, delegate)
     }
 
-    public func update(reference: DocumentReference, data: [String: Any?], delegate: IObjectDelegate?) {
-        proxy.update(reference, data, delegate)
+    public func update(reference: DocumentReference, data: [String: Any?], key: String?, delegate: IObjectDelegate?) {
+        proxy.update(reference, key, data, delegate)
     }
 
     public func delete(reference: DocumentReference, delegate: IDocumentReferenceDelegate?) {
@@ -222,12 +223,13 @@ public class SyncManager: NSObject {
     public func delete(reference: CollectionReference, delegate: IDocumentReferenceDelegate?) {
         proxy.delete(reference, delegate)
     }
-
-    public func subscribe(reference: DocumentReference, delegate: ISyncManagerEventDelegate) -> ISyncManagerLiveQuery {
-        return proxy.subscribe(reference, delegate)
+    
+    @discardableResult
+    public func subscribe(reference: DocumentReference, key: String?, delegate: ISyncManagerEventDelegate) -> ISyncManagerLiveQuery {
+        proxy.subscribe(reference, key: key, delegate)
     }
     
-    public func unsubscribe(reference: DocumentReference) {
-        proxy.unsubscribe(reference)
+    public func unsubscribe(reference: DocumentReference, key: String?) {
+        proxy.unsubscribe(reference, key: key)
     }
 }

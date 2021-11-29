@@ -119,8 +119,8 @@ class LivePlayerController: BaseViewController {
         agoraKit?.destroyMediaPlayer(nil)
         
         leaveChannel(uid: UserInfo.userId, channelName: channleName, isExit: true)
-        SyncUtil.unsubscribe(id: channleName, className: sceneType.rawValue)
-        SyncUtil.unsubscribe(id: channleName, className: SYNC_MANAGER_GIFT_INFO)
+        SyncUtil.unsubscribe(id: channleName, key: sceneType.rawValue)
+        SyncUtil.unsubscribe(id: channleName, key: SYNC_MANAGER_GIFT_INFO)
         SyncUtil.leaveScene(id: channleName)
         navigationTransparent(isTransparent: false)
         UIApplication.shared.isIdleTimerDisabled = false
@@ -164,7 +164,7 @@ class LivePlayerController: BaseViewController {
         bottomView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         
         playGifView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        playGifView.topAnchor.constraint(equalTo: liveCanvasView.topAnchor).isActive = true
+        playGifView.topAnchor.constraint(equalTo: view.topAnchor, constant: -Screen.kNavHeight).isActive = true
         playGifView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         playGifView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
@@ -178,9 +178,6 @@ class LivePlayerController: BaseViewController {
         playGifView.gifAnimationFinishedClosure = { [weak self] in
             guard let self = self else { return }
             self.playGifView.isHidden = true
-            SyncUtil.deleteCollection(id: self.channleName,
-                                      className: SYNC_MANAGER_GIFT_INFO,
-                                      delegate: nil)
         }
         // 聊天发送
         bottomView.clickChatButtonClosure = { [weak self] message in
@@ -219,10 +216,10 @@ class LivePlayerController: BaseViewController {
                     LogUtils.log(message: "gif == \(giftModel.gifName)", level: .info)
                     let params = JSONObject.toJson(giftModel)
                     /// 发送礼物
-                    SyncUtil.addCollection(id: self.channleName,
-                                           className: SYNC_MANAGER_GIFT_INFO,
-                                           params: params,
-                                           delegate: nil)
+                    SyncUtil.update(id: self.channleName,
+                                    key: SYNC_MANAGER_GIFT_INFO,
+                                    params: params,
+                                    delegate: nil)
                 }
                 AlertManager.show(view: self.giftView, alertPostion: .bottom)
             case .pk:
@@ -237,9 +234,7 @@ class LivePlayerController: BaseViewController {
         }
         
         // 监听礼物
-        SyncUtil.subscribeCollection(id: channleName,
-                                     className: SYNC_MANAGER_GIFT_INFO,
-                                     delegate: LiveGiftDelegate(vc: self, type: .me))
+        SyncUtil.subscribe(id: channleName, key: SYNC_MANAGER_GIFT_INFO, delegate: LiveGiftDelegate(vc: self, type: .me))
         
         // 收到礼物
         LiveReceivedGiftClosure = { [weak self] giftModel, type in
