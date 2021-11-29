@@ -14,7 +14,9 @@ let SYNC_COLLECTION_SUB_ROOM = "SubRoom"
 let SYNC_MANAGER_PARAM_KEY_APPID = "appId"
 /// 礼物
 let SYNC_MANAGER_GIFT_INFO = "giftInfo"
-/// 游戏
+/// PK游戏信息
+let SYNC_MANAGER_GAME_APPLY_INFO = "GameApplyInfo"
+/// 观众游戏信息
 let SYNC_MANAGER_GAME_INFO = "GameInfo"
 /// pk信息
 let SYNC_MANAGER_PK_INFO = "PKInfo"

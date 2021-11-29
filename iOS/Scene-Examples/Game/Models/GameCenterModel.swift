@@ -35,7 +35,7 @@ struct GameCenterModel {
     
     static func createDatas() -> [GameCenterModel] {
         var dataArray = [GameCenterModel]()
-        let model = GameCenterModel(iconName: "gift-cake",
+        let model = GameCenterModel(iconName: "Game/draw",
                                     title: "你画我猜",
                                     type: .you_draw_i_guess)
         dataArray.append(model)
