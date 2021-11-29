@@ -63,12 +63,13 @@ public class RtmSyncManager: NSObject, ISyncManager {
         })
     }
     
-    public func get(_ reference: DocumentReference, _ delegate: IObjectDelegate) {
+    public func get(_ reference: DocumentReference, _ key: String?, _ delegate: IObjectDelegate) {
         guard let channel = self.channel else {
             delegate.onFailed(code: -1, msg: "yet join channel")
             return
         }
-        rtmKit?.getChannelAllAttributes(reference.className == channel ? channel : channel + reference.className, completion: { res, error in
+        let key = key ?? ""
+        rtmKit?.getChannelAllAttributes(reference.className == channel ? channel + key : channel + reference.className + key, completion: { res, error in
             guard let res = res, res.count > 0 else {
                 delegate.onFailed(code: -1, msg: "none")
                 return

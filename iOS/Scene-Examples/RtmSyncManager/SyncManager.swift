@@ -96,8 +96,8 @@ public class DocumentReference {
         return self
     }
 
-    public func get(delegate: IObjectDelegate) {
-        manager.get(reference: self, delegate: delegate)
+    public func get(key: String?, delegate: IObjectDelegate) {
+        manager.get(reference: self, key: key, delegate: delegate)
     }
 
     public func update(data: [String: Any?], key: String?, delegate: IObjectDelegate?) {
@@ -175,7 +175,7 @@ public protocol ISyncManagerLiveQuery {
 public protocol ISyncManager {
     func joinScene(_ room: Scene, _ manager: SyncManager, _ delegate: IObjectDelegate?) -> SceneReference
     func getScenes(_ delegate: IObjectListDelegate) -> Void
-    func get(_ reference: DocumentReference, _ delegate: IObjectDelegate) -> Void
+    func get(_ reference: DocumentReference, _ key: String?, _ delegate: IObjectDelegate) -> Void
     func get(_ reference: CollectionReference, _ delegate: IObjectListDelegate) -> Void
     func add(_ reference: CollectionReference, _ data: [String: Any?], _ delegate: IObjectDelegate?) -> Void
     func update(_ reference: DocumentReference, _ key: String?, _ data: [String: Any?], _ delegate: IObjectDelegate?) -> Void
@@ -200,8 +200,8 @@ public class SyncManager: NSObject {
         proxy.getScenes(delegate)
     }
 
-    public func get(reference: DocumentReference, delegate: IObjectDelegate) {
-        proxy.get(reference, delegate)
+    public func get(reference: DocumentReference, key: String?, delegate: IObjectDelegate) {
+        proxy.get(reference, key, delegate)
     }
 
     public func get(reference: CollectionReference, delegate: IObjectListDelegate) {

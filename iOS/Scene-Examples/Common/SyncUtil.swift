@@ -37,7 +37,7 @@ class SyncUtil: NSObject {
     
     class func fetch(id: String, key: String?, delegate: IObjectDelegate) {
         let sceneRef = sceneRefs[id]
-        sceneRef?.get(delegate: delegate)
+        sceneRef?.get(key: key, delegate: delegate)
     }
     
     class func update(id: String,
@@ -56,6 +56,11 @@ class SyncUtil: NSObject {
     class func unsubscribe(id: String, key: String?) {
         let sceneRef = sceneRefs[id]
         sceneRef?.unsubscribe(key: key)
+    }
+    
+    class func delete(id: String, delegate: IDocumentReferenceDelegate? = nil) {
+        let sceneRef = sceneRefs[id]
+        sceneRef?.delete(delegate: delegate)
     }
     
     class func fetchCollection(id: String,
