@@ -10,7 +10,6 @@ import AgoraRtmKit
 import CommonCrypto
 
 public class RtmSyncManager: NSObject, ISyncManager {
-    
     var rtmKit: AgoraRtmKit? = nil
     var appId: String? = nil
     var uid: String? = nil
@@ -131,19 +130,21 @@ public class RtmSyncManager: NSObject, ISyncManager {
         })
     }
     
-    public func update(_ reference: DocumentReference, _ data: [String : Any?], _ delegate: IObjectDelegate?) {
+    public func update(_ reference: DocumentReference, _ key: String?, _ data: [String : Any?], _ delegate: IObjectDelegate?) {
         guard let channel = self.channel else {
             delegate?.onFailed(code: -1, msg: "yet join channel")
             return
         }
         let attr = AgoraRtmChannelAttribute()
         let item = Utils.getJson(dict: data as NSDictionary)
-        attr.key = reference.id
+        attr.key = key ?? reference.id
         attr.value = item
         let option = AgoraRtmChannelAttributeOptions()
         option.enableNotificationToChannelMembers = true
-        rtmKit?.addOrUpdateChannel(reference.className == channel ? channel : channel + reference.className, attributes: [attr], options: option, completion: { error in
-            if let channel = self.channels[channel + reference.className] {
+        let key = key ?? ""
+        let channelName = reference.className == channel ? channel + key : channel + reference.className + key
+        rtmKit?.addOrUpdateChannel(channelName, attributes: [attr], options: option, completion: { error in
+            if let channel = self.channels[channel + reference.className + (key ?? "")] {
                 if let delegate = self.delegates[channel] {
                     delegate.onUpdated(object: attr.toAttribute())
                 }
@@ -197,29 +198,33 @@ public class RtmSyncManager: NSObject, ISyncManager {
         })
     }
     
-    public func subscribe(_ reference: DocumentReference, _ delegate: ISyncManagerEventDelegate?) -> ISyncManagerLiveQuery {
+    @discardableResult
+    public func subscribe(_ reference: DocumentReference, key: String?, _ delegate: ISyncManagerEventDelegate?) -> ISyncManagerLiveQuery {
         let callback = RtmLiveQuery.init(name: reference.className)
         guard let channel = self.channel else {
             delegate?.onError(code: -1, msg: "yet join channel")
             return callback
         }
-        let key = reference.className == channel ? channel : channel + reference.className
-        guard let rtmChannel = rtmKit?.createChannel(withId: key, delegate: self) else {
+        let key = key ?? ""
+        let channleName = reference.className == channel ? channel + key : channel + reference.className + key
+        guard let rtmChannel = rtmKit?.createChannel(withId: channleName, delegate: self) else {
             delegate?.onError(code: -1, msg: "yet join channel")
             return callback
         }
-        channels[channel + reference.className] = rtmChannel
+        channels[channel + reference.className + key] = rtmChannel
         rtmChannel.join(completion: nil)
         self.delegates[rtmChannel] = delegate
         delegate?.onSubscribed()
         return callback
     }
     
-    public func unsubscribe(_ reference: DocumentReference) {
+    public func unsubscribe(_ reference: DocumentReference, key: String?) {
         guard let channel = self.channel else {
             return
         }
-        guard let rtmChannel = channels[reference.className == channel ? channel : channel + reference.className] else {
+        let key = key ?? ""
+        let channleName = reference.className == channel ? channel + key : channel + reference.className + key
+        guard let rtmChannel = channels[channleName] else {
             return
         }
         self.delegates.removeValue(forKey: rtmChannel)

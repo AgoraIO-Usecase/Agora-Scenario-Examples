@@ -41,7 +41,7 @@ class PKLiveController: LivePlayerController {
     
     public var pkInfoModel: PKInfoModel?
     private lazy var timer = GCDTimer()
-    private var targetChannelName: String = ""
+    public var targetChannelName: String = ""
     private var pkApplyInfoModel: PKApplyInfoModel?
     
     override func viewDidLoad() {
@@ -85,16 +85,19 @@ class PKLiveController: LivePlayerController {
     
     override func eventHandler() {
         super.eventHandler()
-        // 监听主播发起PK
-        SyncUtil.subscribeCollection(id: channleName,
-                                     className: sceneType.rawValue,
-                                     delegate: PKInviteInfoDelegate(vc: self))
+        if getRole(uid: "\(UserInfo.userId)") == .broadcaster {
+            // 监听主播发起PK
+            SyncUtil.subscribe(id: channleName,
+                               key: sceneType.rawValue,
+                               delegate: PKInviteInfoDelegate(vc: self))
+        }
+        if getRole(uid: "\(UserInfo.userId)") == .audience {
+            // 监听PKinfo 让观众加入到PK的channel
+            SyncUtil.subscribe(id: channleName,
+                               key: SYNC_MANAGER_PK_INFO, 
+                               delegate: PKInfoDelegate(vc: self))
+        }
         
-        // 监听PKinfo 让观众加入到PK的channel
-        SyncUtil.subscribeCollection(id: channleName,
-                                     className: SYNC_MANAGER_PK_INFO,
-                                     delegate: PKInfoDelegate(vc: self))
-
         // pk开始回调
         pkLiveStartClosure = { [weak self] applyModel in
             guard let self = self else { return }
@@ -157,7 +160,7 @@ class PKLiveController: LivePlayerController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         let channelName = targetChannelName.isEmpty ? channleName : targetChannelName
-        SyncUtil.unsubscribe(id: channleName, className: SYNC_MANAGER_PK_INFO)
+        SyncUtil.unsubscribe(id: channleName, key: SYNC_MANAGER_PK_INFO)
         SyncUtil.deleteCollection(id: channelName, className: sceneType.rawValue, delegate: nil)
         deleteSubscribe()
     }
@@ -171,19 +174,18 @@ class PKLiveController: LivePlayerController {
         guard var applyModel = pkApplyInfoModel else { return }
         applyModel.status = .end
         let channelName = targetChannelName.isEmpty ? channleName : targetChannelName
-        SyncUtil.updateCollection(id: channelName,
-                                  className: sceneType.rawValue,
-                                  objectId: applyModel.objectId,
-                                  params: JSONObject.toJson(applyModel),
-                                  delegate: nil)
+        SyncUtil.update(id: channelName,
+                        key: sceneType.rawValue,
+                        params: JSONObject.toJson(applyModel),
+                        delegate: nil)
     }
     
     public func deleteSubscribe() {
         timer.destoryTimer(withName: sceneType.rawValue)
         if !targetChannelName.isEmpty {
             leaveChannel(uid: UserInfo.userId, channelName: targetChannelName)
-            SyncUtil.unsubscribe(id: targetChannelName, className: sceneType.rawValue)
-            SyncUtil.unsubscribe(id: targetChannelName, className: SYNC_MANAGER_GIFT_INFO)
+            SyncUtil.unsubscribe(id: targetChannelName, key: sceneType.rawValue)
+            SyncUtil.unsubscribe(id: targetChannelName, key: SYNC_MANAGER_GIFT_INFO)
             SyncUtil.leaveScene(id: targetChannelName)
         } else {
             guard let applyModel = pkApplyInfoModel else { return }
@@ -197,14 +199,14 @@ class PKLiveController: LivePlayerController {
             guard let self = self else { return }
             self.targetChannelName = id
             // 加入到对方的channel 订阅对方
-            SyncUtil.subscribeCollection(id: id,
-                                         className: self.sceneType.rawValue,
-                                         delegate: PKInviteInfoDelegate(vc: self))
+            SyncUtil.subscribe(id: id,
+                               key: self.sceneType.rawValue,
+                               delegate: PKInviteInfoDelegate(vc: self))
             
             // 订阅对方收到的礼物
-            SyncUtil.subscribeCollection(id: id,
-                                         className: SYNC_MANAGER_GIFT_INFO,
-                                         delegate: LiveGiftDelegate(vc: self, type: .target))
+            SyncUtil.subscribe(id: id,
+                               key: SYNC_MANAGER_GIFT_INFO,
+                               delegate: LiveGiftDelegate(vc: self, type: .target))
         }
         AlertManager.show(view: pkInviteListView, alertPostion: .bottom)
     }

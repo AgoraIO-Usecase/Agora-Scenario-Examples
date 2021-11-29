@@ -27,6 +27,8 @@ struct LiveGiftModel: Codable {
     var gifName: String = ""
     var userId: String = "\(UserInfo.userId)"
     var giftType: GiftType = .delay
+    
+    
     static func createGiftData() -> [LiveGiftModel] {
         var dataArray = [LiveGiftModel]()
         var model = LiveGiftModel(iconName: "gift-dang".localized,

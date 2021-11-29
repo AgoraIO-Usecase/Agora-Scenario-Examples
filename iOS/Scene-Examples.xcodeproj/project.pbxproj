@@ -34,7 +34,7 @@
 		E79BEF68274203ED009FA838 /* PKLiveInviteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF67274203ED009FA838 /* PKLiveInviteView.swift */; };
 		E79BEF6A27420933009FA838 /* PKApplyInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF6927420933009FA838 /* PKApplyInfoModel.swift */; };
 		E79BEF6F2742118A009FA838 /* PKInviteInfoDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF6E2742118A009FA838 /* PKInviteInfoDelegate.swift */; };
-		E79BEF7127421295009FA838 /* FetchPKinfoDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF7027421295009FA838 /* FetchPKinfoDataDelegate.swift */; };
+		E79BEF7127421295009FA838 /* FetchAllBroadcastDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF7027421295009FA838 /* FetchAllBroadcastDataDelegate.swift */; };
 		E79BEF7327438D6A009FA838 /* PKInfoDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF7227438D6A009FA838 /* PKInfoDelegate.swift */; };
 		E79BEF752744FD8B009FA838 /* GCDTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF742744FD8B009FA838 /* GCDTimer.swift */; };
 		E79BEF772745036E009FA838 /* PKLiveProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF762745036E009FA838 /* PKLiveProgressView.swift */; };
@@ -55,6 +55,7 @@
 		E79BF02B274B81A0009FA838 /* GameInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BF02A274B819F009FA838 /* GameInfoModel.swift */; };
 		E79BF02E274B8278009FA838 /* GameApplyInfoDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BF02D274B8278009FA838 /* GameApplyInfoDelegate.swift */; };
 		E79BF0302754761A009FA838 /* GameApplyInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BF02F2754761A009FA838 /* GameApplyInfoModel.swift */; };
+		E79BF0342754BA3C009FA838 /* FetchPKInfoDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BF0332754BA3C009FA838 /* FetchPKInfoDataDelegate.swift */; };
 		E79C25DF273B67DB00909CD4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C25DE273B67DB00909CD4 /* AppDelegate.swift */; };
 		E79C25E1273B67DB00909CD4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C25E0273B67DB00909CD4 /* SceneDelegate.swift */; };
 		E79C25E3273B67DB00909CD4 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C25E2273B67DB00909CD4 /* MainViewController.swift */; };
@@ -121,7 +122,7 @@
 		E79BEF67274203ED009FA838 /* PKLiveInviteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PKLiveInviteView.swift; sourceTree = "<group>"; };
 		E79BEF6927420933009FA838 /* PKApplyInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PKApplyInfoModel.swift; sourceTree = "<group>"; };
 		E79BEF6E2742118A009FA838 /* PKInviteInfoDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PKInviteInfoDelegate.swift; sourceTree = "<group>"; };
-		E79BEF7027421295009FA838 /* FetchPKinfoDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchPKinfoDataDelegate.swift; sourceTree = "<group>"; };
+		E79BEF7027421295009FA838 /* FetchAllBroadcastDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchAllBroadcastDataDelegate.swift; sourceTree = "<group>"; };
 		E79BEF7227438D6A009FA838 /* PKInfoDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PKInfoDelegate.swift; sourceTree = "<group>"; };
 		E79BEF742744FD8B009FA838 /* GCDTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDTimer.swift; sourceTree = "<group>"; };
 		E79BEF762745036E009FA838 /* PKLiveProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PKLiveProgressView.swift; sourceTree = "<group>"; };
@@ -142,6 +143,7 @@
 		E79BF02A274B819F009FA838 /* GameInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameInfoModel.swift; sourceTree = "<group>"; };
 		E79BF02D274B8278009FA838 /* GameApplyInfoDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameApplyInfoDelegate.swift; sourceTree = "<group>"; };
 		E79BF02F2754761A009FA838 /* GameApplyInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameApplyInfoModel.swift; sourceTree = "<group>"; };
+		E79BF0332754BA3C009FA838 /* FetchPKInfoDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchPKInfoDataDelegate.swift; sourceTree = "<group>"; };
 		E79C25DB273B67DB00909CD4 /* Scene-Examples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Scene-Examples.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E79C25DE273B67DB00909CD4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E79C25E0273B67DB00909CD4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -288,7 +290,8 @@
 			children = (
 				E79BEF6E2742118A009FA838 /* PKInviteInfoDelegate.swift */,
 				E79BEF7227438D6A009FA838 /* PKInfoDelegate.swift */,
-				E79BEF7027421295009FA838 /* FetchPKinfoDataDelegate.swift */,
+				E79BEF7027421295009FA838 /* FetchAllBroadcastDataDelegate.swift */,
+				E79BF0332754BA3C009FA838 /* FetchPKInfoDataDelegate.swift */,
 			);
 			path = SyncManagerDelegate;
 			sourceTree = "<group>";
@@ -770,7 +773,7 @@
 				E79C2638273BC8DF00909CD4 /* MainModel.swift in Sources */,
 				E79C2613273B689B00909CD4 /* UIColor+Extension.swift in Sources */,
 				E79BF029274B77C7009FA838 /* GameViewModel.swift in Sources */,
-				E79BEF7127421295009FA838 /* FetchPKinfoDataDelegate.swift in Sources */,
+				E79BEF7127421295009FA838 /* FetchAllBroadcastDataDelegate.swift in Sources */,
 				E79BEF6A27420933009FA838 /* PKApplyInfoModel.swift in Sources */,
 				E79BEF35273D1304009FA838 /* LivePlayerCell.swift in Sources */,
 				E79BEF8527463FA5009FA838 /* BORHomeViewController.swift in Sources */,
@@ -796,6 +799,7 @@
 				E79BEF9627475239009FA838 /* GameWebView.swift in Sources */,
 				E79C260D273B689B00909CD4 /* Config.swift in Sources */,
 				E79BEF9E27477F66009FA838 /* GameCenterModel.swift in Sources */,
+				E79BF0342754BA3C009FA838 /* FetchPKInfoDataDelegate.swift in Sources */,
 				E79C25E1273B67DB00909CD4 /* SceneDelegate.swift in Sources */,
 				E79BEF88274640A6009FA838 /* BORVideoRoomDetailCell.swift in Sources */,
 				E79C260C273B689B00909CD4 /* MBHUD.swift in Sources */,

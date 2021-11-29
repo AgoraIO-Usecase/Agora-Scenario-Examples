@@ -35,6 +35,29 @@ class SyncUtil: NSObject {
         manager?.getScenes(delegate: delegate)
     }
     
+    class func fetch(id: String, key: String?, delegate: IObjectDelegate) {
+        let sceneRef = sceneRefs[id]
+        sceneRef?.get(delegate: delegate)
+    }
+    
+    class func update(id: String,
+                      key: String?,
+                      params: [String: Any],
+                      delegate: IObjectDelegate?) {
+        let sceneRef = sceneRefs[id]
+        sceneRef?.update(data: params, key: key, delegate: delegate)
+    }
+    
+    class func subscribe(id: String, key: String?, delegate: ISyncManagerEventDelegate) {
+        let sceneRef = sceneRefs[id]
+        sceneRef?.subscribe(key: key, delegate: delegate)
+    }
+    
+    class func unsubscribe(id: String, key: String?) {
+        let sceneRef = sceneRefs[id]
+        sceneRef?.unsubscribe(key: key)
+    }
+    
     class func fetchCollection(id: String,
                                className: String,
                                delegate: IObjectListDelegate) {
@@ -57,7 +80,7 @@ class SyncUtil: NSObject {
                                 params: [String: Any],
                                 delegate: IObjectDelegate?) {
         let sceneRef = sceneRefs[id]
-        sceneRef?.collection(className: className).document(id: objectId).update(data: params, delegate: delegate)
+        sceneRef?.collection(className: className).document(id: objectId).update(data: params, key: nil, delegate: delegate)
     }
     
     class func subscribeCollection(id: String,
@@ -68,17 +91,17 @@ class SyncUtil: NSObject {
         if documentId == nil {
             subscribeCollectionDelegate = sceneRef?.collection(className: className)
                 .document()
-                .subscribe(delegate: delegate)
+                .subscribe(key: nil, delegate: delegate)
         } else {
             subscribeCollectionDelegate = sceneRef?.collection(className: className)
                 .document(id: documentId ?? "")
-                .subscribe(delegate: delegate)
+                .subscribe(key: nil, delegate: delegate)
         }
     }
     
-    class func unsubscribe(id: String, className: String) {
+    class func unsubscribeCollection(id: String, className: String) {
         let sceneRef = sceneRefs[id]
-        sceneRef?.collection(className: className).document().unsubscribe()
+        sceneRef?.collection(className: className).document().unsubscribe(key: nil)
     }
     
     class func leaveScene(id: String) {
