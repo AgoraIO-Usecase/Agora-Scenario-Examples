@@ -10,12 +10,12 @@ public class SceneReference extends DocumentReference {
 
     private CollectionReference mCollectionReference;
 
-    public SceneReference(String id, String className) {
-        super(new CollectionReference(null, className), id);
+    public SceneReference(ISyncManager manager, String parent, String id) {
+        super(manager, parent, id);
     }
 
     public CollectionReference collection(@NonNull String collectionKey) {
-        mCollectionReference = new CollectionReference(this, collectionKey);
+        mCollectionReference = new CollectionReference(this.manager, this.parent, collectionKey);
         return mCollectionReference;
     }
 }

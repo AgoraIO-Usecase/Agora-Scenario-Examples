@@ -3,8 +3,6 @@ package io.agora.syncmanager.rtm.impl;
 import android.content.Context;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -30,15 +28,18 @@ import io.agora.rtm.RtmFileMessage;
 import io.agora.rtm.RtmImageMessage;
 import io.agora.rtm.RtmMediaOperationProgress;
 import io.agora.rtm.RtmMessage;
+import io.agora.syncmanager.rtm.SceneReference;
+import io.agora.syncmanager.rtm.SyncManagerException;
+import io.agora.syncmanager.rtm.IObject;
+import io.agora.syncmanager.rtm.Scene;
 import io.agora.syncmanager.rtm.CollectionReference;
 import io.agora.syncmanager.rtm.DocumentReference;
-import io.agora.syncmanager.rtm.IObject;
 import io.agora.syncmanager.rtm.ISyncManager;
-import io.agora.syncmanager.rtm.Scene;
-import io.agora.syncmanager.rtm.SyncManager;
-import io.agora.syncmanager.rtm.SyncManagerException;
+import io.agora.syncmanager.rtm.Sync;
 
 import static android.content.ContentValues.TAG;
+
+import androidx.annotation.NonNull;
 
 public class DataSyncImpl implements ISyncManager {
 
@@ -49,9 +50,9 @@ public class DataSyncImpl implements ISyncManager {
     private static final String DEFAULT_CHANNEL_NAME_PARAM = "defaultChannel";
     private String mDefaultChannel;
     private RtmClient client;
-    private String majorChannel;
+    private Map<String, RtmChannel> majorChannels = new ConcurrentHashMap<>();
     private String uid;
-    private Map<String, SyncManager.EventListener> eventListeners = new ConcurrentHashMap<>();
+    private Map<String, Sync.EventListener> eventListeners = new ConcurrentHashMap<>();
     private Map<String, NamedChannelListener> channelListeners = new ConcurrentHashMap<>();
     private Map<String, List<RtmChannelAttribute>> cachedAttrs = new ConcurrentHashMap<>();
 
@@ -77,7 +78,7 @@ public class DataSyncImpl implements ISyncManager {
         return null;
     }
 
-    public DataSyncImpl(Context context, Map<String, String> params) {
+    public DataSyncImpl(Context context, Map<String, String> params, Sync.Callback callback) {
         try {
             appId = params.get(APP_ID);
             token = params.get(TOKEN);
@@ -90,11 +91,13 @@ public class DataSyncImpl implements ISyncManager {
                 @Override
                 public void onSuccess(Void unused) {
                     Log.d(TAG, "on rtm login successful! ");
+                    callback.onSuccess();
                 }
 
                 @Override
                 public void onFailure(ErrorInfo errorInfo) {
                     Log.d(TAG, "on rtm login failed! ");
+                    callback.onFail(new SyncManagerException(-1, errorInfo.toString()));
                 }
             });
         } catch (Exception e) {
@@ -103,37 +106,47 @@ public class DataSyncImpl implements ISyncManager {
     }
 
     @Override
-    public Scene joinScene(Scene room, SyncManager.Callback callback) {
+    public void joinScene(Scene room, Sync.JoinSceneCallback callback) {
         String channel = room.getId();
         assert channel != null;
-        this.majorChannel = channel;
         NamedChannelListener listener = new NamedChannelListener(channel);
         RtmChannel rtmChannel = client.createChannel(channel, listener);
-        rtmChannel.join(null);
-        channelListeners.put(channel, listener);
-        // Update Scenes List
-        RtmChannelAttribute attribute = new RtmChannelAttribute();
-        attribute.setKey(room.getId());
-        attribute.setValue(room.toJson());
-        ChannelAttributeOptions options = new ChannelAttributeOptions();
-        List<RtmChannelAttribute> list = new ArrayList<>();
-        list.add(attribute);
-        client.addOrUpdateChannelAttributes(mDefaultChannel, list, options, new ResultCallback<Void>() {
+        rtmChannel.join(new ResultCallback<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                if(callback!=null) callback.onSuccess();
+                if(!majorChannels.containsKey(room.getId())){
+                    majorChannels.put(room.getId(), rtmChannel);
+                }
+                channelListeners.put(channel, listener);
+                // Update Scenes List
+                RtmChannelAttribute attribute = new RtmChannelAttribute();
+                attribute.setKey(room.getId());
+                attribute.setValue(room.toJson());
+                ChannelAttributeOptions options = new ChannelAttributeOptions();
+                List<RtmChannelAttribute> list = new ArrayList<>();
+                list.add(attribute);
+                client.addOrUpdateChannelAttributes(mDefaultChannel, list, options, new ResultCallback<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        if(callback!=null) callback.onSuccess(new SceneReference(DataSyncImpl.this, room.getId(), channel));
+                    }
+
+                    @Override
+                    public void onFailure(ErrorInfo errorInfo) {
+                        if(callback!=null) callback.onFail(new SyncManagerException(-1, errorInfo.toString()));
+                    }
+                });
             }
 
             @Override
             public void onFailure(ErrorInfo errorInfo) {
-                if(callback!=null) callback.onFail(new SyncManagerException(-1, errorInfo.toString()));
+                callback.onFail(new SyncManagerException(-1, "join rtm channel failed!"));
             }
         });
-        return null;
     }
 
     @Override
-    public void getScenes(SyncManager.DataListCallback callback) {
+    public void getScenes(Sync.DataListCallback callback) {
         client.getChannelAttributes(mDefaultChannel, new ResultCallback<List<RtmChannelAttribute>>() {
             @Override
             public void onSuccess(List<RtmChannelAttribute> rtmChannelAttributes) {
@@ -156,8 +169,9 @@ public class DataSyncImpl implements ISyncManager {
     }
 
     @Override
-    public void get(DocumentReference reference, SyncManager.DataItemCallback callback) {
-        if (this.majorChannel != null) {
+    public void get(DocumentReference reference, Sync.DataItemCallback callback) {
+        if (this.majorChannels.containsKey(reference.getParent())) {
+            String majorChannel = reference.getParent();
             String channel = reference.getId().equals(majorChannel) ? majorChannel : majorChannel + reference.getId();
             client.getChannelAttributes(channel, new ResultCallback<List<RtmChannelAttribute>>() {
                 @Override
@@ -180,22 +194,14 @@ public class DataSyncImpl implements ISyncManager {
     }
 
     @Override
-    public void get(CollectionReference reference, SyncManager.DataListCallback callback) {
-        if (this.majorChannel != null) {
+    public void get(CollectionReference reference, Sync.DataListCallback callback) {
+        if (this.majorChannels.containsKey(reference.getParent())) {
+            String majorChannel = reference.getParent();
             String channel = reference.getKey().equals(majorChannel) ? majorChannel : majorChannel + reference.getKey();
             client.getChannelAttributes(channel, new ResultCallback<List<RtmChannelAttribute>>() {
                 @Override
                 public void onSuccess(List<RtmChannelAttribute> rtmChannelAttributes) {
                     if (rtmChannelAttributes != null && rtmChannelAttributes.size() > 0) {
-                        NamedChannelListener listener;
-                        if (channelListeners.containsKey(channel)) {
-                            listener = channelListeners.get(channel);
-                        } else {
-                            listener = new NamedChannelListener(channel);
-                            channelListeners.put(channel, listener);
-                        }
-                        RtmChannel rtmChannel = client.createChannel(channel, listener);
-                        rtmChannel.join(null);
                         cachedAttrs.put(channel, rtmChannelAttributes);
                         List<IObject> res = new ArrayList<>();
                         for (RtmChannelAttribute attribute : rtmChannelAttributes) {
@@ -212,14 +218,24 @@ public class DataSyncImpl implements ISyncManager {
                     callback.onFail(new SyncManagerException(-1, errorInfo.getErrorDescription()));
                 }
             });
+            NamedChannelListener listener;
+            if (channelListeners.containsKey(channel)) {
+                listener = channelListeners.get(channel);
+            } else {
+                listener = new NamedChannelListener(channel);
+                channelListeners.put(channel, listener);
+            }
+            RtmChannel rtmChannel = client.createChannel(channel, listener);
+            rtmChannel.join(null);
         } else {
             callback.onFail(new SyncManagerException(-1, "yet join channel"));
         }
     }
 
     @Override
-    public void add(CollectionReference reference, HashMap<String, Object> data, SyncManager.DataItemCallback callback) {
-        if (this.majorChannel != null) {
+    public void add(CollectionReference reference, HashMap<String, Object> data, Sync.DataItemCallback callback) {
+        if (this.majorChannels.containsKey(reference.getParent())) {
+            String majorChannel = reference.getParent();
             String channel = reference.getKey().equals(majorChannel) ? majorChannel : majorChannel + reference.getKey();
             if (!channelListeners.containsKey(channel)) {
                 NamedChannelListener listener = new NamedChannelListener(channel);
@@ -248,7 +264,7 @@ public class DataSyncImpl implements ISyncManager {
                         cachedAttrs.put(channel, rtmChannelAttributes);
                     }
                     IObject item = new Attribute(reference.getKey(), json);
-                    SyncManager.EventListener listener = eventListeners.get(channel);
+                    Sync.EventListener listener = eventListeners.get(channel);
                     if(listener !=null){
                         listener.onCreated(item);
                     }
@@ -266,8 +282,9 @@ public class DataSyncImpl implements ISyncManager {
     }
 
     @Override
-    public void delete(DocumentReference reference, SyncManager.Callback callback) {
-        if (this.majorChannel != null) {
+    public void delete(DocumentReference reference, Sync.Callback callback) {
+        if (this.majorChannels.containsKey(reference.getParent())) {
+            String majorChannel = reference.getParent();
             if(reference.getId().equals(majorChannel)){
                 // remove the scene itself, remove it from scene list
                 List<String> list = new ArrayList<>();
@@ -286,7 +303,7 @@ public class DataSyncImpl implements ISyncManager {
             }
             else{
                 // remove specific property
-                String channel = majorChannel + reference.getParent().getKey();
+                String channel = majorChannel + reference.getId();
                 ChannelAttributeOptions options = new ChannelAttributeOptions();
                 options.setEnableNotificationToChannelMembers(true);
                 List<String> list = new ArrayList<>();
@@ -300,24 +317,18 @@ public class DataSyncImpl implements ISyncManager {
                     @Override
                     public void onSuccess(Void unused) {
                         List<RtmChannelAttribute> rtmChannelAttributes = cachedAttrs.get(channel);
-
-                        RtmChannelAttribute removeItem = null;
                         if(rtmChannelAttributes != null){
                             for(RtmChannelAttribute item : rtmChannelAttributes){
                                 if(item.getKey().equals(reference.getId())){
-                                    removeItem = item;
                                     rtmChannelAttributes.remove(item);
                                     break;
                                 }
                             }
                         }
-                        if(removeItem != null){
-                            SyncManager.EventListener listener = eventListeners.get(channel);
-                            if(listener !=null){
-                                listener.onDeleted(new Attribute(removeItem.getKey(), removeItem.getValue()));
-                            }
+                        Sync.EventListener listener = eventListeners.get(channel);
+                        if(listener !=null){
+                            listener.onDeleted(new Attribute(reference.getId(), list.get(0)));
                         }
-
                         if(callback!=null) callback.onSuccess();
                     }
 
@@ -333,13 +344,14 @@ public class DataSyncImpl implements ISyncManager {
     }
 
     @Override
-    public void delete(CollectionReference reference, SyncManager.Callback callback) {
+    public void delete(CollectionReference reference, Sync.Callback callback) {
         if(callback!=null) callback.onFail(new SyncManagerException(-1, "not supported yet"));
     }
 
     @Override
-    public void update(DocumentReference reference, String key, Object data, SyncManager.DataItemCallback callback) {
-        if (this.majorChannel != null) {
+    public void update(DocumentReference reference, String key, Object data, Sync.DataItemCallback callback) {
+        if (this.majorChannels.containsKey(reference.getParent())) {
+            String majorChannel = reference.getParent();
             String channel = reference.getId().equals(majorChannel) ? majorChannel : majorChannel + reference.getId();
             RtmChannelAttribute attribute = new RtmChannelAttribute();
             attribute.setKey(key);
@@ -352,8 +364,8 @@ public class DataSyncImpl implements ISyncManager {
             client.addOrUpdateChannelAttributes(channel, list, options, new ResultCallback<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
-                    IObject item = new Attribute(key, json);
-                    SyncManager.EventListener listener = eventListeners.get(channel);
+                    IObject item = new Attribute(reference.getId(), json);
+                    Sync.EventListener listener = eventListeners.get(channel);
                     if(listener !=null){
                         listener.onUpdated(item);
                     }
@@ -371,8 +383,9 @@ public class DataSyncImpl implements ISyncManager {
     }
 
     @Override
-    public void update(DocumentReference reference, HashMap<String, Object> data, SyncManager.DataItemCallback callback) {
-        if (this.majorChannel != null) {
+    public void update(DocumentReference reference, HashMap<String, Object> data, Sync.DataItemCallback callback) {
+        if (this.majorChannels.containsKey(reference.getParent())) {
+            String majorChannel = reference.getParent();
             String channel = reference.getId().equals(majorChannel) ? majorChannel : majorChannel + reference.getId();
             RtmChannelAttribute attribute = new RtmChannelAttribute();
             attribute.setKey(reference.getId());
@@ -399,34 +412,11 @@ public class DataSyncImpl implements ISyncManager {
     }
 
     @Override
-    public void subscribe(DocumentReference reference, SyncManager.EventListener listener) {
-        if (this.majorChannel != null) {
+    public void subscribe(DocumentReference reference, Sync.EventListener listener) {
+        if (this.majorChannels.containsKey(reference.getParent())) {
+            String majorChannel = reference.getParent();
             String channel = reference.getId().equals(majorChannel) ? majorChannel : majorChannel + reference.getId();
             eventListeners.put(channel, listener);
-
-            if (!channelListeners.containsKey(channel)) {
-                NamedChannelListener clistener = new NamedChannelListener(channel);
-                RtmChannel rtmChannel = client.createChannel(channel, clistener);
-                rtmChannel.join(null);
-                channelListeners.put(channel, clistener);
-            }
-            List<RtmChannelAttribute> rtmChannelAttributes = cachedAttrs.get(channel);
-            if(rtmChannelAttributes == null){
-                rtmChannelAttributes = new ArrayList<>();
-                cachedAttrs.put(channel, rtmChannelAttributes);
-            }
-
-            get(reference, new SyncManager.DataItemCallback() {
-                @Override
-                public void onSuccess(IObject result) {
-
-                }
-
-                @Override
-                public void onFail(SyncManagerException exception) {
-
-                }
-            });
         }
         else{
             listener.onSubscribeError(new SyncManagerException(-1, "yet join channel"));
@@ -434,24 +424,13 @@ public class DataSyncImpl implements ISyncManager {
     }
 
     @Override
-    public void subscribe(CollectionReference reference, SyncManager.EventListener listener) {
-        if (this.majorChannel != null) {
+    public void subscribe(CollectionReference reference, Sync.EventListener eventListener) {
+        if (this.majorChannels.containsKey(reference.getParent())) {
+            String majorChannel = reference.getParent();
             String channel = reference.getKey().equals(majorChannel) ? majorChannel : majorChannel + reference.getKey();
-            eventListeners.put(channel, listener);
-
-            if (!channelListeners.containsKey(channel)) {
-                NamedChannelListener clistener = new NamedChannelListener(channel);
-                RtmChannel rtmChannel = client.createChannel(channel, clistener);
-                rtmChannel.join(null);
-                channelListeners.put(channel, clistener);
-            }
-            List<RtmChannelAttribute> rtmChannelAttributes = cachedAttrs.get(channel);
-            if(rtmChannelAttributes == null){
-                rtmChannelAttributes = new ArrayList<>();
-                cachedAttrs.put(channel, rtmChannelAttributes);
-            }
+            eventListeners.put(channel, eventListener);
             // for generate cachedAttrs
-            get(reference, new SyncManager.DataListCallback() {
+            get(reference, new Sync.DataListCallback() {
                 @Override
                 public void onSuccess(List<IObject> result) {
 
@@ -464,19 +443,16 @@ public class DataSyncImpl implements ISyncManager {
             });
         }
         else{
-            listener.onSubscribeError(new SyncManagerException(-1, "yet join channel"));
+            eventListener.onSubscribeError(new SyncManagerException(-1, "yet join channel"));
         }
     }
 
     @Override
-    public void unsubscribe(SyncManager.EventListener listener) {
+    public void unsubscribe(Sync.EventListener listener) {
         if(eventListeners.containsValue(listener)){
-            for(Map.Entry<String, SyncManager.EventListener> entry : eventListeners.entrySet()){
+            for(Map.Entry<String, Sync.EventListener> entry : eventListeners.entrySet()){
                 if(listener == entry.getValue()){
                     eventListeners.remove(entry.getKey());
-                    if(channelListeners.containsKey(entry.getKey())){
-
-                    }
                     return;
                 }
             }
@@ -550,8 +526,8 @@ public class DataSyncImpl implements ISyncManager {
             // room属性有一个listener对象, 每一个collection也有一个listener对象, 存放在一个map中
             // map的key是 channel名 或者是collection的classname
             if(eventListeners.containsKey(channelName)){
-                SyncManager.EventListener callback = eventListeners.get(channelName);
-                if(channelName.equals(majorChannel)){
+                Sync.EventListener callback = eventListeners.get(channelName);
+                if(majorChannels.containsKey(channelName)){
                     RtmChannelAttribute rtmChannelAttribute = list.get(0);
                     assert callback != null;
                     callback.onUpdated(new Attribute(rtmChannelAttribute.getKey(), rtmChannelAttribute.getValue()));

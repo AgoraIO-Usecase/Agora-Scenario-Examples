@@ -11,57 +11,48 @@ import java.util.HashMap;
 public class CollectionReference {
 
     private String key;
-    private SceneReference parent;
-    private DocumentReference mDocumentReference;
-    private Query mQuery;
+    private String parent;
+    private ISyncManager manager;
 
-    public CollectionReference(SceneReference parent, String key) {
-        this.parent = parent;
+    public CollectionReference(ISyncManager manager, String parent, String key) {
         this.key = key;
+        this.manager = manager;
+        this.parent = parent;
     }
-
+    //not supported in rtm impl
     public CollectionReference query(Query mQuery) {
-        this.mQuery = mQuery;
         return this;
     }
-
+    //not supported in rtm impl
     public Query getQuery() {
-        return mQuery;
-    }
-
-    public SceneReference getParent() {
-        return parent;
+        return null;
     }
 
     public String getKey() {
         return key;
     }
 
+    public String getParent() {
+        return parent;
+    }
+
     public DocumentReference document(@NonNull String id) {
-        mDocumentReference = new DocumentReference(this, id);
-        return mDocumentReference;
+        return new DocumentReference(manager, parent, id);
     }
 
-    private HashMap<String, Object> datas = new HashMap<>();
-
-    public HashMap<String, Object> getDatas() {
-        return datas;
+    public void add(HashMap<String, Object> datas, Sync.DataItemCallback callback) {
+        manager.add(this, datas, callback);
     }
 
-    public void add(HashMap<String, Object> datas, SyncManager.DataItemCallback callback) {
-        this.datas = datas;
-        SyncManager.Instance().add(this, datas, callback);
+    public void get(Sync.DataListCallback callback) {
+        manager.get(this, callback);
     }
 
-    public void get(SyncManager.DataListCallback callback) {
-        SyncManager.Instance().get(this, callback);
+    public void delete(Sync.Callback callback) {
+        manager.delete(this, callback);
     }
 
-    public void delete(SyncManager.Callback callback) {
-        SyncManager.Instance().delete(this, callback);
-    }
-
-    public void subcribe(SyncManager.EventListener listener) {
-        SyncManager.Instance().subscribe(this, listener);
+    public void subscribe(Sync.EventListener listener) {
+        manager.subscribe(this, listener);
     }
 }

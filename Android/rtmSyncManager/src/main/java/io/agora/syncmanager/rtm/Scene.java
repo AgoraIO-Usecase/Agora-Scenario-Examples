@@ -13,7 +13,7 @@ public class Scene {
 
     public String toJson() {
         Map res = new HashMap();
-        if(property != null){
+        if(property!=null){
             res.putAll(property);
         }
         res.put("id", id);
