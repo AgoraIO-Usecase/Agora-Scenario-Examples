@@ -206,7 +206,6 @@ class GameLiveController: PKLiveController {
         if isStart {
             var gameApplyModel = GameApplyInfoModel()
             gameApplyModel.status = .playing
-//            gameApplyModel.gameUid
             SyncUtil.addCollection(id: channelName,
                                    className: SYNC_MANAGER_GAME_APPLY_INFO,
                                    params: JSONObject.toJson(gameApplyModel),
@@ -214,10 +213,10 @@ class GameLiveController: PKLiveController {
             return
         }
         gameApplyInfoModel?.status = .end
-        let params = JSONObject.toJson(gameInfoModel)
+        let params = JSONObject.toJson(gameApplyInfoModel)
         SyncUtil.updateCollection(id: channelName,
                                   className: SYNC_MANAGER_GAME_APPLY_INFO,
-                                  objectId: gameInfoModel?.objectId ?? "",
+                                  objectId: gameApplyInfoModel?.objectId ?? "",
                                   params: params,
                                   delegate: nil)
     }
