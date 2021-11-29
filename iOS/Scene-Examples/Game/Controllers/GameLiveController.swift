@@ -39,7 +39,7 @@ class GameLiveController: PKLiveController {
     private var gameRoleType: GameRoleType {
         targetChannelName.isEmpty ? .audience : .broadcast
     }
-    private var screenUserID: UInt {
+    public var screenUserID: UInt {
         UserInfo.userId + 10000
     }
     
@@ -201,7 +201,7 @@ class GameLiveController: PKLiveController {
                                 roleType: gameRoleType)
             } else { // 观众拉取屏幕共享流
                 let canvas = AgoraRtcVideoCanvas()
-                canvas.uid = screenUserID
+                canvas.uid = UInt(gameInfoModel?.gameUid ?? "0") ?? 0
                 canvas.view = webView
                 agoraKit?.setupRemoteVideoEx(canvas, connection: screenConnection)
             }

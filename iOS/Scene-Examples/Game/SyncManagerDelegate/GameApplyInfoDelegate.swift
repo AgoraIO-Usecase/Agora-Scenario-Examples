@@ -25,7 +25,7 @@ class GameApplyInfoDelegate: ISyncManagerEventDelegate {
         
         var gameInfoModel = GameInfoModel()
         gameInfoModel.status = model.status
-        gameInfoModel.gameUid = ""//model.gameUid
+        gameInfoModel.gameUid = "\(vc.screenUserID)"
         
         if model.status == .no_start {
             vc.updatePKUIStatus(isStart: false)
