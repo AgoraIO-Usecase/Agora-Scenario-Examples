@@ -222,6 +222,8 @@ class GameLiveController: PKLiveController {
             // 主播调用离开游戏接口
             if getRole(uid: "\(UserInfo.userId)") == .broadcaster {
                 viewModel.leaveGame(roleType: gameRoleType)
+                AgoraScreenShare.shareInstance().stopService()
+                agoraKit?.leaveChannelEx(screenConnection, leaveChannelBlock: nil)
             }
         }
     }
