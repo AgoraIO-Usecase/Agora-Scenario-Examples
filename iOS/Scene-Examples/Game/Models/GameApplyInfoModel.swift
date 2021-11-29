@@ -16,7 +16,7 @@ enum GameStatus: Int, Codable {
     case end = 3
 }
 
-class GameApplyInfoModel: Codable {
+struct GameApplyInfoModel: Codable {
     var objectId: String = ""
     
     var status: GameStatus = .no_start
