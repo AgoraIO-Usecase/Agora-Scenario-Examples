@@ -32,10 +32,12 @@ class GameLiveController: PKLiveController {
     public lazy var viewModel = GameViewModel(channleName: channleName,
                                               ownerId: currentUserId)
     
+    private var isLoadScreenShare: Bool = false
     private lazy var screenConnection = AgoraRtcConnection()
     private lazy var timer = GCDTimer()
     private var pkApplyInfoModel: PKApplyInfoModel?
     public var gameApplyInfoModel: GameApplyInfoModel?
+    public var gameInfoModel: GameInfoModel?
     private var gameRoleType: GameRoleType {
         targetChannelName.isEmpty ? .audience : .broadcast
     }
@@ -225,6 +227,7 @@ class GameLiveController: PKLiveController {
                 AgoraScreenShare.shareInstance().stopService()
                 agoraKit?.leaveChannelEx(screenConnection, leaveChannelBlock: nil)
             }
+            isLoadScreenShare = false
         }
     }
     
@@ -259,7 +262,8 @@ class GameLiveController: PKLiveController {
     
     /// 屏幕共享
     private func onClickScreenShareButton() {
-        guard let agoraKit = agoraKit else { return }
+        guard let agoraKit = agoraKit, isLoadScreenShare == false else { return }
+        isLoadScreenShare = true
         joinScreenShare(channelName: channleName)
         AgoraScreenShare.shareInstance().startService(with: agoraKit, connection: screenConnection)
         if #available(iOS 12.0, *) {
