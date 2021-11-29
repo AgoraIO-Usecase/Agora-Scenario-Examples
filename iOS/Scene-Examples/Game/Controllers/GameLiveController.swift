@@ -34,6 +34,9 @@ class GameLiveController: PKLiveController {
     private var pkApplyInfoModel: PKApplyInfoModel?
     public var gameApplyInfoModel: GameApplyInfoModel?
     public var gameInfoModel: GameInfoModel?
+    private var gameRoleType: GameRoleType {
+        targetChannelName.isEmpty ? .audience : .broadcast
+    }
     
     private var gameCenterModel: GameCenterModel?
     override func viewDidLoad() {
@@ -175,11 +178,10 @@ class GameLiveController: PKLiveController {
         if isStart {
             ToastView.show(text: "游戏开始", postion: .top, duration: 3)
             if getRole(uid: "\(UserInfo.userId)") == .broadcaster {
-                let roleType: GameRoleType = targetChannelName.isEmpty ? .audience : .broadcast
                 let channelName = targetChannelName.isEmpty ? channleName : targetChannelName
                 webView.loadUrl(urlString: gameCenterModel?.type.gameUrl ?? "https://imgsecond.yuanqiyouxi.com/test/DrawAndGuess/index.html",
                                 roomId: channelName,
-                                roleType: roleType)
+                                roleType: gameRoleType)
             } else { // 观众拉取屏幕共享流
                 
             }
@@ -194,9 +196,11 @@ class GameLiveController: PKLiveController {
         } else {
             updateLiveLayout(postion: .center)
             pkProgressView.reset()
-            let roleType: GameRoleType = targetChannelName.isEmpty ? .audience : .broadcast
-            viewModel.leaveGame(roleType: roleType)
             webView.reset()
+            // 主播调用离开游戏接口
+            if getRole(uid: "\(UserInfo.userId)") == .broadcaster {
+                viewModel.leaveGame(roleType: gameRoleType)
+            }
         }
     }
     
