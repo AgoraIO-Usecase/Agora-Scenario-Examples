@@ -1,0 +1,111 @@
+//
+//  GameApplyInfoDelegate.swift
+//  Scene-Examples
+//
+//  Created by zhaoyongqiang on 2021/11/22.
+//
+
+import UIKit
+
+class GameApplyInfoDelegate: ISyncManagerEventDelegate {
+    private var vc: GameLiveController
+    init(vc: GameLiveController) {
+        self.vc = vc
+    }
+    func onCreated(object: IObject) {
+        LogUtils.log(message: "onCreated game == \(String(describing: object.toJson()))", level: .info)
+        guard let model = JSONObject.toModel(GameApplyInfoModel.self, value: object.toJson()) else { return }
+        vc.gameApplyInfoModel = model
+    }
+    
+    func onUpdated(object: IObject) {
+        LogUtils.log(message: "onUpdated game == \(String(describing: object.toJson()))", level: .info)
+        guard let model = JSONObject.toModel(GameApplyInfoModel.self, value: object.toJson()) else { return }
+        vc.gameApplyInfoModel = model
+        
+        var gameInfoModel = GameInfoModel()
+        gameInfoModel.status = model.status
+        gameInfoModel.gameUid = ""//model.gameUid
+        
+        if model.status == .no_start {
+            vc.updatePKUIStatus(isStart: false)
+        } else if model.status == .playing {
+            vc.updatePKUIStatus(isStart: true)
+            // 通知观众拉取屏幕流
+            SyncUtil.addCollection(id: vc.channleName,
+                                   className: SYNC_MANAGER_GAME_INFO,
+                                   params: JSONObject.toJson(gameInfoModel),
+                                   delegate: nil)
+        } else {
+            vc.updatePKUIStatus(isStart: false)
+            let channelName = vc.targetChannelName.isEmpty ? vc.channleName : vc.targetChannelName
+            
+            SyncUtil.deleteCollection(id: channelName,
+                                      className: SYNC_MANAGER_GAME_APPLY_INFO,
+                                      delegate: nil)
+            
+            // 更新观众状态
+            SyncUtil.updateCollection(id: vc.channleName,
+                                      className: SYNC_MANAGER_GAME_INFO,
+                                      objectId: vc.gameInfoModel?.objectId ?? "",
+                                      params: JSONObject.toJson(gameInfoModel), delegate: nil)
+        }
+
+        guard vc.getRole(uid: "\(UserInfo.userId)") == .broadcaster else { return }
+        vc.stopBroadcastButton.isHidden = model.status != .end
+    }
+    
+    func onDeleted(object: IObject?) {
+        LogUtils.log(message: "onDeleted game == \(String(describing: object?.toJson()))", level: .info)
+    }
+    
+    func onSubscribed() {
+        LogUtils.log(message: "onSubscribed game", level: .info)
+    }
+    
+    func onError(code: Int, msg: String) {
+        LogUtils.log(message: "onError game code ==\(code) msg == \(msg)", level: .error)
+    }
+}
+
+/// 观众游戏状态
+class GameInfoDelegate: ISyncManagerEventDelegate {
+    private var vc: GameLiveController
+    init(vc: GameLiveController) {
+        self.vc = vc
+    }
+    func onCreated(object: IObject) {
+        LogUtils.log(message: "onCreated game info == \(String(describing: object.toJson()))", level: .info)
+        guard let model = JSONObject.toModel(GameInfoModel.self, value: object.toJson()) else { return }
+        vc.gameInfoModel = model
+    }
+    
+    func onUpdated(object: IObject) {
+        LogUtils.log(message: "onUpdated game info == \(String(describing: object.toJson()))", level: .info)
+        guard let model = JSONObject.toModel(GameInfoModel.self, value: object.toJson()) else { return }
+        vc.gameInfoModel = model
+        if model.status == .no_start {
+            vc.updatePKUIStatus(isStart: false)
+        } else if model.status == .playing {
+            vc.updatePKUIStatus(isStart: true)
+        } else {
+            vc.updatePKUIStatus(isStart: false)
+            SyncUtil.deleteCollection(id: vc.channleName,
+                                      className: SYNC_MANAGER_GAME_INFO,
+                                      delegate: nil)
+        }
+        vc.stopBroadcastButton.isHidden = true
+    }
+    
+    func onDeleted(object: IObject?) {
+        LogUtils.log(message: "onDeleted game info == \(String(describing: object?.toJson()))", level: .info)
+    }
+    
+    func onSubscribed() {
+        LogUtils.log(message: "onSubscribed game info", level: .info)
+    }
+    
+    func onError(code: Int, msg: String) {
+        LogUtils.log(message: "onError game info code ==\(code) msg == \(msg)", level: .error)
+    }
+}
