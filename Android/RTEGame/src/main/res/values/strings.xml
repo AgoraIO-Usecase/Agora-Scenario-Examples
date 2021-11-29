@@ -32,7 +32,7 @@
 
     <string name="donate">赠送</string>
     <string name="gift">礼物</string>
-    <string name="gift_received">收到%s赠送的%s%s</string>
+    <string name="gift_received">%s赠送了%s%s</string>
 
 
     <!--    权限-->

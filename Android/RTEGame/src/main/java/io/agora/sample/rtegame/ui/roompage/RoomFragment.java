@@ -24,6 +24,8 @@ import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
+import java.util.Objects;
+
 import io.agora.example.base.BaseRecyclerViewAdapter;
 import io.agora.example.base.BaseUtil;
 import io.agora.rtc2.RtcEngine;
@@ -182,15 +184,20 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         });
     }
 
+    /**
+     * 主播 ==》消息提示
+     * 用户 ==》显示特效+消息提示
+     */
     private void onGiftUpdated(GiftInfo giftInfo) {
         if (giftInfo == null) return;
 
         mBinding.giftImageFgRoom.setVisibility(View.VISIBLE);
 
-        if (aMHost) {
+        if (aMHost || Objects.equals(giftInfo.getUserId(), GameApplication.getInstance().user.getUserId())) {
             String giftDesc = GiftUtil.getGiftDesc(requireContext(), giftInfo);
             if (giftDesc != null) insertNewMessage(giftDesc);
-        } else {
+        }
+        if (!aMHost) {
             int giftId = GiftUtil.getGiftIdFromGiftInfo(requireContext(), giftInfo);
             Glide.with(requireContext()).asGif().load(GiftUtil.getGifByGiftId(giftId))
                     .listener(new RequestListener<GifDrawable>() {
