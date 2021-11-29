@@ -199,6 +199,8 @@ class GameLiveController: PKLiveController {
                 webView.loadUrl(urlString: gameCenterModel?.type.gameUrl ?? "https://imgsecond.yuanqiyouxi.com/test/DrawAndGuess/index.html",
                                 roomId: channelName,
                                 roleType: gameRoleType)
+                // 调用屏幕共享
+                onClickScreenShareButton()
             } else { // 观众拉取屏幕共享流
                 let canvas = AgoraRtcVideoCanvas()
                 canvas.uid = UInt(gameInfoModel?.gameUid ?? "0") ?? 0
