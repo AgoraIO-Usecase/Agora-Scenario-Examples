@@ -8,6 +8,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.Collections;
+import java.util.Objects;
+
 import io.agora.example.base.BaseUtil;
 import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
@@ -453,7 +456,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
     public void initRTC(@NonNull Context mContext, @NonNull IRtcEngineEventHandler mEventHandler) {
         String appID = mContext.getString(R.string.rtc_app_id);
-        if (appID.length() != 32) {
+        if (appID.isEmpty() || appID.codePointCount(0, appID.length()) != 32) {
             _viewStatus.postValue(new ViewStatus.Error("APPID is not valid"));
             _mEngine.postValue(null);
         } else {
