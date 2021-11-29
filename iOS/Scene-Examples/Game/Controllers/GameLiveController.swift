@@ -142,6 +142,17 @@ class GameLiveController: PKLiveController {
         }
     }
     
+    /// 获取pk状态
+    override func getBroadcastPKStatus() {
+        super.getBroadcastPKStatus()
+        let fetchGameInfoDelegate = FetchPKInfoDataDelegate()
+        fetchGameInfoDelegate.onSuccess = { [weak self] result in
+            let gameInfoModel = JSONObject.toModel(GameInfoModel.self, value: result.toJson())
+            self?.updatePKUIStatus(isStart: gameInfoModel?.status == .playing)
+        }
+        SyncUtil.fetch(id: channleName, key: SYNC_MANAGER_GAME_INFO, delegate: fetchGameInfoDelegate)
+    }
+    
     /// pk开始
     override func pkLiveStartHandler() {
         super.pkLiveStartHandler()

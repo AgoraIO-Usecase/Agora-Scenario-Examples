@@ -47,6 +47,9 @@ class PKLiveController: LivePlayerController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        if getRole(uid: "\(UserInfo.userId)") == .audience {
+            getBroadcastPKStatus()
+        }
     }
     
     private func setupUI() {
@@ -110,6 +113,16 @@ class PKLiveController: LivePlayerController {
             self?.pkApplyInfoModel = applyModel
             self?.pkLiveEndHandler()
         }
+    }
+    
+    /// 获取当前主播PK状态
+    public func getBroadcastPKStatus() {
+        let fetchPKInfoDelegate = FetchPKInfoDataDelegate()
+        fetchPKInfoDelegate.onSuccess = { [weak self] result in
+            let pkApplyModel = JSONObject.toModel(PKApplyInfoModel.self, value: result.toJson())
+            self?.updatePKUIStatus(isStart: pkApplyModel?.status == .accept)
+        }
+        SyncUtil.fetch(id: channleName, key: sceneType.rawValue, delegate: fetchPKInfoDelegate)
     }
     
     /// pk开始

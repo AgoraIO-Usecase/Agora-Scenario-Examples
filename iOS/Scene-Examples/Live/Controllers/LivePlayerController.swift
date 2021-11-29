@@ -256,7 +256,9 @@ class LivePlayerController: BaseViewController {
     }
     
     /// 关闭直播
-    public func closeLiveHandler() { }
+    public func closeLiveHandler() {
+        SyncUtil.delete(id: channleName)
+    }
     
     /// 主播PK
     public func clickPKHandler() {}
