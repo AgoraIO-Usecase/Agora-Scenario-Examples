@@ -48,7 +48,7 @@ class PKLiveController: LivePlayerController {
         super.viewDidLoad()
         setupUI()
         if getRole(uid: "\(UserInfo.userId)") == .audience {
-            getBroadcastPKStatus()
+            getBroadcastPKApplyInfo()
         }
     }
     
@@ -115,15 +115,22 @@ class PKLiveController: LivePlayerController {
         }
     }
     
-    /// 获取当前主播PK状态
-    public func getBroadcastPKStatus() {
+    /// 获取PK信息
+    private func getBroadcastPKApplyInfo() {
         let fetchPKInfoDelegate = FetchPKInfoDataDelegate()
         fetchPKInfoDelegate.onSuccess = { [weak self] result in
             let pkApplyModel = JSONObject.toModel(PKApplyInfoModel.self, value: result.toJson())
             self?.updatePKUIStatus(isStart: pkApplyModel?.status == .accept)
+            let channelName = pkApplyModel?.roomId == self?.channleName ? pkApplyModel?.targetRoomId : pkApplyModel?.roomId
+            let uid = pkApplyModel?.userId == self?.currentUserId ? pkApplyModel?.targetUserId : pkApplyModel?.userId
+            self?.joinAudienceChannel(channelName: channelName ?? "", pkUid: UInt(uid ?? "0") ?? 0)
+            self?.getBroadcastPKStatus()
         }
         SyncUtil.fetch(id: channleName, key: sceneType.rawValue, delegate: fetchPKInfoDelegate)
     }
+    
+    /// 获取当前主播PK状态
+    public func getBroadcastPKStatus() { }
     
     /// pk开始
     public func pkLiveStartHandler() {
