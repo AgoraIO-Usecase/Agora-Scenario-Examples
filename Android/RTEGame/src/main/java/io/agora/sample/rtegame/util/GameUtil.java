@@ -27,6 +27,11 @@ import io.agora.sample.rtegame.ui.roompage.RoomViewModelFactory;
 import io.agora.syncmanager.rtm.Scene;
 
 public class GameUtil {
+    private static String getGameURLByID(int gameId){
+        if (gameId == 1){
+            return "https://imgsecond.yuanqiyouxi.com/test/DrawAndGuess/index.html";
+        } else return "";
+    }
     private static final String[] nameList = {
             "一马当先",
             "二姓之好",
@@ -85,6 +90,7 @@ public class GameUtil {
         return R.mipmap.ic_launcher;
     }
 
+    @NonNull
     public static Scene getSceneFromRoomInfo(@NonNull RoomInfo roomInfo) {
         Scene scene = new Scene();
         scene.setId(roomInfo.getId());

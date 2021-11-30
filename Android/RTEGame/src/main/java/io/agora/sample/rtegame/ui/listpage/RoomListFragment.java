@@ -11,16 +11,10 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,9 +95,6 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
         mViewModel.viewStatus().observe(getViewLifecycleOwner(), this::onViewStatusChanged);
         // 房间列表数据监听
         mViewModel.roomList().observe(getViewLifecycleOwner(), resList -> {
-            for (RoomInfo roomInfo : resList) {
-                BaseUtil.logD(roomInfo.toString());
-            }
             onListStatus(resList.isEmpty());
             mAdapter.submitListAndPurge(resList);
         });
@@ -169,6 +160,7 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
         if (tempRoom != null)
             mGlobalModel.roomInfo.setValue(new Event<>(tempRoom));
 
+        mGlobalModel.sceneReference = null;
         findNavController().navigate(R.id.action_roomListFragment_to_roomFragment);
     }
 

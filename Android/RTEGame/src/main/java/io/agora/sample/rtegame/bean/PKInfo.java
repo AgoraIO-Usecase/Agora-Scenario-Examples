@@ -33,4 +33,13 @@ public class PKInfo {
     public void setStatus(int status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "PKInfo{" +
+                "status=" + status +
+                ", roomId='" + roomId + '\'' +
+                ", userId='" + userId + '\'' +
+                '}';
+    }
 }

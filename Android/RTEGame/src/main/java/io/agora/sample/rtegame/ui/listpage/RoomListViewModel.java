@@ -12,7 +12,7 @@ import io.agora.sample.rtegame.bean.RoomInfo;
 import io.agora.sample.rtegame.repo.RoomListApi;
 import io.agora.sample.rtegame.util.ViewStatus;
 import io.agora.syncmanager.rtm.IObject;
-import io.agora.syncmanager.rtm.SyncManager;
+import io.agora.syncmanager.rtm.Sync;
 import io.agora.syncmanager.rtm.SyncManagerException;
 
 
@@ -58,7 +58,7 @@ public class RoomListViewModel extends ViewModel implements RoomListApi {
 //            _roomList.postValue(res);
 //            _viewStatus.postValue(new ViewStatus.Done());
 //        }).start();
-        SyncManager.Instance().getScenes(new SyncManager.DataListCallback() {
+        Sync.Instance().getScenes(new Sync.DataListCallback() {
             @Override
             public void onSuccess(List<IObject> result) {
                 List<RoomInfo> res = new ArrayList<>();

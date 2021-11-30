@@ -4,31 +4,40 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.HashMap;
 
-import io.agora.example.base.BaseUtil;
 import io.agora.sample.rtegame.bean.LocalUser;
 import io.agora.sample.rtegame.bean.RoomInfo;
 import io.agora.sample.rtegame.repo.RoomCreateApi;
 import io.agora.sample.rtegame.util.Event;
 import io.agora.sample.rtegame.util.GameConstants;
 import io.agora.sample.rtegame.util.GameUtil;
-import io.agora.syncmanager.rtm.SyncManager;
+import io.agora.syncmanager.rtm.SceneReference;
+import io.agora.syncmanager.rtm.Sync;
 import io.agora.syncmanager.rtm.SyncManagerException;
 
 public class GlobalViewModel extends ViewModel implements RoomCreateApi {
 
+    // FIXME
+    @Nullable
+    public SceneReference sceneReference = null;
+
     private final MutableLiveData<LocalUser> _user = new MutableLiveData<>();
-    public LiveData<LocalUser> user(){
+
+    @NonNull
+    public LiveData<LocalUser> user() {
         return _user;
     }
 
     private final MutableLiveData<Boolean> _isRTMInit = new MutableLiveData<>();
-    public LiveData<Boolean> isRTMInit(){
+
+    @NonNull
+    public LiveData<Boolean> isRTMInit() {
         return _isRTMInit;
     }
 
@@ -67,7 +76,7 @@ public class GlobalViewModel extends ViewModel implements RoomCreateApi {
         return localUser;
     }
 
-    public void clearRoomInfo(){
+    public void clearRoomInfo() {
         Event<RoomInfo> roomInfoEvent = new Event<>(null);
         roomInfoEvent.getContentIfNotHandled();
         roomInfo.setValue(roomInfoEvent);
@@ -75,9 +84,10 @@ public class GlobalViewModel extends ViewModel implements RoomCreateApi {
 
     @Override
     public void createRoom(@NonNull RoomInfo room) {
-        SyncManager.Instance().joinScene(GameUtil.getSceneFromRoomInfo(room), new SyncManager.Callback() {
+        Sync.Instance().joinScene(GameUtil.getSceneFromRoomInfo(room), new Sync.JoinSceneCallback() {
             @Override
-            public void onSuccess() {
+            public void onSuccess(SceneReference sceneReference) {
+                GlobalViewModel.this.sceneReference = sceneReference;
                 roomInfo.postValue(new Event<>(room));
             }
 
@@ -89,25 +99,25 @@ public class GlobalViewModel extends ViewModel implements RoomCreateApi {
     }
 
     //<editor-fold desc="SyncManager">
-    public void initSyncManager(Context context) {
+    public void initSyncManager(@NonNull Context context) {
         HashMap<String, String> map = new HashMap<>();
         map.put("appid", context.getString(R.string.rtm_app_id));
         map.put("token", context.getString(R.string.rtm_app_token));
         map.put("defaultChannel", GameConstants.globalChannel);
-        BaseUtil.logD("initSyncManager");
-        SyncManager.Instance().init(context, map);
-        // FIXME
-        new Thread(() -> {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        Sync.Instance().init(context, map, new Sync.Callback() {
+            @Override
+            public void onSuccess() {
+                _isRTMInit.postValue(true);
             }
-            _isRTMInit.postValue(true);
-        }).start();
+
+            @Override
+            public void onFail(SyncManagerException exception) {
+                _isRTMInit.postValue(false);
+            }
+        });
     }
 
-    public void destroySyncManager(){
+    public void destroySyncManager() {
 //        SyncManager.Instance()
     }
 

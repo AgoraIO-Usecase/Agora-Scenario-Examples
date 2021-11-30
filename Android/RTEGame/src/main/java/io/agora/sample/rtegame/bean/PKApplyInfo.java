@@ -1,5 +1,7 @@
 package io.agora.sample.rtegame.bean;
 
+import androidx.annotation.NonNull;
+
 public class PKApplyInfo {
     public static final int APPLYING = 1;
     public static final int AGREED = 2;
@@ -20,7 +22,7 @@ public class PKApplyInfo {
 //    对方直播间的RoomID
     private final String targetRoomId;
 
-    public PKApplyInfo(String userId, String targetUserId, String userName, int status, int gameId, String roomId, String targetRoomId) {
+    public PKApplyInfo(@NonNull String userId, @NonNull String targetUserId, @NonNull String userName, int status, int gameId, @NonNull String roomId, @NonNull String targetRoomId) {
         this.userId = userId;
         this.targetUserId = targetUserId;
         this.userName = userName;
@@ -34,14 +36,17 @@ public class PKApplyInfo {
         this.status = status;
     }
 
+    @NonNull
     public String getUserId() {
         return userId;
     }
 
+    @NonNull
     public String getTargetUserId() {
         return targetUserId;
     }
 
+    @NonNull
     public String getUserName() {
         return userName;
     }
@@ -54,11 +59,27 @@ public class PKApplyInfo {
         return gameId;
     }
 
+    @NonNull
     public String getRoomId() {
         return roomId;
     }
 
+    @NonNull
     public String getTargetRoomId() {
         return targetRoomId;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "PKApplyInfo{" +
+                "userId='" + userId + '\'' +
+                ", targetUserId='" + targetUserId + '\'' +
+                ", userName='" + userName + '\'' +
+                ", status=" + status +
+                ", gameId=" + gameId +
+                ", roomId='" + roomId + '\'' +
+                ", targetRoomId='" + targetRoomId + '\'' +
+                '}';
     }
 }

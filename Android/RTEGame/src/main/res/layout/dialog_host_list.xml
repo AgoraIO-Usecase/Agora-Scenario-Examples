@@ -26,6 +26,7 @@
         android:id="@+id/recycler_view_dialog_host_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="360dp"
         android:layout_marginTop="?attr/actionBarSize"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

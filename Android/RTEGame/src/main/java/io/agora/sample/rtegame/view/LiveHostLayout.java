@@ -1,10 +1,14 @@
 package io.agora.sample.rtegame.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -83,17 +87,48 @@ public class LiveHostLayout extends ConstraintLayout {
     }
 
     public void createDefaultGameView(){
-        if (watchGame){
+        if (!watchGame){
             if (webViewHostView != null && webViewHostView.getParent() == this)
                 removeView(webViewHostView);
-            webViewHostView = new WebView(getContext());
-            webViewHostView.setBackgroundColor(Color.TRANSPARENT);
+            webViewHostView = generateWebView();
             this.addView(webViewHostView, new LayoutParams(0, heightForGameView));
         }else{
             if (gameHostView != null && gameHostView.getParent() == this)
                 removeView(gameHostView);
             gameHostView = new LiveHostCardView(getContext());
             this.addView(gameHostView, new LayoutParams(0, heightForGameView));
+        }
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private WebView generateWebView() {
+        WebView webView = new WebView(getContext());
+        webView.setBackgroundColor(Color.TRANSPARENT);
+
+        WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                if (request.getUrl().getScheme().contains("http"))
+                    view.loadUrl(request.getUrl().toString());
+                return true;
+            }
+        });
+        webView.loadUrl("https://imgsecond.yuanqiyouxi.com/test/DrawAndGuess/index.html");
+        return webView;
+    }
+
+    public void removeGameView(){
+        if (watchGame){
+            if (gameHostView != null && gameHostView.getParent() == this)
+                removeView(gameHostView);
+            gameHostView = null;
+        }else{
+            if (webViewHostView != null && webViewHostView.getParent() == this)
+                removeView(webViewHostView);
+            webViewHostView = null;
         }
     }
 
@@ -109,6 +144,7 @@ public class LiveHostLayout extends ConstraintLayout {
             lp.matchConstraintPercentWidth = 0.25f;
             lp.rightToRight = ConstraintSet.PARENT_ID;
             lp.bottomToBottom = ConstraintSet.PARENT_ID;
+            lp.bottomMargin = this.bottomMarginInGameType;
             subHostView.setLayoutParams(lp);
         }
         if (hostView != null && hostView.getParent() == this) {
@@ -124,6 +160,7 @@ public class LiveHostLayout extends ConstraintLayout {
             if (subHostView == null) {
                 lp.rightToRight = ConstraintSet.PARENT_ID;
                 lp.bottomToBottom = ConstraintSet.PARENT_ID;
+                lp.bottomMargin = this.bottomMarginInGameType;
             } else {
                 lp.rightToLeft = subHostView.getId();
                 lp.bottomToBottom = subHostView.getId();
@@ -139,11 +176,11 @@ public class LiveHostLayout extends ConstraintLayout {
             if (webViewHostView != null)
                 webViewHostView.setVisibility(GONE);
         }else{
-            if (gameHostView != null && gameHostView.getParent() == this)
-                gameHostView.setVisibility(GONE);
-            if (webViewHostView != null) {
+            if (webViewHostView != null && webViewHostView.getParent() == this)
                 webViewHostView.setVisibility(VISIBLE);
                 setUpGameView(webViewHostView);
+            if (gameHostView != null) {
+                gameHostView.setVisibility(GONE);
             }
         }
 
@@ -177,7 +214,6 @@ public class LiveHostLayout extends ConstraintLayout {
             lp.leftToLeft = ConstraintSet.PARENT_ID;
             lp.topToTop = ConstraintSet.PARENT_ID;
             lp.bottomToBottom = ConstraintSet.PARENT_ID;
-            BaseUtil.logD(lp.toString());
             hostView.setLayoutParams(lp);
         }
     }
@@ -228,7 +264,7 @@ public class LiveHostLayout extends ConstraintLayout {
     }
 
     public boolean isCurrentlyInGame(){
-        return webViewHostView != null && gameHostView != null;
+        return webViewHostView != null || gameHostView != null;
     }
 
     @NonNull

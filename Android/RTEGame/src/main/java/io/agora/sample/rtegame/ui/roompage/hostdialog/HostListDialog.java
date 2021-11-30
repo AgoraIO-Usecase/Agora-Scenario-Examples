@@ -18,7 +18,6 @@ import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import io.agora.example.base.BaseBottomSheetDialogFragment;
 import io.agora.example.base.BaseRecyclerViewAdapter;
@@ -37,10 +36,7 @@ import io.agora.sample.rtegame.util.ViewStatus;
 public class HostListDialog extends BaseBottomSheetDialogFragment<DialogHostListBinding> implements OnItemClickListener<RoomInfo> {
     public static final String TAG = "HostListDialog";
 
-    // 用于更新直播间状态
     private RoomViewModel roomViewModel;
-    // 用于发起PK
-    private HostListViewModel hostListViewModel;
     // 用于获取可PK主播
     private RoomListViewModel roomListViewModel;
 
@@ -52,7 +48,6 @@ public class HostListDialog extends BaseBottomSheetDialogFragment<DialogHostList
         WindowCompat.setDecorFitsSystemWindows(requireDialog().getWindow(), false);
 
         roomViewModel = GameUtil.getViewModel(requireParentFragment(), RoomViewModel.class);
-        hostListViewModel = GameUtil.getViewModel(this, HostListViewModel.class);
         roomListViewModel = GameUtil.getViewModel(this, RoomListViewModel.class);
 
         initView();
@@ -87,7 +82,8 @@ public class HostListDialog extends BaseBottomSheetDialogFragment<DialogHostList
 
         roomListViewModel.viewStatus().observe(getViewLifecycleOwner(), this::onViewStatusChanged);
         roomListViewModel.roomList().observe(getViewLifecycleOwner(), this::onFetchedRoomList);
-        hostListViewModel.pkResult().observe(getViewLifecycleOwner(), new EventObserver<>(data -> {
+
+        roomViewModel.pkResult().observe(getViewLifecycleOwner(), new EventObserver<>(data -> {
             if (data == Boolean.TRUE)
                 dismiss();
             else if (data == Boolean.FALSE)
@@ -107,17 +103,17 @@ public class HostListDialog extends BaseBottomSheetDialogFragment<DialogHostList
             }else i++;
         }
         // TODO TEST
-        if (new Random().nextBoolean())
-        for (int i = 0; i < 20; i++) {
-            tempRoomInfoList.add(new RoomInfo("room_test:"+i, ""+i));
-        }else tempRoomInfoList.clear();
+//        if (new Random().nextBoolean())
+//        for (int i = 0; i < 20; i++) {
+//            tempRoomInfoList.add(new RoomInfo("room_test:"+i, ""+i));
+//        }else tempRoomInfoList.clear();
         mAdapter.submitListAndPurge(tempRoomInfoList);
         mBinding.recyclerViewDialogHostList.setVisibility(tempRoomInfoList.isEmpty() ? GONE : VISIBLE);
         mBinding.emptyDialogHostList.setVisibility(tempRoomInfoList.isEmpty() ? VISIBLE : GONE);
     }
 
     /**
-     * View状态改变成功
+     * View状态改变
      */
     private void onViewStatusChanged(ViewStatus viewStatus) {
         if (viewStatus instanceof ViewStatus.Loading) {
@@ -133,7 +129,7 @@ public class HostListDialog extends BaseBottomSheetDialogFragment<DialogHostList
     @Override
     public void onItemClick(@NonNull RoomInfo targetRoom, @NonNull View view, int position, long viewType) {
         if (view instanceof MaterialButton){
-            hostListViewModel.sendPKInvite(roomViewModel, targetRoom, 1);
+            roomViewModel.sendPKInvite(roomViewModel, targetRoom, 1);
         }
     }
 }

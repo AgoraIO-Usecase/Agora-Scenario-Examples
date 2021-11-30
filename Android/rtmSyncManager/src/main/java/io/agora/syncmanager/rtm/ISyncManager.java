@@ -23,9 +23,9 @@ public interface ISyncManager {
 
     void subscribe(DocumentReference reference, Sync.EventListener listener);
 
+    void subscribe(DocumentReference reference, String key, Sync.EventListener listener);
+
     void subscribe(CollectionReference reference, Sync.EventListener listener);
 
     void unsubscribe(Sync.EventListener listener);
-
-    String getSceneClass();
 }

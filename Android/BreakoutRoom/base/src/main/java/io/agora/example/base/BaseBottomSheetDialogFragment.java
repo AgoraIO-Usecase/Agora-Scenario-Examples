@@ -46,9 +46,4 @@ public class BaseBottomSheetDialogFragment<B extends ViewBinding> extends Bottom
         }
         return null;
     }
-
-    public BaseBottomSheetDialogFragment<B> setBundleArgs(Bundle bundleArgs){
-        setArguments(bundleArgs);
-        return this;
-    }
 }

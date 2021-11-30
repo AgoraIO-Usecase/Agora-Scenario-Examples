@@ -43,7 +43,6 @@ public class MoreDialog extends BaseBottomSheetDialogFragment<DialogMoreBinding>
     private void initListener() {
         ViewCompat.setOnApplyWindowInsetsListener(requireDialog().getWindow().getDecorView(), (v, insets) -> {
             Insets inset = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            BaseUtil.logD(inset.toString());
             mBinding.getRoot().setPadding(inset.left, 0, inset.right, inset.bottom);
             return WindowInsetsCompat.CONSUMED;
         });

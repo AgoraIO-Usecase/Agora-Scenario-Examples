@@ -58,6 +58,10 @@ public class DocumentReference {
         manager.subscribe(this, listener);
     }
 
+    public void subscribe(String key, Sync.EventListener listener) {
+        manager.subscribe(this, key, listener);
+    }
+
     public void unsubscribe(Sync.EventListener listener) {
         manager.unsubscribe(listener);
     }
