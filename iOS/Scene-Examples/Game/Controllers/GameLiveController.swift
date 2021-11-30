@@ -33,7 +33,12 @@ class GameLiveController: PKLiveController {
                                               ownerId: currentUserId)
     
     private var isLoadScreenShare: Bool = false
-    private lazy var screenConnection = AgoraRtcConnection()
+    private lazy var screenConnection: AgoraRtcConnection = {
+        let connection = AgoraRtcConnection()
+        connection.localUid = UserInfo.userId
+        connection.channelId = channleName
+        return connection
+    }()
     private lazy var timer = GCDTimer()
     private var pkApplyInfoModel: PKApplyInfoModel?
     public var gameApplyInfoModel: GameApplyInfoModel?
@@ -156,8 +161,8 @@ class GameLiveController: PKLiveController {
         super.getBroadcastPKStatus()
         let fetchGameInfoDelegate = FetchPKInfoDataDelegate()
         fetchGameInfoDelegate.onSuccess = { [weak self] result in
-            let gameInfoModel = JSONObject.toModel(GameInfoModel.self, value: result.toJson())
-            self?.updatePKUIStatus(isStart: gameInfoModel?.status == .playing)
+            self?.gameInfoModel = JSONObject.toModel(GameInfoModel.self, value: result.toJson())
+            self?.updatePKUIStatus(isStart: self?.gameInfoModel?.status == .playing)
         }
         SyncUtil.fetch(id: channleName, key: SYNC_MANAGER_GAME_INFO, delegate: fetchGameInfoDelegate)
     }
@@ -206,7 +211,7 @@ class GameLiveController: PKLiveController {
             } else { // 观众拉取屏幕共享流
                 let canvas = AgoraRtcVideoCanvas()
                 canvas.uid = UInt(gameInfoModel?.gameUid ?? "0") ?? 0
-                canvas.view = webView
+                canvas.view = webView.webView
                 agoraKit?.setupRemoteVideoEx(canvas, connection: screenConnection)
             }
             
@@ -215,6 +220,7 @@ class GameLiveController: PKLiveController {
                 self?.countTimeLabel.setTitle("PK剩余 \("".timeFormat(secounds: duration))", for: .normal)
                 if duration <= 0 {
                     self?.updatePKUIStatus(isStart: false)
+                    self?.updateGameInfoStatus(isStart: false)
                 }
             }
         } else {
@@ -231,7 +237,7 @@ class GameLiveController: PKLiveController {
         }
     }
     
-    private func joinScreenShare(channelName: String) {
+    private func joinScreenShare() {
         // 屏幕共享辅频道
         let optionEx = AgoraRtcChannelMediaOptions()
         optionEx.clientRoleType = AgoraRtcIntOptional.of(Int32(AgoraClientRole.broadcaster.rawValue))
@@ -239,12 +245,9 @@ class GameLiveController: PKLiveController {
         optionEx.autoSubscribeAudio = AgoraRtcBoolOptional.of(false)
         optionEx.autoSubscribeVideo = AgoraRtcBoolOptional.of(false)
         // 关闭辅频道麦克风(通过主频道开启即可)
-        optionEx.publishAudioTrack = AgoraRtcBoolOptional.of(false)
-        optionEx.publishCustomVideoTrack = AgoraRtcBoolOptional.of(true)
-        optionEx.publishCustomAudioTrack = AgoraRtcBoolOptional.of(true)
-        screenConnection = AgoraRtcConnection()
-        screenConnection.localUid = screenUserID
-        screenConnection.channelId = channelName
+        optionEx.publishAudioTrack = .of(false)
+        optionEx.publishCustomVideoTrack = .of(true)
+        optionEx.publishCustomAudioTrack = .of(true)
         
         let resultEx = agoraKit?.joinChannelEx(byToken: KeyCenter.Token,
                                                connection: screenConnection,
@@ -264,7 +267,7 @@ class GameLiveController: PKLiveController {
     private func onClickScreenShareButton() {
         guard let agoraKit = agoraKit, isLoadScreenShare == false else { return }
         isLoadScreenShare = true
-        joinScreenShare(channelName: channleName)
+        joinScreenShare()
         AgoraScreenShare.shareInstance().startService(with: agoraKit, connection: screenConnection)
         if #available(iOS 12.0, *) {
             let systemBroadcastPicker = RPSystemBroadcastPickerView(frame: .zero)

@@ -16,7 +16,7 @@ enum GameRoleType: Int {
 }
 
 class GameWebView: UIView {
-    private lazy var webView: WKWebView = {
+    private(set) lazy var webView: WKWebView = {
         let config = WKWebViewConfiguration()
         config.allowsAirPlayForMediaPlayback = true
         config.allowsInlineMediaPlayback = true
