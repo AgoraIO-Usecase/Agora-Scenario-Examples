@@ -102,31 +102,31 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
 
             return WindowInsetsCompat.CONSUMED;
         });
-//        mBinding.toolbarFgList.setOnLongClickListener(v -> {
-//            try {
-//                Field mISyncManager = Sync.class.getDeclaredField("mISyncManager");
-//                mISyncManager.setAccessible(true);
-//                DataSyncImpl impl = (DataSyncImpl) mISyncManager.get(Sync.Instance());
-//
-//                Field client = DataSyncImpl.class.getDeclaredField("client");
-//                client.setAccessible(true);
-//                RtmClient rtmClient = (RtmClient) client.get(impl);
-//                List<String> rooms = new ArrayList<>();
-//                for (RoomInfo roomInfo : mAdapter.dataList) {
-//                    rooms.add(roomInfo.getId());
-////                        deleteChannelAttributesByKeys (String channelId, List< String > attributeKeys, ChannelAttributeOptions option
-//                    BaseUtil.logD("delete:"+roomInfo.getRoomName());
-//                }
-//                if (rtmClient != null) {
-//                    rtmClient.deleteChannelAttributesByKeys(GameConstants.globalChannel,rooms, new ChannelAttributeOptions(true), null);
-//                }
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//
-//            return true;
-//        });
+        mBinding.toolbarFgList.setOnLongClickListener(v -> {
+            try {
+                Field mISyncManager = Sync.class.getDeclaredField("mISyncManager");
+                mISyncManager.setAccessible(true);
+                DataSyncImpl impl = (DataSyncImpl) mISyncManager.get(Sync.Instance());
+
+                Field client = DataSyncImpl.class.getDeclaredField("client");
+                client.setAccessible(true);
+                RtmClient rtmClient = (RtmClient) client.get(impl);
+                List<String> rooms = new ArrayList<>();
+                for (RoomInfo roomInfo : mAdapter.dataList) {
+                    rooms.add(roomInfo.getId());
+                    BaseUtil.logD("delete:"+roomInfo.getRoomName());
+                }
+                if (rtmClient != null) {
+//                  deleteChannelAttributesByKeys (String channelId, List< String > attributeKeys, ChannelAttributeOptions option
+                    rtmClient.deleteChannelAttributesByKeys(GameConstants.globalChannel,rooms, new ChannelAttributeOptions(true), null);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return true;
+        });
         // "创建房间"按钮
         mBinding.btnCreateFgList.setOnClickListener((v) -> checkPermissionBeforeToNextPage(null));
         // 下拉刷新监听

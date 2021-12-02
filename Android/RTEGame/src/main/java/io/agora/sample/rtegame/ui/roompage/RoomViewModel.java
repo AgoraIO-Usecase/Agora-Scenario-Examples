@@ -242,6 +242,22 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     private void onPKApplyInfoChanged(@NonNull PKApplyInfo pkApplyInfo) {
         _applyInfo.postValue(pkApplyInfo);
         switch (pkApplyInfo.getStatus()) {
+            case PKApplyInfo.APPLYING:{
+                if (targetSceneRef == null && Objects.equals(pkApplyInfo.getTargetRoomId(), currentRoom.getId()))
+                    Sync.Instance().joinScene(GameUtil.getSceneFromRoomInfo(new RoomInfo(pkApplyInfo.getRoomId(), "", pkApplyInfo.getUserId())), new Sync.JoinSceneCallback() {
+                        @Override
+                        public void onSuccess(SceneReference sceneReference) {
+                            if (targetSceneRef == null)
+                                targetSceneRef = sceneReference;
+                        }
+
+                        @Override
+                        public void onFail(SyncManagerException exception) {
+
+                        }
+                    });
+                break;
+            }
             case PKApplyInfo.AGREED: {
                 startPK(pkApplyInfo);
                 break;
@@ -335,7 +351,6 @@ public class RoomViewModel extends ViewModel implements RoomApi {
      * 主播：@{@link GameInfo#IDLE} 加载WebView， {@link GameInfo#END} 卸载 WebView
      */
     private void onGameChanged(@NonNull GameInfo gameInfo) {
-        if (GameUtil.currentGame == null) return;
         _gameInfo.postValue(gameInfo);
         if (gameInfo.getStatus() == GameInfo.END){
             exitGame();
