@@ -16,6 +16,7 @@ class GameApplyInfoDelegate: ISyncManagerEventDelegate {
         LogUtils.log(message: "onCreated game == \(String(describing: object.toJson()))", level: .info)
         guard let model = JSONObject.toModel(GameApplyInfoModel.self, value: object.toJson()) else { return }
         vc.gameApplyInfoModel = model
+        onUpdated(object: object)
     }
     
     func onUpdated(object: IObject) {
