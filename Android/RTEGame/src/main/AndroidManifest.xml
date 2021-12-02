@@ -3,6 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="io.agora.sample.rtegame">
 
+<!--    观众仍然可以使用APP-->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.CAMERA" />

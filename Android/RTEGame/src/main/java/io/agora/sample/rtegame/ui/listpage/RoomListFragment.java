@@ -16,6 +16,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,8 @@ import io.agora.example.base.BaseRecyclerViewAdapter;
 import io.agora.example.base.BaseUtil;
 import io.agora.example.base.DividerDecoration;
 import io.agora.example.base.OnItemClickListener;
+import io.agora.rtm.ChannelAttributeOptions;
+import io.agora.rtm.RtmClient;
 import io.agora.sample.rtegame.GlobalViewModel;
 import io.agora.sample.rtegame.R;
 import io.agora.sample.rtegame.base.BaseFragment;
@@ -30,8 +33,14 @@ import io.agora.sample.rtegame.bean.RoomInfo;
 import io.agora.sample.rtegame.databinding.FragmentRoomListBinding;
 import io.agora.sample.rtegame.databinding.ItemRoomListBinding;
 import io.agora.sample.rtegame.util.Event;
+import io.agora.sample.rtegame.util.GameConstants;
 import io.agora.sample.rtegame.util.GameUtil;
 import io.agora.sample.rtegame.util.ViewStatus;
+import io.agora.syncmanager.rtm.Scene;
+import io.agora.syncmanager.rtm.SceneReference;
+import io.agora.syncmanager.rtm.Sync;
+import io.agora.syncmanager.rtm.SyncManagerException;
+import io.agora.syncmanager.rtm.impl.DataSyncImpl;
 
 public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> implements OnItemClickListener<RoomInfo> {
 
@@ -67,6 +76,12 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
         initListener();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mViewModel.fetchRoomList();
+    }
+
     private void initView() {
         mAdapter = new BaseRecyclerViewAdapter<>(null, this, RoomListHolder.class);
         mBinding.recyclerViewFgList.setAdapter(mAdapter);
@@ -87,6 +102,31 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
 
             return WindowInsetsCompat.CONSUMED;
         });
+//        mBinding.toolbarFgList.setOnLongClickListener(v -> {
+//            try {
+//                Field mISyncManager = Sync.class.getDeclaredField("mISyncManager");
+//                mISyncManager.setAccessible(true);
+//                DataSyncImpl impl = (DataSyncImpl) mISyncManager.get(Sync.Instance());
+//
+//                Field client = DataSyncImpl.class.getDeclaredField("client");
+//                client.setAccessible(true);
+//                RtmClient rtmClient = (RtmClient) client.get(impl);
+//                List<String> rooms = new ArrayList<>();
+//                for (RoomInfo roomInfo : mAdapter.dataList) {
+//                    rooms.add(roomInfo.getId());
+////                        deleteChannelAttributesByKeys (String channelId, List< String > attributeKeys, ChannelAttributeOptions option
+//                    BaseUtil.logD("delete:"+roomInfo.getRoomName());
+//                }
+//                if (rtmClient != null) {
+//                    rtmClient.deleteChannelAttributesByKeys(GameConstants.globalChannel,rooms, new ChannelAttributeOptions(true), null);
+//                }
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//            return true;
+//        });
         // "创建房间"按钮
         mBinding.btnCreateFgList.setOnClickListener((v) -> checkPermissionBeforeToNextPage(null));
         // 下拉刷新监听
@@ -121,7 +161,10 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
         mBinding.emptyViewFgList.setVisibility(empty ? View.VISIBLE : View.GONE);
     }
 
-    private void checkPermissionBeforeToNextPage(@Nullable RoomInfo data){
+    /**
+     * 摄像头、录音权限检查
+     */
+    private void checkPermissionBeforeToNextPage(@Nullable RoomInfo data) {
         tempRoom = data;
 
         // 小于 M 无需控制

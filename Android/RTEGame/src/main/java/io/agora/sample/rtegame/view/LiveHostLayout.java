@@ -116,7 +116,6 @@ public class LiveHostLayout extends ConstraintLayout {
                 return true;
             }
         });
-        webView.loadUrl("https://imgsecond.yuanqiyouxi.com/test/DrawAndGuess/index.html");
         return webView;
     }
 
@@ -133,14 +132,13 @@ public class LiveHostLayout extends ConstraintLayout {
     }
 
     private void onDoubleInGamePerformed() {
+        String dimension = getMeasuredWidth() + ":" + getMeasuredHeight();
         if (subHostView != null && subHostView.getParent() == this) {
             subHostView.setVisibility(VISIBLE);
             LayoutParams lp = (LayoutParams) subHostView.getLayoutParams();
             clearRequiredViewParams(lp);
-            int width = getContext().getResources().getDisplayMetrics().widthPixels;
-            int height = getContext().getResources().getDisplayMetrics().heightPixels;
 
-            lp.dimensionRatio = width + ":" + height;
+            lp.dimensionRatio = dimension;
             lp.matchConstraintPercentWidth = 0.25f;
             lp.rightToRight = ConstraintSet.PARENT_ID;
             lp.bottomToBottom = ConstraintSet.PARENT_ID;
@@ -151,10 +149,8 @@ public class LiveHostLayout extends ConstraintLayout {
             LayoutParams lp = (LayoutParams) hostView.getLayoutParams();
             clearRequiredViewParams(lp);
 
-            int width = getContext().getResources().getDisplayMetrics().widthPixels;
-            int height = getContext().getResources().getDisplayMetrics().heightPixels;
 
-            lp.dimensionRatio = width + ":" + height;
+            lp.dimensionRatio = dimension;
             lp.matchConstraintPercentWidth = 0.25f;
 
             if (subHostView == null) {
@@ -225,6 +221,7 @@ public class LiveHostLayout extends ConstraintLayout {
 
         if (hostView != null && hostView.getParent() == this) {
             LayoutParams lp = (LayoutParams) hostView.getLayoutParams();
+            clearRequiredViewParams(lp);
             lp.leftToLeft = ConstraintSet.PARENT_ID;
             lp.rightToRight = ConstraintSet.PARENT_ID;
             lp.topToTop = ConstraintSet.PARENT_ID;

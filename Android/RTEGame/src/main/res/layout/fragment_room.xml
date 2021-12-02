@@ -59,16 +59,16 @@
             android:id="@+id/recycler_view_fg_room"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginBottom="50dp"
             android:layout_marginStart="@dimen/space_normal"
             android:fadingEdge="vertical"
             android:orientation="vertical"
             android:requiresFadingEdge="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toTopOf="@id/input_layout_fg_room"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHeight_percent="0.3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintWidth_percent="0.4"
-            app:layout_goneMarginBottom="50dp"
             app:stackFromEnd="true"
             tools:listitem="@layout/item_room_message" />
 
@@ -94,8 +94,9 @@
             android:id="@+id/input_fg_room"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_normal"
+            android:layout_margin="@dimen/space_normal"
             android:stateListAnimator="@null"
+            app:chipMinTouchTargetSize="0dp"
             android:text="@string/input_hint"
             android:textColor="@android:color/white"
             app:chipEndPadding="@dimen/space_big"
@@ -123,13 +124,30 @@
             android:layout_height="32dp"
             android:layout_margin="@dimen/space_normal"
             android:background="@android:color/transparent"
-            android:contentDescription="@string/exit"
+            android:contentDescription="@string/game"
             android:scaleType="fitXY"
             android:src="@drawable/ic_game"
             android:tintMode="src_atop"
+            android:tooltipText="@string/game"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btn_more_fg_room"
-            app:tint="@color/selector_color_scrim" />
+            app:tint="@color/selector_color_scrim"
+            tools:targetApi="o" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/btn_exit_game_fg_room"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_margin="@dimen/space_normal"
+            android:layout_marginStart="@dimen/space_normal"
+            android:stateListAnimator="@null"
+            android:text="@string/exit_game"
+            android:textColor="@android:color/white"
+            app:chipMinTouchTargetSize="0dp"
+            app:chipSurfaceColor="?attr/scrimBackground"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_more_fg_room" />
 
         <ImageButton
             android:id="@+id/btn_more_fg_room"
@@ -137,13 +155,31 @@
             android:layout_height="32dp"
             android:layout_margin="@dimen/space_normal"
             android:background="@android:color/transparent"
-            android:contentDescription="@string/exit"
+            android:contentDescription="@string/tools"
             android:scaleType="fitXY"
             android:src="@drawable/ic_more"
             android:tintMode="src_atop"
+            android:tooltipText="@string/tools"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btn_exit_fg_room"
-            app:tint="@color/selector_color_scrim" />
+            app:tint="@color/selector_color_scrim"
+            tools:targetApi="o" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/btn_exit_pk_fg_room"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            tools:visibility="visible"
+            android:stateListAnimator="@null"
+            android:layout_margin="@dimen/space_normal"
+            android:layout_marginStart="@dimen/space_normal"
+            android:text="@string/exit_pk"
+            android:textColor="@android:color/white"
+            app:chipMinTouchTargetSize="0dp"
+            app:chipSurfaceColor="?attr/scrimBackground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btn_exit_fg_room" />
 
         <ImageButton
             android:id="@+id/btn_exit_fg_room"
@@ -155,9 +191,11 @@
             android:scaleType="fitXY"
             android:src="@drawable/ic_close"
             android:tintMode="src_atop"
+            android:tooltipText="@string/exit"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:tint="@color/selector_color_scrim" />
+            app:tint="@color/selector_color_scrim"
+            tools:targetApi="o" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
@@ -165,5 +203,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="false"
+        android:contentDescription="@string/gift"
         android:focusable="false" />
 </FrameLayout>

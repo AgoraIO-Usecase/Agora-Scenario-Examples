@@ -2,6 +2,7 @@ package io.agora.sample.rtegame.ui.roompage;
 
 import android.content.Context;
 import android.view.TextureView;
+import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +30,7 @@ import io.agora.sample.rtegame.bean.LocalUser;
 import io.agora.sample.rtegame.bean.PKApplyInfo;
 import io.agora.sample.rtegame.bean.PKInfo;
 import io.agora.sample.rtegame.bean.RoomInfo;
+import io.agora.sample.rtegame.repo.GameRepo;
 import io.agora.sample.rtegame.repo.RoomApi;
 import io.agora.sample.rtegame.util.Event;
 import io.agora.sample.rtegame.util.GamSyncEventListener;
@@ -46,6 +48,7 @@ import io.agora.syncmanager.rtm.SyncManagerException;
  */
 public class RoomViewModel extends ViewModel implements RoomApi {
 
+    //<editor-fold desc="Persistent variable">
     public final RoomInfo currentRoom;
     public final boolean amHost;
     @Nullable
@@ -55,10 +58,13 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
     public boolean isLocalVideoMuted = false;
     public boolean isLocalMicMuted = false;
+    //</editor-fold>
 
 
+    //<editor-fold desc="Live data">
     // RTC engine 初始化结果
     private final MutableLiveData<RtcEngineEx> _mEngine = new MutableLiveData<>();
+
     @NonNull
     public LiveData<RtcEngineEx> mEngine() {
         return _mEngine;
@@ -66,6 +72,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
     // UI状态
     private final MutableLiveData<ViewStatus> _viewStatus = new MutableLiveData<>();
+
     @NonNull
     public LiveData<ViewStatus> viewStatus() {
         return _viewStatus;
@@ -73,6 +80,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
     ///////////////////// 本房间主播 在 RTC 中的 id /////////////////////////
     private final MutableLiveData<Integer> _LocalHostId = new MutableLiveData<>();
+
     @NonNull
     public LiveData<Integer> localHostId() {
         return _LocalHostId;
@@ -80,6 +88,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
     // 直播间礼物信息
     private final MutableLiveData<GiftInfo> _gift = new MutableLiveData<>();
+
     @NonNull
     public LiveData<GiftInfo> gift() {
         return _gift;
@@ -87,6 +96,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
     // 连麦房间信息
     private final MutableLiveData<RoomInfo> _subRoomInfo = new MutableLiveData<>();
+
     @NonNull
     public LiveData<RoomInfo> subRoomInfo() {
         return _subRoomInfo;
@@ -94,6 +104,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
     // 连麦房间信息
     private final MutableLiveData<GameInfo> _gameInfo = new MutableLiveData<>();
+
     @NonNull
     public LiveData<GameInfo> gameInfo() {
         return _gameInfo;
@@ -106,11 +117,14 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     }
 
     private final MutableLiveData<Event<Boolean>> _pkResult = new MutableLiveData<>();
+
     @NonNull
     public LiveData<Event<Boolean>> pkResult() {
         return _pkResult;
     }
+    //</editor-fold>
 
+    //<editor-fold desc="Init and end">
     public RoomViewModel(@NonNull Context context, @NonNull RoomInfo roomInfo, @Nullable SceneReference sceneReference) {
         this.currentRoom = roomInfo;
         this.amHost = Objects.equals(currentRoom.getUserId(), GameApplication.getInstance().user.getUserId());
@@ -173,22 +187,26 @@ public class RoomViewModel extends ViewModel implements RoomApi {
                     });
                 else currentSceneRef.unsubscribe(null);
             }
-            if (targetSceneRef != null){
+            if (targetSceneRef != null) {
                 currentSceneRef.unsubscribe(null);
+                currentSceneRef = null;
             }
         }).start();
     }
+    //</editor-fold>
 
     //<editor-fold desc="SyncManager related">
 
     public void subscribeAttr(@NonNull SceneReference sceneRef, @NonNull RoomInfo targetRoom) {
-        if (Objects.equals(targetRoom.getId(),currentRoom.getId())){
-        sceneRef.subscribe(GameConstants.GIFT_INFO, new GamSyncEventListener(GameConstants.GIFT_INFO, this::tryHandleGiftInfo));
-        sceneRef.subscribe(GameConstants.PK_INFO, new GamSyncEventListener(GameConstants.PK_INFO, this::tryHandlePKInfo));
-        sceneRef.subscribe(GameConstants.GAME_INFO, new GamSyncEventListener(GameConstants.GAME_INFO, this::tryHandleGameInfo));
+        if (Objects.equals(targetRoom.getId(), currentRoom.getId())) {
+            BaseUtil.logD("subscribe current room attr");
+            sceneRef.subscribe(GameConstants.GIFT_INFO, new GamSyncEventListener(GameConstants.GIFT_INFO, this::tryHandleGiftInfo));
+            sceneRef.subscribe(GameConstants.PK_INFO, new GamSyncEventListener(GameConstants.PK_INFO, this::tryHandlePKInfo));
+            sceneRef.subscribe(GameConstants.GAME_INFO, new GamSyncEventListener(GameConstants.GAME_INFO, this::tryHandleGameInfo));
             if (amHost)
                 sceneRef.subscribe(GameConstants.PK_APPLY_INFO, new GamSyncEventListener(GameConstants.PK_APPLY_INFO, this::tryHandleApplyPKInfo));
-        }else{
+        } else {
+            BaseUtil.logD("subscribe other room attr");
             sceneRef.subscribe(GameConstants.PK_APPLY_INFO, new GamSyncEventListener(GameConstants.PK_APPLY_INFO, this::tryHandleApplyPKInfo));
         }
     }
@@ -224,17 +242,13 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     private void onPKApplyInfoChanged(@NonNull PKApplyInfo pkApplyInfo) {
         _applyInfo.postValue(pkApplyInfo);
         switch (pkApplyInfo.getStatus()) {
-            case PKApplyInfo.APPLYING:
-            case PKApplyInfo.REFUSED: {
-                if (targetSceneRef != null) targetSceneRef.unsubscribe(null);
-                break;
-            }
             case PKApplyInfo.AGREED: {
                 startPK(pkApplyInfo);
                 break;
             }
+            case PKApplyInfo.REFUSED:
             case PKApplyInfo.END: {
-                endPK(pkApplyInfo.getTargetRoomId());
+                if (targetSceneRef != null) targetSceneRef.unsubscribe(null);
                 break;
             }
         }
@@ -321,13 +335,18 @@ public class RoomViewModel extends ViewModel implements RoomApi {
      * 主播：@{@link GameInfo#IDLE} 加载WebView， {@link GameInfo#END} 卸载 WebView
      */
     private void onGameChanged(@NonNull GameInfo gameInfo) {
+        if (GameUtil.currentGame == null) return;
         _gameInfo.postValue(gameInfo);
+        if (gameInfo.getStatus() == GameInfo.END){
+            exitGame();
+        }
     }
 
     /**
      * {@link PKInfo#AGREED} 加入对方频道，拉流 | {@link PKInfo#END} 退出频道
      */
     private void onPKInfoChanged(@NonNull PKInfo pkInfo) {
+        BaseUtil.logD("onPKInfoChanged:"+pkInfo.getStatus());
         if (pkInfo.getStatus() == PKInfo.AGREED) {
             // 只用来加入频道，只使用 roomId 字段
             // this variable will only for join channel so room name doesn't matter.
@@ -349,6 +368,28 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         pkApplyInfo.setStatus(PKApplyInfo.REFUSED);
         if (currentSceneRef != null)
             currentSceneRef.update(GameConstants.PK_APPLY_INFO, pkApplyInfo, null);
+    }
+
+    public void startGame(@NonNull GameInfo gameInfo, @NonNull WebView webView) {
+        PKApplyInfo pkApplyInfo = _applyInfo.getValue();
+        if (pkApplyInfo == null) return;
+        GameUtil.currentGame = GameRepo.getGameDetail(gameInfo.getGameId());
+        boolean isOrganizer = Objects.equals(_applyInfo.getValue().getRoomId(), currentRoom.getId());
+        GameRepo.gameStart(webView, GameApplication.getInstance().user, isOrganizer, Integer.parseInt(pkApplyInfo.getRoomId()));
+    }
+
+    public void requestExitGame(){
+        GameInfo gameInfo = new GameInfo(GameInfo.END, 0, 0);
+        if (currentSceneRef != null) currentSceneRef.update(GameConstants.GAME_INFO, gameInfo, null);
+        if (targetSceneRef != null) targetSceneRef.update(GameConstants.GAME_INFO, gameInfo, null);
+    }
+
+    public void exitGame() {
+        if (GameUtil.currentGame == null) return;
+        PKApplyInfo applyInfo = _applyInfo.getValue();
+        if (applyInfo != null) {
+            GameRepo.endThisGame(Integer.parseInt(applyInfo.getRoomId()));
+        }
     }
 
     /**
@@ -374,19 +415,10 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     /**
      * 仅主播调用
      */
-    public void endPK(@NonNull String channelId) {
-        if (currentSceneRef != null)
-            currentSceneRef.update(GameConstants.PK_INFO, null, new Sync.DataItemCallback() {
-                @Override
-                public void onSuccess(IObject result) {
-
-                }
-
-                @Override
-                public void onFail(SyncManagerException exception) {
-
-                }
-            });
+    public void endPK() {
+        PKInfo pkInfo = new PKInfo(PKInfo.END, "", "");
+        if (currentSceneRef != null) currentSceneRef.update(GameConstants.PK_INFO, pkInfo, null);
+        if (targetSceneRef != null) targetSceneRef.update(GameConstants.PK_INFO, pkInfo, null);
     }
 
 
@@ -426,14 +458,12 @@ public class RoomViewModel extends ViewModel implements RoomApi {
             ChannelMediaOptions options = new ChannelMediaOptions();
             options.autoSubscribeAudio = true;
             options.autoSubscribeVideo = true;
-            if (localUser.getUserId().equals(currentRoom.getUserId())) {
+            if (amHost) {
                 engine.enableAudio();
                 engine.enableVideo();
                 engine.startPreview();
-                options.channelProfile = Constants.CHANNEL_PROFILE_LIVE_BROADCASTING;
                 options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
             } else {
-                options.channelProfile = Constants.CHANNEL_PROFILE_LIVE_BROADCASTING;
                 options.clientRoleType = Constants.CLIENT_ROLE_AUDIENCE;
             }
 
@@ -468,20 +498,20 @@ public class RoomViewModel extends ViewModel implements RoomApi {
                 @Override
                 public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
                     super.onJoinChannelSuccess(channel, uid, elapsed);
-                    BaseUtil.logD("onJoinChannelSuccess:"+uid);
+                    BaseUtil.logD("onJoinChannelSuccess:" + uid);
                 }
 
                 @Override
                 public void onUserJoined(int uid, int elapsed) {
                     _subRoomInfo.postValue(subRoomInfo);
-                    BaseUtil.logD("uid:"+uid);
+                    BaseUtil.logD("uid:" + uid);
                 }
             });
         }
     }
 
     public void leaveSubRoom(@NonNull String channelId) {
-        _subRoomInfo.setValue(null);
+        _subRoomInfo.postValue(null);
         RtcEngineEx engine = _mEngine.getValue();
         if (engine != null) {
             RtcConnection connection = new RtcConnection();
@@ -503,6 +533,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
             RtcEngineConfig.LogConfig logConfig = new RtcEngineConfig.LogConfig();
             logConfig.filePath = mContext.getExternalCacheDir().getAbsolutePath();
             config.mLogConfig = logConfig;
+            config.mChannelProfile = Constants.CHANNEL_PROFILE_LIVE_BROADCASTING;
 
             try {
                 _mEngine.postValue((RtcEngineEx) RtcEngineEx.create(config));

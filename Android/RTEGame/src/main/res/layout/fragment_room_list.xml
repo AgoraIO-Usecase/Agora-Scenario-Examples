@@ -13,6 +13,7 @@
         app:liftOnScroll="true">
 
         <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_fg_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:title="">

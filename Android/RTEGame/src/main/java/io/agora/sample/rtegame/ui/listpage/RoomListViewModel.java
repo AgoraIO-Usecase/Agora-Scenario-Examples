@@ -1,5 +1,6 @@
 package io.agora.sample.rtegame.ui.listpage;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -24,6 +25,7 @@ public class RoomListViewModel extends ViewModel implements RoomListApi {
     /* UI 状态管理*/
     private final MutableLiveData<ViewStatus> _viewStatus = new MutableLiveData<>();
 
+    @NonNull
     public LiveData<ViewStatus> viewStatus() {
         return _viewStatus;
     }
@@ -31,6 +33,7 @@ public class RoomListViewModel extends ViewModel implements RoomListApi {
     /* 房间列表数据集合*/
     private final MutableLiveData<List<RoomInfo>> _roomList = new MutableLiveData<>();
 
+    @NonNull
     public LiveData<List<RoomInfo>> roomList() {
         return _roomList;
     }
@@ -42,22 +45,7 @@ public class RoomListViewModel extends ViewModel implements RoomListApi {
     @Override
     public void fetchRoomList() {
         _viewStatus.postValue(new ViewStatus.Loading(false));
-//        new Thread(() -> {
-//            try {
-//                Thread.sleep(1000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//            List<RoomInfo> res = new ArrayList<>();
-//            RoomInfo roomInfo;
-//            if (new Random().nextBoolean())
-//                for (int i = 0; i < 20; i++) {
-//                    roomInfo = new RoomInfo("room_" + i, "" + i, "" + i);
-//                    res.add(roomInfo);
-//                }
-//            _roomList.postValue(res);
-//            _viewStatus.postValue(new ViewStatus.Done());
-//        }).start();
+
         Sync.Instance().getScenes(new Sync.DataListCallback() {
             @Override
             public void onSuccess(List<IObject> result) {

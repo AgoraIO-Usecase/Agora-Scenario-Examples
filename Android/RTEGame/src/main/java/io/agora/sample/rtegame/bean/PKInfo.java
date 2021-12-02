@@ -1,5 +1,7 @@
 package io.agora.sample.rtegame.bean;
 
+import androidx.annotation.NonNull;
+
 public class PKInfo {
     public static final int APPLYING = 1;
     public static final int AGREED = 2;
@@ -12,7 +14,7 @@ public class PKInfo {
 //    对方主播的ID, 拉流使用
     private final String userId;
 
-    public PKInfo(int status, String roomId, String userId) {
+    public PKInfo(int status, @NonNull String roomId, @NonNull String userId) {
         this.status = status;
         this.roomId = roomId;
         this.userId = userId;
@@ -22,10 +24,12 @@ public class PKInfo {
         return status;
     }
 
+    @NonNull
     public String getRoomId() {
         return roomId;
     }
 
+    @NonNull
     public String getUserId() {
         return userId;
     }
@@ -34,6 +38,7 @@ public class PKInfo {
         this.status = status;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "PKInfo{" +

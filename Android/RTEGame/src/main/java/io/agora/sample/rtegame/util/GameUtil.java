@@ -2,13 +2,16 @@ package io.agora.sample.rtegame.util;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.WebView;
 
 import androidx.activity.ComponentActivity;
 import androidx.annotation.DrawableRes;
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
@@ -22,31 +25,45 @@ import java.util.Random;
 
 import io.agora.example.base.BaseUtil;
 import io.agora.sample.rtegame.R;
+import io.agora.sample.rtegame.bean.AgoraGame;
+import io.agora.sample.rtegame.bean.LocalUser;
 import io.agora.sample.rtegame.bean.RoomInfo;
-import io.agora.sample.rtegame.ui.roompage.RoomViewModelFactory;
+import io.agora.sample.rtegame.repo.YuanQiHttp;
 import io.agora.syncmanager.rtm.Scene;
 
 public class GameUtil {
-    private static String getGameURLByID(int gameId){
-        if (gameId == 1){
-            return "https://imgsecond.yuanqiyouxi.com/test/DrawAndGuess/index.html";
-        } else return "";
+    @Nullable
+    public static AgoraGame currentGame = null;
+    private static final String[] avatarList = {
+            "https://terrigen-cdn-dev.marvel.com/content/prod/1x/012scw_ons_crd_02.jpg",
+            "https://terrigen-cdn-dev.marvel.com/content/prod/1x/003cap_ons_crd_03.jpg",
+            "https://terrigen-cdn-dev.marvel.com/content/prod/1x/011blw_ons_crd_04.jpg",
+            "https://terrigen-cdn-dev.marvel.com/content/prod/1x/009drs_ons_crd_02.jpg",
+            "https://terrigen-cdn-dev.marvel.com/content/prod/1x/017lok_ons_crd_03.jpg",
+            "https://terrigen-cdn-dev.marvel.com/content/prod/1x/004tho_ons_crd_03.jpg"};
+
+    @NonNull
+    public static String randomAvatar(){
+        int index = new Random().nextInt(10000);
+        return avatarList[index % avatarList.length];
     }
+
+
     private static final String[] nameList = {
-            "一马当先",
-            "二姓之好",
-            "三生有幸",
-            "四分五裂",
-            "五光十色",
-            "六神无主",
-            "七上八下",
-            "八面玲珑",
-            "九霄云外",
-            "十全十美",
+           "Tokyo",
+           "Delhi",
+           "Shanghai",
+           "Sao Paulo",
+           "Mexico City",
+           "Cairo",
+           "Dhaka",
+           "Mumbai",
+           "Beijing",
+           "Osaka",
     };
 
     @DrawableRes
-    public static int getBgdFromRoomBgdId(String bgdId) {
+    public static int getBgdFromRoomBgdId(@Nullable String bgdId) {
         int i = 1;
         try {
             if (bgdId != null)
@@ -85,11 +102,6 @@ public class GameUtil {
         }
     }
 
-    @DrawableRes
-    public static int getAvatarFromUserId(String userId) {
-        return R.mipmap.ic_launcher;
-    }
-
     @NonNull
     public static Scene getSceneFromRoomInfo(@NonNull RoomInfo roomInfo) {
         Scene scene = new Scene();
@@ -104,12 +116,23 @@ public class GameUtil {
         return scene;
     }
 
+    @NonNull
     public static String getRandomRoomName() {
         return getRandomRoomName(new Random().nextInt(10));
     }
 
+    @NonNull
     public static String getRandomRoomName(int number) {
         return nameList[number % 10];
+    }
+
+
+    public static void setBottomMarginForConstraintLayoutChild(@NonNull View view,int desiredBottom){
+        ConstraintLayout.LayoutParams lp = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+        if (lp != null) {
+            lp.bottomMargin = desiredBottom;
+            view.setLayoutParams(lp);
+        }
     }
 
     public static void setBottomDialogBackground(@NonNull View view) {
@@ -131,15 +154,15 @@ public class GameUtil {
         else return color;
     }
 
-    public static <T extends ViewModel> T getViewModel(Fragment fragment, Class<T> viewModelClass) {
+    public static <T extends ViewModel> T getViewModel(@NonNull Fragment fragment, @NonNull Class<T> viewModelClass) {
         return new ViewModelProvider(fragment.getViewModelStore(), new ViewModelProvider.NewInstanceFactory()).get(viewModelClass);
     }
 
-    public static <T extends ViewModel> T getViewModel(Fragment fragment, Class<T> viewModelClass, ViewModelProvider.NewInstanceFactory factory) {
+    public static <T extends ViewModel> T getViewModel(@NonNull Fragment fragment, @NonNull Class<T> viewModelClass, @NonNull ViewModelProvider.NewInstanceFactory factory) {
         return new ViewModelProvider(fragment.getViewModelStore(), factory).get(viewModelClass);
     }
 
-    public static <T extends ViewModel> T getViewModel(ComponentActivity activity, Class<T> viewModelClass) {
+    public static <T extends ViewModel> T getViewModel(@NonNull ComponentActivity activity, @NonNull Class<T> viewModelClass) {
         return new ViewModelProvider(activity, new ViewModelProvider.NewInstanceFactory()).get(viewModelClass);
     }
 

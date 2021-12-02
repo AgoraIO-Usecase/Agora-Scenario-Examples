@@ -29,6 +29,9 @@
     <string name="camera_tip">是否发布本地视频流</string>
     <string name="mic">麦克风</string>
     <string name="mic_tip">是否发布本地音频流</string>
+    <string name="game">游戏</string>
+    <string name="exit_game">退出游戏</string>
+    <string name="exit_pk">终止连麦</string>
 
     <string name="donate">赠送</string>
     <string name="gift">礼物</string>
