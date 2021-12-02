@@ -35,12 +35,11 @@ class GameLiveController: PKLiveController {
     private var isLoadScreenShare: Bool = false
     private lazy var screenConnection: AgoraRtcConnection = {
         let connection = AgoraRtcConnection()
-        connection.localUid = UserInfo.userId
+        connection.localUid = screenUserID
         connection.channelId = channleName
         return connection
     }()
     private lazy var timer = GCDTimer()
-    private var pkApplyInfoModel: PKApplyInfoModel?
     public var gameApplyInfoModel: GameApplyInfoModel?
     public var gameInfoModel: GameInfoModel?
     private var gameRoleType: GameRoleType {
@@ -209,9 +208,13 @@ class GameLiveController: PKLiveController {
                 // 调用屏幕共享
                 onClickScreenShareButton()
             } else { // 观众拉取屏幕共享流
+                guard gameInfoModel != nil else { return }
                 let canvas = AgoraRtcVideoCanvas()
                 canvas.uid = UInt(gameInfoModel?.gameUid ?? "0") ?? 0
                 canvas.view = webView.webView
+                canvas.renderMode = .fit
+                screenConnection.localUid = UserInfo.userId
+                joinScreenShare(isBroadcast: false)
                 agoraKit?.setupRemoteVideoEx(canvas, connection: screenConnection)
             }
             
@@ -224,7 +227,7 @@ class GameLiveController: PKLiveController {
                 }
             }
         } else {
-            updateLiveLayout(postion: .center)
+            updateLiveLayout(postion: pkApplyInfoModel?.status == .accept ? .center : .full)
             pkProgressView.reset()
             webView.reset()
             // 主播调用离开游戏接口
@@ -237,38 +240,43 @@ class GameLiveController: PKLiveController {
         }
     }
     
-    private func joinScreenShare() {
+    private func joinScreenShare(isBroadcast: Bool) {
         // 屏幕共享辅频道
         let optionEx = AgoraRtcChannelMediaOptions()
         optionEx.clientRoleType = AgoraRtcIntOptional.of(Int32(AgoraClientRole.broadcaster.rawValue))
         // 不订阅
-        optionEx.autoSubscribeAudio = AgoraRtcBoolOptional.of(false)
-        optionEx.autoSubscribeVideo = AgoraRtcBoolOptional.of(false)
+        optionEx.autoSubscribeAudio = AgoraRtcBoolOptional.of(!isBroadcast)
+        optionEx.autoSubscribeVideo = AgoraRtcBoolOptional.of(!isBroadcast)
         // 关闭辅频道麦克风(通过主频道开启即可)
         optionEx.publishAudioTrack = .of(false)
-        optionEx.publishCustomVideoTrack = .of(true)
-        optionEx.publishCustomAudioTrack = .of(true)
-        
-        let resultEx = agoraKit?.joinChannelEx(byToken: KeyCenter.Token,
-                                               connection: screenConnection,
-                                               delegate: nil,
-                                               mediaOptions: optionEx,
-                                               joinSuccess: nil)
-        if resultEx != 0 {
-            showAlert(title: "Error", message: "joinChannelEx call failed: \(resultEx ?? 0), please check your params")
+        optionEx.publishCustomVideoTrack = .of(isBroadcast)
+        optionEx.publishCustomAudioTrack = .of(isBroadcast)
+        let config = AgoraVideoEncoderConfiguration()
+        config.dimensions = CGSize(width: Screen.width, height: webView.frame.height)
+        agoraKit?.setVideoEncoderConfigurationEx(config, connection: screenConnection)
+        agoraKit?.joinChannelEx(byToken: KeyCenter.Token,
+                                connection: screenConnection,
+                                delegate: nil,
+                                mediaOptions: optionEx,
+                                joinSuccess: nil)
+
+        if getRole(uid: "\(UserInfo.userId)") == .broadcaster {
+            // mute 辅频道流
+            agoraKit?.muteRemoteAudioStream(screenUserID, mute: true)
+            agoraKit?.muteRemoteVideoStream(screenUserID, mute: true)
         }
-        
-        // mute 辅频道流
-        agoraKit?.muteRemoteAudioStream(screenUserID, mute: true)
-        agoraKit?.muteRemoteVideoStream(screenUserID, mute: true)
     }
     
     /// 屏幕共享
     private func onClickScreenShareButton() {
         guard let agoraKit = agoraKit, isLoadScreenShare == false else { return }
         isLoadScreenShare = true
-        joinScreenShare()
-        AgoraScreenShare.shareInstance().startService(with: agoraKit, connection: screenConnection)
+        joinScreenShare(isBroadcast: true)
+        let insets = UIEdgeInsets(top: webView.frame.minY,
+                                  left: 0,
+                                  bottom: view.frame.height - webView.frame.maxY,
+                                  right: 0)
+        AgoraScreenShare.shareInstance().startService(with: agoraKit, connection: screenConnection, regionInsets: insets)
         if #available(iOS 12.0, *) {
             let systemBroadcastPicker = RPSystemBroadcastPickerView(frame: .zero)
             systemBroadcastPicker.showsMicrophoneButton = false

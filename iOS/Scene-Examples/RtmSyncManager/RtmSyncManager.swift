@@ -145,7 +145,7 @@ public class RtmSyncManager: NSObject, ISyncManager {
         let key = key ?? ""
         let channelName = reference.className == channel ? channel + key : channel + reference.className + key
         rtmKit?.addOrUpdateChannel(channelName, attributes: [attr], options: option, completion: { error in
-            if let channel = self.channels[channel + reference.className + (key ?? "")] {
+            if let channel = self.channels[channel + reference.className + key] {
                 if let delegate = self.delegates[channel] {
                     delegate.onUpdated(object: attr.toAttribute())
                 }

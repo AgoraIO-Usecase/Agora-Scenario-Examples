@@ -42,7 +42,7 @@ class PKLiveController: LivePlayerController {
     public var pkInfoModel: PKInfoModel?
     private lazy var timer = GCDTimer()
     public var targetChannelName: String = ""
-    private var pkApplyInfoModel: PKApplyInfoModel?
+    public var pkApplyInfoModel: PKApplyInfoModel?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,7 +83,9 @@ class PKLiveController: LivePlayerController {
     
     override func closeLiveHandler() {
         super.closeLiveHandler()
-        updatePKInfoStatusToEnd()
+        if getRole(uid: "\(UserInfo.userId)") == .broadcaster {
+            updatePKInfoStatusToEnd()            
+        }
     }
     
     override func eventHandler() {
@@ -120,6 +122,7 @@ class PKLiveController: LivePlayerController {
         let fetchPKInfoDelegate = FetchPKInfoDataDelegate()
         fetchPKInfoDelegate.onSuccess = { [weak self] result in
             let pkApplyModel = JSONObject.toModel(PKApplyInfoModel.self, value: result.toJson())
+            self?.pkApplyInfoModel = pkApplyModel
             self?.updatePKUIStatus(isStart: pkApplyModel?.status == .accept)
             let channelName = pkApplyModel?.roomId == self?.channleName ? pkApplyModel?.targetRoomId : pkApplyModel?.roomId
             let uid = pkApplyModel?.userId == self?.currentUserId ? pkApplyModel?.targetUserId : pkApplyModel?.userId
