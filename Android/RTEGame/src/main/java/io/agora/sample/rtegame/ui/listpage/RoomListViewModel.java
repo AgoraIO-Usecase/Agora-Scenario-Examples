@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import io.agora.example.base.BaseUtil;
 import io.agora.sample.rtegame.bean.RoomInfo;
 import io.agora.sample.rtegame.repo.RoomListApi;
 import io.agora.sample.rtegame.util.ViewStatus;
@@ -61,6 +62,9 @@ public class RoomListViewModel extends ViewModel implements RoomListApi {
                     }
                     if (roomInfo != null)
                         res.add(roomInfo);
+                }
+                for (RoomInfo re : res) {
+                    BaseUtil.logD(re.toString());
                 }
                 _roomList.postValue(res);
                 _viewStatus.postValue(new ViewStatus.Done());

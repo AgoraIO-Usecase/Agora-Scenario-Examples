@@ -38,6 +38,12 @@
     <string name="gift_received">%s赠送了%s%s</string>
 
 
+    <string name="screen_share_request_denied">Screen share cancelled</string>
+    <string name="screen_share_version_unsupported">Screen Share do not support on this Android version</string>
+    <string name="notify_recording_screen">正在录制屏幕内容…</string>
+    <string name="notify_service_desc">Notice that we are trying to capture the screen!!</string>
+    <string name="notify_channel_id">agora_media_project</string>
+
     <!--    权限-->
     <string name="permission_refused">APP运行所必需的权限被拒绝</string>
     <string name="permission_alert">此APP功能为视频通话，录音及摄像头权限为功能必需，是否继续？</string>

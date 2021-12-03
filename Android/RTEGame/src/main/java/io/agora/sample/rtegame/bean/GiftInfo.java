@@ -19,6 +19,7 @@ public class GiftInfo {
         this.userId = userId;
     }
 
+    @NonNull
     public String getGifName() {
         return gifName;
     }
@@ -27,11 +28,24 @@ public class GiftInfo {
         return coin;
     }
 
+    @NonNull
     public String getTitle() {
         return title;
     }
 
+    @NonNull
     public String getUserId() {
         return userId;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "GiftInfo{" +
+                "gifName='" + gifName + '\'' +
+                ", coin=" + coin +
+                ", title='" + title + '\'' +
+                ", userId='" + userId + '\'' +
+                '}';
     }
 }

@@ -1,6 +1,8 @@
 package io.agora.sample.rtegame.ui.roompage;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Rect;
 import android.view.TextureView;
 import android.webkit.WebView;
 
@@ -11,6 +13,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.Objects;
+import java.util.Random;
 
 import io.agora.example.base.BaseUtil;
 import io.agora.rtc2.ChannelMediaOptions;
@@ -21,7 +24,10 @@ import io.agora.rtc2.RtcEngine;
 import io.agora.rtc2.RtcEngineConfig;
 import io.agora.rtc2.RtcEngineEx;
 import io.agora.rtc2.internal.RtcEngineImpl;
+import io.agora.rtc2.video.Rectangle;
+import io.agora.rtc2.video.ScreenCaptureParameters;
 import io.agora.rtc2.video.VideoCanvas;
+import io.agora.rtc2.video.VideoEncoderConfiguration;
 import io.agora.sample.rtegame.GameApplication;
 import io.agora.sample.rtegame.R;
 import io.agora.sample.rtegame.bean.GameInfo;
@@ -111,6 +117,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     }
 
     private final MutableLiveData<PKApplyInfo> _applyInfo = new MutableLiveData<>();
+
     @NonNull
     public LiveData<PKApplyInfo> applyInfo() {
         return _applyInfo;
@@ -133,8 +140,14 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
             @Override
             public void onUserJoined(int uid, int elapsed) {
+                BaseUtil.logD("onUserJoined:"+uid);
                 if (String.valueOf(uid).equals(currentRoom.getUserId()))
                     RoomViewModel.this._LocalHostId.postValue(uid);
+            }
+
+            @Override
+            public void onVideoPublishStateChanged(String channel, STREAM_PUBLISH_STATE oldState, STREAM_PUBLISH_STATE newState, int elapseSinceLastState) {
+                BaseUtil.logD("channel:" + channel + "oldState:" + oldState + "newState:" + newState);
             }
         });
         if (sceneReference == null)
@@ -222,7 +235,8 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     private void tryHandleGiftInfo(IObject item) {
         GiftInfo giftInfo = handleIObject(item, GiftInfo.class);
         if (giftInfo != null) {
-            _gift.postValue(giftInfo);
+            if (_gift.getValue() == null || !Objects.equals(_gift.getValue().toString(), giftInfo.toString()))
+                _gift.postValue(giftInfo);
         }
     }
     //</editor-fold>
@@ -231,7 +245,8 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     private void tryHandleApplyPKInfo(IObject item) {
         PKApplyInfo pkApplyInfo = handleIObject(item, PKApplyInfo.class);
         if (pkApplyInfo != null) {
-            onPKApplyInfoChanged(pkApplyInfo);
+            if (_applyInfo.getValue() == null || !Objects.equals(_applyInfo.getValue().toString(), pkApplyInfo.toString()))
+                onPKApplyInfoChanged(pkApplyInfo);
         }
     }
 
@@ -242,7 +257,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     private void onPKApplyInfoChanged(@NonNull PKApplyInfo pkApplyInfo) {
         _applyInfo.postValue(pkApplyInfo);
         switch (pkApplyInfo.getStatus()) {
-            case PKApplyInfo.APPLYING:{
+            case PKApplyInfo.APPLYING: {
                 if (targetSceneRef == null && Objects.equals(pkApplyInfo.getTargetRoomId(), currentRoom.getId()))
                     Sync.Instance().joinScene(GameUtil.getSceneFromRoomInfo(new RoomInfo(pkApplyInfo.getRoomId(), "", pkApplyInfo.getUserId())), new Sync.JoinSceneCallback() {
                         @Override
@@ -325,14 +340,17 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
     private void tryHandleGameInfo(IObject item) {
         GameInfo gameInfo = handleIObject(item, GameInfo.class);
-        if (gameInfo != null)
-            onGameChanged(gameInfo);
+        if (gameInfo != null){
+            if (_gameInfo.getValue() == null || !Objects.equals(_gameInfo.getValue().toString(), gameInfo.toString()))
+                onGameChanged(gameInfo);
+        }
     }
 
     private void tryHandlePKInfo(IObject item) {
         PKInfo pkInfo = handleIObject(item, PKInfo.class);
-        if (pkInfo != null) onPKInfoChanged(pkInfo);
-//            _pkInfo.postValue(pkInfo);
+        if (pkInfo != null) {
+            onPKInfoChanged(pkInfo);
+        }
     }
 
     @Nullable
@@ -351,9 +369,57 @@ public class RoomViewModel extends ViewModel implements RoomApi {
      * 主播：@{@link GameInfo#IDLE} 加载WebView， {@link GameInfo#END} 卸载 WebView
      */
     private void onGameChanged(@NonNull GameInfo gameInfo) {
+        BaseUtil.logD("onGameChanged");
         _gameInfo.postValue(gameInfo);
-        if (gameInfo.getStatus() == GameInfo.END){
+        if (gameInfo.getStatus() == GameInfo.END) {
             exitGame();
+        }
+    }
+
+    public void startScreenCapture(@NonNull Intent intent, @NonNull Rect rect) {
+        RtcEngineEx rtcEngine = _mEngine.getValue();
+        if (rtcEngine != null) {
+            // public abstract int joinChannelEx(String token, RtcConnection connection, ChannelMediaOptions options, IRtcEngineEventHandler eventHandler);
+            BaseUtil.logD("startScreenCapture:"+rect.toString());
+
+            RtcConnection connection = new RtcConnection();
+            connection.localUid = 101024;
+            connection.channelId = currentRoom.getId();
+
+            BaseUtil.logD("onJoinChannelSuccess");
+            ScreenCaptureParameters parameters = new ScreenCaptureParameters();
+            parameters.setFrameRate(15);
+            parameters.setVideoDimensions(new VideoEncoderConfiguration.VideoDimensions(rect.right, rect.bottom - rect.top));
+            parameters.setCropRectangle(new Rectangle(rect.left, rect.top, rect.right, rect.bottom - rect.top));
+            rtcEngine.startScreenCapture(intent, parameters);
+
+            ChannelMediaOptions options = new ChannelMediaOptions();
+            options.autoSubscribeAudio = false;
+            options.autoSubscribeVideo = false;
+            options.publishScreenTrack = true;
+            options.publishCameraTrack = false;
+            options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
+            options.channelProfile = Constants.CHANNEL_PROFILE_LIVE_BROADCASTING;
+//            rtcEngine.updateChannelMediaOptions(options);
+
+            rtcEngine.joinChannelEx(null, connection, options, new IRtcEngineEventHandler() {});
+            if (currentSceneRef != null) {
+                GameInfo gameInfo = new GameInfo(GameInfo.PLAYING, 1, 101024);
+                currentSceneRef.update(GameConstants.GAME_INFO, gameInfo, null);
+            }
+        }
+    }
+
+    private void endScreenCapture() {
+        RtcEngineEx rtcEngine = _mEngine.getValue();
+        if (rtcEngine != null) {
+            rtcEngine.stopScreenCapture();
+
+            RtcConnection connection = new RtcConnection();
+            connection.localUid = new Random().nextInt(101024);
+            connection.channelId = currentRoom.getId();
+
+            rtcEngine.leaveChannelEx(connection);
         }
     }
 
@@ -361,7 +427,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
      * {@link PKInfo#AGREED} 加入对方频道，拉流 | {@link PKInfo#END} 退出频道
      */
     private void onPKInfoChanged(@NonNull PKInfo pkInfo) {
-        BaseUtil.logD("onPKInfoChanged:"+pkInfo.getStatus());
+        BaseUtil.logD("onPKInfoChanged:" + pkInfo.getStatus());
         if (pkInfo.getStatus() == PKInfo.AGREED) {
             // 只用来加入频道，只使用 roomId 字段
             // this variable will only for join channel so room name doesn't matter.
@@ -393,12 +459,19 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         GameRepo.gameStart(webView, GameApplication.getInstance().user, isOrganizer, Integer.parseInt(pkApplyInfo.getRoomId()));
     }
 
-    public void requestExitGame(){
+    /**
+     * 只更新监听的数据字段
+     */
+    public void requestExitGame() {
         GameInfo gameInfo = new GameInfo(GameInfo.END, 0, 0);
-        if (currentSceneRef != null) currentSceneRef.update(GameConstants.GAME_INFO, gameInfo, null);
+        if (currentSceneRef != null)
+            currentSceneRef.update(GameConstants.GAME_INFO, gameInfo, null);
         if (targetSceneRef != null) targetSceneRef.update(GameConstants.GAME_INFO, gameInfo, null);
     }
 
+    /**
+     * 监听到修改成功，退出游戏
+     */
     public void exitGame() {
         if (GameUtil.currentGame == null) return;
         PKApplyInfo applyInfo = _applyInfo.getValue();
@@ -483,8 +556,6 @@ public class RoomViewModel extends ViewModel implements RoomApi {
             }
 
             engine.joinChannel(((RtcEngineImpl) engine).getContext().getString(R.string.rtc_app_token), currentRoom.getId(), Integer.parseInt(localUser.getUserId()), options);
-//            joinChannel(String token, String channelName, String optionalInfo, int optionalUid);
-//            engine.joinChannel(((RtcEngineImpl) engine).getContext().getString(R.string.rtc_app_token), currentRoom.getId(), null, Integer.parseInt(localUser.getUserId()));
         }
     }
 
@@ -507,19 +578,11 @@ public class RoomViewModel extends ViewModel implements RoomApi {
             connection.localUid = -Integer.parseInt(localUser.getUserId());
 
             ChannelMediaOptions options = new ChannelMediaOptions();
-
 //            public abstract int joinChannelEx(String token, RtcConnection connection, ChannelMediaOptions options, IRtcEngineEventHandler eventHandler);
             engine.joinChannelEx(((RtcEngineImpl) engine).getContext().getString(R.string.rtc_app_token), connection, options, new IRtcEngineEventHandler() {
                 @Override
                 public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
-                    super.onJoinChannelSuccess(channel, uid, elapsed);
-                    BaseUtil.logD("onJoinChannelSuccess:" + uid);
-                }
-
-                @Override
-                public void onUserJoined(int uid, int elapsed) {
                     _subRoomInfo.postValue(subRoomInfo);
-                    BaseUtil.logD("uid:" + uid);
                 }
             });
         }
@@ -575,7 +638,6 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     public void setupRemoteView(@NonNull TextureView view, @NonNull RoomInfo roomInfo, boolean isLocalHost) {
         RtcEngineEx engine = _mEngine.getValue();
         if (engine != null) {
-            BaseUtil.logD(roomInfo.toString());
             VideoCanvas videoCanvas = new VideoCanvas(view, Constants.RENDER_MODE_HIDDEN, Integer.parseInt(roomInfo.getUserId()));
             if (isLocalHost) {
                 engine.setupRemoteVideo(videoCanvas);
@@ -585,6 +647,19 @@ public class RoomViewModel extends ViewModel implements RoomApi {
                 connection.localUid = -Integer.parseInt(GameApplication.getInstance().user.getUserId());
                 engine.setupRemoteVideoEx(videoCanvas, connection);
             }
+        }
+    }
+
+    public void setupScreenView(@NonNull TextureView view, int gameUid) {
+        BaseUtil.logD("gameUid:"+gameUid);
+        RtcEngineEx engine = _mEngine.getValue();
+        if (engine != null) {
+            VideoCanvas videoCanvas = new VideoCanvas(view, Constants.RENDER_MODE_FIT, gameUid);
+            engine.setupRemoteVideo(videoCanvas);
+//            RtcConnection connection = new RtcConnection();
+//            connection.channelId = currentRoom.getId();
+//            connection.localUid = -Integer.parseInt(GameApplication.getInstance().user.getUserId());
+//            engine.setupRemoteVideoEx(videoCanvas, connection);
         }
     }
     //</editor-fold>

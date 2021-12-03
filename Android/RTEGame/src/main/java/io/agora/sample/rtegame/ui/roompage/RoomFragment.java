@@ -1,8 +1,14 @@
 package io.agora.sample.rtegame.ui.roompage;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +16,8 @@ import android.os.Looper;
 import android.view.View;
 import android.webkit.WebView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,6 +49,7 @@ import io.agora.sample.rtegame.bean.PKApplyInfo;
 import io.agora.sample.rtegame.bean.RoomInfo;
 import io.agora.sample.rtegame.databinding.FragmentRoomBinding;
 import io.agora.sample.rtegame.databinding.ItemRoomMessageBinding;
+import io.agora.sample.rtegame.service.MediaProjectService;
 import io.agora.sample.rtegame.ui.roompage.donatedialog.DonateDialog;
 import io.agora.sample.rtegame.ui.roompage.hostdialog.HostListDialog;
 import io.agora.sample.rtegame.ui.roompage.moredialog.MoreDialog;
@@ -56,6 +65,8 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
 
     private BaseRecyclerViewAdapter<ItemRoomMessageBinding, String, MessageHolder> mMessageAdapter;
 
+    // 请求权限
+    private ActivityResultLauncher<Intent> activityResultLauncher;
     private RoomInfo currentRoom;
     private boolean aMHost;
     private boolean showInputBox = false;
@@ -125,6 +136,18 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
     }
 
     private void initListener() {
+        // handle request screen record callback
+        // since onActivityResult() is deprecated
+        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                if (mBinding.hostContainerFgRoom.webViewHostView != null) {
+                    Rect rect = new Rect();
+                    mBinding.hostContainerFgRoom.webViewHostView.getHitRect(rect);
+                    mViewModel.startScreenCapture(result.getData(), rect);
+                }
+            }
+        });
+
         // 沉浸处理
         ViewCompat.setOnApplyWindowInsetsListener(mBinding.getRoot(), (v, insets) -> {
             Insets inset = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -239,9 +262,16 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
                 if (webView != null) {
                     mViewModel.startGame(gameInfo, webView);
                 }
+                startServices();
             }
         } else if (gameInfo.getStatus() == GameInfo.PLAYING) {
-            if (!aMHost) needGameView(true);
+            if (!aMHost) {
+                insertNewMessage("加载远端画面");
+                needGameView(true);
+                if (mBinding.hostContainerFgRoom.gameHostView != null) {
+                    mViewModel.setupScreenView(mBinding.hostContainerFgRoom.gameHostView.renderTextureView, gameInfo.getGameUid());
+                }
+            }
         } else if (gameInfo.getStatus() == GameInfo.END) {
             needGameView(false);
             if (aMHost){
@@ -335,6 +365,7 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
      */
     @MainThread
     private void onLocalHostJoin(Integer uid) {
+        BaseUtil.logD("uid:"+uid);
         if (uid == null) return;
         insertNewMessage("正在加载主播【" + currentRoom.getTempUserName() + "】视频");
         LiveHostLayout liveHost = mBinding.hostContainerFgRoom;
@@ -365,6 +396,8 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
             else
                 container.setType(LiveHostLayout.Type.DOUBLE);
             mViewModel.setupRemoteView(view.renderTextureView, subRoomInfo, false);
+
+            if (!aMHost) return;
             if (mBinding.hostContainerFgRoom.isCurrentlyInGame())
                 mBinding.btnExitPkFgRoom.setVisibility(View.GONE);
             else
@@ -380,6 +413,19 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         int count = mMessageAdapter.getItemCount();
         if (count > 0)
             mBinding.recyclerViewFgRoom.smoothScrollToPosition(count - 1);
+    }
+
+    private void startServices(){
+        Intent mediaProjectionIntent = new Intent(requireActivity(), MediaProjectService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            requireContext().startForegroundService(mediaProjectionIntent);
+        } else {
+            requireContext().startService(mediaProjectionIntent);
+        }
+
+        MediaProjectionManager mpm = (MediaProjectionManager) requireContext().getSystemService(Context.MEDIA_PROJECTION_SERVICE);
+        Intent intent = mpm.createScreenCaptureIntent();
+        activityResultLauncher.launch(intent);
     }
 
 }

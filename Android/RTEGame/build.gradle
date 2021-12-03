@@ -33,16 +33,18 @@ android {
         abi {
             enable true
             reset()
-            include 'armeabi-v7a', 'arm64-v8a'
+//            include 'armeabi-v7a', 'arm64-v8a'
+            include 'arm64-v8a'
             universalApk false
         }
     }
 }
 
 dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation(project(":BreakoutRoom:base"))
     implementation project(path: ':rtmSyncManager')
-    implementation('com.github.agorabuilder:agora-full-preview:4.0.0.preview.3')
+//    implementation('com.github.agorabuilder:agora-full-preview:4.0.0.preview.3')
 
     implementation("androidx.navigation:navigation-fragment:2.3.5")
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
