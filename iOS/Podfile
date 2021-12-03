@@ -14,7 +14,7 @@ target 'Scene-Examples' do
 
 end
 
-target 'Agora-ScreenShare-Extension(Socket)' do
+target 'Agora-ScreenShare-Extension' do
   use_frameworks!
   pod 'AgoraScreenShare', :path => 'sdk'
   pod 'CocoaAsyncSocket', '7.6.5'
