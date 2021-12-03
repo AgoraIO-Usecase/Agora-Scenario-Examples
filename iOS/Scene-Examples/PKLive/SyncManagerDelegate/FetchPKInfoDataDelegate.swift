@@ -8,12 +8,13 @@
 import UIKit
 
 class FetchPKInfoDataDelegate: IObjectDelegate {
-    var onSuccess: ((IObject) -> Void)?
+    var onSuccess: ((IObject?) -> Void)?
     func onSuccess(result: IObject) {
         onSuccess?(result)
     }
     
     func onFailed(code: Int, msg: String) {
         LogUtils.log(message: "code == \(code) msg == \(msg)", level: .info)
+        onSuccess?(nil)
     }
 }
