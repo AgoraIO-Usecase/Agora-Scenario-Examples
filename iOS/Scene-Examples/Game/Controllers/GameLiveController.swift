@@ -157,10 +157,12 @@ class GameLiveController: PKLiveController {
         super.getBroadcastPKStatus()
         let fetchGameInfoDelegate = FetchPKInfoDataDelegate()
         fetchGameInfoDelegate.onSuccess = { [weak self] result in
-            self?.gameInfoModel = JSONObject.toModel(GameInfoModel.self, value: result.toJson())
+            self?.gameInfoModel = JSONObject.toModel(GameInfoModel.self, value: result?.toJson())
             self?.updatePKUIStatus(isStart: self?.gameInfoModel?.status == .playing)
-            if self?.gameInfoModel?.status != .playing && self?.pkApplyInfoModel?.status == .accept {
+            if self?.gameInfoModel?.status != .playing && self?.pkInfoModel?.status == .accept {
                 self?.updateLiveLayout(postion: .center)
+            } else if self?.gameInfoModel?.status == .playing && self?.pkInfoModel?.status == .accept {
+                self?.updateLiveLayout(postion: .bottom)
             } else {
                 self?.updateLiveLayout(postion: .full)
             }
@@ -278,7 +280,8 @@ class GameLiveController: PKLiveController {
                                   left: 0,
                                   bottom: view.frame.height - webView.frame.maxY,
                                   right: 0)
-        AgoraScreenShare.shareInstance().startService(with: agoraKit, connection: screenConnection, regionInsets: insets)
+//        AgoraScreenShare.shareInstance().startService(with: agoraKit, connection: screenConnection, regionInsets: insets)
+        AgoraScreenShare.shareInstance().startService(with: agoraKit, connection: screenConnection, regionRect: webView.frame)
         if #available(iOS 12.0, *) {
             let systemBroadcastPicker = RPSystemBroadcastPickerView(frame: .zero)
             systemBroadcastPicker.showsMicrophoneButton = false

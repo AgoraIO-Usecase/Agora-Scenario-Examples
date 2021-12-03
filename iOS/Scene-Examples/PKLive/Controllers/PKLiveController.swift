@@ -42,7 +42,7 @@ class PKLiveController: LivePlayerController {
     public var pkInfoModel: PKInfoModel?
     private lazy var timer = GCDTimer()
     public var targetChannelName: String = ""
-    public var pkApplyInfoModel: PKApplyInfoModel?
+    private var pkApplyInfoModel: PKApplyInfoModel?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -119,15 +119,16 @@ class PKLiveController: LivePlayerController {
     private func getBroadcastPKApplyInfo() {
         let fetchPKInfoDelegate = FetchPKInfoDataDelegate()
         fetchPKInfoDelegate.onSuccess = { [weak self] result in
-            let pkApplyModel = JSONObject.toModel(PKApplyInfoModel.self, value: result.toJson())
-            self?.pkApplyInfoModel = pkApplyModel
-            self?.updatePKUIStatus(isStart: pkApplyModel?.status == .accept)
-            let channelName = pkApplyModel?.roomId == self?.channleName ? pkApplyModel?.targetRoomId : pkApplyModel?.roomId
-            let uid = pkApplyModel?.userId == self?.currentUserId ? pkApplyModel?.targetUserId : pkApplyModel?.userId
-            self?.joinAudienceChannel(channelName: channelName ?? "", pkUid: UInt(uid ?? "0") ?? 0)
-            self?.getBroadcastPKStatus()
+            guard let self = self,
+            let pkInfoModel = JSONObject.toModel(PKInfoModel.self, value: result?.toJson()) else { return }
+            self.pkInfoModel = pkInfoModel
+            self.updatePKUIStatus(isStart: pkInfoModel.status == .accept)
+            if pkInfoModel.status == .accept {
+                self.joinAudienceChannel(channelName: pkInfoModel.roomId, pkUid: UInt(pkInfoModel.userId) ?? 0)
+            }
+            self.getBroadcastPKStatus()
         }
-        SyncUtil.fetch(id: channleName, key: sceneType.rawValue, delegate: fetchPKInfoDelegate)
+        SyncUtil.fetch(id: channleName, key: SYNC_MANAGER_PK_INFO, delegate: fetchPKInfoDelegate)
     }
     
     /// 获取当前主播PK状态
