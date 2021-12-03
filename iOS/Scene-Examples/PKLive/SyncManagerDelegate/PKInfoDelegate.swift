@@ -14,7 +14,8 @@ class PKInfoDelegate: ISyncManagerEventDelegate {
     }
     func onCreated(object: IObject) {
         LogUtils.log(message: "onCreated pkInfo == \(String(describing: object.toJson()))", level: .info)
-        guard let model = JSONObject.toModel(PKInfoModel.self, value: object.toJson()) else { return }
+        guard vc.getRole(uid: "\(UserInfo.userId)") == .audience,
+              let model = JSONObject.toModel(PKInfoModel.self, value: object.toJson()) else { return }
         if model.userId == "\(UserInfo.userId)" { return }
         vc.pkInfoModel = model
         vc.joinAudienceChannel(channelName: model.roomId, pkUid:  UInt(model.userId) ?? 0)
@@ -22,7 +23,8 @@ class PKInfoDelegate: ISyncManagerEventDelegate {
     
     func onUpdated(object: IObject) {
         LogUtils.log(message: "onUpdated pkInfo == \(String(describing: object.toJson()))", level: .info)
-        guard let model = JSONObject.toModel(PKInfoModel.self, value: object.toJson()) else { return }
+        guard vc.getRole(uid: "\(UserInfo.userId)") == .audience,
+              let model = JSONObject.toModel(PKInfoModel.self, value: object.toJson()) else { return }
         if model.userId == "\(UserInfo.userId)" { return }
         vc.pkInfoModel = model
         if model.status == .end {

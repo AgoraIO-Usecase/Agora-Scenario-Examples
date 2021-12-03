@@ -96,12 +96,10 @@ class PKLiveController: LivePlayerController {
                                key: sceneType.rawValue,
                                delegate: PKInviteInfoDelegate(vc: self))
         }
-        if getRole(uid: "\(UserInfo.userId)") == .audience {
-            // 监听PKinfo 让观众加入到PK的channel
-            SyncUtil.subscribe(id: channleName,
-                               key: SYNC_MANAGER_PK_INFO, 
-                               delegate: PKInfoDelegate(vc: self))
-        }
+        // 监听PKinfo 让观众加入到PK的channel
+        SyncUtil.subscribe(id: channleName,
+                           key: SYNC_MANAGER_PK_INFO,
+                           delegate: PKInfoDelegate(vc: self))
         
         // pk开始回调
         pkLiveStartClosure = { [weak self] applyModel in

@@ -77,7 +77,8 @@ class GameInfoDelegate: ISyncManagerEventDelegate {
     
     func onUpdated(object: IObject) {
         LogUtils.log(message: "onUpdated game info == \(String(describing: object.toJson()))", level: .info)
-        guard let model = JSONObject.toModel(GameInfoModel.self, value: object.toJson()) else { return }
+        guard vc.getRole(uid: "\(UserInfo.userId)") == .audience,
+              let model = JSONObject.toModel(GameInfoModel.self, value: object.toJson()) else { return }
         vc.gameInfoModel = model
         if model.status == .no_start {
             vc.updatePKUIStatus(isStart: false)
