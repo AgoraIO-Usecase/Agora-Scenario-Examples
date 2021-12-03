@@ -146,13 +146,10 @@ class GameLiveController: PKLiveController {
                                key: SYNC_MANAGER_GAME_APPLY_INFO,
                                delegate: GameApplyInfoDelegate(vc: self))
         }
-        
-        if getRole(uid: "\(UserInfo.userId)") == .audience {
-            // 更新观众游戏状态
-            SyncUtil.subscribe(id: channleName,
-                               key: SYNC_MANAGER_GAME_INFO,
-                               delegate: GameInfoDelegate(vc: self))
-        }
+        // 更新观众游戏状态
+        SyncUtil.subscribe(id: channleName,
+                           key: SYNC_MANAGER_GAME_INFO,
+                           delegate: GameInfoDelegate(vc: self))
     }
     
     /// 获取pk状态
@@ -162,6 +159,11 @@ class GameLiveController: PKLiveController {
         fetchGameInfoDelegate.onSuccess = { [weak self] result in
             self?.gameInfoModel = JSONObject.toModel(GameInfoModel.self, value: result.toJson())
             self?.updatePKUIStatus(isStart: self?.gameInfoModel?.status == .playing)
+            if self?.gameInfoModel?.status != .playing && self?.pkApplyInfoModel?.status == .accept {
+                self?.updateLiveLayout(postion: .center)
+            } else {
+                self?.updateLiveLayout(postion: .full)
+            }
         }
         SyncUtil.fetch(id: channleName, key: SYNC_MANAGER_GAME_INFO, delegate: fetchGameInfoDelegate)
     }
@@ -227,7 +229,7 @@ class GameLiveController: PKLiveController {
                 }
             }
         } else {
-            updateLiveLayout(postion: pkApplyInfoModel?.status == .accept ? .center : .full)
+            updateLiveLayout(postion: .center)
             pkProgressView.reset()
             webView.reset()
             // 主播调用离开游戏接口
