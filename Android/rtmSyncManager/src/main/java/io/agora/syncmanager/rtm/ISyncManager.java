@@ -9,6 +9,8 @@ public interface ISyncManager {
 
     void get(DocumentReference reference, Sync.DataItemCallback callback);
 
+    void get(DocumentReference reference, String key, Sync.DataItemCallback callback);
+
     void get(CollectionReference reference, Sync.DataListCallback callback);
 
     void add(CollectionReference reference, HashMap<String, Object> data, Sync.DataItemCallback callback);
@@ -27,5 +29,5 @@ public interface ISyncManager {
 
     void subscribe(CollectionReference reference, Sync.EventListener listener);
 
-    void unsubscribe(Sync.EventListener listener);
+    void unsubscribe(String id, Sync.EventListener listener);
 }

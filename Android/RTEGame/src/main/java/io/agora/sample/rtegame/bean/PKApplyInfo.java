@@ -1,8 +1,9 @@
 package io.agora.sample.rtegame.bean;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-public class PKApplyInfo {
+public class PKApplyInfo implements Cloneable{
     public static final int APPLYING = 1;
     public static final int AGREED = 2;
     public static final int REFUSED = 3;
@@ -81,5 +82,16 @@ public class PKApplyInfo {
                 ", roomId='" + roomId + '\'' +
                 ", targetRoomId='" + targetRoomId + '\'' +
                 '}';
+    }
+
+    @Override
+    public PKApplyInfo clone() {
+        PKApplyInfo pkApplyInfo = null;
+        try {
+            pkApplyInfo = (PKApplyInfo) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return pkApplyInfo;
     }
 }

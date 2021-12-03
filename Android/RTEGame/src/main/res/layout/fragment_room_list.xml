@@ -2,6 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="?attr/colorSurface"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -27,26 +28,6 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_fg_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?attr/colorSurface"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_fg_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:overScrollMode="never"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="2"
-            tools:itemCount="12"
-            tools:listitem="@layout/item_room_list"
-            tools:paddingTop="?attr/actionBarSize" />
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
     <TextView
         android:id="@+id/empty_view_fg_list"
         android:layout_width="wrap_content"
@@ -66,11 +47,29 @@
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/space_big"
         android:elevation="4dp"
-        android:outlineProvider="background"
         android:background="@android:color/transparent"
         android:contentDescription="@string/desc_create_room"
         android:src="@drawable/ic_create_room"
         app:tint="@color/selector_color_scrim"
         app:tintMode="src_atop" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_fg_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_fg_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2"
+            tools:itemCount="12"
+            tools:listitem="@layout/item_room_list"
+            tools:paddingTop="?attr/actionBarSize" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

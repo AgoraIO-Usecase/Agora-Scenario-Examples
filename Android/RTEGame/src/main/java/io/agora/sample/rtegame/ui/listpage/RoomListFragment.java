@@ -79,7 +79,8 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
     @Override
     public void onResume() {
         super.onResume();
-        mViewModel.fetchRoomList();
+        // 退出房间 更新列表 FIXME 更好的方式实现监听退出房间更新列表
+        mBinding.getRoot().postDelayed(() -> mViewModel.fetchRoomList(),1000);
     }
 
     private void initView() {

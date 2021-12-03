@@ -11,6 +11,7 @@
         tools:layout="@layout/fragment_splash">
         <action
             android:id="@+id/action_splashFragment_to_roomListFragment"
+            app:enterAnim="@android:anim/fade_in"
             app:destination="@id/roomListFragment"/>
     </fragment>
     <fragment
@@ -20,6 +21,10 @@
         tools:layout="@layout/fragment_room_list">
         <action
             android:id="@+id/action_roomListFragment_to_roomFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_left"
+            app:popExitAnim="@anim/slide_out_right"
             app:destination="@id/roomFragment" />
     </fragment>
     <fragment
@@ -35,6 +40,10 @@
         tools:layout="@layout/fragment_room">
         <action
             android:id="@+id/action_roomFragment_to_roomCreateFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_left"
+            app:popExitAnim="@anim/slide_out_right"
             app:destination="@id/roomCreateFragment" />
     </fragment>
 </navigation>

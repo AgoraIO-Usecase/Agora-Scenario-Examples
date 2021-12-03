@@ -36,6 +36,9 @@
     <string name="donate">赠送</string>
     <string name="gift">礼物</string>
     <string name="gift_received">%s赠送了%s%s</string>
+    <string name="user_msg"><![CDATA[
+         <font color=\'#0091FC\'>%s</font>：%s
+        ]]></string>
 
 
     <string name="screen_share_request_denied">Screen share cancelled</string>

@@ -42,6 +42,10 @@ public class DocumentReference {
         manager.get(this, callback);
     }
 
+    public void get(String key, Sync.DataItemCallback callback) {
+        manager.get(this, key, callback);
+    }
+
     public void update(@NonNull HashMap<String, Object> data, Sync.DataItemCallback callback) {
         manager.update(this, data, callback);
     }
@@ -63,6 +67,6 @@ public class DocumentReference {
     }
 
     public void unsubscribe(Sync.EventListener listener) {
-        manager.unsubscribe(listener);
+        manager.unsubscribe(id, listener);
     }
 }

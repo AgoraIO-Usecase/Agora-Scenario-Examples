@@ -13,8 +13,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Html;
+import android.text.Spanned;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.webkit.WebView;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -63,7 +69,7 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
 
     private RoomViewModel mViewModel;
 
-    private BaseRecyclerViewAdapter<ItemRoomMessageBinding, String, MessageHolder> mMessageAdapter;
+    private BaseRecyclerViewAdapter<ItemRoomMessageBinding, CharSequence, MessageHolder> mMessageAdapter;
 
     // 请求权限
     private ActivityResultLauncher<Intent> activityResultLauncher;
@@ -101,7 +107,22 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        if (mViewModel != null)
+            mViewModel.handleScreenCapture(false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mViewModel != null)
+            mViewModel.handleScreenCapture(true);
+    }
+
+    @Override
     public void onDestroy() {
+        stopScreenCaptureService();
         super.onDestroy();
         requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
     }
@@ -115,7 +136,7 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         // config game view
         new Handler(Looper.getMainLooper()).post(() -> {
             int topMargin = (int) (mBinding.containerHostFgRoom.getBottom() + mBinding.containerHostFgRoom.getX());
-            int marginBottom = mBinding.containerOverlayFgRoom.getMeasuredHeight() - mBinding.btnExitFgRoom.getTop() + ((int)BaseUtil.dp2px(12));
+            int marginBottom = mBinding.containerOverlayFgRoom.getMeasuredHeight() - mBinding.btnExitFgRoom.getTop() + ((int) BaseUtil.dp2px(12));
             int height = mBinding.recyclerViewFgRoom.getTop() - topMargin;
             mBinding.hostContainerFgRoom.initParams(!aMHost, topMargin, height, marginBottom);
         });
@@ -156,15 +177,15 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
             mBinding.containerOverlayFgRoom.setPadding(inset.left, inset.top, inset.right, inset.bottom);
             // 输入框显隐及位置偏移
             boolean imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime());
-            if (imeVisible){
+            if (imeVisible) {
                 int desiredRecyclerViewMargin = 0;
-                if(showInputBox) {
+                if (showInputBox) {
                     mBinding.inputLayoutFgRoom.setVisibility(View.VISIBLE);
                     mBinding.inputLayoutFgRoom.requestFocus();
                     desiredRecyclerViewMargin = (int) BaseUtil.dp2px(50);
                 }
                 GameUtil.setBottomMarginForConstraintLayoutChild(mBinding.recyclerViewFgRoom, desiredBottom + desiredRecyclerViewMargin);
-            }else{
+            } else {
                 showInputBox = false;
                 mBinding.inputLayoutFgRoom.setVisibility(View.GONE);
                 mBinding.inputLayoutFgRoom.clearFocus();
@@ -174,6 +195,18 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
             GameUtil.setBottomMarginForConstraintLayoutChild(mBinding.inputLayoutFgRoom, desiredBottom);
 
             return WindowInsetsCompat.CONSUMED;
+        });
+
+        // 本地消息
+        mBinding.editTextFgRoom.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                String msg = v.getText().toString().trim();
+                if (!msg.isEmpty())
+                    insertUserMessage(msg);
+                BaseUtil.hideKeyboard(requireActivity().getWindow(), v);
+                v.setText("");
+            }
+            return false;
         });
         // "更多"弹窗
         mBinding.btnMoreFgRoom.setOnClickListener(v -> new MoreDialog().show(getChildFragmentManager(), MoreDialog.TAG));
@@ -224,6 +257,7 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
             insertNewMessage("邀请已拒绝");
         }
     }
+
     /**
      * 仅主播调用
      */
@@ -251,7 +285,7 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
 
     //<editor-fold desc="游戏相关">
     private void onGameChanged(GameInfo gameInfo) {
-        BaseUtil.logD("game status->"+gameInfo.getStatus());
+        BaseUtil.logD("game status->" + gameInfo.getStatus());
         if (gameInfo.getStatus() == GameInfo.IDLE) {
             if (aMHost) {
                 mBinding.btnGameFgRoom.setVisibility(View.GONE);
@@ -262,7 +296,7 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
                 if (webView != null) {
                     mViewModel.startGame(gameInfo, webView);
                 }
-                startServices();
+                startScreenCaptureService();
             }
         } else if (gameInfo.getStatus() == GameInfo.PLAYING) {
             if (!aMHost) {
@@ -274,10 +308,12 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
             }
         } else if (gameInfo.getStatus() == GameInfo.END) {
             needGameView(false);
-            if (aMHost){
+            if (aMHost) {
                 mBinding.btnGameFgRoom.setVisibility(View.VISIBLE);
                 mBinding.btnExitGameFgRoom.setVisibility(View.GONE);
                 mBinding.btnExitPkFgRoom.setVisibility(View.VISIBLE);
+                stopScreenCaptureService();
+                mViewModel.endScreenCapture();
             }
         }
     }
@@ -365,7 +401,7 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
      */
     @MainThread
     private void onLocalHostJoin(Integer uid) {
-        BaseUtil.logD("uid:"+uid);
+        BaseUtil.logD("uid:" + uid);
         if (uid == null) return;
         insertNewMessage("正在加载主播【" + currentRoom.getTempUserName() + "】视频");
         LiveHostLayout liveHost = mBinding.hostContainerFgRoom;
@@ -380,7 +416,7 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
      */
     @MainThread
     private void onSubHostJoin(@Nullable RoomInfo subRoomInfo) {
-        BaseUtil.logD("room status->"+(subRoomInfo==null));
+        BaseUtil.logD("room status->" + (subRoomInfo == null));
         LiveHostLayout container = mBinding.hostContainerFgRoom;
         // remove subHostView
         if (subRoomInfo == null) {
@@ -405,17 +441,22 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         }
     }
 
+    private void insertUserMessage(String msg){
+        Spanned userMessage = Html.fromHtml(getString(R.string.user_msg, mViewModel.localUser.getName(), msg));
+        insertNewMessage(userMessage);
+    }
+
     /**
      * 直播间滚动消息
      */
-    private void insertNewMessage(String msg) {
+    private void insertNewMessage(CharSequence msg) {
         mMessageAdapter.addItem(msg);
         int count = mMessageAdapter.getItemCount();
         if (count > 0)
             mBinding.recyclerViewFgRoom.smoothScrollToPosition(count - 1);
     }
 
-    private void startServices(){
+    private void startScreenCaptureService() {
         Intent mediaProjectionIntent = new Intent(requireActivity(), MediaProjectService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             requireContext().startForegroundService(mediaProjectionIntent);
@@ -426,6 +467,11 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         MediaProjectionManager mpm = (MediaProjectionManager) requireContext().getSystemService(Context.MEDIA_PROJECTION_SERVICE);
         Intent intent = mpm.createScreenCaptureIntent();
         activityResultLauncher.launch(intent);
+    }
+
+    private void stopScreenCaptureService() {
+        Intent mediaProjectionIntent = new Intent(requireActivity(), MediaProjectService.class);
+        requireContext().stopService(mediaProjectionIntent);
     }
 
 }

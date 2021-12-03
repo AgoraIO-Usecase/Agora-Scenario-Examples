@@ -85,6 +85,7 @@
                 android:id="@+id/edit_text_fg_room"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:imeOptions="actionDone"
                 android:inputType="text"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>

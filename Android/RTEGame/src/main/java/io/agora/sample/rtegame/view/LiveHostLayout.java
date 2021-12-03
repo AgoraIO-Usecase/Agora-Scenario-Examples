@@ -15,8 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
-import io.agora.example.base.BaseUtil;
-
 public class LiveHostLayout extends ConstraintLayout {
 
     public int bottomMarginInGameType = 0;
