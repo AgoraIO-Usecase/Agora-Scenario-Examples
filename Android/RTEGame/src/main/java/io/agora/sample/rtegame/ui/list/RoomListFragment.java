@@ -1,4 +1,4 @@
-package io.agora.sample.rtegame.ui.listpage;
+package io.agora.sample.rtegame.ui.list;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -36,10 +36,7 @@ import io.agora.sample.rtegame.util.Event;
 import io.agora.sample.rtegame.util.GameConstants;
 import io.agora.sample.rtegame.util.GameUtil;
 import io.agora.sample.rtegame.util.ViewStatus;
-import io.agora.syncmanager.rtm.Scene;
-import io.agora.syncmanager.rtm.SceneReference;
 import io.agora.syncmanager.rtm.Sync;
-import io.agora.syncmanager.rtm.SyncManagerException;
 import io.agora.syncmanager.rtm.impl.DataSyncImpl;
 
 public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> implements OnItemClickListener<RoomInfo> {

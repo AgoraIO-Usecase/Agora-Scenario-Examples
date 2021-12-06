@@ -1,12 +1,9 @@
-package io.agora.sample.rtegame.ui.roompage.hostdialog;
+package io.agora.sample.rtegame.ui.room.invite;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.bumptech.glide.Glide;
-
 import io.agora.example.base.BaseRecyclerViewAdapter;
-import io.agora.sample.rtegame.R;
 import io.agora.sample.rtegame.bean.RoomInfo;
 import io.agora.sample.rtegame.databinding.ItemDialogHostBinding;
 import io.agora.sample.rtegame.util.GameUtil;

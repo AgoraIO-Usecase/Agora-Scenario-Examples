@@ -1,4 +1,4 @@
-package io.agora.sample.rtegame.ui.listpage;
+package io.agora.sample.rtegame.ui.list;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;

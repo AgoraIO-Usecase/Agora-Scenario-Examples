@@ -1,4 +1,4 @@
-package io.agora.sample.rtegame.ui.roompage;
+package io.agora.sample.rtegame.ui.room;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +13,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.Objects;
-import java.util.Random;
 
 import io.agora.example.base.BaseUtil;
 import io.agora.rtc2.ChannelMediaOptions;

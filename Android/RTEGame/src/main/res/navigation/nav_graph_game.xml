@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/roomListFragment"
-        android:name="io.agora.sample.rtegame.ui.listpage.RoomListFragment"
+        android:name="io.agora.sample.rtegame.ui.list.RoomListFragment"
         android:label="RoomListFragment"
         tools:layout="@layout/fragment_room_list">
         <action
@@ -29,13 +29,13 @@
     </fragment>
     <fragment
         android:id="@+id/roomCreateFragment"
-        android:name="io.agora.sample.rtegame.ui.createpage.RoomCreateFragment"
+        android:name="io.agora.sample.rtegame.ui.create.RoomCreateFragment"
         android:label="RoomCreateFragment"
         tools:layout="@layout/fragment_create_room">
     </fragment>
     <fragment
         android:id="@+id/roomFragment"
-        android:name="io.agora.sample.rtegame.ui.roompage.RoomFragment"
+        android:name="io.agora.sample.rtegame.ui.room.RoomFragment"
         android:label="RoomFragment"
         tools:layout="@layout/fragment_room">
         <action

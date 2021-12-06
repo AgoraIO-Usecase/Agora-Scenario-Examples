@@ -1,4 +1,4 @@
-package io.agora.sample.rtegame.ui.roompage.donatedialog;
+package io.agora.sample.rtegame.ui.room.donate;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 
@@ -22,12 +21,11 @@ import io.agora.example.base.DividerDecoration;
 import io.agora.example.base.OnItemClickListener;
 import io.agora.sample.rtegame.GameApplication;
 import io.agora.sample.rtegame.R;
-import io.agora.sample.rtegame.bean.GameInfo;
 import io.agora.sample.rtegame.bean.Gift;
 import io.agora.sample.rtegame.bean.GiftInfo;
 import io.agora.sample.rtegame.databinding.DialogDonateBinding;
 import io.agora.sample.rtegame.databinding.ItemDialogGiftBinding;
-import io.agora.sample.rtegame.ui.roompage.RoomViewModel;
+import io.agora.sample.rtegame.ui.room.RoomViewModel;
 import io.agora.sample.rtegame.util.GameUtil;
 import io.agora.sample.rtegame.util.GiftUtil;
 

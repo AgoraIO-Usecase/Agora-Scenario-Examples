@@ -1,4 +1,4 @@
-package io.agora.sample.rtegame.ui.roompage;
+package io.agora.sample.rtegame.ui.room;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

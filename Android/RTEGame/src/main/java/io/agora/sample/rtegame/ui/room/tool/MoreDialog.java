@@ -1,4 +1,4 @@
-package io.agora.sample.rtegame.ui.roompage.moredialog;
+package io.agora.sample.rtegame.ui.room.tool;
 
 import android.os.Bundle;
 import android.view.View;
@@ -6,17 +6,12 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.graphics.Insets;
-import androidx.core.view.OnApplyWindowInsetsListener;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.lifecycle.ViewModelProvider;
-
-import com.google.android.material.button.MaterialButton;
 
 import io.agora.example.base.BaseBottomSheetDialogFragment;
-import io.agora.example.base.BaseUtil;
 import io.agora.sample.rtegame.databinding.DialogMoreBinding;
-import io.agora.sample.rtegame.ui.roompage.RoomViewModel;
+import io.agora.sample.rtegame.ui.room.RoomViewModel;
 import io.agora.sample.rtegame.util.GameUtil;
 
 /**

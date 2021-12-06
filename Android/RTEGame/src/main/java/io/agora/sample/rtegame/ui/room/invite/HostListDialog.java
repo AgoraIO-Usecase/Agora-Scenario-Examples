@@ -1,4 +1,4 @@
-package io.agora.sample.rtegame.ui.roompage.hostdialog;
+package io.agora.sample.rtegame.ui.room.invite;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -27,8 +27,8 @@ import io.agora.sample.rtegame.GameApplication;
 import io.agora.sample.rtegame.bean.RoomInfo;
 import io.agora.sample.rtegame.databinding.DialogHostListBinding;
 import io.agora.sample.rtegame.databinding.ItemDialogHostBinding;
-import io.agora.sample.rtegame.ui.listpage.RoomListViewModel;
-import io.agora.sample.rtegame.ui.roompage.RoomViewModel;
+import io.agora.sample.rtegame.ui.list.RoomListViewModel;
+import io.agora.sample.rtegame.ui.room.RoomViewModel;
 import io.agora.sample.rtegame.util.EventObserver;
 import io.agora.sample.rtegame.util.GameUtil;
 import io.agora.sample.rtegame.util.ViewStatus;

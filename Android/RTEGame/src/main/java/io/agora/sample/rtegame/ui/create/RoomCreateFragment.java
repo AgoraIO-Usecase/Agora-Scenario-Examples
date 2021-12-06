@@ -1,4 +1,4 @@
-package io.agora.sample.rtegame.ui.createpage;
+package io.agora.sample.rtegame.ui.create;
 
 import android.os.Bundle;
 import android.view.View;
@@ -10,7 +10,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.lifecycle.ViewModelProvider;
 
 import io.agora.example.base.BaseUtil;
 import io.agora.sample.rtegame.GameApplication;

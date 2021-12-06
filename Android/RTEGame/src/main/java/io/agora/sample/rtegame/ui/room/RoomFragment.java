@@ -1,4 +1,4 @@
-package io.agora.sample.rtegame.ui.roompage;
+package io.agora.sample.rtegame.ui.room;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -15,12 +15,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Html;
 import android.text.Spanned;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.WebView;
-import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -56,9 +54,9 @@ import io.agora.sample.rtegame.bean.RoomInfo;
 import io.agora.sample.rtegame.databinding.FragmentRoomBinding;
 import io.agora.sample.rtegame.databinding.ItemRoomMessageBinding;
 import io.agora.sample.rtegame.service.MediaProjectService;
-import io.agora.sample.rtegame.ui.roompage.donatedialog.DonateDialog;
-import io.agora.sample.rtegame.ui.roompage.hostdialog.HostListDialog;
-import io.agora.sample.rtegame.ui.roompage.moredialog.MoreDialog;
+import io.agora.sample.rtegame.ui.room.donate.DonateDialog;
+import io.agora.sample.rtegame.ui.room.invite.HostListDialog;
+import io.agora.sample.rtegame.ui.room.tool.MoreDialog;
 import io.agora.sample.rtegame.util.GameUtil;
 import io.agora.sample.rtegame.util.GiftUtil;
 import io.agora.sample.rtegame.util.ViewStatus;

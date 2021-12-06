@@ -1,4 +1,4 @@
-package io.agora.sample.rtegame.ui.roompage;
+package io.agora.sample.rtegame.ui.room;
 
 import android.content.Context;
 
