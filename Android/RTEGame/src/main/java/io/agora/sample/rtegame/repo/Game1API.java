@@ -85,9 +85,10 @@ public interface Game1API {
      * "data":"接口请求错误"
      * }
      */
+    @NonNull
     @FormUrlEncoded
     @POST
-    void gameEnd(
+    Call<ResponseBody> gameEnd(
             @Field("user_id") int user_id,
             @Field("app_id") int app_id,
             @Field("identity") int identity,
@@ -150,9 +151,11 @@ public interface Game1API {
      * "data":"接口请求错误"
      * }
      */
+    @NonNull
     @POST
     @FormUrlEncoded
-    void gameGift(
+    Call<ResponseBody> gameGift(
+            @Url @NonNull String url,
             @Field("user_id") int user_id,
             @Field("app_id") int app_id,
             @Field("room_id") int room_id,

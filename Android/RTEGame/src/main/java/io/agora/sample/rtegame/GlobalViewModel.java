@@ -23,10 +23,6 @@ import io.agora.syncmanager.rtm.SyncManagerException;
 
 public class GlobalViewModel extends ViewModel implements RoomCreateApi {
 
-    // FIXME
-    @Nullable
-    public SceneReference sceneReference = null;
-
     private final MutableLiveData<LocalUser> _user = new MutableLiveData<>();
 
     @NonNull
@@ -84,10 +80,10 @@ public class GlobalViewModel extends ViewModel implements RoomCreateApi {
 
     @Override
     public void createRoom(@NonNull RoomInfo room) {
-        Sync.Instance().joinScene(GameUtil.getSceneFromRoomInfo(room), new Sync.JoinSceneCallback() {
+        Sync.Instance().createScene(GameUtil.getSceneFromRoomInfo(room), new Sync.Callback() {
+
             @Override
-            public void onSuccess(SceneReference sceneReference) {
-                GlobalViewModel.this.sceneReference = sceneReference;
+            public void onSuccess() {
                 roomInfo.postValue(new Event<>(room));
             }
 

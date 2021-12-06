@@ -6,6 +6,8 @@ import android.content.Context;
 import java.util.List;
 import java.util.Map;
 
+import io.agora.common.annotation.NonNull;
+import io.agora.common.annotation.Nullable;
 import io.agora.syncmanager.rtm.impl.DataSyncImpl;
 
 /**
@@ -34,8 +36,16 @@ public final class Sync {
         mISyncManager = new DataSyncImpl(context, params, callback);
     }
 
-    public void joinScene(Scene room, Sync.JoinSceneCallback callback) {
-        mISyncManager.joinScene(room, callback);
+    public void destroy(){
+        mISyncManager.destroy();
+    }
+
+    public void joinScene(@NonNull String sceneId, @Nullable Sync.JoinSceneCallback callback) {
+        mISyncManager.joinScene(sceneId, callback);
+    }
+
+    public void createScene(@NonNull Scene room, @NonNull Sync.Callback callback){
+        mISyncManager.createScene(room, callback);
     }
 
     public void getScenes(Sync.DataListCallback callback) {

@@ -135,7 +135,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     //</editor-fold>
 
     //<editor-fold desc="Init and end">
-    public RoomViewModel(@NonNull Context context, @NonNull RoomInfo roomInfo, @Nullable SceneReference sceneReference) {
+    public RoomViewModel(@NonNull Context context, @NonNull RoomInfo roomInfo) {
         this.currentRoom = roomInfo;
         screenShareConnection.channelId = currentRoom.getId();
         screenShareConnection.localUid = screenShareUId;
@@ -146,26 +146,12 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
             @Override
             public void onUserJoined(int uid, int elapsed) {
-                BaseUtil.logD("onUserJoined:"+uid);
+                BaseUtil.logD("onUserJoined:" + uid);
                 if (String.valueOf(uid).equals(currentRoom.getUserId()))
                     RoomViewModel.this._LocalHostId.postValue(uid);
             }
 
         });
-        if (sceneReference == null)
-            // 监听当前房间数据 <==> 礼物、PK、
-            Sync.Instance().joinScene(GameUtil.getSceneFromRoomInfo(currentRoom), new Sync.JoinSceneCallback() {
-                @Override
-                public void onSuccess(SceneReference sceneReference) {
-                    onJoinRTMSucceed(sceneReference);
-                }
-
-                @Override
-                public void onFail(SyncManagerException e) {
-                    _viewStatus.postValue(new ViewStatus.Error("加入RTM失败"));
-                }
-            });
-        else onJoinRTMSucceed(sceneReference);
     }
 
     private void onJoinRTMSucceed(@NonNull SceneReference sceneReference) {
@@ -269,6 +255,10 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     public void donateGift(@NonNull GiftInfo gift) {
         if (currentSceneRef != null)
             currentSceneRef.update(GameConstants.GIFT_INFO, gift, null);
+        GameInfo gameInfo = _gameInfo.getValue();
+        if (gameInfo != null && gameInfo.getStatus() == GameInfo.PLAYING){
+            GameRepo.sendGift(localUser, currentRoom, gift);
+        }
     }
 
     private void tryHandleGiftInfo(IObject item) {
@@ -288,7 +278,6 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         }
     }
 
-
     /**
      * 仅主播调用
      */
@@ -296,13 +285,14 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         _applyInfo.postValue(pkApplyInfo);
         switch (pkApplyInfo.getStatus()) {
             case PKApplyInfo.APPLYING: {
-                // 收到其他主播的游戏邀请，加入对方RTM频道
+                // 收到其他主播的游戏邀请，加入对方RTM频道(并监听对方频道的属性, 支持退出游戏后可以再次邀请进入游戏。
                 if (targetSceneRef == null && Objects.equals(pkApplyInfo.getTargetRoomId(), currentRoom.getId()))
-                    Sync.Instance().joinScene(GameUtil.getSceneFromRoomInfo(new RoomInfo(pkApplyInfo.getRoomId(), "", pkApplyInfo.getUserId())), new Sync.JoinSceneCallback() {
+                    Sync.Instance().joinScene(pkApplyInfo.getRoomId(), new Sync.JoinSceneCallback() {
                         @Override
                         public void onSuccess(SceneReference sceneReference) {
                             if (targetSceneRef == null)
                                 targetSceneRef = sceneReference;
+                            targetSceneRef.subscribe(GameConstants.PK_APPLY_INFO, new GamSyncEventListener(GameConstants.PK_APPLY_INFO, RoomViewModel.this::tryHandleApplyPKInfo));
                         }
 
                         @Override
@@ -342,7 +332,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         if (targetSceneRef != null)
             doSendPKInvite(roomViewModel, targetSceneRef, targetRoom, gameId);
         else
-            Sync.Instance().joinScene(GameUtil.getSceneFromRoomInfo(targetRoom), new Sync.JoinSceneCallback() {
+            Sync.Instance().joinScene(targetRoom.getId(), new Sync.JoinSceneCallback() {
                 @Override
                 public void onSuccess(SceneReference sceneReference) {
                     targetSceneRef = sceneReference;
@@ -379,7 +369,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
     private void tryHandleGameInfo(IObject item) {
         GameInfo gameInfo = handleIObject(item, GameInfo.class);
-        if (gameInfo != null){
+        if (gameInfo != null) {
             if (_gameInfo.getValue() == null || !Objects.equals(_gameInfo.getValue().toString(), gameInfo.toString()))
                 onGameChanged(gameInfo);
         }
@@ -419,7 +409,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         RtcEngineEx rtcEngine = _mEngine.getValue();
         if (rtcEngine != null) {
             // public abstract int joinChannelEx(String token, RtcConnection connection, ChannelMediaOptions options, IRtcEngineEventHandler eventHandler);
-            BaseUtil.logD("startScreenCapture:"+rect.toString());
+            BaseUtil.logD("startScreenCapture:" + rect.toString());
 
             BaseUtil.logD("onJoinChannelSuccess");
             ScreenCaptureParameters parameters = new ScreenCaptureParameters();
@@ -436,7 +426,8 @@ public class RoomViewModel extends ViewModel implements RoomApi {
             options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
             options.channelProfile = Constants.CHANNEL_PROFILE_LIVE_BROADCASTING;
 
-            rtcEngine.joinChannelEx(null, screenShareConnection, options, new IRtcEngineEventHandler() {});
+            rtcEngine.joinChannelEx(null, screenShareConnection, options, new IRtcEngineEventHandler() {
+            });
             if (currentSceneRef != null) {
                 GameInfo gameInfo = new GameInfo(GameInfo.PLAYING, 1, screenShareUId);
                 currentSceneRef.update(GameConstants.GAME_INFO, gameInfo, null);
@@ -452,7 +443,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         }
     }
 
-    public void handleScreenCapture(boolean needCapture){
+    public void handleScreenCapture(boolean needCapture) {
         BaseUtil.logD("needCapture:" + needCapture);
         RtcEngineEx rtcEngine = _mEngine.getValue();
         if (rtcEngine != null) {
@@ -642,7 +633,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     }
 
     public void initRTC(@NonNull Context mContext, @NonNull IRtcEngineEventHandler mEventHandler) {
-        new Thread(()->{
+        new Thread(() -> {
             String appID = mContext.getString(R.string.rtc_app_id);
             if (appID.isEmpty() || appID.codePointCount(0, appID.length()) != 32) {
                 _viewStatus.postValue(new ViewStatus.Error("APP ID is not valid"));
@@ -664,6 +655,19 @@ public class RoomViewModel extends ViewModel implements RoomApi {
                     _viewStatus.postValue(new ViewStatus.Error(e));
                     _mEngine.postValue(null);
                 }
+
+                // 监听当前房间数据 <==> 礼物、PK、
+                Sync.Instance().joinScene(currentRoom.getId(), new Sync.JoinSceneCallback() {
+                    @Override
+                    public void onSuccess(SceneReference sceneReference) {
+                        onJoinRTMSucceed(sceneReference);
+                    }
+
+                    @Override
+                    public void onFail(SyncManagerException e) {
+                        _viewStatus.postValue(new ViewStatus.Error("加入RTM失败"));
+                    }
+                });
             }
         }).start();
     }
@@ -700,10 +704,9 @@ public class RoomViewModel extends ViewModel implements RoomApi {
      * 只有观众调用
      */
     public void setupScreenView(@NonNull TextureView view, int gameUid) {
-        BaseUtil.logD("gameUid:"+gameUid);
         RtcEngineEx engine = _mEngine.getValue();
         if (engine != null) {
-            VideoCanvas videoCanvas = new VideoCanvas(view, Constants.RENDER_MODE_FIT, gameUid);
+            VideoCanvas videoCanvas = new VideoCanvas(view, Constants.RENDER_MODE_HIDDEN, gameUid);
             engine.setupRemoteVideo(videoCanvas);
         }
     }

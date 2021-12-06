@@ -40,18 +40,21 @@
         android:visibility="gone"
         app:drawableTopCompat="@drawable/ic_empty_list" />
 
-    <ImageButton
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/btn_create_fg_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/space_big"
-        android:elevation="4dp"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/desc_create_room"
-        android:src="@drawable/ic_create_room"
-        app:tint="@color/selector_color_scrim"
-        app:tintMode="src_atop" />
+        app:cardElevation="6dp"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardCornerRadius="28dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp">
+        <FrameLayout
+            android:background="@drawable/ic_launcher_background"
+            android:foreground="@drawable/ic_create_room"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </com.google.android.material.card.MaterialCardView>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_fg_list"

@@ -16,20 +16,18 @@ import io.agora.syncmanager.rtm.SceneReference;
 public class RoomViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     private final Context context;
     private final RoomInfo roomInfo;
-    private final SceneReference sceneReference;
 
-    public RoomViewModelFactory(@NonNull Context context, @NonNull RoomInfo currentRoom, @Nullable SceneReference sceneReference) {
+    public RoomViewModelFactory(@NonNull Context context, @NonNull RoomInfo currentRoom) {
         this.context = context;
         this.roomInfo = currentRoom;
-        this.sceneReference = sceneReference;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         try {
-            Constructor<T> constructor = modelClass.getConstructor(Context.class, RoomInfo.class, SceneReference.class);
-            return constructor.newInstance(context, roomInfo, sceneReference);
+            Constructor<T> constructor = modelClass.getConstructor(Context.class, RoomInfo.class);
+            return constructor.newInstance(context, roomInfo);
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("Cannot create an instance of " + modelClass, e);
         }

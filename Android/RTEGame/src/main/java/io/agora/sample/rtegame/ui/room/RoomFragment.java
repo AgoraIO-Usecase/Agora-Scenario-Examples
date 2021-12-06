@@ -53,6 +53,7 @@ import io.agora.sample.rtegame.bean.PKApplyInfo;
 import io.agora.sample.rtegame.bean.RoomInfo;
 import io.agora.sample.rtegame.databinding.FragmentRoomBinding;
 import io.agora.sample.rtegame.databinding.ItemRoomMessageBinding;
+import io.agora.sample.rtegame.repo.GameRepo;
 import io.agora.sample.rtegame.service.MediaProjectService;
 import io.agora.sample.rtegame.ui.room.donate.DonateDialog;
 import io.agora.sample.rtegame.ui.room.invite.HostListDialog;
@@ -94,7 +95,7 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         if (currentRoom == null) {
             findNavController().navigate(R.id.action_roomFragment_to_roomCreateFragment);
         } else {
-            mViewModel = GameUtil.getViewModel(this, RoomViewModel.class, new RoomViewModelFactory(requireContext(), currentRoom, mGlobalModel.sceneReference));
+            mViewModel = GameUtil.getViewModel(this, RoomViewModel.class, new RoomViewModelFactory(requireContext(), currentRoom));
 
             //  See if current user is the host
             aMHost = currentRoom.getUserId().equals(GameApplication.getInstance().user.getUserId());
@@ -299,6 +300,7 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         } else if (gameInfo.getStatus() == GameInfo.PLAYING) {
             if (!aMHost) {
                 insertNewMessage("加载远端画面");
+                GameUtil.currentGame =  GameRepo.getGameDetail(gameInfo.getGameId());
                 needGameView(true);
                 if (mBinding.hostContainerFgRoom.gameHostView != null) {
                     mViewModel.setupScreenView(mBinding.hostContainerFgRoom.gameHostView.renderTextureView, gameInfo.getGameUid());
@@ -329,18 +331,17 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
 
 
     /**
-     * 主播 ==》消息提示
-     * 用户 ==》显示特效+消息提示
+     * 主播 || 自己送的==》消息提示
+     * 不是主播 ==》显示特效
      */
     private void onGiftUpdated(GiftInfo giftInfo) {
         if (giftInfo == null) return;
 
         mBinding.giftImageFgRoom.setVisibility(View.VISIBLE);
 
-        if (aMHost || Objects.equals(giftInfo.getUserId(), GameApplication.getInstance().user.getUserId())) {
-            String giftDesc = GiftUtil.getGiftDesc(requireContext(), giftInfo);
-            if (giftDesc != null) insertNewMessage(giftDesc);
-        }
+        String giftDesc = GiftUtil.getGiftDesc(requireContext(), giftInfo);
+        if (giftDesc != null) insertNewMessage(giftDesc);
+
         if (!aMHost) {
             int giftId = GiftUtil.getGiftIdFromGiftInfo(requireContext(), giftInfo);
             Glide.with(requireContext()).asGif().load(GiftUtil.getGifByGiftId(giftId))
@@ -439,7 +440,11 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         }
     }
 
-    private void insertUserMessage(String msg){
+    /**
+     * 用户发送消息
+     * 直播间滚动消息
+     */
+    private void insertUserMessage(String msg) {
         Spanned userMessage = Html.fromHtml(getString(R.string.user_msg, mViewModel.localUser.getName(), msg));
         insertNewMessage(userMessage);
     }

@@ -2,8 +2,13 @@ package io.agora.syncmanager.rtm;
 
 import java.util.HashMap;
 
+import io.agora.common.annotation.NonNull;
+import io.agora.common.annotation.Nullable;
+
 public interface ISyncManager {
-    void joinScene(Scene room, Sync.JoinSceneCallback callback);
+    void joinScene(@NonNull String sceneId,@Nullable Sync.JoinSceneCallback callback);
+
+    void createScene(@NonNull Scene room, @Nullable Sync.Callback callback);
 
     void getScenes(Sync.DataListCallback callback);
 
@@ -30,4 +35,6 @@ public interface ISyncManager {
     void subscribe(CollectionReference reference, Sync.EventListener listener);
 
     void unsubscribe(String id, Sync.EventListener listener);
+
+    void destroy();
 }

@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import io.agora.common.annotation.NonNull;
+import io.agora.common.annotation.Nullable;
 import io.agora.rtm.ChannelAttributeOptions;
 import io.agora.rtm.ErrorInfo;
 import io.agora.rtm.ResultCallback;
@@ -39,9 +41,6 @@ import io.agora.syncmanager.rtm.ISyncManager;
 import io.agora.syncmanager.rtm.Sync;
 
 import static android.content.ContentValues.TAG;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 public class DataSyncImpl implements ISyncManager {
 
@@ -109,41 +108,99 @@ public class DataSyncImpl implements ISyncManager {
     }
 
     @Override
-    public void joinScene(Scene room, Sync.JoinSceneCallback callback) {
-        String channel = room.getId();
-        assert channel != null;
-        NamedChannelListener listener = new NamedChannelListener(channel);
-        RtmChannel rtmChannel = client.createChannel(channel, listener);
-        rtmChannel.join(new ResultCallback<Void>() {
+    public void destroy() {
+        this.eventListeners.clear();
+        this.majorChannels.clear();
+        this.channelListeners.clear();
+        this.cachedAttrs.clear();
+        if(client != null){
+            client.logout(new ResultCallback<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    client.release();
+                }
+
+                @Override
+                public void onFailure(ErrorInfo errorInfo) {
+
+                }
+            });
+        }
+    }
+
+    @Override
+    public void createScene(@NonNull Scene room,@Nullable Sync.Callback callback) {
+        String channelName = room.getId();
+        assert channelName != null;
+
+        RtmChannelAttribute attribute = new RtmChannelAttribute();
+        attribute.setKey(channelName);
+        attribute.setValue(room.toJson());
+        ChannelAttributeOptions options = new ChannelAttributeOptions();
+        List<RtmChannelAttribute> list = new ArrayList<>();
+        list.add(attribute);
+        client.addOrUpdateChannelAttributes(mDefaultChannel, list, options, new ResultCallback<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                if(!majorChannels.containsKey(room.getId())){
-                    majorChannels.put(room.getId(), rtmChannel);
-                }
-                channelListeners.put(channel, listener);
-                // Update Scenes List
-                RtmChannelAttribute attribute = new RtmChannelAttribute();
-                attribute.setKey(room.getId());
-                attribute.setValue(room.toJson());
-                ChannelAttributeOptions options = new ChannelAttributeOptions();
-                List<RtmChannelAttribute> list = new ArrayList<>();
-                list.add(attribute);
-                client.addOrUpdateChannelAttributes(mDefaultChannel, list, options, new ResultCallback<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        if(callback!=null) callback.onSuccess(new SceneReference(DataSyncImpl.this, room.getId(), channel));
-                    }
-
-                    @Override
-                    public void onFailure(ErrorInfo errorInfo) {
-                        if(callback!=null) callback.onFail(new SyncManagerException(-1, errorInfo.toString()));
-                    }
-                });
+                if(callback!=null) callback.onSuccess();
             }
 
             @Override
             public void onFailure(ErrorInfo errorInfo) {
-                callback.onFail(new SyncManagerException(-1, "join rtm channel failed!"));
+                if(callback!=null) callback.onFail(new SyncManagerException(-1, errorInfo.toString()));
+            }
+        });
+
+//        rtmChannel.join(new ResultCallback<Void>() {
+//            @Override
+//            public void onSuccess(Void unused) {
+//                if(!majorChannels.containsKey(channelName)){
+//                    majorChannels.put(channelName, rtmChannel);
+//                }
+//                channelListeners.put(channelName, listener);
+//                // Update Scenes List
+//                RtmChannelAttribute attribute = new RtmChannelAttribute();
+//                attribute.setKey(room.getId());
+//                attribute.setValue(room.toJson());
+//                ChannelAttributeOptions options = new ChannelAttributeOptions();
+//                List<RtmChannelAttribute> list = new ArrayList<>();
+//                list.add(attribute);
+//                client.addOrUpdateChannelAttributes(mDefaultChannel, list, options, new ResultCallback<Void>() {
+//                    @Override
+//                    public void onSuccess(Void unused) {
+//                        if(callback!=null) callback.onSuccess(new SceneReference(DataSyncImpl.this, room.getId(), channelName));
+//                    }
+//
+//                    @Override
+//                    public void onFailure(ErrorInfo errorInfo) {
+//                        if(callback!=null) callback.onFail(new SyncManagerException(-1, errorInfo.toString()));
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onFailure(ErrorInfo errorInfo) {
+//                callback.onFail(new SyncManagerException(-1, "join rtm channelName failed!"));
+//            }
+//        });
+    }
+
+    @Override
+    public void joinScene(@NonNull String sceneId,@Nullable Sync.JoinSceneCallback callback) {
+        NamedChannelListener listener = new NamedChannelListener(sceneId);
+        RtmChannel rtmChannel = client.createChannel(sceneId, listener);
+        rtmChannel.join(new ResultCallback<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                majorChannels.put(sceneId, rtmChannel);
+                channelListeners.put(sceneId, listener);
+                if(callback!=null) callback.onSuccess(new SceneReference(DataSyncImpl.this, sceneId, sceneId));
+            }
+
+            @Override
+            public void onFailure(ErrorInfo errorInfo) {
+                if (callback != null)
+                    callback.onFail(new SyncManagerException(-1, "join rtm channel failed!\n"+errorInfo.getErrorDescription()));
             }
         });
     }
