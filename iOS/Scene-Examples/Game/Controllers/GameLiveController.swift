@@ -67,17 +67,12 @@ class GameLiveController: PKLiveController {
         webView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         webView.bottomAnchor.constraint(equalTo: chatView.topAnchor, constant: -10).isActive = true
         
-//        webView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-//        webView.topAnchor.constraint(equalTo: view.topAnchor, constant: -Screen.kNavHeight).isActive = true
-//        webView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-//        webView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        
         countTimeLabel.translatesAutoresizingMaskIntoConstraints = false
         pkProgressView.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(countTimeLabel)
         countTimeLabel.centerXAnchor.constraint(equalTo: liveCanvasView.centerXAnchor).isActive = true
-        countTimeLabel.bottomAnchor.constraint(equalTo: liveCanvasView.topAnchor, constant: -6).isActive = true
+        countTimeLabel.topAnchor.constraint(equalTo: liveCanvasView.topAnchor).isActive = true
         countTimeLabel.widthAnchor.constraint(equalToConstant: 83).isActive = true
         
         pkProgressView.removeConstraints(pkProgressView.constraints)
@@ -158,7 +153,7 @@ class GameLiveController: PKLiveController {
         let fetchGameInfoDelegate = FetchPKInfoDataDelegate()
         fetchGameInfoDelegate.onSuccess = { [weak self] result in
             self?.gameInfoModel = JSONObject.toModel(GameInfoModel.self, value: result?.toJson())
-            self?.updatePKUIStatus(isStart: self?.gameInfoModel?.status == .playing)
+            self?.updatePKUIStatus(isStart: self?.gameInfoModel?.status == .playing && self?.pkInfoModel?.status == .accept)
             if self?.gameInfoModel?.status != .playing && self?.pkInfoModel?.status == .accept {
                 self?.updateLiveLayout(postion: .center)
             } else if self?.gameInfoModel?.status == .playing && self?.pkInfoModel?.status == .accept {
@@ -188,6 +183,11 @@ class GameLiveController: PKLiveController {
         if type == .me {
             viewModel.postGiftHandler(type: giftModel.giftType)
         }
+    }
+    /// 发消息
+    override func sendMessage(message: String) {
+        super.sendMessage(message: message)
+        viewModel.postBarrage()
     }
     
     override func updatePKUIStatus(isStart: Bool) {
@@ -256,6 +256,7 @@ class GameLiveController: PKLiveController {
         optionEx.publishCustomVideoTrack = .of(isBroadcast)
         optionEx.publishCustomAudioTrack = .of(isBroadcast)
         let config = AgoraVideoEncoderConfiguration()
+        config.frameRate = .fps15
         config.dimensions = CGSize(width: Screen.width, height: webView.frame.height)
         agoraKit?.setVideoEncoderConfigurationEx(config, connection: screenConnection)
         agoraKit?.joinChannelEx(byToken: KeyCenter.Token,
@@ -276,17 +277,12 @@ class GameLiveController: PKLiveController {
         guard let agoraKit = agoraKit, isLoadScreenShare == false else { return }
         isLoadScreenShare = true
         joinScreenShare(isBroadcast: true)
-        let insets = UIEdgeInsets(top: webView.frame.minY,
-                                  left: 0,
-                                  bottom: view.frame.height - webView.frame.maxY,
-                                  right: 0)
-//        AgoraScreenShare.shareInstance().startService(with: agoraKit, connection: screenConnection, regionInsets: insets)
         AgoraScreenShare.shareInstance().startService(with: agoraKit, connection: screenConnection, regionRect: webView.frame)
         if #available(iOS 12.0, *) {
             let systemBroadcastPicker = RPSystemBroadcastPickerView(frame: .zero)
             systemBroadcastPicker.showsMicrophoneButton = false
             systemBroadcastPicker.autoresizingMask = [.flexibleTopMargin, .flexibleRightMargin]
-            if let url = Bundle.main.url(forResource: "Agora-ScreenShare-Extension(Socket)", withExtension: "appex", subdirectory: "PlugIns") {
+            if let url = Bundle.main.url(forResource: "Agora-ScreenShare-Extension", withExtension: "appex", subdirectory: "PlugIns") {
                 if let bundle = Bundle(url: url) {
                     systemBroadcastPicker.preferredExtension = bundle.bundleIdentifier
                 }

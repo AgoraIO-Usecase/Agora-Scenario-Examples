@@ -18,11 +18,11 @@ class PKInviteInfoDelegate: ISyncManagerEventDelegate {
         self.vc = vc
     }
     func onCreated(object: IObject) {
-        LogUtils.log(message: "onCreated invite == \(String(describing: object.toJson()))", level: .info)
+        LogUtils.log(message: "onCreated pkApplyInfo == \(String(describing: object.toJson()))", level: .info)
     }
     
     func onUpdated(object: IObject) {
-        LogUtils.log(message: "onUpdated invite == \(String(describing: object.toJson()))", level: .info)
+        LogUtils.log(message: "onUpdated pkApplyInfo == \(String(describing: object.toJson()))", level: .info)
         guard var model = JSONObject.toModel(PKApplyInfoModel.self, value: object.toJson()) else { return }
         if model.status == .end {
             print("========== me end ==================")
@@ -55,7 +55,7 @@ class PKInviteInfoDelegate: ISyncManagerEventDelegate {
             var pkInfo = PKInfoModel()
             pkInfo.status = model.status
             pkInfo.roomId = channelName ?? ""
-            pkInfo.userId = model.userId
+            pkInfo.userId = userId ?? ""
             SyncUtil.update(id: vc.channleName,
                             key: SYNC_MANAGER_PK_INFO,
                             params: JSONObject.toJson(pkInfo),
@@ -81,19 +81,20 @@ class PKInviteInfoDelegate: ISyncManagerEventDelegate {
             }
         } else if model.status == .refuse && "\(UserInfo.userId)" == model.userId {
             vc.showAlert(title: "PK_Invite_Reject".localized, message: "")
+            vc.deleteSubscribe()
         }
     }
     
     func onDeleted(object: IObject?) {
-        LogUtils.log(message: "onDeleted invite == \(String(describing: object?.toJson()))", level: .info)
+        LogUtils.log(message: "onDeleted pkApplyInfo == \(String(describing: object?.toJson()))", level: .info)
     }
     
     func onSubscribed() {
-        LogUtils.log(message: "onSubscribed invite", level: .info)
+        LogUtils.log(message: "onSubscribed pkApplyInfo", level: .info)
     }
     
     func onError(code: Int, msg: String) {
-        LogUtils.log(message: "onError gift code ==\(code) msg == \(msg)", level: .error)
+        LogUtils.log(message: "onError pkApplyInfo code ==\(code) msg == \(msg)", level: .error)
     }
 }
 

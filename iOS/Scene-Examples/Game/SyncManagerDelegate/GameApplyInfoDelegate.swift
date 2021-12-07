@@ -13,14 +13,14 @@ class GameApplyInfoDelegate: ISyncManagerEventDelegate {
         self.vc = vc
     }
     func onCreated(object: IObject) {
-        LogUtils.log(message: "onCreated game == \(String(describing: object.toJson()))", level: .info)
+        LogUtils.log(message: "onCreated applyGameInfo == \(String(describing: object.toJson()))", level: .info)
         guard let model = JSONObject.toModel(GameApplyInfoModel.self, value: object.toJson()) else { return }
         vc.gameApplyInfoModel = model
         onUpdated(object: object)
     }
     
     func onUpdated(object: IObject) {
-        LogUtils.log(message: "onUpdated game == \(String(describing: object.toJson()))", level: .info)
+        LogUtils.log(message: "onUpdated applyGameInfo == \(String(describing: object.toJson()))", level: .info)
         guard let model = JSONObject.toModel(GameApplyInfoModel.self, value: object.toJson()) else { return }
         vc.gameApplyInfoModel = model
         
@@ -51,15 +51,15 @@ class GameApplyInfoDelegate: ISyncManagerEventDelegate {
     }
     
     func onDeleted(object: IObject?) {
-        LogUtils.log(message: "onDeleted game == \(String(describing: object?.toJson()))", level: .info)
+        LogUtils.log(message: "onDeleted applyGameInfo == \(String(describing: object?.toJson()))", level: .info)
     }
     
     func onSubscribed() {
-        LogUtils.log(message: "onSubscribed game", level: .info)
+        LogUtils.log(message: "onSubscribed applyGameInfo", level: .info)
     }
     
     func onError(code: Int, msg: String) {
-        LogUtils.log(message: "onError game code ==\(code) msg == \(msg)", level: .error)
+        LogUtils.log(message: "onError applyGameInfo code ==\(code) msg == \(msg)", level: .error)
     }
 }
 

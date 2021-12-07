@@ -176,7 +176,7 @@ class LiveGidtViewCell: UICollectionViewCell {
     
     func setliveGigtData(item: Any?) {
         guard let model = item as? LiveGiftModel else { return }
-        imageView.image = UIImage(named: model.iconName)
+        imageView.image = UIImage(named: model.iconName ?? "")
         titleLabel.text = model.title
         descLabel.text = "(\(model.coin)" + "Coin".localized + ")"
     }

@@ -9,13 +9,13 @@ import UIKit
 
 enum SceneType: String {
     /// 单直播
-    case singleLive = "SignleLive"
+    case singleLive = "signleLive"
     /// 超级小班课
     case breakoutRoom = "BreakOutRoom"
     /// 游戏
     case game = "interactiveGame"
     /// PKApply
-    case pkApply = "PKApplyInfo"
+    case pkApply = "pkApplyInfo"
     
     var alertTitle: String {
         switch self {
