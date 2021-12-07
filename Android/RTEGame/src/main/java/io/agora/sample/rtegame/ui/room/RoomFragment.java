@@ -85,16 +85,15 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         super.onCreate(savedInstanceState);
         // During Live we limit the orientation
         requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-        GlobalViewModel mGlobalModel = GameUtil.getViewModel(requireActivity(), GlobalViewModel.class);
-        // hold current RoomInfo
-        if (mGlobalModel.roomInfo.getValue() != null)
-            currentRoom = mGlobalModel.roomInfo.getValue().peekContent();
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        GlobalViewModel mGlobalModel = GameUtil.getViewModel(requireActivity(), GlobalViewModel.class);
+        // hold current RoomInfo
+        if (mGlobalModel.roomInfo.getValue() != null)
+            currentRoom = mGlobalModel.roomInfo.getValue().peekContent();
         if (currentRoom == null) {
             findNavController().navigate(R.id.action_roomFragment_to_roomCreateFragment);
             return null;

@@ -3,7 +3,6 @@ package io.agora.sample.rtegame.ui.room;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
-import android.os.SystemClock;
 import android.view.TextureView;
 import android.webkit.WebView;
 
