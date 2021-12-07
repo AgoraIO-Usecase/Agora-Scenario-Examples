@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.core.view.WindowCompat;
 
 import io.agora.example.base.BaseActivity;
+import io.agora.example.base.BaseUtil;
 import io.agora.rtc2.RtcEngine;
 import io.agora.sample.rtegame.databinding.ActivityMainBinding;
 import io.agora.syncmanager.rtm.Sync;
@@ -20,11 +21,13 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    public void finish() {
+        super.finish();
+        BaseUtil.logD("finish");
 //        RTMDestroy
         Sync.Instance().destroy();
 //        RTCDestroy
         RtcEngine.destroy();
     }
+
 }

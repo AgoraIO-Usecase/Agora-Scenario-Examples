@@ -65,7 +65,7 @@ public class GameRepo {
         String timestamp = String.valueOf(System.currentTimeMillis()/1000);
 
         String giftUrl = GameUtil.currentGame.getGameGiftUrl();
-        YuanQiHttp.getAPI().gameGift(giftUrl, userId, appId,roomId, user.getName(), "token123", timestamp, "123", new Random().nextInt(5) + 1, 1, playerId, "signed").enqueue(new EmptyRetrofitCallBack<>());
+        YuanQiHttp.getAPI().gameGift(giftUrl, userId, appId,roomId, user.getName(), "token123", timestamp, "123", gift.getGiftType(), 1, playerId, "signed").enqueue(new EmptyRetrofitCallBack<>());
     }
 
     static class EmptyRetrofitCallBack<T> implements Callback<T>{

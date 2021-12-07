@@ -7,11 +7,11 @@
     tools:background="?attr/colorSurface">
 
     <TextView
-        android:id="@+id/title_dialog_game_mode"
+        android:id="@+id/title_dialog_game_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingVertical="@dimen/space_normal"
-        android:text="@string/gift"
+        android:text="@string/game_mode"
         android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,31 +23,16 @@
         android:layout_marginHorizontal="@dimen/space_normal"
         android:alpha="0.12"
         android:background="?attr/colorOnSurface"
-        app:layout_constraintTop_toBottomOf="@id/title_dialog_game_mode" />
+        app:layout_constraintTop_toBottomOf="@id/title_dialog_game_list" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_dialog_donate"
+        android:id="@+id/recycler_view_dialog_game_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/title_dialog_game_mode"
-        app:spanCount="4"
-        tools:itemCount="8"
-        tools:listitem="@layout/item_dialog_gift" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_donate_dialog_donate"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/space_normal"
-        android:paddingHorizontal="48dp"
+        android:orientation="horizontal"
         android:paddingVertical="@dimen/space_normal"
-        android:text="@string/donate"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recycler_view_dialog_donate"
-        app:shapeAppearance="@style/roundStyle" />
+        tools:listitem="@layout/item_game"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@id/title_dialog_game_list" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

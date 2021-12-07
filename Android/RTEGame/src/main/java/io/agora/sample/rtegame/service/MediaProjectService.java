@@ -65,8 +65,8 @@ public class MediaProjectService extends Service {
         Notification notification = new NotificationCompat.Builder(this, channelId)
                 .setContentText(getString(R.string.notify_recording_screen))
                 .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
-                .setSmallIcon(R.mipmap.ic_launcher)
-//                .setColor(getResources().getColor(R.color.agora_blue))
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setColor(getResources().getColor(R.color.colorAccent))
                 .setWhen(System.currentTimeMillis())
                 .build();
         startForeground(new Random().nextInt(1024) + 11024, notification);

@@ -11,9 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/menu_create_room"
         app:navigationIcon="@drawable/ic_close"
         app:title=""
+        tools:menu="@menu/menu_create_room"
         tools:title="@string/app_name" />
 
     <com.google.android.material.imageview.ShapeableImageView
@@ -46,6 +46,7 @@
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:textColor="@android:color/white"
+        android:textIsSelectable="false"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/btn_random_fg_create"
@@ -77,6 +78,7 @@
         android:background="@android:color/transparent"
         android:contentDescription="@string/beauty"
         android:src="@mipmap/ic_launcher"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/btn_live_fg_create"
         app:layout_constraintEnd_toStartOf="@id/btn_live_fg_create"
         app:layout_constraintStart_toStartOf="parent"
@@ -99,6 +101,7 @@
         android:background="@android:color/transparent"
         android:contentDescription="@string/beauty"
         android:src="@mipmap/ic_launcher"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/btn_live_fg_create"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/btn_live_fg_create"

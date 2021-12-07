@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingVertical="@dimen/space_normal"
-        android:text="@string/gift"
+        android:text="@string/game_mode"
         android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,29 +25,31 @@
         android:background="?attr/colorOnSurface"
         app:layout_constraintTop_toBottomOf="@id/title_dialog_game_mode" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_dialog_donate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/title_dialog_game_mode"
-        app:spanCount="4"
-        tools:itemCount="8"
-        tools:listitem="@layout/item_dialog_gift" />
-
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_donate_dialog_donate"
+        android:id="@+id/btn_pk_fg_game_mode"
         style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/space_normal"
-        android:paddingHorizontal="48dp"
-        android:paddingVertical="@dimen/space_normal"
-        android:text="@string/donate"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_marginTop="@dimen/space_big"
+        app:backgroundTint="#F5A623"
+        app:icon="@drawable/ic_game_mode_pk"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recycler_view_dialog_donate"
-        app:shapeAppearance="@style/roundStyle" />
+        app:layout_constraintTop_toBottomOf="@id/title_dialog_game_mode"
+        app:shapeAppearance="@style/cornerBigStyle" />
+
+    <TextView
+        android:id="@+id/title_pk_game_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_small"
+        android:layout_marginBottom="@dimen/space_big"
+        android:text="@string/pk_with_mic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/btn_pk_fg_game_mode"
+        app:layout_constraintStart_toStartOf="@id/btn_pk_fg_game_mode"
+        app:layout_constraintTop_toBottomOf="@id/btn_pk_fg_game_mode" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

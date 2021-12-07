@@ -36,14 +36,27 @@ import io.agora.sample.rtegame.util.ViewStatus;
 public class HostListDialog extends BaseBottomSheetDialogFragment<DialogHostListBinding> implements OnItemClickListener<RoomInfo> {
     public static final String TAG = "HostListDialog";
 
+    public int desiredGameId = -1;
+
     private RoomViewModel roomViewModel;
     // 用于获取可PK主播
     private RoomListViewModel roomListViewModel;
 
     private BaseRecyclerViewAdapter<ItemDialogHostBinding, RoomInfo, ItemHostHolder> mAdapter;
 
+    public HostListDialog() {
+    }
+
+    public HostListDialog(int desiredGameId) {
+        this.desiredGameId = desiredGameId;
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        if (desiredGameId == -1){
+            dismiss();
+            return;
+        }
         super.onViewCreated(view, savedInstanceState);
         WindowCompat.setDecorFitsSystemWindows(requireDialog().getWindow(), false);
 
@@ -129,7 +142,7 @@ public class HostListDialog extends BaseBottomSheetDialogFragment<DialogHostList
     @Override
     public void onItemClick(@NonNull RoomInfo targetRoom, @NonNull View view, int position, long viewType) {
         if (view instanceof MaterialButton){
-            roomViewModel.sendPKInvite(roomViewModel, targetRoom, 1);
+            roomViewModel.sendApplyPKInvite(roomViewModel, targetRoom, desiredGameId);
         }
     }
 }

@@ -1,12 +1,12 @@
 package io.agora.sample.rtegame.ui.create;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -28,6 +28,7 @@ public class RoomCreateFragment extends BaseFragment<FragmentCreateRoomBinding> 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         mGlobalModel = GameUtil.getViewModel(requireActivity(), GlobalViewModel.class);
         initListener();
 
@@ -37,12 +38,13 @@ public class RoomCreateFragment extends BaseFragment<FragmentCreateRoomBinding> 
     private void initListener() {
         ViewCompat.setOnApplyWindowInsetsListener(mBinding.getRoot(), (v, insets) -> {
             Insets inset = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            // 顶部
-            mBinding.toolbarFgCreate.setPadding(0,inset.top,0,0);
-            // 底部
-            ConstraintLayout.LayoutParams lpBtn = (ConstraintLayout.LayoutParams) mBinding.btnLiveFgCreate.getLayoutParams();
-            lpBtn.bottomMargin = inset.bottom + ((int) BaseUtil.dp2px(36));
-            mBinding.btnLiveFgCreate.setLayoutParams(lpBtn);
+            mBinding.getRoot().setPaddingRelative(inset.left,inset.top,inset.right,inset.bottom);
+//            // 顶部
+//            mBinding.toolbarFgCreate.setPadding(0,inset.top,0,0);
+//            // 底部
+//            ConstraintLayout.LayoutParams lpBtn = (ConstraintLayout.LayoutParams) mBinding.btnLiveFgCreate.getLayoutParams();
+//            lpBtn.bottomMargin = inset.bottom + ((int) BaseUtil.dp2px(36));
+//            mBinding.btnLiveFgCreate.setLayoutParams(lpBtn);
 
             return WindowInsetsCompat.CONSUMED;
         });

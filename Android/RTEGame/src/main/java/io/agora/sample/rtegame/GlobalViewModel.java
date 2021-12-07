@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -17,7 +16,6 @@ import io.agora.sample.rtegame.repo.RoomCreateApi;
 import io.agora.sample.rtegame.util.Event;
 import io.agora.sample.rtegame.util.GameConstants;
 import io.agora.sample.rtegame.util.GameUtil;
-import io.agora.syncmanager.rtm.SceneReference;
 import io.agora.syncmanager.rtm.Sync;
 import io.agora.syncmanager.rtm.SyncManagerException;
 

@@ -40,6 +40,9 @@
          <font color=\'#0091FC\'>%s</font>：%s
         ]]></string>
 
+    <string name="game_mode">游戏模式</string>
+    <string name="pk_with_mic">连麦PK</string>
+
 
     <string name="screen_share_request_denied">Screen share cancelled</string>
     <string name="screen_share_version_unsupported">Screen Share do not support on this Android version</string>
@@ -72,13 +75,13 @@
         <item>🚀</item>
     </string-array>
     <string-array name="gift_name_list_eng">
-        <item>bell</item>
-        <item>icecream</item>
-        <item>wine</item>
-        <item>cake</item>
-        <item>ring</item>
-        <item>watch</item>
-        <item>diamond</item>
-        <item>rocket</item>
+        <item>SuperBell</item>
+        <item>SuperIcecream</item>
+        <item>SuperWine</item>
+        <item>SuperCake</item>
+        <item>SuperRing</item>
+        <item>SuperWatch</item>
+        <item>SuperDiamond</item>
+        <item>SuperRocket</item>
     </string-array>
 </resources>

@@ -2,18 +2,19 @@ package io.agora.sample.rtegame.bean;
 
 import androidx.annotation.NonNull;
 
-public class GameInfo {
-    public static final int START = 2;
+public class GameApplyInfo {
+    public static final int IDLE = 1;
+    public static final int PLAYING = 2;
     public static final int END = 3;
 
     //        1 - 未开始, 2 - 进行中, 3 - 已结束 (需要游戏有一个加载完成的回调)
     private int status;
-    //        屏幕共享对应的uid
-    private final int gameUid;
+    //       1 你画我猜
+    private final int gameId;
 
-    public GameInfo(int status, int gameUid) {
-        this.status = status;
-        this.gameUid = gameUid;
+    public GameApplyInfo(int status, int gameUid) {
+        this.status = status; 
+        this.gameId = gameUid;
     }
 
     public void setStatus(int status) {
@@ -24,16 +25,16 @@ public class GameInfo {
         return status;
     }
 
-    public int getGameUid() {
-        return gameUid;
+    public int getGameId() {
+        return gameId;
     }
 
     @NonNull
     @Override
     public String toString() {
-        return "GameInfo{" +
+        return "GameApplyInfo{" +
                 "status=" + status +
-                ", gameUid=" + gameUid +
+                ", gameId=" + gameId +
                 '}';
     }
 }

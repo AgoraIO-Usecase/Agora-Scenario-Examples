@@ -77,7 +77,7 @@ public class DonateDialog extends BaseBottomSheetDialogFragment<DialogDonateBind
         List<Gift> gifts = new ArrayList<>();
         String[] giftNames = getResources().getStringArray(R.array.gift_name_list);
         for (int i = 0; i < 8; i++) {
-            Gift gift = new Gift(i, 10 * i, giftNames[i]);
+            Gift gift = new Gift(i, 10 * (i + 1), giftNames[i]);
             gift.iconRes = GiftUtil.getIconByGiftId(i);
             gift.gifRes = GiftUtil.getGifByGiftId(i);
             gifts.add(gift);

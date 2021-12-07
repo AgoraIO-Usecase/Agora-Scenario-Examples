@@ -111,6 +111,7 @@ public class GameUtil {
         HashMap<String, String> map = new HashMap<>();
         map.put("backgroundId", roomInfo.getBackgroundId());
         map.put("roomName", roomInfo.getRoomName());
+        map.put("roomId", roomInfo.getId());
 
         scene.setProperty(map);
         return scene;

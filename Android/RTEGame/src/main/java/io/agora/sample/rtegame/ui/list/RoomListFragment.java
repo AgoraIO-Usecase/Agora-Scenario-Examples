@@ -2,6 +2,7 @@ package io.agora.sample.rtegame.ui.list;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +16,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -81,9 +83,11 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
     }
 
     private void initView() {
+        int spanCount = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? 2 : 4;
         mAdapter = new BaseRecyclerViewAdapter<>(null, this, RoomListHolder.class);
         mBinding.recyclerViewFgList.setAdapter(mAdapter);
-        mBinding.recyclerViewFgList.addItemDecoration(new DividerDecoration(2));
+        mBinding.recyclerViewFgList.setLayoutManager(new GridLayoutManager(requireContext(), spanCount));
+        mBinding.recyclerViewFgList.addItemDecoration(new DividerDecoration(spanCount));
         mBinding.swipeFgList.setProgressViewOffset(true, 0, mBinding.swipeFgList.getProgressViewEndOffset());
         mBinding.swipeFgList.setColorSchemeResources(R.color.btn_gradient_start_color, R.color.btn_gradient_end_color);
     }
@@ -100,6 +104,8 @@ public class RoomListFragment extends BaseFragment<FragmentRoomListBinding> impl
 
             return WindowInsetsCompat.CONSUMED;
         });
+
+        // FIXME 点击标题栏清除房间信息(仅限调试)
         mBinding.toolbarFgList.setOnLongClickListener(v -> {
             try {
                 Field mISyncManager = Sync.class.getDeclaredField("mISyncManager");

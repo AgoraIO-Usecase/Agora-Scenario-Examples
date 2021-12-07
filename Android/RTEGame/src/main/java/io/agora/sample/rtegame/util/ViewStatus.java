@@ -1,17 +1,20 @@
 package io.agora.sample.rtegame.util;
 
+import androidx.annotation.NonNull;
+
 public class ViewStatus {
     private ViewStatus() {
     }
 
     public static class Error extends ViewStatus{
+        @NonNull
         public String msg;
 
-        public Error(String msg) {
+        public Error(@NonNull String msg) {
             this.msg = msg;
         }
-        public Error(Throwable t) {
-            this.msg = t.getMessage();
+        public Error(@NonNull Throwable t) {
+            this.msg = t.getMessage() == null ? "" : t.getMessage();
         }
     }
 
