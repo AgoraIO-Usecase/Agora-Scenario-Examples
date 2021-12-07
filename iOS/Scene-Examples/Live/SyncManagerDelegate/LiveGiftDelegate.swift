@@ -34,10 +34,12 @@ class LiveGiftDelegate: ISyncManagerEventDelegate {
     func onUpdated(object: IObject) {
         LogUtils.log(message: "onUpdated gift == \(String(describing: object.toJson()))", level: .info)
         guard let model = JSONObject.toModel(LiveGiftModel.self, value: object.toJson()) else { return }
-        self.vc.playGifView.isHidden = false
-        self.vc.playGifView.loadGIFName(gifName: model.gifName)
+        if type == .me {
+            vc.playGifView.isHidden = false
+            vc.playGifView.loadGIFName(gifName: model.gifName)
+            vc.chatView.sendMessage(message: model.userId + "送出了一个" + model.title)
+        }
         LiveReceivedGiftClosure?(model, type)
-        self.vc.chatView.sendMessage(message: model.userId + "送出了一个" + model.title)
     }
     
     func onDeleted(object: IObject?) {

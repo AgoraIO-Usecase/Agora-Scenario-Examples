@@ -15,11 +15,11 @@ let SYNC_MANAGER_PARAM_KEY_APPID = "appId"
 /// 礼物
 let SYNC_MANAGER_GIFT_INFO = "giftInfo"
 /// PK游戏信息
-let SYNC_MANAGER_GAME_APPLY_INFO = "GameApplyInfo"
+let SYNC_MANAGER_GAME_APPLY_INFO = "gameApplyInfo"
 /// 观众游戏信息
-let SYNC_MANAGER_GAME_INFO = "GameInfo"
+let SYNC_MANAGER_GAME_INFO = "gameInfo"
 /// pk信息
-let SYNC_MANAGER_PK_INFO = "PKInfo"
+let SYNC_MANAGER_PK_INFO = "pkInfo"
 
 struct UserInfo {
     static var userId: UInt {

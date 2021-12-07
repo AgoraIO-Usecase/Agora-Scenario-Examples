@@ -7,9 +7,9 @@
 
 import UIKit
 
-enum GameCenterType: Codable {
+enum GameCenterType: Int, Codable {
     /// 你画我猜
-    case you_draw_i_guess
+    case you_draw_i_guess = 1
 
     var gameUrl: String {
         switch self {

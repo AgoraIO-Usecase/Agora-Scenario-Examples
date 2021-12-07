@@ -182,7 +182,7 @@ class LivePlayerController: BaseViewController {
         // 聊天发送
         bottomView.clickChatButtonClosure = { [weak self] message in
             guard let self = self else { return }
-            self.chatView.sendMessage(message: message)
+            self.sendMessage(message: message)
         }
         // 底部功能回调
         bottomView.clickBottomButtonTypeClosure = { [weak self] type in
@@ -271,6 +271,11 @@ class LivePlayerController: BaseViewController {
     
     /// 收到礼物
     public func receiveGiftHandler(giftModel: LiveGiftModel, type: PKLiveType) {}
+    
+    /// 发送消息
+    public func sendMessage(message: String) {
+        chatView.sendMessage(message: message)
+    }
     
     /// 更新直播布局
     public func updateLiveLayout(postion: LiveLayoutPostion) {
