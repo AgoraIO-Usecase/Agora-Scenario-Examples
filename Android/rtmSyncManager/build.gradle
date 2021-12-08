@@ -32,7 +32,7 @@ dependencies {
 
     implementation 'androidx.annotation:annotation:1.2.0'
     implementation 'com.google.code.gson:gson:2.8.7'
-    api 'com.github.agorabuilder:rtm-sdk:1.4.7'
+    implementation 'com.github.agorabuilder:rtm-sdk:1.4.7'
 }
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8

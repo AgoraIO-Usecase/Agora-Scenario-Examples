@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import android.view.TextureView;
 import android.webkit.WebView;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
@@ -23,7 +24,6 @@ import io.agora.rtc2.RtcEngine;
 import io.agora.rtc2.RtcEngineConfig;
 import io.agora.rtc2.RtcEngineEx;
 import io.agora.rtc2.internal.RtcEngineImpl;
-import io.agora.rtc2.video.Rectangle;
 import io.agora.rtc2.video.ScreenCaptureParameters;
 import io.agora.rtc2.video.VideoCanvas;
 import io.agora.rtc2.video.VideoEncoderConfiguration;
@@ -52,6 +52,7 @@ import io.agora.syncmanager.rtm.SyncManagerException;
 /**
  * @author lq
  */
+@Keep
 public class RoomViewModel extends ViewModel implements RoomApi {
 
     //<editor-fold desc="Persistent variable">
@@ -222,8 +223,8 @@ public class RoomViewModel extends ViewModel implements RoomApi {
             // Step 1
             ScreenCaptureParameters parameters = new ScreenCaptureParameters();
             parameters.setFrameRate(15);
-            parameters.setVideoDimensions(new VideoEncoderConfiguration.VideoDimensions(rect.right, rect.bottom - rect.top));
-            parameters.setCropRectangle(new Rectangle(rect.left, rect.top, rect.right, rect.bottom - rect.top));
+            parameters.setVideoDimensions(new VideoEncoderConfiguration.VideoDimensions(rect.width(), rect.height()));
+            parameters.setCropRect(rect);
             rtcEngine.startScreenCapture(intent, parameters);
 
             // Step 2

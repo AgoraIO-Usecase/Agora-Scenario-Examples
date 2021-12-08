@@ -23,11 +23,12 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     @Override
     public void finish() {
         super.finish();
-        BaseUtil.logD("finish");
+        new Thread(() -> {
 //        RTMDestroy
-        Sync.Instance().destroy();
+            Sync.Instance().destroy();
 //        RTCDestroy
-        RtcEngine.destroy();
+            RtcEngine.destroy();
+        }).start();
     }
 
 }
