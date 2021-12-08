@@ -12,6 +12,9 @@ class BaseViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupNavigationBar()
+        NotificationCenter.default.addObserver(self, selector: #selector(appBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
     }
 
     private func setupNavigationBar() {
@@ -74,6 +77,18 @@ class BaseViewController: UIViewController {
     private func clickBackButton() {
         navigationController?.popViewController(animated: true)
     }
+    
+    /** 程序进入前台 开始活跃 */
+    @objc
+    public func appBecomeActive() { }
+    
+    /** 程序进入后台 */
+    @objc
+    public func appEnterBackground() { }
+    
+    /** 程序被杀死 */
+    @objc
+    public func applicationWillTerminate() { }
 }
 
 extension BaseViewController: UIGestureRecognizerDelegate {

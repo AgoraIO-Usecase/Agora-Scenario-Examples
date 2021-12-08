@@ -190,6 +190,13 @@ class GameLiveController: PKLiveController {
         viewModel.postBarrage()
     }
     
+    override func applicationWillTerminate() {
+        super.applicationWillTerminate()
+        guard getRole(uid: UserInfo.uid) == .broadcaster else { return }
+        updateGameInfoStatus(isStart: false)
+        AgoraScreenShare.shareInstance().stopService()
+    }
+    
     override func updatePKUIStatus(isStart: Bool) {
         vsImageView.isHidden = true
         countTimeLabel.isHidden = !isStart

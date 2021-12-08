@@ -32,4 +32,7 @@ struct UserInfo {
         UserDefaults.standard.synchronize()
         return user
     }
+    static var uid: String {
+        "\(userId)"
+    }
 }
