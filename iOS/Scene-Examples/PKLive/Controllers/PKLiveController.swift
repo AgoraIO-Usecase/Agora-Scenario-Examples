@@ -152,6 +152,11 @@ class PKLiveController: LivePlayerController {
             pkProgressView.updateTargetProgressValue(at: giftModel.coin)
         }
     }
+    /// 程序杀死
+    override func applicationWillTerminate() {
+        guard getRole(uid: UserInfo.uid) == .broadcaster else { return }
+        updatePKInfoStatusToEnd()
+    }
     
     public func updatePKUIStatus(isStart: Bool) {
         vsImageView.isHidden = !isStart
