@@ -28,7 +28,9 @@ class PKInfoDelegate: ISyncManagerEventDelegate {
         if model.userId == "\(UserInfo.userId)" { return }
         vc.pkInfoModel = model
         if model.status == .end {
-            vc.leaveChannel(uid: UserInfo.userId, channelName: model.roomId)
+            if vc.channleName != model.roomId {
+                vc.leaveChannel(uid: UserInfo.userId, channelName: model.roomId)                
+            }
             vc.updateLiveLayout(postion: .full)
         } else {
             vc.joinAudienceChannel(channelName: model.roomId, pkUid:  UInt(model.userId) ?? 0)

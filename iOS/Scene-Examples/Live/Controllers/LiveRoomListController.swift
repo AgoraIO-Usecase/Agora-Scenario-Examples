@@ -69,6 +69,17 @@ class LiveRoomListController: BaseViewController {
     
     @objc
     private func clickCreateLiveButton() {
+        let model = dataArray.filter({ $0.userId == UserInfo.uid }).first
+        if model != nil {
+            showAlert(title: "您已创建房间, 将为您跳转进入", message: "") {
+                let params = JSONObject.toJson(model)
+                SyncUtil.joinScene(id: model?.roomId ?? "",
+                                   userId: model?.userId ?? "",
+                                   property: params,
+                                   delegate: self)
+            }
+            return
+        }
         let createLiveVC = CreateLiveController(sceneType: sceneType)
         navigationController?.pushViewController(createLiveVC, animated: true)
     }
