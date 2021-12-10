@@ -17,6 +17,13 @@ enum GameCenterType: Int, Codable {
             return "https://imgsecond.yuanqiyouxi.com/test/DrawAndGuess/index.html"
         }
     }
+    
+    var bgImage: UIImage? {
+        switch self {
+        case .you_draw_i_guess:
+            return UIImage(named: "Game/draw_bg")
+        }
+    }
 }
 
 enum GameBarrageType: Int, Codable, CaseIterable {

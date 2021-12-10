@@ -91,6 +91,7 @@ class GameLiveController: PKLiveController {
         modeView.didGameModeItemClosure = { model in
             let gameCenterView = GameCenterView()
             gameCenterView.didGameCenterItemClosure = { [weak self] gameCenterModel in
+                self?.view.layer.contents = gameCenterModel.type.bgImage?.cgImage
                 self?.gameCenterModel = gameCenterModel
                 self?.inviteBroadcastHandler()
             }
