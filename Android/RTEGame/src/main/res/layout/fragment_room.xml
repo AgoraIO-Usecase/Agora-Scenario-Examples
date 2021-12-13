@@ -59,8 +59,8 @@
             android:id="@+id/recycler_view_fg_room"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="50dp"
             android:layout_marginStart="@dimen/space_normal"
+            android:layout_marginBottom="50dp"
             android:fadingEdge="vertical"
             android:orientation="vertical"
             android:requiresFadingEdge="vertical"
@@ -76,18 +76,20 @@
             android:id="@+id/input_layout_fg_room"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/input_hint"
             android:visibility="gone"
-            app:hintAnimationEnabled="false"
+            app:hintEnabled="false"
             app:layout_constraintBottom_toBottomOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_fg_room"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:hint="@string/input_hint"
                 android:imeOptions="actionDone"
                 android:inputType="text"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:padding="0dp"
+                tools:text="@string/app_name" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!--    Bottom Part-->
@@ -97,10 +99,10 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/space_normal"
             android:stateListAnimator="@null"
-            app:chipMinTouchTargetSize="0dp"
             android:text="@string/input_hint"
             android:textColor="@android:color/white"
             app:chipEndPadding="@dimen/space_big"
+            app:chipMinTouchTargetSize="0dp"
             app:chipSurfaceColor="?attr/scrimBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -137,7 +139,6 @@
 
         <com.google.android.material.chip.Chip
             android:id="@+id/btn_exit_game_fg_room"
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="32dp"
             android:layout_margin="@dimen/space_normal"
@@ -145,6 +146,7 @@
             android:stateListAnimator="@null"
             android:text="@string/exit_game"
             android:textColor="@android:color/white"
+            android:visibility="gone"
             app:chipMinTouchTargetSize="0dp"
             app:chipSurfaceColor="?attr/scrimBackground"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -168,19 +170,19 @@
 
         <com.google.android.material.chip.Chip
             android:id="@+id/btn_exit_pk_fg_room"
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="32dp"
-            tools:visibility="visible"
-            android:stateListAnimator="@null"
             android:layout_margin="@dimen/space_normal"
             android:layout_marginStart="@dimen/space_normal"
+            android:stateListAnimator="@null"
             android:text="@string/exit_pk"
             android:textColor="@android:color/white"
+            android:visibility="gone"
             app:chipMinTouchTargetSize="0dp"
             app:chipSurfaceColor="?attr/scrimBackground"
+            app:layout_constraintBottom_toTopOf="@id/btn_exit_fg_room"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/btn_exit_fg_room" />
+            tools:visibility="visible" />
 
         <ImageButton
             android:id="@+id/btn_exit_fg_room"

@@ -19,6 +19,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowInsets;
+import android.view.WindowInsetsAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.WebView;
 
@@ -30,7 +32,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsAnimationCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.Observer;
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat;
 
 import com.bumptech.glide.Glide;
@@ -39,6 +43,8 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+
+import java.util.List;
 
 import io.agora.example.base.BaseRecyclerViewAdapter;
 import io.agora.example.base.BaseUtil;
@@ -98,6 +104,13 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
             findNavController().navigate(R.id.action_roomFragment_to_roomCreateFragment);
             return null;
         }
+
+        mGlobalModel.focused.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean focused) {
+                mViewModel.handleScreenCapture(focused);
+            }
+        });
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -111,20 +124,6 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
 
         initView();
         initListener();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (mViewModel != null)
-            mViewModel.handleScreenCapture(false);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mViewModel != null)
-            mViewModel.handleScreenCapture(true);
     }
 
     @Override
@@ -178,33 +177,7 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
             }
         });
 
-        // 沉浸处理
-        ViewCompat.setOnApplyWindowInsetsListener(mBinding.getRoot(), (v, insets) -> {
-            Insets inset = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            int desiredBottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom - inset.bottom;
-            // 整体留白
-            mBinding.containerOverlayFgRoom.setPadding(inset.left, inset.top, inset.right, inset.bottom);
-            // 输入框显隐及位置偏移
-            boolean imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime());
-            if (imeVisible) {
-                int desiredRecyclerViewMargin = 0;
-                if (showInputBox) {
-                    mBinding.inputLayoutFgRoom.setVisibility(View.VISIBLE);
-                    mBinding.inputLayoutFgRoom.requestFocus();
-                    desiredRecyclerViewMargin = (int) BaseUtil.dp2px(50);
-                }
-                GameUtil.setBottomMarginForConstraintLayoutChild(mBinding.recyclerViewFgRoom, desiredBottom + desiredRecyclerViewMargin);
-            } else {
-                showInputBox = false;
-                mBinding.inputLayoutFgRoom.setVisibility(View.GONE);
-                mBinding.inputLayoutFgRoom.clearFocus();
-                GameUtil.setBottomMarginForConstraintLayoutChild(mBinding.recyclerViewFgRoom, (int) BaseUtil.dp2px(50));
-            }
-
-            GameUtil.setBottomMarginForConstraintLayoutChild(mBinding.inputLayoutFgRoom, desiredBottom);
-
-            return WindowInsetsCompat.CONSUMED;
-        });
+        handleWindowInset();
 
         // 本地消息
         mBinding.editTextFgRoom.setOnEditorActionListener((v, actionId, event) -> {
@@ -265,7 +238,7 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
             if (mBinding.hostContainerFgRoom.gameHostView != null) {
                 mViewModel.setupScreenView(mBinding.hostContainerFgRoom.gameHostView.renderTextureView, gameInfo.getGameUid());
             }
-        }else if(gameInfo.getStatus() == GameInfo.END){
+        } else if (gameInfo.getStatus() == GameInfo.END) {
             insertNewMessage("停止远端游戏画面");
             needGameView(false);
         }
@@ -476,6 +449,43 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
         int count = mMessageAdapter.getItemCount();
         if (count > 0)
             mBinding.recyclerViewFgRoom.smoothScrollToPosition(count - 1);
+    }
+
+    private void handleWindowInset() {
+        ViewCompat.setWindowInsetsAnimationCallback(mBinding.getRoot(), new WindowInsetsAnimationCompat.Callback(WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_STOP) {
+            @NonNull
+            @Override
+            public WindowInsetsCompat onProgress(@NonNull WindowInsetsCompat insets, @NonNull List<WindowInsetsAnimationCompat> runningAnimations) {
+                if (showInputBox) {
+                    int desiredInputBottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom - insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom;
+                    mBinding.inputLayoutFgRoom.setTranslationY(-desiredInputBottom);
+                }
+                return insets;
+            }
+        });
+        // 沉浸处理
+        ViewCompat.setOnApplyWindowInsetsListener(mBinding.getRoot(), (v, insets) -> {
+            Insets inset = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            // 整体留白
+            mBinding.containerOverlayFgRoom.setPadding(inset.left, inset.top, inset.right, inset.bottom);
+            // 输入框显隐及位置偏移
+            boolean imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime());
+            if (imeVisible) {
+                if (showInputBox) {
+                    mBinding.getRoot().post(() -> {
+                        mBinding.inputLayoutFgRoom.setVisibility(View.VISIBLE);
+                        mBinding.inputLayoutFgRoom.requestFocus();
+                    });
+                }
+            } else {
+                showInputBox = false;
+                mBinding.getRoot().post(() -> {
+                    mBinding.inputLayoutFgRoom.setVisibility(View.GONE);
+                    mBinding.inputLayoutFgRoom.clearFocus();
+                });
+            }
+            return WindowInsetsCompat.CONSUMED;
+        });
     }
 
     private void startScreenCaptureService() {

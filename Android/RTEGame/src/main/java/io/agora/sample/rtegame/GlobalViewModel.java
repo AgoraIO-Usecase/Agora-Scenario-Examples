@@ -21,6 +21,8 @@ import io.agora.syncmanager.rtm.SyncManagerException;
 
 public class GlobalViewModel extends ViewModel implements RoomCreateApi {
 
+    public final MutableLiveData<Boolean> focused = new MutableLiveData<>(true);
+
     private final MutableLiveData<LocalUser> _user = new MutableLiveData<>();
 
     @NonNull

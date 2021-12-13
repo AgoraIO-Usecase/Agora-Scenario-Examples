@@ -9,15 +9,24 @@ import io.agora.example.base.BaseActivity;
 import io.agora.example.base.BaseUtil;
 import io.agora.rtc2.RtcEngine;
 import io.agora.sample.rtegame.databinding.ActivityMainBinding;
+import io.agora.sample.rtegame.util.GameUtil;
 import io.agora.syncmanager.rtm.Sync;
 
 public class MainActivity extends BaseActivity<ActivityMainBinding> {
 
+    private GlobalViewModel globalViewModel;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        globalViewModel = GameUtil.getViewModel(this, GlobalViewModel.class);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         getWindow().setBackgroundDrawable(null);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        BaseUtil.logD("onPause");
     }
 
     @Override
@@ -31,4 +40,9 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
         }).start();
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        globalViewModel.focused.setValue(hasFocus);
+    }
 }
