@@ -6,8 +6,6 @@ import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.Random;
-
 import io.agora.example.base.BaseUtil;
 import io.agora.sample.rtegame.GameApplication;
 import io.agora.sample.rtegame.bean.AgoraGame;
@@ -34,11 +32,15 @@ public class GameRepo {
 
     public static void endThisGame(int targetRoomId){
         if (GameUtil.currentGame == null) return;
+        BaseUtil.logD("endThisGame:"+targetRoomId);
         int userId = Integer.parseInt(GameApplication.getInstance().user.getUserId());
         int appId = Integer.parseInt(GameUtil.currentGame.getAppId());
         String timestamp = String.valueOf(System.currentTimeMillis()/1000);
 
-        YuanQiHttp.getAPI().gameEnd(userId,appId, 1, targetRoomId, "123456789", timestamp, "123").enqueue(new EmptyRetrofitCallBack<>());
+        String endUrl = GameUtil.currentGame.getGameEndUrl();
+
+        YuanQiHttp.getAPI().gameEnd(endUrl, userId,appId, 1, targetRoomId, "123456789", timestamp, "123").enqueue(new EmptyRetrofitCallBack<>());
+        BaseUtil.logD("end complete");
     }
 
     @MainThread
@@ -77,7 +79,7 @@ public class GameRepo {
 
         @Override
         public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
-
+            BaseUtil.logD(t.getMessage());
         }
     }
 }

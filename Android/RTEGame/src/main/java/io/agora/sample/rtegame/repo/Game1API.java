@@ -89,6 +89,7 @@ public interface Game1API {
     @FormUrlEncoded
     @POST
     Call<ResponseBody> gameEnd(
+            @Url @NonNull String url,
             @Field("user_id") int user_id,
             @Field("app_id") int app_id,
             @Field("identity") int identity,

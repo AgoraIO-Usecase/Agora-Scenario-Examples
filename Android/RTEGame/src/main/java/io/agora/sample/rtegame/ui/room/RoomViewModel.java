@@ -504,15 +504,14 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         }
     }
 
-    /**
-     * 只在当前频道
-     * 主播：@{@link GameApplyInfo#IDLE} 加载WebView， {@link GameInfo#END} 卸载 WebView
-     */
     private void onGameApplyInfoChanged(@NonNull GameApplyInfo currentGame) {
         BaseUtil.logD("onGameApplyInfoChanged:"+currentGame.toString());
         _currentGame.postValue(currentGame);
         if (currentGame.getStatus() == GameInfo.END) {
             exitGame();
+            BaseUtil.logD("after exitgame");
+            if (currentSceneRef != null)
+                currentSceneRef.update(GameConstants.GAME_INFO, new GameInfo(GameInfo.END, screenShareUId), null);
         }
     }
 
@@ -608,7 +607,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         if (GameUtil.currentGame == null) return;
         PKApplyInfo applyInfo = _applyInfo.getValue();
         if (applyInfo != null) {
-            GameRepo.endThisGame(Integer.parseInt(applyInfo.getRoomId()));
+            GameRepo.endThisGame(Integer.parseInt(applyInfo.getTargetRoomId()));
         }
     }
     //</editor-fold>
