@@ -790,7 +790,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     public void setupScreenView(@NonNull TextureView view, int gameUid) {
         RtcEngineEx engine = _mEngine.getValue();
         if (engine != null) {
-            VideoCanvas videoCanvas = new VideoCanvas(view, Constants.RENDER_MODE_HIDDEN, gameUid);
+            VideoCanvas videoCanvas = new VideoCanvas(view, Constants.RENDER_MODE_FIT, gameUid);
             engine.setupRemoteVideo(videoCanvas);
         }
     }
