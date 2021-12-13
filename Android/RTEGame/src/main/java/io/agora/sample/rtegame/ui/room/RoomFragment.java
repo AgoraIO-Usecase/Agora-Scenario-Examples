@@ -135,7 +135,7 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
     }
 
     private void initView() {
-        Glide.with(requireContext()).load(GameApplication.getInstance().user.getAvatar())
+        Glide.with(this).load(GameApplication.getInstance().user.getAvatar())
                 .centerCrop()
                 .placeholder(R.mipmap.ic_launcher_round).into(mBinding.avatarHostFgRoom);
         mBinding.nameHostFgRoom.setText(currentRoom.getTempUserName());
@@ -362,7 +362,7 @@ public class RoomFragment extends BaseFragment<FragmentRoomBinding> {
 
         if (!aMHost) {
             int giftId = GiftUtil.getGiftIdFromGiftInfo(requireContext(), giftInfo);
-            Glide.with(requireContext()).asGif().load(GiftUtil.getGifByGiftId(giftId))
+            Glide.with(this).asGif().load(GiftUtil.getGifByGiftId(giftId))
                     .listener(new RequestListener<GifDrawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<GifDrawable> target, boolean isFirstResource) {
