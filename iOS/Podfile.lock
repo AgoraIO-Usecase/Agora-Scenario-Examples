@@ -1,0 +1,35 @@
+PODS:
+  - AgoraRtcEngine_iOS_Preview (4.0.0.preview.3)
+  - AgoraRtm_iOS (1.4.8)
+  - AgoraScreenShare (1.0)
+  - CocoaAsyncSocket (7.6.5)
+  - MBProgressHUD (1.2.0)
+
+DEPENDENCIES:
+  - AgoraRtcEngine_iOS_Preview (= 4.0.0.preview.3)
+  - AgoraRtm_iOS (~> 1.4.8)
+  - AgoraScreenShare (from `sdk`)
+  - CocoaAsyncSocket (= 7.6.5)
+  - MBProgressHUD (~> 1.2.0)
+
+SPEC REPOS:
+  trunk:
+    - AgoraRtcEngine_iOS_Preview
+    - AgoraRtm_iOS
+    - CocoaAsyncSocket
+    - MBProgressHUD
+
+EXTERNAL SOURCES:
+  AgoraScreenShare:
+    :path: sdk
+
+SPEC CHECKSUMS:
+  AgoraRtcEngine_iOS_Preview: 6af3e4305cf2b6828ba8f759a082be2fcb45ec87
+  AgoraRtm_iOS: 382a54763803dad098d3b31a2608ccd62972e00b
+  AgoraScreenShare: 07e82b5985340b66a574e17db0353d6e70c780cc
+  CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
+  MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
+
+PODFILE CHECKSUM: 58812470b2a651151ceaae5c7f4fe519d1159298
+
+COCOAPODS: 1.11.2
