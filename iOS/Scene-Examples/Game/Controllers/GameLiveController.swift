@@ -169,6 +169,7 @@ class GameLiveController: PKLiveController {
     override func pkLiveStartHandler() {
         super.pkLiveStartHandler()
         updateGameInfoStatus(isStart: true)
+        viewModel.channelName = pkApplyInfoModel?.targetRoomId ?? ""
     }
     
     /// pk结束

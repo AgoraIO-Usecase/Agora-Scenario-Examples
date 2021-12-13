@@ -8,7 +8,7 @@
 import UIKit
 
 class GameViewModel: NSObject {
-    private var channelName: String = ""
+    var channelName: String = ""
     private var ownerId: String = ""
     init(channleName: String, ownerId: String) {
         self.channelName = channleName
