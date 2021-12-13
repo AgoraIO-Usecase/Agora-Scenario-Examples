@@ -42,7 +42,7 @@ class PKLiveController: LivePlayerController {
     public var pkInfoModel: PKInfoModel?
     private lazy var timer = GCDTimer()
     public var targetChannelName: String = ""
-    private var pkApplyInfoModel: PKApplyInfoModel?
+    public var pkApplyInfoModel: PKApplyInfoModel?
     
     override func viewDidLoad() {
         super.viewDidLoad()
