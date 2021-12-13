@@ -44,7 +44,9 @@ class GameWebView: UIView {
     }
     
     func reset() {
-        webView.loadHTMLString("https://", baseURL: nil)
+        guard let url = URL(string: "http://") else { return }
+        let request = URLRequest(url: url)
+        webView.load(request)
     }
     
     private func setupUI() {
