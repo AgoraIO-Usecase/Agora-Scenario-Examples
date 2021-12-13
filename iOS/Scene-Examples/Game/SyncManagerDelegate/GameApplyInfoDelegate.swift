@@ -31,6 +31,7 @@ class GameApplyInfoDelegate: ISyncManagerEventDelegate {
         if model.status == .no_start {
             vc.updatePKUIStatus(isStart: false)
         } else if model.status == .playing {
+            vc.view.layer.contents = model.gameId.bgImage?.cgImage
             vc.updatePKUIStatus(isStart: true)
             // 通知观众拉取屏幕流
             SyncUtil.update(id: vc.channleName,
