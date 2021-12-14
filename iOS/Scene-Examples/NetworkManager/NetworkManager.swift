@@ -12,8 +12,8 @@ class NetworkManager {
         case GET = "GET"
         case POST = "POST"
     }
-    typealias successful = ([String: Any]) -> Void
-    typealias failure = (String) -> Void
+    typealias SuccessClosure = ([String: Any]) -> Void
+    typealias FailClosure = (String) -> Void
     
     private lazy var sessionConfig: URLSessionConfiguration = {
         let config = URLSessionConfiguration.default
@@ -27,12 +27,12 @@ class NetworkManager {
     static let shared = NetworkManager()
     private init() { }
     
-    func getRequest(urlString: String, success: successful?, failure: failure?) {
+    func getRequest(urlString: String, success: SuccessClosure?, failure: FailClosure?) {
         DispatchQueue.global().async {
             self.request(urlString: urlString, params: nil, method: .GET, success: success, failure: failure)
         }
     }
-    func postRequest(urlString: String, params: [String: Any]?, success: successful?, failure: failure?) {
+    func postRequest(urlString: String, params: [String: Any]?, success: SuccessClosure?, failure: FailClosure?) {
         DispatchQueue.global().async {
             self.request(urlString: urlString, params: params, method: .POST, success: success, failure: failure)
         }
@@ -52,8 +52,8 @@ class NetworkManager {
     private func request(urlString: String,
                          params: [String: Any]?,
                          method: HTTPMethods,
-                         success: successful?,
-                         failure: failure?) {
+                         success: SuccessClosure?,
+                         failure: FailClosure?) {
         let session = URLSession(configuration: sessionConfig)
         guard let request = getRequest(urlString: urlString,
                                        params: params,
@@ -70,8 +70,8 @@ class NetworkManager {
     private func getRequest(urlString: String,
                             params: [String: Any]?,
                             method: HTTPMethods,
-                            success: successful?,
-                            failure: failure?) -> URLRequest? {
+                            success: SuccessClosure?,
+                            failure: FailClosure?) -> URLRequest? {
         guard let url = URL(string: urlString) else {
             return nil
         }
@@ -89,7 +89,7 @@ class NetworkManager {
         return value
     }
     
-    private func checkResponse(response: URLResponse?, data: Data?, success: successful?, failure: failure?) {
+    private func checkResponse(response: URLResponse?, data: Data?, success: SuccessClosure?, failure: FailClosure?) {
         if let httpResponse = response as? HTTPURLResponse {
             switch httpResponse.statusCode {
             case 200...201:
