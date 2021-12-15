@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		9BBBCEFD3169C583A481C92C /* Pods_Agora_ScreenShare_Extension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6A12BD14C6C12D3D9AB21A6 /* Pods_Agora_ScreenShare_Extension.framework */; };
 		B5DF969B7ED11BACA57C6864 /* Pods_Scene_Examples.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AED837A3EC68965AC33FE2E6 /* Pods_Scene_Examples.framework */; };
+		E7499C1B276A078500E799FF /* LiveOnlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C1A276A078500E799FF /* LiveOnlineView.swift */; };
 		E79BEF31273D0EA4009FA838 /* LivePlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF30273D0EA4009FA838 /* LivePlayerController.swift */; };
 		E79BEF33273D0F0C009FA838 /* LiveCanvasModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF32273D0F0C009FA838 /* LiveCanvasModel.swift */; };
 		E79BEF35273D1304009FA838 /* LivePlayerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF34273D1304009FA838 /* LivePlayerCell.swift */; };
@@ -128,6 +129,7 @@
 		A6A12BD14C6C12D3D9AB21A6 /* Pods_Agora_ScreenShare_Extension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Agora_ScreenShare_Extension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AED837A3EC68965AC33FE2E6 /* Pods_Scene_Examples.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Scene_Examples.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C99DD6A332A83A34EF8B5943 /* Pods-Scene-Examples.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Scene-Examples.release.xcconfig"; path = "Target Support Files/Pods-Scene-Examples/Pods-Scene-Examples.release.xcconfig"; sourceTree = "<group>"; };
+		E7499C1A276A078500E799FF /* LiveOnlineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveOnlineView.swift; sourceTree = "<group>"; };
 		E79BEF30273D0EA4009FA838 /* LivePlayerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivePlayerController.swift; sourceTree = "<group>"; };
 		E79BEF32273D0F0C009FA838 /* LiveCanvasModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCanvasModel.swift; sourceTree = "<group>"; };
 		E79BEF34273D1304009FA838 /* LivePlayerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivePlayerCell.swift; sourceTree = "<group>"; };
@@ -635,6 +637,7 @@
 				E79C2635273BC6C400909CD4 /* LiveRandomNameView.swift */,
 				E79C2643273BE7C000909CD4 /* LiveSettingView.swift */,
 				E79BEF38273D18B4009FA838 /* LiveAvatarView.swift */,
+				E7499C1A276A078500E799FF /* LiveOnlineView.swift */,
 				E79BEF3A273D21FD009FA838 /* LiveChatView.swift */,
 				E79BEF3C273D327F009FA838 /* LiveBottomView.swift */,
 				E79BEF3E273D3EF0009FA838 /* LiveToolView.swift */,
@@ -916,6 +919,7 @@
 				E79C2632273BC17B00909CD4 /* String+Extension.swift in Sources */,
 				E79C262A273B7D8900909CD4 /* DeviceAssistant.swift in Sources */,
 				E79BEF43273E3709009FA838 /* LiveGiftView.swift in Sources */,
+				E7499C1B276A078500E799FF /* LiveOnlineView.swift in Sources */,
 				E79BEF9827475677009FA838 /* GameModeView.swift in Sources */,
 				E79C260F273B689B00909CD4 /* JSONObject.swift in Sources */,
 				E79C25DF273B67DB00909CD4 /* AppDelegate.swift in Sources */,
@@ -1157,7 +1161,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1203;
+				CURRENT_PROJECT_VERSION = 1209;
 				DEVELOPMENT_TEAM = YS397FG5PA;
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1194,7 +1198,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1203;
+				CURRENT_PROJECT_VERSION = 1209;
 				DEVELOPMENT_TEAM = YS397FG5PA;
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;

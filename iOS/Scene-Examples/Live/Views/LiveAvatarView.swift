@@ -12,7 +12,7 @@ class LiveAvatarView: UIView {
         let imageView = UIImageView(image: UIImage(systemName: "person.circle")?.withTintColor(.gray, renderingMode: .alwaysOriginal))
         imageView.contentMode = .scaleAspectFill
         imageView.layer.masksToBounds = true
-        imageView.layer.cornerRadius = 20
+        imageView.layer.cornerRadius = 13
         imageView.layer.masksToBounds = true
         return imageView
     }()
@@ -37,21 +37,21 @@ class LiveAvatarView: UIView {
     }
     
     private func setupUI() {
-        backgroundColor = UIColor(hex: "#000000", alpha: 0.7)
-        layer.cornerRadius = 21
+        backgroundColor = UIColor(hex: "#000000", alpha: 0.4)
+        layer.cornerRadius = 16
         layer.masksToBounds = true
         translatesAutoresizingMaskIntoConstraints = false
         avatarImageView.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        heightAnchor.constraint(equalToConstant: 42).isActive = true
+        heightAnchor.constraint(equalToConstant: 32).isActive = true
         addSubview(avatarImageView)
         addSubview(nameLabel)
         
         avatarImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 1).isActive = true
-        avatarImageView.topAnchor.constraint(equalTo: topAnchor, constant: 1).isActive = true
-        avatarImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1).isActive = true
-        avatarImageView.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        avatarImageView.topAnchor.constraint(equalTo: topAnchor, constant: 3).isActive = true
+        avatarImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -3).isActive = true
+        avatarImageView.widthAnchor.constraint(equalToConstant: 26).isActive = true
         
         nameLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         nameLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 5).isActive = true
