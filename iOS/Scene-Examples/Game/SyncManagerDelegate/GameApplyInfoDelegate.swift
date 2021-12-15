@@ -86,7 +86,7 @@ class GameInfoDelegate: ISyncManagerEventDelegate {
             vc.updatePKUIStatus(isStart: false)
         } else if model.status == .playing {
             vc.updatePKUIStatus(isStart: true)
-            vc.view.layer.contents = model.gameId.bgImage?.cgImage
+            vc.view.layer.contents = model.gameId?.bgImage?.cgImage
         } else {
             vc.updatePKUIStatus(isStart: false)
         }

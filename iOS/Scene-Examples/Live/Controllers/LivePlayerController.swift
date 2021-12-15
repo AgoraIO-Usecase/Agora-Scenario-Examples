@@ -155,7 +155,7 @@ class LivePlayerController: BaseViewController {
         
         chatView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         chatView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -60).isActive = true
-        let chatViewW = view.frame.width / 2 * 0.8
+        let chatViewW = view.frame.width / 2 * 0.9
         chatView.widthAnchor.constraint(equalToConstant: chatViewW).isActive = true
         chatView.heightAnchor.constraint(equalToConstant: chatViewW).isActive = true
         
@@ -288,10 +288,11 @@ class LivePlayerController: BaseViewController {
         switch postion {
         case .bottom:
             let viewW = Screen.width
-            itemWidth = (viewW - 150 - 15) / 2
+            let chatViewW = chatView.frame.width
+            itemWidth = (viewW - chatViewW - 15) / 2
             itemHeight = viewW / 2 * 0.7
             let topMargin = view.frame.height - itemHeight - 78
-            leading = 150
+            leading = chatViewW
             top = topMargin
             bottom = -70
             trailing = -15
