@@ -181,6 +181,7 @@ class GameLiveController: PKLiveController {
     /// 收到礼物
     override func receiveGiftHandler(giftModel: LiveGiftModel, type: PKLiveType) {
         super.receiveGiftHandler(giftModel: giftModel, type: type)
+        playGifView.isHidden = getRole(uid: UserInfo.uid) == .broadcaster && pkApplyInfoModel?.status == .accept
         if type == .me {
             viewModel.postGiftHandler(type: giftModel.giftType)
         }
@@ -200,7 +201,7 @@ class GameLiveController: PKLiveController {
     
     override func updatePKUIStatus(isStart: Bool) {
         vsImageView.isHidden = true
-        countTimeLabel.isHidden = !isStart
+        countTimeLabel.isHidden = true//!isStart
         pkProgressView.isHidden = !isStart
         webView.isHidden = !isStart
         if currentUserId == "\(UserInfo.userId)" && isStart {
@@ -227,17 +228,18 @@ class GameLiveController: PKLiveController {
                 canvas.renderMode = .fit
                 screenConnection.localUid = UserInfo.userId
                 joinScreenShare(isBroadcast: false)
+                pkProgressView.isHidden = gameInfoModel == nil
                 agoraKit?.setupRemoteVideoEx(canvas, connection: screenConnection)
             }
             
             updateLiveLayout(postion: .bottom)
-            timer.scheduledSecondsTimer(withName: sceneType.rawValue, timeInterval: 900, queue: .main) { [weak self] _, duration in
-                self?.countTimeLabel.setTitle("PK剩余 \("".timeFormat(secounds: duration))", for: .normal)
-                if duration <= 0 {
-                    self?.updatePKUIStatus(isStart: false)
-                    self?.updateGameInfoStatus(isStart: false)
-                }
-            }
+//            timer.scheduledSecondsTimer(withName: sceneType.rawValue, timeInterval: 900, queue: .main) { [weak self] _, duration in
+//                self?.countTimeLabel.setTitle("PK剩余 \("".timeFormat(secounds: duration))", for: .normal)
+//                if duration <= 0 {
+//                    self?.updatePKUIStatus(isStart: false)
+//                    self?.updateGameInfoStatus(isStart: false)
+//                }
+//            }
         } else {
             updateLiveLayout(postion: .center)
             pkProgressView.reset()
