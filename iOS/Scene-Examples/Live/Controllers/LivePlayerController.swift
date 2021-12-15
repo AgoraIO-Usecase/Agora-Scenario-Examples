@@ -47,6 +47,7 @@ class LivePlayerController: BaseViewController {
     public lazy var liveToolView = LiveToolView()
     /// 礼物
     private lazy var giftView = LiveGiftView()
+    private lazy var onlineView = LiveOnlineView()
     public lazy var playGifView: GIFImageView = {
         let view = GIFImageView()
         view.isHidden = true
@@ -135,11 +136,13 @@ class LivePlayerController: BaseViewController {
         chatView.translatesAutoresizingMaskIntoConstraints = false
         bottomView.translatesAutoresizingMaskIntoConstraints = false
         playGifView.translatesAutoresizingMaskIntoConstraints = false
+        onlineView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(liveCanvasView)
         view.addSubview(avatarview)
         view.addSubview(chatView)
         view.addSubview(bottomView)
         view.addSubview(playGifView)
+        view.addSubview(onlineView)
         
         canvasLeadingConstraint = liveCanvasView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
         canvasTopConstraint = liveCanvasView.topAnchor.constraint(equalTo: view.topAnchor, constant: -Screen.kNavHeight)
@@ -168,7 +171,10 @@ class LivePlayerController: BaseViewController {
         playGifView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         playGifView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
-        avatarview.setName(with: currentUserId + " roomId: " + channleName)
+        onlineView.topAnchor.constraint(equalTo: avatarview.topAnchor).isActive = true
+        onlineView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15).isActive = true
+        
+        avatarview.setName(with: currentUserId)
         let bottomType: [LiveBottomView.LiveBottomType] = currentUserId == "\(UserInfo.userId)" ? [.tool, .close] : [.gift, .close]
         bottomView.updateButtonType(type: bottomType)
     }

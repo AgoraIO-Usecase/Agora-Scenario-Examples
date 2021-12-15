@@ -49,6 +49,7 @@ class LiveRoomListController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         SyncUtil.fetchAll(delegate: self)
+        navigationTransparent(isTransparent: false)
     }
     
     private func setupUI() {

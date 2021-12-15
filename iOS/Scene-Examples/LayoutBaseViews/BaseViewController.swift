@@ -16,7 +16,7 @@ class BaseViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(appEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
     }
-
+    
     private func setupNavigationBar() {
         let viewControllers = navigationController?.viewControllers.count ?? 0
         guard viewControllers > 1 else { return }
@@ -28,6 +28,8 @@ class BaseViewController: UIViewController {
         let image = isTransparent ? UIImage() : nil
         navigationController?.navigationBar.setBackgroundImage(image, for: .default)
         navigationController?.navigationBar.shadowImage = image
+        navigationController?.navigationBar.barTintColor = isTransparent ? .clear : .white
+        navigationController?.navigationBar.isHidden = isTransparent
     }
 
     func showAlert(title: String? = nil, message: String) {
