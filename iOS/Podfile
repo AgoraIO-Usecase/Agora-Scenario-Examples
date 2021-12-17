@@ -1,44 +1,21 @@
 # Uncomment the next line to define a global platform for your project
-platform :ios, '13.0'
+# platform :ios, '9.0'
 
-def commonPods
+target 'Scene-Examples' do
+  # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
-  pod 'RxSwift', '6.1.0'
-  pod 'RxCocoa', '6.1.0'
-  pod 'RxRelay', '6.1.0'
-  pod 'IGListKit', '~> 4.0.0'
+  inhibit_all_warnings!
+  
+  pod 'AgoraRtm_iOS', '~> 1.4.8'
+  pod 'MBProgressHUD', '~> 1.2.0'
+  pod 'AgoraRtcEngine_iOS_Preview', '4.0.0.preview.3'
+  pod 'AgoraScreenShare', :path => 'sdk'
+  # Pods for Scene-Examples
+
 end
 
-target 'Core' do
-  commonPods
+target 'Agora-ScreenShare-Extension' do
   use_frameworks!
-end
-
-target 'InteractivePodcast' do
-  commonPods
-  use_frameworks!
-  pod 'AgoraRtcEngine_iOS'
-end
-
-target 'BlindDate' do
-  commonPods
-  use_frameworks!
-  pod 'AgoraRtm_iOS'
-  pod 'AgoraRtcEngine_iOS'
-end
-
-# target with leancloud sdk
-target 'Scene-Examples_LeanCloud' do
-  commonPods
-  use_frameworks!
-  pod 'LeanCloud'
-  pod 'LivePKCore',  :path => 'LivePKCore/LivePKCore.podspec'
-end
-
-# target with firebase sdk
-target 'Scene-Examples_Firebase' do
-  commonPods
-  use_frameworks!
-  pod 'Firebase/Firestore'
-  pod 'FirebaseFirestoreSwift'
+  pod 'AgoraScreenShare', :path => 'sdk'
+  pod 'CocoaAsyncSocket', '7.6.5'
 end
