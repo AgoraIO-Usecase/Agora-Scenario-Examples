@@ -277,7 +277,6 @@ public class AudienceActivity extends DataBindBaseActivity<ActivityVideoBinding>
 
     private void startRTCPK() {
         rtcManager.startRtcStreaming(mRoomInfo.roomId, false);
-        rtcManager.stopPlayer();
         runOnUiThread(() -> {
             mDataBinding.liveBottomBtnMore.setVisibility(View.VISIBLE);
             mDataBinding.flLocalFullContainer.removeAllViews();
@@ -292,7 +291,10 @@ public class AudienceActivity extends DataBindBaseActivity<ActivityVideoBinding>
             mDataBinding.liveBottomBtnMore.setVisibility(View.GONE);
             mDataBinding.remoteCallVideoLayout.removeAllViews();
             mDataBinding.remoteCallLayout.setVisibility(View.GONE);
-            setupVideoPlayer();
+
+            mDataBinding.flLocalFullContainer.removeAllViews();
+            mDataBinding.ivLoadingBg.setVisibility(View.GONE);
+            rtcManager.renderPlayerView(mDataBinding.flLocalFullContainer, null);
         });
     }
 
@@ -349,20 +351,12 @@ public class AudienceActivity extends DataBindBaseActivity<ActivityVideoBinding>
                 if (mUserInfo != null && mUserInfo.userId.equals(roomInfo.userIdPK)) {
                     Toast.makeText(this, "Start PK", Toast.LENGTH_LONG).show();
                     startRTCPK();
-                } else {
-                    if (mRoomInfo.mode == RoomInfo.PUSH_MODE_DIRECT_CDN) {
-                        setupVideoPlayer();
-                    }
                 }
             } else {
                 // 停止PK
                 if(mUserInfo != null && mUserInfo.userId.equals(oldRoomInfo.userIdPK)){
                     Toast.makeText(this, "Stop PK", Toast.LENGTH_LONG).show();
                     stopRTCPK();
-                } else {
-                    if (mRoomInfo.mode == RoomInfo.PUSH_MODE_DIRECT_CDN) {
-                        setupVideoPlayer();
-                    }
                 }
             }
         }
