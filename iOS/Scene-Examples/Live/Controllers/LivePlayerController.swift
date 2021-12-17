@@ -145,7 +145,7 @@ class LivePlayerController: BaseViewController {
         view.addSubview(onlineView)
         
         canvasLeadingConstraint = liveCanvasView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
-        canvasTopConstraint = liveCanvasView.topAnchor.constraint(equalTo: view.topAnchor, constant: -Screen.kNavHeight)
+        canvasTopConstraint = liveCanvasView.topAnchor.constraint(equalTo: view.topAnchor,constant: -Screen.statusHeight())
         canvasBottomConstraint = liveCanvasView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         canvasTrailingConstraint = liveCanvasView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         canvasTopConstraint?.isActive = true
@@ -286,7 +286,7 @@ class LivePlayerController: BaseViewController {
     /// 更新直播布局
     public func updateLiveLayout(postion: LiveLayoutPostion) {
         var leading: CGFloat = 0
-        var top: CGFloat = -Screen.kNavHeight
+        var top: CGFloat = -Screen.statusHeight()
         var bottom: CGFloat = Screen.safeAreaBottomHeight()
         var trailing: CGFloat = 0
         var itemWidth: CGFloat = Screen.width
