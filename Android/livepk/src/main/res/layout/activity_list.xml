@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_room_list_top">
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:gravity="center"
+                android:text="@string/room_list_title"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/ivHead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/nav_icon_lobby_n"
+                android:layout_gravity="end|center_vertical"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            android:layout_weight="1">
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/host_in_swipe"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/host_in_room_list_recycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone" />
+
+                    <RelativeLayout
+                        android:id="@+id/no_data_bg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/no_data_icon"
+                            android:layout_width="@dimen/room_list_exception_icon_size"
+                            android:layout_height="@dimen/room_list_exception_icon_size"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/list_no_data" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/no_data_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/no_data_icon"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/activity_vertical_margin"
+                            android:text="@string/room_list_no_data_hint"
+                            android:textColor="@color/gray"
+                            android:textSize="@dimen/text_size_normal" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/network_error_bg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:visibility="gone">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/network_error_icon"
+                            android:layout_width="@dimen/room_list_exception_icon_size"
+                            android:layout_height="@dimen/room_list_exception_icon_size"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/list_error_icon" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/network_error_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/network_error_icon"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/activity_vertical_margin"
+                            android:text="@string/room_list_network_error_title"
+                            android:textColor="@color/gray"
+                            android:textSize="@dimen/text_size_normal" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/network_error_message"
+                            android:layout_width="@dimen/room_list_exception_icon_size"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/network_error_text"
+                            android:layout_marginTop="@dimen/activity_vertical_margin"
+                            android:text="@string/room_list_network_error_message"
+                            android:textColor="@color/gray_lighter" />
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/live_room_start_broadcast"
+                android:layout_width="@dimen/start_broadcast_btn_size"
+                android:layout_height="@dimen/start_broadcast_btn_size"
+                android:layout_gravity="bottom|end"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:paddingStart="@dimen/activity_horizontal_margin"
+                android:paddingEnd="@dimen/activity_horizontal_margin"
+                android:scaleType="centerCrop"
+                android:src="@drawable/start_broadcast_btn" />
+        </FrameLayout>
+    </LinearLayout>
+
+
+</layout>
