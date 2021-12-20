@@ -6,10 +6,11 @@
 //
 
 import UIKit
+import AgoraUIKit
 
 class MainViewController: BaseViewController {
-    private lazy var tableView: BaseTableViewLayout = {
-        let view = BaseTableViewLayout()
+    private lazy var tableView: AGETableView = {
+        let view = AGETableView()
         view.estimatedRowHeight = 100
         view.delegate = self
         view.register(MainTableViewCell.self,
@@ -33,7 +34,7 @@ class MainViewController: BaseViewController {
     }
 }
 
-extension MainViewController: BaseTableViewLayoutDelegate {
+extension MainViewController: AGETableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: MainTableViewCell.description(),
                                                  for: indexPath) as! MainTableViewCell

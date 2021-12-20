@@ -6,10 +6,11 @@
 //
 
 import UIKit
+import AgoraUIKit
 
 class LiveChatView: UIView {
-    private lazy var tableLayoutView: BaseTableViewLayout = {
-        let view = BaseTableViewLayout()
+    private lazy var tableLayoutView: AGETableView = {
+        let view = AGETableView()
         view.estimatedRowHeight = 44
         view.delegate = self
         view.showsVerticalScrollIndicator = false
@@ -50,7 +51,7 @@ class LiveChatView: UIView {
     }
 }
 
-extension LiveChatView: BaseTableViewLayoutDelegate {
+extension LiveChatView: AGETableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: LiveChatViewCell.description(), for: indexPath) as! LiveChatViewCell
         let message = tableLayoutView.dataArray?[indexPath.row]

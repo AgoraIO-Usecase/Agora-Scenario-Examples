@@ -78,8 +78,6 @@
 		E79C2611273B689B00909CD4 /* SyncUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2604273B689A00909CD4 /* SyncUtil.swift */; };
 		E79C2612273B689B00909CD4 /* SegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2606273B689B00909CD4 /* SegmentView.swift */; };
 		E79C2613273B689B00909CD4 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2607273B689B00909CD4 /* UIColor+Extension.swift */; };
-		E79C2614273B689B00909CD4 /* BaseCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2608273B689B00909CD4 /* BaseCollectionViewLayout.swift */; };
-		E79C2616273B6BEC00909CD4 /* BaseTableViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2615273B6BEC00909CD4 /* BaseTableViewLayout.swift */; };
 		E79C261C273B712000909CD4 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C261B273B712000909CD4 /* BaseViewController.swift */; };
 		E79C261F273B737100909CD4 /* MainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C261E273B737100909CD4 /* MainTableViewCell.swift */; };
 		E79C2626273B7BDA00909CD4 /* CreateLiveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2625273B7BDA00909CD4 /* CreateLiveController.swift */; };
@@ -203,8 +201,6 @@
 		E79C2604273B689A00909CD4 /* SyncUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncUtil.swift; sourceTree = "<group>"; };
 		E79C2606273B689B00909CD4 /* SegmentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentView.swift; sourceTree = "<group>"; };
 		E79C2607273B689B00909CD4 /* UIColor+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
-		E79C2608273B689B00909CD4 /* BaseCollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseCollectionViewLayout.swift; sourceTree = "<group>"; };
-		E79C2615273B6BEC00909CD4 /* BaseTableViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewLayout.swift; sourceTree = "<group>"; };
 		E79C261B273B712000909CD4 /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		E79C261E273B737100909CD4 /* MainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTableViewCell.swift; sourceTree = "<group>"; };
 		E79C2625273B7BDA00909CD4 /* CreateLiveController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateLiveController.swift; sourceTree = "<group>"; };
@@ -546,8 +542,6 @@
 			children = (
 				E79C261B273B712000909CD4 /* BaseViewController.swift */,
 				E79C2606273B689B00909CD4 /* SegmentView.swift */,
-				E79C2608273B689B00909CD4 /* BaseCollectionViewLayout.swift */,
-				E79C2615273B6BEC00909CD4 /* BaseTableViewLayout.swift */,
 				E79BEF5A273E5768009FA838 /* GIFImageView.swift */,
 			);
 			path = LayoutBaseViews;
@@ -864,7 +858,6 @@
 			files = (
 				E79BEF60273E72F7009FA838 /* LiveGiftDelegate.swift in Sources */,
 				E79BEF37273D15D6009FA838 /* Screen.swift in Sources */,
-				E79C2616273B6BEC00909CD4 /* BaseTableViewLayout.swift in Sources */,
 				E79C2611273B689B00909CD4 /* SyncUtil.swift in Sources */,
 				E79BEF5B273E5768009FA838 /* GIFImageView.swift in Sources */,
 				E79BEF6F2742118A009FA838 /* PKInviteInfoDelegate.swift in Sources */,
@@ -882,7 +875,6 @@
 				E79BF0302754761A009FA838 /* GameApplyInfoModel.swift in Sources */,
 				E79BEF3F273D3EF0009FA838 /* LiveToolView.swift in Sources */,
 				E79BEF7327438D6A009FA838 /* PKInfoDelegate.swift in Sources */,
-				E79C2614273B689B00909CD4 /* BaseCollectionViewLayout.swift in Sources */,
 				E79BF02B274B81A0009FA838 /* GameInfoModel.swift in Sources */,
 				E79C2626273B7BDA00909CD4 /* CreateLiveController.swift in Sources */,
 				E79BEF8627463FA5009FA838 /* BORRoomDetailController.swift in Sources */,

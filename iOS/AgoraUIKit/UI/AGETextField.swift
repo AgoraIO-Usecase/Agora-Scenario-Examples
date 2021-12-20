@@ -7,61 +7,61 @@
 
 import UIKit
 
-class AGETextField: UITextField {
-    var colorStyle: AGETextColorStyle = .black {
+public class AGETextField: UITextField {
+    public var colorStyle: AGETextColorStyle = .black {
         didSet {
             updateTextColor()
         }
     }
-    var fontStyle: AGETextFontStyle = .middle {
+    public var fontStyle: AGETextFontStyle = .middle {
         didSet {
             updateTextFont()
         }
     }
     
-    var cornerRadius: CGFloat = 0 {
+    public var cornerRadius: CGFloat = 0 {
         didSet {
             layer.cornerRadius = cornerRadius
             layer.masksToBounds = true
         }
     }
-    var maskedCorners: CACornerMask? {
+    public var maskedCorners: CACornerMask? {
         didSet {
             guard let corners = maskedCorners else { return }
             layer.maskedCorners = corners
         }
     }
-    var borderWidth: CGFloat = 0 {
+    public var borderWidth: CGFloat = 0 {
         didSet {
             layer.borderWidth = borderWidth
         }
     }
-    var borderColor: UIColor = .clear {
+    public var borderColor: UIColor = .clear {
         didSet {
             layer.borderColor = borderColor.cgColor
         }
     }
-    var shadowPath: CGPath? {
+    public var shadowPath: CGPath? {
         didSet {
             layer.shadowPath = shadowPath
         }
     }
-    var shadowColor: UIColor? {
+    public var shadowColor: UIColor? {
         didSet {
             layer.shadowColor = shadowColor?.cgColor
         }
     }
-    var shadowOffset: CGSize = .zero {
+    public var shadowOffset: CGSize = .zero {
         didSet {
             layer.shadowOffset = shadowOffset
         }
     }
-    var shadowRadius: CGFloat = 0 {
+    public var shadowRadius: CGFloat = 0 {
         didSet {
             layer.shadowRadius = shadowRadius
         }
     }
-    var shadowOpacity: Float = 0 {
+    public var shadowOpacity: Float = 0 {
         didSet {
             layer.shadowOpacity = shadowOpacity
         }

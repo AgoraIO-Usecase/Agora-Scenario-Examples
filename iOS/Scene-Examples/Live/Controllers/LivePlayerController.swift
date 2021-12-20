@@ -13,8 +13,8 @@ class LivePlayerController: BaseViewController {
     enum LiveLayoutPostion {
         case full, center, bottom
     }
-    public lazy var liveCanvasView: BaseCollectionViewLayout = {
-        let view = BaseCollectionViewLayout()
+    public lazy var liveCanvasView: AGECollectionView = {
+        let view = AGECollectionView()
         view.itemSize = CGSize(width: Screen.width, height: Screen.height)
         view.minInteritemSpacing = 0
         view.minLineSpacing = 0
@@ -431,7 +431,7 @@ class LivePlayerController: BaseViewController {
     }
 }
 
-extension LivePlayerController: BaseCollectionViewLayoutDelegate {
+extension LivePlayerController: AGECollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LivePlayerCell.description(),
                                                       for: indexPath) as! LivePlayerCell

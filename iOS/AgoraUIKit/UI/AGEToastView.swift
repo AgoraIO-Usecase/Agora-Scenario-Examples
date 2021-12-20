@@ -6,11 +6,11 @@
 //
 import UIKit
 
-enum AGEToastViewPostion {
+public enum AGEToastViewPostion {
     case top, center, bottom
 }
 
-class AGEToastView: UIView {
+public class AGEToastView: UIView {
     private lazy var tagImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -28,33 +28,33 @@ class AGEToastView: UIView {
         return label
     }()
     private static var currentToastView: AGEToastView?
-
-    var text: String? {
+    
+    public var text: String? {
         didSet {
             label.text = text
         }
     }
-    var textColor: UIColor? {
+    public var textColor: UIColor? {
         didSet {
             guard let color = textColor else { return }
             label.textColor = color
         }
     }
-    var font: UIFont? {
+    public var font: UIFont? {
         didSet {
             label.font = font ?? .systemFont(ofSize: 14)
         }
     }
     
-    var tagImage: UIImage? {
+    public var tagImage: UIImage? {
         didSet {
             guard tagImage != nil else { return }
             tagImageView.image = tagImage
             tagImageView.isHidden = tagImage == nil
         }
     }
-
-    var cornerRadius: CGFloat = 0 {
+    
+    public var cornerRadius: CGFloat = 0 {
         didSet {
             layer.cornerRadius = cornerRadius
             layer.masksToBounds = true
@@ -70,29 +70,29 @@ class AGEToastView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    static func show(text: String, postion: AGEToastViewPostion = .center) {
+    static public  func show(text: String, postion: AGEToastViewPostion = .center) {
         show(text: text, tagImage: nil, textColor: .white, font: nil, duration: 2.5, postion: postion, view: nil)
     }
     
-    static func show(text: String, duration: CGFloat = 2.5, view: UIView? = nil) {
+    static public func show(text: String, duration: CGFloat = 2.5, view: UIView? = nil) {
         show(text: text, tagImage: nil, textColor: .white, font: nil, duration: duration, postion: .center, view: view)
     }
     
-    static func show(text: String, postion: AGEToastViewPostion = .center, duration: CGFloat = 2.5, view: UIView? = nil) {
+    static public func show(text: String, postion: AGEToastViewPostion = .center, duration: CGFloat = 2.5, view: UIView? = nil) {
         show(text: text, tagImage: nil, textColor: .white, font: nil, duration: duration, postion: postion, view: view)
     }
     
-    static func show(text: String, tagImage: UIImage? = nil, postion: AGEToastViewPostion = .center, view: UIView? = nil) {
+    static public func show(text: String, tagImage: UIImage? = nil, postion: AGEToastViewPostion = .center, view: UIView? = nil) {
         show(text: text, tagImage: tagImage, textColor: .white, font: nil, duration: 2.5, postion: postion, view: view)
     }
     
-    static func show(text: String,
-                     tagImage: UIImage? = nil,
-                     textColor: UIColor = .white,
-                     font: UIFont? = nil,
-                     duration: CGFloat = 2.5,
-                     postion: AGEToastViewPostion = .center,
-                     view: UIView?) {
+    static public func show(text: String,
+                            tagImage: UIImage? = nil,
+                            textColor: UIColor = .white,
+                            font: UIFont? = nil,
+                            duration: CGFloat = 2.5,
+                            postion: AGEToastViewPostion = .center,
+                            view: UIView?) {
         currentToastView?.removeFromSuperview()
         guard let currentView = view ?? UIApplication.keyWindow else { return }
         let toastView = AGEToastView()

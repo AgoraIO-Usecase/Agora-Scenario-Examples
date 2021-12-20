@@ -7,7 +7,7 @@
 
 import UIKit
 
-enum AGETextColorStyle: Int, CaseIterable {
+public enum AGETextColorStyle: Int, CaseIterable {
     case black
     case white
     case primary
@@ -15,7 +15,7 @@ enum AGETextColorStyle: Int, CaseIterable {
     case warning
     case disabled
 
-    var color: UIColor {
+    public var color: UIColor {
         switch self {
         case .black: return .black
         case .white: return .white
@@ -27,10 +27,10 @@ enum AGETextColorStyle: Int, CaseIterable {
     }
 }
 
-enum AGETextFontStyle {
+public enum AGETextFontStyle {
     case small, middle, large
     
-    var font: UIFont {
+    public var font: UIFont {
         switch self {
         case .small: return .systemFont(ofSize: 12)
         case .middle: return .systemFont(ofSize: 14)
@@ -39,60 +39,60 @@ enum AGETextFontStyle {
     }
 }
 
-class AGELabel: UILabel {
-    var colorStyle: AGETextColorStyle = .black {
+public class AGELabel: UILabel {
+    public var colorStyle: AGETextColorStyle = .black {
         didSet {
             updateTextColor()
         }
     }
-    var fontStyle: AGETextFontStyle = .middle {
+    public var fontStyle: AGETextFontStyle = .middle {
         didSet {
             updateTextFont()
         }
     }
-    var cornerRadius: CGFloat = 0 {
+    public var cornerRadius: CGFloat = 0 {
         didSet {
             layer.cornerRadius = cornerRadius
             layer.masksToBounds = true
         }
     }
-    var maskedCorners: CACornerMask? {
+    public var maskedCorners: CACornerMask? {
         didSet {
             guard let corners = maskedCorners else { return }
             layer.maskedCorners = corners
         }
     }
-    var borderWidth: CGFloat = 0 {
+    public var borderWidth: CGFloat = 0 {
         didSet {
             layer.borderWidth = borderWidth
         }
     }
-    var borderColor: UIColor = .clear {
+    public var borderColor: UIColor = .clear {
         didSet {
             layer.borderColor = borderColor.cgColor
         }
     }
-    var shadowPath: CGPath? {
+    public var shadowPath: CGPath? {
         didSet {
             layer.shadowPath = shadowPath
         }
     }
-    override var shadowColor: UIColor? {
+    public override var shadowColor: UIColor? {
         didSet {
             layer.shadowColor = shadowColor?.cgColor
         }
     }
-    override var shadowOffset: CGSize {
+    public override var shadowOffset: CGSize {
         didSet {
             layer.shadowOffset = shadowOffset
         }
     }
-    var shadowRadius: CGFloat = 0 {
+    public var shadowRadius: CGFloat = 0 {
         didSet {
             layer.shadowRadius = shadowRadius
         }
     }
-    var shadowOpacity: Float = 0 {
+    public var shadowOpacity: Float = 0 {
         didSet {
             layer.shadowOpacity = shadowOpacity
         }

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AgoraUIKit
 
 class PKLiveInviteView: UIView {
     var pkInviteSubscribe: ((String) -> Void)?
@@ -21,8 +22,8 @@ class PKLiveInviteView: UIView {
         view.backgroundColor = .lightGray
         return view
     }()
-    private lazy var tableViewLayout: BaseTableViewLayout = {
-        let view = BaseTableViewLayout()
+    private lazy var tableViewLayout: AGETableView = {
+        let view = AGETableView()
         view.estimatedRowHeight = 44
         view.delegate = self
         view.emptyTitle = "暂时没有主播"
@@ -88,7 +89,7 @@ class PKLiveInviteView: UIView {
     }
 }
 
-extension PKLiveInviteView: BaseTableViewLayoutDelegate {
+extension PKLiveInviteView: AGETableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: PKLiveInviteViewCell.description(), for: indexPath) as! PKLiveInviteViewCell
         cell.setPKInfoData(with: tableViewLayout.dataArray?[indexPath.row],

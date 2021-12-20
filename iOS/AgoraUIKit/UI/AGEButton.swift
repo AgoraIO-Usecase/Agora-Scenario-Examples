@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: ButtonStyle
-enum AGEButtonStyle {
+public enum AGEButtonStyle {
     case filled(backgroundColor: UIColor?)
     case outline(borderColor: UIColor?)
     case createLive
@@ -36,79 +36,79 @@ enum AGEButtonStyle {
 }
 
 
-class AGEButton: UIButton {
-    enum ImagePosition {
+public class AGEButton: UIButton {
+    public enum ImagePosition {
         case top
         case left
         case bottom
         case right
     }
     
-    var onClickButtonClosure: ((UIButton) -> Void)?
+    public var onClickButtonClosure: ((UIButton) -> Void)?
     
-    var buttonStyle: AGEButtonStyle = .none {
+    public var buttonStyle: AGEButtonStyle = .none {
         didSet {
             update()
         }
     }
-    var colorStyle: AGETextColorStyle? {
+    public var colorStyle: AGETextColorStyle? {
         didSet {
             updateTextColor()
         }
     }
-    var fontStyle: AGETextFontStyle? {
+    public var fontStyle: AGETextFontStyle? {
         didSet {
             updateTextFont()
         }
     }
     
     /// 图片大小, 默认取图片大小
-    var imageSize: CGSize?
+    public var imageSize: CGSize?
     /// 设置圆角
-    var cornerRadius: CGFloat = 0 {
+    public var cornerRadius: CGFloat = 0 {
         didSet {
             layer.cornerRadius = cornerRadius
             layer.masksToBounds = true
         }
     }
     /// 设置某个角圆角
-    var maskedCorners: CACornerMask? {
+    public var maskedCorners: CACornerMask? {
         didSet {
             guard let corners = maskedCorners else { return }
             layer.maskedCorners = corners
         }
     }
-    var borderWidth: CGFloat = 0 {
+    public var borderWidth: CGFloat = 0 {
         didSet {
             layer.borderWidth = borderWidth
         }
     }
-    var borderColor: UIColor = .clear {
+    public var borderColor: UIColor = .clear {
         didSet {
             layer.borderColor = borderColor.cgColor
         }
     }
-    var shadowPath: CGPath? {
+    public var shadowPath: CGPath? {
         didSet {
             layer.shadowPath = shadowPath
         }
     }
-    var shadowColor: UIColor = .clear {
+    public var shadowColor: UIColor = .clear {
         didSet {
             layer.shadowColor = shadowColor.cgColor
         }
     }
-    var shadowOffset: CGSize = .zero {
+    public var shadowOffset: CGSize = .zero {
         didSet {
             layer.shadowOffset = shadowOffset
         }
     }
-    var shadowRadius: CGFloat = 0 {
+    public var shadowRadius: CGFloat = 0 {
         didSet {
             layer.shadowRadius = shadowRadius
         }
     }
-    var shadowOpacity: Float = 0 {
+    public var shadowOpacity: Float = 0 {
         didSet {
             layer.shadowOpacity = shadowOpacity
         }
@@ -153,10 +153,10 @@ class AGEButton: UIButton {
                   action: #selector(onClickButton(sender:)),
                   for: .touchUpInside)
     }
-    func setImage(_ image: UIImage?,
-                  for state: UIControl.State,
-                  postion: ImagePosition,
-                  spacing: CGFloat = 5) {
+    public func setImage(_ image: UIImage?,
+                         for state: UIControl.State,
+                         postion: ImagePosition,
+                         spacing: CGFloat = 5) {
         self.position = postion
         self.spacing = spacing
         setImage(image, for: state)

@@ -8,7 +8,7 @@
 import UIKit
 
 @objc
-protocol AGETableViewDelegate {
+public protocol AGETableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     
     @objc optional func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
@@ -20,69 +20,69 @@ protocol AGETableViewDelegate {
     @objc optional func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String?
 }
 
-class AGETableView: UIView {
+public class AGETableView: UIView {
     //MARK: Public
-    var rowHeight: CGFloat = 0 {
+    public var rowHeight: CGFloat = 0 {
         didSet {
             tableView.rowHeight = rowHeight
         }
     }
-    var estimatedRowHeight: CGFloat = 0 {
+    public var estimatedRowHeight: CGFloat = 0 {
         didSet {
             tableView.estimatedRowHeight = estimatedRowHeight
         }
     }
-    var dataArray: [Any]? {
+    public var dataArray: [Any]? {
         didSet {
             emptyView.isHidden = !(dataArray?.isEmpty ?? true)
             tableView.reloadData()
         }
     }
-    var separatorStyle: UITableViewCell.SeparatorStyle = .none {
+    public var separatorStyle: UITableViewCell.SeparatorStyle = .none {
         didSet {
             tableView.separatorStyle = separatorStyle
         }
     }
-    var headerView: UIView? {
+    public var headerView: UIView? {
         didSet {
             tableView.tableHeaderView = headerView
         }
     }
-    var emptyTitle: String? {
+    public var emptyTitle: String? {
         didSet {
             emptyView.setEmptyTitle(emptyTitle)
         }
     }
-    var emptyImage: UIImage? {
+    public var emptyImage: UIImage? {
         didSet {
             emptyView.setEmptyImage(emptyImage)
         }
     }
-    var contentInset: UIEdgeInsets = .zero {
+    public var contentInset: UIEdgeInsets = .zero {
         didSet {
             tableView.contentInset = contentInset
         }
     }
-    var showsVerticalScrollIndicator: Bool = false {
+    public var showsVerticalScrollIndicator: Bool = false {
         didSet {
             tableView.showsVerticalScrollIndicator = showsVerticalScrollIndicator
         }
     }
     weak open var delegate: AGETableViewDelegate?
-    var isRefreshing: Bool {
+    public var isRefreshing: Bool {
         refreshControl.isRefreshing
     }
-    func reloadData() {
+    public func reloadData() {
         tableView.reloadData()
     }
-    func register(_ cellClass: AnyClass?, forCellWithReuseIdentifier identifier: String) {
+    public func register(_ cellClass: AnyClass?, forCellWithReuseIdentifier identifier: String) {
         tableView.register(cellClass, forCellReuseIdentifier: identifier)
     }
     
-    func register(_ nib: UINib?, forCellWithReuseIdentifier identifier: String) {
+    public func register(_ nib: UINib?, forCellWithReuseIdentifier identifier: String) {
         tableView.register(nib, forCellReuseIdentifier: identifier)
     }
-    func insertBottomRow(item: Any?) {
+    public func insertBottomRow(item: Any?) {
         guard let datas = dataArray,
         let item = item else { return }
         tableView.beginUpdates()
@@ -92,13 +92,13 @@ class AGETableView: UIView {
         tableView.endUpdates()
         tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
     }
-    func addRefresh() {
+    public func addRefresh() {
         tableView.refreshControl = refreshControl
     }
-    func beginRefreshing() {
+    public func beginRefreshing() {
         refreshControl.beginRefreshing()
     }
-    func endRefreshing() {
+    public func endRefreshing() {
         refreshControl.endRefreshing()
     }
     
@@ -167,27 +167,27 @@ class AGETableView: UIView {
 
 extension AGETableView: UITableViewDataSource, UITableViewDelegate {
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        style == .grouped ? dataArray?.count ?? 0 : 0
+    public func numberOfSections(in tableView: UITableView) -> Int {
+        style == .grouped ? dataArray?.count ?? 0 : 1
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
          let model = dataArray?[section] as? [Any]
         return style == .grouped ? model?.count ?? 1 : dataArray?.count ?? 0
     }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = delegate?.tableView(tableView, cellForRowAt: indexPath)
         cell?.selectionStyle = .none
         return cell ?? UITableViewCell()
     }
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         delegate?.tableView?(tableView, didSelectRowAt: indexPath)
     }
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         delegate?.tableView?(tableView, viewForHeaderInSection: section)
     }
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         delegate?.tableView?(tableView, titleForHeaderInSection: section)
     }
 }

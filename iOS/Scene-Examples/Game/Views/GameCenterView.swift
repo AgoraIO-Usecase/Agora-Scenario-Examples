@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AgoraUIKit
 
 class GameCenterView: UIView {
     var didGameCenterItemClosure: ((GameCenterModel) -> Void)?
@@ -27,8 +28,8 @@ class GameCenterView: UIView {
         view.backgroundColor = .lightGray
         return view
     }()
-    public lazy var collectionLayout: BaseCollectionViewLayout = {
-        let view = BaseCollectionViewLayout()
+    public lazy var collectionLayout: AGECollectionView = {
+        let view = AGECollectionView()
         let w = (Screen.width - 15 * 4) / 4
         view.itemSize = CGSize(width: w, height: 123)
         view.minInteritemSpacing = 0
@@ -91,7 +92,7 @@ class GameCenterView: UIView {
         AlertManager.hiddenView(all: false, completion: nil)
     }
 }
-extension GameCenterView: BaseCollectionViewLayoutDelegate {
+extension GameCenterView: AGECollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: GameModeViewCell.description(),
                                                       for: indexPath) as! GameModeViewCell

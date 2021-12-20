@@ -8,90 +8,90 @@
 import UIKit
 
 @objc
-protocol AGECollectionViewDelegate {
+public protocol AGECollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
     
     @objc optional func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
     @objc optional func pullToRefreshHandler()
 }
 
-class AGECollectionView: UIView {
+public class AGECollectionView: UIView {
     //MARK: Public
-    var itemSize: CGSize = .zero {
+    public var itemSize: CGSize = .zero {
         didSet {
             flowLayout.itemSize = itemSize
         }
     }
-    var estimatedItemSize: CGSize = .zero {
+    public var estimatedItemSize: CGSize = .zero {
         didSet {
             flowLayout.estimatedItemSize = estimatedItemSize
         }
     }
-    var edge: UIEdgeInsets = .zero
-    var minLineSpacing: CGFloat = 0
-    var minInteritemSpacing: CGFloat = 0
-    var scrollDirection: UICollectionView.ScrollDirection = .horizontal
-    var showsHorizontalScrollIndicator: Bool = false {
+    public var edge: UIEdgeInsets = .zero
+    public var minLineSpacing: CGFloat = 0
+    public var minInteritemSpacing: CGFloat = 0
+    public var scrollDirection: UICollectionView.ScrollDirection = .horizontal
+    public var showsHorizontalScrollIndicator: Bool = false {
         didSet {
             collectionView.showsHorizontalScrollIndicator = showsHorizontalScrollIndicator
         }
     }
-    var showsVerticalScrollIndicator: Bool = false {
+    public var showsVerticalScrollIndicator: Bool = false {
         didSet {
             collectionView.showsVerticalScrollIndicator = showsVerticalScrollIndicator
         }
     }
-    var isPagingEnabled: Bool = false {
+    public var isPagingEnabled: Bool = false {
         didSet {
             collectionView.isPagingEnabled = isPagingEnabled
         }
     }
-    var isScrollEnabled: Bool = true {
+    public var isScrollEnabled: Bool = true {
         didSet {
             collectionView.isScrollEnabled = isScrollEnabled
         }
     }
     weak open var delegate: AGECollectionViewDelegate?
-    var dataArray: [Any]? {
+    public var dataArray: [Any]? {
         didSet {
             flowLayout.scrollDirection = scrollDirection
             emptyView.isHidden = !(dataArray?.isEmpty ?? true)
             collectionView.reloadData()
         }
     }
-    var visibleCells: [UICollectionViewCell] {
+    public var visibleCells: [UICollectionViewCell] {
         collectionView.visibleCells
     }
-    var emptyTitle: String? {
+    public var emptyTitle: String? {
         didSet {
             emptyView.setEmptyTitle(emptyTitle)
         }
     }
-    var emptyImage: UIImage? {
+    public var emptyImage: UIImage? {
         didSet {
             emptyView.setEmptyImage(emptyImage)
         }
     }
-    var isRefreshing: Bool {
+    public var isRefreshing: Bool {
         refreshControl.isRefreshing
     }
-    func reloadData() {
+    public func reloadData() {
         collectionView.reloadData()
     }
-    func register(_ cellClass: AnyClass?, forCellWithReuseIdentifier identifier: String) {
+    public func register(_ cellClass: AnyClass?, forCellWithReuseIdentifier identifier: String) {
         collectionView.register(cellClass, forCellWithReuseIdentifier: identifier)
     }
     
-    func register(_ nib: UINib?, forCellWithReuseIdentifier identifier: String) {
+    public func register(_ nib: UINib?, forCellWithReuseIdentifier identifier: String) {
         collectionView.register(nib, forCellWithReuseIdentifier: identifier)
     }
-    func addRefresh() {
+    public func addRefresh() {
         collectionView.refreshControl = refreshControl
     }
-    func beginRefreshing() {
+    public func beginRefreshing() {
         refreshControl.beginRefreshing()
     }
-    func endRefreshing() {
+    public func endRefreshing() {
         refreshControl.endRefreshing()
     }
     
@@ -150,34 +150,34 @@ class AGECollectionView: UIView {
     }
     
     @objc
-    func pullRefreshHandler() {
+    private func pullRefreshHandler() {
         delegate?.pullToRefreshHandler?()
     }
 }
 
 extension AGECollectionView: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         dataArray?.count ?? 0
     }
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = delegate?.collectionView(collectionView, cellForItemAt: indexPath) else { return UICollectionViewCell() }
         return cell
     }
 }
 extension AGECollectionView: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         delegate?.collectionView?(collectionView, didSelectItemAt: indexPath)
     }
 }
 
 extension AGECollectionView: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         minLineSpacing
     }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         minInteritemSpacing
     }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         edge
     }
 }

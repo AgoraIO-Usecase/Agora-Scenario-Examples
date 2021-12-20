@@ -6,10 +6,11 @@
 //
 
 import UIKit
+import AgoraUIKit
 
 class BORHomeViewController: BaseViewController {
-    private lazy var roomView: BaseCollectionViewLayout = {
-        let view = BaseCollectionViewLayout()
+    private lazy var roomView: AGECollectionView = {
+        let view = AGECollectionView()
         view.delegate = self
         view.edge = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         view.minLineSpacing = 15
@@ -81,7 +82,7 @@ extension BORHomeViewController: IObjectListDelegate {
     }
 }
 
-extension BORHomeViewController: BaseCollectionViewLayoutDelegate {
+extension BORHomeViewController: AGECollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let item = roomView.dataArray?[indexPath.item] as? BORLiveModel else { return }
         let params = JSONObject.toJson(item)

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AgoraUIKit
 enum LiveToolType {
     case switch_camera
     case camera
@@ -49,8 +50,8 @@ class LiveToolView: UIView {
         view.backgroundColor = .lightGray
         return view
     }()
-    private lazy var collectionViewLayout: BaseCollectionViewLayout = {
-        let view = BaseCollectionViewLayout()
+    private lazy var collectionViewLayout: AGECollectionView = {
+        let view = AGECollectionView()
         view.itemSize = CGSize(width: 80, height: 100)
         view.showsHorizontalScrollIndicator = false
         view.minInteritemSpacing = 20
@@ -110,7 +111,7 @@ class LiveToolView: UIView {
     }
 }
 
-extension LiveToolView: BaseCollectionViewLayoutDelegate {
+extension LiveToolView: AGECollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LiveToolViewCell.description(), for: indexPath) as! LiveToolViewCell
         cell.setToolData(item: collectionViewLayout.dataArray?[indexPath.item])

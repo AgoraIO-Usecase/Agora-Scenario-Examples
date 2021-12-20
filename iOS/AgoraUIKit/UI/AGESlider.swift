@@ -7,7 +7,7 @@
 
 import UIKit
 
-class AGESlider: UISlider {
+public class AGESlider: UISlider {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()

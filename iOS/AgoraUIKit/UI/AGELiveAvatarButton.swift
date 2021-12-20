@@ -7,7 +7,7 @@
 
 import UIKit
 
-class AGELiveAvatarButton: UIButton {
+public class AGELiveAvatarButton: UIButton {
     private lazy var avatarImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "person.circle")?.withTintColor(.gray, renderingMode: .alwaysOriginal))
         imageView.contentMode = .scaleAspectFill
@@ -33,7 +33,7 @@ class AGELiveAvatarButton: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setName(with avatar: UIImage?, name: String) {
+    public func setName(with avatar: UIImage?, name: String) {
         nameLabel.text = name
         avatarImageView.image = avatar
     }

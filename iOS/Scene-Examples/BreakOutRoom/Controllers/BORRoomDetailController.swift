@@ -7,6 +7,7 @@
 
 import UIKit
 import AgoraRtcKit
+import AgoraUIKit
 
 class BORRoomDetailController: BaseViewController {
     private lazy var segmentView: SegmentView = {
@@ -27,8 +28,8 @@ class BORRoomDetailController: BaseViewController {
         }
         return segmentView
     }()
-    private lazy var videoView: BaseCollectionViewLayout = {
-        let view = BaseCollectionViewLayout()
+    private lazy var videoView: AGECollectionView = {
+        let view = AGECollectionView()
         let viewW = self.view.frame.width
         view.itemSize = CGSize(width: viewW / 2, height: viewW / 2)
         view.minInteritemSpacing = 0
@@ -205,7 +206,7 @@ class BORRoomDetailController: BaseViewController {
         agoraKit?.muteLocalAudioStream(sender.isSelected)
     }
 }
-extension BORRoomDetailController: BaseCollectionViewLayoutDelegate {
+extension BORRoomDetailController: AGECollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
     }

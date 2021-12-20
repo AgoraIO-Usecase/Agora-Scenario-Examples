@@ -7,19 +7,19 @@
 
 import UIKit
 
-enum AGEImageType: String {
+public enum AGEImageType: String {
     case avatar = "person.circle"
     case placeHolder = "pic-placeholding"
 }
 
-class AGEImageView: UIImageView {
-    var cornerRadius: CGFloat = 0 {
+public class AGEImageView: UIImageView {
+    public var cornerRadius: CGFloat = 0 {
         didSet {
             layer.cornerRadius = cornerRadius
             layer.masksToBounds = true
         }
     }
-    var maskedCorners: CACornerMask? {
+    public var maskedCorners: CACornerMask? {
         didSet {
             guard let corners = maskedCorners else { return }
             layer.maskedCorners = corners
