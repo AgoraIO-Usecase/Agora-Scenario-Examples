@@ -127,7 +127,7 @@ public class AGETableView: UIView {
         return view
     }()
     
-    init(frame: CGRect, style: UITableView.Style) {
+    public init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: .zero)
         self.style = style
         setupUI()
@@ -172,8 +172,11 @@ extension AGETableView: UITableViewDataSource, UITableViewDelegate {
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-         let model = dataArray?[section] as? [Any]
-        return style == .grouped ? model?.count ?? 1 : dataArray?.count ?? 0
+        if style == .grouped {
+            let model = dataArray?[section] as? [Any]
+            return model?.count ?? 1
+        }
+        return dataArray?.count ?? 0
     }
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = delegate?.tableView(tableView, cellForRowAt: indexPath)

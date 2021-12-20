@@ -32,16 +32,16 @@ public class AGEImageView: UIImageView {
         }
     }
     
-    init(type: AGEImageType) {
+    public init(type: AGEImageType) {
         super.init(frame: .zero)
         self.imageType = type
     }
     
-    init(systemName: String) {
+    public init(systemName: String) {
         super.init(frame: .zero)
         image = UIImage(systemName: systemName)
     }
-    init(imageName: String) {
+    public init(imageName: String) {
         super.init(frame: .zero)
         image = UIImage(named: imageName)
     }

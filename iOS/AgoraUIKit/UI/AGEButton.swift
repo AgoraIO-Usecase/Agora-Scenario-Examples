@@ -119,7 +119,7 @@ public class AGEButton: UIButton {
     /// 图片位置
     private var position: ImagePosition = .left
     
-    init(style: AGEButtonStyle = .none,
+    public init(style: AGEButtonStyle = .none,
          colorStyle: AGETextColorStyle? = nil,
          fontStyle: AGETextFontStyle? = nil) {
         super.init(frame: .zero)

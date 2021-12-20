@@ -98,7 +98,7 @@ public class AGELabel: UILabel {
         }
     }
     
-    init(colorStyle: AGETextColorStyle = .black,
+    public init(colorStyle: AGETextColorStyle = .black,
          fontStyle: AGETextFontStyle = .middle) {
         super.init(frame: .zero)
         self.colorStyle = colorStyle

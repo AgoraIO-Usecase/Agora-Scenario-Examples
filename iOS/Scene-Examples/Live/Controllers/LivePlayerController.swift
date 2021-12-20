@@ -11,7 +11,7 @@ import AgoraUIKit
 
 class LivePlayerController: BaseViewController {
     enum LiveLayoutPostion {
-        case full, center, bottom
+        case full, center, bottom, signle
     }
     public lazy var liveCanvasView: AGECollectionView = {
         let view = AGECollectionView()
@@ -68,6 +68,7 @@ class LivePlayerController: BaseViewController {
     private var canvasTopConstraint: NSLayoutConstraint?
     private var canvasTrailingConstraint: NSLayoutConstraint?
     private var canvasBottomConstraint: NSLayoutConstraint?
+    private var chatViewTrailingConstraint: NSLayoutConstraint?
     private(set) var liveCanvasViewHeight: CGFloat = 0
     /// 用户角色
     public func getRole(uid: String) -> AgoraClientRole {
@@ -160,7 +161,8 @@ class LivePlayerController: BaseViewController {
         chatView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         chatView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -60).isActive = true
         let chatViewW = view.frame.width / 2 * 0.9
-        chatView.widthAnchor.constraint(equalToConstant: chatViewW).isActive = true
+        chatViewTrailingConstraint = chatView.trailingAnchor.constraint(equalTo: liveCanvasView.trailingAnchor, constant: -chatViewW)
+        chatViewTrailingConstraint?.isActive = true
         chatView.heightAnchor.constraint(equalToConstant: chatViewW).isActive = true
         
         bottomView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
@@ -189,7 +191,12 @@ class LivePlayerController: BaseViewController {
         // 聊天发送
         bottomView.clickChatButtonClosure = { [weak self] message in
             guard let self = self else { return }
-            self.sendMessage(message: message)
+            let model = ChatMessageModel(message: message, messageType: .message)
+            self.sendMessage(messageModel: model)
+        }
+        // 点击聊天消息
+        chatView.didSelectRowAt = { [weak self] messageModel in
+            self?.didMessageCell(messageModel: messageModel)
         }
         // 底部功能回调
         bottomView.clickBottomButtonTypeClosure = { [weak self] type in
@@ -280,9 +287,11 @@ class LivePlayerController: BaseViewController {
     public func receiveGiftHandler(giftModel: LiveGiftModel, type: PKLiveType) {}
     
     /// 发送消息
-    public func sendMessage(message: String) {
-        chatView.sendMessage(message: message)
+    public func sendMessage(messageModel: ChatMessageModel) {
+        chatView.sendMessage(messageModel: messageModel)
     }
+    /// 点击聊天消息
+    public func didMessageCell(messageModel: ChatMessageModel) { }
     
     /// 更新直播布局
     public func updateLiveLayout(postion: LiveLayoutPostion) {
@@ -295,20 +304,37 @@ class LivePlayerController: BaseViewController {
         switch postion {
         case .bottom:
             let viewW = Screen.width
-            let chatViewW = chatView.frame.width
-            itemWidth = (viewW - chatViewW - 15) / 2
+            itemWidth = ((viewW * 0.5) - 15) * 0.5
             itemHeight = viewW / 2 * 0.7
             let topMargin = view.frame.height - itemHeight - 78
-            leading = chatViewW
+            leading = viewW * 0.5
             top = topMargin
             bottom = -70
             trailing = -15
+            chatViewTrailingConstraint?.constant = -(leading - 10)
+            
         case .center:
             let viewW = Screen.width
             itemWidth = viewW / 2
             itemHeight = viewW / 2 * 1.2
             top = Screen.kNavHeight + 40
-        default: break
+            guard let cons = chatViewTrailingConstraint else { return }
+            chatView.removeConstraint(cons)
+            
+        case .signle:
+            let viewW = Screen.width
+            itemWidth = 90
+            itemHeight = viewW / 2 * 0.7
+            let topMargin = view.frame.height - itemHeight - 78
+            leading = viewW - (itemWidth + 15)
+            top = topMargin
+            bottom = -70
+            trailing = -15
+            chatViewTrailingConstraint?.constant = -(itemWidth + 10)
+            
+        default:
+            let chatViewW = view.frame.width / 2 * 0.9
+            chatViewTrailingConstraint?.constant = -chatViewW
         }
         liveCanvasViewHeight = top + itemHeight
         canvasLeadingConstraint?.constant = leading
@@ -322,6 +348,7 @@ class LivePlayerController: BaseViewController {
             self.canvasLeadingConstraint?.isActive = true
             self.liveCanvasView.itemSize = CGSize(width: itemWidth,
                                                   height: itemHeight)
+            self.chatViewTrailingConstraint?.isActive = true
         }
     }
     
@@ -359,7 +386,8 @@ class LivePlayerController: BaseViewController {
         if result == 0 {
             LogUtils.log(message: "主播进入房间", level: .info)
         }
-        chatView.sendMessage(message: "\(UserInfo.userId)加入房间")
+        let model = ChatMessageModel(message: "\(UserInfo.userId)加入房间", messageType: .message)
+        chatView.sendMessage(messageModel: model)
     }
     
     /// 观众加入channel
@@ -390,7 +418,8 @@ class LivePlayerController: BaseViewController {
         if joinResult == 0 {
             LogUtils.log(message: "join audience success uid == \(pkUid) channelName == \(channelName)", level: .info)
             let userId = pkUid == (UInt(currentUserId) ?? 0) ? UserInfo.userId : pkUid
-            chatView.sendMessage(message: "\(userId)加入房间")
+            let model = ChatMessageModel(message: "\(userId)加入房间", messageType: .message)
+            chatView.sendMessage(messageModel: model)
             return
         }
         LogUtils.log(message: "join audience error uid == \(pkUid) channelName == \(channelName)", level: .error)
@@ -423,7 +452,8 @@ class LivePlayerController: BaseViewController {
             liveCanvasView.dataArray = canvasDataArray
         }
         guard "\(uid)" != currentUserId else { return }
-        chatView.sendMessage(message: "\(uid)离开房间")
+        let model = ChatMessageModel(message: "\(uid)离开房间", messageType: .message)
+        chatView.sendMessage(messageModel: model)
     }
     
     deinit {

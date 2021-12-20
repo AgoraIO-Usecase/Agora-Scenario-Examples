@@ -127,6 +127,10 @@ extension LiveRoomListController: IObjectDelegate {
             let dgLiveVC = GameLiveController(channelName: channelName ?? "", sceneType: sceneType, userId: ownerId ?? "")
             navigationController?.pushViewController(dgLiveVC, animated: true)
             
+        case .playTogether:
+            let dgLiveVC = PlayTogetherViewController(channelName: channelName ?? "", sceneType: sceneType, userId: ownerId ?? "")
+            navigationController?.pushViewController(dgLiveVC, animated: true)
+            
         default: break
         }
         

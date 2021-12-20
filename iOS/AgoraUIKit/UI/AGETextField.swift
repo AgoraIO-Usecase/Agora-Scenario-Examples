@@ -67,8 +67,8 @@ public class AGETextField: UITextField {
         }
     }
     
-    init(colorStyle: AGETextColorStyle = .black,
-         fontStyle: AGETextFontStyle = .middle) {
+    public init(colorStyle: AGETextColorStyle = .black,
+                fontStyle: AGETextFontStyle = .middle) {
         super.init(frame: .zero)
         self.colorStyle = colorStyle
         self.fontStyle = fontStyle

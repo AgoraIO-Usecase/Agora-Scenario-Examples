@@ -37,7 +37,8 @@ class LiveGiftDelegate: ISyncManagerEventDelegate {
         if type == .me {
             vc.playGifView.isHidden = false
             vc.playGifView.loadGIFName(gifName: model.gifName)
-            vc.chatView.sendMessage(message: model.userId + "送出了一个" + model.title)
+            let model = ChatMessageModel(message: model.userId + "送出了一个" + model.title, messageType: .message)
+            vc.chatView.sendMessage(messageModel: model)
         }
         LiveReceivedGiftClosure?(model, type)
     }

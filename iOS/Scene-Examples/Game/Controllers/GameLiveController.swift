@@ -187,8 +187,8 @@ class GameLiveController: PKLiveController {
         }
     }
     /// 发消息
-    override func sendMessage(message: String) {
-        super.sendMessage(message: message)
+    override func sendMessage(messageModel: ChatMessageModel) {
+        super.sendMessage(messageModel: messageModel)
         viewModel.postBarrage()
     }
     

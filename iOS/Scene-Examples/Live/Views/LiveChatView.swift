@@ -8,7 +8,19 @@
 import UIKit
 import AgoraUIKit
 
+enum ChatMessageType {
+    case message
+    case notice
+}
+
+struct ChatMessageModel {
+    var message: String = ""
+    var messageType: ChatMessageType = .message
+}
+
 class LiveChatView: UIView {
+    var didSelectRowAt: ((ChatMessageModel) -> Void)?
+    
     private lazy var tableLayoutView: AGETableView = {
         let view = AGETableView()
         view.estimatedRowHeight = 44
@@ -16,8 +28,9 @@ class LiveChatView: UIView {
         view.showsVerticalScrollIndicator = false
         view.emptyImage = UIImage()
         view.emptyTitle = ""
-        view.register(LiveChatViewCell.self,
-                      forCellWithReuseIdentifier: LiveChatViewCell.description())
+        view.register(MessageCell.self,
+                      forCellWithReuseIdentifier: MessageCell.description())
+        view.register(NoticeCell.self, forCellWithReuseIdentifier: NoticeCell.description())
         view.dataArray = []
         return view
     }()
@@ -30,8 +43,8 @@ class LiveChatView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func sendMessage(message: String) {
-        tableLayoutView.insertBottomRow(item: message)
+    func sendMessage(messageModel: ChatMessageModel) {
+        tableLayoutView.insertBottomRow(item: messageModel)
     }
     
     private func setupUI() {
@@ -53,78 +66,31 @@ class LiveChatView: UIView {
 
 extension LiveChatView: AGETableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: LiveChatViewCell.description(), for: indexPath) as! LiveChatViewCell
-        let message = tableLayoutView.dataArray?[indexPath.row]
-        cell.setChatMessage(message: message)
-        return cell
-    }
-}
-
-
-class LiveChatViewCell: UITableViewCell {
-    private lazy var containerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(hex: "#000000", alpha: 0.6)
-        view.layer.masksToBounds = true
-        return view
-    }()
-    private lazy var messageLabel: UILabel = {
-        let label = UILabel()
-        label.text = "ukonw 加入房间"
-        label.textColor = .white
-        label.font = .systemFont(ofSize: 15)
-        label.numberOfLines = 0
-        return label
-    }()
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupUI()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func setupUI() {
-        backgroundColor = .clear
-        contentView.backgroundColor = .clear
-        containerView.translatesAutoresizingMaskIntoConstraints = false
-        messageLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        contentView.addSubview(containerView)
-        containerView.addSubview(messageLabel)
-        
-        containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
-        containerView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15).isActive = true
-        
-        messageLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10).isActive = true
-        messageLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 10).isActive = true
-        messageLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10).isActive = true
-        messageLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -10).isActive = true
-        
-        containerView.layer.cornerRadius = (contentView.frame.height - 15) / 2
-    }
-    
-    func setChatMessage(message: Any?) {
-        guard let message = message as? String else {
-            return
+        guard let message = tableLayoutView.dataArray?[indexPath.row] as? ChatMessageModel else { return UITableViewCell() }
+        switch message.messageType {
+        case .message:
+            let cell = tableView.dequeueReusableCell(withIdentifier: MessageCell.description(), for: indexPath) as! MessageCell
+            cell.setChatMessage(message: message)
+            return cell
+            
+        case .notice:
+            let cell = tableView.dequeueReusableCell(withIdentifier: NoticeCell.description(), for: indexPath) as! NoticeCell
+            return cell
         }
-        messageLabel.text = message
     }
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        messageLabel.preferredMaxLayoutWidth = contentView.frame.width - 46
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let message = tableLayoutView.dataArray?[indexPath.row] as? ChatMessageModel else { return }
+        didSelectRowAt?(message)
     }
 }
-
 
 class LiveChatMessageView: UIView {
     var clickKeyboardSendClosure: ((String) -> Void)?
     
     private lazy var textField: UITextField = {
         let textField = UITextField()
-        textField.font = .systemFont(ofSize: 14)
+        textField.font = .systemFont(ofSize: 14.fit)
         textField.textColor = .black
         textField.placeholder = "Live_Text_Input_Placeholder".localized
         textField.returnKeyType = .send
