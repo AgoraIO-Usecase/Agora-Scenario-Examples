@@ -85,29 +85,21 @@ class BORCreateRoomController: BaseViewController {
         itemModel.backgroundId = String(format: "portrait%02d", arc4random_uniform(13) + 1)
         let params = JSONObject.toJson(itemModel)
         LogUtils.log(message: "params == \(params)", level: .info)
-        SyncUtil.joinScene(id: itemModel.id,
-                           userId: "\(UserInfo.userId)",
-                           property: params,
-                           delegate: self)
+        SyncUtil.joinScene(id: itemModel.id, userId: UserInfo.uid, property: params) { objects in
+            let roomDetailVC = BORRoomDetailController(channelName: self.textField.text ?? "",
+                                                       ownerId: UserInfo.uid)
+            self.navigationController?.pushViewController(roomDetailVC, animated: true)
+            self.hideHUD()
+        } fail: { error in
+            self.hideHUD()
+            LogUtils.log(message: "join scene error == \(error.localizedDescription)", level: .error)
+        }
+
         let roomModel = BORSubRoomModel(subRoom: text)
         let roomParams = JSONObject.toJson(roomModel)
 //        SyncUtil.instance.addCollection(id: itemModel.id, className: SYNC_COLLECTION_SUB_ROOM,
 //                                        params: roomParams,
 //                                        delegate: self)
         createRoomFinished?()
-    }
-}
-
-extension BORCreateRoomController: IObjectDelegate {
-    func onSuccess(result: IObject) {
-        let roomDetailVC = BORRoomDetailController(channelName: textField.text ?? "",
-                                                   ownerId: "\(UserInfo.userId)")
-        navigationController?.pushViewController(roomDetailVC, animated: true)
-        hideHUD()
-    }
-    
-    func onFailed(code: Int, msg: String) {
-        hideHUD()
-        LogUtils.log(message: "code == \(code) msg == \(msg)", level: .error)
     }
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Title Bar -->
+    <color name="title_bar_bg_default_color">#FFFFFF</color>
+    <color name="title_bar_deliver_color">#33000000</color>
+    <color name="title_bar_text_color">#FFFFFF</color>
+
+    <!--================== Function ==================-->
+    <!-- RoomList -->
+    <color name="room_list_icon_text_color">#878787</color>
+    <color name="room_list_icon_text_sub_color">#cccccc</color>
+    <color name="room_list_item_bg">#cccccc</color>
+
+    <!-- Video Setting -->
+    <color name="video_setting_dialog_text_color">#656565</color>
+    <color name="video_setting_dialog_diliver_color">#efefef</color>
+
+</resources>

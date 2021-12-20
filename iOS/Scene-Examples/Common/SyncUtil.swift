@@ -6,51 +6,69 @@
 //
 
 import UIKit
+import AgoraSyncManager
 
 class SyncUtil: NSObject {
-    private static var manager: SyncManager?
+    private static var manager: AgoraSyncManager?
     private override init() { }
-    private static var subscribeCollectionDelegate: ISyncManagerLiveQuery?
     private static var sceneRefs: [String: SceneReference] = [String: SceneReference]()
     
     static func initSyncManager(sceneId: String) {
-        let dict = [SYNC_MANAGER_PARAM_KEY_APPID: KeyCenter.AppId,
-                       SYNC_MANAGER_PARAM_KEY_ID: sceneId]
-        manager = SyncManager(dict: dict)
+        let config = AgoraSyncManager.RtmConfig(appId: KeyCenter.AppId, channelName: sceneId)
+        manager = AgoraSyncManager(config: config, complete: { code in
+            if code == 0 {
+                print("SyncManager init success")
+            } else {
+                print("SyncManager init error")
+            }
+        })
     }
     
     class func joinScene(id: String,
                          userId: String,
                          property: [String: Any]?,
-                         delegate: IObjectDelegate? = nil) {
+                         success: SuccessBlock? = nil,
+                         fail: FailBlock? = nil) {
         guard let manager = manager else { return }
         let jsonString = JSONObject.toJsonString(dict: property) ?? ""
         let params = JSONObject.toDictionary(jsonStr: jsonString)
         let scene = Scene(id: id, userId: userId, property: params)
-        let sceneRef = manager.joinScene(with: scene, delegate: delegate)
+        let sceneRef = manager.joinScene(scene: scene, success: success, fail: fail)
         sceneRefs[id] = sceneRef
     }
     
-    class func fetchAll(delegate: IObjectListDelegate) {
-        manager?.getScenes(delegate: delegate)
+    class func fetchAll(success: SuccessBlock? = nil, fail: FailBlock? = nil) {
+        manager?.getScenes(success: success, fail: fail)
     }
     
-    class func fetch(id: String, key: String?, delegate: IObjectDelegate) {
+    class func fetch(id: String, key: String?, success: SuccessBlockObjOptional? = nil, fail: FailBlock? = nil) {
         let sceneRef = sceneRefs[id]
-        sceneRef?.get(key: key, delegate: delegate)
+        sceneRef?.get(key: key, success: success, fail: fail)
     }
     
     class func update(id: String,
                       key: String?,
                       params: [String: Any],
-                      delegate: IObjectDelegate?) {
+                      success: SuccessBlock? = nil,
+                      fail: FailBlock? = nil) {
         let sceneRef = sceneRefs[id]
-        sceneRef?.update(data: params, key: key, delegate: delegate)
+        sceneRef?.update(key: key, data: params, success: success, fail: fail)
     }
     
-    class func subscribe(id: String, key: String?, delegate: ISyncManagerEventDelegate) {
+    class func subscribe(id: String,
+                         key: String?,
+                         onCreated: OnSubscribeBlock? = nil,
+                         onUpdated: OnSubscribeBlock? = nil,
+                         onDeleted: OnSubscribeBlock? = nil,
+                         onSubscribed: OnSubscribeBlockVoid? = nil,
+                         fail: FailBlock? = nil) {
         let sceneRef = sceneRefs[id]
-        sceneRef?.subscribe(key: key, delegate: delegate)
+        sceneRef?.subscribe(key: key,
+                            onCreated: onCreated,
+                            onUpdated: onUpdated,
+                            onDeleted: onDeleted,
+                            onSubscribed: onSubscribed,
+                            fail: fail)
     }
     
     class func unsubscribe(id: String, key: String?) {
@@ -58,49 +76,65 @@ class SyncUtil: NSObject {
         sceneRef?.unsubscribe(key: key)
     }
     
-    class func delete(id: String, delegate: IDocumentReferenceDelegate? = nil) {
+    class func delete(id: String, success: SuccessBlock? = nil, fail: FailBlock? = nil) {
         let sceneRef = sceneRefs[id]
-        sceneRef?.delete(delegate: delegate)
+        sceneRef?.delete(success: success, fail: fail)
     }
     
     class func fetchCollection(id: String,
                                className: String,
-                               delegate: IObjectListDelegate) {
+                               success: SuccessBlock? = nil,
+                               fail: FailBlock? = nil) {
         let sceneRef = sceneRefs[id]
-        sceneRef?.collection(className: className).get(delegate: delegate)
+        sceneRef?.collection(className: className).get(success: success, fail: fail)
     }
     
     class func addCollection(id: String,
                              className: String,
                              params: [String: Any],
-                             delegate: IObjectDelegate?) {
+                             success: SuccessBlockObj? = nil,
+                             fail: FailBlock? = nil) {
         let sceneRef = sceneRefs[id]
-        sceneRef?.collection(className: className)
-            .add(data: params, delegate: delegate)
+        sceneRef?.collection(className: className).add(data: params, success: success, fail: fail)
     }
     
     class func updateCollection(id: String,
                                 className: String,
                                 objectId: String,
                                 params: [String: Any],
-                                delegate: IObjectDelegate?) {
+                                success: SuccessBlock? = nil,
+                                fail: FailBlock? = nil) {
         let sceneRef = sceneRefs[id]
-        sceneRef?.collection(className: className).document(id: objectId).update(data: params, key: nil, delegate: delegate)
+        sceneRef?.collection(className: className).document(id: objectId).update(key: nil, data: params, success: success, fail: fail)
     }
     
     class func subscribeCollection(id: String,
                                    className: String,
                                    documentId: String? = nil,
-                                   delegate: ISyncManagerEventDelegate) {
+                                   onCreated: OnSubscribeBlock? = nil,
+                                   onUpdated: OnSubscribeBlock? = nil,
+                                   onDeleted: OnSubscribeBlock? = nil,
+                                   onSubscribed: OnSubscribeBlockVoid? = nil,
+                                   fail: FailBlock? = nil) {
         let sceneRef = sceneRefs[id]
         if documentId == nil {
-            subscribeCollectionDelegate = sceneRef?.collection(className: className)
+            sceneRef?.collection(className: className)
                 .document()
-                .subscribe(key: nil, delegate: delegate)
+                .subscribe(key: nil,
+                           onCreated: onCreated,
+                           onUpdated: onUpdated,
+                           onDeleted: onDeleted,
+                           onSubscribed: onSubscribed,
+                           fail: fail)
         } else {
-            subscribeCollectionDelegate = sceneRef?.collection(className: className)
+            sceneRef?.collection(className: className)
                 .document(id: documentId ?? "")
-                .subscribe(key: nil, delegate: delegate)
+                .subscribe(key: nil,
+                           onCreated: onCreated,
+                           onUpdated: onUpdated,
+                           onDeleted: onDeleted,
+                           onSubscribed: onSubscribed,
+                           fail: fail)
         }
     }
     
@@ -116,17 +150,19 @@ class SyncUtil: NSObject {
     class func deleteDocument(id: String,
                               className: String,
                               objectId: String?,
-                              delegate: IDocumentReferenceDelegate?) {
+                              success: SuccessBlock? = nil,
+                              fail: FailBlock? = nil) {
         let sceneRef = sceneRefs[id]
         /// 删除单条数据
-        sceneRef?.collection(className: className).document(id: objectId ?? "").delete(delegate: delegate)
+        sceneRef?.collection(className: className).document(id: objectId ?? "").delete(success: success, fail: fail)
     }
     
     class func deleteCollection(id: String,
                                 className: String,
-                                delegate: IDocumentReferenceDelegate?) {
+                                success: SuccessBlock? = nil,
+                                fail: FailBlock? = nil) {
         let sceneRef = sceneRefs[id]
         /// 删除数据
-        sceneRef?.collection(className: className).delete(delegate: delegate)
+        sceneRef?.collection(className: className).delete(success: success, fail: fail)
     }
 }

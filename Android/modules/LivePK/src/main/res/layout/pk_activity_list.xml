@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/pk_shape_room_list_top">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center"
+            android:text="@string/pk_room_list_title"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/pk_white">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout_att_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/host_in_room_list_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+
+                <RelativeLayout
+                    android:id="@+id/no_data_bg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/no_data_icon"
+                        android:layout_width="@dimen/pk_room_list_exception_icon_size"
+                        android:layout_height="@dimen/pk_room_list_exception_icon_size"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/pk_list_no_data" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/no_data_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/no_data_icon"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/pk_activity_vertical_margin"
+                        android:text="@string/pk_room_list_no_data_hint"
+                        android:textColor="@color/pk_gray"
+                        android:textSize="@dimen/pk_text_size_normal" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/network_error_bg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/network_error_icon"
+                        android:layout_width="@dimen/pk_room_list_exception_icon_size"
+                        android:layout_height="@dimen/pk_room_list_exception_icon_size"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/pk_list_error_icon" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/network_error_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/network_error_icon"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/pk_activity_vertical_margin"
+                        android:text="@string/pk_room_list_network_error_title"
+                        android:textColor="@color/pk_gray"
+                        android:textSize="@dimen/pk_text_size_normal" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/network_error_message"
+                        android:layout_width="@dimen/pk_room_list_exception_icon_size"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/network_error_text"
+                        android:layout_marginTop="@dimen/pk_activity_vertical_margin"
+                        android:text="@string/pk_room_list_network_error_message"
+                        android:textColor="@color/pk_gray_lighter" />
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <ImageView
+            android:id="@+id/live_room_start_broadcast"
+            android:layout_width="@dimen/pk_start_broadcast_btn_size"
+            android:layout_height="@dimen/pk_start_broadcast_btn_size"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/pk_activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/pk_activity_vertical_margin"
+            android:paddingStart="@dimen/pk_activity_horizontal_margin"
+            android:paddingEnd="@dimen/pk_activity_horizontal_margin"
+            android:scaleType="centerCrop"
+            android:clickable="true"
+            android:src="@drawable/pk_start_broadcast_btn" />
+    </FrameLayout>
+</LinearLayout>

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AgoraUIKit
 
 class LiveOnlineView: UIView {
     private lazy var onLineView: UIView = {
@@ -26,8 +27,8 @@ class LiveOnlineView: UIView {
         label.font = .systemFont(ofSize: 14)
         return label
     }()
-    private lazy var collectionView: BaseCollectionViewLayout = {
-        let view = BaseCollectionViewLayout()
+    private lazy var collectionView: AGECollectionView = {
+        let view = AGECollectionView()
         view.itemSize = CGSize(width: 28, height: 28)
         view.minInteritemSpacing = 0
         view.minLineSpacing = 10
@@ -75,7 +76,7 @@ class LiveOnlineView: UIView {
         collectionView.dataArray = ["1", "2", "3", "4"]
     }
 }
-extension LiveOnlineView: BaseCollectionViewLayoutDelegate {
+extension LiveOnlineView: AGECollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LiveOnLineViewCell", for: indexPath)
         

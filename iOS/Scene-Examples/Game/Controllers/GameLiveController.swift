@@ -9,6 +9,7 @@ import UIKit
 import AgoraRtcKit
 import ReplayKit
 import AgoraScreenShare
+import AgoraSyncManager
 
 class GameLiveController: PKLiveController {
     private lazy var webView: GameWebView = {
@@ -52,51 +53,135 @@ class GameLiveController: PKLiveController {
     private var gameCenterModel: GameCenterModel?
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupUI()
     }
     
     private func setupUI() {
         let bottomType: [LiveBottomView.LiveBottomType] = currentUserId == "\(UserInfo.userId)" ? [.game, .tool, .close] : [.gift, .close]
-        bottomView.updateButtonType(type: bottomType)
+        liveView.updateBottomButtonType(type: bottomType)
         
         webView.translatesAutoresizingMaskIntoConstraints = false
-        view.insertSubview(webView, at: 0)
+        view.addSubview(webView)
         webView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        webView.topAnchor.constraint(equalTo: avatarview.bottomAnchor, constant: 15).isActive = true
+        webView.topAnchor.constraint(equalTo: liveView.avatarview.bottomAnchor, constant: 15).isActive = true
         webView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        webView.bottomAnchor.constraint(equalTo: chatView.topAnchor, constant: -10).isActive = true
+        webView.bottomAnchor.constraint(equalTo: liveView.chatView.topAnchor, constant: -10).isActive = true
         
         countTimeLabel.translatesAutoresizingMaskIntoConstraints = false
         pkProgressView.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(countTimeLabel)
-        countTimeLabel.centerXAnchor.constraint(equalTo: liveCanvasView.centerXAnchor).isActive = true
-        countTimeLabel.topAnchor.constraint(equalTo: liveCanvasView.topAnchor).isActive = true
+        countTimeLabel.centerXAnchor.constraint(equalTo: liveView.liveCanvasView.centerXAnchor).isActive = true
+        countTimeLabel.topAnchor.constraint(equalTo: liveView.liveCanvasView.topAnchor).isActive = true
         countTimeLabel.widthAnchor.constraint(equalToConstant: 83).isActive = true
         
         pkProgressView.removeConstraints(pkProgressView.constraints)
         pkProgressView.removeFromSuperview()
         pkProgressView.reset()
-        liveCanvasView.addSubview(pkProgressView)
-        pkProgressView.leadingAnchor.constraint(equalTo: liveCanvasView.leadingAnchor).isActive = true
-        pkProgressView.trailingAnchor.constraint(equalTo: liveCanvasView.trailingAnchor).isActive = true
-        pkProgressView.bottomAnchor.constraint(equalTo: liveCanvasView.bottomAnchor).isActive = true
+        liveView.liveCanvasView.addSubview(pkProgressView)
+        pkProgressView.leadingAnchor.constraint(equalTo: liveView.liveCanvasView.leadingAnchor).isActive = true
+        pkProgressView.trailingAnchor.constraint(equalTo: liveView.liveCanvasView.trailingAnchor).isActive = true
+        pkProgressView.bottomAnchor.constraint(equalTo: liveView.liveCanvasView.bottomAnchor).isActive = true
         pkProgressView.heightAnchor.constraint(equalToConstant: 20).isActive = true
     }
     
-    // 游戏PK
-    override func clickGamePKHandler() {
-        let modeView = GameModeView()
-        modeView.didGameModeItemClosure = { model in
-            let gameCenterView = GameCenterView()
-            gameCenterView.didGameCenterItemClosure = { [weak self] gameCenterModel in
-                self?.gameCenterModel = gameCenterModel
-                self?.inviteBroadcastHandler()
-            }
-            AlertManager.show(view: gameCenterView, alertPostion: .bottom)
+    override func eventHandler() {
+        super.eventHandler()
+        if getRole(uid: "\(UserInfo.userId)") == .broadcaster {
+            // 监听游戏
+            subscibeGameApplyInfo(channelName: channleName)
         }
-        AlertManager.show(view: modeView, alertPostion: .bottom)
+        
+        // 更新观众游戏状态
+        SyncUtil.subscribe(id: channleName, key: SYNC_MANAGER_GAME_INFO) { object in
+            guard let model = JSONObject.toModel(GameInfoModel.self, value: object.toJson()) else { return }
+            self.gameInfoModel = model
+        } onUpdated: { object in
+            LogUtils.log(message: "onUpdated game info == \(String(describing: object.toJson()))", level: .info)
+            guard self.getRole(uid: "\(UserInfo.userId)") == .audience,
+                  let model = JSONObject.toModel(GameInfoModel.self, value: object.toJson()) else { return }
+            self.gameInfoModel = model
+            if model.status == .no_start {
+                self.updatePKUIStatus(isStart: false)
+            } else if model.status == .playing {
+                self.updatePKUIStatus(isStart: true)
+                self.view.layer.contents = model.gameId?.bgImage?.cgImage
+            } else {
+                self.updatePKUIStatus(isStart: false)
+            }
+            self.stopBroadcastButton.isHidden = true
+        } onSubscribed: {
+            LogUtils.log(message: "onSubscribed game info", level: .info)
+        }
+
+        liveView.onClickGameButtonClosure = { [weak self] in
+            self?.clickGamePKHandler()
+        }
+        
+        liveView.onClickExitGameButtonClosure = { [weak self] in
+            self?.exitGameHandler()
+        }
+        /// 发消息
+        liveView.onClickSendMessageClosure = { [weak self] meesageModel in
+            self?.viewModel.postBarrage()
+        }
+        /// 发礼物
+        liveView.onSendGiftClosure = { [weak self] giftModel in
+            self?.viewModel.postGiftHandler(type: giftModel.giftType)
+        }
+    }
+    
+    private func subscibeGameApplyInfo(channelName: String) {
+        SyncUtil.subscribe(id: channelName, key: SYNC_MANAGER_GAME_APPLY_INFO) { object in
+            LogUtils.log(message: "onCreated applyGameInfo == \(String(describing: object.toJson()))", level: .info)
+            self.gameApplySubscibeHandler(object: object)
+        } onUpdated: { object in
+            LogUtils.log(message: "onUpdated applyGameInfo == \(String(describing: object.toJson()))", level: .info)
+            self.gameApplySubscibeHandler(object: object)
+        } onSubscribed: {
+            LogUtils.log(message: "onSubscribed applyGameInfo", level: .info)
+        }
+    }
+    
+    private func gameApplySubscibeHandler(object: IObject) {
+        guard let model = JSONObject.toModel(GameApplyInfoModel.self, value: object.toJson()) else { return }
+        gameApplyInfoModel = model
+        var gameInfoModel = GameInfoModel()
+        gameInfoModel.status = model.status
+        gameInfoModel.gameUid = "\(screenUserID)"
+        gameInfoModel.gameId = model.gameId
+        
+        if model.status == .no_start {
+            updatePKUIStatus(isStart: false)
+        } else if model.status == .playing {
+            view.layer.contents = model.gameId.bgImage?.cgImage
+            updatePKUIStatus(isStart: true)
+            // 通知观众拉取屏幕流
+            SyncUtil.update(id: channleName, key: SYNC_MANAGER_GAME_INFO, params: JSONObject.toJson(gameInfoModel))
+            
+        } else {
+            updatePKUIStatus(isStart: false)
+            // 更新观众状态
+            SyncUtil.update(id: channleName, key: SYNC_MANAGER_GAME_INFO, params: JSONObject.toJson(gameInfoModel))
+        }
+
+        guard getRole(uid: "\(UserInfo.userId)") == .broadcaster else { return }
+        stopBroadcastButton.isHidden = model.status != .end
+    }
+    
+    // 游戏PK
+    private func clickGamePKHandler() {
+//        let modeView = GameModeView()
+//        modeView.didGameModeItemClosure = { model in
+//
+//        }
+//        AlertManager.show(view: modeView, alertPostion: .bottom)
+        let gameCenterView = GameCenterView()
+        gameCenterView.didGameCenterItemClosure = { [weak self] gameCenterModel in
+            self?.gameCenterModel = gameCenterModel
+            self?.inviteBroadcastHandler()
+        }
+        AlertManager.show(view: gameCenterView, alertPostion: .bottom)
     }
     
     private func inviteBroadcastHandler() {
@@ -105,26 +190,24 @@ class GameLiveController: PKLiveController {
             guard let self = self else { return }
             self.targetChannelName = id
             // 加入到对方的channel 订阅对方
-            SyncUtil.subscribe(id: id,
-                               key: self.sceneType.rawValue,
-                               delegate: PKInviteInfoDelegate(vc: self))
-            
+            SyncUtil.subscribe(id: id, key: self.sceneType.rawValue, onUpdated: { object in
+                self.pkSubscribeHandler(object: object)
+            }, onSubscribed: {
+                LogUtils.log(message: "onSubscribed pkApplyInfo", level: .info)
+            })
+
             // 订阅对方收到的礼物
-            SyncUtil.subscribe(id: id,
-                               key: SYNC_MANAGER_GIFT_INFO,
-                               delegate: LiveGiftDelegate(vc: self, type: .target))
+            self.liveView.subscribeGift(channelName: id, type: .target)
             
             // 订阅对方的游戏
-            SyncUtil.subscribe(id: id,
-                               key: SYNC_MANAGER_GAME_APPLY_INFO,
-                               delegate: GameApplyInfoDelegate(vc: self))
+            self.subscibeGameApplyInfo(channelName: id)
+
         }
         AlertManager.show(view: pkInviteListView, alertPostion: .bottom)
     }
-    
-    
+
     // 退出游戏
-    override func exitGameHandler() {
+    private func exitGameHandler() {
         showAlert(title: "退出游戏", message: "退出游戏将会终止游戏PK", cancel: nil) { [weak self] in
             self?.updatePKUIStatus(isStart: false)
             self?.updateGameInfoStatus(isStart: false)
@@ -132,37 +215,21 @@ class GameLiveController: PKLiveController {
 //        self?.viewModel.postBarrage()
 //        viewModel.postGiftHandler(type: .delay)
     }
-
-    override func eventHandler() {
-        super.eventHandler()
-        if getRole(uid: "\(UserInfo.userId)") == .broadcaster {
-            // 监听游戏
-            SyncUtil.subscribe(id: channleName,
-                               key: SYNC_MANAGER_GAME_APPLY_INFO,
-                               delegate: GameApplyInfoDelegate(vc: self))
-        }
-        // 更新观众游戏状态
-        SyncUtil.subscribe(id: channleName,
-                           key: SYNC_MANAGER_GAME_INFO,
-                           delegate: GameInfoDelegate(vc: self))
-    }
     
     /// 获取pk状态
     override func getBroadcastPKStatus() {
         super.getBroadcastPKStatus()
-        let fetchGameInfoDelegate = FetchPKInfoDataDelegate()
-        fetchGameInfoDelegate.onSuccess = { [weak self] result in
-            self?.gameInfoModel = JSONObject.toModel(GameInfoModel.self, value: result?.toJson())
-            self?.updatePKUIStatus(isStart: self?.gameInfoModel?.status == .playing && self?.pkInfoModel?.status == .accept)
-            if self?.gameInfoModel?.status != .playing && self?.pkInfoModel?.status == .accept {
-                self?.updateLiveLayout(postion: .center)
-            } else if self?.gameInfoModel?.status == .playing && self?.pkInfoModel?.status == .accept {
-                self?.updateLiveLayout(postion: .bottom)
+        SyncUtil.fetch(id: channleName, key: SYNC_MANAGER_GAME_INFO, success: { result in
+            self.gameInfoModel = JSONObject.toModel(GameInfoModel.self, value: result?.toJson())
+            self.updatePKUIStatus(isStart: self.gameInfoModel?.status == .playing && self.pkInfoModel?.status == .accept)
+            if self.gameInfoModel?.status != .playing && self.pkInfoModel?.status == .accept {
+                self.liveView.updateLiveLayout(postion: .center)
+            } else if self.gameInfoModel?.status == .playing && self.pkInfoModel?.status == .accept {
+                self.liveView.updateLiveLayout(postion: .bottom)
             } else {
-                self?.updateLiveLayout(postion: .full)
+                self.liveView.updateLiveLayout(postion: .full)
             }
-        }
-        SyncUtil.fetch(id: channleName, key: SYNC_MANAGER_GAME_INFO, delegate: fetchGameInfoDelegate)
+        })
     }
     
     /// pk开始
@@ -175,21 +242,13 @@ class GameLiveController: PKLiveController {
     /// pk结束
     override func pkLiveEndHandler() {
         super.pkLiveEndHandler()
-        updateLiveLayout(postion: .full)
+        liveView.updateLiveLayout(postion: .full)
     }
-    
+
     /// 收到礼物
-    override func receiveGiftHandler(giftModel: LiveGiftModel, type: PKLiveType) {
+    override func receiveGiftHandler(giftModel: LiveGiftModel, type: RecelivedType) {
         super.receiveGiftHandler(giftModel: giftModel, type: type)
-        playGifView.isHidden = getRole(uid: UserInfo.uid) == .broadcaster && pkApplyInfoModel?.status == .accept
-        if type == .me {
-            viewModel.postGiftHandler(type: giftModel.giftType)
-        }
-    }
-    /// 发消息
-    override func sendMessage(message: String) {
-        super.sendMessage(message: message)
-        viewModel.postBarrage()
+        liveView.playGifView.isHidden = getRole(uid: UserInfo.uid) == .broadcaster && pkInfoModel?.status == .accept
     }
     
     override func applicationWillTerminate() {
@@ -205,11 +264,11 @@ class GameLiveController: PKLiveController {
         pkProgressView.isHidden = !isStart
         webView.isHidden = !isStart
         if currentUserId == "\(UserInfo.userId)" && isStart {
-            bottomView.updateButtonType(type: [.exitgame, .tool, .close])
+            liveView.updateBottomButtonType(type: [.exitgame, .tool, .close])
         } else if currentUserId == "\(UserInfo.userId)" && !isStart {
-            bottomView.updateButtonType(type: [.game, .tool, .close])
+            liveView.updateBottomButtonType(type: [.game, .tool, .close])
         } else {
-            bottomView.updateButtonType(type: [.gift, .close])
+            liveView.updateBottomButtonType(type: [.gift, .close])
         }
         if isStart {
             ToastView.show(text: "游戏开始", postion: .top, duration: 3)
@@ -232,7 +291,7 @@ class GameLiveController: PKLiveController {
                 agoraKit?.setupRemoteVideoEx(canvas, connection: screenConnection)
             }
             
-            updateLiveLayout(postion: .bottom)
+            liveView.updateLiveLayout(postion: .bottom)
 //            timer.scheduledSecondsTimer(withName: sceneType.rawValue, timeInterval: 900, queue: .main) { [weak self] _, duration in
 //                self?.countTimeLabel.setTitle("PK剩余 \("".timeFormat(secounds: duration))", for: .normal)
 //                if duration <= 0 {
@@ -241,7 +300,7 @@ class GameLiveController: PKLiveController {
 //                }
 //            }
         } else {
-            updateLiveLayout(postion: .center)
+            liveView.updateLiveLayout(postion: .center)
             pkProgressView.reset()
             webView.reset()
             // 主播调用离开游戏接口
@@ -314,18 +373,12 @@ class GameLiveController: PKLiveController {
         if isStart {
             var gameApplyModel = GameApplyInfoModel()
             gameApplyModel.status = .playing
-            SyncUtil.update(id: channelName,
-                            key: SYNC_MANAGER_GAME_APPLY_INFO,
-                            params: JSONObject.toJson(gameApplyModel),
-                            delegate: nil)
+            SyncUtil.update(id: channelName, key: SYNC_MANAGER_GAME_APPLY_INFO, params: JSONObject.toJson(gameApplyModel))
             return
         }
         gameApplyInfoModel?.status = .end
         let params = JSONObject.toJson(gameApplyInfoModel)
-        SyncUtil.update(id: channelName,
-                        key: SYNC_MANAGER_GAME_APPLY_INFO,
-                        params: params,
-                        delegate: nil)
+        SyncUtil.update(id: channelName, key: SYNC_MANAGER_GAME_APPLY_INFO, params: params)
     }
     
     override func viewDidDisappear(_ animated: Bool) {

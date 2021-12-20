@@ -1,0 +1,20 @@
+<resources>
+    <string name="pk_app_name">LivePK</string>
+    <string name="pk_cmm_tip">Tip</string>
+    <string name="pk_cmm_ok">OK</string>
+    <string name="pk_cmm_cancel">Cancel</string>
+    <string name="pk_cmm_create">Create</string>
+
+    <string name="pk_room_list_title">Room List</string>
+    <string name="pk_room_list_no_data_hint">Please Create a Room</string>
+    <string name="pk_room_list_fail_to_obtain_data_hint">Loading Data failed, please try later</string>
+    <string name="pk_room_list_network_error_title">Network failure</string>
+    <string name="pk_room_list_network_error_message">The network connection is not available, please try later.</string>
+
+    <string name="pk_room_create_title">Create Room</string>
+    <string name="pk_room_create_dialog_inpit_hint">Room Name</string>
+
+    <string name="pk_error_leak_permission">Need corresponding permissions, please open firstly.</string>
+
+    <string name="pk_room_create_dialog_title">Create Room</string>
+</resources>

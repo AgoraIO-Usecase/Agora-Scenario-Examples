@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:background="?attr/colorSurface">
+
+    <TextView
+        android:id="@+id/title_dialog_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingVertical="@dimen/game_space_normal"
+        android:text="@string/game_tools"
+        android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginHorizontal="@dimen/game_space_normal"
+        android:alpha="0.12"
+        android:background="?attr/colorOnSurface"
+        app:layout_constraintTop_toBottomOf="@id/title_dialog_more" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_flip_camera_dialog_more"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/game_space_normal"
+        android:background="?android:attr/selectableItemBackground"
+        android:checkable="false"
+        android:text="@string/game_flip_camera"
+        android:textColor="?attr/colorOnSurface"
+        app:icon="@drawable/game_ic_flip_camera"
+        app:iconGravity="top"
+        app:iconTint="?attr/colorOnSurface"
+        app:iconTintMode="src_atop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_camera_dialog_more"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_dialog_more" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_camera_dialog_more"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:checkable="true"
+        android:text="@string/game_camera"
+        android:tooltipText="@string/game_camera_tip"
+        app:icon="@drawable/game_ic_camera"
+        app:iconGravity="top"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_mic_dialog_more"
+        app:layout_constraintStart_toEndOf="@id/btn_flip_camera_dialog_more"
+        app:layout_constraintTop_toBottomOf="@id/title_dialog_more"
+        tools:targetApi="o" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_mic_dialog_more"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:checkable="true"
+        android:text="@string/game_mic"
+        android:tooltipText="@string/game_mic_tip"
+        app:icon="@drawable/game_ic_mic"
+        app:iconGravity="top"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btn_camera_dialog_more"
+        app:layout_constraintTop_toBottomOf="@id/title_dialog_more"
+        tools:targetApi="o" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

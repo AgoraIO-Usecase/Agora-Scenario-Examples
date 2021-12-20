@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="single_colorPrimary">#000000</color>
+    <color name="single_colorPrimaryDark">#000000</color>
+    <color name="single_colorAccent">#009688</color>
+
+    <color name="single_room_item_background">#232d3b</color>
+    <color name="single_grey_color">#C3C3C3</color>
+    <color name="single_grey_press_color">#E8E8E8</color>
+</resources>

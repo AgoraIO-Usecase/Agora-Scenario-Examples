@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AgoraUIKit
 
 class LiveSettingView: UIView {
     var liveSettingFinishedClosure: ((LiveSettingUseData) -> Void)?
@@ -23,8 +24,8 @@ class LiveSettingView: UIView {
         label.font = .systemFont(ofSize: 14)
         return label
     }()
-    private lazy var tableViewLayout: BaseTableViewLayout = {
-        let view = BaseTableViewLayout()
+    private lazy var tableViewLayout: AGETableView = {
+        let view = AGETableView()
         view.estimatedRowHeight = 100
         view.delegate = self
         view.separatorStyle = .singleLine
@@ -83,7 +84,7 @@ class LiveSettingView: UIView {
         AlertManager.hiddenView(all: false)
     }
 }
-extension LiveSettingView: BaseTableViewLayoutDelegate {
+extension LiveSettingView: AGETableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let datas = tableViewLayout.dataArray as? [LiveSettingModel] else { return UITableViewCell() }
         var model = datas[indexPath.row]

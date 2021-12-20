@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AgoraUIKit
 
 class LiveGiftView: UIView {
     var clickGiftItemClosure: ((LiveGiftModel) -> Void)?
@@ -21,8 +22,8 @@ class LiveGiftView: UIView {
         view.backgroundColor = .lightGray
         return view
     }()
-    private lazy var collectionViewLayout: BaseCollectionViewLayout = {
-        let view = BaseCollectionViewLayout()
+    private lazy var collectionViewLayout: AGECollectionView = {
+        let view = AGECollectionView()
         view.estimatedItemSize = CGSize(width: 60, height: 100)
         view.showsHorizontalScrollIndicator = false
         view.minInteritemSpacing = 20
@@ -102,7 +103,7 @@ class LiveGiftView: UIView {
         }
     }
 }
-extension LiveGiftView: BaseCollectionViewLayoutDelegate {
+extension LiveGiftView: AGECollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LiveGidtViewCell.description(), for: indexPath) as! LiveGidtViewCell
         let model = LiveGiftModel.createGiftData()[indexPath.item]

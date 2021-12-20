@@ -25,7 +25,7 @@ class GameViewModel: NSObject {
                                      "timestamp": "".timeStamp,
                                      "gift": type.rawValue,
                                      "count": 1,
-                                     "player": ownerId,
+                                     "player": Int(ownerId) ?? 0,
                                      "nonce_str": "".timeStamp16]
         let sign = NetworkManager.shared.generateSignature(params: params,
                                                            token: KeyCenter.gameAppSecrets)

@@ -7,6 +7,7 @@
 
 import UIKit
 import AgoraRtcKit
+import AgoraSyncManager
 
 class CreateLiveController: BaseViewController {
     private lazy var randomNameView: LiveRandomNameView = {
@@ -173,21 +174,19 @@ class CreateLiveController: BaseViewController {
     private func clickStartLiveButton() {
         let roomInfo = LiveRoomInfo(roomName: randomNameView.text)
         let params = JSONObject.toJson(roomInfo)
-        SyncUtil.joinScene(id: roomInfo.roomId, userId: roomInfo.userId, property: params, delegate: self)
+        SyncUtil.joinScene(id: roomInfo.roomId, userId: roomInfo.userId, property: params, success: { results in
+            guard let result = results.first else { return }
+            self.startLiveHandler(result: result)
+        })
     }
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
-    }
-}
-
-extension CreateLiveController: IObjectDelegate {
-    func onSuccess(result: IObject) {
+    
+    private func startLiveHandler(result: IObject) {
         LogUtils.log(message: "result == \(result.toJson() ?? "")", level: .info)
-        let channelName = try? result.getPropertyWith(key: "roomId", type: String.self) as? String
+        let channelName = result.getPropertyWith(key: "roomId", type: String.self) as? String
         
         switch sceneType {
         case .singleLive:
-            let livePlayerVC = LivePlayerController(channelName: channelName ?? "",
+            let livePlayerVC = SignleLiveController(channelName: channelName ?? "",
                                                     sceneType: sceneType,
                                                     userId: "\(UserInfo.userId)",
                                                     agoraKit: agoraKit)
@@ -207,11 +206,25 @@ extension CreateLiveController: IObjectDelegate {
                                             agoraKit: agoraKit)
             navigationController?.pushViewController(dgLiveVC, animated: true)
             
+        case .playTogether:
+            let playTogetherVC = PlayTogetherViewController(channelName: channelName ?? "",
+                                                            sceneType: sceneType,
+                                                            userId: "\(UserInfo.userId)",
+                                                            agoraKit: agoraKit)
+            navigationController?.pushViewController(playTogetherVC, animated: true)
+            
+        case .oneToOne:
+            let oneToOneVC = OneToOneViewController(channelName: channelName ?? "",
+                                                    sceneType: sceneType,
+                                                    userId: UserInfo.uid,
+                                                    agoraKit: agoraKit)
+            navigationController?.pushViewController(oneToOneVC, animated: true)
+        
         default: break
         }
     }
     
-    func onFailed(code: Int, msg: String) {
-        LogUtils.log(message: "code == \(code) msg == \(msg)", level: .error)
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
     }
 }

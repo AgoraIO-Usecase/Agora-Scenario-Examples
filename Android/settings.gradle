@@ -1,10 +1,12 @@
-if (!isModule.toBoolean()) {
+rootProject.name = "SE"
+if (!isRunAlone.toBoolean()) {
     include ':app'
 }
 
-include ':data'
-include ':baselibrary'
-include ':InteractivePodcast'
-include ':MarriageInterview'
+include ':libs:base-library'
+include ':libs:ui-widget'
 
-rootProject.name = "Agora-Scene-Android"
+include ':modules:BreakoutRoom'
+include ':modules:LivePK'
+include ':modules:SingleHostLive'
+include ':modules:RTEGame'

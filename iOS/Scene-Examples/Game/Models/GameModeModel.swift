@@ -10,6 +10,8 @@ import UIKit
 enum GameModeType {
     /// 连麦pk
     case game_pk
+    /// 同玩
+    case together
 }
 
 struct GameModeModel {
@@ -20,17 +22,17 @@ struct GameModeModel {
     
     static func createDatas() -> [GameModeModel] {
         var dataArray = [GameModeModel]()
-        let model = GameModeModel(iconName: "Game/pkgame-icon",
+        var model = GameModeModel(iconName: "Game/pkgame-icon",
                                   title: "连麦PK",
                                   bgColor: .init(hex: "#F5A623"),
                                   type: .game_pk)
         dataArray.append(model)
         
-//        model = GameModeModel(iconName: "Game/pkgame-icon",
-//                              title: "连麦PK",
-//                              bgColor: .init(hex: "#F5A623"),
-//                              type: .game_pk)
-//        dataArray.append(model)
+        model = GameModeModel(iconName: "Game/fansgame",
+                              title: "粉丝互动游戏",
+                              bgColor: .init(hex: "#4A90E2"),
+                              type: .together)
+        dataArray.append(model)
 //        
 //        model = GameModeModel(iconName: "Game/pkgame-icon",
 //                              title: "连麦PK",

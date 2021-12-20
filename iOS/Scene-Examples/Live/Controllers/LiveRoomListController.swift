@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import AgoraUIKit
+import AgoraSyncManager
 
 class LiveRoomListController: BaseViewController {
-    private lazy var roomView: BaseCollectionViewLayout = {
-        let view = BaseCollectionViewLayout()
+    private lazy var roomView: AGECollectionView = {
+        let view = AGECollectionView()
         view.delegate = self
         view.edge = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         view.minLineSpacing = 15
@@ -48,8 +50,22 @@ class LiveRoomListController: BaseViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        SyncUtil.fetchAll(delegate: self)
+        getLiveData()
         navigationTransparent(isTransparent: false)
+    }
+    
+    private func getLiveData() {
+        SyncUtil.fetchAll { results in
+            self.hideHUD()
+            self.roomView.endRefreshing()
+            print("result == \(results.compactMap{ $0.toJson() })")
+            self.dataArray = results.compactMap({ $0.toJson() }).compactMap({ JSONObject.toModel(LiveRoomInfo.self, value: $0 )})
+            self.roomView.dataArray = self.dataArray
+        } fail: { error in
+            self.hideHUD()
+            self.roomView.endRefreshing()
+            LogUtils.log(message: "get live data error == \(error.localizedDescription)", level: .info)
+        }
     }
     
     private func setupUI() {
@@ -76,43 +92,23 @@ class LiveRoomListController: BaseViewController {
                 let params = JSONObject.toJson(model)
                 SyncUtil.joinScene(id: model?.roomId ?? "",
                                    userId: model?.userId ?? "",
-                                   property: params,
-                                   delegate: self)
+                                   property: params, success: { results in
+                    guard let result = results.first else { return }
+                    self.joinSceneHandler(result: result)
+                })
             }
             return
         }
         let createLiveVC = CreateLiveController(sceneType: sceneType)
         navigationController?.pushViewController(createLiveVC, animated: true)
     }
-}
-
-extension LiveRoomListController: BaseCollectionViewLayoutDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let item = roomView.dataArray?[indexPath.item] as? LiveRoomInfo else { return }
-        let params = JSONObject.toJson(item)
-        SyncUtil.joinScene(id: item.roomId,
-                           userId: item.userId,
-                           property: params,
-                           delegate: self)
-    }
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LiveRoomListCell.description(),
-                                                      for: indexPath) as! LiveRoomListCell
-        cell.setRoomInfo(info: roomView.dataArray?[indexPath.item])
-        return cell
-    }
-    func pullToRefreshHandler() {
-        SyncUtil.fetchAll(delegate: self)
-    }
-}
-
-extension LiveRoomListController: IObjectDelegate {
-    func onSuccess(result: IObject) {
-        let channelName = try? result.getPropertyWith(key: "roomId", type: String.self) as? String
-        let ownerId = try? result.getPropertyWith(key: "userId", type: String.self) as? String
+    
+    private func joinSceneHandler(result: IObject) {
+        let channelName = result.getPropertyWith(key: "roomId", type: String.self) as? String
+        let ownerId = result.getPropertyWith(key: "userId", type: String.self) as? String
         switch sceneType {
         case .singleLive:
-            let livePlayerVC = LivePlayerController(channelName: channelName ?? "", sceneType: sceneType, userId: ownerId ?? "")
+            let livePlayerVC = SignleLiveController(channelName: channelName ?? "", sceneType: sceneType, userId: ownerId ?? "")
             navigationController?.pushViewController(livePlayerVC, animated: true)
         case .pkApply:
             let pkLiveVC = PKLiveController(channelName: channelName ?? "", sceneType: sceneType, userId: ownerId ?? "")
@@ -126,23 +122,36 @@ extension LiveRoomListController: IObjectDelegate {
             let dgLiveVC = GameLiveController(channelName: channelName ?? "", sceneType: sceneType, userId: ownerId ?? "")
             navigationController?.pushViewController(dgLiveVC, animated: true)
             
+        case .playTogether:
+            let dgLiveVC = PlayTogetherViewController(channelName: channelName ?? "", sceneType: sceneType, userId: ownerId ?? "")
+            navigationController?.pushViewController(dgLiveVC, animated: true)
+            
+        case .oneToOne:
+            let oneToOneVC = OneToOneViewController(channelName: channelName ?? "", sceneType: sceneType, userId: ownerId ?? "")
+            navigationController?.pushViewController(oneToOneVC, animated: true)
+            
         default: break
         }
-        
     }
 }
 
-extension LiveRoomListController: IObjectListDelegate {
-    func onFailed(code: Int, msg: String) {
-        hideHUD()
-        roomView.endRefreshing()
+extension LiveRoomListController: AGECollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let item = roomView.dataArray?[indexPath.item] as? LiveRoomInfo else { return }
+        let params = JSONObject.toJson(item)
+        SyncUtil.joinScene(id: item.roomId, userId: item.userId, property: params, success: { results in
+            guard let result = results.first else { return }
+            self.joinSceneHandler(result: result)
+        })
+
     }
-    
-    func onSuccess(result: [IObject]) {
-        hideHUD()
-        roomView.endRefreshing()
-        print("result == \(result.compactMap{ $0.toJson() })")
-        dataArray = result.compactMap({ $0.toJson() }).compactMap({ JSONObject.toModel(LiveRoomInfo.self, value: $0 )})
-        roomView.dataArray = dataArray
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LiveRoomListCell.description(),
+                                                      for: indexPath) as! LiveRoomListCell
+        cell.setRoomInfo(info: roomView.dataArray?[indexPath.item])
+        return cell
+    }
+    func pullToRefreshHandler() {
+        getLiveData()
     }
 }

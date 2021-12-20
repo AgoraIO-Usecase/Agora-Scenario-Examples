@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="dynamic_previewViewCount" format="integer"/>
+    <declare-styleable name="DynamicView">
+        <attr name="dynamic_layoutStyle" format="flags">
+            <flag name="flex" value="0"/>
+            <flag name="scroll" value="1"/>
+        </attr>
+        <attr name="dynamic_fitEnd" format="boolean"/>
+        <attr name="dynamic_gapInFlex" format="dimension"/>
+        <attr name="dynamic_previewViewCount"/>
+    </declare-styleable>
+</resources>
