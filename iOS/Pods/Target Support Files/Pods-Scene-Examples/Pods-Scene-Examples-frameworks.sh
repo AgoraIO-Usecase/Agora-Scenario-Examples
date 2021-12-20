@@ -183,8 +183,8 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${PODS_ROOT}/AgoraRtcEngine_iOS_Preview/Agoraffmpeg.framework"
   install_framework "${PODS_ROOT}/AgoraRtm_iOS/AgoraRtmKit.framework"
   install_framework "${PODS_ROOT}/../sdk/libs/AgoraScreenShare.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/AgoraUIKit/AgoraUIKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${PODS_ROOT}/AgoraRtcEngine_iOS_Preview/AgoraRTE.framework"
@@ -194,8 +194,8 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${PODS_ROOT}/AgoraRtcEngine_iOS_Preview/Agoraffmpeg.framework"
   install_framework "${PODS_ROOT}/AgoraRtm_iOS/AgoraRtmKit.framework"
   install_framework "${PODS_ROOT}/../sdk/libs/AgoraScreenShare.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/AgoraUIKit/AgoraUIKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
   wait

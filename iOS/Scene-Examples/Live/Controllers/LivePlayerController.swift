@@ -7,6 +7,7 @@
 
 import UIKit
 import AgoraRtcKit
+import AgoraUIKit
 
 class LivePlayerController: BaseViewController {
     enum LiveLayoutPostion {
