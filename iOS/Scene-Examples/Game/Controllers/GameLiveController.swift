@@ -87,16 +87,17 @@ class GameLiveController: PKLiveController {
     
     // 游戏PK
     override func clickGamePKHandler() {
-        let modeView = GameModeView()
-        modeView.didGameModeItemClosure = { model in
-            let gameCenterView = GameCenterView()
-            gameCenterView.didGameCenterItemClosure = { [weak self] gameCenterModel in
-                self?.gameCenterModel = gameCenterModel
-                self?.inviteBroadcastHandler()
-            }
-            AlertManager.show(view: gameCenterView, alertPostion: .bottom)
+//        let modeView = GameModeView()
+//        modeView.didGameModeItemClosure = { model in
+//
+//        }
+//        AlertManager.show(view: modeView, alertPostion: .bottom)
+        let gameCenterView = GameCenterView()
+        gameCenterView.didGameCenterItemClosure = { [weak self] gameCenterModel in
+            self?.gameCenterModel = gameCenterModel
+            self?.inviteBroadcastHandler()
         }
-        AlertManager.show(view: modeView, alertPostion: .bottom)
+        AlertManager.show(view: gameCenterView, alertPostion: .bottom)
     }
     
     private func inviteBroadcastHandler() {

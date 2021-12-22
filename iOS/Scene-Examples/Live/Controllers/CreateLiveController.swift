@@ -214,6 +214,13 @@ extension CreateLiveController: IObjectDelegate {
                                                             agoraKit: agoraKit)
             navigationController?.pushViewController(playTogetherVC, animated: true)
             
+        case .oneToOne:
+            let oneToOneVC = OneToOneViewController(channelName: channelName ?? "",
+                                                    sceneType: sceneType,
+                                                    userId: UserInfo.uid,
+                                                    agoraKit: agoraKit)
+            navigationController?.pushViewController(oneToOneVC, animated: true)
+        
         default: break
         }
     }

@@ -18,6 +18,8 @@ enum SceneType: String {
     case pkApply = "pkApplyInfo"
     /// 同玩
     case playTogether = "playTogether"
+    /// 1v1
+    case oneToOne = "oneToOne"
     
     var alertTitle: String {
         switch self {
@@ -69,6 +71,13 @@ struct MainModel {
         model.desc = "你画我猜"
         model.imageNmae = "pic-Virtual"
         model.sceneType = .playTogether
+        dataArray.append(model)
+        
+        model = MainModel()
+        model.title = "1V1直播"
+        model.desc = "你画我猜"
+        model.imageNmae = "pic-Virtual"
+        model.sceneType = .oneToOne
         dataArray.append(model)
         
         return dataArray

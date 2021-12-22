@@ -54,7 +54,6 @@ class BORRoomDetailController: BaseViewController {
         config.appId = KeyCenter.AppId
         config.channelProfile = .liveBroadcasting
         config.areaCode = .global
-        config.channelProfile = .liveBroadcasting
         return config
     }()
     private lazy var channelMediaOptions: AgoraRtcChannelMediaOptions = {

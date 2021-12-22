@@ -64,20 +64,21 @@ class PlayTogetherViewController: LivePlayerController {
     
     // 游戏
     override func clickGamePKHandler() {
-        let modeView = GameModeView()
-        modeView.didGameModeItemClosure = { model in
-            let gameCenterView = GameCenterView()
-            gameCenterView.didGameCenterItemClosure = { [weak self] gameCenterModel in
-                self?.gameCenterModel = gameCenterModel
-                self?.updateUIStatus(isStart: true)
-                if self?.getRole(uid: UserInfo.uid) == .broadcaster {
-                    self?.updateGameInfoStatus(isStart: true)
-                }
-                AlertManager.hiddenView()
+//        let modeView = GameModeView()
+//        modeView.didGameModeItemClosure = { model in
+//
+//        }
+//        AlertManager.show(view: modeView, alertPostion: .bottom)
+        let gameCenterView = GameCenterView()
+        gameCenterView.didGameCenterItemClosure = { [weak self] gameCenterModel in
+            self?.gameCenterModel = gameCenterModel
+            self?.updateUIStatus(isStart: true)
+            if self?.getRole(uid: UserInfo.uid) == .broadcaster {
+                self?.updateGameInfoStatus(isStart: true)
             }
-            AlertManager.show(view: gameCenterView, alertPostion: .bottom)
+            AlertManager.hiddenView()
         }
-        AlertManager.show(view: modeView, alertPostion: .bottom)
+        AlertManager.show(view: gameCenterView, alertPostion: .bottom)
     }
     // 退出游戏
     override func exitGameHandler() {
@@ -99,7 +100,7 @@ class PlayTogetherViewController: LivePlayerController {
     override func sendMessage(messageModel: ChatMessageModel) {
         super.sendMessage(messageModel: messageModel)
         viewModel.postBarrage()
-        if getRole(uid: UserInfo.uid) == .audience && messageModel.message == "主播yyds" {
+        if getRole(uid: UserInfo.uid) == .audience && messageModel.message == "主播yyds" && gameInfoModel?.status == .playing {
             updateUIStatus(isStart: true)
         }
     }
@@ -118,8 +119,6 @@ class PlayTogetherViewController: LivePlayerController {
             bottomView.updateButtonType(type: [.game, .gift, .tool, .close])
         } else if isStart {
             bottomView.updateButtonType(type: [.exitgame, .gift, .close])
-        } else if !isStart {
-            bottomView.updateButtonType(type: [.game, .gift, .close])
         } else {
             bottomView.updateButtonType(type: [.gift, .close])
         }

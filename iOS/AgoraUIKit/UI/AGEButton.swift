@@ -11,15 +11,15 @@ import UIKit
 public enum AGEButtonStyle {
     case filled(backgroundColor: UIColor?)
     case outline(borderColor: UIColor?)
-    case createLive
     case startLive
     case switchCamera(imageColor: UIColor?)
-    case setting
     case delete(imageColor: UIColor?)
     case mic(imageColor: UIColor?)
     case muteMic(imageColor: UIColor?)
     case play(imageColor: UIColor?)
     case pause(imageColor: UIColor?)
+    case systemImage(name: String, imageColor: UIColor?)
+    case imageName(name: String)
     case none
     
     var cornerRadius: CGFloat {
@@ -42,6 +42,7 @@ public class AGEButton: UIButton {
         case left
         case bottom
         case right
+        case center
     }
     
     public var onClickButtonClosure: ((UIButton) -> Void)?
@@ -115,9 +116,9 @@ public class AGEButton: UIButton {
     }
     
     /// 图片和文字之间的间距
-    private var spacing: CGFloat = 5
+    private var spacing: CGFloat = 0
     /// 图片位置
-    private var position: ImagePosition = .left
+    private var position: ImagePosition = .center
     
     public init(style: AGEButtonStyle = .none,
          colorStyle: AGETextColorStyle? = nil,
@@ -146,7 +147,7 @@ public class AGEButton: UIButton {
         setContentHuggingPriority(.required, for: .horizontal)
         setContentHuggingPriority(.required, for: .vertical)
         
-        setTitle("按钮", for: .normal)
+        setTitle("", for: .normal)
         setTitleColor(colorStyle?.color ?? .white, for: .normal)
         titleLabel?.font = fontStyle?.font ?? .systemFont(ofSize: 14)
         addTarget(self,
@@ -164,12 +165,6 @@ public class AGEButton: UIButton {
     }
     
     private func update() {
-        cornerRadius = buttonStyle.cornerRadius
-        backgroundColor = .clear
-        setTitleColor(.clear, for: .normal)
-        titleLabel?.font = fontStyle?.font ?? .systemFont(ofSize: 14)
-        borderWidth = 0
-        borderColor = .clear
         switch buttonStyle {
         case .filled(let bgColor):
             backgroundColor = bgColor ?? .blueColor
@@ -191,12 +186,10 @@ public class AGEButton: UIButton {
             widthAnchor.constraint(equalToConstant: 100).isActive = true
             heightAnchor.constraint(equalToConstant: 40).isActive = true
             
-        case .setting:
-            setImage(UIImage(named: "ImagesBundle.bundle/setting_icon"), for: .normal)
-            
-        case .createLive:
-            setImage(UIImage(named: "ImagesBundle.bundle/create_room"), for: .normal)
-            
+        case .imageName(let name):
+            setImage(UIImage(named: name),
+                     for: .normal)
+    
         case .switchCamera(let imageColor):
             setImage(UIImage(systemName: "camera")?.withTintColor(imageColor ?? .blueColor, renderingMode: .alwaysOriginal), for: .normal)
             
@@ -207,13 +200,16 @@ public class AGEButton: UIButton {
             setImage(UIImage(systemName: "mic")?.withTintColor(imageColor ?? .blueColor, renderingMode: .alwaysOriginal), for: .normal)
 
         case .muteMic(let imageColor):
-            setImage(UIImage(systemName: "mic.fill")?.withTintColor(imageColor ?? .blueColor, renderingMode: .alwaysOriginal), for: .normal)
+            setImage(UIImage(systemName: "mic.slash")?.withTintColor(imageColor ?? .blueColor, renderingMode: .alwaysOriginal), for: .normal)
         
         case .play(let imageColor):
             setImage(UIImage(systemName: "play.circle")?.withTintColor(imageColor ?? .blueColor, renderingMode: .alwaysOriginal), for: .normal)
             
         case .pause(let imageColor):
             setImage(UIImage(systemName: "pause.circle")?.withTintColor(imageColor ?? .blueColor, renderingMode: .alwaysOriginal), for: .normal)
+            
+        case .systemImage(let name, let imageColor):
+            setImage(UIImage(systemName: name)?.withTintColor(imageColor ?? .blueColor, renderingMode: .alwaysOriginal), for: .normal)
         
         case .none:
             backgroundColor = .clear
@@ -233,7 +229,7 @@ public class AGEButton: UIButton {
     override open func layoutSubviews() {
         super.layoutSubviews()
         titleLabel?.sizeToFit()
-        let labelSize = titleLabel?.frame.size ?? .zero
+        let labelSize = ((titleLabel?.text?.isEmpty ?? false) ? .zero : titleLabel?.frame.size) ?? .zero
         let imageSize = self.imageSize ?? imageView?.frame.size ?? .zero
 
         let totalWidth = labelSize.width + imageSize.width + spacing
@@ -241,7 +237,6 @@ public class AGEButton: UIButton {
 
         var imageFrame: CGRect = .zero
         var labelFrame: CGRect = .zero
-
         switch position {
         case .left:
             imageFrame = CGRect(origin: CGPoint(x: bounds.width / 2.0 - totalWidth / 2.0,
@@ -275,6 +270,24 @@ public class AGEButton: UIButton {
             imageFrame = CGRect(origin: CGPoint(x: bounds.width / 2.0 - imageSize.width / 2.0,
                                                 y: labelFrame.maxY + spacing),
                                 size: CGSize(width: imageSize.width, height: imageSize.height))
+            
+        case .center:
+            if imageSize != .zero && labelSize != .zero {
+                imageFrame = CGRect(x: (bounds.width - imageSize.width) / 2.0,
+                                    y: (bounds.height - imageSize.height) / 2.0,
+                                    width: imageSize.width,
+                                    height: imageSize.height)
+                labelFrame = CGRect(origin: CGPoint(x: (bounds.width - labelSize.width) / 2.0, y: imageFrame.maxY + spacing),
+                                    size: CGSize(width: bounds.width - 10, height: labelSize.height))
+            } else if imageSize == .zero && labelSize != .zero {
+                labelFrame = CGRect(origin: CGPoint(x: (bounds.width - labelSize.width) / 2.0, y: (bounds.height - labelSize.height) / 2.0),
+                                    size: CGSize(width: bounds.width - 10, height: labelSize.height))
+            } else {
+                imageFrame = CGRect(x: (bounds.width - imageSize.width) / 2.0,
+                                    y: (bounds.height - imageSize.height) / 2.0,
+                                    width: imageSize.width,
+                                    height: imageSize.height)
+            }
         }
 
         titleLabel?.frame = labelFrame

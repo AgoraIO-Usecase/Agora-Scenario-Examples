@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 public let cl_screenWidht = UIScreen.main.bounds.width
 public let cl_screenHeight = UIScreen.main.bounds.height
@@ -20,26 +21,35 @@ class AlertManager: NSObject {
     }
     
     private static var vc: UIViewController?
-    private static var containerView: UIButton?
+    private static var containerView: UIView?
     private static var currentPosition: AlertPosition = .center
     private static var viewCache: [AlertViewCache] = []
     private static var bottomAnchor: NSLayoutConstraint?
     
     public static func show(view: UIView,
                             alertPostion: AlertPosition = .center,
-                            didCoverDismiss: Bool = true) {
+                            didCoverDismiss: Bool = true,
+                            controller: UIViewController? = nil) {
         let index = viewCache.isEmpty ? 0 : viewCache.count
         viewCache.append(AlertViewCache(view: view, index: index))
         currentPosition = alertPostion
+        if controller != nil {
+            hiddenView()
+        }
         if vc == nil {
             containerView = UIButton(frame: CGRect(x: 0, y: 0, width: cl_screenWidht, height: cl_screenHeight))
             containerView?.backgroundColor = UIColor(red: 0.0/255, green: 0.0/255, blue: 0.0/255, alpha: 0.0)
         }
         if didCoverDismiss {
-            containerView?.addTarget(self, action: #selector(tapView), for: .touchUpInside)
+            (containerView as? UIButton)?.addTarget(self, action: #selector(tapView), for: .touchUpInside)
+        }
+        if controller == nil {
+            containerView?.addSubview(view)
+        } else {
+            containerView = controller?.view
+            vc = controller
         }
         guard let containerView = containerView else { return }
-        containerView.addSubview(view)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.alpha = 0
         if alertPostion == .center {

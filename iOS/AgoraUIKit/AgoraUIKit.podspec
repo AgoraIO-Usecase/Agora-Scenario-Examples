@@ -11,7 +11,5 @@ Pod::Spec.new do |spec|
    spec.source_files = "**/*.swift"
    spec.requires_arc  = true
    spec.ios.deployment_target = '13.0'
-   spec.resource_bundles = {
-    'AgoraUIKit' => ['Core/ImagesBundle.bundle'],#(.png的资源)
-  }
+   
  end
