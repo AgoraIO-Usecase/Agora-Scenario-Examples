@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/live_room_list_item_view_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="@dimen/pk_room_list_item_corner"
+    app:cardBackgroundColor="@color/pk_gray_light">
+
+    <io.agora.scene.livepk.widget.SquareRelativeLayout
+        android:id="@+id/live_room_list_item_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/live_room_list_item_room_name"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/pk_room_list_item_name_height"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:lines="1"
+            android:textAlignment="gravity"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:background="@drawable/pk_mask_background"/>
+
+        <ImageView
+            android:id="@+id/iv_delete"
+            android:layout_alignParentEnd="true"
+            android:padding="8dp"
+            android:src="@drawable/pk_ic_baseline_close_24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </io.agora.scene.livepk.widget.SquareRelativeLayout>
+</androidx.cardview.widget.CardView>

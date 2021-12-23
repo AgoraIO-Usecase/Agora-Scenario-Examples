@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/pk_gray_alpha2"/>
+    <corners android:radius="@dimen/pk_live_name_pad_corner"/>
+</shape>

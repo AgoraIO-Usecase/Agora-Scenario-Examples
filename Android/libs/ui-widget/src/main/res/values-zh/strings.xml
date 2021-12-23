@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--================== Function ==================-->
+    <!-- RoomList -->
+    <string name="room_list_no_data_hint">请创建一个房间</string>
+    <string name="room_list_network_error_title">网络异常</string>
+    <string name="room_list_network_error_message">当前网络连接异常，请稍候再试</string>
+
+    <!-- Preview Control -->
+    <string name="preview_control_name_hint">直播间名字</string>
+    <string name="preview_control_go_live_text">开始直播</string>
+    <string name="preview_control_room_restriction">本应用为测试产品，请勿商用。单次直播最长10分钟，每个频道最多10人。</string>
+
+    <!-- Video Setting -->
+    <string name="video_setting_dialog_title">设置</string>
+    <string name="video_setting_dialog_title_resolution">分辨率</string>
+    <string name="video_setting_dialog_title_framerate">帧率</string>
+    <string name="video_setting_dialog_title_bitrate">码率</string>
+    <string name="video_setting_dialog_bitrate_value_default">默认</string>
+
+    <!--=================== Utils ======================-->
+
+    <!-- RandomUtil -->
+    <string-array name="random_channel_names">
+        <item>陌上花开等你来</item>
+        <item>天天爱你</item>
+        <item>我爱你们</item>
+        <item>有人可以</item>
+        <item>风情万种</item>
+        <item>强势归来</item>
+        <item>哈哈哈</item>
+        <item>聊聊</item>
+        <item>美人舞江山</item>
+        <item>最美的回忆</item>
+        <item>遇见你</item>
+        <item>最长情的告白</item>
+        <item>全力以赴</item>
+        <item>简单点</item>
+        <item>早上好</item>
+        <item>春风十里不如你</item>
+    </string-array>
+
+    <string-array name="random_surnames">
+        <item>赵</item>
+        <item>钱</item>
+        <item>孙</item>
+        <item>李</item>
+        <item>周</item>
+        <item>吴</item>
+        <item>郑</item>
+        <item>王</item>
+    </string-array>
+
+    <string-array name="random_names">
+        <item>富贵</item>
+        <item>国强</item>
+        <item>建国</item>
+        <item>林</item>
+        <item>麒麟</item>
+        <item>宝强</item>
+        <item>强</item>
+        <item>相如</item>
+        <item>欢喜</item>
+    </string-array>
+
+</resources>

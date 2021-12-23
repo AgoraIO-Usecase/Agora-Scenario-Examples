@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    tools:background="@drawable/game_portrait02">
+
+<!--    Video Layer-->
+    <io.agora.scene.rtegame.view.LiveHostLayout
+        android:id="@+id/host_container_fg_room"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+<!--    Button Layer-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container_overlay_fg_room"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/layout_room_info"
+            layout="@layout/game_layout_room_info"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_fg_room"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/game_space_normal"
+            android:clipToPadding="true"
+            android:orientation="vertical"
+            android:fadingEdge="vertical"
+            android:requiresFadingEdge="vertical"
+            android:paddingHorizontal="@dimen/game_space_small"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/input_fg_room"
+            app:layout_constraintHeight_percent="0.22"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_percent="1"
+            app:stackFromEnd="true"
+            tools:listitem="@layout/game_item_room_message" />
+
+        <!--    Bottom Part-->
+        <com.google.android.material.chip.Chip
+            android:id="@+id/input_fg_room"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="@dimen/game_space_small"
+            android:layout_marginEnd="@dimen/game_space_normal"
+            android:layout_marginBottom="@dimen/game_space_normal"
+            android:stateListAnimator="@null"
+            android:text="@string/game_input_hint"
+            android:textColor="@android:color/white"
+            app:chipEndPadding="@dimen/game_space_big"
+            app:chipMinTouchTargetSize="0dp"
+            app:chipSurfaceColor="?attr/scrimBackground"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_donate_fg_room"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btn_donate_fg_room"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginEnd="@dimen/game_space_normal"
+            android:layout_marginBottom="@dimen/game_space_normal"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/game_exit"
+            android:scaleType="fitXY"
+            android:src="@drawable/game_ic_gift"
+            android:tintMode="src_atop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_game_fg_room"
+            app:layout_constraintStart_toEndOf="@id/input_fg_room"
+            app:tint="@color/game_selector_color_scrim" />
+
+        <ImageButton
+            android:id="@+id/btn_game_fg_room"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginEnd="@dimen/game_space_normal"
+            android:layout_marginBottom="@dimen/game_space_normal"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/game_game"
+            android:scaleType="fitXY"
+            android:src="@drawable/game_ic_game"
+            android:tintMode="src_atop"
+            android:tooltipText="@string/game_game"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_exit_game_fg_room"
+            app:layout_constraintStart_toEndOf="@id/btn_donate_fg_room"
+            app:tint="@color/game_selector_color_scrim"
+            tools:targetApi="o" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/btn_exit_game_fg_room"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:layout_marginEnd="@dimen/game_space_normal"
+            android:layout_marginBottom="@dimen/game_space_normal"
+            android:stateListAnimator="@null"
+            android:text="@string/game_exit_game"
+            android:textColor="@android:color/white"
+            android:visibility="gone"
+            app:chipMinTouchTargetSize="0dp"
+            app:chipSurfaceColor="?attr/scrimBackground"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_more_fg_room"
+            app:layout_constraintStart_toEndOf="@id/btn_game_fg_room"
+            tools:visibility="visible" />
+
+        <ImageButton
+            android:id="@+id/btn_more_fg_room"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginEnd="@dimen/game_space_normal"
+            android:layout_marginBottom="@dimen/game_space_normal"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/game_tools"
+            android:scaleType="fitXY"
+            android:src="@drawable/game_ic_more"
+            android:tintMode="src_atop"
+            android:tooltipText="@string/game_tools"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_exit_fg_room"
+            app:layout_constraintStart_toEndOf="@id/btn_exit_game_fg_room"
+            app:tint="@color/game_selector_color_scrim"
+            tools:targetApi="o" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/btn_exit_pk_fg_room"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:layout_margin="@dimen/game_space_normal"
+            android:layout_marginStart="@dimen/game_space_normal"
+            android:stateListAnimator="@null"
+            android:text="@string/game_exit_pk"
+            android:textColor="@android:color/white"
+            android:visibility="gone"
+            app:chipMinTouchTargetSize="0dp"
+            app:chipSurfaceColor="?attr/scrimBackground"
+            app:layout_constraintBottom_toTopOf="@id/btn_exit_fg_room"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="visible" />
+
+        <ImageButton
+            android:id="@+id/btn_exit_fg_room"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginEnd="@dimen/game_space_small"
+            android:layout_marginBottom="@dimen/game_space_normal"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/game_exit"
+            android:scaleType="fitXY"
+            android:src="@drawable/game_ic_close"
+            android:tintMode="src_atop"
+            android:tooltipText="@string/game_exit"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/game_selector_color_scrim"
+            tools:targetApi="o" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--    Gift Effects Container-->
+    <ImageView
+        android:id="@+id/gift_image_fg_room"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="false"
+        android:contentDescription="@string/game_gift"
+        android:focusable="false" />
+
+<!--    Input Box-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_layout_fg_room"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:visibility="gone"
+        app:hintAnimationEnabled="false"
+        app:hintEnabled="false">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_fg_room"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="@string/game_input_hint"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:maxLines="1"
+            android:padding="0dp"
+            tools:text="@string/game_app_name" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+</FrameLayout>

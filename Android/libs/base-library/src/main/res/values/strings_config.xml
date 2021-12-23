@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rtm_app_id" translatable="false"/>
+    <string name="rtm_app_token" translatable="false"/>
+
+    <string name="rtc_app_id" translatable="false"/>
+    <string name="rtc_app_token" translatable="false"/>
+</resources>

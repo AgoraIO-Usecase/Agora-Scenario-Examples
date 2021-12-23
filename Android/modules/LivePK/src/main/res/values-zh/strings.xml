@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pk_app_name">LivePK</string>
+    <string name="pk_cmm_tip">提示</string>
+    <string name="pk_cmm_ok">确认</string>
+    <string name="pk_cmm_cancel">取消</string>
+    <string name="pk_cmm_create">创建</string>
+
+    <string name="pk_room_list_title">房间列表</string>
+    <string name="pk_room_list_no_data_hint">请创建一个房间</string>
+    <string name="pk_room_list_fail_to_obtain_data_hint">暂无数据，请稍候再试</string>
+    <string name="pk_room_list_network_error_title">网络异常</string>
+    <string name="pk_room_list_network_error_message">当前网络连接异常，请稍候再试</string>
+
+    <string name="pk_room_create_title">创建房间</string>
+    <string name="pk_room_create_dialog_inpit_hint">房间名</string>
+
+    <string name="pk_error_leak_permission">需要相应权限，请先打开</string>
+
+    <string name="pk_room_create_dialog_title">创建房间</string>
+
+</resources>

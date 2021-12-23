@@ -1,7 +1,8 @@
 package io.agora.scene;
 
-import com.agora.data.AgoraApplication;
+import android.app.Application;
 
-public class AppApplication extends AgoraApplication {
+
+public class AppApplication extends Application {
 
 }

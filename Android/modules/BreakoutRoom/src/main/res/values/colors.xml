@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="room_colorPrimary">#0088EB</color>
+    <color name="room_colorPrimaryDark">#0088EB</color>
+    <color name="room_colorAccent">#0088EB</color>
+</resources>

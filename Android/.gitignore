@@ -14,5 +14,5 @@
 .externalNativeBuild
 .cxx
 local.properties
-/RTEGame/libs
-/RTEGame/src/main/jniLibs
+/modules/RTEGame/libs
+/modules/RTEGame/src/main/jniLibs
