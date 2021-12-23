@@ -29,7 +29,7 @@ class PKInviteInfoDelegate: ISyncManagerEventDelegate {
             // 自己在对方的channel中移除
             let channelName = model.targetUserId == "\(UserInfo.userId)" ? model.roomId : model.targetRoomId
             vc.leaveChannel(uid: UserInfo.userId, channelName: channelName ?? "")
-            vc.updateLiveLayout(postion: .full)
+            vc.liveView.updateLiveLayout(postion: .full)
             
             pkLiveEndClosure?(model)
             
@@ -43,7 +43,7 @@ class PKInviteInfoDelegate: ISyncManagerEventDelegate {
                             delegate: nil)
             
         } else if model.status == .accept {
-            vc.updateLiveLayout(postion: .center)
+            vc.liveView.updateLiveLayout(postion: .center)
             // 把自己加入到对方的channel
             let channelName = model.targetUserId == "\(UserInfo.userId)" ? model.roomId : model.targetRoomId
             let userId = model.userId == vc.currentUserId ? model.targetUserId : model.userId

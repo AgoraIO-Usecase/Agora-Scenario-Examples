@@ -31,10 +31,10 @@ class PKInfoDelegate: ISyncManagerEventDelegate {
             if vc.channleName != model.roomId {
                 vc.leaveChannel(uid: UserInfo.userId, channelName: model.roomId)                
             }
-            vc.updateLiveLayout(postion: .full)
+            vc.liveView.updateLiveLayout(postion: .full)
         } else {
             vc.joinAudienceChannel(channelName: model.roomId, pkUid:  UInt(model.userId) ?? 0)
-            vc.updateLiveLayout(postion: .center)
+            vc.liveView.updateLiveLayout(postion: .center)
         }
     }
     

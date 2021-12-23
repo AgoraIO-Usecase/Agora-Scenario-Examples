@@ -14,10 +14,11 @@ class OneToOneViewController: BaseViewController {
     public lazy var remoteView: AGEButton = {
         let button = AGEButton()
         button.setTitle("远程视频", for: .normal)
-        button.cornerRadius = 5
-        button.shadowOffset = CGSize(width: 0, height: 2)
-        button.shadowColor = .init(hex: "#000000", alpha: 0.3)
+        button.layer.cornerRadius = 5
+        button.shadowOffset = CGSize(width: 0, height: 0)
+        button.shadowColor = .init(hex: "#000000")
         button.shadowRadius = 5
+        button.shadowOpacity = 0.5
         button.buttonStyle = .filled(backgroundColor: .gray)
         return button
     }()

@@ -187,7 +187,7 @@ extension CreateLiveController: IObjectDelegate {
         
         switch sceneType {
         case .singleLive:
-            let livePlayerVC = LivePlayerController(channelName: channelName ?? "",
+            let livePlayerVC = SignleLiveController(channelName: channelName ?? "",
                                                     sceneType: sceneType,
                                                     userId: "\(UserInfo.userId)",
                                                     agoraKit: agoraKit)

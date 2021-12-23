@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PlayTogetherViewController: LivePlayerController {
+class PlayTogetherViewController: SignleLiveController {
     private lazy var webView: GameWebView = {
         let view = GameWebView()
         view.isHidden = true
@@ -31,14 +31,14 @@ class PlayTogetherViewController: LivePlayerController {
     
     private func setupUI() {
         let bottomType: [LiveBottomView.LiveBottomType] = currentUserId == "\(UserInfo.userId)" ? [.game, .gift, .tool, .close] : [.gift, .close]
-        bottomView.updateButtonType(type: bottomType)
+        liveView.updateBottomButtonType(type: bottomType)
         
         webView.translatesAutoresizingMaskIntoConstraints = false
         view.insertSubview(webView, at: 0)
         webView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        webView.topAnchor.constraint(equalTo: avatarview.bottomAnchor, constant: 15).isActive = true
+        webView.topAnchor.constraint(equalTo: liveView.avatarview.bottomAnchor, constant: 15).isActive = true
         webView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        webView.bottomAnchor.constraint(equalTo: chatView.topAnchor, constant: -10).isActive = true
+        webView.bottomAnchor.constraint(equalTo: liveView.chatView.topAnchor, constant: -10).isActive = true
         
     }
     /// 获取主播游戏状态
@@ -60,10 +60,22 @@ class PlayTogetherViewController: LivePlayerController {
         if getRole(uid: UserInfo.uid) == .audience {
             SyncUtil.subscribe(id: channleName, key: SYNC_MANAGER_GAME_INFO, delegate: self)
         }
+        liveView.onClickGameButtonClosure = { [weak self] in
+            self?.clickGamePKHandler()
+        }
+        liveView.onClickExitGameButtonClosure = { [weak self] in
+            self?.exitGameHandler()
+        }
+        liveView.onReceivedGiftClosure = { [weak self] giftModel, type in
+            self?.receiveGiftHandler(giftModel: giftModel, type: type)
+        }
+        liveView.onClickSendMessageClosure = { [weak self] messageModel in
+            self?.sendMessage(messageModel: messageModel)
+        }
     }
     
     // 游戏
-    override func clickGamePKHandler() {
+    private func clickGamePKHandler() {
 //        let modeView = GameModeView()
 //        modeView.didGameModeItemClosure = { model in
 //
@@ -81,7 +93,7 @@ class PlayTogetherViewController: LivePlayerController {
         AlertManager.show(view: gameCenterView, alertPostion: .bottom)
     }
     // 退出游戏
-    override func exitGameHandler() {
+    private func exitGameHandler() {
         showAlert(title: "退出游戏", message: "", cancel: nil) { [weak self] in
             self?.updateUIStatus(isStart: false)
             self?.updateGameInfoStatus(isStart: false)
@@ -91,14 +103,12 @@ class PlayTogetherViewController: LivePlayerController {
     }
     
     /// 收到礼物
-    override func receiveGiftHandler(giftModel: LiveGiftModel, type: PKLiveType) {
-        super.receiveGiftHandler(giftModel: giftModel, type: type)
-        playGifView.isHidden = !webView.isHidden
+    private func receiveGiftHandler(giftModel: LiveGiftModel, type: PKLiveType) {
+        liveView.playGifView.isHidden = !webView.isHidden
         viewModel.postGiftHandler(type: giftModel.giftType)
     }
     /// 发消息
-    override func sendMessage(messageModel: ChatMessageModel) {
-        super.sendMessage(messageModel: messageModel)
+    private func sendMessage(messageModel: ChatMessageModel) {
         viewModel.postBarrage()
         if getRole(uid: UserInfo.uid) == .audience && messageModel.message == "主播yyds" && gameInfoModel?.status == .playing {
             updateUIStatus(isStart: true)
@@ -114,13 +124,13 @@ class PlayTogetherViewController: LivePlayerController {
     private func updateUIStatus(isStart: Bool) {
         webView.isHidden = !isStart
         if currentUserId == UserInfo.uid && isStart {
-            bottomView.updateButtonType(type: [.exitgame, .gift, .tool, .close])
+            liveView.updateBottomButtonType(type: [.exitgame, .gift, .tool, .close])
         } else if currentUserId == UserInfo.uid && !isStart {
-            bottomView.updateButtonType(type: [.game, .gift, .tool, .close])
+            liveView.updateBottomButtonType(type: [.game, .gift, .tool, .close])
         } else if isStart {
-            bottomView.updateButtonType(type: [.exitgame, .gift, .close])
+            liveView.updateBottomButtonType(type: [.exitgame, .gift, .close])
         } else {
-            bottomView.updateButtonType(type: [.gift, .close])
+            liveView.updateBottomButtonType(type: [.gift, .close])
         }
         if isStart {
             ToastView.show(text: "游戏开始", postion: .top, duration: 3)
@@ -128,10 +138,10 @@ class PlayTogetherViewController: LivePlayerController {
                             roomId: channleName,
                             roleType: gameRoleType)
             
-            updateLiveLayout(postion: .signle)
+            liveView.updateLiveLayout(postion: .signle)
             
         } else {
-            updateLiveLayout(postion: .full)
+            liveView.updateLiveLayout(postion: .full)
             webView.reset()
             // 离开游戏接口
             viewModel.leaveGame(roleType: gameRoleType)
@@ -167,7 +177,7 @@ extension PlayTogetherViewController: ISyncManagerEventDelegate {
         
         LogUtils.log(message: "gameInfo == \(object.toJson())", level: .info)
         if model.status == .playing {
-            chatView.sendMessage(messageModel: ChatMessageModel(message: "", messageType: .notice))
+            liveView.sendMessage(message: "", messageType: .notice)
         }
     }
     

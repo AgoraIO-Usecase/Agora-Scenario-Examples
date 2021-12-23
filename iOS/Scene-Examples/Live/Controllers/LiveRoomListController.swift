@@ -113,7 +113,7 @@ extension LiveRoomListController: IObjectDelegate {
         let ownerId = try? result.getPropertyWith(key: "userId", type: String.self) as? String
         switch sceneType {
         case .singleLive:
-            let livePlayerVC = LivePlayerController(channelName: channelName ?? "", sceneType: sceneType, userId: ownerId ?? "")
+            let livePlayerVC = SignleLiveController(channelName: channelName ?? "", sceneType: sceneType, userId: ownerId ?? "")
             navigationController?.pushViewController(livePlayerVC, animated: true)
         case .pkApply:
             let pkLiveVC = PKLiveController(channelName: channelName ?? "", sceneType: sceneType, userId: ownerId ?? "")

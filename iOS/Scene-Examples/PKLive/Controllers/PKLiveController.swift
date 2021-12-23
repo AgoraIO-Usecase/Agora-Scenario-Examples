@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PKLiveController: LivePlayerController {
+class PKLiveController: SignleLiveController {
     public lazy var stopBroadcastButton: UIButton = {
         let button = UIButton()
         button.setTitle("停止连麦", for: .normal)
@@ -47,14 +47,14 @@ class PKLiveController: LivePlayerController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        if getRole(uid: "\(UserInfo.userId)") == .audience {
+        if getRole(uid: UserInfo.uid) == .audience {
             getBroadcastPKApplyInfo()
         }
     }
     
     private func setupUI() {
-        let bottomType: [LiveBottomView.LiveBottomType] = currentUserId == "\(UserInfo.userId)" ? [.pk, .tool, .close] : [.gift, .close]
-        bottomView.updateButtonType(type: bottomType)
+        let bottomType: [LiveBottomView.LiveBottomType] = currentUserId == UserInfo.uid ? [.pk, .tool, .close] : [.gift, .close]
+        liveView.updateBottomButtonType(type: bottomType)
         
         stopBroadcastButton.translatesAutoresizingMaskIntoConstraints = false
         vsImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -65,18 +65,18 @@ class PKLiveController: LivePlayerController {
         stopBroadcastButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15).isActive = true
         stopBroadcastButton.widthAnchor.constraint(equalToConstant: 83).isActive = true
         stopBroadcastButton.heightAnchor.constraint(equalToConstant: 38).isActive = true
-        stopBroadcastButton.bottomAnchor.constraint(equalTo: bottomView.topAnchor, constant: -10).isActive = true
+        stopBroadcastButton.bottomAnchor.constraint(equalTo: liveView.bottomView.topAnchor, constant: -10).isActive = true
         
         view.addSubview(vsImageView)
-        vsImageView.centerXAnchor.constraint(equalTo: liveCanvasView.centerXAnchor).isActive = true
+        vsImageView.centerXAnchor.constraint(equalTo: liveView.liveCanvasView.centerXAnchor).isActive = true
         
         view.addSubview(countTimeLabel)
         countTimeLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        countTimeLabel.bottomAnchor.constraint(equalTo: liveCanvasView.topAnchor, constant: -1).isActive = true
+        countTimeLabel.bottomAnchor.constraint(equalTo: liveView.liveCanvasView.topAnchor, constant: -1).isActive = true
         
         view.addSubview(pkProgressView)
         pkProgressView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60).isActive = true
-        pkProgressView.topAnchor.constraint(equalTo: liveCanvasView.topAnchor, constant: 15).isActive = true
+        pkProgressView.topAnchor.constraint(equalTo: liveView.liveCanvasView.topAnchor, constant: 15).isActive = true
         pkProgressView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60).isActive = true
         pkProgressView.heightAnchor.constraint(equalToConstant: 40).isActive = true
     }
@@ -113,6 +113,14 @@ class PKLiveController: LivePlayerController {
             self?.pkApplyInfoModel = applyModel
             self?.pkLiveEndHandler()
         }
+        
+        liveView.onReceivedGiftClosure = { [weak self] giftModel, type in
+            self?.receiveGiftHandler(giftModel: giftModel, type: type)
+        }
+        
+        liveView.onClickPKButtonClosure = { [weak self] in
+            self?.clickPKHandler()
+        }
     }
     
     /// 获取PK信息
@@ -145,7 +153,7 @@ class PKLiveController: LivePlayerController {
         stopBroadcastButton.isHidden = true
     }
     /// 收到礼物
-    override func receiveGiftHandler(giftModel: LiveGiftModel, type: PKLiveType) {
+    public func receiveGiftHandler(giftModel: LiveGiftModel, type: PKLiveType) {
         if type == .me {
             pkProgressView.updateProgressValue(at: giftModel.coin)
         } else {
@@ -163,16 +171,16 @@ class PKLiveController: LivePlayerController {
         countTimeLabel.isHidden = !isStart
         pkProgressView.isHidden = !isStart
         if currentUserId == "\(UserInfo.userId)" && isStart {
-            bottomView.updateButtonType(type: [.tool, .close])
+            liveView.updateBottomButtonType(type: [.tool, .close])
         } else if currentUserId == "\(UserInfo.userId)" && !isStart {
-            bottomView.updateButtonType(type: [.pk, .tool, .close])
+            liveView.updateBottomButtonType(type: [.pk, .tool, .close])
         } else {
-            bottomView.updateButtonType(type: [.gift, .close])
+            liveView.updateBottomButtonType(type: [.gift, .close])
         }
         stopBroadcastButton.isHidden = getRole(uid: "\(UserInfo.userId)") == .audience ? true : !isStart
         if isStart {
             vsImageView.centerYAnchor.constraint(equalTo: view.topAnchor,
-                                                 constant: liveCanvasViewHeight).isActive = true
+                                                 constant: liveView.liveCanvasViewHeight).isActive = true
             timer.scheduledSecondsTimer(withName: sceneType.rawValue, timeInterval: 180, queue: .main) { [weak self] _, duration in
                 self?.countTimeLabel.text = "".timeFormat(secounds: duration)
                 if duration <= 0 {
@@ -220,7 +228,7 @@ class PKLiveController: LivePlayerController {
         }
     }
     
-    override func clickPKHandler() {
+    public func clickPKHandler() {
         let pkInviteListView = PKLiveInviteView(channelName: channleName, sceneType: sceneType)
         pkInviteListView.pkInviteSubscribe = { [weak self] id in
             guard let self = self else { return }
@@ -231,9 +239,7 @@ class PKLiveController: LivePlayerController {
                                delegate: PKInviteInfoDelegate(vc: self))
             
             // 订阅对方收到的礼物
-            SyncUtil.subscribe(id: id,
-                               key: SYNC_MANAGER_GIFT_INFO,
-                               delegate: LiveGiftDelegate(vc: self, type: .target))
+            self.liveView.subscribeGift(channelName: id, type: .target)
         }
         AlertManager.show(view: pkInviteListView, alertPostion: .bottom)
     }
