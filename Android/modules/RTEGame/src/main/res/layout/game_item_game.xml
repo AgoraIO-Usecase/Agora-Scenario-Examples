@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/game_space_normal"
+    android:drawablePadding="@dimen/game_space_normal"
+    tools:drawableTopCompat="@drawable/game_ic_game"
+    tools:text="@string/game_app_name" />

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="room_app_name">小班课</string>
+
+    <string name="room_fab_add_room">创建房间</string>
+    <string name="room_fab_add_sub_room">添加子房间</string>
+    <string name="room_please_input_name">请输入房间名称</string>
+
+    <string name="room_room_name_regex">^[\\s-\\$\\(\\)\\+-\\.0-\\[\\]-\\_a-\\~]+$</string>
+    <string name="room_room_name_duplicated">存在重名的房间哦😂</string>
+    <string name="room_room_name_restrict">RTC暂不支持名称中的某些字符哦😣</string>
+    <string name="room_room_count_limited">子房间数已达上限哦🤪</string>
+
+
+    <string name="room_empty_click_to_refresh">暂无可用房间，点击刷新</string>
+    <string name="room_error_click_to_refresh">获取房间失败，点击刷新</string>
+    <string name="room_error_desc">RTM初始化出错</string>
+    <string name="room_error_happened_click_to_refresh">出错了，再试一次</string>
+    <string name="room_page_data_empty">页面数据为空</string>
+
+    <string name="room_portrait_format">portrait%02d</string>
+    <string name="room_room_name_format">🏠 %s\n👱 User_%s</string>
+    <string name="room_user_name_format">User_%d</string>
+
+<!--    权限-->
+    <string name="room_permission_refused">APP运行所必需的权限被拒绝</string>
+    <string name="room_permission_alert">此APP功能为视频通话，录音及摄像头权限为功能必需，是否继续？</string>
+</resources>

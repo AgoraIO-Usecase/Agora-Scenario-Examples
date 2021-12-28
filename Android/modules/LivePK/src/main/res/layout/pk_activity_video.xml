@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/pk_dark_background"
+    tools:context=".activity.HostPKActivity">
+
+    <FrameLayout
+        android:id="@+id/fl_local_full_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/iv_loading_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/pk_bg_avatar_round_frame"
+                android:padding="0.5dp">
+
+                <ImageView
+                    android:id="@+id/iv_room_avatar"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center" />
+
+            </FrameLayout>
+
+
+            <TextView
+                android:id="@+id/tv_room_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:textColor="@color/pk_white"
+                tools:text="1111" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/iv_close"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/pk_bg_btn"
+                android:scaleType="centerInside"
+                android:src="@drawable/pk_ic_baseline_close_24" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_pk_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/darker_gray"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="320dp"
+                    android:layout_weight="1">
+
+                    <FrameLayout
+                        android:id="@+id/fl_local_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                    <ImageView
+                        android:id="@+id/iv_local_cover"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:visibility="gone" />
+
+                </FrameLayout>
+
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="320dp" />
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="320dp"
+                    android:layout_weight="1">
+
+                    <FrameLayout
+                        android:id="@+id/fl_remote_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                    <ImageView
+                        android:id="@+id/iv_remote_cover"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:visibility="gone" />
+
+                </FrameLayout>
+
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="-30dp"
+                android:src="@drawable/pk_icon_pk_vs" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="25dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/switch_camera_button"
+            android:layout_width="@dimen/pk_live_pk_start_button_size"
+            android:layout_height="@dimen/pk_live_pk_start_button_size"
+            android:paddingHorizontal="12dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="18dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/pk_icon_rotate"
+            android:visibility="gone" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/start_pk_button"
+            android:layout_width="@dimen/pk_live_pk_start_button_size"
+            android:layout_height="@dimen/pk_live_pk_start_button_size"
+            android:scaleType="fitXY"
+            android:src="@drawable/pk_start_pk_button" />
+    </LinearLayout>
+
+</FrameLayout>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:background="?attr/colorSurface">
+
+    <TextView
+        android:id="@+id/title_dialog_game_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingVertical="@dimen/game_space_normal"
+        android:text="@string/game_gift"
+        android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginHorizontal="@dimen/game_space_normal"
+        android:alpha="0.12"
+        android:background="?attr/colorOnSurface"
+        app:layout_constraintTop_toBottomOf="@id/title_dialog_game_mode" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_dialog_donate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintTop_toBottomOf="@id/title_dialog_game_mode"
+        app:spanCount="4"
+        tools:itemCount="8"
+        tools:listitem="@layout/game_item_dialog_gift" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_donate_dialog_donate"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/game_space_normal"
+        android:paddingHorizontal="48dp"
+        android:paddingVertical="@dimen/game_space_normal"
+        android:text="@string/game_donate"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recycler_view_dialog_donate"
+        app:shapeAppearance="@style/game_roundStyle" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

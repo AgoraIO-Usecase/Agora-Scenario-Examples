@@ -1,0 +1,62 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="room_BaseTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/room_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/room_colorPrimaryDark</item>
+        <item name="colorAccent">@color/room_colorAccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+        <item name="android:colorControlActivated" tools:targetApi="lollipop">@color/room_colorAccent</item>
+        <item name="android:colorControlHighlight" tools:targetApi="lollipop">@color/room_colorAccent</item>
+
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@android:color/transparent</item>
+        <item name="android:navigationBarColor" tools:targetApi="lollipop">@android:color/transparent</item>
+
+        <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
+
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
+    </style>
+
+    <style name="room_BreakoutRoomAppTheme" parent="room_BaseTheme">
+        <item name="android:windowBackground">@android:color/white</item>
+    </style>
+
+    <style name="room_roundStyle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="room_cornerTinyStyle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">4dp</item>
+    </style>
+
+    <style name="room_cornerSmallStyle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/room_space_small</item>
+    </style>
+
+    <style name="room_cornerNormalStyle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/room_space_normal</item>
+    </style>
+
+    <style name="room_cornerBigStyle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/room_space_big</item>
+    </style>
+
+    <style name="room_cornerTinyBottomStyle">
+        <item name="cornerFamilyBottomLeft">rounded</item>
+        <item name="cornerFamilyBottomRight">rounded</item>
+        <item name="cornerSizeBottomLeft">4dp</item>
+        <item name="cornerSizeBottomRight">4dp</item>
+        <item name="cornerSizeTopLeft">0dp</item>
+        <item name="cornerSizeTopRight">0dp</item>
+    </style>
+
+</resources>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/video_setting_dialog_margin">
+
+    <RelativeLayout
+        android:id="@+id/video_setting_resolution"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/video_setting_dialog_text_item_height"
+        android:background="@drawable/video_setting_dialog_item_bg">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="@string/video_setting_dialog_title_resolution"
+            android:textAlignment="gravity" />
+
+        <View
+            android:id="@+id/video_setting_arrow_resolution"
+            android:layout_width="@dimen/video_setting_dialog_arrow_size"
+            android:layout_height="@dimen/video_setting_dialog_arrow_size"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/video_setting_enter_icon" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/video_setting_main_resolution_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/video_setting_arrow_resolution"
+            android:gravity="center"
+            android:textAlignment="gravity" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/video_setting_dialog_item_divider_height"
+        android:background="@color/video_setting_dialog_diliver_color" />
+
+    <RelativeLayout
+        android:id="@+id/video_setting_framerate"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/video_setting_dialog_text_item_height"
+        android:background="@drawable/video_setting_dialog_item_bg">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="@string/video_setting_dialog_title_framerate"
+            android:textAlignment="gravity" />
+
+        <View
+            android:id="@+id/video_setting_arrow_framerate"
+            android:layout_width="@dimen/video_setting_dialog_arrow_size"
+            android:layout_height="@dimen/video_setting_dialog_arrow_size"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/video_setting_enter_icon" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/video_setting_main_framerate_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/video_setting_arrow_framerate"
+            android:gravity="center"
+            android:textAlignment="gravity" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/video_setting_dialog_item_divider_height"
+        android:background="@color/video_setting_dialog_diliver_color" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/video_setting_bitrate_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="@dimen/video_setting_dialog_margin"
+            android:gravity="center"
+            android:text="@string/video_setting_dialog_title_bitrate"
+            android:textAlignment="gravity" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/video_setting_bitrate_value_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="@dimen/video_setting_dialog_margin"
+            android:layout_marginTop="@dimen/video_setting_dialog_margin"
+            android:layout_toEndOf="@id/video_setting_bitrate_title"
+            android:gravity="center"
+            android:textAlignment="gravity" />
+
+        <SeekBar
+            android:id="@+id/live_room_setting_bitrate_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/video_setting_dialog_progress_height"
+            android:layout_below="@id/video_setting_bitrate_title"
+            android:layout_marginTop="@dimen/video_setting_dialog_margin"
+            android:maxHeight="3dp"
+            android:minHeight="3dp"
+            android:progressDrawable="@drawable/video_setting_progress"
+            android:thumb="@drawable/video_setting_seekbar_thumb" />
+    </RelativeLayout>
+
+</LinearLayout>

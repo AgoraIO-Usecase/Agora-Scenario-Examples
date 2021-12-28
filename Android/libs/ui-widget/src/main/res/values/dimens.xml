@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Title Bar -->
+    <dimen name="title_bar_height">60dp</dimen>
+    <dimen name="title_bar_text_size">20sp</dimen>
+    <dimen name="title_bar_text_max_width">160dp</dimen>
+    <dimen name="title_bar_icon_padding">5dp</dimen>
+
+
+    <!--================== Function ==================-->
+    <!-- RoomList -->
+    <dimen name="room_list_exception_icon_size">164dp</dimen>
+    <dimen name="room_list_icon_text_margin">16dp</dimen>
+    <dimen name="room_list_icon_text_size">16sp</dimen>
+    <dimen name="room_list_item_margin">16sp</dimen>
+    <dimen name="room_list_item_corner">12dp</dimen>
+    <dimen name="room_list_item_padding">8dp</dimen>
+    <dimen name="room_list_item_name_width">72dp</dimen>
+    <dimen name="room_list_item_name_height">42dp</dimen>
+    <dimen name="room_list_item_text_padding_big">6dp</dimen>
+    <dimen name="room_list_item_text_padding_small">2dp</dimen>
+    <dimen name="room_list_item_participant_icon_size">22dp</dimen>
+    <dimen name="room_list_item_participant_text_size">12sp</dimen>
+
+
+    <!-- Preview Control -->
+    <dimen name="preview_control_shadow_height">120dp</dimen>
+    <dimen name="preview_control_btn_height">48dp</dimen>
+    <dimen name="preview_control_content_padding">24dp</dimen>
+    <dimen name="preview_control_text_content_padding">10dp</dimen>
+    <dimen name="preview_control_hint_text_size">12sp</dimen>
+    <dimen name="preview_control_content_text_size">14sp</dimen>
+    <dimen name="preview_control_bottom_margin">48dp</dimen>
+    <dimen name="preview_control_bottom_padding">24dp</dimen>
+    <dimen name="preview_control_button_size">44dp</dimen>
+    <dimen name="preview_control_policy_padding">6dp</dimen>
+    <dimen name="preview_control_policy_sign_size">32dp</dimen>
+    <dimen name="preview_control_policy_caution_size">22dp</dimen>
+
+    <!-- Video Setting -->
+    <dimen name="video_setting_dialog_height">243dp</dimen>
+    <dimen name="video_setting_dialog_text_item_height">48dp</dimen>
+    <dimen name="video_setting_dialog_margin">24dp</dimen>
+    <dimen name="video_setting_dialog_arrow_size">30dp</dimen>
+    <dimen name="video_setting_dialog_text_size">16sp</dimen>
+    <dimen name="video_setting_dialog_item_divider_height">1dp</dimen>
+    <dimen name="video_setting_dialog_content_height">243dp</dimen>
+    <dimen name="video_setting_dialog_progress_height">20dp</dimen>
+
+
+</resources>

@@ -1,0 +1,32 @@
+if (isRunAlone.toBoolean()) {
+    apply plugin: 'com.android.application'
+} else {
+    apply plugin: 'com.android.library'
+}
+android{
+
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    sourceSets {
+        main {
+            if (isRunAlone.toBoolean()) {
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+            } else {
+                manifest.srcFile 'src/main/moduleManifest/AndroidManifest.xml'
+            }
+        }
+    }
+
+    resourcePrefix rootProject.ext.resourcePrefixMap."${project.name}"
+
+    buildFeatures {
+        viewBinding true
+    }
+
+//    aaptOptions{
+//        println("${project.name}")
+//        additionalParameters '--package-id',rootProject.ext.resMap."${project.name}", '--extra-packages',rootProject.ext.packageNameMap."${project.name}"
+//    }
+
+}

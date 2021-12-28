@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <!--================== Function ==================-->
+    <!-- RoomList -->
+    <string name="room_list_no_data_hint">Please Create a Room</string>
+    <string name="room_list_network_error_title">Network failure</string>
+    <string name="room_list_network_error_message">The network connection is not available, please try later.</string>
+
+
+    <!-- Preview Control -->
+    <string name="preview_control_name_hint">Channel Name</string>
+    <string name="preview_control_go_live_text">Go Live</string>
+    <string name="preview_control_room_restriction">This is a testing product. Please refrain from using it commercially. The max duration per session is 10 minutes, and the max number of participants per channel is 10. </string>
+
+    <!-- Video Setting -->
+    <string name="video_setting_dialog_title">Setting</string>
+    <string name="video_setting_dialog_title_resolution">Resolution</string>
+    <string name="video_setting_dialog_title_framerate">Frame Rate</string>
+    <string name="video_setting_dialog_title_bitrate">Bitrate</string>
+    <string name="video_setting_dialog_bitrate_value_default">Default</string>
+    <string name="video_setting_dialog_bitrate_value_format" translatable="false">%d kbps</string>
+
+
+
+    <!--=================== Utils ======================-->
+
+    <!-- RandomUtil -->
+    <string-array name="random_channel_names">
+        <item>Cheer</item>
+        <item>Vibe</item>
+        <item>Devine</item>
+        <item>Duo</item>
+        <item>Ablaze</item>
+        <item>Amaze</item>
+        <item>Harmony</item>
+        <item>Verse</item>
+        <item>Vigilant</item>
+        <item>Contender</item>
+        <item>Vista</item>
+        <item>Wander</item>
+        <item>Collections</item>
+        <item>Moon</item>
+        <item>Boho</item>
+        <item>Everest</item>
+    </string-array>
+
+    <string-array name="random_surnames">
+        <item>Atkinson</item>
+        <item>Edwards</item>
+        <item>Gibson</item>
+        <item>Holmes</item>
+        <item>Kelvin</item>
+        <item>Lloyd</item>
+        <item>Payne</item>
+        <item>White</item>
+    </string-array>
+
+    <string-array name="random_names">
+        <item>Alexander</item>
+        <item>Halley</item>
+        <item>Rickey</item>
+        <item>Xavior</item>
+        <item>Yolanda</item>
+        <item>Corynn</item>
+        <item>Daniel</item>
+        <item>Kelly</item>
+        <item>Lauren</item>
+    </string-array>
+
+</resources>

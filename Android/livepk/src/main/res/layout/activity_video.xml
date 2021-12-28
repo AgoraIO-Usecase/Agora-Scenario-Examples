@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/dark_background"
+        tools:context=".view.HostPKActivity">
+
+        <FrameLayout
+            android:id="@+id/fl_local_full_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/iv_loading_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/remote_call_layout"
+            android:layout_width="@dimen/ecommerce_remote_video_layout_width"
+            android:layout_height="@dimen/ecommerce_remote_video_layout_height"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="70dp"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <RelativeLayout
+                android:layout_width="@dimen/ecommerce_remote_video_width"
+                android:layout_height="@dimen/ecommerce_remote_video_height"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true">
+
+                <FrameLayout
+                    android:id="@+id/remote_call_video_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/remote_call_peer_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/mask_background"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/text_size_small"
+                    android:paddingBottom="@dimen/text_size_small"
+                    android:textAlignment="gravity"
+                    android:textColor="@android:color/white" />
+            </RelativeLayout>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/remote_call_close_btn"
+                android:layout_width="@dimen/ecommerce_remote_video_close_btn_size"
+                android:layout_height="@dimen/ecommerce_remote_video_close_btn_size"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/icon_video_close_gray" />
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:fitsSystemWindows="true"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginVertical="8dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_sclable_gray_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iv_room_avatar"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center" />
+
+
+                <TextView
+                    android:id="@+id/tv_room_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="20dp"
+                    android:maxWidth="150dp"
+                    android:textColor="@color/white"
+                    tools:text="111111111111" />
+
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:id="@+id/ll_participant"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_sclable_gray_bg"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/participant_icon"
+                    android:layout_width="@dimen/live_participant_count_height"
+                    android:layout_height="@dimen/live_participant_count_height"
+                    android:layout_marginStart="@dimen/live_participant_margin_start"
+                    android:layout_marginEnd="@dimen/live_participant_margin_end"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/icon_participants" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/live_participant_count_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/live_participant_count_height"
+                    android:layout_marginEnd="@dimen/live_participant_text_margin_end"
+                    android:gravity="center_vertical"
+                    android:textAlignment="gravity"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_medium"
+                    tools:text="200" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="end"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:layout_marginBottom="12dp"
+            android:paddingVertical="8dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/live_bottom_btn_more"
+                android:layout_width="@dimen/live_bottom_layout_height"
+                android:layout_height="@dimen/live_bottom_layout_height"
+                android:layout_marginEnd="@dimen/live_bottom_btn_margin"
+                android:layout_toStartOf="@id/live_bottom_btn_close"
+                android:background="@drawable/round_dark_gray_bg"
+                android:src="@drawable/live_bottom_btn_more" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/live_bottom_btn_close"
+                android:layout_width="@dimen/live_bottom_layout_height"
+                android:layout_height="@dimen/live_bottom_layout_height"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/round_dark_gray_bg"
+                android:src="@drawable/live_bottom_btn_close" />
+
+
+        </LinearLayout>
+
+    </FrameLayout>
+</layout>
