@@ -1,0 +1,6 @@
+framework module AgoraScreenShare {
+  umbrella header "AgoraScreenShare.h"
+
+  export *
+  module * { export * }
+}
