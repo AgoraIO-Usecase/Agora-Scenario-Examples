@@ -70,7 +70,7 @@ class LiveOnlineView: UIView {
         
         collectionView.trailingAnchor.constraint(equalTo: onLineView.leadingAnchor, constant: -10).isActive = true
         collectionView.heightAnchor.constraint(equalTo: onLineView.heightAnchor).isActive = true
-        collectionView.widthAnchor.constraint(equalToConstant: 118).isActive = true
+//        collectionView.widthAnchor.constraint(equalToConstant: 118).isActive = true
         collectionView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         collectionView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         collectionView.dataArray = ["1", "2", "3", "4"]

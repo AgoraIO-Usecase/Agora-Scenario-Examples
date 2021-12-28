@@ -64,7 +64,6 @@ class PlayTogetherViewController: SignleLiveController {
                     self?.liveView.sendMessage(message: "", messageType: .notice)
                 }
             })
-
         }
         liveView.onClickGameButtonClosure = { [weak self] in
             self?.clickGamePKHandler()

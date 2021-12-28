@@ -20,19 +20,17 @@ class OneToOneViewController: BaseViewController {
         button.shadowRadius = 5
         button.shadowOpacity = 0.5
         button.buttonStyle = .filled(backgroundColor: .gray)
-        button.addTarget(self, action: #selector(clickTapView), for: .touchUpInside)
         return button
     }()
     private lazy var containerView: AGEView = {
         let view = AGEView()
         return view
     }()
-    private lazy var controlView: OneToOneControlView = OneToOneControlView()
-    private lazy var webView: GameWebView = {
-        let webView = GameWebView()
-        webView.isHidden = true
-        return webView
+    private lazy var onoToOneGameView: OnoToOneGameView = {
+        let topControlView = OnoToOneGameView()
+        return topControlView
     }()
+    private lazy var controlView = OneToOneControlView()
        
     public var agoraKit: AgoraRtcEngineKit?
     private lazy var rtcEngineConfig: AgoraRtcEngineConfig = {
@@ -61,6 +59,8 @@ class OneToOneViewController: BaseViewController {
         currentUserId == UserInfo.uid ? .broadcast : .audience
     }
     private(set) var currentUserId: String = ""
+    private var isCloseGame: Bool = false
+    private var isSelfExitGame: Bool = false
     
     init(channelName: String, sceneType: SceneType, userId: String, agoraKit: AgoraRtcEngineKit? = nil) {
         super.init(nibName: nil, bundle: nil)
@@ -109,55 +109,90 @@ class OneToOneViewController: BaseViewController {
     }
     
     private func eventHandler() {
-        controlView.onClickControlButtonClosure = { [weak self] type, isSelected in
+        onoToOneGameView.onClickControlButtonClosure = { [weak self] type, isSelected in
             guard let self = self else { return }
-            switch type {
-            case .switchCamera:
-                self.agoraKit?.switchCamera()
-                
-            case .game:
-                self.clickGameHandler()
-            
-            case .mic:
-                self.agoraKit?.muteLocalAudioStream(isSelected)
-                
-            case .exit:
-                self.showAlert(title: "退出游戏", message: "确定退出退出游戏 ？") {
-                    self.controlView.updateControlUI(types: [.switchCamera, .game, .mic])
-                    self.showOrHiddenControlView(isHidden: false)
-                    AlertManager.hiddenView()
-                    self.viewModel.leaveGame(roleType: self.roleType)
-                }
-                
-            case .close:
-                self.showAlert(title: "关闭直播间", message: "关闭直播间后，其他用户将不能再和您连线。确定关闭 ？") {
-                    self.navigationController?.popViewController(animated: true)
-                }
+            if type == .exit {
+                self.controlView.isHidden = false
+                self.viewModel.leaveGame(roleType: self.roleType)
+                self.isCloseGame = false
+                let gameInfo = GameInfoModel(status: .end, gameUid: UserInfo.uid, gameId: .you_draw_i_guess)
+                SyncUtil.update(id: self.channelName, key: SYNC_MANAGER_GAME_INFO, params: JSONObject.toJson(gameInfo))
+                self.isSelfExitGame = true
+                return
             }
+            self.clickControlViewHandler(controlType: type, isSelected: isSelected)
+        }
+        controlView.onClickControlButtonClosure = { [weak self] type, isSelected in
+            self?.clickControlViewHandler(controlType: type, isSelected: isSelected)
+        }
+        /// 监听游戏开始
+        SyncUtil.subscribe(id: channelName, key: SYNC_MANAGER_GAME_INFO, onUpdated: { [weak self] object in
+            guard let self = self else { return }
+            let model = JSONObject.toModel(GameInfoModel.self, value: object.toJson())
+            if model?.status == .playing {
+                self.isSelfExitGame = false
+                self.showAlert(title: "对方邀请您玩游戏", message: "") {
+                    self.onoToOneGameView.setLoadUrl(urlString: model?.gameId?.gameUrl ?? "",
+                                                     roomId: self.channelName,
+                                                     roleType: self.roleType)
+                    AlertManager.show(view: self.onoToOneGameView, alertPostion: .bottom, didCoverDismiss: false)
+                }
+            } else if model?.status == .end && !self.isSelfExitGame{
+                AlertManager.hiddenView()
+                ToastView.show(text: "游戏已结束")
+                self.viewModel.leaveGame(roleType: self.roleType)
+                self.isSelfExitGame = false
+            }
+        }, onSubscribed: {
+            LogUtils.log(message: "onSubscribed One To One", level: .info)
+        })
+    }
+    
+    private func clickControlViewHandler(controlType: OneToOneControlType, isSelected: Bool) {
+        switch controlType {
+        case .switchCamera:
+            agoraKit?.switchCamera()
+            
+        case .game:
+            clickGameHandler()
+        
+        case .mic:
+            agoraKit?.muteLocalAudioStream(isSelected)
+            
+        case .exit:
+            showAlert(title: "退出游戏", message: "确定退出退出游戏 ？") {
+                self.controlView.isHidden = false
+                AlertManager.hiddenView()
+                self.viewModel.leaveGame(roleType: self.roleType)
+            }
+            
+        case .back:
+            showAlert(title: "关闭直播间", message: "关闭直播间后，其他用户将不能再和您连线。确定关闭 ？") {
+                self.navigationController?.popViewController(animated: true)
+            }
+            
+        case .close:
+            AlertManager.hiddenView()
+            controlView.isHidden = false
+            isCloseGame = true
         }
     }
     
     private func clickGameHandler() {
+        isSelfExitGame = false
+        if isCloseGame {
+            AlertManager.show(view: onoToOneGameView, alertPostion: .bottom, didCoverDismiss: false)
+            return
+        }
         let gameCenterView = GameCenterView()
         gameCenterView.didGameCenterItemClosure = { [weak self] gameCenterModel in
             guard let self = self else { return }
-            self.webView.loadUrl(urlString: gameCenterModel.type.gameUrl, roomId: self.channelName, roleType: self.roleType)
-            self.webView.isHidden = false
-            AlertManager.show(view: self.webView, alertPostion: .bottom, didCoverDismiss: false, controller: self)
-            self.showOrHiddenControlView(isHidden: true)
-            self.controlView.updateControlUI(types: [.switchCamera, .game, .mic, .exit])
+            self.onoToOneGameView.setLoadUrl(urlString: gameCenterModel.type.gameUrl, roomId: self.channelName, roleType: self.roleType)
+            AlertManager.show(view: self.onoToOneGameView, alertPostion: .bottom, didCoverDismiss: false)
+            let gameInfo = GameInfoModel(status: .playing, gameUid: UserInfo.uid, gameId: .you_draw_i_guess)
+            SyncUtil.update(id: self.channelName, key: SYNC_MANAGER_GAME_INFO, params: JSONObject.toJson(gameInfo))
         }
         AlertManager.show(view: gameCenterView, alertPostion: .bottom)
-    }
-    
-    private func showOrHiddenControlView(isHidden: Bool) {
-        UIView.animate(withDuration: 0.25) {
-            self.controlView.alpha = isHidden ? 0.0 : 1.0
-        }
-    }
-    @objc
-    private func clickTapView() {
-        showOrHiddenControlView(isHidden: controlView.alpha == 1.0)
     }
     
     private func setupUI() {
@@ -167,21 +202,16 @@ class OneToOneViewController: BaseViewController {
         localView.translatesAutoresizingMaskIntoConstraints = false
         remoteView.translatesAutoresizingMaskIntoConstraints = false
         controlView.translatesAutoresizingMaskIntoConstraints = false
-        webView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(localView)
         view.addSubview(containerView)
-        containerView.addSubview(webView)
         containerView.addSubview(remoteView)
         containerView.addSubview(controlView)
         
         containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         containerView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        
-        webView.widthAnchor.constraint(equalToConstant: Screen.width).isActive = true
-        webView.heightAnchor.constraint(equalToConstant: Screen.height - 152.fit).isActive = true
-        
+        containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: Screen.safeAreaBottomHeight()).isActive = true
+    
         localView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         localView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         localView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
@@ -195,13 +225,13 @@ class OneToOneViewController: BaseViewController {
         controlView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         controlView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         controlView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        
-        let tap = UITapGestureRecognizer(target: self, action: #selector(clickTapView))
-        containerView.addGestureRecognizer(tap)
     }
     
     private func setupAgoraKit() {
-        guard agoraKit == nil else { return }
+        guard agoraKit == nil else {
+            agoraKit?.delegate = self
+            return
+        }
         agoraKit = AgoraRtcEngineKit.sharedEngine(with: rtcEngineConfig, delegate: self)
         agoraKit?.setLogFile(LogUtils.sdkLogPath())
         agoraKit?.setClientRole(.broadcaster)

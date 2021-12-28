@@ -25,6 +25,7 @@ class AlertManager: NSObject {
     private static var currentPosition: AlertPosition = .center
     private static var viewCache: [AlertViewCache] = []
     private static var bottomAnchor: NSLayoutConstraint?
+    private static var isLocalControll: Bool = false
     
     public static func show(view: UIView,
                             alertPostion: AlertPosition = .center,
@@ -33,6 +34,7 @@ class AlertManager: NSObject {
         let index = viewCache.isEmpty ? 0 : viewCache.count
         viewCache.append(AlertViewCache(view: view, index: index))
         currentPosition = alertPostion
+        isLocalControll = controller != nil
         if controller != nil {
             hiddenView()
         }
@@ -163,6 +165,7 @@ class AlertManager: NSObject {
     private static var originFrame:CGRect = .zero
     // 键盘显示
     @objc private static func keyboardWillShow(notification: Notification) {
+        guard isLocalControll == false else { return }
         originFrame = containerView!.frame
         let keyboardHeight = (notification.userInfo?["UIKeyboardBoundsUserInfoKey"] as? CGRect)?.height
         let y = cl_screenHeight - (keyboardHeight ?? 304) - containerView!.frame.height
@@ -172,6 +175,7 @@ class AlertManager: NSObject {
     }
     // 键盘隐藏
     @objc private static func keyboardWillHide(notification: Notification) {
+        guard isLocalControll == false else { return }
         UIView.animate(withDuration: 0.25) {
             containerView?.frame = originFrame
         }

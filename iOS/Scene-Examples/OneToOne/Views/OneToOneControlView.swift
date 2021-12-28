@@ -12,8 +12,9 @@ enum OneToOneControlType: Int {
     case switchCamera = 1
     case game = 2
     case mic = 3
-    case close = 4
+    case back = 4
     case exit = 5
+    case close = 6
 }
 
 class OneToOneControlView: UIView {
@@ -53,12 +54,12 @@ class OneToOneControlView: UIView {
         button.addTarget(self, action: #selector(clickMicButton(sender:)), for: .touchUpInside)
         return button
     }()
-    private lazy var closeButton: AGEButton = {
+    private lazy var backButton: AGEButton = {
         let button = AGEButton(style: .systemImage(name: "phone.down.fill", imageColor: .white))
         button.backgroundColor = .init(hex: "#E23E51")
         button.cornerRadius = 30.fit
         button.imageSize = CGSize(width: 34.fit, height: 10.fit)
-        button.tag = OneToOneControlType.close.rawValue
+        button.tag = OneToOneControlType.back.rawValue
         button.addTarget(self, action: #selector(clickCloseButton), for: .touchUpInside)
         return button
     }()
@@ -93,14 +94,14 @@ class OneToOneControlView: UIView {
         switchCameraButton.translatesAutoresizingMaskIntoConstraints = false
         gameButton.translatesAutoresizingMaskIntoConstraints = false
         micButton.translatesAutoresizingMaskIntoConstraints = false
-        closeButton.translatesAutoresizingMaskIntoConstraints = false
+        backButton.translatesAutoresizingMaskIntoConstraints = false
         
         addSubview(statckView)
         statckView.addArrangedSubview(switchCameraButton)
         statckView.addArrangedSubview(gameButton)
         statckView.addArrangedSubview(micButton)
         statckView.addArrangedSubview(exitButton)
-        addSubview(closeButton)
+        addSubview(backButton)
         
         statckView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 54.fit).isActive = true
         statckView.topAnchor.constraint(equalTo: topAnchor).isActive = true
@@ -116,11 +117,11 @@ class OneToOneControlView: UIView {
         exitButton.widthAnchor.constraint(equalToConstant: 60.fit).isActive = true
         exitButton.heightAnchor.constraint(equalToConstant: 60.fit).isActive = true
         
-        closeButton.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        closeButton.widthAnchor.constraint(equalToConstant: 60.fit).isActive = true
-        closeButton.heightAnchor.constraint(equalToConstant: 60.fit).isActive = true
-        closeButton.topAnchor.constraint(equalTo: statckView.bottomAnchor, constant: 30.fit).isActive = true
-        closeButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -48).isActive = true
+        backButton.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        backButton.widthAnchor.constraint(equalToConstant: 60.fit).isActive = true
+        backButton.heightAnchor.constraint(equalToConstant: 60.fit).isActive = true
+        backButton.topAnchor.constraint(equalTo: statckView.bottomAnchor, constant: 30.fit).isActive = true
+        backButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -48).isActive = true
     }
     
     @objc
@@ -143,7 +144,7 @@ class OneToOneControlView: UIView {
     }
     @objc
     private func clickCloseButton() {
-        onClickControlButtonClosure?(.close, false)
+        onClickControlButtonClosure?(.back, false)
     }
     @objc
     private func clickExitButton() {

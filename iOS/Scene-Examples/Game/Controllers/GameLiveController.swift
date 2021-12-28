@@ -236,7 +236,6 @@ class GameLiveController: PKLiveController {
     override func pkLiveStartHandler() {
         super.pkLiveStartHandler()
         updateGameInfoStatus(isStart: true)
-        viewModel.channelName = pkApplyInfoModel?.targetRoomId ?? ""
     }
     
     /// pk结束
@@ -279,6 +278,7 @@ class GameLiveController: PKLiveController {
                                 roleType: gameRoleType)
                 // 调用屏幕共享
                 onClickScreenShareButton()
+                viewModel.channelName = channelName
             } else { // 观众拉取屏幕共享流
                 guard gameInfoModel != nil else { return }
                 let canvas = AgoraRtcVideoCanvas()

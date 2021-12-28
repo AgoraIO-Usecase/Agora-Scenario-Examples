@@ -206,7 +206,7 @@ class PKLiveInviteViewCell: UITableViewCell {
     private func pkApplyInfoHandler(channelName: String) {
         pkInviteSubscribe?(channelName)
         var pkModel = PKApplyInfoModel()
-        pkModel.roomId = channelName
+        pkModel.roomId = self.channelName
         pkModel.targetRoomId = channelName
         pkModel.targetUserId = currendModel?.userId ?? ""
         pkModel.status = .invite

@@ -107,8 +107,8 @@ class LiveBaseView: UIView {
     }
     
     /// 设置主播昵称
-    func setAvatarName(name: String) {
-        avatarview.setName(with: name)
+    func setAvatarName(name: String, roomId: String) {
+        avatarview.setName(with: "\(name) roomId: \(roomId)")
     }
     
     /// 更新底部功能按钮
@@ -140,13 +140,13 @@ class LiveBaseView: UIView {
         SyncUtil.subscribe(id: channelName, key: SYNC_MANAGER_GIFT_INFO, onUpdated: { object in
             LogUtils.log(message: "onUpdated gift == \(String(describing: object.toJson()))", level: .info)
             guard let model = JSONObject.toModel(LiveGiftModel.self, value: object.toJson()) else { return }
-            self.onReceivedGiftClosure?(model, type)
             if type == .me {
                 self.playGifView.isHidden = false
                 self.playGifView.loadGIFName(gifName: model.gifName)
                 let model = ChatMessageModel(message: model.userId + "送出了一个" + model.title, messageType: .message)
                 self.chatView.sendMessage(messageModel: model)
             }
+            self.onReceivedGiftClosure?(model, type)
         }, onSubscribed: {
             LogUtils.log(message: "subscribe gift type == \(type)", level: .info)
         })
@@ -317,8 +317,9 @@ class LiveBaseView: UIView {
         
         onlineView.topAnchor.constraint(equalTo: avatarview.topAnchor).isActive = true
         onlineView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15).isActive = true
+        onlineView.leadingAnchor.constraint(equalTo: avatarview.trailingAnchor, constant: 15).isActive = true
         
-        setAvatarName(name: currentUserId)
+        setAvatarName(name: currentUserId, roomId: channelName)
         
         let bottomType: [LiveBottomView.LiveBottomType] = currentUserId == UserInfo.uid ? [.tool, .close] : [.gift, .close]
         bottomView.updateButtonType(type: bottomType)
