@@ -1,4 +1,5 @@
 ${PODS_ROOT}/Target Support Files/Pods-Scene-Examples/Pods-Scene-Examples-frameworks.sh
+${BUILT_PRODUCTS_DIR}/AgoraLog/AgoraLog.framework
 ${PODS_ROOT}/AgoraRtcEngine_iOS_Preview/AgoraRTE.framework
 ${PODS_ROOT}/AgoraRtcEngine_iOS_Preview/AgoraRtcCryptoLoader.framework
 ${PODS_ROOT}/AgoraRtcEngine_iOS_Preview/AgoraRtcKit.framework
@@ -6,5 +7,7 @@ ${PODS_ROOT}/AgoraRtcEngine_iOS_Preview/AgoraVideoProcess.framework
 ${PODS_ROOT}/AgoraRtcEngine_iOS_Preview/Agoraffmpeg.framework
 ${PODS_ROOT}/AgoraRtm_iOS/AgoraRtmKit.framework
 ${PODS_ROOT}/../sdk/libs/AgoraScreenShare.framework
+${BUILT_PRODUCTS_DIR}/AgoraSyncManager/AgoraSyncManager.framework
 ${BUILT_PRODUCTS_DIR}/AgoraUIKit/AgoraUIKit.framework
+${BUILT_PRODUCTS_DIR}/CocoaLumberjack/CocoaLumberjack.framework
 ${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework

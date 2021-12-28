@@ -20,6 +20,7 @@ class OneToOneViewController: BaseViewController {
         button.shadowRadius = 5
         button.shadowOpacity = 0.5
         button.buttonStyle = .filled(backgroundColor: .gray)
+        button.addTarget(self, action: #selector(clickTapView), for: .touchUpInside)
         return button
     }()
     private lazy var containerView: AGEView = {

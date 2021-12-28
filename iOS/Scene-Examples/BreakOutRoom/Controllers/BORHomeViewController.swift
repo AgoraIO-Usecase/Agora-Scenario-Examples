@@ -42,7 +42,21 @@ class BORHomeViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        SyncUtil.fetchAll(delegate: self)
+        getData()
+    }
+    
+    private func getData() {
+        SyncUtil.fetchAll { objects in
+            self.hideHUD()
+            self.roomView.endRefreshing()
+            print("result == \(objects.compactMap{ $0.toJson() })")
+            self.dataArray = objects.compactMap({ $0.toJson() }).compactMap({ JSONObject.toModel(BORLiveModel.self, value: $0 )})
+            self.roomView.dataArray = self.dataArray
+        } fail: { error in
+            LogUtils.log(message: "get all data error == \(error.localizedDescription)", level: .error)
+            self.hideHUD()
+            self.roomView.endRefreshing()
+        }
     }
     
     private func setupUI() {
@@ -67,29 +81,19 @@ class BORHomeViewController: BaseViewController {
     }
 }
 
-extension BORHomeViewController: IObjectListDelegate {
-    func onFailed(code: Int, msg: String) {
-        hideHUD()
-        roomView.endRefreshing()
-    }
-    
-    func onSuccess(result: [IObject]) {
-        hideHUD()
-        roomView.endRefreshing()
-        print("result == \(result.compactMap{ $0.toJson() })")
-        dataArray = result.compactMap({ $0.toJson() }).compactMap({ JSONObject.toModel(BORLiveModel.self, value: $0 )})
-        roomView.dataArray = dataArray
-    }
-}
-
 extension BORHomeViewController: AGECollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let item = roomView.dataArray?[indexPath.item] as? BORLiveModel else { return }
         let params = JSONObject.toJson(item)
-        SyncUtil.joinScene(id: item.id,
-                           userId: item.userId,
-                           property: params,
-                           delegate: self)
+        SyncUtil.joinScene(id: item.id, userId: item.userId, property: params) { results in
+            guard let result = results.first else { return }
+            let channelName = result.getPropertyWith(key: "id", type: String.self) as? String
+            let ownerId = result.getPropertyWith(key: "userId", type: String.self) as? String
+            let roomDetailVC = BORRoomDetailController(channelName: channelName ?? "", ownerId: ownerId ?? "")
+            self.navigationController?.pushViewController(roomDetailVC, animated: true)
+        } fail: { error in
+            LogUtils.log(message: "join scene error == \(error.localizedDescription)", level: .error)
+        }
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LiveRoomListCell.description(),
@@ -98,15 +102,6 @@ extension BORHomeViewController: AGECollectionViewDelegate {
         return cell
     }
     func pullToRefreshHandler() {
-        SyncUtil.fetchAll(delegate: self)
-    }
-}
-
-extension BORHomeViewController: IObjectDelegate {
-    func onSuccess(result: IObject) {
-        let channelName = try? result.getPropertyWith(key: "id", type: String.self) as? String
-        let ownerId = try? result.getPropertyWith(key: "userId", type: String.self) as? String
-        let roomDetailVC = BORRoomDetailController(channelName: channelName ?? "", ownerId: ownerId ?? "")
-        navigationController?.pushViewController(roomDetailVC, animated: true)
+        getData()
     }
 }

@@ -9,6 +9,11 @@ import UIKit
 import AgoraUIKit
 import AgoraRtcKit
 
+enum RecelivedType {
+    case me
+    case target
+}
+
 class LiveBaseView: UIView {
     /// 点击发送消息
     var onClickSendMessageClosure: ((ChatMessageModel) -> Void)?
@@ -28,8 +33,10 @@ class LiveBaseView: UIView {
     var onClickGameButtonClosure: (() -> Void)?
     /// 点击退出游戏
     var onClickExitGameButtonClosure: (() -> Void)?
+    /// 发送礼物
+    var onSendGiftClosure: ((LiveGiftModel) -> Void)?
     /// 收到礼物
-    var onReceivedGiftClosure: ((LiveGiftModel, PKLiveType) -> Void)?
+    var onReceivedGiftClosure: ((LiveGiftModel, RecelivedType) -> Void)?
     /// 设置本地视频画面
     var setupLocalVideoClosure: ((AgoraRtcVideoCanvas?) -> Void)?
     /// 设置远程直播画面
@@ -129,8 +136,20 @@ class LiveBaseView: UIView {
     }
     
     /// 监听礼物
-    func subscribeGift(channelName: String, type: PKLiveType) {
-        SyncUtil.subscribe(id: channelName, key: SYNC_MANAGER_GIFT_INFO, delegate: LiveGiftDelegate(view: self, type: type))
+    func subscribeGift(channelName: String, type: RecelivedType) {
+        SyncUtil.subscribe(id: channelName, key: SYNC_MANAGER_GIFT_INFO, onUpdated: { object in
+            LogUtils.log(message: "onUpdated gift == \(String(describing: object.toJson()))", level: .info)
+            guard let model = JSONObject.toModel(LiveGiftModel.self, value: object.toJson()) else { return }
+            self.onReceivedGiftClosure?(model, type)
+            if type == .me {
+                self.playGifView.isHidden = false
+                self.playGifView.loadGIFName(gifName: model.gifName)
+                let model = ChatMessageModel(message: model.userId + "送出了一个" + model.title, messageType: .message)
+                self.chatView.sendMessage(messageModel: model)
+            }
+        }, onSubscribed: {
+            LogUtils.log(message: "subscribe gift type == \(type)", level: .info)
+        })
     }
     
     /// 更新直播布局
@@ -235,12 +254,10 @@ class LiveBaseView: UIView {
             case .gift:
                 self.giftView.clickGiftItemClosure = { giftModel in
                     LogUtils.log(message: "gif == \(giftModel.gifName)", level: .info)
+                    self.onSendGiftClosure?(giftModel)
                     let params = JSONObject.toJson(giftModel)
                     /// 发送礼物
-                    SyncUtil.update(id: self.channelName,
-                                    key: SYNC_MANAGER_GIFT_INFO,
-                                    params: params,
-                                    delegate: nil)
+                    SyncUtil.update(id: self.channelName, key: SYNC_MANAGER_GIFT_INFO, params: params)
                 }
                 AlertManager.show(view: self.giftView, alertPostion: .bottom)
             case .pk:
@@ -253,11 +270,7 @@ class LiveBaseView: UIView {
                 self.onClickExitGameButtonClosure?()
             }
         }
-        
         subscribeGift(channelName: channelName, type: .me)
-        
-        // 收到礼物
-        LiveReceivedGiftClosure = onReceivedGiftClosure
     }
     
     private func setupUI() {

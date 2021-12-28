@@ -176,6 +176,7 @@ code_sign_if_enabled() {
 }
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_framework "${BUILT_PRODUCTS_DIR}/AgoraLog/AgoraLog.framework"
   install_framework "${PODS_ROOT}/AgoraRtcEngine_iOS_Preview/AgoraRTE.framework"
   install_framework "${PODS_ROOT}/AgoraRtcEngine_iOS_Preview/AgoraRtcCryptoLoader.framework"
   install_framework "${PODS_ROOT}/AgoraRtcEngine_iOS_Preview/AgoraRtcKit.framework"
@@ -183,10 +184,13 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${PODS_ROOT}/AgoraRtcEngine_iOS_Preview/Agoraffmpeg.framework"
   install_framework "${PODS_ROOT}/AgoraRtm_iOS/AgoraRtmKit.framework"
   install_framework "${PODS_ROOT}/../sdk/libs/AgoraScreenShare.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/AgoraSyncManager/AgoraSyncManager.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/AgoraUIKit/AgoraUIKit.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/CocoaLumberjack/CocoaLumberjack.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_framework "${BUILT_PRODUCTS_DIR}/AgoraLog/AgoraLog.framework"
   install_framework "${PODS_ROOT}/AgoraRtcEngine_iOS_Preview/AgoraRTE.framework"
   install_framework "${PODS_ROOT}/AgoraRtcEngine_iOS_Preview/AgoraRtcCryptoLoader.framework"
   install_framework "${PODS_ROOT}/AgoraRtcEngine_iOS_Preview/AgoraRtcKit.framework"
@@ -194,7 +198,9 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${PODS_ROOT}/AgoraRtcEngine_iOS_Preview/Agoraffmpeg.framework"
   install_framework "${PODS_ROOT}/AgoraRtm_iOS/AgoraRtmKit.framework"
   install_framework "${PODS_ROOT}/../sdk/libs/AgoraScreenShare.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/AgoraSyncManager/AgoraSyncManager.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/AgoraUIKit/AgoraUIKit.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/CocoaLumberjack/CocoaLumberjack.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then

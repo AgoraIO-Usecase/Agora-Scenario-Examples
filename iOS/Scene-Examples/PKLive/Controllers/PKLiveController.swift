@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AgoraSyncManager
 
 class PKLiveController: SignleLiveController {
     public lazy var stopBroadcastButton: UIButton = {
@@ -92,27 +93,37 @@ class PKLiveController: SignleLiveController {
         super.eventHandler()
         if getRole(uid: "\(UserInfo.userId)") == .broadcaster {
             // 监听主播发起PK
-            SyncUtil.subscribe(id: channleName,
-                               key: sceneType.rawValue,
-                               delegate: PKInviteInfoDelegate(vc: self))
+            SyncUtil.subscribe(id: channleName, key: sceneType.rawValue, onUpdated: { object in
+                self.pkSubscribeHandler(object: object)
+            }, onSubscribed: {
+                LogUtils.log(message: "onSubscribed pkApplyInfo", level: .info)
+            })
         }
         // 监听PKinfo 让观众加入到PK的channel
-        SyncUtil.subscribe(id: channleName,
-                           key: SYNC_MANAGER_PK_INFO,
-                           delegate: PKInfoDelegate(vc: self))
-        
-        // pk开始回调
-        pkLiveStartClosure = { [weak self] applyModel in
-            guard let self = self else { return }
-            self.pkApplyInfoModel = applyModel
-            self.pkLiveStartHandler()
-        }
-        
-        // pk 结束回调
-        pkLiveEndClosure = { [weak self] applyModel in
-            self?.pkApplyInfoModel = applyModel
-            self?.pkLiveEndHandler()
-        }
+        SyncUtil.subscribe(id: channleName, key: SYNC_MANAGER_PK_INFO, onCreated: { object in
+            guard self.getRole(uid: "\(UserInfo.userId)") == .audience,
+                  let model = JSONObject.toModel(PKInfoModel.self, value: object.toJson()) else { return }
+            if model.userId == "\(UserInfo.userId)" { return }
+            self.pkInfoModel = model
+            self.joinAudienceChannel(channelName: model.roomId, pkUid:  UInt(model.userId) ?? 0)
+        }, onUpdated: { object in
+            LogUtils.log(message: "onUpdated pkInfo == \(String(describing: object.toJson()))", level: .info)
+            guard self.getRole(uid: "\(UserInfo.userId)") == .audience,
+                  let model = JSONObject.toModel(PKInfoModel.self, value: object.toJson()) else { return }
+            if model.userId == "\(UserInfo.userId)" { return }
+            self.pkInfoModel = model
+            if model.status == .end {
+                if self.channleName != model.roomId {
+                    self.leaveChannel(uid: UserInfo.userId, channelName: model.roomId)
+                }
+                self.liveView.updateLiveLayout(postion: .full)
+            } else {
+                self.joinAudienceChannel(channelName: model.roomId, pkUid:  UInt(model.userId) ?? 0)
+                self.liveView.updateLiveLayout(postion: .center)
+            }
+        }, onSubscribed: {
+            LogUtils.log(message: "onSubscribed pkInfo", level: .info)
+        })
         
         liveView.onReceivedGiftClosure = { [weak self] giftModel, type in
             self?.receiveGiftHandler(giftModel: giftModel, type: type)
@@ -123,20 +134,76 @@ class PKLiveController: SignleLiveController {
         }
     }
     
+    public func pkSubscribeHandler(object: IObject) {
+        LogUtils.log(message: "onUpdated pkApplyInfo == \(String(describing: object.toJson()))", level: .info)
+        guard var model = JSONObject.toModel(PKApplyInfoModel.self, value: object.toJson()) else { return }
+        pkApplyInfoModel = model
+        if model.status == .end {
+            print("========== me end ==================")
+            // 自己在对方的channel中移除
+            let channelName = model.targetUserId == UserInfo.uid ? model.roomId : model.targetRoomId
+            leaveChannel(uid: UserInfo.userId, channelName: channelName ?? "")
+            liveView.updateLiveLayout(postion: .full)
+            // PK结束
+            pkLiveEndHandler()
+            
+            guard var pkInfoModel = pkInfoModel else {
+                return
+            }
+            pkInfoModel.status = .end
+            SyncUtil.update(id: channleName, key: SYNC_MANAGER_PK_INFO, params: JSONObject.toJson(pkInfoModel))
+            
+        } else if model.status == .accept {
+            liveView.updateLiveLayout(postion: .center)
+            // 把自己加入到对方的channel
+            let channelName = model.targetUserId == UserInfo.uid ? model.roomId : model.targetRoomId
+            let userId = model.userId == currentUserId ? model.targetUserId : model.userId
+            joinAudienceChannel(channelName: channelName ?? "", pkUid: UInt(userId ?? "0") ?? 0)
+            
+            // pk开始
+            pkLiveStartHandler()
+            
+            // 通知观众加入到pk的channel
+            var pkInfo = PKInfoModel()
+            pkInfo.status = model.status
+            pkInfo.roomId = channelName ?? ""
+            pkInfo.userId = userId ?? ""
+            SyncUtil.update(id: channleName, key: SYNC_MANAGER_PK_INFO, params: JSONObject.toJson(pkInfo), success: { results in
+                guard let result = results.first else { return }
+                guard let model = JSONObject.toModel(PKInfoModel.self, value: result.toJson()) else { return }
+                self.pkInfoModel = model
+            })
+            
+        } else if model.status == .invite && "\(UserInfo.userId)" != model.userId {
+            let message = sceneType == .game ? "您的好友\(model.userName)邀请\n您加入\(model.gameId.title)游戏" : ""
+            showAlert(title: sceneType.alertTitle, message: message) { [weak self] in
+                guard let self = self else { return }
+                model.status = .refuse
+                SyncUtil.update(id: model.targetRoomId ?? "", key: self.sceneType.rawValue, params: JSONObject.toJson(model))
+                
+            } confirm: { [weak self] in
+                guard let self = self else { return }
+                model.status = .accept
+                SyncUtil.update(id: model.targetRoomId ?? "", key: self.sceneType.rawValue, params: JSONObject.toJson(model))
+            }
+        } else if model.status == .refuse && "\(UserInfo.userId)" == model.userId {
+            showAlert(title: "PK_Invite_Reject".localized, message: "")
+            deleteSubscribe()
+        }
+    }
+    
     /// 获取PK信息
     private func getBroadcastPKApplyInfo() {
-        let fetchPKInfoDelegate = FetchPKInfoDataDelegate()
-        fetchPKInfoDelegate.onSuccess = { [weak self] result in
+        SyncUtil.fetch(id: channleName, key: SYNC_MANAGER_PK_INFO, success: { [weak self] result in
             guard let self = self,
-            let pkInfoModel = JSONObject.toModel(PKInfoModel.self, value: result?.toJson()) else { return }
+                  let pkInfoModel = JSONObject.toModel(PKInfoModel.self, value: result?.toJson()) else { return }
             self.pkInfoModel = pkInfoModel
             self.updatePKUIStatus(isStart: pkInfoModel.status == .accept)
             if pkInfoModel.status == .accept {
                 self.joinAudienceChannel(channelName: pkInfoModel.roomId, pkUid: UInt(pkInfoModel.userId) ?? 0)
             }
             self.getBroadcastPKStatus()
-        }
-        SyncUtil.fetch(id: channleName, key: SYNC_MANAGER_PK_INFO, delegate: fetchPKInfoDelegate)
+        })
     }
     
     /// 获取当前主播PK状态
@@ -153,7 +220,7 @@ class PKLiveController: SignleLiveController {
         stopBroadcastButton.isHidden = true
     }
     /// 收到礼物
-    public func receiveGiftHandler(giftModel: LiveGiftModel, type: PKLiveType) {
+    public func receiveGiftHandler(giftModel: LiveGiftModel, type: RecelivedType) {
         if type == .me {
             pkProgressView.updateProgressValue(at: giftModel.coin)
         } else {
@@ -196,7 +263,7 @@ class PKLiveController: SignleLiveController {
         super.viewDidDisappear(animated)
         let channelName = targetChannelName.isEmpty ? channleName : targetChannelName
         SyncUtil.unsubscribe(id: channleName, key: SYNC_MANAGER_PK_INFO)
-        SyncUtil.deleteCollection(id: channelName, className: sceneType.rawValue, delegate: nil)
+        SyncUtil.deleteCollection(id: channelName, className: sceneType.rawValue)
         deleteSubscribe()
     }
     
@@ -209,10 +276,7 @@ class PKLiveController: SignleLiveController {
         guard var applyModel = pkApplyInfoModel else { return }
         applyModel.status = .end
         let channelName = targetChannelName.isEmpty ? channleName : targetChannelName
-        SyncUtil.update(id: channelName,
-                        key: sceneType.rawValue,
-                        params: JSONObject.toJson(applyModel),
-                        delegate: nil)
+        SyncUtil.update(id: channelName, key: sceneType.rawValue, params: JSONObject.toJson(applyModel))
     }
     
     public func deleteSubscribe() {
@@ -234,10 +298,11 @@ class PKLiveController: SignleLiveController {
             guard let self = self else { return }
             self.targetChannelName = id
             // 加入到对方的channel 订阅对方
-            SyncUtil.subscribe(id: id,
-                               key: self.sceneType.rawValue,
-                               delegate: PKInviteInfoDelegate(vc: self))
-            
+            SyncUtil.subscribe(id: id, key: self.sceneType.rawValue, onUpdated: { object  in
+                self.pkSubscribeHandler(object: object)
+            }, onSubscribed: {
+                LogUtils.log(message: "subscribe target pk apply info", level: .info)
+            })
             // 订阅对方收到的礼物
             self.liveView.subscribeGift(channelName: id, type: .target)
         }

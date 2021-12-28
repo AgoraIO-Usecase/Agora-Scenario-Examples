@@ -89,7 +89,7 @@ class GameCenterView: UIView {
     
     @objc
     private func clickBackButton() {
-        AlertManager.hiddenView(all: false, completion: nil)
+        AlertManager.hiddenView()
     }
 }
 extension GameCenterView: AGECollectionViewDelegate {

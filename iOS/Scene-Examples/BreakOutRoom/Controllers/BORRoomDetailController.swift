@@ -8,6 +8,7 @@
 import UIKit
 import AgoraRtcKit
 import AgoraUIKit
+import AgoraSyncManager
 
 class BORRoomDetailController: BaseViewController {
     private lazy var segmentView: SegmentView = {
@@ -90,11 +91,45 @@ class BORRoomDetailController: BaseViewController {
         
         segmentView.titles = [channleName]
         
-        SyncUtil.fetchCollection(id: id, className: SYNC_COLLECTION_SUB_ROOM, delegate: self)
+        SyncUtil.fetchCollection(id: id, className: SYNC_COLLECTION_SUB_ROOM, success: { results in
+            SyncUtil.subscribeCollection(id: self.id, className: SYNC_COLLECTION_SUB_ROOM) { result in
+                self.onCreated(result: result)
+            } onUpdated: { object in
+                self.onUpdated(object: object)
+            }
+            let subRooms = results.compactMap({ $0.toJson() }).compactMap({ JSONObject.toModel(BORSubRoomModel.self, value: $0) }).sorted { s1, s2 in
+                    return s1.createTime < s2.createTime
+                }
+            let titles = subRooms.compactMap({ $0.subRoom })
+            guard !titles.isEmpty else { return }
+            self.segmentView.titles = self.segmentView.titles + titles
+        })
         
-        SyncUtil.subscribeCollection(id: id,
-                                     className: SYNC_COLLECTION_SUB_ROOM,
-                                     delegate: self)
+        SyncUtil.subscribeCollection(id: id, className: SYNC_COLLECTION_SUB_ROOM) { result in
+            self.onCreated(result: result)
+        } onUpdated: { object in
+            self.onUpdated(object: object)
+        } onSubscribed: {
+            print("onSubscribed")
+        }
+    }
+    
+    private func onCreated(result: IObject) {
+        var titles = segmentView.titles
+        let roomModel = JSONObject.toModel(BORSubRoomModel.self, value: result.toJson())
+        guard !titles.contains(roomModel?.subRoom ?? "") else { return }
+        titles.append(roomModel?.subRoom ?? "")
+        segmentView.titles = titles
+        print("onCreated == \(result)")
+    }
+    
+    private func onUpdated(object: IObject) {
+        print("onUpdated == \(object)")
+        var titles = self.segmentView.titles
+        let roomModel = JSONObject.toModel(BORSubRoomModel.self, value: object.toJson())
+        guard !titles.contains(roomModel?.subRoom ?? "") else { return }
+        titles.append(roomModel?.subRoom ?? "")
+        segmentView.titles = titles
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -192,10 +227,7 @@ class BORRoomDetailController: BaseViewController {
             }
             let roomModel = BORSubRoomModel(subRoom: text)
             let roomParams = JSONObject.toJson(roomModel)
-            SyncUtil.addCollection(id: self?.id ?? "",
-                                   className: SYNC_COLLECTION_SUB_ROOM,
-                                   params: roomParams,
-                                   delegate: nil)
+            SyncUtil.addCollection(id: self?.id ?? "", className: SYNC_COLLECTION_SUB_ROOM, params: roomParams)
         }
     }
     
@@ -280,60 +312,5 @@ extension BORRoomDetailController: AgoraRtcEngineDelegate {
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, remoteAudioStats stats: AgoraRtcRemoteAudioStats) {
 //        remoteVideo.statsInfo?.updateAudioStats(stats)
-    }
-}
-
-extension BORRoomDetailController: IObjectListDelegate {
-    func onSuccess(result: [IObject]) {
-        SyncUtil.subscribeCollection(id: id,
-                                     className: SYNC_COLLECTION_SUB_ROOM,
-                                     delegate: self)
-        let subRooms = result.compactMap({ $0.toJson() }).compactMap({ JSONObject.toModel(BORSubRoomModel.self, value: $0) }).sorted { s1, s2 in
-                return s1.createTime < s2.createTime
-            }
-        let titles = subRooms.compactMap({ $0.subRoom })
-        guard !titles.isEmpty else { return }
-        segmentView.titles = segmentView.titles + titles
-    }
-    
-    func onFailed(code: Int, msg: String) {
-        LogUtils.log(message: "onFailed == \(msg)  code === \(code)", level: .error)
-    }
-}
-
-extension BORRoomDetailController: ISyncManagerEventDelegate {
-    func onCreated(object: IObject) {
-        var titles = segmentView.titles
-        let roomModel = JSONObject.toModel(BORSubRoomModel.self, value: object.toJson())
-        guard !titles.contains(roomModel?.subRoom ?? "") else { return }
-        titles.append(roomModel?.subRoom ?? "")
-        segmentView.titles = titles
-        print("onCreated == \(object)")
-    }
-    
-    func onUpdated(object: IObject) {
-        print("onUpdated == \(object)")
-        var titles = segmentView.titles
-        let roomModel = JSONObject.toModel(BORSubRoomModel.self, value: object.toJson())
-        guard !titles.contains(roomModel?.subRoom ?? "") else { return }
-        titles.append(roomModel?.subRoom ?? "")
-        segmentView.titles = titles
-    }
-    
-    func onDeleted(object: IObject?) {
-        print("onDeleted == \(String(describing: object?.toJson()))")
-        
-    }
-    func onDeleted(objectId: String) {
-    
-    }
-    
-    func onSubscribed() {
-        print("onSubscribed")
-    }
-    
-    func onError(code: Int, msg: String) {
-        print("onError  code == \(code) msg === \(msg)")
-        showAlert(title: "code == \(code) msg == \(msg)", message: "")
     }
 }

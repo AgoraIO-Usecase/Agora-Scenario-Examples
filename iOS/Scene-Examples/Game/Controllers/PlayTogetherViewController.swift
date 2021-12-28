@@ -34,7 +34,7 @@ class PlayTogetherViewController: SignleLiveController {
         liveView.updateBottomButtonType(type: bottomType)
         
         webView.translatesAutoresizingMaskIntoConstraints = false
-        view.insertSubview(webView, at: 0)
+        view.addSubview(webView)
         webView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         webView.topAnchor.constraint(equalTo: liveView.avatarview.bottomAnchor, constant: 15).isActive = true
         webView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
@@ -43,22 +43,28 @@ class PlayTogetherViewController: SignleLiveController {
     }
     /// 获取主播游戏状态
     private func getBroadcastGameStatus() {
-        let fetchGameInfoDelegate = FetchPKInfoDataDelegate()
-        fetchGameInfoDelegate.onSuccess = { [weak self] result in
+        SyncUtil.fetch(id: channleName, key: SYNC_MANAGER_GAME_INFO, success: { result in
             let gameInfoModel = JSONObject.toModel(GameInfoModel.self, value: result?.toJson())
-            self?.gameInfoModel = gameInfoModel
+            self.gameInfoModel = gameInfoModel
             if gameInfoModel?.status == .playing {
-                self?.sendMessage(messageModel: ChatMessageModel(message: "", messageType: .notice))
+                self.sendMessage(messageModel: ChatMessageModel(message: "", messageType: .notice))
             }
-        }
-        SyncUtil.fetch(id: channleName, key: SYNC_MANAGER_GAME_INFO, delegate: fetchGameInfoDelegate)
+        })
     }
     
     override func eventHandler() {
         super.eventHandler()
         /// 监听游戏
         if getRole(uid: UserInfo.uid) == .audience {
-            SyncUtil.subscribe(id: channleName, key: SYNC_MANAGER_GAME_INFO, delegate: self)
+            SyncUtil.subscribe(id: channleName, key: SYNC_MANAGER_GAME_INFO, onUpdated: { [weak self] object in
+                guard self?.getRole(uid: UserInfo.uid) == .audience,
+                      let model = JSONObject.toModel(GameInfoModel.self, value: object.toJson()) else { return }
+                LogUtils.log(message: "gameInfo == \(object.toJson() ?? "")", level: .info)
+                if model.status == .playing {
+                    self?.liveView.sendMessage(message: "", messageType: .notice)
+                }
+            })
+
         }
         liveView.onClickGameButtonClosure = { [weak self] in
             self?.clickGamePKHandler()
@@ -103,7 +109,7 @@ class PlayTogetherViewController: SignleLiveController {
     }
     
     /// 收到礼物
-    private func receiveGiftHandler(giftModel: LiveGiftModel, type: PKLiveType) {
+    private func receiveGiftHandler(giftModel: LiveGiftModel, type: RecelivedType) {
         liveView.playGifView.isHidden = !webView.isHidden
         viewModel.postGiftHandler(type: giftModel.giftType)
     }
@@ -155,41 +161,12 @@ class PlayTogetherViewController: SignleLiveController {
         gameInfoModel.status = isStart ? .playing : .no_start
         SyncUtil.update(id: channleName,
                         key: SYNC_MANAGER_GAME_INFO,
-                        params: JSONObject.toJson(gameInfoModel),
-                        delegate: nil)
+                        params: JSONObject.toJson(gameInfoModel))
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         SyncUtil.unsubscribe(id: channleName, key: SYNC_MANAGER_GAME_APPLY_INFO)
         SyncUtil.unsubscribe(id: channleName, key: SYNC_MANAGER_GAME_INFO)
-    }
-}
-
-extension PlayTogetherViewController: ISyncManagerEventDelegate {
-    func onCreated(object: IObject) {
-        
-    }
-    
-    func onUpdated(object: IObject) {
-        guard getRole(uid: UserInfo.uid) == .audience,
-              let model = JSONObject.toModel(GameInfoModel.self, value: object.toJson()) else { return }
-        
-        LogUtils.log(message: "gameInfo == \(object.toJson())", level: .info)
-        if model.status == .playing {
-            liveView.sendMessage(message: "", messageType: .notice)
-        }
-    }
-    
-    func onDeleted(object: IObject?) {
-        
-    }
-    
-    func onSubscribed() {
-        
-    }
-    
-    func onError(code: Int, msg: String) {
-        
     }
 }

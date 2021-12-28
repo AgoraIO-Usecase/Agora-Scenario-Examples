@@ -32,7 +32,6 @@ class PKLiveInviteView: UIView {
                       forCellWithReuseIdentifier: PKLiveInviteViewCell.description())
         return view
     }()
-    private lazy var fetchPKInfoDataDelegate = FetchAllBroadcastDataDelegate()
     private var channelName: String = ""
     private var sceneType: SceneType = .singleLive
     
@@ -49,13 +48,12 @@ class PKLiveInviteView: UIView {
     }
     
     private func fetchPKInfoData() {
-        fetchPKInfoDataDelegate.onSuccess = { [weak self] result in
-            let datas = result.compactMap({ $0.toJson() })
+        SyncUtil.fetchAll(success: { results in
+            let datas = results.compactMap({ $0.toJson() })
                 .compactMap({ JSONObject.toModel(LiveRoomInfo.self, value: $0 )})
                 .filter({ $0.userId != "\(UserInfo.userId)"})
-            self?.tableViewLayout.dataArray = datas
-        }
-        SyncUtil.fetchAll(delegate: fetchPKInfoDataDelegate)
+            self.tableViewLayout.dataArray = datas
+        })
     }
     
     private func setupUI() {
@@ -181,58 +179,38 @@ class PKLiveInviteViewCell: UITableViewCell {
         sender.isEnabled = !sender.isEnabled
         
         // 加入要pk主播的channel
-        SyncUtil.joinScene(id: model.roomId, userId: model.userId, property: JSONObject.toJson(model), delegate: self)
-        
-        AlertManager.hiddenView()
-        
-    }
-}
-
-extension PKLiveInviteViewCell: IObjectDelegate {
-    func onSuccess(result: IObject) {
-        let channelName = try? result.getPropertyWith(key: "roomId", type: String.self) as? String
-        SyncUtil.fetch(id: channelName ?? "",
-                       key: SceneType.pkApply.rawValue,
-                       delegate: GetPKLiveDataDelegate(cell: self))
-    }
-    
-    func onFailed(code: Int, msg: String) {
-        LogUtils.log(message: "code == \(code) msg == \(msg)", level: .error)
-    }
-}
-
-class GetPKLiveDataDelegate: IObjectDelegate {
-    private var cell: PKLiveInviteViewCell
-    init(cell: PKLiveInviteViewCell) {
-        self.cell = cell
-    }
-    func onSuccess(result: IObject) {
-        let pkApplyInfo = JSONObject.toModel(PKApplyInfoModel.self, value: result.toJson())
-        if pkApplyInfo == nil {
-            pkApplyInfoHandler(channelName: cell.currendModel?.roomId ?? "")
-        } else {
-            if pkApplyInfo?.status == .accept {
-                ToastView.show(text: "PK_Invite_Fail".localized, duration: 3)
-            } else {
-                pkApplyInfoHandler(channelName: cell.currendModel?.roomId ?? "")
+        SyncUtil.joinScene(id: model.roomId, userId: model.userId, property: JSONObject.toJson(model), success: { results in
+            guard let result = results.first else { return }
+            let channelName = result.getPropertyWith(key: "roomId", type: String.self) as? String
+            SyncUtil.fetch(id: channelName ?? "", key: SceneType.pkApply.rawValue) { object in
+                let pkApplyInfo = JSONObject.toModel(PKApplyInfoModel.self, value: object?.toJson())
+                if pkApplyInfo == nil {
+                    self.pkApplyInfoHandler(channelName: self.currendModel?.roomId ?? "")
+                } else {
+                    if pkApplyInfo?.status == .accept {
+                        ToastView.show(text: "PK_Invite_Fail".localized, duration: 3)
+                    } else {
+                        self.pkApplyInfoHandler(channelName: self.currendModel?.roomId ?? "")
+                    }
+                }
+            } fail: { error in
+                if error.code == -1 {
+                    self.pkApplyInfoHandler(channelName: self.currendModel?.roomId ?? "")
+                }
             }
-        }
-    }
-    
-    func onFailed(code: Int, msg: String) {
-        if code == -1 {
-            pkApplyInfoHandler(channelName: cell.currendModel?.roomId ?? "")
-        }
+
+        })
+        AlertManager.hiddenView()
     }
     
     private func pkApplyInfoHandler(channelName: String) {
-        cell.pkInviteSubscribe?(channelName)
+        pkInviteSubscribe?(channelName)
         var pkModel = PKApplyInfoModel()
-        pkModel.roomId = cell.channelName
+        pkModel.roomId = channelName
         pkModel.targetRoomId = channelName
-        pkModel.targetUserId = cell.currendModel?.userId ?? ""
+        pkModel.targetUserId = currendModel?.userId ?? ""
         pkModel.status = .invite
         let params = JSONObject.toJson(pkModel)
-        SyncUtil.update(id: channelName, key: cell.sceneType.rawValue, params: params, delegate: nil)
+        SyncUtil.update(id: channelName, key: sceneType.rawValue, params: params)
     }
 }

@@ -37,13 +37,9 @@
 		E79BEF58273E50ED009FA838 /* SuperDiamond.gif in Resources */ = {isa = PBXBuildFile; fileRef = E79BEF4F273E50ED009FA838 /* SuperDiamond.gif */; };
 		E79BEF59273E50ED009FA838 /* sound.gif in Resources */ = {isa = PBXBuildFile; fileRef = E79BEF50273E50ED009FA838 /* sound.gif */; };
 		E79BEF5B273E5768009FA838 /* GIFImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF5A273E5768009FA838 /* GIFImageView.swift */; };
-		E79BEF60273E72F7009FA838 /* LiveGiftDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF5F273E72F7009FA838 /* LiveGiftDelegate.swift */; };
 		E79BEF662741FD43009FA838 /* PKLiveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF652741FD43009FA838 /* PKLiveController.swift */; };
 		E79BEF68274203ED009FA838 /* PKLiveInviteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF67274203ED009FA838 /* PKLiveInviteView.swift */; };
 		E79BEF6A27420933009FA838 /* PKApplyInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF6927420933009FA838 /* PKApplyInfoModel.swift */; };
-		E79BEF6F2742118A009FA838 /* PKInviteInfoDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF6E2742118A009FA838 /* PKInviteInfoDelegate.swift */; };
-		E79BEF7127421295009FA838 /* FetchAllBroadcastDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF7027421295009FA838 /* FetchAllBroadcastDataDelegate.swift */; };
-		E79BEF7327438D6A009FA838 /* PKInfoDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF7227438D6A009FA838 /* PKInfoDelegate.swift */; };
 		E79BEF752744FD8B009FA838 /* GCDTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF742744FD8B009FA838 /* GCDTimer.swift */; };
 		E79BEF772745036E009FA838 /* PKLiveProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF762745036E009FA838 /* PKLiveProgressView.swift */; };
 		E79BEF7D27463F79009FA838 /* BORSubRoomModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF7A27463F79009FA838 /* BORSubRoomModel.swift */; };
@@ -65,17 +61,12 @@
 		E79BF029274B77C7009FA838 /* GameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BF028274B77C7009FA838 /* GameViewModel.swift */; };
 		E79BF02B274B81A0009FA838 /* GameInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BF02A274B819F009FA838 /* GameInfoModel.swift */; };
 		E79BF0302754761A009FA838 /* GameApplyInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BF02F2754761A009FA838 /* GameApplyInfoModel.swift */; };
-		E79BF03227547D4D009FA838 /* GameApplyInfoDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BF03127547D4D009FA838 /* GameApplyInfoDelegate.swift */; };
-		E79BF0342754BA3C009FA838 /* FetchPKInfoDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BF0332754BA3C009FA838 /* FetchPKInfoDataDelegate.swift */; };
 		E79C25DF273B67DB00909CD4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C25DE273B67DB00909CD4 /* AppDelegate.swift */; };
 		E79C25E1273B67DB00909CD4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C25E0273B67DB00909CD4 /* SceneDelegate.swift */; };
 		E79C25E3273B67DB00909CD4 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C25E2273B67DB00909CD4 /* MainViewController.swift */; };
 		E79C25E6273B67DB00909CD4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E79C25E4273B67DB00909CD4 /* Main.storyboard */; };
 		E79C25E8273B67DD00909CD4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E79C25E7273B67DD00909CD4 /* Assets.xcassets */; };
 		E79C25EB273B67DD00909CD4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E79C25E9273B67DD00909CD4 /* LaunchScreen.storyboard */; };
-		E79C2609273B689B00909CD4 /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C25FA273B689A00909CD4 /* SyncManager.swift */; };
-		E79C260A273B689B00909CD4 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C25FC273B689A00909CD4 /* Utils.swift */; };
-		E79C260B273B689B00909CD4 /* RtmSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C25FD273B689A00909CD4 /* RtmSyncManager.swift */; };
 		E79C260C273B689B00909CD4 /* MBHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C25FF273B689A00909CD4 /* MBHUD.swift */; };
 		E79C260D273B689B00909CD4 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2600273B689A00909CD4 /* Config.swift */; };
 		E79C260E273B689B00909CD4 /* AgoraExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2601273B689A00909CD4 /* AgoraExtension.swift */; };
@@ -161,13 +152,9 @@
 		E79BEF4F273E50ED009FA838 /* SuperDiamond.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = SuperDiamond.gif; sourceTree = "<group>"; };
 		E79BEF50273E50ED009FA838 /* sound.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = sound.gif; sourceTree = "<group>"; };
 		E79BEF5A273E5768009FA838 /* GIFImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIFImageView.swift; sourceTree = "<group>"; };
-		E79BEF5F273E72F7009FA838 /* LiveGiftDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveGiftDelegate.swift; sourceTree = "<group>"; };
 		E79BEF652741FD43009FA838 /* PKLiveController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PKLiveController.swift; sourceTree = "<group>"; };
 		E79BEF67274203ED009FA838 /* PKLiveInviteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PKLiveInviteView.swift; sourceTree = "<group>"; };
 		E79BEF6927420933009FA838 /* PKApplyInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PKApplyInfoModel.swift; sourceTree = "<group>"; };
-		E79BEF6E2742118A009FA838 /* PKInviteInfoDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PKInviteInfoDelegate.swift; sourceTree = "<group>"; };
-		E79BEF7027421295009FA838 /* FetchAllBroadcastDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchAllBroadcastDataDelegate.swift; sourceTree = "<group>"; };
-		E79BEF7227438D6A009FA838 /* PKInfoDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PKInfoDelegate.swift; sourceTree = "<group>"; };
 		E79BEF742744FD8B009FA838 /* GCDTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDTimer.swift; sourceTree = "<group>"; };
 		E79BEF762745036E009FA838 /* PKLiveProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PKLiveProgressView.swift; sourceTree = "<group>"; };
 		E79BEF7A27463F79009FA838 /* BORSubRoomModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BORSubRoomModel.swift; sourceTree = "<group>"; };
@@ -191,8 +178,6 @@
 		E79BF028274B77C7009FA838 /* GameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewModel.swift; sourceTree = "<group>"; };
 		E79BF02A274B819F009FA838 /* GameInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameInfoModel.swift; sourceTree = "<group>"; };
 		E79BF02F2754761A009FA838 /* GameApplyInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameApplyInfoModel.swift; sourceTree = "<group>"; };
-		E79BF03127547D4D009FA838 /* GameApplyInfoDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameApplyInfoDelegate.swift; sourceTree = "<group>"; };
-		E79BF0332754BA3C009FA838 /* FetchPKInfoDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchPKInfoDataDelegate.swift; sourceTree = "<group>"; };
 		E79C25DB273B67DB00909CD4 /* Scene-Examples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Scene-Examples.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E79C25DE273B67DB00909CD4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E79C25E0273B67DB00909CD4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -201,10 +186,6 @@
 		E79C25E7273B67DD00909CD4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E79C25EA273B67DD00909CD4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E79C25EC273B67DD00909CD4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E79C25FA273B689A00909CD4 /* SyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
-		E79C25FB273B689A00909CD4 /* RtmSyncManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RtmSyncManager.h; sourceTree = "<group>"; };
-		E79C25FC273B689A00909CD4 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
-		E79C25FD273B689A00909CD4 /* RtmSyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RtmSyncManager.swift; sourceTree = "<group>"; };
 		E79C25FF273B689A00909CD4 /* MBHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MBHUD.swift; sourceTree = "<group>"; };
 		E79C2600273B689A00909CD4 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		E79C2601273B689A00909CD4 /* AgoraExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraExtension.swift; sourceTree = "<group>"; };
@@ -348,7 +329,6 @@
 		E79BEF5E273E72D2009FA838 /* SyncManagerDelegate */ = {
 			isa = PBXGroup;
 			children = (
-				E79BEF5F273E72F7009FA838 /* LiveGiftDelegate.swift */,
 			);
 			path = SyncManagerDelegate;
 			sourceTree = "<group>";
@@ -392,10 +372,6 @@
 		E79BEF6D27421160009FA838 /* SyncManagerDelegate */ = {
 			isa = PBXGroup;
 			children = (
-				E79BEF6E2742118A009FA838 /* PKInviteInfoDelegate.swift */,
-				E79BEF7227438D6A009FA838 /* PKInfoDelegate.swift */,
-				E79BEF7027421295009FA838 /* FetchAllBroadcastDataDelegate.swift */,
-				E79BF0332754BA3C009FA838 /* FetchPKInfoDataDelegate.swift */,
 			);
 			path = SyncManagerDelegate;
 			sourceTree = "<group>";
@@ -506,7 +482,6 @@
 		E79BF02C274B824C009FA838 /* SyncManagerDelegate */ = {
 			isa = PBXGroup;
 			children = (
-				E79BF03127547D4D009FA838 /* GameApplyInfoDelegate.swift */,
 			);
 			path = SyncManagerDelegate;
 			sourceTree = "<group>";
@@ -538,7 +513,6 @@
 				E79BEF9F274796E1009FA838 /* NetworkManager */,
 				E79C2630273BC16700909CD4 /* Extension */,
 				E79C262B273BC0B500909CD4 /* ToastView */,
-				E79C25F9273B689A00909CD4 /* RtmSyncManager */,
 				E79C2605273B689B00909CD4 /* LayoutBaseViews */,
 				E79C25FE273B689A00909CD4 /* Common */,
 				E79C2619273B6F4800909CD4 /* AppDelegate */,
@@ -565,17 +539,6 @@
 				E79BEF7F27463F84009FA838 /* Cells */,
 			);
 			path = BreakOutRoom;
-			sourceTree = "<group>";
-		};
-		E79C25F9273B689A00909CD4 /* RtmSyncManager */ = {
-			isa = PBXGroup;
-			children = (
-				E79C25FA273B689A00909CD4 /* SyncManager.swift */,
-				E79C25FB273B689A00909CD4 /* RtmSyncManager.h */,
-				E79C25FC273B689A00909CD4 /* Utils.swift */,
-				E79C25FD273B689A00909CD4 /* RtmSyncManager.swift */,
-			);
-			path = RtmSyncManager;
 			sourceTree = "<group>";
 		};
 		E79C25FE273B689A00909CD4 /* Common */ = {
@@ -914,26 +877,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E79BEF60273E72F7009FA838 /* LiveGiftDelegate.swift in Sources */,
 				E79BEF37273D15D6009FA838 /* Screen.swift in Sources */,
 				E79C2611273B689B00909CD4 /* SyncUtil.swift in Sources */,
 				E79BEF5B273E5768009FA838 /* GIFImageView.swift in Sources */,
-				E79BEF6F2742118A009FA838 /* PKInviteInfoDelegate.swift in Sources */,
 				E79BEF8A274644A9009FA838 /* BORLiveModel.swift in Sources */,
 				E79BEF45273E4D99009FA838 /* LiveGiftModel.swift in Sources */,
 				E79C264E273D062400909CD4 /* LiveRoomListCell.swift in Sources */,
-				E79C260A273B689B00909CD4 /* Utils.swift in Sources */,
-				E79C2609273B689B00909CD4 /* SyncManager.swift in Sources */,
 				E79C264A273D003B00909CD4 /* LiveRoomInfo.swift in Sources */,
 				E79C2610273B689B00909CD4 /* KeyCenter.swift in Sources */,
-				E79C260B273B689B00909CD4 /* RtmSyncManager.swift in Sources */,
 				E79C262D273BC0CA00909CD4 /* ToastView.swift in Sources */,
 				E79C2644273BE7C000909CD4 /* LiveSettingView.swift in Sources */,
 				E79BEF3B273D21FD009FA838 /* LiveChatView.swift in Sources */,
 				E79BF0302754761A009FA838 /* GameApplyInfoModel.swift in Sources */,
 				E7499C2C2770537C00E799FF /* MessageCell.swift in Sources */,
 				E79BEF3F273D3EF0009FA838 /* LiveToolView.swift in Sources */,
-				E79BEF7327438D6A009FA838 /* PKInfoDelegate.swift in Sources */,
 				E79BF02B274B81A0009FA838 /* GameInfoModel.swift in Sources */,
 				E79C2626273B7BDA00909CD4 /* CreateLiveController.swift in Sources */,
 				E79BEF8627463FA5009FA838 /* BORRoomDetailController.swift in Sources */,
@@ -944,7 +901,6 @@
 				E79BEF68274203ED009FA838 /* PKLiveInviteView.swift in Sources */,
 				E79BEF33273D0F0C009FA838 /* LiveCanvasModel.swift in Sources */,
 				E7499C2A2770534400E799FF /* NoticeCell.swift in Sources */,
-				E79BF03227547D4D009FA838 /* GameApplyInfoDelegate.swift in Sources */,
 				E79C25E3273B67DB00909CD4 /* MainViewController.swift in Sources */,
 				E79C2612273B689B00909CD4 /* SegmentView.swift in Sources */,
 				E79BEF662741FD43009FA838 /* PKLiveController.swift in Sources */,
@@ -954,7 +910,6 @@
 				E79C2638273BC8DF00909CD4 /* MainModel.swift in Sources */,
 				E79C2613273B689B00909CD4 /* UIColor+Extension.swift in Sources */,
 				E79BF029274B77C7009FA838 /* GameViewModel.swift in Sources */,
-				E79BEF7127421295009FA838 /* FetchAllBroadcastDataDelegate.swift in Sources */,
 				E7440E262772CADF00CBF4D8 /* OneToOneControlView.swift in Sources */,
 				E79BEF6A27420933009FA838 /* PKApplyInfoModel.swift in Sources */,
 				E79BEF35273D1304009FA838 /* LivePlayerCell.swift in Sources */,
@@ -985,7 +940,6 @@
 				E7499C30277173BC00E799FF /* OneToOneViewController.swift in Sources */,
 				E79C260D273B689B00909CD4 /* Config.swift in Sources */,
 				E79BEF9E27477F66009FA838 /* GameCenterModel.swift in Sources */,
-				E79BF0342754BA3C009FA838 /* FetchPKInfoDataDelegate.swift in Sources */,
 				E79C25E1273B67DB00909CD4 /* SceneDelegate.swift in Sources */,
 				E79BEF88274640A6009FA838 /* BORVideoRoomDetailCell.swift in Sources */,
 				E79C260C273B689B00909CD4 /* MBHUD.swift in Sources */,
@@ -1069,7 +1023,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = YS397FG5PA;
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Agora-ScreenShare-Extension/Info.plist";
@@ -1217,7 +1171,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1210;
+				CURRENT_PROJECT_VERSION = 1211;
 				DEVELOPMENT_TEAM = YS397FG5PA;
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1255,8 +1209,8 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1210;
-				DEVELOPMENT_TEAM = "";
+				CURRENT_PROJECT_VERSION = 1211;
+				DEVELOPMENT_TEAM = YS397FG5PA;
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Scene-Examples/Info.plist";
