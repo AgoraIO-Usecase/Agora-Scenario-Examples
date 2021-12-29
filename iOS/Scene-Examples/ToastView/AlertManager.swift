@@ -25,19 +25,13 @@ class AlertManager: NSObject {
     private static var currentPosition: AlertPosition = .center
     private static var viewCache: [AlertViewCache] = []
     private static var bottomAnchor: NSLayoutConstraint?
-    private static var isLocalControll: Bool = false
     
     public static func show(view: UIView,
                             alertPostion: AlertPosition = .center,
-                            didCoverDismiss: Bool = true,
-                            controller: UIViewController? = nil) {
+                            didCoverDismiss: Bool = true) {
         let index = viewCache.isEmpty ? 0 : viewCache.count
         viewCache.append(AlertViewCache(view: view, index: index))
         currentPosition = alertPostion
-        isLocalControll = controller != nil
-        if controller != nil {
-            hiddenView()
-        }
         if vc == nil {
             containerView = UIButton(frame: CGRect(x: 0, y: 0, width: cl_screenWidht, height: cl_screenHeight))
             containerView?.backgroundColor = UIColor(red: 0.0/255, green: 0.0/255, blue: 0.0/255, alpha: 0.0)
@@ -45,13 +39,8 @@ class AlertManager: NSObject {
         if didCoverDismiss {
             (containerView as? UIButton)?.addTarget(self, action: #selector(tapView), for: .touchUpInside)
         }
-        if controller == nil {
-            containerView?.addSubview(view)
-        } else {
-            containerView = controller?.view
-            vc = controller
-        }
         guard let containerView = containerView else { return }
+        containerView.addSubview(view)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.alpha = 0
         if alertPostion == .center {
@@ -74,10 +63,10 @@ class AlertManager: NSObject {
             showAlertPostion(alertPostion: alertPostion, view: view)
         }
         //注册键盘出现通知
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name:  UIResponder.keyboardWillShowNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name:  UIResponder.keyboardWillShowNotification, object: nil)
         
         //注册键盘隐藏通知
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name:  UIResponder.keyboardWillHideNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name:  UIResponder.keyboardWillHideNotification, object: nil)
     }
 
     private static func showAlertPostion(alertPostion: AlertPosition, view: UIView) {
@@ -165,7 +154,6 @@ class AlertManager: NSObject {
     private static var originFrame:CGRect = .zero
     // 键盘显示
     @objc private static func keyboardWillShow(notification: Notification) {
-        guard isLocalControll == false else { return }
         originFrame = containerView!.frame
         let keyboardHeight = (notification.userInfo?["UIKeyboardBoundsUserInfoKey"] as? CGRect)?.height
         let y = cl_screenHeight - (keyboardHeight ?? 304) - containerView!.frame.height
@@ -175,7 +163,6 @@ class AlertManager: NSObject {
     }
     // 键盘隐藏
     @objc private static func keyboardWillHide(notification: Notification) {
-        guard isLocalControll == false else { return }
         UIView.animate(withDuration: 0.25) {
             containerView?.frame = originFrame
         }
