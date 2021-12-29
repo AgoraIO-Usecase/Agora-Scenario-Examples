@@ -7,6 +7,7 @@ import android.util.Size;
 import android.view.SurfaceView;
 import android.widget.FrameLayout;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,13 +27,14 @@ public class PreviewActivity extends AppCompatActivity {
     private RtcEngine rtcEngine;
 
     private final BaseUtil.PermissionResultCallback<String[]> resultCallback = this::initPreview;
+    private final ActivityResultLauncher<String[]> launcher = BaseUtil.registerForActivityResult(this, resultCallback);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_preview_activity);
         initView();
-        BaseUtil.checkPermissionBeforeNextOP(this, permissions, resultCallback);
+        BaseUtil.checkPermissionBeforeNextOP(this, launcher, permissions, resultCallback);
     }
 
     @Override
@@ -40,11 +42,11 @@ public class PreviewActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void initView(){
+    public void initView() {
         PreviewControlView previewControlView = findViewById(R.id.preview_control_view);
         previewControlView.setBackIcon(true, v -> finish());
         previewControlView.setCameraIcon(true, v -> {
-            if(rtcEngine != null){
+            if (rtcEngine != null) {
                 rtcEngine.switchCamera();
             }
         });
@@ -82,10 +84,11 @@ public class PreviewActivity extends AppCompatActivity {
 
     private void initPreview() {
         try {
-            rtcEngine = RtcEngine.create(this, getString(R.string.rtc_app_id), new IRtcEngineEventHandler() {});
+            rtcEngine = RtcEngine.create(this, getString(R.string.rtc_app_id), new IRtcEngineEventHandler() {
+            });
             rtcEngine.enableVideo();
             FrameLayout surfaceViewContainer = findViewById(R.id.surface_view_container);
-            SurfaceView videoView = RtcEngine.CreateRendererView(this);
+            SurfaceView videoView = new SurfaceView(this);
             surfaceViewContainer.addView(videoView);
             rtcEngine.setupLocalVideo(new VideoCanvas(videoView));
             rtcEngine.startPreview();

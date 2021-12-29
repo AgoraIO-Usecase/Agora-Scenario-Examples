@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="one_colorPrimary">#0088EB</color>
+    <color name="one_colorPrimaryDark">#0649F3</color>
+    <color name="one_colorAccent">#0088EB</color>
+
+    <color name="one_colorHint">#999999</color>
+    <color name="one_colorHalfTransparent">#80000000</color>
+
+    <color name="one_btn_gradient_start_color">#FF087D</color>
+    <color name="one_btn_gradient_end_color">#294B8D</color>
+</resources>

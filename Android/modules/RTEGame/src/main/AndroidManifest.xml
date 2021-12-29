@@ -22,7 +22,6 @@
         android:icon="@mipmap/game_ic_launcher"
         android:label="${appName}"
         android:roundIcon="@mipmap/game_ic_launcher_round"
-        android:supportsRtl="true"
         android:theme="@style/game_AppTheme"
         tools:ignore="AllowBackup">
         <activity

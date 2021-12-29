@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/bgd_item_room_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:duplicateParentState="true"
+        android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="345:200"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearance="@style/one_cornerNormalStyle"
+        app:tintMode="src_atop"
+        tools:src="@mipmap/one_ic_launcher" />
+
+    <TextView
+        android:id="@+id/title_item_room_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="12dp"
+        android:textColor="@android:color/white"
+        android:textIsSelectable="false"
+        app:layout_constraintBottom_toBottomOf="@+id/bgd_item_room_list"
+        app:layout_constraintEnd_toEndOf="@+id/bgd_item_room_list"
+        app:layout_constraintStart_toStartOf="@+id/bgd_item_room_list"
+        tools:text="@string/one_app_name" />
+</androidx.constraintlayout.widget.ConstraintLayout>

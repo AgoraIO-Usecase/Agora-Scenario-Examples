@@ -21,25 +21,32 @@ public class ModulesConfig {
                 "io.agora.scene.singlehostlive.RoomListActivity"
         ));
         // Live PK
-        moduleInfo.add(new ModuleInfo(
+        this.moduleInfo.add(new ModuleInfo(
                 R.string.app_live_pk_name,
                 R.string.app_live_pk_description,
                 R.drawable.app_banner_livepk,
                 "io.agora.scene.livepk.activity.LivePKListActivity"
         ));
         // BreakoutRoom
-        moduleInfo.add(new ModuleInfo(
+        this.moduleInfo.add(new ModuleInfo(
                 R.string.app_breakout_room_name,
                 R.string.app_breakout_room_description,
                 R.drawable.app_banner_breakout_room,
                 "io.agora.scene.breakoutroom.ui.MainActivity"
         ));
         // RTEGame
-        moduleInfo.add(new ModuleInfo(
+        this.moduleInfo.add(new ModuleInfo(
                 R.string.app_live_game_name,
                 R.string.app_live_game_description,
                 R.drawable.app_banner_live_game,
                 "io.agora.scene.rtegame.MainActivity"
+        ));
+        //
+        this.moduleInfo.add(new ModuleInfo(
+                R.string.app_one_live_name,
+                R.string.app_one_live_description,
+                R.drawable.app_banner_live_shopping,
+                "io.agora.scene.onelive.MainActivity"
         ));
     }
 

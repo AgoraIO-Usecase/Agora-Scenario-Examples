@@ -157,7 +157,7 @@ public class IndicatorView extends View {
     }
 
 
-    private void setIndicatorColor(@ColorInt int color){
+    public void setIndicatorColor(@ColorInt int color){
         indicatorPaint.setColor(color);
         invalidate();
     }

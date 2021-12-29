@@ -41,15 +41,15 @@ import java.util.List;
 @Keep
 public class BaseUtil {
 
-    public static void checkPermissionBeforeNextOP(@NonNull ComponentActivity activity, @NonNull String[] permissions, @NonNull PermissionResultCallback<String[]> callback) {
-        checkPermissionBeforeNextOP(activity, activity, permissions, callback);
+    public static void checkPermissionBeforeNextOP(@NonNull ComponentActivity activity, @NonNull ActivityResultLauncher<String[]> launcher, @NonNull String[] permissions, @NonNull PermissionResultCallback<String[]> callback) {
+        checkPermissionBeforeNextOP(activity, activity, launcher, permissions, callback);
     }
 
-    public static void checkPermissionBeforeNextOP(@NonNull Fragment fragment, @NonNull String[] permissions, @NonNull PermissionResultCallback<String[]> callback) {
-        checkPermissionBeforeNextOP(fragment.requireContext(), fragment, permissions, callback);
+    public static void checkPermissionBeforeNextOP(@NonNull Fragment fragment, @NonNull ActivityResultLauncher<String[]> launcher, @NonNull String[] permissions, @NonNull PermissionResultCallback<String[]> callback) {
+        checkPermissionBeforeNextOP(fragment.requireContext(), fragment, launcher, permissions, callback);
     }
 
-    private static void checkPermissionBeforeNextOP(@NonNull Context context,@NonNull Object o, @NonNull String[] permissions, @NonNull PermissionResultCallback<String[]> callback) {
+    private static void checkPermissionBeforeNextOP(@NonNull Context context,@NonNull Object o, @NonNull ActivityResultLauncher<String[]> launcher, @NonNull String[] permissions, @NonNull PermissionResultCallback<String[]> callback) {
         ComponentActivity activity = null;
         Fragment fragment = null;
         ActivityResultCaller caller;
@@ -101,7 +101,7 @@ public class BaseUtil {
         }
         // 直接申请
         if (requestDirectly) {
-            registerForActivityResult(caller, callback).launch(permissions);
+            launcher.launch(permissions);
         }
         // 显示申请理由
         else callback.showReasonDialog(permissions);
@@ -125,6 +125,11 @@ public class BaseUtil {
     }
 
     public interface PermissionResultCallback<T> {
+
+        default void onCreate(){
+
+        }
+
         void onAllPermissionGranted();
 
         default void onPermissionRefused(T refusedPermissions) {

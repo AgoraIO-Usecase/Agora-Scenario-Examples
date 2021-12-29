@@ -49,6 +49,7 @@ dependencies {
     runtimeOnly(project(':modules:BreakoutRoom'))
     runtimeOnly(project(':modules:SingleHostLive'))
     runtimeOnly(project(':modules:RTEGame'))
+    runtimeOnly(project(':modules:OneLive'))
 
 
     // Test
