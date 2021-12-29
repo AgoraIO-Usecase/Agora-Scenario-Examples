@@ -7,7 +7,7 @@
 
 import UIKit
 import AgoraRtcKit
-import AgoraUIKit
+import AgoraUIKit_iOS
 
 class OneToOneViewController: BaseViewController {
     public lazy var localView = AGEView()

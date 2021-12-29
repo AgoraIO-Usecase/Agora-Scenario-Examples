@@ -72,7 +72,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 			<key>License</key>
 			<string>Copyright</string>
 			<key>Title</key>
-			<string>AgoraUIKit</string>
+			<string>AgoraUIKit-iOS</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 		</dict>

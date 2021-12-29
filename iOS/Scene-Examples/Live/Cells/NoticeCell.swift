@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import AgoraUIKit
+import AgoraUIKit_iOS
 
 class NoticeCell: UITableViewCell {
     private lazy var containerView: UIView = {

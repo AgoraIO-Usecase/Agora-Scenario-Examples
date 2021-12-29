@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import AgoraUIKit
+import AgoraUIKit_iOS
 
 class OnoToOneGameView: UIView {
     var onClickControlButtonClosure: ((OneToOneControlType, Bool) -> Void)?

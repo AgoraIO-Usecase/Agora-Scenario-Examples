@@ -6,8 +6,8 @@
 //
 
 import UIKit
-import AgoraUIKit
 import AgoraSyncManager
+import AgoraUIKit_iOS
 
 class LiveRoomListController: BaseViewController {
     private lazy var roomView: AGECollectionView = {

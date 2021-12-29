@@ -46,348 +46,355 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		00377A9791260E43DE56F2616D4EB62F /* AGETableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE1757B0CF8BCBFE8D3E1D0860869FB /* AGETableView.swift */; };
-		043814025A882AAE58F0F1DFB7AA8A37 /* CollectionReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = E939F4DE1F6BECB522F17592B82AA6AE /* CollectionReference.swift */; };
-		04BA074A81C18550067E797DF2EB916C /* DDOSLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = DB2375D95362C800B1046D071463C639 /* DDOSLogger.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		072A82C76CE1A7580A95768BC95B73B8 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8074679F244D8299209FACD57BC50421 /* Extensions.swift */; };
+		01736C787815A2F698BDF51961E51580 /* AGELabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75C37DF51544580DB25E8EAD0E5109FF /* AGELabel.swift */; };
+		03B899C6C204C7E679D533D27243DB67 /* DDContextFilterLogFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 34C2442E92440D23E0CA6AC330F716CB /* DDContextFilterLogFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		043814025A882AAE58F0F1DFB7AA8A37 /* CollectionReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446BB7C1803F1660931DDB0A46C2EECD /* CollectionReference.swift */; };
+		06349EAC82FB2CF16EE2593A24543DDE /* AgoraUIKit-iOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = AD313F4512C374259CBF01D9FC2F2A67 /* AgoraUIKit-iOS-dummy.m */; };
+		072A82C76CE1A7580A95768BC95B73B8 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C3BDB154D475CDBA26539944B2911F /* Extensions.swift */; };
+		08F4A9F61C4F8B0E275E67B1561C0DC0 /* DDMultiFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = B7D3092316EF3EDFB0037F8532DADBE7 /* DDMultiFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0AA33EBB857A5205F87C09CCB99EAC74 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB342FF58CA5A5D1282C84E02280A34F /* Foundation.framework */; };
-		0F2E73232B9076E163004BD469F95D6E /* AGELiveAvatarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DDEA95300837351776BBD5DB177DE0D /* AGELiveAvatarButton.swift */; };
-		14F92DC557FF32792EF968C0E6018B87 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB342FF58CA5A5D1282C84E02280A34F /* Foundation.framework */; };
-		1807167FA3AA0394A9F869F0F3480A69 /* AgoraSyncManager-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 50640FA858EDFDF770F4C0FC791158A8 /* AgoraSyncManager-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1AA4A560AEB73156F98BDD18649418B9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB342FF58CA5A5D1282C84E02280A34F /* Foundation.framework */; };
-		1C6973BE98DD4BE09691E39024555881 /* CocoaLumberjack.h in Headers */ = {isa = PBXBuildFile; fileRef = 55C1FEA13EF73E20CC674D180644D4CA /* CocoaLumberjack.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1DB8373C496001B96C42F97E6A05EC27 /* CocoaLumberjack-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A5800A23EE8A30162D2A033173BDA14 /* CocoaLumberjack-dummy.m */; };
+		1255DC4630C21BA6FE67799922C50AD1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB342FF58CA5A5D1282C84E02280A34F /* Foundation.framework */; };
+		1807167FA3AA0394A9F869F0F3480A69 /* AgoraSyncManager-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 65540A09318F0358C7ABFAB2981E742D /* AgoraSyncManager-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		191F5B86BABB0BF8500B8933D3868F5C /* AGELiveAvatarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37108A6F1EAC4D2424B3DA1AF14D0BA2 /* AGELiveAvatarButton.swift */; };
+		1A150627DB31D269893A42F7CF504EE4 /* DDLegacyMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 067478D166C959E4B47979F454A538EA /* DDLegacyMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1BF5F65DF6ABE08AE15B245794CF7EE0 /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 93F3A792D5AC3BEB5A2F721227C1AE6D /* DDAbstractDatabaseLogger.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		1E7061E7E834816EC21373E83FCD5E27 /* Pods-Agora-ScreenShare-Extension-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = AF03D95CD235C125619CFD62C6B1D6A0 /* Pods-Agora-ScreenShare-Extension-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2831370BAEBE4B71F3718ED40C2EA12E /* DDDispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8482CFE48AAB8B2FBDD4C84C62C64529 /* DDDispatchQueueLogFormatter.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		2FD6CEB4B3E086E19DCE141D6ED27487 /* AGEColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB91EBEC12E5EFFBD5F7079699917715 /* AGEColor+Extension.swift */; };
-		30E1FDC6279E1DBA0EFEF455F5B3B46F /* DDFileLogger+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = C4EE7BE7E789A1BC594CD469461B0F41 /* DDFileLogger+Internal.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		3185267BBE948E5E5F57670EEC76E8D2 /* DDMultiFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1842835BD944F65AED3283DE52E16999 /* DDMultiFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		329B9933C8AB0F0D27ED8211262C2C0B /* DDASLLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = A3C2225C68E8ACE4E4482D51B42F6729 /* DDASLLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		375B04C69173D0C42432AE30B7FF5286 /* AgoraSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F50C8E8C0126509221418A288EBCD5D /* AgoraSyncManager.swift */; };
-		3852E503606C5211990AD9B110CB1AB5 /* AGEToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA5230D3A4C23BF21547A323E46E741 /* AGEToastView.swift */; };
-		38962D3035AD303F91A18A0FC0243C0B /* Pods-Scene-Examples-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 058EB5DF5D4E5933319135347741731F /* Pods-Scene-Examples-dummy.m */; };
-		3FE3A36FB70E4B7C5F720EA29417B94A /* AGELabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27245A1624EAE0A65023C011A254C43B /* AGELabel.swift */; };
-		40DDBF096867DB1DAC4FF13593748449 /* AGEView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D195C472CB94D2576F893903D642ABA /* AGEView.swift */; };
-		4252456DC7C66B001F41A0FF638E61B3 /* DDAssertMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 9BD364884B2D3F27DC5FF9191D5C6CCE /* DDAssertMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4D5C08EAFBCCA17C56CEA95762122C51 /* SyncManager+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126259BEA022662B50730D5BA63E1656 /* SyncManager+Info.swift */; };
+		348A422EAF020661D74700A7E332AC8A /* AGEToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0EE0C66C427BABA5BD253CD7FD5F22 /* AGEToastView.swift */; };
+		375B04C69173D0C42432AE30B7FF5286 /* AgoraSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDC497D46BECFDA8BA66A9EBC570E7D /* AgoraSyncManager.swift */; };
+		3F02F0CE7F2B24633C167F1739962DE9 /* CocoaLumberjack-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 773B95073AA4BB1DB96480148F91EC44 /* CocoaLumberjack-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4042A7EB0C15AFCE6C7A0A4C4E6223D5 /* DDLoggerNames.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F1DD9E0B72651667E9572BFF9C987F6 /* DDLoggerNames.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		42D145DCEE0A460247BFEB739F327924 /* DDOSLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = D27478D84CAAE5326EC1AEA474CA4533 /* DDOSLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		44CF90CC90747725F1F3F800870666BA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB342FF58CA5A5D1282C84E02280A34F /* Foundation.framework */; };
+		4624FDB27D10E51317C016BF23609E4E /* CLIColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E159A30B24580044BCDC7867E435A0D /* CLIColor.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		4B6C13F09B1532BBB66EBF57CC8B88ED /* AGETextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363A3ED3D2E89BCE04E930AD7ED9ECB3 /* AGETextField.swift */; };
+		4D5C08EAFBCCA17C56CEA95762122C51 /* SyncManager+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4EBDAAA1F3687483C68A55B88FF00C8 /* SyncManager+Info.swift */; };
 		4DC001DE65937C2A540BC46397B9C71B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB342FF58CA5A5D1282C84E02280A34F /* Foundation.framework */; };
-		4DEDB1E52D0C1954419181672E3B94C6 /* AgoraLogUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 4689687705BB48ECE22D6C40706DFEE1 /* AgoraLogUtils.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		52B9B7ED32290110A4C45A126FB2CA29 /* DDLog.h in Headers */ = {isa = PBXBuildFile; fileRef = C62848B8122CA949B1BC86B1D3DD170F /* DDLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5941FF8A512A2BE97401F73A7E7C9D12 /* Agora+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F1726F0332561D38AD4762516B4C14 /* Agora+Extension.swift */; };
-		5BAC1EF86D0E57E44E404B2796993561 /* MBProgressHUD-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 94F496AF34371CFEC0E3968AC0B59F17 /* MBProgressHUD-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5C2B9FB4F69C9CF60A4ABAC5D13154B0 /* AGEButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 133E4E4C2546AB18A7BC83E6D7AF6F47 /* AGEButton.swift */; };
-		5D335BB1BD8BB7EB9AF54E5BCDA68CA3 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 983399C1BFF860B95A38D4A3B73F38C7 /* DDTTYLogger.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		5DADD9E17EE4BB6DDB6F7DCF3D8160C2 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B50A72AB68327190ABF4A5A0D7E623C /* Protocols.swift */; };
-		5F748E3E8CFBD918389E2B5D6002A1D8 /* AgoraSyncManager-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = D1DA9289D7B8C99D2154352916E8233F /* AgoraSyncManager-dummy.m */; };
+		4DEDB1E52D0C1954419181672E3B94C6 /* AgoraLogUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C00EC23D932D3FBDC6A678FB65C56BFE /* AgoraLogUtils.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		50DDE3DEB881C7B0ABEA833F05584882 /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = B63530D102730199FAAB7CB21BCD1DE1 /* DDFileLogger.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		54DCA5CC7FF625D9790C954DEE2ACFC1 /* CocoaLumberjack.h in Headers */ = {isa = PBXBuildFile; fileRef = 86961AC1BD0518586E980094EFC63D56 /* CocoaLumberjack.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5675FF3DE1CB50089DB423853C7CA935 /* AgoraUIKit-iOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = A87DB9A16DE2667AE1288B1A4E9C3C59 /* AgoraUIKit-iOS-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5BAC1EF86D0E57E44E404B2796993561 /* MBProgressHUD-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 9F3CCE792207737740406B0D1E85338B /* MBProgressHUD-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5DADD9E17EE4BB6DDB6F7DCF3D8160C2 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = A68EC2E62A2FFF3C122F56A827F24ABC /* Protocols.swift */; };
+		5F1FBD672613394766FFA4F0EEDD9D6E /* DDDispatchQueueLogFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 6986A579FCE0BA3DBADE65AB08D58D8B /* DDDispatchQueueLogFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5F498998F6C7C2224BE7FD81ADAD273F /* DDFileLogger+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = C8819FDA8FEFCF6204CC4FEF979B6C21 /* DDFileLogger+Internal.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		5F748E3E8CFBD918389E2B5D6002A1D8 /* AgoraSyncManager-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = C3BE1E35C20E90614ADF5B9518F49996 /* AgoraSyncManager-dummy.m */; };
 		61144C08FDA1393193DE0AFA7396B4DE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB342FF58CA5A5D1282C84E02280A34F /* Foundation.framework */; };
-		6168F30137591786F4F0621DF0FEB9F0 /* DDFileLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 8649D71DE605C9669ACC9B6F2C30CBCB /* DDFileLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		63F73B8E01B564762F92D26DF81ECC0F /* RtmSyncManager+ISyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691B442DA22CDCCF3156FF2270DCC98B /* RtmSyncManager+ISyncManager.swift */; };
-		664322323F45DA54FF797F17FDC0EC75 /* MBProgressHUD-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = C697239822F8440253DD5E3B2D088142 /* MBProgressHUD-dummy.m */; };
-		67E941CADB3CDDEEDF8CE4EE4A4A05BB /* MBProgressHUD.h in Headers */ = {isa = PBXBuildFile; fileRef = 830E3A6E1C33429C53D25C0B4F1D072B /* MBProgressHUD.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		69BFDC103FA7085E4BE59DB9FD08323C /* DDASLLogCapture.h in Headers */ = {isa = PBXBuildFile; fileRef = 0902A59D2EC4C42C26D9409961037CFC /* DDASLLogCapture.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		6AFCF12C985B09BA321046E13597BAA8 /* DocumentReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539A9B4D0DDE75CC0A23F8D7812721D0 /* DocumentReference.swift */; };
-		6BD4B6C06133C6ACF3DA73D174288244 /* DDLog+LOGV.h in Headers */ = {isa = PBXBuildFile; fileRef = 38C130BF66074C4F587C782033110505 /* DDLog+LOGV.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		705FAE5D1A2F11D870E424E4EEABC5CC /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 22E1035DA42B44B88A0FBBEFC34733C3 /* DDASLLogger.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		78D65F8F425E68FC75DABAF62C88E7EF /* Blocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434740E9D178116380A6392B3E38B218 /* Blocks.swift */; };
-		7BE8FD84E301F00E6A1464A569F73373 /* DDTTYLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 00D7606E099862E0A533CDB88AF07182 /* DDTTYLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7E95DA74002F9FB69B410F850C560EA4 /* DDFileLogger+Buffering.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9B3976F79118BDE75877C56AEB4B03 /* DDFileLogger+Buffering.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		837B589D178B57F7862D9F10118C20EF /* CLIColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A876F53C47E0448365B14776CCC545D /* CLIColor.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		8503E0674AC74938C3C99B8E940CD8D7 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AAB1F68F00ECBCED2E1E63DA4022946 /* Utils.swift */; };
-		8750237B83849AA830D04C3A452928C8 /* SyncError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C5FAA4677642E46E5D9149E5DE2877 /* SyncError.swift */; };
-		888F8E6D72036C545681535D9C0F8316 /* DDDispatchQueueLogFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = E9574179A92B8DEC914FBE9EC79A20CD /* DDDispatchQueueLogFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8ACCB6ED806508741DE26A8E175CD525 /* AgoraUIKit-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 550F9F44E4528BFA44775D654C89ADC3 /* AgoraUIKit-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8DB34320EDB25FFC7C42E768B2D25BC7 /* Pods-Scene-Examples-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 819BB00804A96239CFDCDC20F64E7B90 /* Pods-Scene-Examples-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		92D8412DEFC50309FDDD1CA394094B82 /* DDMultiFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = B003796A50C9D47A37199CA4219ED95F /* DDMultiFormatter.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		932517D6EF75CBCDEC84E30843AC518D /* AgoraLogEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = 14E8226CAAC71F5173029C65CAFCB579 /* AgoraLogEnums.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9721DF1D770FA99C38D8144B08402274 /* DDLoggerNames.m in Sources */ = {isa = PBXBuildFile; fileRef = 1767A97D9C5901919B01BF760BBB5C39 /* DDLoggerNames.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		9CEFEA7C7647AACB1A95919F8AA52D63 /* AGETextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB15982DF3AF2B4ED921D160F2530CBC /* AGETextField.swift */; };
-		9D0EA9FAEE26EBE5C39A2AF75F8665A3 /* RtmSyncManager+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 509EB1425598B711477E580C31944600 /* RtmSyncManager+Info.swift */; };
-		A25651DBFD03C1488454E6AE90A4BA2E /* DDOSLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = ABC43A81DDAA6E55547D9D81CCF071EF /* DDOSLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A2B911E6B5EFD50588E9972B90854671 /* AgoraLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 55E138D045D66A92A4908CF004269ED8 /* AgoraLogger.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		A3F7164060349B671499DC0F064C5020 /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B713437278049B2FC99E5FC37979B2E /* DDLog.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		A71CA18DEB2CD058D6B4B8BB2F6121BC /* CLIColor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A7390D5F4789C54709E03250421EE14 /* CLIColor.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A7A04165C299225E592ABB0A15B51429 /* DDLoggerNames.h in Headers */ = {isa = PBXBuildFile; fileRef = AE4D62FE9E619FA1A3B8FAA7207C12B3 /* DDLoggerNames.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		63B42AC1DA9B488BD51EE8AC18F2D8FC /* DDTTYLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = F7EC7FE7B790BAC3ED437E358C39A6D6 /* DDTTYLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		63F42E39FB2674CA427A4798CF94B58B /* CLIColor.h in Headers */ = {isa = PBXBuildFile; fileRef = BD8667A6DB9F0D9B6F81A5975EEE7E2A /* CLIColor.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		63F73B8E01B564762F92D26DF81ECC0F /* RtmSyncManager+ISyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C02D3CD12FCE4FE63B7509B6DDDA98D /* RtmSyncManager+ISyncManager.swift */; };
+		664322323F45DA54FF797F17FDC0EC75 /* MBProgressHUD-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CC503846C0E6D7DEBC2D7D546117132 /* MBProgressHUD-dummy.m */; };
+		671748F4CADDDFA3AA3A437834556BA0 /* DDLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D406B578DAC35142B622A13D71662BC /* DDLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		67E941CADB3CDDEEDF8CE4EE4A4A05BB /* MBProgressHUD.h in Headers */ = {isa = PBXBuildFile; fileRef = 3663AB55E1FF7EB3C099632B94744333 /* MBProgressHUD.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6A1DA93E88FD424E5DE1EAAFFAFD3C5C /* AGEView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D4A2A4925F96F6F1EBBA31EA21C0705 /* AGEView.swift */; };
+		6AFCF12C985B09BA321046E13597BAA8 /* DocumentReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8033230D5EEC943E336C93B08F1A8A /* DocumentReference.swift */; };
+		6C38A54CF94825CEFD379A93A18B4292 /* DDLoggerNames.m in Sources */ = {isa = PBXBuildFile; fileRef = D31DFFA65E9394C5DCB475615C2D32FB /* DDLoggerNames.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		70F7DB441A4EDBF55BE01EF4815B9C8A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB342FF58CA5A5D1282C84E02280A34F /* Foundation.framework */; };
+		75871B25FA0086DE68A79F3FEE0E6A0C /* AGEImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE44E1B99C783E694EC855786095091C /* AGEImageView.swift */; };
+		7877E21134C7CE183A51ED857C60B5DF /* DDLog+LOGV.h in Headers */ = {isa = PBXBuildFile; fileRef = 80D7B62445263C16F2618971ED84428F /* DDLog+LOGV.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		78D65F8F425E68FC75DABAF62C88E7EF /* Blocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19E8956DDBE7F8DA3E7587DC60A1380 /* Blocks.swift */; };
+		8503E0674AC74938C3C99B8E940CD8D7 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED206329EBB208DED13FD30D8EC2670A /* Utils.swift */; };
+		8750237B83849AA830D04C3A452928C8 /* SyncError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B765E948B3C7CCEAC15C087C9C2A8FAD /* SyncError.swift */; };
+		88072F8A6B612C35B174EBB44825CDDB /* DDLogMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = D0628850EA4A0CCFF28DE571AF3E67B6 /* DDLogMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8A924C6ED54529BB06AB8301BEAF1CF6 /* DDASLLogCapture.m in Sources */ = {isa = PBXBuildFile; fileRef = 3803FBDA5899C032135479F398ECF3CD /* DDASLLogCapture.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		8EB486FF3FB10C3D57D676E575D6A1D1 /* AGETableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB034698E6D7849CF5E4EAD6C07F0D48 /* AGETableView.swift */; };
+		932517D6EF75CBCDEC84E30843AC518D /* AgoraLogEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = C0D3B83F35B773CFA68CF6D3D8AD24A1 /* AgoraLogEnums.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		966FD90F3F52F147E720ED2248B6078B /* Pods-Scene-Examples-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 819BB00804A96239CFDCDC20F64E7B90 /* Pods-Scene-Examples-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		98A8455CF30EDA84EC117A8C05509F9E /* AGEButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42E8E71F6932006FC3EB3CBB5FF314CC /* AGEButton.swift */; };
+		9D0EA9FAEE26EBE5C39A2AF75F8665A3 /* RtmSyncManager+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FFF70D2E7F4B90D3E68FDB2C8FD1CEA /* RtmSyncManager+Info.swift */; };
+		A2B911E6B5EFD50588E9972B90854671 /* AgoraLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E209D6DC27C59A31FA8D3289069D9C /* AgoraLogger.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		AB871EAAF94CE53C02BAA6BB4AB0182B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB342FF58CA5A5D1282C84E02280A34F /* Foundation.framework */; };
-		AD632872B5459CEFCD8EA58553C98AE4 /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = AF509BD86F698E6C9488B3ABF0A741B4 /* DDFileLogger.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		AFAC1D4EBD53A048346210536741DF13 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CABB98090B02C131F86931CB9BE54B7A /* CoreGraphics.framework */; };
-		B2154E9992ADBB9E1BB2076E8A6FE594 /* AgoraLog-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = DE15D47450B415060666F944A564DF4C /* AgoraLog-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B2154E9992ADBB9E1BB2076E8A6FE594 /* AgoraLog-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 4D32D19069634811BA25C69B03C9DE1C /* AgoraLog-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B52177FF72FDAC3EDB7195DE98F5501E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51AB40693B18F443F75126966ED13E47 /* QuartzCore.framework */; };
-		B6188C2AD73D0ADD25583D0695ADE8DF /* DDFileLogger+Buffering.h in Headers */ = {isa = PBXBuildFile; fileRef = F9A1FF4CD616587570EBEDB50E8E0953 /* DDFileLogger+Buffering.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		B68D0345F7DB561D11850298102C4591 /* AgoraLogUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = D7068742FBF67C32486931A4EC1060F5 /* AgoraLogUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		BCF286ABA2A029753ED26A84B2887BA0 /* DDLegacyMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = F25389DFB32AADF61BAEEFB834FD6F42 /* DDLegacyMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C085F883B8E229F3F5179736C0670313 /* AGEImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7150D6F1997E5FF1FF375DFB389D4C92 /* AGEImageView.swift */; };
-		C13EEC89F24BE452C0D55BFC4001A03C /* DDContextFilterLogFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = D7CF82BA6C2A11813A2A7B8E0C6AA571 /* DDContextFilterLogFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C33646CF3842CAF01A024C9375EC22A6 /* DDASLLogCapture.m in Sources */ = {isa = PBXBuildFile; fileRef = 8793F7ABA21FE71B2889367FD371896C /* DDASLLogCapture.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		C4AB367DABFFCA67379863482552DFC4 /* AGECollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150DA170C0DCABE6F020261375E47CB7 /* AGECollectionView.swift */; };
-		C9164ACEF130B7CC37C49355F10883AA /* CocoaLumberjack-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 12D30FDCC4A1D9C241D01771983AFECB /* CocoaLumberjack-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CBF59AAF717E410FFC0834FE1D0D693E /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8CE9EFA28D0DE5694DBA37E9488FB87 /* Models.swift */; };
-		CFAF93CA065934163A29DCE166070D22 /* DDAbstractDatabaseLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 105D209E15BAF72A062F1AF966FC204B /* DDAbstractDatabaseLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D4574195D24E91E44DE57A1B15716905 /* DDContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 459E0C15573A42C62040FF26E184EBDE /* DDContextFilterLogFormatter.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		D54C488AFD3FECA959966309B4367776 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE019378E4ECA5A1A3697EB90A0C306 /* MBProgressHUD.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		D62DAD0B642BFE5AE1D955081CB7833D /* AgoraLog-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 30B29D3CA2F16B448E95525DC73D1F81 /* AgoraLog-dummy.m */; };
-		D94479BFAB855D35F806F8CC314A5354 /* RtmSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DBCD230FE371F15B87101BD4FDF464 /* RtmSyncManager.swift */; };
-		D9CD965CA5A9779EC1F19EA2395BADE9 /* AGESlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691452D4DAF4BFFBB602D868E3174C63 /* AGESlider.swift */; };
-		DC2D94BA0697665234F482BB03F5D16D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB342FF58CA5A5D1282C84E02280A34F /* Foundation.framework */; };
+		B68D0345F7DB561D11850298102C4591 /* AgoraLogUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = B7B3010FE998C622F844E59840832181 /* AgoraLogUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B75382A9165FBD087C8EFAF77971C538 /* Agora+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37C092200742EFFE37673D2D7A7B9770 /* Agora+Extension.swift */; };
+		B7D60E599FC8278E3069AB13EDB1F350 /* Pods-Scene-Examples-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 058EB5DF5D4E5933319135347741731F /* Pods-Scene-Examples-dummy.m */; };
+		C23AEBB2209A74E8239090E56259B1CE /* DDContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = AE3C85B2CF191F10DC9458B266F4BC02 /* DDContextFilterLogFormatter.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		C339BAAC53667B6EC518BCFFCC4175E0 /* DDASLLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A170B58C57CA5F212F367CED5D60F3A /* DDASLLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C7EE2D947811ADE731AC0E99445BEFE0 /* DDDispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = F5ED44F18EF46A4580B0EAA1E8871899 /* DDDispatchQueueLogFormatter.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		CBF59AAF717E410FFC0834FE1D0D693E /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B21527675E0217EEA71DAEF1D57FD8 /* Models.swift */; };
+		D0BC0FCFA368C53D576DFAEB6DB42217 /* DDAbstractDatabaseLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 21EB01E7DE653FD83504B024FDD69423 /* DDAbstractDatabaseLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D0C6FEB30D0EAB7DD7EE620B53FB0533 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 09C5515187C855FB88F2A8595A3AB397 /* DDTTYLogger.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		D0DFE1C383445A5FF30239D28CB529BA /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = C399D74B49D9AB3514A9BF8089AC238E /* DDLog.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		D54C488AFD3FECA959966309B4367776 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C24247300CA90A4430007AB47D11D9 /* MBProgressHUD.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		D58B970AE7423530008922706D6BCEAB /* DDOSLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BC80D74D018A515234281EFA0E019DC /* DDOSLogger.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		D62DAD0B642BFE5AE1D955081CB7833D /* AgoraLog-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 93F1200E3B5DF42D92DB082052AAD2E4 /* AgoraLog-dummy.m */; };
+		D91D5773DCA560A7D62A090751CDF06F /* DDFileLogger+Buffering.h in Headers */ = {isa = PBXBuildFile; fileRef = 7780E9388DAA54CA30698DCE7892B4A4 /* DDFileLogger+Buffering.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D94479BFAB855D35F806F8CC314A5354 /* RtmSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBBBF0D362F74755CAC1060E719FB1 /* RtmSyncManager.swift */; };
+		DB32E055C66EE6BE05B0129C1F0A1143 /* DDASLLogCapture.h in Headers */ = {isa = PBXBuildFile; fileRef = 33B1EA3EC830B133BE5FCA1C71A19255 /* DDASLLogCapture.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DDA73962B41AD5510F2EDE92D2693389 /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F79A3B348DAB04017617B90F717A097 /* DDASLLogger.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		DF384447B4A8EA7354A7B185C0813EA5 /* DDFileLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 9B3DB9279BADD7B3F3FCA3C0638E8FB7 /* DDFileLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E07FA7FE43B224D36FC82A50F015BBB0 /* Pods-Agora-ScreenShare-Extension-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D04AF15B610B057E266FCF6FDDDE2 /* Pods-Agora-ScreenShare-Extension-dummy.m */; };
-		E1834A749C4F149C0098BB50C1BFB226 /* AgoraLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F0747B7C433CC006E474345DA1B86D7 /* AgoraLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E99FE5DD5E2EE2551B429F6EA8552FFD /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 781EDA92CBD47CC9AEC3D9BEFC2D3F03 /* DDAbstractDatabaseLogger.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		E9EFDF8A22618E49159F89AF5ADAEC80 /* DDLogMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = A5379DDF2A7FA3AFC0BE4F70011662E1 /* DDLogMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FAFD9EE9861A6224D4E4C48B8DC0AF72 /* AgoraUIKit-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 64422D2912A781FEF020464F13232418 /* AgoraUIKit-dummy.m */; };
-		FBE2A5294F61C74C6E3CE1EBAA053B03 /* RtmSyncManager+Handle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9235734204B464986913D625F7A832A8 /* RtmSyncManager+Handle.swift */; };
-		FCD0A66C72399DE67EC9D0D7CCCD52E5 /* LogProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C03B3E46902008487444D968783033 /* LogProvider.swift */; };
+		E1834A749C4F149C0098BB50C1BFB226 /* AgoraLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FB03F1C186A589DD7837AB9D6F98888 /* AgoraLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E452BEC43A60F6BE02B4AD72C4A390B3 /* AGECollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1824C3AE3565DF6F0943A916BE04CDF /* AGECollectionView.swift */; };
+		EA1D4434524D7D242AC7DFD4243B26BD /* DDMultiFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = C42B7B4949C0B3124FF223619906B709 /* DDMultiFormatter.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		EB419F32942AE33E17F3FA71D353AEAD /* AGEColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A5DC691E9F8F5C7F4FF99DE3CA7A48 /* AGEColor+Extension.swift */; };
+		EF0C2DD43E08F34EF382F6C3E2938344 /* DDAssertMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = F6124748CFB7A8FD3C417B38C960C287 /* DDAssertMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EFA2B64F9BD15A1CDE70AECAAA3FB716 /* DDFileLogger+Buffering.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CBED8B9C9D3D67FE3E857A1961B30F2 /* DDFileLogger+Buffering.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		F2EB8818542F2C8937495D445D6476FA /* CocoaLumberjack-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 17A52A69CEAC09BF2D6DA400D8638911 /* CocoaLumberjack-dummy.m */; };
+		FB987E16BEA353FB7FC0F308E69B7F31 /* AGESlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457A58E60A68C653399223554E7049C4 /* AGESlider.swift */; };
+		FBE2A5294F61C74C6E3CE1EBAA053B03 /* RtmSyncManager+Handle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DD671DA73484461DB0E9E02A274A7F /* RtmSyncManager+Handle.swift */; };
+		FCD0A66C72399DE67EC9D0D7CCCD52E5 /* LogProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED311FE5BD86EBE2629F7A42C5E0CFA /* LogProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		030FB623F2889244EDD076EBF31AEF28 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = E95654B155D25890BE8E26081FCA8265;
-			remoteInfo = CocoaLumberjack;
-		};
-		392E3ACBCBF1A9DEC3F389F41ACDAABD /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C749B96AD7CBE862709769C59C7DF18E;
-			remoteInfo = AgoraRtm_iOS;
-		};
-		438B6BB2D2808EE523421584F4123432 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = E95654B155D25890BE8E26081FCA8265;
-			remoteInfo = CocoaLumberjack;
-		};
-		4AE43AC86353812D5847EED5D470D45A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C014EE64F91BF3E982DA13DA2B7C76F1;
-			remoteInfo = AgoraLog;
-		};
-		5791D823D9E1C2BE2342FA6D9870CD06 /* PBXContainerItemProxy */ = {
+		00B19EFAA2D355267804F5653BD68D7E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 301224968EA8A6DC58FCC647175F57F7;
 			remoteInfo = "AgoraScreenShare-iOS13.0";
 		};
-		9B3D64CAC7455BFF2C05B6F8CD670865 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B44BABF52836AD694BB0B1138B9FF052;
-			remoteInfo = AgoraRtcEngine_iOS_Preview;
-		};
-		BAE18EFDD89DB99F8E9C9981371D5AA3 /* PBXContainerItemProxy */ = {
+		0C5EDBEED8CC7E38AC39A8FE6CF0CDC2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 9E252967684E1AF8BF4723B43F556F48;
 			remoteInfo = AgoraSyncManager;
 		};
-		BD21EFD9F72A79D4EA5D6E50C6D4BCF3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C749B96AD7CBE862709769C59C7DF18E;
-			remoteInfo = AgoraRtm_iOS;
-		};
-		BFFF703251D39CE6540C613F928786C0 /* PBXContainerItemProxy */ = {
+		18A8E4ABE8EAC28886873748EA483C43 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = FD936D71AE857912BF36BD5B3A215255;
 			remoteInfo = "AgoraScreenShare-iOS12.0";
 		};
-		C21198AB19AA8592FF69D0770CE28F4C /* PBXContainerItemProxy */ = {
+		2E06075FE3FB90BD5FE2A18F0F87101A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C749B96AD7CBE862709769C59C7DF18E;
+			remoteInfo = AgoraRtm_iOS;
+		};
+		499432CC094EEC079EFA36F27DF133CE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E95654B155D25890BE8E26081FCA8265;
+			remoteInfo = CocoaLumberjack;
+		};
+		513499D87ED262DD4995BF152601D6EE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E95654B155D25890BE8E26081FCA8265;
+			remoteInfo = CocoaLumberjack;
+		};
+		707C07B410FB999E2E28A7F70D0B9CE6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F1344B359C238419E319DAA48BBD510C;
+			remoteInfo = "AgoraUIKit-iOS";
+		};
+		7450C609AAF0915AB697CC3F4FF7D8C7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B44BABF52836AD694BB0B1138B9FF052;
+			remoteInfo = AgoraRtcEngine_iOS_Preview;
+		};
+		94C83DFEEB4D13862CA669A8804F7CE1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = C014EE64F91BF3E982DA13DA2B7C76F1;
 			remoteInfo = AgoraLog;
 		};
-		DF5ECB328B2CAF5B025FDD908E8EA54A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 9172AE13E25A7D3200C24F5DED9902E5;
-			remoteInfo = AgoraUIKit;
-		};
-		FC4A2D91E1AC46364C1DD7F77CD97322 /* PBXContainerItemProxy */ = {
+		98BB6BE374E4376F17FFC64B8CE00745 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 82B0A41D3031FF27D78E17B0A9A46FB0;
 			remoteInfo = MBProgressHUD;
 		};
+		9D5AC1CE1EB5BF6FE72197660AF05D9F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C749B96AD7CBE862709769C59C7DF18E;
+			remoteInfo = AgoraRtm_iOS;
+		};
+		B34291A94D9BEB0357030544B3994A2A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C014EE64F91BF3E982DA13DA2B7C76F1;
+			remoteInfo = AgoraLog;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		00D7606E099862E0A533CDB88AF07182 /* DDTTYLogger.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDTTYLogger.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/DDTTYLogger.h; sourceTree = "<group>"; };
-		039D9DD18E2EF5828C5DE7BE708A084F /* AgoraVideoProcess.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AgoraVideoProcess.framework; sourceTree = "<group>"; };
 		058EB5DF5D4E5933319135347741731F /* Pods-Scene-Examples-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Scene-Examples-dummy.m"; sourceTree = "<group>"; };
-		05D8149961F798ABE886CF74C8420408 /* AgoraSyncManager.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = AgoraSyncManager.modulemap; sourceTree = "<group>"; };
-		074848DB97962E68763C93485FEB7FEE /* Agoraffmpeg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Agoraffmpeg.framework; sourceTree = "<group>"; };
-		0902A59D2EC4C42C26D9409961037CFC /* DDASLLogCapture.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDASLLogCapture.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/DDASLLogCapture.h; sourceTree = "<group>"; };
-		0904AB922BA79F8B4D752388830F8D8F /* AgoraRTE.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AgoraRTE.framework; sourceTree = "<group>"; };
-		09C03B3E46902008487444D968783033 /* LogProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LogProvider.swift; sourceTree = "<group>"; };
-		0AA21911B0CB03EECC4F1A5A815A7A6E /* AgoraSyncManager.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = AgoraSyncManager.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		0FFD1600A169E7B3BCE4E58D972E0394 /* CocoaLumberjack.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = CocoaLumberjack.debug.xcconfig; sourceTree = "<group>"; };
-		105D209E15BAF72A062F1AF966FC204B /* DDAbstractDatabaseLogger.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDAbstractDatabaseLogger.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/DDAbstractDatabaseLogger.h; sourceTree = "<group>"; };
-		126259BEA022662B50730D5BA63E1656 /* SyncManager+Info.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "SyncManager+Info.swift"; sourceTree = "<group>"; };
-		12B2A78E5D3691370FA1ED86E3A393A1 /* AgoraScreenShare-iOS12.0.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "AgoraScreenShare-iOS12.0.release.xcconfig"; sourceTree = "<group>"; };
-		12D30FDCC4A1D9C241D01771983AFECB /* CocoaLumberjack-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "CocoaLumberjack-umbrella.h"; sourceTree = "<group>"; };
-		133E4E4C2546AB18A7BC83E6D7AF6F47 /* AGEButton.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AGEButton.swift; sourceTree = "<group>"; };
-		14A8C0010A6876D0C98942D2564A772E /* CocoaLumberjack.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = CocoaLumberjack.modulemap; sourceTree = "<group>"; };
-		14E8226CAAC71F5173029C65CAFCB579 /* AgoraLogEnums.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AgoraLogEnums.h; path = "AgoraLog-Objective-C/sources/AgoraLogEnums.h"; sourceTree = "<group>"; };
-		150DA170C0DCABE6F020261375E47CB7 /* AGECollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AGECollectionView.swift; sourceTree = "<group>"; };
-		15E951E40ADCBC18EB4A5DC6D360A39B /* AgoraLog-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AgoraLog-prefix.pch"; sourceTree = "<group>"; };
-		161564B80F092A3A886F2FCBA95358E0 /* AgoraScreenShare-iOS13.0.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "AgoraScreenShare-iOS13.0.release.xcconfig"; path = "../AgoraScreenShare-iOS13.0/AgoraScreenShare-iOS13.0.release.xcconfig"; sourceTree = "<group>"; };
-		1767A97D9C5901919B01BF760BBB5C39 /* DDLoggerNames.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDLoggerNames.m; path = Sources/CocoaLumberjack/DDLoggerNames.m; sourceTree = "<group>"; };
-		1842835BD944F65AED3283DE52E16999 /* DDMultiFormatter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDMultiFormatter.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/DDMultiFormatter.h; sourceTree = "<group>"; };
-		1A7390D5F4789C54709E03250421EE14 /* CLIColor.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = CLIColor.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/CLIColor.h; sourceTree = "<group>"; };
+		067478D166C959E4B47979F454A538EA /* DDLegacyMacros.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDLegacyMacros.h; path = "Sources/CocoaLumberjack/Supporting Files/DDLegacyMacros.h"; sourceTree = "<group>"; };
+		06F8AD7661CBAED7136F2DC8CAA05E87 /* AgoraSyncManager.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AgoraSyncManager.release.xcconfig; sourceTree = "<group>"; };
+		08A5DC691E9F8F5C7F4FF99DE3CA7A48 /* AGEColor+Extension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "AGEColor+Extension.swift"; path = "AgoraUIKit/Classes/AgoraUIKit/Core/AGEColor+Extension.swift"; sourceTree = "<group>"; };
+		09C5515187C855FB88F2A8595A3AB397 /* DDTTYLogger.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDTTYLogger.m; path = Sources/CocoaLumberjack/DDTTYLogger.m; sourceTree = "<group>"; };
+		0BEBBBF0D362F74755CAC1060E719FB1 /* RtmSyncManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RtmSyncManager.swift; sourceTree = "<group>"; };
+		0E159A30B24580044BCDC7867E435A0D /* CLIColor.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = CLIColor.m; path = Sources/CocoaLumberjack/CLI/CLIColor.m; sourceTree = "<group>"; };
+		1347AD7421819E1D6FD4B8A865A7F366 /* AgoraUIKit-iOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "AgoraUIKit-iOS.modulemap"; sourceTree = "<group>"; };
+		17A52A69CEAC09BF2D6DA400D8638911 /* CocoaLumberjack-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "CocoaLumberjack-dummy.m"; sourceTree = "<group>"; };
+		1A170B58C57CA5F212F367CED5D60F3A /* DDASLLogger.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDASLLogger.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/DDASLLogger.h; sourceTree = "<group>"; };
 		1B69FF2560EEFF38FF5438E3A0F996B7 /* Pods-Agora-ScreenShare-Extension */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-Agora-ScreenShare-Extension"; path = Pods_Agora_ScreenShare_Extension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		21EDCF1DB18E21CB9EB6911EA7C15012 /* AgoraScreenShare-iOS12.0.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "AgoraScreenShare-iOS12.0.debug.xcconfig"; sourceTree = "<group>"; };
-		22E1035DA42B44B88A0FBBEFC34733C3 /* DDASLLogger.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDASLLogger.m; path = Sources/CocoaLumberjack/DDASLLogger.m; sourceTree = "<group>"; };
-		2566AA9315DB16352F738C8809F7A5B9 /* MBProgressHUD.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = MBProgressHUD.release.xcconfig; sourceTree = "<group>"; };
-		26231486B99FA6AC7CC36558226C71F1 /* AgoraScreenShare-iOS13.0.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "AgoraScreenShare-iOS13.0.debug.xcconfig"; path = "../AgoraScreenShare-iOS13.0/AgoraScreenShare-iOS13.0.debug.xcconfig"; sourceTree = "<group>"; };
-		27245A1624EAE0A65023C011A254C43B /* AGELabel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AGELabel.swift; sourceTree = "<group>"; };
+		1ED253651F9E590988F8CA88C77F79B1 /* AgoraSyncManager.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = AgoraSyncManager.modulemap; sourceTree = "<group>"; };
+		1F79A3B348DAB04017617B90F717A097 /* DDASLLogger.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDASLLogger.m; path = Sources/CocoaLumberjack/DDASLLogger.m; sourceTree = "<group>"; };
+		21EB01E7DE653FD83504B024FDD69423 /* DDAbstractDatabaseLogger.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDAbstractDatabaseLogger.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/DDAbstractDatabaseLogger.h; sourceTree = "<group>"; };
 		28763535DB3269D3831AE799C152C2C6 /* Pods-Scene-Examples.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Scene-Examples.debug.xcconfig"; sourceTree = "<group>"; };
-		28C6E1DCD0D2CA00A441CA3430BD82AE /* AgoraLog.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AgoraLog.release.xcconfig; sourceTree = "<group>"; };
+		28E209D6DC27C59A31FA8D3289069D9C /* AgoraLogger.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AgoraLogger.m; path = "AgoraLog-Objective-C/sources/AgoraLogger.m"; sourceTree = "<group>"; };
 		2C8D04AF15B610B057E266FCF6FDDDE2 /* Pods-Agora-ScreenShare-Extension-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Agora-ScreenShare-Extension-dummy.m"; sourceTree = "<group>"; };
-		2DE88F3DA4A7E06EC4968E781C07B5C7 /* AgoraUIKit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AgoraUIKit.release.xcconfig; sourceTree = "<group>"; };
-		30B29D3CA2F16B448E95525DC73D1F81 /* AgoraLog-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "AgoraLog-dummy.m"; sourceTree = "<group>"; };
-		35E88F3A4C6F28130E157CA7C583315C /* AgoraLog.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = AgoraLog.modulemap; sourceTree = "<group>"; };
-		38C130BF66074C4F587C782033110505 /* DDLog+LOGV.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "DDLog+LOGV.h"; path = "Sources/CocoaLumberjack/include/CocoaLumberjack/DDLog+LOGV.h"; sourceTree = "<group>"; };
-		39C076C64CBC66A65F3767C64C3A35B6 /* AgoraRtm_iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AgoraRtm_iOS.debug.xcconfig; sourceTree = "<group>"; };
-		434740E9D178116380A6392B3E38B218 /* Blocks.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Blocks.swift; sourceTree = "<group>"; };
-		4559F84BB03DBF1DE7A2605F77036464 /* AgoraUIKit-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AgoraUIKit-prefix.pch"; sourceTree = "<group>"; };
-		45781B783540620DF5A923554CF359A2 /* AgoraRtm_iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AgoraRtm_iOS.release.xcconfig; sourceTree = "<group>"; };
-		459E0C15573A42C62040FF26E184EBDE /* DDContextFilterLogFormatter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDContextFilterLogFormatter.m; path = Sources/CocoaLumberjack/Extensions/DDContextFilterLogFormatter.m; sourceTree = "<group>"; };
-		4689687705BB48ECE22D6C40706DFEE1 /* AgoraLogUtils.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AgoraLogUtils.m; path = "AgoraLog-Objective-C/sources/AgoraLogUtils.m"; sourceTree = "<group>"; };
-		4A041713F769C2AB05004B55A3E52726 /* MBProgressHUD-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "MBProgressHUD-prefix.pch"; sourceTree = "<group>"; };
-		4A876F53C47E0448365B14776CCC545D /* CLIColor.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = CLIColor.m; path = Sources/CocoaLumberjack/CLI/CLIColor.m; sourceTree = "<group>"; };
-		4DDEA95300837351776BBD5DB177DE0D /* AGELiveAvatarButton.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AGELiveAvatarButton.swift; sourceTree = "<group>"; };
-		50640FA858EDFDF770F4C0FC791158A8 /* AgoraSyncManager-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AgoraSyncManager-umbrella.h"; sourceTree = "<group>"; };
+		2EF063D398184A67266EDD2CC5FA34E5 /* AgoraUIKit-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "AgoraUIKit-iOS.release.xcconfig"; sourceTree = "<group>"; };
+		2F1DD9E0B72651667E9572BFF9C987F6 /* DDLoggerNames.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDLoggerNames.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/DDLoggerNames.h; sourceTree = "<group>"; };
+		2F823392C9CB0B10E10ED04480B7FB12 /* AgoraUIKit-iOS-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AgoraUIKit-iOS-prefix.pch"; sourceTree = "<group>"; };
+		33B1EA3EC830B133BE5FCA1C71A19255 /* DDASLLogCapture.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDASLLogCapture.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/DDASLLogCapture.h; sourceTree = "<group>"; };
+		33C23B08180C41D3F530719F77509FFE /* AgoraRtcEngine_iOS_Preview.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AgoraRtcEngine_iOS_Preview.release.xcconfig; sourceTree = "<group>"; };
+		33C3BDB154D475CDBA26539944B2911F /* Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		34C2442E92440D23E0CA6AC330F716CB /* DDContextFilterLogFormatter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDContextFilterLogFormatter.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/DDContextFilterLogFormatter.h; sourceTree = "<group>"; };
+		363A3ED3D2E89BCE04E930AD7ED9ECB3 /* AGETextField.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AGETextField.swift; path = AgoraUIKit/Classes/AgoraUIKit/UI/AGETextField.swift; sourceTree = "<group>"; };
+		3663AB55E1FF7EB3C099632B94744333 /* MBProgressHUD.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		36AA883612C44BFA3640EBF55AE81E8A /* AgoraLog-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "AgoraLog-Info.plist"; sourceTree = "<group>"; };
+		37108A6F1EAC4D2424B3DA1AF14D0BA2 /* AGELiveAvatarButton.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AGELiveAvatarButton.swift; path = AgoraUIKit/Classes/AgoraUIKit/UI/AGELiveAvatarButton.swift; sourceTree = "<group>"; };
+		37C092200742EFFE37673D2D7A7B9770 /* Agora+Extension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Agora+Extension.swift"; path = "AgoraUIKit/Classes/AgoraUIKit/Core/Agora+Extension.swift"; sourceTree = "<group>"; };
+		37D65E0F32D6C43B929F38083C5E0F7F /* AgoraRtmKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AgoraRtmKit.framework; sourceTree = "<group>"; };
+		3803FBDA5899C032135479F398ECF3CD /* DDASLLogCapture.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDASLLogCapture.m; path = Sources/CocoaLumberjack/DDASLLogCapture.m; sourceTree = "<group>"; };
+		399D46B011EC28D49BF5CAD904A9647D /* AgoraScreenShare-iOS12.0.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "AgoraScreenShare-iOS12.0.release.xcconfig"; sourceTree = "<group>"; };
+		3A2F011ECD045C7128537E1FF1B95D75 /* AgoraRtcEngine_iOS_Preview.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AgoraRtcEngine_iOS_Preview.debug.xcconfig; sourceTree = "<group>"; };
+		3BBEF490263D243FACE8949C5EDC392B /* AgoraScreenShare-iOS13.0.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "AgoraScreenShare-iOS13.0.debug.xcconfig"; path = "../AgoraScreenShare-iOS13.0/AgoraScreenShare-iOS13.0.debug.xcconfig"; sourceTree = "<group>"; };
+		3C6199299C2B15EBD9571A4744D84D31 /* AgoraScreenShare.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = AgoraScreenShare.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		3CBED8B9C9D3D67FE3E857A1961B30F2 /* DDFileLogger+Buffering.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "DDFileLogger+Buffering.m"; path = "Sources/CocoaLumberjack/Extensions/DDFileLogger+Buffering.m"; sourceTree = "<group>"; };
+		3D406B578DAC35142B622A13D71662BC /* DDLog.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDLog.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/DDLog.h; sourceTree = "<group>"; };
+		3FC5FE453E71C627942BE9997FED4F99 /* MBProgressHUD-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "MBProgressHUD-prefix.pch"; sourceTree = "<group>"; };
+		42E8E71F6932006FC3EB3CBB5FF314CC /* AGEButton.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AGEButton.swift; path = AgoraUIKit/Classes/AgoraUIKit/UI/AGEButton.swift; sourceTree = "<group>"; };
+		42E95D7B8B5309EDB150291ECDA389D1 /* AgoraSyncManager.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AgoraSyncManager.debug.xcconfig; sourceTree = "<group>"; };
+		446BB7C1803F1660931DDB0A46C2EECD /* CollectionReference.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CollectionReference.swift; sourceTree = "<group>"; };
+		457A58E60A68C653399223554E7049C4 /* AGESlider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AGESlider.swift; path = AgoraUIKit/Classes/AgoraUIKit/UI/AGESlider.swift; sourceTree = "<group>"; };
+		466FC4E05C0CF0A41DE137D34E603E40 /* Agoraffmpeg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Agoraffmpeg.framework; sourceTree = "<group>"; };
+		474C3E357F07CA4F113CC64824B43B68 /* MBProgressHUD-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "MBProgressHUD-Info.plist"; sourceTree = "<group>"; };
+		4C02D3CD12FCE4FE63B7509B6DDDA98D /* RtmSyncManager+ISyncManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "RtmSyncManager+ISyncManager.swift"; sourceTree = "<group>"; };
+		4D32D19069634811BA25C69B03C9DE1C /* AgoraLog-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AgoraLog-umbrella.h"; sourceTree = "<group>"; };
+		4D4A2A4925F96F6F1EBBA31EA21C0705 /* AGEView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AGEView.swift; path = AgoraUIKit/Classes/AgoraUIKit/UI/AGEView.swift; sourceTree = "<group>"; };
 		5082AFEEFDD6D89A94F4A3F3E95768C6 /* Pods-Agora-ScreenShare-Extension.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Agora-ScreenShare-Extension.modulemap"; sourceTree = "<group>"; };
-		509EB1425598B711477E580C31944600 /* RtmSyncManager+Info.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "RtmSyncManager+Info.swift"; sourceTree = "<group>"; };
 		51AB40693B18F443F75126966ED13E47 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
-		539A9B4D0DDE75CC0A23F8D7812721D0 /* DocumentReference.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DocumentReference.swift; sourceTree = "<group>"; };
-		550F9F44E4528BFA44775D654C89ADC3 /* AgoraUIKit-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AgoraUIKit-umbrella.h"; sourceTree = "<group>"; };
-		55C1FEA13EF73E20CC674D180644D4CA /* CocoaLumberjack.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = CocoaLumberjack.h; path = "Sources/CocoaLumberjack/Supporting Files/CocoaLumberjack.h"; sourceTree = "<group>"; };
-		55E138D045D66A92A4908CF004269ED8 /* AgoraLogger.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AgoraLogger.m; path = "AgoraLog-Objective-C/sources/AgoraLogger.m"; sourceTree = "<group>"; };
-		59E0D7C9A6469C737CD5E4FCD2339852 /* CocoaLumberjack-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "CocoaLumberjack-Info.plist"; sourceTree = "<group>"; };
-		5AAB1F68F00ECBCED2E1E63DA4022946 /* Utils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
-		5B50A72AB68327190ABF4A5A0D7E623C /* Protocols.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
-		5F0747B7C433CC006E474345DA1B86D7 /* AgoraLogger.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AgoraLogger.h; path = "AgoraLog-Objective-C/sources/AgoraLogger.h"; sourceTree = "<group>"; };
-		64422D2912A781FEF020464F13232418 /* AgoraUIKit-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "AgoraUIKit-dummy.m"; sourceTree = "<group>"; };
-		685CC1267DED64FE2728357CE14B0035 /* MBProgressHUD.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = MBProgressHUD.modulemap; sourceTree = "<group>"; };
-		691452D4DAF4BFFBB602D868E3174C63 /* AGESlider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AGESlider.swift; sourceTree = "<group>"; };
-		691B442DA22CDCCF3156FF2270DCC98B /* RtmSyncManager+ISyncManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "RtmSyncManager+ISyncManager.swift"; sourceTree = "<group>"; };
+		5B360ADE01415C9D3FB5687659DAE43C /* CocoaLumberjack-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "CocoaLumberjack-prefix.pch"; sourceTree = "<group>"; };
+		5F633B3F0282105933A3A5F1C40391F7 /* MBProgressHUD.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = MBProgressHUD.release.xcconfig; sourceTree = "<group>"; };
+		5FFF70D2E7F4B90D3E68FDB2C8FD1CEA /* RtmSyncManager+Info.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "RtmSyncManager+Info.swift"; sourceTree = "<group>"; };
+		65540A09318F0358C7ABFAB2981E742D /* AgoraSyncManager-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AgoraSyncManager-umbrella.h"; sourceTree = "<group>"; };
+		6986A579FCE0BA3DBADE65AB08D58D8B /* DDDispatchQueueLogFormatter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDDispatchQueueLogFormatter.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/DDDispatchQueueLogFormatter.h; sourceTree = "<group>"; };
 		6993DE9986B99F0CCB5D8B6EB896E49A /* Pods-Agora-ScreenShare-Extension-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Agora-ScreenShare-Extension-acknowledgements.plist"; sourceTree = "<group>"; };
-		6A9417883DA70296EB93E808608F5D3A /* AgoraLog-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "AgoraLog-Info.plist"; sourceTree = "<group>"; };
-		6F50C8E8C0126509221418A288EBCD5D /* AgoraSyncManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgoraSyncManager.swift; sourceTree = "<group>"; };
+		6D562B6DA3BF1C6DDEBFAFF6CC1E2F87 /* MBProgressHUD.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = MBProgressHUD.debug.xcconfig; sourceTree = "<group>"; };
 		70BC4F7165D3A9FAE2E40E9105D0C3FB /* Pods-Agora-ScreenShare-Extension-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Agora-ScreenShare-Extension-Info.plist"; sourceTree = "<group>"; };
-		7150D6F1997E5FF1FF375DFB389D4C92 /* AGEImageView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AGEImageView.swift; sourceTree = "<group>"; };
-		7803095616B59094C33C8424E0538D16 /* AgoraUIKit */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = AgoraUIKit; path = AgoraUIKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		781EDA92CBD47CC9AEC3D9BEFC2D3F03 /* DDAbstractDatabaseLogger.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDAbstractDatabaseLogger.m; path = Sources/CocoaLumberjack/DDAbstractDatabaseLogger.m; sourceTree = "<group>"; };
-		7841E1B973B76586DA15E23820EA7E6A /* AgoraRtmKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AgoraRtmKit.framework; sourceTree = "<group>"; };
-		799D78917746410EA5B4AB8A8A2236CD /* AgoraSyncManager.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AgoraSyncManager.release.xcconfig; sourceTree = "<group>"; };
+		75C37DF51544580DB25E8EAD0E5109FF /* AGELabel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AGELabel.swift; path = AgoraUIKit/Classes/AgoraUIKit/UI/AGELabel.swift; sourceTree = "<group>"; };
+		76577821FBB60DCD7A4C964F8680190D /* AgoraLog.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = AgoraLog.modulemap; sourceTree = "<group>"; };
+		773B95073AA4BB1DB96480148F91EC44 /* CocoaLumberjack-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "CocoaLumberjack-umbrella.h"; sourceTree = "<group>"; };
+		7780BB8041FE7013A36B8697C483DDDD /* CocoaLumberjack-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "CocoaLumberjack-Info.plist"; sourceTree = "<group>"; };
+		7780E9388DAA54CA30698DCE7892B4A4 /* DDFileLogger+Buffering.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "DDFileLogger+Buffering.h"; path = "Sources/CocoaLumberjack/include/CocoaLumberjack/DDFileLogger+Buffering.h"; sourceTree = "<group>"; };
 		7AEE7BF348A278B8C759C3E5B3FF3BB1 /* Pods-Agora-ScreenShare-Extension-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Agora-ScreenShare-Extension-acknowledgements.markdown"; sourceTree = "<group>"; };
-		7B420B0A507BD37488452C2F013F2FDD /* AgoraRtcKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AgoraRtcKit.framework; sourceTree = "<group>"; };
-		7B713437278049B2FC99E5FC37979B2E /* DDLog.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDLog.m; path = Sources/CocoaLumberjack/DDLog.m; sourceTree = "<group>"; };
-		7FD2F856B3A74D00DDF97B4046B9665E /* AgoraRtcEngine_iOS_Preview.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AgoraRtcEngine_iOS_Preview.release.xcconfig; sourceTree = "<group>"; };
-		8001DB2320FF3E717A1DF2CD4D0101DB /* AgoraScreenShare.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = AgoraScreenShare.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		803DEB1C08434D4C97BF3F01EC60C4C6 /* CocoaLumberjack.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = CocoaLumberjack.release.xcconfig; sourceTree = "<group>"; };
-		8074679F244D8299209FACD57BC50421 /* Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		7FB03F1C186A589DD7837AB9D6F98888 /* AgoraLogger.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AgoraLogger.h; path = "AgoraLog-Objective-C/sources/AgoraLogger.h"; sourceTree = "<group>"; };
+		80D7B62445263C16F2618971ED84428F /* DDLog+LOGV.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "DDLog+LOGV.h"; path = "Sources/CocoaLumberjack/include/CocoaLumberjack/DDLog+LOGV.h"; sourceTree = "<group>"; };
 		819BB00804A96239CFDCDC20F64E7B90 /* Pods-Scene-Examples-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Scene-Examples-umbrella.h"; sourceTree = "<group>"; };
-		81B3A5CA309AD7692E79FBB4A5387576 /* AgoraUIKit.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = AgoraUIKit.modulemap; sourceTree = "<group>"; };
-		830E3A6E1C33429C53D25C0B4F1D072B /* MBProgressHUD.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
-		8482CFE48AAB8B2FBDD4C84C62C64529 /* DDDispatchQueueLogFormatter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDDispatchQueueLogFormatter.m; path = Sources/CocoaLumberjack/Extensions/DDDispatchQueueLogFormatter.m; sourceTree = "<group>"; };
-		8649D71DE605C9669ACC9B6F2C30CBCB /* DDFileLogger.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDFileLogger.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/DDFileLogger.h; sourceTree = "<group>"; };
-		8793F7ABA21FE71B2889367FD371896C /* DDASLLogCapture.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDASLLogCapture.m; path = Sources/CocoaLumberjack/DDASLLogCapture.m; sourceTree = "<group>"; };
-		8A5800A23EE8A30162D2A033173BDA14 /* CocoaLumberjack-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "CocoaLumberjack-dummy.m"; sourceTree = "<group>"; };
+		81DD671DA73484461DB0E9E02A274A7F /* RtmSyncManager+Handle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "RtmSyncManager+Handle.swift"; sourceTree = "<group>"; };
+		86961AC1BD0518586E980094EFC63D56 /* CocoaLumberjack.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = CocoaLumberjack.h; path = "Sources/CocoaLumberjack/Supporting Files/CocoaLumberjack.h"; sourceTree = "<group>"; };
+		8A9A35A3FDC27503049081FB59A7E01D /* AgoraLog-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AgoraLog-prefix.pch"; sourceTree = "<group>"; };
 		8B8FAB0D627B17EDE1366984278705D9 /* MBProgressHUD */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = MBProgressHUD; path = MBProgressHUD.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		8D195C472CB94D2576F893903D642ABA /* AGEView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AGEView.swift; sourceTree = "<group>"; };
-		9235734204B464986913D625F7A832A8 /* RtmSyncManager+Handle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "RtmSyncManager+Handle.swift"; sourceTree = "<group>"; };
+		8CC503846C0E6D7DEBC2D7D546117132 /* MBProgressHUD-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "MBProgressHUD-dummy.m"; sourceTree = "<group>"; };
+		8E8033230D5EEC943E336C93B08F1A8A /* DocumentReference.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DocumentReference.swift; sourceTree = "<group>"; };
+		8F16BC1EF2650C4BB9A8BBCB9D2645B4 /* AgoraLog.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AgoraLog.debug.xcconfig; sourceTree = "<group>"; };
+		8F6EFECD21C3AAB65B057589A9108FCD /* AgoraVideoProcess.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AgoraVideoProcess.framework; sourceTree = "<group>"; };
+		93F1200E3B5DF42D92DB082052AAD2E4 /* AgoraLog-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "AgoraLog-dummy.m"; sourceTree = "<group>"; };
+		93F3A792D5AC3BEB5A2F721227C1AE6D /* DDAbstractDatabaseLogger.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDAbstractDatabaseLogger.m; path = Sources/CocoaLumberjack/DDAbstractDatabaseLogger.m; sourceTree = "<group>"; };
 		942957904528DD0C05AD6E423EC799C1 /* AgoraSyncManager */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = AgoraSyncManager; path = AgoraSyncManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		94F496AF34371CFEC0E3968AC0B59F17 /* MBProgressHUD-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "MBProgressHUD-umbrella.h"; sourceTree = "<group>"; };
-		96C9AEFE3ECA72E33719CE1E8217360E /* AgoraSyncManager-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AgoraSyncManager-prefix.pch"; sourceTree = "<group>"; };
-		983399C1BFF860B95A38D4A3B73F38C7 /* DDTTYLogger.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDTTYLogger.m; path = Sources/CocoaLumberjack/DDTTYLogger.m; sourceTree = "<group>"; };
-		9BD364884B2D3F27DC5FF9191D5C6CCE /* DDAssertMacros.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDAssertMacros.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/DDAssertMacros.h; sourceTree = "<group>"; };
+		9B3DB9279BADD7B3F3FCA3C0638E8FB7 /* DDFileLogger.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDFileLogger.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/DDFileLogger.h; sourceTree = "<group>"; };
+		9BC80D74D018A515234281EFA0E019DC /* DDOSLogger.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDOSLogger.m; path = Sources/CocoaLumberjack/DDOSLogger.m; sourceTree = "<group>"; };
+		9C212AB5886DC79279898845ADD527B6 /* CocoaLumberjack.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = CocoaLumberjack.release.xcconfig; sourceTree = "<group>"; };
+		9CDC497D46BECFDA8BA66A9EBC570E7D /* AgoraSyncManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgoraSyncManager.swift; sourceTree = "<group>"; };
 		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		A11EAE44A1529E1F45DEB774A9E78353 /* AgoraUIKit.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = AgoraUIKit.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		A3C2225C68E8ACE4E4482D51B42F6729 /* DDASLLogger.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDASLLogger.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/DDASLLogger.h; sourceTree = "<group>"; };
-		A5379DDF2A7FA3AFC0BE4F70011662E1 /* DDLogMacros.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDLogMacros.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/DDLogMacros.h; sourceTree = "<group>"; };
-		A8F1726F0332561D38AD4762516B4C14 /* Agora+Extension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Agora+Extension.swift"; sourceTree = "<group>"; };
+		9F3CCE792207737740406B0D1E85338B /* MBProgressHUD-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "MBProgressHUD-umbrella.h"; sourceTree = "<group>"; };
+		A05A297FDBC7CBBDB37752A00C8257D4 /* AgoraSyncManager-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AgoraSyncManager-prefix.pch"; sourceTree = "<group>"; };
+		A17354C02D3F1C08B5647517CDD82CCA /* AgoraRtm_iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AgoraRtm_iOS.debug.xcconfig; sourceTree = "<group>"; };
+		A606FE3A0309897B60C86F38D284A1D4 /* MBProgressHUD.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = MBProgressHUD.modulemap; sourceTree = "<group>"; };
+		A68EC2E62A2FFF3C122F56A827F24ABC /* Protocols.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
+		A87DB9A16DE2667AE1288B1A4E9C3C59 /* AgoraUIKit-iOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AgoraUIKit-iOS-umbrella.h"; sourceTree = "<group>"; };
+		A881F39573FB17D02C45CDEE8DFA04BD /* AgoraRtm_iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AgoraRtm_iOS.release.xcconfig; sourceTree = "<group>"; };
+		AA1D483E5D211F3F6C63A6B49EDE9C43 /* AgoraUIKit-iOS */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "AgoraUIKit-iOS"; path = AgoraUIKit_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB196D88F9F7F2C40B529F18E7303263 /* Pods-Scene-Examples */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-Scene-Examples"; path = Pods_Scene_Examples.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		AB91EBEC12E5EFFBD5F7079699917715 /* AGEColor+Extension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "AGEColor+Extension.swift"; sourceTree = "<group>"; };
-		ABC43A81DDAA6E55547D9D81CCF071EF /* DDOSLogger.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDOSLogger.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/DDOSLogger.h; sourceTree = "<group>"; };
-		AE4D62FE9E619FA1A3B8FAA7207C12B3 /* DDLoggerNames.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDLoggerNames.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/DDLoggerNames.h; sourceTree = "<group>"; };
+		AD313F4512C374259CBF01D9FC2F2A67 /* AgoraUIKit-iOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "AgoraUIKit-iOS-dummy.m"; sourceTree = "<group>"; };
+		AE3C85B2CF191F10DC9458B266F4BC02 /* DDContextFilterLogFormatter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDContextFilterLogFormatter.m; path = Sources/CocoaLumberjack/Extensions/DDContextFilterLogFormatter.m; sourceTree = "<group>"; };
+		AE44E1B99C783E694EC855786095091C /* AGEImageView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AGEImageView.swift; path = AgoraUIKit/Classes/AgoraUIKit/UI/AGEImageView.swift; sourceTree = "<group>"; };
 		AF03D95CD235C125619CFD62C6B1D6A0 /* Pods-Agora-ScreenShare-Extension-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Agora-ScreenShare-Extension-umbrella.h"; sourceTree = "<group>"; };
-		AF509BD86F698E6C9488B3ABF0A741B4 /* DDFileLogger.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDFileLogger.m; path = Sources/CocoaLumberjack/DDFileLogger.m; sourceTree = "<group>"; };
-		B003796A50C9D47A37199CA4219ED95F /* DDMultiFormatter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDMultiFormatter.m; path = Sources/CocoaLumberjack/Extensions/DDMultiFormatter.m; sourceTree = "<group>"; };
+		AF2EF36A2C6C57B823AD731E3B37A4B8 /* AgoraRTE.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AgoraRTE.framework; sourceTree = "<group>"; };
+		B19E8956DDBE7F8DA3E7587DC60A1380 /* Blocks.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Blocks.swift; sourceTree = "<group>"; };
+		B2C24247300CA90A4430007AB47D11D9 /* MBProgressHUD.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		B45F00675B2A47ABF32B55AA9AF2B9EC /* AgoraScreenShare-iOS13.0.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "AgoraScreenShare-iOS13.0.release.xcconfig"; path = "../AgoraScreenShare-iOS13.0/AgoraScreenShare-iOS13.0.release.xcconfig"; sourceTree = "<group>"; };
+		B63530D102730199FAAB7CB21BCD1DE1 /* DDFileLogger.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDFileLogger.m; path = Sources/CocoaLumberjack/DDFileLogger.m; sourceTree = "<group>"; };
 		B75282FBA6524CFBE26884A8A629789B /* Pods-Agora-ScreenShare-Extension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Agora-ScreenShare-Extension.debug.xcconfig"; sourceTree = "<group>"; };
-		BD7A1387D317395BEB2E9289D20228B9 /* AgoraSyncManager-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "AgoraSyncManager-Info.plist"; sourceTree = "<group>"; };
+		B765E948B3C7CCEAC15C087C9C2A8FAD /* SyncError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SyncError.swift; sourceTree = "<group>"; };
+		B7B3010FE998C622F844E59840832181 /* AgoraLogUtils.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AgoraLogUtils.h; path = "AgoraLog-Objective-C/sources/AgoraLogUtils.h"; sourceTree = "<group>"; };
+		B7D3092316EF3EDFB0037F8532DADBE7 /* DDMultiFormatter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDMultiFormatter.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/DDMultiFormatter.h; sourceTree = "<group>"; };
+		B99768C70FB6FB1BF64BB7826590516F /* AgoraUIKit-iOS-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "AgoraUIKit-iOS-Info.plist"; sourceTree = "<group>"; };
+		BA0EE0C66C427BABA5BD253CD7FD5F22 /* AGEToastView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AGEToastView.swift; path = AgoraUIKit/Classes/AgoraUIKit/UI/AGEToastView.swift; sourceTree = "<group>"; };
+		BD8667A6DB9F0D9B6F81A5975EEE7E2A /* CLIColor.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = CLIColor.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/CLIColor.h; sourceTree = "<group>"; };
 		BE38196F96975C9FB0EC00C82762782F /* Pods-Agora-ScreenShare-Extension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Agora-ScreenShare-Extension.release.xcconfig"; sourceTree = "<group>"; };
+		C00EC23D932D3FBDC6A678FB65C56BFE /* AgoraLogUtils.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AgoraLogUtils.m; path = "AgoraLog-Objective-C/sources/AgoraLogUtils.m"; sourceTree = "<group>"; };
+		C0D3B83F35B773CFA68CF6D3D8AD24A1 /* AgoraLogEnums.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AgoraLogEnums.h; path = "AgoraLog-Objective-C/sources/AgoraLogEnums.h"; sourceTree = "<group>"; };
 		C261436D14052AE3C35F240BCD155CAC /* CocoaLumberjack */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = CocoaLumberjack; path = CocoaLumberjack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		C4C5FAA4677642E46E5D9149E5DE2877 /* SyncError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SyncError.swift; sourceTree = "<group>"; };
-		C4EE7BE7E789A1BC594CD469461B0F41 /* DDFileLogger+Internal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "DDFileLogger+Internal.h"; path = "Sources/CocoaLumberjack/DDFileLogger+Internal.h"; sourceTree = "<group>"; };
+		C399D74B49D9AB3514A9BF8089AC238E /* DDLog.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDLog.m; path = Sources/CocoaLumberjack/DDLog.m; sourceTree = "<group>"; };
+		C39FCD41C7863A9D6C7490482A512E2C /* AgoraSyncManager.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = AgoraSyncManager.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		C3BE1E35C20E90614ADF5B9518F49996 /* AgoraSyncManager-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "AgoraSyncManager-dummy.m"; sourceTree = "<group>"; };
+		C42B7B4949C0B3124FF223619906B709 /* DDMultiFormatter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDMultiFormatter.m; path = Sources/CocoaLumberjack/Extensions/DDMultiFormatter.m; sourceTree = "<group>"; };
+		C5A95F74FA9200148A8B5A0890FCBAFB /* AgoraUIKit-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "AgoraUIKit-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		C5E880D2F233E52B3090E2ACD0EF999E /* Pods-Scene-Examples-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Scene-Examples-Info.plist"; sourceTree = "<group>"; };
-		C62848B8122CA949B1BC86B1D3DD170F /* DDLog.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDLog.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/DDLog.h; sourceTree = "<group>"; };
-		C697239822F8440253DD5E3B2D088142 /* MBProgressHUD-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "MBProgressHUD-dummy.m"; sourceTree = "<group>"; };
-		C753F8AFF884AF8DB833C71E745791A4 /* AgoraLog.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AgoraLog.debug.xcconfig; sourceTree = "<group>"; };
-		C7ADD881E32D396E44961992F2314F89 /* AgoraRtcCryptoLoader.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AgoraRtcCryptoLoader.framework; sourceTree = "<group>"; };
-		CAA5230D3A4C23BF21547A323E46E741 /* AGEToastView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AGEToastView.swift; sourceTree = "<group>"; };
+		C8819FDA8FEFCF6204CC4FEF979B6C21 /* DDFileLogger+Internal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "DDFileLogger+Internal.h"; path = "Sources/CocoaLumberjack/DDFileLogger+Internal.h"; sourceTree = "<group>"; };
 		CABB98090B02C131F86931CB9BE54B7A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
-		CB15982DF3AF2B4ED921D160F2530CBC /* AGETextField.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AGETextField.swift; sourceTree = "<group>"; };
 		CB342FF58CA5A5D1282C84E02280A34F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		CFE1757B0CF8BCBFE8D3E1D0860869FB /* AGETableView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AGETableView.swift; sourceTree = "<group>"; };
-		D1DA9289D7B8C99D2154352916E8233F /* AgoraSyncManager-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "AgoraSyncManager-dummy.m"; sourceTree = "<group>"; };
-		D2F24B71FD0228A37907042D164F828D /* CocoaLumberjack-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "CocoaLumberjack-prefix.pch"; sourceTree = "<group>"; };
-		D4DBCD230FE371F15B87101BD4FDF464 /* RtmSyncManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RtmSyncManager.swift; sourceTree = "<group>"; };
-		D6B1F5991308D2747CF223A08085E9B3 /* AgoraRtcEngine_iOS_Preview.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AgoraRtcEngine_iOS_Preview.debug.xcconfig; sourceTree = "<group>"; };
-		D7068742FBF67C32486931A4EC1060F5 /* AgoraLogUtils.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AgoraLogUtils.h; path = "AgoraLog-Objective-C/sources/AgoraLogUtils.h"; sourceTree = "<group>"; };
-		D7CF82BA6C2A11813A2A7B8E0C6AA571 /* DDContextFilterLogFormatter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDContextFilterLogFormatter.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/DDContextFilterLogFormatter.h; sourceTree = "<group>"; };
-		D8CE9EFA28D0DE5694DBA37E9488FB87 /* Models.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
-		DB2375D95362C800B1046D071463C639 /* DDOSLogger.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDOSLogger.m; path = Sources/CocoaLumberjack/DDOSLogger.m; sourceTree = "<group>"; };
-		DC4A51541433AE8910310E5245637E21 /* AgoraUIKit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AgoraUIKit.debug.xcconfig; sourceTree = "<group>"; };
-		DE15D47450B415060666F944A564DF4C /* AgoraLog-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AgoraLog-umbrella.h"; sourceTree = "<group>"; };
-		DE9B3976F79118BDE75877C56AEB4B03 /* DDFileLogger+Buffering.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "DDFileLogger+Buffering.m"; path = "Sources/CocoaLumberjack/Extensions/DDFileLogger+Buffering.m"; sourceTree = "<group>"; };
-		E122E07D5CDF5788EF68FB8D86891965 /* AgoraSyncManager.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AgoraSyncManager.debug.xcconfig; sourceTree = "<group>"; };
+		CB464106C1ED48626F54955FB2A82AE0 /* CocoaLumberjack.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = CocoaLumberjack.debug.xcconfig; sourceTree = "<group>"; };
+		D0628850EA4A0CCFF28DE571AF3E67B6 /* DDLogMacros.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDLogMacros.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/DDLogMacros.h; sourceTree = "<group>"; };
+		D1824C3AE3565DF6F0943A916BE04CDF /* AGECollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AGECollectionView.swift; path = AgoraUIKit/Classes/AgoraUIKit/UI/AGECollectionView.swift; sourceTree = "<group>"; };
+		D27478D84CAAE5326EC1AEA474CA4533 /* DDOSLogger.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDOSLogger.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/DDOSLogger.h; sourceTree = "<group>"; };
+		D31DFFA65E9394C5DCB475615C2D32FB /* DDLoggerNames.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDLoggerNames.m; path = Sources/CocoaLumberjack/DDLoggerNames.m; sourceTree = "<group>"; };
+		D69E20423239EE593A99C4CB64FFA4BF /* AgoraSyncManager-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "AgoraSyncManager-Info.plist"; sourceTree = "<group>"; };
+		DB034698E6D7849CF5E4EAD6C07F0D48 /* AGETableView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AGETableView.swift; path = AgoraUIKit/Classes/AgoraUIKit/UI/AGETableView.swift; sourceTree = "<group>"; };
+		E4EBDAAA1F3687483C68A55B88FF00C8 /* SyncManager+Info.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "SyncManager+Info.swift"; sourceTree = "<group>"; };
 		E60A3400DAB4DBEF52EEBCFB9B134E3E /* Pods-Scene-Examples.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Scene-Examples.modulemap"; sourceTree = "<group>"; };
 		E89D643525C869987A9BC4BFEBAEA4D0 /* Pods-Scene-Examples-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Scene-Examples-acknowledgements.markdown"; sourceTree = "<group>"; };
-		E939F4DE1F6BECB522F17592B82AA6AE /* CollectionReference.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CollectionReference.swift; sourceTree = "<group>"; };
-		E9574179A92B8DEC914FBE9EC79A20CD /* DDDispatchQueueLogFormatter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDDispatchQueueLogFormatter.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/DDDispatchQueueLogFormatter.h; sourceTree = "<group>"; };
-		EEE019378E4ECA5A1A3697EB90A0C306 /* MBProgressHUD.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
-		EFB8FFEDCDB429247978598AC9DA5889 /* MBProgressHUD-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "MBProgressHUD-Info.plist"; sourceTree = "<group>"; };
-		F07ABFBC86BC248B6CC3934FA0407AE9 /* MBProgressHUD.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = MBProgressHUD.debug.xcconfig; sourceTree = "<group>"; };
+		ED206329EBB208DED13FD30D8EC2670A /* Utils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		ED28CA70DB44C461D02DF7E916C60364 /* CocoaLumberjack.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = CocoaLumberjack.modulemap; sourceTree = "<group>"; };
+		ED4E9B5983099FD65BD714DF1DA67F37 /* AgoraRtcKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AgoraRtcKit.framework; sourceTree = "<group>"; };
+		ED54851FBB62939F99B9E45F89619FBD /* AgoraScreenShare.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AgoraScreenShare.framework; path = libs/AgoraScreenShare.framework; sourceTree = "<group>"; };
+		ED945E556785BDF659BCE21FC82FCC70 /* AgoraLog.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AgoraLog.release.xcconfig; sourceTree = "<group>"; };
+		EED311FE5BD86EBE2629F7A42C5E0CFA /* LogProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LogProvider.swift; sourceTree = "<group>"; };
 		F170AB44CBD940B892FB47311C7289DE /* AgoraLog */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = AgoraLog; path = AgoraLog.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F25389DFB32AADF61BAEEFB834FD6F42 /* DDLegacyMacros.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDLegacyMacros.h; path = "Sources/CocoaLumberjack/Supporting Files/DDLegacyMacros.h"; sourceTree = "<group>"; };
 		F39B87387DC78AA6CCDAABC6032F187E /* Pods-Scene-Examples-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Scene-Examples-acknowledgements.plist"; sourceTree = "<group>"; };
-		F9A1FF4CD616587570EBEDB50E8E0953 /* DDFileLogger+Buffering.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "DDFileLogger+Buffering.h"; path = "Sources/CocoaLumberjack/include/CocoaLumberjack/DDFileLogger+Buffering.h"; sourceTree = "<group>"; };
-		F9ACDB07626F719560766289663766B9 /* AgoraUIKit-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "AgoraUIKit-Info.plist"; sourceTree = "<group>"; };
+		F5ED44F18EF46A4580B0EAA1E8871899 /* DDDispatchQueueLogFormatter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDDispatchQueueLogFormatter.m; path = Sources/CocoaLumberjack/Extensions/DDDispatchQueueLogFormatter.m; sourceTree = "<group>"; };
+		F6124748CFB7A8FD3C417B38C960C287 /* DDAssertMacros.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDAssertMacros.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/DDAssertMacros.h; sourceTree = "<group>"; };
+		F6B21527675E0217EEA71DAEF1D57FD8 /* Models.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		F7EC7FE7B790BAC3ED437E358C39A6D6 /* DDTTYLogger.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDTTYLogger.h; path = Sources/CocoaLumberjack/include/CocoaLumberjack/DDTTYLogger.h; sourceTree = "<group>"; };
+		F973CB2B215C0383DFC1E5F7C56FDD0F /* AgoraScreenShare-iOS12.0.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "AgoraScreenShare-iOS12.0.debug.xcconfig"; sourceTree = "<group>"; };
 		FA215D947BD1E98F368E051871081ECD /* Pods-Scene-Examples.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Scene-Examples.release.xcconfig"; sourceTree = "<group>"; };
+		FA5C084510C72D8B12F0A8D6213C87C7 /* AgoraRtcCryptoLoader.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AgoraRtcCryptoLoader.framework; sourceTree = "<group>"; };
 		FA727BBBFC2D8961C62F0E809523D7B0 /* Pods-Scene-Examples-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Scene-Examples-frameworks.sh"; sourceTree = "<group>"; };
-		FAFA48268F0EBAC651D98796EE41034F /* AgoraScreenShare.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AgoraScreenShare.framework; path = libs/AgoraScreenShare.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		09AD156D1623AAD5742FF4D06456D841 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				14F92DC557FF32792EF968C0E6018B87 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		138BBC586110C6094DF803C20742F0A4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				4DC001DE65937C2A540BC46397B9C71B /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		13FA3E866998AAE9B90506ECFDB04D5A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1255DC4630C21BA6FE67799922C50AD1 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		309409734F808745E19E20463119DEBC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				70F7DB441A4EDBF55BE01EF4815B9C8A /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -407,14 +414,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B9B4D79EDE163F7FF213A8286EA2F406 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1AA4A560AEB73156F98BDD18649418B9 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		D6DC8F0C2894774845C1DD2E7CA07B0C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -425,11 +424,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		EBE022CE5C5721B0E1322FB1EED2810F /* Frameworks */ = {
+		F204868330C958FA7A5589737F11F654 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DC2D94BA0697665234F482BB03F5D16D /* Foundation.framework in Frameworks */,
+				44CF90CC90747725F1F3F800870666BA /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -444,22 +443,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		0A6DA015C168435FA619980870C6E64B /* Pod */ = {
+		05729890AF99D1ADA466302E86215C5F /* CocoaLumberjack */ = {
 			isa = PBXGroup;
 			children = (
-				0AA21911B0CB03EECC4F1A5A815A7A6E /* AgoraSyncManager.podspec */,
+				B5AE717B281B194834BDEC4EE26F7D15 /* Core */,
+				FF36C24044E6B4713F207A0E609018C9 /* Support Files */,
 			);
-			name = Pod;
-			sourceTree = "<group>";
-		};
-		0ED0F78B26A33586342BB20216FA0EB9 /* Other */ = {
-			isa = PBXGroup;
-			children = (
-				09C03B3E46902008487444D968783033 /* LogProvider.swift */,
-				5AAB1F68F00ECBCED2E1E63DA4022946 /* Utils.swift */,
-			);
-			name = Other;
-			path = Other;
+			name = CocoaLumberjack;
+			path = CocoaLumberjack;
 			sourceTree = "<group>";
 		};
 		0FA33D81A2FED1318E4FA88BA4220C2D /* Pods-Agora-ScreenShare-Extension */ = {
@@ -478,40 +469,84 @@
 			path = "Target Support Files/Pods-Agora-ScreenShare-Extension";
 			sourceTree = "<group>";
 		};
-		194717FA50BB69FE271A451328D33492 /* AgoraSyncManager */ = {
+		152E23EF6305149D618E66FAFA7D3459 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
-				935E18C8DBFD3E05F42359B64E161BB1 /* Objects */,
-				0ED0F78B26A33586342BB20216FA0EB9 /* Other */,
-				0A6DA015C168435FA619980870C6E64B /* Pod */,
-				A87F2F6FC4CC29E912FA1702213892FB /* Support Files */,
-				82E1182A5C1393F27000FC8A099EAAF2 /* SyncManager */,
+				B19E8956DDBE7F8DA3E7587DC60A1380 /* Blocks.swift */,
+				33C3BDB154D475CDBA26539944B2911F /* Extensions.swift */,
+				F6B21527675E0217EEA71DAEF1D57FD8 /* Models.swift */,
+				B765E948B3C7CCEAC15C087C9C2A8FAD /* SyncError.swift */,
 			);
-			name = AgoraSyncManager;
-			path = ../AgoraSyncManager;
+			name = Objects;
+			path = Objects;
 			sourceTree = "<group>";
 		};
-		239119A30CBBC623604F9115303C59F0 /* Frameworks */ = {
+		1E27BCA2D99A964A0FE9096B680338D5 /* AgoraScreenShare */ = {
 			isa = PBXGroup;
 			children = (
-				FAFA48268F0EBAC651D98796EE41034F /* AgoraScreenShare.framework */,
+				FB0B71EE7A194AD032252911D6CF15AB /* Frameworks */,
+				4BA36F81C4F33B0846A46EDEE1DA8404 /* Pod */,
+				D708BCA299DBE67A6C5A920CB01680C1 /* Support Files */,
 			);
-			name = Frameworks;
+			name = AgoraScreenShare;
+			path = ../sdk;
 			sourceTree = "<group>";
 		};
-		24CE303A6D0A32A04FA117E31CF3AFC7 /* Support Files */ = {
+		21EB23ED2E477606948F635A60029B1E /* AgoraLog */ = {
 			isa = PBXGroup;
 			children = (
-				14A8C0010A6876D0C98942D2564A772E /* CocoaLumberjack.modulemap */,
-				8A5800A23EE8A30162D2A033173BDA14 /* CocoaLumberjack-dummy.m */,
-				59E0D7C9A6469C737CD5E4FCD2339852 /* CocoaLumberjack-Info.plist */,
-				D2F24B71FD0228A37907042D164F828D /* CocoaLumberjack-prefix.pch */,
-				12D30FDCC4A1D9C241D01771983AFECB /* CocoaLumberjack-umbrella.h */,
-				0FFD1600A169E7B3BCE4E58D972E0394 /* CocoaLumberjack.debug.xcconfig */,
-				803DEB1C08434D4C97BF3F01EC60C4C6 /* CocoaLumberjack.release.xcconfig */,
+				C0D3B83F35B773CFA68CF6D3D8AD24A1 /* AgoraLogEnums.h */,
+				7FB03F1C186A589DD7837AB9D6F98888 /* AgoraLogger.h */,
+				28E209D6DC27C59A31FA8D3289069D9C /* AgoraLogger.m */,
+				B7B3010FE998C622F844E59840832181 /* AgoraLogUtils.h */,
+				C00EC23D932D3FBDC6A678FB65C56BFE /* AgoraLogUtils.m */,
+				E1D95A7968D326B4FDE9C2486A7E1C03 /* Support Files */,
+			);
+			name = AgoraLog;
+			path = AgoraLog;
+			sourceTree = "<group>";
+		};
+		3171438DC7447CDC6E9E83B526E6BE83 /* AgoraRtcEngine_iOS_Preview */ = {
+			isa = PBXGroup;
+			children = (
+				969A9FCFE61F98253D4AE16BE8496D7A /* Frameworks */,
+				950046C4C4EB977E753803F180ABC69E /* Support Files */,
+			);
+			name = AgoraRtcEngine_iOS_Preview;
+			path = AgoraRtcEngine_iOS_Preview;
+			sourceTree = "<group>";
+		};
+		320B4D5A67DBEC9837157F048AC0A267 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				1ED253651F9E590988F8CA88C77F79B1 /* AgoraSyncManager.modulemap */,
+				C3BE1E35C20E90614ADF5B9518F49996 /* AgoraSyncManager-dummy.m */,
+				D69E20423239EE593A99C4CB64FFA4BF /* AgoraSyncManager-Info.plist */,
+				A05A297FDBC7CBBDB37752A00C8257D4 /* AgoraSyncManager-prefix.pch */,
+				65540A09318F0358C7ABFAB2981E742D /* AgoraSyncManager-umbrella.h */,
+				42E95D7B8B5309EDB150291ECDA389D1 /* AgoraSyncManager.debug.xcconfig */,
+				06F8AD7661CBAED7136F2DC8CAA05E87 /* AgoraSyncManager.release.xcconfig */,
 			);
 			name = "Support Files";
-			path = "../Target Support Files/CocoaLumberjack";
+			path = "../Pods/Target Support Files/AgoraSyncManager";
+			sourceTree = "<group>";
+		};
+		3630B59A8BA2176CEC0D8853DC6D3E65 /* AgoraRtm_iOS */ = {
+			isa = PBXGroup;
+			children = (
+				DE000A8CB81745FDFC6A0DAD7D6364E2 /* Frameworks */,
+				EF0D66043427C704AF9ED58ADE7E47E0 /* Support Files */,
+			);
+			name = AgoraRtm_iOS;
+			path = AgoraRtm_iOS;
+			sourceTree = "<group>";
+		};
+		4BA36F81C4F33B0846A46EDEE1DA8404 /* Pod */ = {
+			isa = PBXGroup;
+			children = (
+				3C6199299C2B15EBD9571A4744D84D31 /* AgoraScreenShare.podspec */,
+			);
+			name = Pod;
 			sourceTree = "<group>";
 		};
 		4D6691D8CB3D493006A8661C7CFED31A /* iOS */ = {
@@ -524,83 +559,17 @@
 			name = iOS;
 			sourceTree = "<group>";
 		};
-		52A20CE645AA2CFAAACBF66331AB9407 /* RtmManager */ = {
+		646E4C12054DF71D77F8DD73F682A3B9 /* AgoraSyncManager */ = {
 			isa = PBXGroup;
 			children = (
-				D4DBCD230FE371F15B87101BD4FDF464 /* RtmSyncManager.swift */,
-				9235734204B464986913D625F7A832A8 /* RtmSyncManager+Handle.swift */,
-				509EB1425598B711477E580C31944600 /* RtmSyncManager+Info.swift */,
-				691B442DA22CDCCF3156FF2270DCC98B /* RtmSyncManager+ISyncManager.swift */,
+				152E23EF6305149D618E66FAFA7D3459 /* Objects */,
+				7C62735C6B2B669836743BFE93D82975 /* Other */,
+				89FE8882C27E1515ABD267C91967FA8E /* Pod */,
+				320B4D5A67DBEC9837157F048AC0A267 /* Support Files */,
+				C7347647C42F28F39307EABC2C607909 /* SyncManager */,
 			);
-			name = RtmManager;
-			path = RtmManager;
-			sourceTree = "<group>";
-		};
-		53397AD787B51EB00A8DCF30DDD81565 /* CocoaLumberjack */ = {
-			isa = PBXGroup;
-			children = (
-				6D24CE6E719AC51258CFB30E6F62FD71 /* Core */,
-				24CE303A6D0A32A04FA117E31CF3AFC7 /* Support Files */,
-			);
-			name = CocoaLumberjack;
-			path = CocoaLumberjack;
-			sourceTree = "<group>";
-		};
-		59262995441F153EA3666C3896659773 /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				39C076C64CBC66A65F3767C64C3A35B6 /* AgoraRtm_iOS.debug.xcconfig */,
-				45781B783540620DF5A923554CF359A2 /* AgoraRtm_iOS.release.xcconfig */,
-			);
-			name = "Support Files";
-			path = "../Target Support Files/AgoraRtm_iOS";
-			sourceTree = "<group>";
-		};
-		687D8AC01EE2690CB167C2BBB7CD0097 /* Pod */ = {
-			isa = PBXGroup;
-			children = (
-				8001DB2320FF3E717A1DF2CD4D0101DB /* AgoraScreenShare.podspec */,
-			);
-			name = Pod;
-			sourceTree = "<group>";
-		};
-		6D24CE6E719AC51258CFB30E6F62FD71 /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				1A7390D5F4789C54709E03250421EE14 /* CLIColor.h */,
-				4A876F53C47E0448365B14776CCC545D /* CLIColor.m */,
-				55C1FEA13EF73E20CC674D180644D4CA /* CocoaLumberjack.h */,
-				105D209E15BAF72A062F1AF966FC204B /* DDAbstractDatabaseLogger.h */,
-				781EDA92CBD47CC9AEC3D9BEFC2D3F03 /* DDAbstractDatabaseLogger.m */,
-				0902A59D2EC4C42C26D9409961037CFC /* DDASLLogCapture.h */,
-				8793F7ABA21FE71B2889367FD371896C /* DDASLLogCapture.m */,
-				A3C2225C68E8ACE4E4482D51B42F6729 /* DDASLLogger.h */,
-				22E1035DA42B44B88A0FBBEFC34733C3 /* DDASLLogger.m */,
-				9BD364884B2D3F27DC5FF9191D5C6CCE /* DDAssertMacros.h */,
-				D7CF82BA6C2A11813A2A7B8E0C6AA571 /* DDContextFilterLogFormatter.h */,
-				459E0C15573A42C62040FF26E184EBDE /* DDContextFilterLogFormatter.m */,
-				E9574179A92B8DEC914FBE9EC79A20CD /* DDDispatchQueueLogFormatter.h */,
-				8482CFE48AAB8B2FBDD4C84C62C64529 /* DDDispatchQueueLogFormatter.m */,
-				8649D71DE605C9669ACC9B6F2C30CBCB /* DDFileLogger.h */,
-				AF509BD86F698E6C9488B3ABF0A741B4 /* DDFileLogger.m */,
-				F9A1FF4CD616587570EBEDB50E8E0953 /* DDFileLogger+Buffering.h */,
-				DE9B3976F79118BDE75877C56AEB4B03 /* DDFileLogger+Buffering.m */,
-				C4EE7BE7E789A1BC594CD469461B0F41 /* DDFileLogger+Internal.h */,
-				F25389DFB32AADF61BAEEFB834FD6F42 /* DDLegacyMacros.h */,
-				C62848B8122CA949B1BC86B1D3DD170F /* DDLog.h */,
-				7B713437278049B2FC99E5FC37979B2E /* DDLog.m */,
-				38C130BF66074C4F587C782033110505 /* DDLog+LOGV.h */,
-				AE4D62FE9E619FA1A3B8FAA7207C12B3 /* DDLoggerNames.h */,
-				1767A97D9C5901919B01BF760BBB5C39 /* DDLoggerNames.m */,
-				A5379DDF2A7FA3AFC0BE4F70011662E1 /* DDLogMacros.h */,
-				1842835BD944F65AED3283DE52E16999 /* DDMultiFormatter.h */,
-				B003796A50C9D47A37199CA4219ED95F /* DDMultiFormatter.m */,
-				ABC43A81DDAA6E55547D9D81CCF071EF /* DDOSLogger.h */,
-				DB2375D95362C800B1046D071463C639 /* DDOSLogger.m */,
-				00D7606E099862E0A533CDB88AF07182 /* DDTTYLogger.h */,
-				983399C1BFF860B95A38D4A3B73F38C7 /* DDTTYLogger.m */,
-			);
-			name = Core;
+			name = AgoraSyncManager;
+			path = ../AgoraSyncManager;
 			sourceTree = "<group>";
 		};
 		706052C792D1999CFD21F9EEB281D26E /* Targets Support Files */ = {
@@ -612,91 +581,93 @@
 			name = "Targets Support Files";
 			sourceTree = "<group>";
 		};
-		757A8D72F440F12413D1E713C07D5206 /* Support Files */ = {
+		77761560135EA79D6198045E6BA96734 /* AgoraUIKit-iOS */ = {
 			isa = PBXGroup;
 			children = (
-				35E88F3A4C6F28130E157CA7C583315C /* AgoraLog.modulemap */,
-				30B29D3CA2F16B448E95525DC73D1F81 /* AgoraLog-dummy.m */,
-				6A9417883DA70296EB93E808608F5D3A /* AgoraLog-Info.plist */,
-				15E951E40ADCBC18EB4A5DC6D360A39B /* AgoraLog-prefix.pch */,
-				DE15D47450B415060666F944A564DF4C /* AgoraLog-umbrella.h */,
-				C753F8AFF884AF8DB833C71E745791A4 /* AgoraLog.debug.xcconfig */,
-				28C6E1DCD0D2CA00A441CA3430BD82AE /* AgoraLog.release.xcconfig */,
+				42E8E71F6932006FC3EB3CBB5FF314CC /* AGEButton.swift */,
+				D1824C3AE3565DF6F0943A916BE04CDF /* AGECollectionView.swift */,
+				08A5DC691E9F8F5C7F4FF99DE3CA7A48 /* AGEColor+Extension.swift */,
+				AE44E1B99C783E694EC855786095091C /* AGEImageView.swift */,
+				75C37DF51544580DB25E8EAD0E5109FF /* AGELabel.swift */,
+				37108A6F1EAC4D2424B3DA1AF14D0BA2 /* AGELiveAvatarButton.swift */,
+				457A58E60A68C653399223554E7049C4 /* AGESlider.swift */,
+				DB034698E6D7849CF5E4EAD6C07F0D48 /* AGETableView.swift */,
+				363A3ED3D2E89BCE04E930AD7ED9ECB3 /* AGETextField.swift */,
+				BA0EE0C66C427BABA5BD253CD7FD5F22 /* AGEToastView.swift */,
+				4D4A2A4925F96F6F1EBBA31EA21C0705 /* AGEView.swift */,
+				37C092200742EFFE37673D2D7A7B9770 /* Agora+Extension.swift */,
+				ED891E032DD77EF008F44C52D75DB0C2 /* Support Files */,
 			);
-			name = "Support Files";
-			path = "../Target Support Files/AgoraLog";
+			name = "AgoraUIKit-iOS";
+			path = "AgoraUIKit-iOS";
 			sourceTree = "<group>";
 		};
-		817090AA5988EBE5B781D754B8514775 /* Support Files */ = {
+		7C62735C6B2B669836743BFE93D82975 /* Other */ = {
 			isa = PBXGroup;
 			children = (
-				685CC1267DED64FE2728357CE14B0035 /* MBProgressHUD.modulemap */,
-				C697239822F8440253DD5E3B2D088142 /* MBProgressHUD-dummy.m */,
-				EFB8FFEDCDB429247978598AC9DA5889 /* MBProgressHUD-Info.plist */,
-				4A041713F769C2AB05004B55A3E52726 /* MBProgressHUD-prefix.pch */,
-				94F496AF34371CFEC0E3968AC0B59F17 /* MBProgressHUD-umbrella.h */,
-				F07ABFBC86BC248B6CC3934FA0407AE9 /* MBProgressHUD.debug.xcconfig */,
-				2566AA9315DB16352F738C8809F7A5B9 /* MBProgressHUD.release.xcconfig */,
+				EED311FE5BD86EBE2629F7A42C5E0CFA /* LogProvider.swift */,
+				ED206329EBB208DED13FD30D8EC2670A /* Utils.swift */,
 			);
-			name = "Support Files";
-			path = "../Target Support Files/MBProgressHUD";
+			name = Other;
+			path = Other;
 			sourceTree = "<group>";
 		};
-		82E1182A5C1393F27000FC8A099EAAF2 /* SyncManager */ = {
+		89FE8882C27E1515ABD267C91967FA8E /* Pod */ = {
 			isa = PBXGroup;
 			children = (
-				6F50C8E8C0126509221418A288EBCD5D /* AgoraSyncManager.swift */,
-				E939F4DE1F6BECB522F17592B82AA6AE /* CollectionReference.swift */,
-				539A9B4D0DDE75CC0A23F8D7812721D0 /* DocumentReference.swift */,
-				5B50A72AB68327190ABF4A5A0D7E623C /* Protocols.swift */,
-				126259BEA022662B50730D5BA63E1656 /* SyncManager+Info.swift */,
-				52A20CE645AA2CFAAACBF66331AB9407 /* RtmManager */,
+				C39FCD41C7863A9D6C7490482A512E2C /* AgoraSyncManager.podspec */,
 			);
-			name = SyncManager;
-			path = SyncManager;
+			name = Pod;
 			sourceTree = "<group>";
 		};
-		8AADD8D97F2DD0C4A15C2E882BDE3352 /* Support Files */ = {
+		91F526B88B7487D148EFAD26C6B0E3BE /* Development Pods */ = {
 			isa = PBXGroup;
 			children = (
-				21EDCF1DB18E21CB9EB6911EA7C15012 /* AgoraScreenShare-iOS12.0.debug.xcconfig */,
-				12B2A78E5D3691370FA1ED86E3A393A1 /* AgoraScreenShare-iOS12.0.release.xcconfig */,
-				26231486B99FA6AC7CC36558226C71F1 /* AgoraScreenShare-iOS13.0.debug.xcconfig */,
-				161564B80F092A3A886F2FCBA95358E0 /* AgoraScreenShare-iOS13.0.release.xcconfig */,
+				1E27BCA2D99A964A0FE9096B680338D5 /* AgoraScreenShare */,
+				646E4C12054DF71D77F8DD73F682A3B9 /* AgoraSyncManager */,
 			);
-			name = "Support Files";
-			path = "../Pods/Target Support Files/AgoraScreenShare-iOS12.0";
+			name = "Development Pods";
 			sourceTree = "<group>";
 		};
-		8DE7A28DEEE0738ECC58C7C87418575D /* MBProgressHUD */ = {
+		9350EF02E00513C8D72360D473C6FC0F /* MBProgressHUD */ = {
 			isa = PBXGroup;
 			children = (
-				830E3A6E1C33429C53D25C0B4F1D072B /* MBProgressHUD.h */,
-				EEE019378E4ECA5A1A3697EB90A0C306 /* MBProgressHUD.m */,
-				817090AA5988EBE5B781D754B8514775 /* Support Files */,
+				3663AB55E1FF7EB3C099632B94744333 /* MBProgressHUD.h */,
+				B2C24247300CA90A4430007AB47D11D9 /* MBProgressHUD.m */,
+				AA892512365076A74B9B0A00AF66778D /* Support Files */,
 			);
 			name = MBProgressHUD;
 			path = MBProgressHUD;
 			sourceTree = "<group>";
 		};
-		935E18C8DBFD3E05F42359B64E161BB1 /* Objects */ = {
+		950046C4C4EB977E753803F180ABC69E /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				434740E9D178116380A6392B3E38B218 /* Blocks.swift */,
-				8074679F244D8299209FACD57BC50421 /* Extensions.swift */,
-				D8CE9EFA28D0DE5694DBA37E9488FB87 /* Models.swift */,
-				C4C5FAA4677642E46E5D9149E5DE2877 /* SyncError.swift */,
+				3A2F011ECD045C7128537E1FF1B95D75 /* AgoraRtcEngine_iOS_Preview.debug.xcconfig */,
+				33C23B08180C41D3F530719F77509FFE /* AgoraRtcEngine_iOS_Preview.release.xcconfig */,
 			);
-			name = Objects;
-			path = Objects;
+			name = "Support Files";
+			path = "../Target Support Files/AgoraRtcEngine_iOS_Preview";
 			sourceTree = "<group>";
 		};
-		9FF2C3F43DC8ACE309B0700E17938302 /* Products */ = {
+		969A9FCFE61F98253D4AE16BE8496D7A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				466FC4E05C0CF0A41DE137D34E603E40 /* Agoraffmpeg.framework */,
+				FA5C084510C72D8B12F0A8D6213C87C7 /* AgoraRtcCryptoLoader.framework */,
+				ED4E9B5983099FD65BD714DF1DA67F37 /* AgoraRtcKit.framework */,
+				AF2EF36A2C6C57B823AD731E3B37A4B8 /* AgoraRTE.framework */,
+				8F6EFECD21C3AAB65B057589A9108FCD /* AgoraVideoProcess.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		AA4F3F4144EBFA4100D9738E60519DDD /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				F170AB44CBD940B892FB47311C7289DE /* AgoraLog */,
 				942957904528DD0C05AD6E423EC799C1 /* AgoraSyncManager */,
-				7803095616B59094C33C8424E0538D16 /* AgoraUIKit */,
+				AA1D483E5D211F3F6C63A6B49EDE9C43 /* AgoraUIKit-iOS */,
 				C261436D14052AE3C35F240BCD155CAC /* CocoaLumberjack */,
 				8B8FAB0D627B17EDE1366984278705D9 /* MBProgressHUD */,
 				1B69FF2560EEFF38FF5438E3A0F996B7 /* Pods-Agora-ScreenShare-Extension */,
@@ -705,121 +676,129 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A47873CCC950131F392D3F835ABA5489 /* Pods */ = {
+		AA892512365076A74B9B0A00AF66778D /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				E3E5B28CE8E620AB4746FEF9CCC9D3F8 /* AgoraLog */,
-				C5C2D1870D774616EB2380B10F597CC9 /* AgoraRtcEngine_iOS_Preview */,
-				D487E55A40C2AF25C8A8DEE7AAD720D8 /* AgoraRtm_iOS */,
-				53397AD787B51EB00A8DCF30DDD81565 /* CocoaLumberjack */,
-				8DE7A28DEEE0738ECC58C7C87418575D /* MBProgressHUD */,
+				A606FE3A0309897B60C86F38D284A1D4 /* MBProgressHUD.modulemap */,
+				8CC503846C0E6D7DEBC2D7D546117132 /* MBProgressHUD-dummy.m */,
+				474C3E357F07CA4F113CC64824B43B68 /* MBProgressHUD-Info.plist */,
+				3FC5FE453E71C627942BE9997FED4F99 /* MBProgressHUD-prefix.pch */,
+				9F3CCE792207737740406B0D1E85338B /* MBProgressHUD-umbrella.h */,
+				6D562B6DA3BF1C6DDEBFAFF6CC1E2F87 /* MBProgressHUD.debug.xcconfig */,
+				5F633B3F0282105933A3A5F1C40391F7 /* MBProgressHUD.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/MBProgressHUD";
+			sourceTree = "<group>";
+		};
+		B211F3EC6423391A8D7C7FF63D712788 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				21EB23ED2E477606948F635A60029B1E /* AgoraLog */,
+				3171438DC7447CDC6E9E83B526E6BE83 /* AgoraRtcEngine_iOS_Preview */,
+				3630B59A8BA2176CEC0D8853DC6D3E65 /* AgoraRtm_iOS */,
+				77761560135EA79D6198045E6BA96734 /* AgoraUIKit-iOS */,
+				05729890AF99D1ADA466302E86215C5F /* CocoaLumberjack */,
+				9350EF02E00513C8D72360D473C6FC0F /* MBProgressHUD */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		A87F2F6FC4CC29E912FA1702213892FB /* Support Files */ = {
+		B5AE717B281B194834BDEC4EE26F7D15 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				05D8149961F798ABE886CF74C8420408 /* AgoraSyncManager.modulemap */,
-				D1DA9289D7B8C99D2154352916E8233F /* AgoraSyncManager-dummy.m */,
-				BD7A1387D317395BEB2E9289D20228B9 /* AgoraSyncManager-Info.plist */,
-				96C9AEFE3ECA72E33719CE1E8217360E /* AgoraSyncManager-prefix.pch */,
-				50640FA858EDFDF770F4C0FC791158A8 /* AgoraSyncManager-umbrella.h */,
-				E122E07D5CDF5788EF68FB8D86891965 /* AgoraSyncManager.debug.xcconfig */,
-				799D78917746410EA5B4AB8A8A2236CD /* AgoraSyncManager.release.xcconfig */,
+				BD8667A6DB9F0D9B6F81A5975EEE7E2A /* CLIColor.h */,
+				0E159A30B24580044BCDC7867E435A0D /* CLIColor.m */,
+				86961AC1BD0518586E980094EFC63D56 /* CocoaLumberjack.h */,
+				21EB01E7DE653FD83504B024FDD69423 /* DDAbstractDatabaseLogger.h */,
+				93F3A792D5AC3BEB5A2F721227C1AE6D /* DDAbstractDatabaseLogger.m */,
+				33B1EA3EC830B133BE5FCA1C71A19255 /* DDASLLogCapture.h */,
+				3803FBDA5899C032135479F398ECF3CD /* DDASLLogCapture.m */,
+				1A170B58C57CA5F212F367CED5D60F3A /* DDASLLogger.h */,
+				1F79A3B348DAB04017617B90F717A097 /* DDASLLogger.m */,
+				F6124748CFB7A8FD3C417B38C960C287 /* DDAssertMacros.h */,
+				34C2442E92440D23E0CA6AC330F716CB /* DDContextFilterLogFormatter.h */,
+				AE3C85B2CF191F10DC9458B266F4BC02 /* DDContextFilterLogFormatter.m */,
+				6986A579FCE0BA3DBADE65AB08D58D8B /* DDDispatchQueueLogFormatter.h */,
+				F5ED44F18EF46A4580B0EAA1E8871899 /* DDDispatchQueueLogFormatter.m */,
+				9B3DB9279BADD7B3F3FCA3C0638E8FB7 /* DDFileLogger.h */,
+				B63530D102730199FAAB7CB21BCD1DE1 /* DDFileLogger.m */,
+				7780E9388DAA54CA30698DCE7892B4A4 /* DDFileLogger+Buffering.h */,
+				3CBED8B9C9D3D67FE3E857A1961B30F2 /* DDFileLogger+Buffering.m */,
+				C8819FDA8FEFCF6204CC4FEF979B6C21 /* DDFileLogger+Internal.h */,
+				067478D166C959E4B47979F454A538EA /* DDLegacyMacros.h */,
+				3D406B578DAC35142B622A13D71662BC /* DDLog.h */,
+				C399D74B49D9AB3514A9BF8089AC238E /* DDLog.m */,
+				80D7B62445263C16F2618971ED84428F /* DDLog+LOGV.h */,
+				2F1DD9E0B72651667E9572BFF9C987F6 /* DDLoggerNames.h */,
+				D31DFFA65E9394C5DCB475615C2D32FB /* DDLoggerNames.m */,
+				D0628850EA4A0CCFF28DE571AF3E67B6 /* DDLogMacros.h */,
+				B7D3092316EF3EDFB0037F8532DADBE7 /* DDMultiFormatter.h */,
+				C42B7B4949C0B3124FF223619906B709 /* DDMultiFormatter.m */,
+				D27478D84CAAE5326EC1AEA474CA4533 /* DDOSLogger.h */,
+				9BC80D74D018A515234281EFA0E019DC /* DDOSLogger.m */,
+				F7EC7FE7B790BAC3ED437E358C39A6D6 /* DDTTYLogger.h */,
+				09C5515187C855FB88F2A8595A3AB397 /* DDTTYLogger.m */,
 			);
-			name = "Support Files";
-			path = "../Pods/Target Support Files/AgoraSyncManager";
+			name = Core;
 			sourceTree = "<group>";
 		};
-		B3C6CB63F29A9998033D70C7D1A9C37E /* Support Files */ = {
+		C7347647C42F28F39307EABC2C607909 /* SyncManager */ = {
 			isa = PBXGroup;
 			children = (
-				D6B1F5991308D2747CF223A08085E9B3 /* AgoraRtcEngine_iOS_Preview.debug.xcconfig */,
-				7FD2F856B3A74D00DDF97B4046B9665E /* AgoraRtcEngine_iOS_Preview.release.xcconfig */,
+				9CDC497D46BECFDA8BA66A9EBC570E7D /* AgoraSyncManager.swift */,
+				446BB7C1803F1660931DDB0A46C2EECD /* CollectionReference.swift */,
+				8E8033230D5EEC943E336C93B08F1A8A /* DocumentReference.swift */,
+				A68EC2E62A2FFF3C122F56A827F24ABC /* Protocols.swift */,
+				E4EBDAAA1F3687483C68A55B88FF00C8 /* SyncManager+Info.swift */,
+				D2BB2D0FB33CBBD7160E02D7CEDF6B58 /* RtmManager */,
 			);
-			name = "Support Files";
-			path = "../Target Support Files/AgoraRtcEngine_iOS_Preview";
-			sourceTree = "<group>";
-		};
-		B3D7A13A57CC2D9332B69F46BBFD9089 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				074848DB97962E68763C93485FEB7FEE /* Agoraffmpeg.framework */,
-				C7ADD881E32D396E44961992F2314F89 /* AgoraRtcCryptoLoader.framework */,
-				7B420B0A507BD37488452C2F013F2FDD /* AgoraRtcKit.framework */,
-				0904AB922BA79F8B4D752388830F8D8F /* AgoraRTE.framework */,
-				039D9DD18E2EF5828C5DE7BE708A084F /* AgoraVideoProcess.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		C5A2CD645852F0D5822C72BD153D3112 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				7841E1B973B76586DA15E23820EA7E6A /* AgoraRtmKit.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		C5C2D1870D774616EB2380B10F597CC9 /* AgoraRtcEngine_iOS_Preview */ = {
-			isa = PBXGroup;
-			children = (
-				B3D7A13A57CC2D9332B69F46BBFD9089 /* Frameworks */,
-				B3C6CB63F29A9998033D70C7D1A9C37E /* Support Files */,
-			);
-			name = AgoraRtcEngine_iOS_Preview;
-			path = AgoraRtcEngine_iOS_Preview;
-			sourceTree = "<group>";
-		};
-		C8BEC17838D4E29113FA55ACFDA1EE2F /* Development Pods */ = {
-			isa = PBXGroup;
-			children = (
-				F5ED12A29E0AB308CAD096F0EF4F2163 /* AgoraScreenShare */,
-				194717FA50BB69FE271A451328D33492 /* AgoraSyncManager */,
-				E1CEBD53135283A8EC02F2E968442FB1 /* AgoraUIKit */,
-			);
-			name = "Development Pods";
+			name = SyncManager;
+			path = SyncManager;
 			sourceTree = "<group>";
 		};
 		CF1408CF629C7361332E53B88F7BD30C = {
 			isa = PBXGroup;
 			children = (
 				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
-				C8BEC17838D4E29113FA55ACFDA1EE2F /* Development Pods */,
+				91F526B88B7487D148EFAD26C6B0E3BE /* Development Pods */,
 				03C5C200A0787E300053CFA8F53CA094 /* Frameworks */,
-				A47873CCC950131F392D3F835ABA5489 /* Pods */,
-				9FF2C3F43DC8ACE309B0700E17938302 /* Products */,
+				B211F3EC6423391A8D7C7FF63D712788 /* Pods */,
+				AA4F3F4144EBFA4100D9738E60519DDD /* Products */,
 				706052C792D1999CFD21F9EEB281D26E /* Targets Support Files */,
 			);
 			sourceTree = "<group>";
 		};
-		D20FAB0D11F569102008E018D5406C5B /* UI */ = {
+		D2BB2D0FB33CBBD7160E02D7CEDF6B58 /* RtmManager */ = {
 			isa = PBXGroup;
 			children = (
-				133E4E4C2546AB18A7BC83E6D7AF6F47 /* AGEButton.swift */,
-				150DA170C0DCABE6F020261375E47CB7 /* AGECollectionView.swift */,
-				7150D6F1997E5FF1FF375DFB389D4C92 /* AGEImageView.swift */,
-				27245A1624EAE0A65023C011A254C43B /* AGELabel.swift */,
-				4DDEA95300837351776BBD5DB177DE0D /* AGELiveAvatarButton.swift */,
-				691452D4DAF4BFFBB602D868E3174C63 /* AGESlider.swift */,
-				CFE1757B0CF8BCBFE8D3E1D0860869FB /* AGETableView.swift */,
-				CB15982DF3AF2B4ED921D160F2530CBC /* AGETextField.swift */,
-				CAA5230D3A4C23BF21547A323E46E741 /* AGEToastView.swift */,
-				8D195C472CB94D2576F893903D642ABA /* AGEView.swift */,
+				0BEBBBF0D362F74755CAC1060E719FB1 /* RtmSyncManager.swift */,
+				81DD671DA73484461DB0E9E02A274A7F /* RtmSyncManager+Handle.swift */,
+				5FFF70D2E7F4B90D3E68FDB2C8FD1CEA /* RtmSyncManager+Info.swift */,
+				4C02D3CD12FCE4FE63B7509B6DDDA98D /* RtmSyncManager+ISyncManager.swift */,
 			);
-			name = UI;
-			path = UI;
+			name = RtmManager;
+			path = RtmManager;
 			sourceTree = "<group>";
 		};
-		D487E55A40C2AF25C8A8DEE7AAD720D8 /* AgoraRtm_iOS */ = {
+		D708BCA299DBE67A6C5A920CB01680C1 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				C5A2CD645852F0D5822C72BD153D3112 /* Frameworks */,
-				59262995441F153EA3666C3896659773 /* Support Files */,
+				F973CB2B215C0383DFC1E5F7C56FDD0F /* AgoraScreenShare-iOS12.0.debug.xcconfig */,
+				399D46B011EC28D49BF5CAD904A9647D /* AgoraScreenShare-iOS12.0.release.xcconfig */,
+				3BBEF490263D243FACE8949C5EDC392B /* AgoraScreenShare-iOS13.0.debug.xcconfig */,
+				B45F00675B2A47ABF32B55AA9AF2B9EC /* AgoraScreenShare-iOS13.0.release.xcconfig */,
 			);
-			name = AgoraRtm_iOS;
-			path = AgoraRtm_iOS;
+			name = "Support Files";
+			path = "../Pods/Target Support Files/AgoraScreenShare-iOS12.0";
+			sourceTree = "<group>";
+		};
+		DE000A8CB81745FDFC6A0DAD7D6364E2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				37D65E0F32D6C43B929F38083C5E0F7F /* AgoraRtmKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		E093D93D9BEBF2267F83FB56474005C2 /* Pods-Scene-Examples */ = {
@@ -839,114 +818,72 @@
 			path = "Target Support Files/Pods-Scene-Examples";
 			sourceTree = "<group>";
 		};
-		E1CEBD53135283A8EC02F2E968442FB1 /* AgoraUIKit */ = {
+		E1D95A7968D326B4FDE9C2486A7E1C03 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				F2DE20728002254C7B077C937D5F1C76 /* Core */,
-				E5FBE4642F81321097ACA1AD42838F6A /* Pod */,
-				E4F9E4189EAE843DBF3A5D6DD278D35D /* Support Files */,
-				D20FAB0D11F569102008E018D5406C5B /* UI */,
-			);
-			name = AgoraUIKit;
-			path = ../AgoraUIKit;
-			sourceTree = "<group>";
-		};
-		E3E5B28CE8E620AB4746FEF9CCC9D3F8 /* AgoraLog */ = {
-			isa = PBXGroup;
-			children = (
-				14E8226CAAC71F5173029C65CAFCB579 /* AgoraLogEnums.h */,
-				5F0747B7C433CC006E474345DA1B86D7 /* AgoraLogger.h */,
-				55E138D045D66A92A4908CF004269ED8 /* AgoraLogger.m */,
-				D7068742FBF67C32486931A4EC1060F5 /* AgoraLogUtils.h */,
-				4689687705BB48ECE22D6C40706DFEE1 /* AgoraLogUtils.m */,
-				757A8D72F440F12413D1E713C07D5206 /* Support Files */,
-			);
-			name = AgoraLog;
-			path = AgoraLog;
-			sourceTree = "<group>";
-		};
-		E4F9E4189EAE843DBF3A5D6DD278D35D /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				81B3A5CA309AD7692E79FBB4A5387576 /* AgoraUIKit.modulemap */,
-				64422D2912A781FEF020464F13232418 /* AgoraUIKit-dummy.m */,
-				F9ACDB07626F719560766289663766B9 /* AgoraUIKit-Info.plist */,
-				4559F84BB03DBF1DE7A2605F77036464 /* AgoraUIKit-prefix.pch */,
-				550F9F44E4528BFA44775D654C89ADC3 /* AgoraUIKit-umbrella.h */,
-				DC4A51541433AE8910310E5245637E21 /* AgoraUIKit.debug.xcconfig */,
-				2DE88F3DA4A7E06EC4968E781C07B5C7 /* AgoraUIKit.release.xcconfig */,
+				76577821FBB60DCD7A4C964F8680190D /* AgoraLog.modulemap */,
+				93F1200E3B5DF42D92DB082052AAD2E4 /* AgoraLog-dummy.m */,
+				36AA883612C44BFA3640EBF55AE81E8A /* AgoraLog-Info.plist */,
+				8A9A35A3FDC27503049081FB59A7E01D /* AgoraLog-prefix.pch */,
+				4D32D19069634811BA25C69B03C9DE1C /* AgoraLog-umbrella.h */,
+				8F16BC1EF2650C4BB9A8BBCB9D2645B4 /* AgoraLog.debug.xcconfig */,
+				ED945E556785BDF659BCE21FC82FCC70 /* AgoraLog.release.xcconfig */,
 			);
 			name = "Support Files";
-			path = "../Pods/Target Support Files/AgoraUIKit";
+			path = "../Target Support Files/AgoraLog";
 			sourceTree = "<group>";
 		};
-		E5FBE4642F81321097ACA1AD42838F6A /* Pod */ = {
+		ED891E032DD77EF008F44C52D75DB0C2 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				A11EAE44A1529E1F45DEB774A9E78353 /* AgoraUIKit.podspec */,
+				1347AD7421819E1D6FD4B8A865A7F366 /* AgoraUIKit-iOS.modulemap */,
+				AD313F4512C374259CBF01D9FC2F2A67 /* AgoraUIKit-iOS-dummy.m */,
+				B99768C70FB6FB1BF64BB7826590516F /* AgoraUIKit-iOS-Info.plist */,
+				2F823392C9CB0B10E10ED04480B7FB12 /* AgoraUIKit-iOS-prefix.pch */,
+				A87DB9A16DE2667AE1288B1A4E9C3C59 /* AgoraUIKit-iOS-umbrella.h */,
+				C5A95F74FA9200148A8B5A0890FCBAFB /* AgoraUIKit-iOS.debug.xcconfig */,
+				2EF063D398184A67266EDD2CC5FA34E5 /* AgoraUIKit-iOS.release.xcconfig */,
 			);
-			name = Pod;
+			name = "Support Files";
+			path = "../Target Support Files/AgoraUIKit-iOS";
 			sourceTree = "<group>";
 		};
-		F2DE20728002254C7B077C937D5F1C76 /* Core */ = {
+		EF0D66043427C704AF9ED58ADE7E47E0 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				AB91EBEC12E5EFFBD5F7079699917715 /* AGEColor+Extension.swift */,
-				A8F1726F0332561D38AD4762516B4C14 /* Agora+Extension.swift */,
+				A17354C02D3F1C08B5647517CDD82CCA /* AgoraRtm_iOS.debug.xcconfig */,
+				A881F39573FB17D02C45CDEE8DFA04BD /* AgoraRtm_iOS.release.xcconfig */,
 			);
-			name = Core;
-			path = Core;
+			name = "Support Files";
+			path = "../Target Support Files/AgoraRtm_iOS";
 			sourceTree = "<group>";
 		};
-		F5ED12A29E0AB308CAD096F0EF4F2163 /* AgoraScreenShare */ = {
+		FB0B71EE7A194AD032252911D6CF15AB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				239119A30CBBC623604F9115303C59F0 /* Frameworks */,
-				687D8AC01EE2690CB167C2BBB7CD0097 /* Pod */,
-				8AADD8D97F2DD0C4A15C2E882BDE3352 /* Support Files */,
+				ED54851FBB62939F99B9E45F89619FBD /* AgoraScreenShare.framework */,
 			);
-			name = AgoraScreenShare;
-			path = ../sdk;
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FF36C24044E6B4713F207A0E609018C9 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				ED28CA70DB44C461D02DF7E916C60364 /* CocoaLumberjack.modulemap */,
+				17A52A69CEAC09BF2D6DA400D8638911 /* CocoaLumberjack-dummy.m */,
+				7780BB8041FE7013A36B8697C483DDDD /* CocoaLumberjack-Info.plist */,
+				5B360ADE01415C9D3FB5687659DAE43C /* CocoaLumberjack-prefix.pch */,
+				773B95073AA4BB1DB96480148F91EC44 /* CocoaLumberjack-umbrella.h */,
+				CB464106C1ED48626F54955FB2A82AE0 /* CocoaLumberjack.debug.xcconfig */,
+				9C212AB5886DC79279898845ADD527B6 /* CocoaLumberjack.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/CocoaLumberjack";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		0D39B4E99D40079A0E11AE59BEB504C6 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A71CA18DEB2CD058D6B4B8BB2F6121BC /* CLIColor.h in Headers */,
-				1C6973BE98DD4BE09691E39024555881 /* CocoaLumberjack.h in Headers */,
-				C9164ACEF130B7CC37C49355F10883AA /* CocoaLumberjack-umbrella.h in Headers */,
-				CFAF93CA065934163A29DCE166070D22 /* DDAbstractDatabaseLogger.h in Headers */,
-				69BFDC103FA7085E4BE59DB9FD08323C /* DDASLLogCapture.h in Headers */,
-				329B9933C8AB0F0D27ED8211262C2C0B /* DDASLLogger.h in Headers */,
-				4252456DC7C66B001F41A0FF638E61B3 /* DDAssertMacros.h in Headers */,
-				C13EEC89F24BE452C0D55BFC4001A03C /* DDContextFilterLogFormatter.h in Headers */,
-				888F8E6D72036C545681535D9C0F8316 /* DDDispatchQueueLogFormatter.h in Headers */,
-				6168F30137591786F4F0621DF0FEB9F0 /* DDFileLogger.h in Headers */,
-				B6188C2AD73D0ADD25583D0695ADE8DF /* DDFileLogger+Buffering.h in Headers */,
-				30E1FDC6279E1DBA0EFEF455F5B3B46F /* DDFileLogger+Internal.h in Headers */,
-				BCF286ABA2A029753ED26A84B2887BA0 /* DDLegacyMacros.h in Headers */,
-				52B9B7ED32290110A4C45A126FB2CA29 /* DDLog.h in Headers */,
-				6BD4B6C06133C6ACF3DA73D174288244 /* DDLog+LOGV.h in Headers */,
-				A7A04165C299225E592ABB0A15B51429 /* DDLoggerNames.h in Headers */,
-				E9EFDF8A22618E49159F89AF5ADAEC80 /* DDLogMacros.h in Headers */,
-				3185267BBE948E5E5F57670EEC76E8D2 /* DDMultiFormatter.h in Headers */,
-				A25651DBFD03C1488454E6AE90A4BA2E /* DDOSLogger.h in Headers */,
-				7BE8FD84E301F00E6A1464A569F73373 /* DDTTYLogger.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1BB321C71A5E07B1404279CD5788F6EA /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				8ACCB6ED806508741DE26A8E175CD525 /* AgoraUIKit-umbrella.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		23CFB3CB24BD46D560C27C1E4AC88967 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -961,6 +898,41 @@
 			files = (
 				67E941CADB3CDDEEDF8CE4EE4A4A05BB /* MBProgressHUD.h in Headers */,
 				5BAC1EF86D0E57E44E404B2796993561 /* MBProgressHUD-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6E204B29CA85B0403D72802B17E20B0E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				63F42E39FB2674CA427A4798CF94B58B /* CLIColor.h in Headers */,
+				54DCA5CC7FF625D9790C954DEE2ACFC1 /* CocoaLumberjack.h in Headers */,
+				3F02F0CE7F2B24633C167F1739962DE9 /* CocoaLumberjack-umbrella.h in Headers */,
+				D0BC0FCFA368C53D576DFAEB6DB42217 /* DDAbstractDatabaseLogger.h in Headers */,
+				DB32E055C66EE6BE05B0129C1F0A1143 /* DDASLLogCapture.h in Headers */,
+				C339BAAC53667B6EC518BCFFCC4175E0 /* DDASLLogger.h in Headers */,
+				EF0C2DD43E08F34EF382F6C3E2938344 /* DDAssertMacros.h in Headers */,
+				03B899C6C204C7E679D533D27243DB67 /* DDContextFilterLogFormatter.h in Headers */,
+				5F1FBD672613394766FFA4F0EEDD9D6E /* DDDispatchQueueLogFormatter.h in Headers */,
+				DF384447B4A8EA7354A7B185C0813EA5 /* DDFileLogger.h in Headers */,
+				D91D5773DCA560A7D62A090751CDF06F /* DDFileLogger+Buffering.h in Headers */,
+				5F498998F6C7C2224BE7FD81ADAD273F /* DDFileLogger+Internal.h in Headers */,
+				1A150627DB31D269893A42F7CF504EE4 /* DDLegacyMacros.h in Headers */,
+				671748F4CADDDFA3AA3A437834556BA0 /* DDLog.h in Headers */,
+				7877E21134C7CE183A51ED857C60B5DF /* DDLog+LOGV.h in Headers */,
+				4042A7EB0C15AFCE6C7A0A4C4E6223D5 /* DDLoggerNames.h in Headers */,
+				88072F8A6B612C35B174EBB44825CDDB /* DDLogMacros.h in Headers */,
+				08F4A9F61C4F8B0E275E67B1561C0DC0 /* DDMultiFormatter.h in Headers */,
+				42D145DCEE0A460247BFEB739F327924 /* DDOSLogger.h in Headers */,
+				63B42AC1DA9B488BD51EE8AC18F2D8FC /* DDTTYLogger.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B1E819B9B98AEBFA9B97741D6457D388 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5675FF3DE1CB50089DB423853C7CA935 /* AgoraUIKit-iOS-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -983,11 +955,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FB337F1104EA17CAFB03354852DD1770 /* Headers */ = {
+		ED37857E7BC941F5657BC6887F1B338C /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8DB34320EDB25FFC7C42E768B2D25BC7 /* Pods-Scene-Examples-umbrella.h in Headers */,
+				966FD90F3F52F147E720ED2248B6078B /* Pods-Scene-Examples-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1006,7 +978,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				09512E7870C3E0B41341363F6C5D8F12 /* PBXTargetDependency */,
+				ED25F1D80F11CC972171245E4558BA25 /* PBXTargetDependency */,
 			);
 			name = "Pods-Agora-ScreenShare-Extension";
 			productName = Pods_Agora_ScreenShare_Extension;
@@ -1031,24 +1003,6 @@
 			productReference = 8B8FAB0D627B17EDE1366984278705D9 /* MBProgressHUD */;
 			productType = "com.apple.product-type.framework";
 		};
-		9172AE13E25A7D3200C24F5DED9902E5 /* AgoraUIKit */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2A1398AA7C2AB13EE017980E1F92808A /* Build configuration list for PBXNativeTarget "AgoraUIKit" */;
-			buildPhases = (
-				1BB321C71A5E07B1404279CD5788F6EA /* Headers */,
-				05EAB50DD419A53A60BF7441880B5EE6 /* Sources */,
-				B9B4D79EDE163F7FF213A8286EA2F406 /* Frameworks */,
-				0F40F37BCCD0CED65F8FDB6AC29310B8 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = AgoraUIKit;
-			productName = AgoraUIKit;
-			productReference = 7803095616B59094C33C8424E0538D16 /* AgoraUIKit */;
-			productType = "com.apple.product-type.framework";
-		};
 		9E252967684E1AF8BF4723B43F556F48 /* AgoraSyncManager */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 40C30B4938706D9D977502AD50550CC6 /* Build configuration list for PBXNativeTarget "AgoraSyncManager" */;
@@ -1061,8 +1015,8 @@
 			buildRules = (
 			);
 			dependencies = (
-				305AF6DFDAE5460D4C92B82A9A9EED8A /* PBXTargetDependency */,
-				B714C296A62B15E04903CDCB1F10989A /* PBXTargetDependency */,
+				467F22DAE1C5279C2BFA03BC2BCBCFD4 /* PBXTargetDependency */,
+				B27AB7C8CC89E8DB4AFEFD7B09D0F7FE /* PBXTargetDependency */,
 			);
 			name = AgoraSyncManager;
 			productName = AgoraSyncManager;
@@ -1081,7 +1035,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				F859131FFE7A901FF061A67AEDC71E3B /* PBXTargetDependency */,
+				09D317FDE3170A289D5BC92C9ADC15B2 /* PBXTargetDependency */,
 			);
 			name = AgoraLog;
 			productName = AgoraLog;
@@ -1090,24 +1044,24 @@
 		};
 		E4C6025362D762B68C35DDD90BDC5D67 /* Pods-Scene-Examples */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 33436D71745BA11314F43C9FE28E7D58 /* Build configuration list for PBXNativeTarget "Pods-Scene-Examples" */;
+			buildConfigurationList = E1EDBFA2DC1E0C355572B606E76CBE0E /* Build configuration list for PBXNativeTarget "Pods-Scene-Examples" */;
 			buildPhases = (
-				FB337F1104EA17CAFB03354852DD1770 /* Headers */,
-				8C49A306F177EA1D2292B87562927D74 /* Sources */,
-				EBE022CE5C5721B0E1322FB1EED2810F /* Frameworks */,
-				5B041A9EA4FF0D88A9F25B966A6F1948 /* Resources */,
+				ED37857E7BC941F5657BC6887F1B338C /* Headers */,
+				7B3F6C35672C9E42D99834CDA1C87C1C /* Sources */,
+				13FA3E866998AAE9B90506ECFDB04D5A /* Frameworks */,
+				580C567597BDE57C7093990B1F943B1B /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				4ACB68729D64E90D443BD5255A3C98EF /* PBXTargetDependency */,
-				04D3E39B629F03662A638AC56A58795A /* PBXTargetDependency */,
-				C6080E46DE5EC6C575A67E0416DF442A /* PBXTargetDependency */,
-				FD3AFBEDE7269E540E67D8708B49B428 /* PBXTargetDependency */,
-				FE0300AC924FDB42D88628AA3AF05882 /* PBXTargetDependency */,
-				7521E7B6276D5B0DF4517ACF651D2DF8 /* PBXTargetDependency */,
-				D29C3F4854D67269608152BE2F932F05 /* PBXTargetDependency */,
-				039027A3C2569FEADC92DBF9719810AA /* PBXTargetDependency */,
+				0260031943FDD43B94D50D0607839891 /* PBXTargetDependency */,
+				D4DA0FBCEAF54D739620F75FEAAAACFD /* PBXTargetDependency */,
+				0177115297C79057788151DFAFE137D2 /* PBXTargetDependency */,
+				32ADC051FD37D2B9F726D6812E8B7FFD /* PBXTargetDependency */,
+				383D9D1168AF887AA43F150BC22810A9 /* PBXTargetDependency */,
+				2037A07767FDEFF4D7521D3F8D2B0C0E /* PBXTargetDependency */,
+				9BC4551700B27943AC8C50820D71C7CE /* PBXTargetDependency */,
+				E51CA72CDCD4E1DA866E4749DAFF202C /* PBXTargetDependency */,
 			);
 			name = "Pods-Scene-Examples";
 			productName = Pods_Scene_Examples;
@@ -1116,12 +1070,12 @@
 		};
 		E95654B155D25890BE8E26081FCA8265 /* CocoaLumberjack */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E7E2DB6F223DEC8CC6C1329938038741 /* Build configuration list for PBXNativeTarget "CocoaLumberjack" */;
+			buildConfigurationList = F58D952AB08FDC306B2BC53BD3E90554 /* Build configuration list for PBXNativeTarget "CocoaLumberjack" */;
 			buildPhases = (
-				0D39B4E99D40079A0E11AE59BEB504C6 /* Headers */,
-				729CC2D7372CED2F135FD06893E70D9A /* Sources */,
-				09AD156D1623AAD5742FF4D06456D841 /* Frameworks */,
-				E64A0BE621E4DB7B80BA6A5519EF35D4 /* Resources */,
+				6E204B29CA85B0403D72802B17E20B0E /* Headers */,
+				23BD27D20C77DF69B0A1F8A04CB8F515 /* Sources */,
+				309409734F808745E19E20463119DEBC /* Frameworks */,
+				981896EA507BD528AF9EF5924C69326E /* Resources */,
 			);
 			buildRules = (
 			);
@@ -1130,6 +1084,24 @@
 			name = CocoaLumberjack;
 			productName = CocoaLumberjack;
 			productReference = C261436D14052AE3C35F240BCD155CAC /* CocoaLumberjack */;
+			productType = "com.apple.product-type.framework";
+		};
+		F1344B359C238419E319DAA48BBD510C /* AgoraUIKit-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7F4A104AF24CD3B88C7B9F26E030F813 /* Build configuration list for PBXNativeTarget "AgoraUIKit-iOS" */;
+			buildPhases = (
+				B1E819B9B98AEBFA9B97741D6457D388 /* Headers */,
+				39577CF450DB3BEFED0F856AA8B49ED9 /* Sources */,
+				F204868330C958FA7A5589737F11F654 /* Frameworks */,
+				E7837B9E46BDD1D74FFB4E571833BE50 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "AgoraUIKit-iOS";
+			productName = AgoraUIKit_iOS;
+			productReference = AA1D483E5D211F3F6C63A6B49EDE9C43 /* AgoraUIKit-iOS */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -1150,7 +1122,7 @@
 				en,
 			);
 			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
-			productRefGroup = 9FF2C3F43DC8ACE309B0700E17938302 /* Products */;
+			productRefGroup = AA4F3F4144EBFA4100D9738E60519DDD /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -1160,7 +1132,7 @@
 				FD936D71AE857912BF36BD5B3A215255 /* AgoraScreenShare-iOS12.0 */,
 				301224968EA8A6DC58FCC647175F57F7 /* AgoraScreenShare-iOS13.0 */,
 				9E252967684E1AF8BF4723B43F556F48 /* AgoraSyncManager */,
-				9172AE13E25A7D3200C24F5DED9902E5 /* AgoraUIKit */,
+				F1344B359C238419E319DAA48BBD510C /* AgoraUIKit-iOS */,
 				E95654B155D25890BE8E26081FCA8265 /* CocoaLumberjack */,
 				82B0A41D3031FF27D78E17B0A9A46FB0 /* MBProgressHUD */,
 				6F150805D5022D355D4DDB722682D7D9 /* Pods-Agora-ScreenShare-Extension */,
@@ -1170,13 +1142,6 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		0F40F37BCCD0CED65F8FDB6AC29310B8 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		532054AB3BC454443CA88F6018051D74 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1184,7 +1149,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		5B041A9EA4FF0D88A9F25B966A6F1948 /* Resources */ = {
+		580C567597BDE57C7093990B1F943B1B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1192,6 +1157,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		86708AC30ED4DA1636D86221D09970AF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		981896EA507BD528AF9EF5924C69326E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1212,7 +1184,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E64A0BE621E4DB7B80BA6A5519EF35D4 /* Resources */ = {
+		E7837B9E46BDD1D74FFB4E571833BE50 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1222,23 +1194,44 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		05EAB50DD419A53A60BF7441880B5EE6 /* Sources */ = {
+		23BD27D20C77DF69B0A1F8A04CB8F515 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5C2B9FB4F69C9CF60A4ABAC5D13154B0 /* AGEButton.swift in Sources */,
-				C4AB367DABFFCA67379863482552DFC4 /* AGECollectionView.swift in Sources */,
-				2FD6CEB4B3E086E19DCE141D6ED27487 /* AGEColor+Extension.swift in Sources */,
-				C085F883B8E229F3F5179736C0670313 /* AGEImageView.swift in Sources */,
-				3FE3A36FB70E4B7C5F720EA29417B94A /* AGELabel.swift in Sources */,
-				0F2E73232B9076E163004BD469F95D6E /* AGELiveAvatarButton.swift in Sources */,
-				D9CD965CA5A9779EC1F19EA2395BADE9 /* AGESlider.swift in Sources */,
-				00377A9791260E43DE56F2616D4EB62F /* AGETableView.swift in Sources */,
-				9CEFEA7C7647AACB1A95919F8AA52D63 /* AGETextField.swift in Sources */,
-				3852E503606C5211990AD9B110CB1AB5 /* AGEToastView.swift in Sources */,
-				40DDBF096867DB1DAC4FF13593748449 /* AGEView.swift in Sources */,
-				5941FF8A512A2BE97401F73A7E7C9D12 /* Agora+Extension.swift in Sources */,
-				FAFD9EE9861A6224D4E4C48B8DC0AF72 /* AgoraUIKit-dummy.m in Sources */,
+				4624FDB27D10E51317C016BF23609E4E /* CLIColor.m in Sources */,
+				F2EB8818542F2C8937495D445D6476FA /* CocoaLumberjack-dummy.m in Sources */,
+				1BF5F65DF6ABE08AE15B245794CF7EE0 /* DDAbstractDatabaseLogger.m in Sources */,
+				8A924C6ED54529BB06AB8301BEAF1CF6 /* DDASLLogCapture.m in Sources */,
+				DDA73962B41AD5510F2EDE92D2693389 /* DDASLLogger.m in Sources */,
+				C23AEBB2209A74E8239090E56259B1CE /* DDContextFilterLogFormatter.m in Sources */,
+				C7EE2D947811ADE731AC0E99445BEFE0 /* DDDispatchQueueLogFormatter.m in Sources */,
+				50DDE3DEB881C7B0ABEA833F05584882 /* DDFileLogger.m in Sources */,
+				EFA2B64F9BD15A1CDE70AECAAA3FB716 /* DDFileLogger+Buffering.m in Sources */,
+				D0DFE1C383445A5FF30239D28CB529BA /* DDLog.m in Sources */,
+				6C38A54CF94825CEFD379A93A18B4292 /* DDLoggerNames.m in Sources */,
+				EA1D4434524D7D242AC7DFD4243B26BD /* DDMultiFormatter.m in Sources */,
+				D58B970AE7423530008922706D6BCEAB /* DDOSLogger.m in Sources */,
+				D0C6FEB30D0EAB7DD7EE620B53FB0533 /* DDTTYLogger.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		39577CF450DB3BEFED0F856AA8B49ED9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				98A8455CF30EDA84EC117A8C05509F9E /* AGEButton.swift in Sources */,
+				E452BEC43A60F6BE02B4AD72C4A390B3 /* AGECollectionView.swift in Sources */,
+				EB419F32942AE33E17F3FA71D353AEAD /* AGEColor+Extension.swift in Sources */,
+				75871B25FA0086DE68A79F3FEE0E6A0C /* AGEImageView.swift in Sources */,
+				01736C787815A2F698BDF51961E51580 /* AGELabel.swift in Sources */,
+				191F5B86BABB0BF8500B8933D3868F5C /* AGELiveAvatarButton.swift in Sources */,
+				FB987E16BEA353FB7FC0F308E69B7F31 /* AGESlider.swift in Sources */,
+				8EB486FF3FB10C3D57D676E575D6A1D1 /* AGETableView.swift in Sources */,
+				4B6C13F09B1532BBB66EBF57CC8B88ED /* AGETextField.swift in Sources */,
+				348A422EAF020661D74700A7E332AC8A /* AGEToastView.swift in Sources */,
+				6A1DA93E88FD424E5DE1EAAFFAFD3C5C /* AGEView.swift in Sources */,
+				B75382A9165FBD087C8EFAF77971C538 /* Agora+Extension.swift in Sources */,
+				06349EAC82FB2CF16EE2593A24543DDE /* AgoraUIKit-iOS-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1275,24 +1268,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		729CC2D7372CED2F135FD06893E70D9A /* Sources */ = {
+		7B3F6C35672C9E42D99834CDA1C87C1C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				837B589D178B57F7862D9F10118C20EF /* CLIColor.m in Sources */,
-				1DB8373C496001B96C42F97E6A05EC27 /* CocoaLumberjack-dummy.m in Sources */,
-				E99FE5DD5E2EE2551B429F6EA8552FFD /* DDAbstractDatabaseLogger.m in Sources */,
-				C33646CF3842CAF01A024C9375EC22A6 /* DDASLLogCapture.m in Sources */,
-				705FAE5D1A2F11D870E424E4EEABC5CC /* DDASLLogger.m in Sources */,
-				D4574195D24E91E44DE57A1B15716905 /* DDContextFilterLogFormatter.m in Sources */,
-				2831370BAEBE4B71F3718ED40C2EA12E /* DDDispatchQueueLogFormatter.m in Sources */,
-				AD632872B5459CEFCD8EA58553C98AE4 /* DDFileLogger.m in Sources */,
-				7E95DA74002F9FB69B410F850C560EA4 /* DDFileLogger+Buffering.m in Sources */,
-				A3F7164060349B671499DC0F064C5020 /* DDLog.m in Sources */,
-				9721DF1D770FA99C38D8144B08402274 /* DDLoggerNames.m in Sources */,
-				92D8412DEFC50309FDDD1CA394094B82 /* DDMultiFormatter.m in Sources */,
-				04BA074A81C18550067E797DF2EB916C /* DDOSLogger.m in Sources */,
-				5D335BB1BD8BB7EB9AF54E5BCDA68CA3 /* DDTTYLogger.m in Sources */,
+				B7D60E599FC8278E3069AB13EDB1F350 /* Pods-Scene-Examples-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1302,14 +1282,6 @@
 			files = (
 				D54C488AFD3FECA959966309B4367776 /* MBProgressHUD.m in Sources */,
 				664322323F45DA54FF797F17FDC0EC75 /* MBProgressHUD-dummy.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		8C49A306F177EA1D2292B87562927D74 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				38962D3035AD303F91A18A0FC0243C0B /* Pods-Scene-Examples-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1324,84 +1296,84 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		039027A3C2569FEADC92DBF9719810AA /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = MBProgressHUD;
-			target = 82B0A41D3031FF27D78E17B0A9A46FB0 /* MBProgressHUD */;
-			targetProxy = FC4A2D91E1AC46364C1DD7F77CD97322 /* PBXContainerItemProxy */;
-		};
-		04D3E39B629F03662A638AC56A58795A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = AgoraRtcEngine_iOS_Preview;
-			target = B44BABF52836AD694BB0B1138B9FF052 /* AgoraRtcEngine_iOS_Preview */;
-			targetProxy = 9B3D64CAC7455BFF2C05B6F8CD670865 /* PBXContainerItemProxy */;
-		};
-		09512E7870C3E0B41341363F6C5D8F12 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "AgoraScreenShare-iOS12.0";
-			target = FD936D71AE857912BF36BD5B3A215255 /* AgoraScreenShare-iOS12.0 */;
-			targetProxy = BFFF703251D39CE6540C613F928786C0 /* PBXContainerItemProxy */;
-		};
-		305AF6DFDAE5460D4C92B82A9A9EED8A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = AgoraLog;
-			target = C014EE64F91BF3E982DA13DA2B7C76F1 /* AgoraLog */;
-			targetProxy = C21198AB19AA8592FF69D0770CE28F4C /* PBXContainerItemProxy */;
-		};
-		4ACB68729D64E90D443BD5255A3C98EF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = AgoraLog;
-			target = C014EE64F91BF3E982DA13DA2B7C76F1 /* AgoraLog */;
-			targetProxy = 4AE43AC86353812D5847EED5D470D45A /* PBXContainerItemProxy */;
-		};
-		7521E7B6276D5B0DF4517ACF651D2DF8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = AgoraUIKit;
-			target = 9172AE13E25A7D3200C24F5DED9902E5 /* AgoraUIKit */;
-			targetProxy = DF5ECB328B2CAF5B025FDD908E8EA54A /* PBXContainerItemProxy */;
-		};
-		B714C296A62B15E04903CDCB1F10989A /* PBXTargetDependency */ = {
+		0177115297C79057788151DFAFE137D2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = AgoraRtm_iOS;
 			target = C749B96AD7CBE862709769C59C7DF18E /* AgoraRtm_iOS */;
-			targetProxy = 392E3ACBCBF1A9DEC3F389F41ACDAABD /* PBXContainerItemProxy */;
+			targetProxy = 2E06075FE3FB90BD5FE2A18F0F87101A /* PBXContainerItemProxy */;
 		};
-		C6080E46DE5EC6C575A67E0416DF442A /* PBXTargetDependency */ = {
+		0260031943FDD43B94D50D0607839891 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = AgoraRtm_iOS;
-			target = C749B96AD7CBE862709769C59C7DF18E /* AgoraRtm_iOS */;
-			targetProxy = BD21EFD9F72A79D4EA5D6E50C6D4BCF3 /* PBXContainerItemProxy */;
+			name = AgoraLog;
+			target = C014EE64F91BF3E982DA13DA2B7C76F1 /* AgoraLog */;
+			targetProxy = B34291A94D9BEB0357030544B3994A2A /* PBXContainerItemProxy */;
 		};
-		D29C3F4854D67269608152BE2F932F05 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = CocoaLumberjack;
-			target = E95654B155D25890BE8E26081FCA8265 /* CocoaLumberjack */;
-			targetProxy = 438B6BB2D2808EE523421584F4123432 /* PBXContainerItemProxy */;
-		};
-		F859131FFE7A901FF061A67AEDC71E3B /* PBXTargetDependency */ = {
+		09D317FDE3170A289D5BC92C9ADC15B2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = CocoaLumberjack;
 			target = E95654B155D25890BE8E26081FCA8265 /* CocoaLumberjack */;
-			targetProxy = 030FB623F2889244EDD076EBF31AEF28 /* PBXContainerItemProxy */;
+			targetProxy = 499432CC094EEC079EFA36F27DF133CE /* PBXContainerItemProxy */;
 		};
-		FD3AFBEDE7269E540E67D8708B49B428 /* PBXTargetDependency */ = {
+		2037A07767FDEFF4D7521D3F8D2B0C0E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "AgoraUIKit-iOS";
+			target = F1344B359C238419E319DAA48BBD510C /* AgoraUIKit-iOS */;
+			targetProxy = 707C07B410FB999E2E28A7F70D0B9CE6 /* PBXContainerItemProxy */;
+		};
+		32ADC051FD37D2B9F726D6812E8B7FFD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "AgoraScreenShare-iOS13.0";
 			target = 301224968EA8A6DC58FCC647175F57F7 /* AgoraScreenShare-iOS13.0 */;
-			targetProxy = 5791D823D9E1C2BE2342FA6D9870CD06 /* PBXContainerItemProxy */;
+			targetProxy = 00B19EFAA2D355267804F5653BD68D7E /* PBXContainerItemProxy */;
 		};
-		FE0300AC924FDB42D88628AA3AF05882 /* PBXTargetDependency */ = {
+		383D9D1168AF887AA43F150BC22810A9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = AgoraSyncManager;
 			target = 9E252967684E1AF8BF4723B43F556F48 /* AgoraSyncManager */;
-			targetProxy = BAE18EFDD89DB99F8E9C9981371D5AA3 /* PBXContainerItemProxy */;
+			targetProxy = 0C5EDBEED8CC7E38AC39A8FE6CF0CDC2 /* PBXContainerItemProxy */;
+		};
+		467F22DAE1C5279C2BFA03BC2BCBCFD4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AgoraLog;
+			target = C014EE64F91BF3E982DA13DA2B7C76F1 /* AgoraLog */;
+			targetProxy = 94C83DFEEB4D13862CA669A8804F7CE1 /* PBXContainerItemProxy */;
+		};
+		9BC4551700B27943AC8C50820D71C7CE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = CocoaLumberjack;
+			target = E95654B155D25890BE8E26081FCA8265 /* CocoaLumberjack */;
+			targetProxy = 513499D87ED262DD4995BF152601D6EE /* PBXContainerItemProxy */;
+		};
+		B27AB7C8CC89E8DB4AFEFD7B09D0F7FE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AgoraRtm_iOS;
+			target = C749B96AD7CBE862709769C59C7DF18E /* AgoraRtm_iOS */;
+			targetProxy = 9D5AC1CE1EB5BF6FE72197660AF05D9F /* PBXContainerItemProxy */;
+		};
+		D4DA0FBCEAF54D739620F75FEAAAACFD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AgoraRtcEngine_iOS_Preview;
+			target = B44BABF52836AD694BB0B1138B9FF052 /* AgoraRtcEngine_iOS_Preview */;
+			targetProxy = 7450C609AAF0915AB697CC3F4FF7D8C7 /* PBXContainerItemProxy */;
+		};
+		E51CA72CDCD4E1DA866E4749DAFF202C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MBProgressHUD;
+			target = 82B0A41D3031FF27D78E17B0A9A46FB0 /* MBProgressHUD */;
+			targetProxy = 98BB6BE374E4376F17FFC64B8CE00745 /* PBXContainerItemProxy */;
+		};
+		ED25F1D80F11CC972171245E4558BA25 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "AgoraScreenShare-iOS12.0";
+			target = FD936D71AE857912BF36BD5B3A215255 /* AgoraScreenShare-iOS12.0 */;
+			targetProxy = 18A8E4ABE8EAC28886873748EA483C43 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		04C7D3A905B0EEAC6BEC712CD681ABAD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 799D78917746410EA5B4AB8A8A2236CD /* AgoraSyncManager.release.xcconfig */;
+			baseConfigurationReference = 06F8AD7661CBAED7136F2DC8CAA05E87 /* AgoraSyncManager.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -1436,7 +1408,7 @@
 		};
 		0A12E9241E0EDDFADD73C5249E90EFE6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C753F8AFF884AF8DB833C71E745791A4 /* AgoraLog.debug.xcconfig */;
+			baseConfigurationReference = 8F16BC1EF2650C4BB9A8BBCB9D2645B4 /* AgoraLog.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -1468,42 +1440,6 @@
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
-		};
-		0ED776994E30B29C7879663597B0C6C2 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2DE88F3DA4A7E06EC4968E781C07B5C7 /* AgoraUIKit.release.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/AgoraUIKit/AgoraUIKit-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/AgoraUIKit/AgoraUIKit-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MODULEMAP_FILE = "Target Support Files/AgoraUIKit/AgoraUIKit.modulemap";
-				PRODUCT_MODULE_NAME = AgoraUIKit;
-				PRODUCT_NAME = AgoraUIKit;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
 		};
 		2B9E26EAE2CD392AD762421F663075A1 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -1571,9 +1507,9 @@
 			};
 			name = Debug;
 		};
-		3DC36AF7123BE58F26CE734221F33C0E /* Debug */ = {
+		4069C30F9B88BE91FB9B2A189433788B /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0FFD1600A169E7B3BCE4E58D972E0394 /* CocoaLumberjack.debug.xcconfig */;
+			baseConfigurationReference = 9C212AB5886DC79279898845ADD527B6 /* CocoaLumberjack.release.xcconfig */;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -1600,14 +1536,15 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Debug;
+			name = Release;
 		};
 		44E11D77B21B09DAF50345E3A78CA14B /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 28C6E1DCD0D2CA00A441CA3430BD82AE /* AgoraLog.release.xcconfig */;
+			baseConfigurationReference = ED945E556785BDF659BCE21FC82FCC70 /* AgoraLog.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -1641,9 +1578,46 @@
 			};
 			name = Release;
 		};
+		5004045DBB0BC7E2978F39A16B009531 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 28763535DB3269D3831AE799C152C2C6 /* Pods-Scene-Examples.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-Scene-Examples/Pods-Scene-Examples-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-Scene-Examples/Pods-Scene-Examples.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
 		511CBEDF2470756146AA87D36C9D7A70 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 161564B80F092A3A886F2FCBA95358E0 /* AgoraScreenShare-iOS13.0.release.xcconfig */;
+			baseConfigurationReference = B45F00675B2A47ABF32B55AA9AF2B9EC /* AgoraScreenShare-iOS13.0.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1660,7 +1634,7 @@
 		};
 		59AB7DC8E40625373532FD97BCEED4E4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 45781B783540620DF5A923554CF359A2 /* AgoraRtm_iOS.release.xcconfig */;
+			baseConfigurationReference = A881F39573FB17D02C45CDEE8DFA04BD /* AgoraRtm_iOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1677,7 +1651,7 @@
 		};
 		5B418061E19CCEF286207E34428E821E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 39C076C64CBC66A65F3767C64C3A35B6 /* AgoraRtm_iOS.debug.xcconfig */;
+			baseConfigurationReference = A17354C02D3F1C08B5647517CDD82CCA /* AgoraRtm_iOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1753,44 +1727,9 @@
 			};
 			name = Release;
 		};
-		67678D251336421CD8CF0DA09CBEFCFA /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 803DEB1C08434D4C97BF3F01EC60C4C6 /* CocoaLumberjack.release.xcconfig */;
-			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/CocoaLumberjack/CocoaLumberjack-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/CocoaLumberjack/CocoaLumberjack-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MODULEMAP_FILE = "Target Support Files/CocoaLumberjack/CocoaLumberjack.modulemap";
-				PRODUCT_MODULE_NAME = CocoaLumberjack;
-				PRODUCT_NAME = CocoaLumberjack;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
 		73AF3160B7C4C7D616EC86C0CB7E3A44 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E122E07D5CDF5788EF68FB8D86891965 /* AgoraSyncManager.debug.xcconfig */;
+			baseConfigurationReference = 42E95D7B8B5309EDB150291ECDA389D1 /* AgoraSyncManager.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -1824,7 +1763,7 @@
 		};
 		75F9C8DC4729443E0E14A31EF01EECF4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 21EDCF1DB18E21CB9EB6911EA7C15012 /* AgoraScreenShare-iOS12.0.debug.xcconfig */;
+			baseConfigurationReference = F973CB2B215C0383DFC1E5F7C56FDD0F /* AgoraScreenShare-iOS12.0.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1875,46 +1814,9 @@
 			};
 			name = Debug;
 		};
-		AA3FA62A186F02042F1D05DF44C42484 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 28763535DB3269D3831AE799C152C2C6 /* Pods-Scene-Examples.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "Target Support Files/Pods-Scene-Examples/Pods-Scene-Examples-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-Scene-Examples/Pods-Scene-Examples.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
 		AF96967B0F510B25727D07C6BA723662 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 26231486B99FA6AC7CC36558226C71F1 /* AgoraScreenShare-iOS13.0.debug.xcconfig */;
+			baseConfigurationReference = 3BBEF490263D243FACE8949C5EDC392B /* AgoraScreenShare-iOS13.0.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1927,6 +1829,42 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
+		};
+		B964D06CF4200F8A5C899F5F0E065661 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2EF063D398184A67266EDD2CC5FA34E5 /* AgoraUIKit-iOS.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/AgoraUIKit-iOS/AgoraUIKit-iOS-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/AgoraUIKit-iOS/AgoraUIKit-iOS-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/AgoraUIKit-iOS/AgoraUIKit-iOS.modulemap";
+				PRODUCT_MODULE_NAME = AgoraUIKit_iOS;
+				PRODUCT_NAME = AgoraUIKit_iOS;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
 		};
 		BB90DC21620C9C2D065EAE0072908921 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -1968,7 +1906,7 @@
 		};
 		C3C37B487645A54D043C2C18BF002F24 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2566AA9315DB16352F738C8809F7A5B9 /* MBProgressHUD.release.xcconfig */;
+			baseConfigurationReference = 5F633B3F0282105933A3A5F1C40391F7 /* MBProgressHUD.release.xcconfig */;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -2001,126 +1939,7 @@
 			};
 			name = Release;
 		};
-		CE7674FD20DF632ABF83D5DF7538260F /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = DC4A51541433AE8910310E5245637E21 /* AgoraUIKit.debug.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/AgoraUIKit/AgoraUIKit-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/AgoraUIKit/AgoraUIKit-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MODULEMAP_FILE = "Target Support Files/AgoraUIKit/AgoraUIKit.modulemap";
-				PRODUCT_MODULE_NAME = AgoraUIKit;
-				PRODUCT_NAME = AgoraUIKit;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		D07CF5EAC44F1EFAAF48AD2718334643 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7FD2F856B3A74D00DDF97B4046B9665E /* AgoraRtcEngine_iOS_Preview.release.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		D2AD63FD3972F04B81230F5C4C831FF8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = D6B1F5991308D2747CF223A08085E9B3 /* AgoraRtcEngine_iOS_Preview.debug.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		D45517EE27E995A2C6ED5B30B17BCFFE /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 12B2A78E5D3691370FA1ED86E3A393A1 /* AgoraScreenShare-iOS12.0.release.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		DE569755C8FE69395D8E6C347DC7A5F8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = F07ABFBC86BC248B6CC3934FA0407AE9 /* MBProgressHUD.debug.xcconfig */;
-			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/MBProgressHUD/MBProgressHUD-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/MBProgressHUD/MBProgressHUD-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MODULEMAP_FILE = "Target Support Files/MBProgressHUD/MBProgressHUD.modulemap";
-				PRODUCT_MODULE_NAME = MBProgressHUD;
-				PRODUCT_NAME = MBProgressHUD;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		EC64A1B9753274A0D4992746C0840F96 /* Release */ = {
+		CE9D1ECF7ED2F18BCCCBDD398C08293D /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FA215D947BD1E98F368E051871081ECD /* Pods-Scene-Examples.release.xcconfig */;
 			buildSettings = {
@@ -2158,27 +1977,162 @@
 			};
 			name = Release;
 		};
+		D07CF5EAC44F1EFAAF48AD2718334643 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 33C23B08180C41D3F530719F77509FFE /* AgoraRtcEngine_iOS_Preview.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D2AD63FD3972F04B81230F5C4C831FF8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3A2F011ECD045C7128537E1FF1B95D75 /* AgoraRtcEngine_iOS_Preview.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D45517EE27E995A2C6ED5B30B17BCFFE /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 399D46B011EC28D49BF5CAD904A9647D /* AgoraScreenShare-iOS12.0.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		DE569755C8FE69395D8E6C347DC7A5F8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6D562B6DA3BF1C6DDEBFAFF6CC1E2F87 /* MBProgressHUD.debug.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/MBProgressHUD/MBProgressHUD-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/MBProgressHUD/MBProgressHUD-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/MBProgressHUD/MBProgressHUD.modulemap";
+				PRODUCT_MODULE_NAME = MBProgressHUD;
+				PRODUCT_NAME = MBProgressHUD;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		E3C335E74E7695A40D320B977B5AA5B1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C5A95F74FA9200148A8B5A0890FCBAFB /* AgoraUIKit-iOS.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/AgoraUIKit-iOS/AgoraUIKit-iOS-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/AgoraUIKit-iOS/AgoraUIKit-iOS-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/AgoraUIKit-iOS/AgoraUIKit-iOS.modulemap";
+				PRODUCT_MODULE_NAME = AgoraUIKit_iOS;
+				PRODUCT_NAME = AgoraUIKit_iOS;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		E4CD82853F1EECDEDB4BD4FF08FCE3FA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CB464106C1ED48626F54955FB2A82AE0 /* CocoaLumberjack.debug.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/CocoaLumberjack/CocoaLumberjack-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/CocoaLumberjack/CocoaLumberjack-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/CocoaLumberjack/CocoaLumberjack.modulemap";
+				PRODUCT_MODULE_NAME = CocoaLumberjack;
+				PRODUCT_NAME = CocoaLumberjack;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2A1398AA7C2AB13EE017980E1F92808A /* Build configuration list for PBXNativeTarget "AgoraUIKit" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				CE7674FD20DF632ABF83D5DF7538260F /* Debug */,
-				0ED776994E30B29C7879663597B0C6C2 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		33436D71745BA11314F43C9FE28E7D58 /* Build configuration list for PBXNativeTarget "Pods-Scene-Examples" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				AA3FA62A186F02042F1D05DF44C42484 /* Debug */,
-				EC64A1B9753274A0D4992746C0840F96 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		3AF3674946C27A030F39E497A5AD2F46 /* Build configuration list for PBXAggregateTarget "AgoraRtm_iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -2202,6 +2156,15 @@
 			buildConfigurations = (
 				2B9E26EAE2CD392AD762421F663075A1 /* Debug */,
 				63FAF33E1C55B71A5F5A8B3CC8749F99 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7F4A104AF24CD3B88C7B9F26E030F813 /* Build configuration list for PBXNativeTarget "AgoraUIKit-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E3C335E74E7695A40D320B977B5AA5B1 /* Debug */,
+				B964D06CF4200F8A5C899F5F0E065661 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2251,11 +2214,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E7E2DB6F223DEC8CC6C1329938038741 /* Build configuration list for PBXNativeTarget "CocoaLumberjack" */ = {
+		E1EDBFA2DC1E0C355572B606E76CBE0E /* Build configuration list for PBXNativeTarget "Pods-Scene-Examples" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				3DC36AF7123BE58F26CE734221F33C0E /* Debug */,
-				67678D251336421CD8CF0DA09CBEFCFA /* Release */,
+				5004045DBB0BC7E2978F39A16B009531 /* Debug */,
+				CE9D1ECF7ED2F18BCCCBDD398C08293D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F58D952AB08FDC306B2BC53BD3E90554 /* Build configuration list for PBXNativeTarget "CocoaLumberjack" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E4CD82853F1EECDEDB4BD4FF08FCE3FA /* Debug */,
+				4069C30F9B88BE91FB9B2A189433788B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -30,7 +30,7 @@ Copyright 2019 agora.io. All rights reserved.
 Copyright 2018 agora.io. All rights reserved.
 
 
-## AgoraUIKit
+## AgoraUIKit-iOS
 
 Copyright 2018 agora.io. All rights reserved.
 

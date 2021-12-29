@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import AgoraUIKit
+import AgoraUIKit_iOS
 
 enum ChatMessageType {
     case message

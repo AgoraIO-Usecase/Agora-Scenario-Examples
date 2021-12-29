@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import AgoraUIKit
+import AgoraUIKit_iOS
 
 class PKLiveInviteView: UIView {
     var pkInviteSubscribe: ((String) -> Void)?

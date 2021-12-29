@@ -91,6 +91,7 @@
 		E79C264A273D003B00909CD4 /* LiveRoomInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2649273D003B00909CD4 /* LiveRoomInfo.swift */; };
 		E79C264C273D053E00909CD4 /* LiveRoomListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C264B273D053E00909CD4 /* LiveRoomListController.swift */; };
 		E79C264E273D062400909CD4 /* LiveRoomListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C264D273D062400909CD4 /* LiveRoomListCell.swift */; };
+		E7F9493D277B0C17005C57F1 /* OnoToOneGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F9493C277B0C17005C57F1 /* OnoToOneGameView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -213,6 +214,7 @@
 		E79C2649273D003B00909CD4 /* LiveRoomInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRoomInfo.swift; sourceTree = "<group>"; };
 		E79C264B273D053E00909CD4 /* LiveRoomListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRoomListController.swift; sourceTree = "<group>"; };
 		E79C264D273D062400909CD4 /* LiveRoomListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRoomListCell.swift; sourceTree = "<group>"; };
+		E7F9493C277B0C17005C57F1 /* OnoToOneGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnoToOneGameView.swift; sourceTree = "<group>"; };
 		EA2989DBAC3CC73E3574369E /* Pods-Agora-ScreenShare-Extension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Agora-ScreenShare-Extension.debug.xcconfig"; path = "Target Support Files/Pods-Agora-ScreenShare-Extension/Pods-Agora-ScreenShare-Extension.debug.xcconfig"; sourceTree = "<group>"; };
 		F13F3E8380132BD39CD228E0 /* Pods-Scene-Examples.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Scene-Examples.debug.xcconfig"; path = "Target Support Files/Pods-Scene-Examples/Pods-Scene-Examples.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -284,6 +286,7 @@
 			isa = PBXGroup;
 			children = (
 				E7440E252772CADF00CBF4D8 /* OneToOneControlView.swift */,
+				E7F9493C277B0C17005C57F1 /* OnoToOneGameView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -326,17 +329,9 @@
 			path = Gif;
 			sourceTree = "<group>";
 		};
-		E79BEF5E273E72D2009FA838 /* SyncManagerDelegate */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = SyncManagerDelegate;
-			sourceTree = "<group>";
-		};
 		E79BEF612741FCEB009FA838 /* PKLive */ = {
 			isa = PBXGroup;
 			children = (
-				E79BEF6D27421160009FA838 /* SyncManagerDelegate */,
 				E79BEF642741FD0F009FA838 /* Views */,
 				E79BEF632741FD09009FA838 /* Models */,
 				E79BEF622741FD01009FA838 /* Controllers */,
@@ -369,13 +364,6 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		E79BEF6D27421160009FA838 /* SyncManagerDelegate */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = SyncManagerDelegate;
-			sourceTree = "<group>";
-		};
 		E79BEF7827463F79009FA838 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -406,7 +394,6 @@
 		E79BEF8E2746729D009FA838 /* Game */ = {
 			isa = PBXGroup;
 			children = (
-				E79BF02C274B824C009FA838 /* SyncManagerDelegate */,
 				E79BF027274B77B3009FA838 /* ViewModels */,
 				E79BEF9227474C0E009FA838 /* Models */,
 				E79BEF9127474C07009FA838 /* Views */,
@@ -477,13 +464,6 @@
 				E79BF028274B77C7009FA838 /* GameViewModel.swift */,
 			);
 			path = ViewModels;
-			sourceTree = "<group>";
-		};
-		E79BF02C274B824C009FA838 /* SyncManagerDelegate */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = SyncManagerDelegate;
 			sourceTree = "<group>";
 		};
 		E79C25D2273B67DB00909CD4 = {
@@ -611,7 +591,6 @@
 		E79C2620273B7B5C00909CD4 /* Live */ = {
 			isa = PBXGroup;
 			children = (
-				E79BEF5E273E72D2009FA838 /* SyncManagerDelegate */,
 				E79C2624273B7B9100909CD4 /* Cells */,
 				E79C2622273B7B7F00909CD4 /* Models */,
 				E79C2623273B7B8600909CD4 /* Views */,
@@ -943,6 +922,7 @@
 				E79C25E1273B67DB00909CD4 /* SceneDelegate.swift in Sources */,
 				E79BEF88274640A6009FA838 /* BORVideoRoomDetailCell.swift in Sources */,
 				E79C260C273B689B00909CD4 /* MBHUD.swift in Sources */,
+				E7F9493D277B0C17005C57F1 /* OnoToOneGameView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1171,7 +1151,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1211;
+				CURRENT_PROJECT_VERSION = 1212;
 				DEVELOPMENT_TEAM = YS397FG5PA;
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1209,7 +1189,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1211;
+				CURRENT_PROJECT_VERSION = 1212;
 				DEVELOPMENT_TEAM = YS397FG5PA;
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;

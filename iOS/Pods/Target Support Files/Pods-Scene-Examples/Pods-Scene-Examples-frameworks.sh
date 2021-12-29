@@ -185,7 +185,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${PODS_ROOT}/AgoraRtm_iOS/AgoraRtmKit.framework"
   install_framework "${PODS_ROOT}/../sdk/libs/AgoraScreenShare.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/AgoraSyncManager/AgoraSyncManager.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/AgoraUIKit/AgoraUIKit.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/AgoraUIKit-iOS/AgoraUIKit_iOS.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/CocoaLumberjack/CocoaLumberjack.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework"
 fi
@@ -199,7 +199,7 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${PODS_ROOT}/AgoraRtm_iOS/AgoraRtmKit.framework"
   install_framework "${PODS_ROOT}/../sdk/libs/AgoraScreenShare.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/AgoraSyncManager/AgoraSyncManager.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/AgoraUIKit/AgoraUIKit.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/AgoraUIKit-iOS/AgoraUIKit_iOS.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/CocoaLumberjack/CocoaLumberjack.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework"
 fi

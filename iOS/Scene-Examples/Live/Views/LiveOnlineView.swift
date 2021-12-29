@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import AgoraUIKit
+import AgoraUIKit_iOS
 
 class LiveOnlineView: UIView {
     private lazy var onLineView: UIView = {

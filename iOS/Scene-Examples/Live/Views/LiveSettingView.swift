@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import AgoraUIKit
+import AgoraUIKit_iOS
 
 class LiveSettingView: UIView {
     var liveSettingFinishedClosure: ((LiveSettingUseData) -> Void)?

@@ -6,7 +6,8 @@
 //
 
 import UIKit
-import AgoraUIKit
+import AgoraUIKit_iOS
+
 enum LiveToolType {
     case switch_camera
     case camera

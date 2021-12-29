@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import AgoraUIKit
+import AgoraUIKit_iOS
 
 class MainViewController: BaseViewController {
     private lazy var tableView: AGETableView = {

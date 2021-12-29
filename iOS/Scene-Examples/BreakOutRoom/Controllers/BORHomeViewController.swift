@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import AgoraUIKit
+import AgoraUIKit_iOS
 
 class BORHomeViewController: BaseViewController {
     private lazy var roomView: AGECollectionView = {

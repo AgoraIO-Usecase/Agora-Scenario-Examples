@@ -7,8 +7,8 @@
 
 import UIKit
 import AgoraRtcKit
-import AgoraUIKit
 import AgoraSyncManager
+import AgoraUIKit_iOS
 
 class BORRoomDetailController: BaseViewController {
     private lazy var segmentView: SegmentView = {

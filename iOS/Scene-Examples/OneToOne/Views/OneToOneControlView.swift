@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import AgoraUIKit
+import AgoraUIKit_iOS
 
 enum OneToOneControlType: Int {
     case switchCamera = 1

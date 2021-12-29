@@ -7,7 +7,6 @@
 
 import UIKit
 import AgoraRtcKit
-import AgoraUIKit
 
 class SignleLiveController: BaseViewController {
     public lazy var liveView: LiveBaseView = {

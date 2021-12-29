@@ -8,6 +8,6 @@ ${PODS_ROOT}/AgoraRtcEngine_iOS_Preview/Agoraffmpeg.framework
 ${PODS_ROOT}/AgoraRtm_iOS/AgoraRtmKit.framework
 ${PODS_ROOT}/../sdk/libs/AgoraScreenShare.framework
 ${BUILT_PRODUCTS_DIR}/AgoraSyncManager/AgoraSyncManager.framework
-${BUILT_PRODUCTS_DIR}/AgoraUIKit/AgoraUIKit.framework
+${BUILT_PRODUCTS_DIR}/AgoraUIKit-iOS/AgoraUIKit_iOS.framework
 ${BUILT_PRODUCTS_DIR}/CocoaLumberjack/CocoaLumberjack.framework
 ${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework

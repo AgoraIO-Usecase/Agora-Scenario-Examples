@@ -6,8 +6,8 @@
 //
 
 import UIKit
-import AgoraUIKit
 import AgoraRtcKit
+import AgoraUIKit_iOS
 
 enum RecelivedType {
     case me
