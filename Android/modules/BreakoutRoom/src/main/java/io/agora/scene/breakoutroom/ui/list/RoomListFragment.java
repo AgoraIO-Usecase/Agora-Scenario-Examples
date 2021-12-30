@@ -232,6 +232,6 @@ public class RoomListFragment extends BaseNavFragment<RoomFragmentRoomListBindin
 
     private void onContentStatus() {
         mBinding.swipeFgList.setRefreshing(false);
-        mBinding.emptyImageFgList.setVisibility(View.GONE);
+        mBinding.emptyViewFgList.setVisibility(View.GONE);
     }
 }
