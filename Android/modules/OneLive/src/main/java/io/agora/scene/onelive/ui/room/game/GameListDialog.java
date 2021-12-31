@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import io.agora.example.base.BaseBottomSheetDialogFragment;
@@ -63,8 +64,8 @@ public class GameListDialog extends BaseBottomSheetDialogFragment<OneDialogGameL
     }
 
     private List<AgoraGame> fetchAllGameList(){
-        List<AgoraGame> gameList = new ArrayList<>();
-        gameList.add(GameRepo.getGameDetail(1));
+        List<AgoraGame> gameList = new ArrayList<>(Arrays.asList(GameRepo.gameList));
+        gameList.remove(1);
         return gameList;
     }
 

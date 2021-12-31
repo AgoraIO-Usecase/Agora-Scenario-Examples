@@ -19,15 +19,37 @@ import retrofit2.Response;
 
 public class GameRepo {
 
-    @Nullable
-    public static AgoraGame getGameDetail(int gameId){
-        if (gameId == 1){
-            return new AgoraGame(gameId, "10020", "你画我猜",
+    public static final AgoraGame[] gameList = new AgoraGame[]{
+            new AgoraGame(1, "10020", "你画我猜",
                     "https://imgsecond.yuanqiyouxi.com/test/DrawAndGuess/index.html",
                     "https://testgame.yuanqihuyu.com/guess/leave",
                     "https://testgame.yuanqihuyu.com/guess/gift",
-                    "https://testgame.yuanqihuyu.com/guess/barrage");
-        } else return null;
+                    "https://testgame.yuanqihuyu.com/guess/barrage"),
+            new AgoraGame(2, "10020", "你画我猜同玩版",
+                    "https://imgsecond.yuanqiyouxi.com/test/DrawAndGuess/index.html",
+                    "https://testgame.yuanqihuyu.com/guess/leave",
+                    "https://testgame.yuanqihuyu.com/guess/gift",
+                    "https://testgame.yuanqihuyu.com/guess/barrage"),
+            new AgoraGame(3, "10020", "谁是卧底",
+                    "https://imgsecond.yuanqiyouxi.com/test/spy/index.html",
+                    "https://testgame.yuanqihuyu.com/guess/leave",
+                    "https://testgame.yuanqihuyu.com/guess/gift",
+                    "https://testgame.yuanqihuyu.com/guess/barrage"),
+            new AgoraGame(4, "10020", "大话骰",
+                    "https://imgsecond.yuanqiyouxi.com/test/Dice_ShengWang/index.html",
+                    "https://testgame.yuanqihuyu.com/guess/leave",
+                    "https://testgame.yuanqihuyu.com/guess/gift",
+                    "https://testgame.yuanqihuyu.com/guess/barrage"),
+            new AgoraGame(5, "10020", "王国激战",
+                    "https://imgsecond.yuanqiyouxi.com/test/War/web-mobile/index.html",
+                    "https://testgame.yuanqihuyu.com/guess/leave",
+                    "https://testgame.yuanqihuyu.com/guess/gift",
+                    "https://testgame.yuanqihuyu.com/guess/barrage")
+    };
+
+    @Nullable
+    public static AgoraGame getGameDetail(int gameId){
+        return gameList[gameId - 1];
     }
 
     public static void endThisGame(@NonNull RoomInfo roomInfo, @NonNull AgoraGame agoraGame){
