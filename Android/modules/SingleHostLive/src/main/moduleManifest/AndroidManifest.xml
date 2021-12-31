@@ -1,34 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.agora.scene.singlehostlive">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="io.agora.sample.singlehostlive">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.CAMERA" />
 
-    <application>
-        <activity
-            android:name=".RoomListActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/single_AppTheme" />
+    <application
+        android:allowBackup="false"
+        android:requestLegacyExternalStorage="true"
+        android:screenOrientation="portrait"
+        android:supportsRtl="true"
+        tools:ignore="GoogleAppIndexingWarning">
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.4" />
 
         <activity
-            android:name=".UserProfileActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/single_AppTheme" />
+            android:name="io.agora.sample.singlehostlive.RoomListActivity"
+            android:launchMode="singleTop"/>
 
         <activity
-            android:name=".PreviewActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/single_AppTheme" />
+            android:name="io.agora.sample.singlehostlive.PreviewActivity"
+            android:launchMode="singleTop"/>
 
         <activity
-            android:name=".HostDetailActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/single_AppTheme" />
+            android:name="io.agora.sample.singlehostlive.HostDetailActivity"
+            android:launchMode="singleTop"/>
+
+        <activity
+            android:name="io.agora.sample.singlehostlive.AudienceDetailActivity"
+            android:launchMode="singleTop"/>
 
 
     </application>

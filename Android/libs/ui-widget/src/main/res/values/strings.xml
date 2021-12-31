@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="common_tip">Tip</string>
+    <string name="common_yes">Yes</string>
+    <string name="common_cancel">Cancel</string>
+    <string name="common_no">No</string>
+    <string name="common_tip_close_room">Sure to close room?</string>
 
 
     <!--================== Function ==================-->
@@ -23,6 +28,39 @@
     <string name="video_setting_dialog_bitrate_value_format" translatable="false">%d kbps</string>
 
 
+    <!-- Live Bottom View -->
+    <string name="live_bottom_edit_hint">Say something &#8230;</string>
+
+    <!-- LiveRoomMessageListView -->
+    <string name="live_room_message_user_join_suffix">has joined</string>
+    <string name="live_room_message_user_left_suffix">has left</string>
+    <string name="live_room_message_gift_prefix">has sent out</string>
+
+    <!-- LiveToolDialog -->
+    <string name="live_tool_layout_title">Tool</string>
+    <string name="live_tool_name_data">Data</string>
+    <string name="live_tool_name_speaker">Speaker</string>
+    <string name="live_tool_name_ear_monitor">EarMonitor</string>
+    <string name="live_tool_name_setting">Setting</string>
+    <string name="live_tool_name_rotate">Rotate</string>
+    <string name="live_tool_name_camera">Camera</string>
+
+    <!-- GiftGridDialog -->
+    <string name="gift_grid_title">Presents</string>
+    <string name="gift_grid_send">Send</string>
+    <string name="gift_grid_coin_value_format">(%d Coins)</string>
+    <string name="gift_grid_default_gift_item_bell">Bell</string>
+    <string name="gift_grid_default_gift_item_ice_cream">Ice Cream</string>
+    <string name="gift_grid_default_gift_item_wine">Wine</string>
+    <string name="gift_grid_default_gift_item_cake">Cake</string>
+    <string name="gift_grid_default_gift_item_ring">Ring</string>
+    <string name="gift_grid_default_gift_item_watch">Watch</string>
+    <string name="gift_grid_default_gift_item_diamond">Diamond</string>
+    <string name="gift_grid_default_gift_item_rocket">Rocket</string>
+
+    <!-- OnlineUserListDialog -->
+    <string name="online_user_list_dialog_title">Member Listing</string>
+    <string name="online_user_list_dialog_invite">Invite</string>
 
     <!--=================== Utils ======================-->
 
@@ -68,5 +106,7 @@
         <item>Kelly</item>
         <item>Lauren</item>
     </string-array>
+
+
 
 </resources>

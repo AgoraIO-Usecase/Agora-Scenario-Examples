@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/gift_grid_layout_height"
+    android:orientation="vertical"
+    android:background="@drawable/gift_grid_dialog_bg">
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/gift_grid_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/gift_grid_layout_title_height"
+        android:textAlignment="gravity"
+        android:gravity="center"
+        android:text="@string/gift_grid_title"
+        android:textSize="@dimen/gift_grid_layout_text_size"
+        android:textColor="@color/gift_grid_title_text_color"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/gift_grid_divider_height"
+        android:layout_marginHorizontal="@dimen/gift_grid_content_margin_h"
+        android:background="@color/gift_grid_divider_color"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/gift_grid_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/gift_grid_content_margin_h"
+        android:layout_marginTop="@dimen/gift_grid_content_margin_v" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/gift_grid_send_btn"
+        android:layout_width="@dimen/gift_grid_layout_action_btn_width"
+        android:layout_height="@dimen/gift_grid_layout_action_btn_height"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/gift_grid_content_margin_v"
+        android:textAlignment="gravity"
+        android:gravity="center"
+        android:text="@string/gift_grid_send"
+        android:textSize="@dimen/gift_grid_layout_text_size"
+        android:textColor="@color/gift_grid_action_text_color"
+        android:background="@drawable/gift_grid_action_button_bg"/>
+</LinearLayout>

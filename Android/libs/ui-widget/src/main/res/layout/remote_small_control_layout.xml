@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/remote_small_control_layout_width"
+    android:layout_height="@dimen/remote_small_control_layout_height">
+
+    <RelativeLayout
+        android:layout_width="@dimen/remote_small_control_video_width"
+        android:layout_height="@dimen/remote_small_control_video_height"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true">
+
+        <FrameLayout
+            android:id="@+id/video_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/remote_small_control_text_mask_bg"
+            android:gravity="center"
+            android:paddingVertical="@dimen/remote_small_control_text_padding_v"
+            android:textAlignment="gravity"
+            android:textColor="@android:color/white" />
+    </RelativeLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_close"
+        android:layout_width="@dimen/remote_small_control_close_icon_size"
+        android:layout_height="@dimen/remote_small_control_close_icon_size"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/remote_small_control_close_icon" />
+
+</RelativeLayout>

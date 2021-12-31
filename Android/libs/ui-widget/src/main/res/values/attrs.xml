@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="isLight" format="boolean"/>
+
+    <declare-styleable name="LiveBottomView">
+        <attr name="isLight"/>
+    </declare-styleable>
+
+    <declare-styleable name="LiveHostNameView">
+        <attr name="isLight"/>
+    </declare-styleable>
+
+    <declare-styleable name="LiveRoomUserView">
+        <attr name="isLight"/>
+    </declare-styleable>
+
+    <declare-styleable name="LiveRoomMessageListView">
+        <attr name="isLight"/>
+    </declare-styleable>
+
+
+</resources>
