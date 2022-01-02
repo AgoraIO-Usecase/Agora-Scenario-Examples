@@ -1,7 +1,5 @@
 package io.agora.uiwidget.basic;
 
-import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -13,7 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 
 import io.agora.uiwidget.R;
 
@@ -57,7 +54,7 @@ public class TitleBar extends FrameLayout {
         mBgIv.setImageResource(drawableRes);
     }
 
-    public void setUserIcon(boolean visible, @DrawableRes int drawableRes, View.OnClickListener onClickListener){
+    public void setUserIcon(boolean visible, @DrawableRes int drawableRes, OnClickListener onClickListener){
         mUserIv.setOnClickListener(onClickListener);
         mUserIv.setVisibility(visible ? View.VISIBLE : View.GONE);
         if(drawableRes != View.NO_ID){
@@ -65,7 +62,7 @@ public class TitleBar extends FrameLayout {
         }
     }
 
-    public void setBackIcon(boolean visible, @DrawableRes int drawableRes, View.OnClickListener onClickListener){
+    public void setBackIcon(boolean visible, @DrawableRes int drawableRes, OnClickListener onClickListener){
         mBackIv.setOnClickListener(onClickListener);
         mBackIv.setVisibility(visible ? View.VISIBLE : View.GONE);
         if(drawableRes != View.NO_ID){

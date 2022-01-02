@@ -18,7 +18,7 @@ public class ModulesConfig {
                 R.string.app_live_single_host_name,
                 R.string.app_live_single_host_description,
                 R.drawable.app_banner_live_single_host,
-                "io.agora.scene.singlehostlive.RoomListActivity"
+                "io.agora.sample.singlehostlive.RoomListActivity"
         ));
         // Live PK
         this.moduleInfo.add(new ModuleInfo(
