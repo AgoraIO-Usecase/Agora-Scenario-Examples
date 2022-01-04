@@ -80,6 +80,8 @@ class NetworkManager {
         if method == .POST {
             request.httpBody = convertParams(params: params).data(using: .utf8)
         }
+        let curl = request.cURL(pretty: true)
+        debugPrint("curl == \(curl)")
         return request
     }
     
@@ -104,5 +106,31 @@ class NetworkManager {
                 failure?("Error in the request status code \(httpResponse.statusCode), response: \(String(describing: response))")
             }
         }
+    }
+}
+
+extension URLRequest {
+    public func cURL(pretty: Bool = false) -> String {
+        let newLine = pretty ? "\\\n" : ""
+        let method = (pretty ? "--request " : "-X ") + "\(httpMethod ?? "GET") \(newLine)"
+        let url: String = (pretty ? "--url " : "") + "\'\(url?.absoluteString ?? "")\' \(newLine)"
+        
+        var cURL = "curl "
+        var header = ""
+        var data: String = ""
+        
+        if let httpHeaders = allHTTPHeaderFields, httpHeaders.keys.count > 0 {
+            for (key,value) in httpHeaders {
+                header += (pretty ? "--header " : "-H ") + "\'\(key): \(value)\' \(newLine)"
+            }
+        }
+        
+        if let bodyData = httpBody, let bodyString = String(data: bodyData, encoding: .utf8), !bodyString.isEmpty {
+            data = "--data '\(bodyString)'"
+        }
+        
+        cURL += method + url + header + data
+        
+        return cURL
     }
 }

@@ -21,5 +21,5 @@ struct GameApplyInfoModel: Codable {
     
     var status: GameStatus = .no_start
     
-    var gameId: GameCenterType = .you_draw_i_guess
+    var gameId: GameCenterType = .guess
 }

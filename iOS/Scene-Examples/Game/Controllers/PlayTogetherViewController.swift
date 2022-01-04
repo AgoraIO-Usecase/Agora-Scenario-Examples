@@ -21,6 +21,9 @@ class PlayTogetherViewController: SignleLiveController {
     private var gameRoleType: GameRoleType {
         getRole(uid: UserInfo.uid) == .audience ? .broadcast : .audience
     }
+    private var requestType: String {
+        gameInfoModel?.gameId?.requestParams ?? gameCenterModel?.type.requestParams ?? ""
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -59,6 +62,7 @@ class PlayTogetherViewController: SignleLiveController {
             SyncUtil.subscribe(id: channleName, key: SYNC_MANAGER_GAME_INFO, onUpdated: { [weak self] object in
                 guard self?.getRole(uid: UserInfo.uid) == .audience,
                       let model = JSONObject.toModel(GameInfoModel.self, value: object.toJson()) else { return }
+                self?.gameInfoModel = model
                 LogUtils.log(message: "gameInfo == \(object.toJson() ?? "")", level: .info)
                 if model.status == .playing {
                     self?.liveView.sendMessage(message: "", messageType: .notice)
@@ -86,7 +90,7 @@ class PlayTogetherViewController: SignleLiveController {
 //
 //        }
 //        AlertManager.show(view: modeView, alertPostion: .bottom)
-        let gameCenterView = GameCenterView()
+        let gameCenterView = GameCenterView(sceneType: .playTogether)
         gameCenterView.didGameCenterItemClosure = { [weak self] gameCenterModel in
             self?.gameCenterModel = gameCenterModel
             self?.updateUIStatus(isStart: true)
@@ -110,12 +114,14 @@ class PlayTogetherViewController: SignleLiveController {
     /// 收到礼物
     private func receiveGiftHandler(giftModel: LiveGiftModel, type: RecelivedType) {
         liveView.playGifView.isHidden = !webView.isHidden
-        viewModel.postGiftHandler(type: giftModel.giftType)
+        viewModel.postGiftHandler(giftType: giftModel.giftType, type: requestType)
     }
     /// 发消息
     private func sendMessage(messageModel: ChatMessageModel) {
-        viewModel.postBarrage()
-        if getRole(uid: UserInfo.uid) == .audience && messageModel.message == "主播yyds" && gameInfoModel?.status == .playing {
+        viewModel.postBarrage(type: requestType)
+        if getRole(uid: UserInfo.uid) == .audience
+            && messageModel.message.trimmingCharacters(in: .whitespacesAndNewlines) == "主播yyds"
+            && gameInfoModel?.status == .playing {
             updateUIStatus(isStart: true)
         }
     }
@@ -139,7 +145,7 @@ class PlayTogetherViewController: SignleLiveController {
         }
         if isStart {
             ToastView.show(text: "游戏开始", postion: .top, duration: 3)
-            webView.loadUrl(urlString: gameCenterModel?.type.gameUrl ?? "https://imgsecond.yuanqiyouxi.com/test/DrawAndGuess/index.html",
+            webView.loadUrl(urlString: gameCenterModel?.type.gameUrl ?? gameInfoModel?.gameId?.gameUrl ?? "",
                             roomId: channleName,
                             roleType: gameRoleType)
             
@@ -149,13 +155,13 @@ class PlayTogetherViewController: SignleLiveController {
             liveView.updateLiveLayout(postion: .full)
             webView.reset()
             // 离开游戏接口
-            viewModel.leaveGame(roleType: gameRoleType)
+            viewModel.leaveGame(roleType: gameRoleType, type: requestType)
         }
     }
     /// 更新游戏状态
     private func updateGameInfoStatus(isStart: Bool) {
         var gameInfoModel = GameInfoModel()
-        gameInfoModel.gameId = .you_draw_i_guess
+        gameInfoModel.gameId = .guess
         gameInfoModel.gameUid = currentUserId
         gameInfoModel.status = isStart ? .playing : .no_start
         SyncUtil.update(id: channleName,

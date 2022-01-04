@@ -16,14 +16,14 @@ class GameViewModel: NSObject {
     }
     
     /// 发送礼物
-    func postGiftHandler(type: LiveGiftModel.GiftType) {
+    func postGiftHandler(giftType: LiveGiftModel.GiftType, type: String) {
         var params: [String: Any] = ["user_id": UserInfo.userId,
                                      "app_id": Int(KeyCenter.gameAppId) ?? 0,
                                      "room_id": Int(channelName) ?? 0,
                                      "name": "User-\(UserInfo.userId)",
                                      "token": KeyCenter.gameToken,
                                      "timestamp": "".timeStamp,
-                                     "gift": type.rawValue,
+                                     "gift": giftType.rawValue,
                                      "count": 1,
                                      "player": Int(ownerId) ?? 0,
                                      "nonce_str": "".timeStamp16]
@@ -31,7 +31,7 @@ class GameViewModel: NSObject {
                                                            token: KeyCenter.gameAppSecrets)
         params["sign"] = sign
         
-        NetworkManager.shared.postRequest(urlString: "http://testgame.yuanqihuyu.com/guess/gift", params: params) { result in
+        NetworkManager.shared.postRequest(urlString: "http://testgame.yuanqihuyu.com/\(type)/gift", params: params) { result in
             LogUtils.log(message: "gift == \(result)", level: .info)
         } failure: { error in
             LogUtils.log(message: "error == \(error)", level: .error)
@@ -39,7 +39,7 @@ class GameViewModel: NSObject {
     }
     
     /// 发弹幕
-    func postBarrage() {
+    func postBarrage(type: String) {
         let barrage = GameBarrageType.allCases.randomElement() ?? .salvo
         let params: [String: Any] = ["user_id": "\(UserInfo.userId)",
                                      "app_id": KeyCenter.gameAppId,
@@ -52,7 +52,7 @@ class GameViewModel: NSObject {
                                      "count": 1,
                                      "player": ownerId,
                                      "sign": KeyCenter.gameAppSecrets]
-        NetworkManager.shared.postRequest(urlString: "http://testgame.yuanqihuyu.com/guess/barrage", params: params, success: { result in
+        NetworkManager.shared.postRequest(urlString: "http://testgame.yuanqihuyu.com/\(type)/barrage", params: params, success: { result in
             LogUtils.log(message: "barrge == \(result)", level: .info)
         }, failure: { error in
             LogUtils.log(message: "error == \(error)", level: .error)
@@ -60,7 +60,7 @@ class GameViewModel: NSObject {
     }
     
     /// 离开游戏
-    func leaveGame(roleType: GameRoleType) {
+    func leaveGame(roleType: GameRoleType, type: String) {
         var params: [String: Any] = ["user_id": UserInfo.userId,
                                      "app_id": Int(KeyCenter.gameAppId) ?? 0,
                                      "identity": roleType.rawValue,
@@ -72,7 +72,7 @@ class GameViewModel: NSObject {
                                                            token: KeyCenter.gameAppSecrets)
         params["sign"] = sign
         
-        NetworkManager.shared.postRequest(urlString: "http://testgame.yuanqihuyu.com/guess/leave", params: params) { result in
+        NetworkManager.shared.postRequest(urlString: "http://testgame.yuanqihuyu.com/\(type)/leave", params: params) { result in
             print("result == \(result)")
         } failure: { error in
             print("error == \(error)")

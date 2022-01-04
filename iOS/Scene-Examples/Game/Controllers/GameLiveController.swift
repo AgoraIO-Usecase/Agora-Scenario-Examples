@@ -46,6 +46,10 @@ class GameLiveController: PKLiveController {
     private var gameRoleType: GameRoleType {
         targetChannelName.isEmpty ? .audience : .broadcast
     }
+    private var requestType: String {
+        let type = gameCenterModel?.type.requestParams ?? gameApplyInfoModel?.gameId.requestParams ?? gameInfoModel?.gameId?.requestParams
+        return type ?? ""
+    }
     public var screenUserID: UInt {
         UserInfo.userId + 10000
     }
@@ -123,11 +127,11 @@ class GameLiveController: PKLiveController {
         }
         /// 发消息
         liveView.onClickSendMessageClosure = { [weak self] meesageModel in
-            self?.viewModel.postBarrage()
+            self?.viewModel.postBarrage(type: self?.requestType ?? "")
         }
         /// 发礼物
         liveView.onSendGiftClosure = { [weak self] giftModel in
-            self?.viewModel.postGiftHandler(type: giftModel.giftType)
+            self?.viewModel.postGiftHandler(giftType: giftModel.giftType, type: self?.requestType ?? "")
         }
     }
     
@@ -235,6 +239,7 @@ class GameLiveController: PKLiveController {
     /// pk开始
     override func pkLiveStartHandler() {
         super.pkLiveStartHandler()
+        guard !targetChannelName.isEmpty else { return }
         updateGameInfoStatus(isStart: true)
     }
     
@@ -242,6 +247,9 @@ class GameLiveController: PKLiveController {
     override func pkLiveEndHandler() {
         super.pkLiveEndHandler()
         liveView.updateLiveLayout(postion: .full)
+        if getRole(uid: UserInfo.uid) == .broadcaster {
+            liveView.updateBottomButtonType(type: [.game, .tool, .close])
+        }
     }
 
     /// 收到礼物
@@ -257,23 +265,23 @@ class GameLiveController: PKLiveController {
         AgoraScreenShare.shareInstance().stopService()
     }
     
-    override func updatePKUIStatus(isStart: Bool) {
+    private func updatePKUIStatus(isStart: Bool) {
         vsImageView.isHidden = true
         countTimeLabel.isHidden = true//!isStart
         pkProgressView.isHidden = !isStart
         webView.isHidden = !isStart
-        if currentUserId == "\(UserInfo.userId)" && isStart {
+        if currentUserId == UserInfo.uid && isStart {
             liveView.updateBottomButtonType(type: [.exitgame, .tool, .close])
-        } else if currentUserId == "\(UserInfo.userId)" && !isStart {
+        } else if currentUserId == UserInfo.uid && !isStart {
             liveView.updateBottomButtonType(type: [.game, .tool, .close])
         } else {
             liveView.updateBottomButtonType(type: [.gift, .close])
         }
         if isStart {
             ToastView.show(text: "游戏开始", postion: .top, duration: 3)
-            if getRole(uid: "\(UserInfo.userId)") == .broadcaster {
+            if getRole(uid: UserInfo.uid) == .broadcaster {
                 let channelName = targetChannelName.isEmpty ? channleName : targetChannelName
-                webView.loadUrl(urlString: gameCenterModel?.type.gameUrl ?? "https://imgsecond.yuanqiyouxi.com/test/DrawAndGuess/index.html",
+                webView.loadUrl(urlString: gameCenterModel?.type.gameUrl ?? gameApplyInfoModel?.gameId.gameUrl ?? "",
                                 roomId: channelName,
                                 roleType: gameRoleType)
                 // 调用屏幕共享
@@ -305,7 +313,7 @@ class GameLiveController: PKLiveController {
             webView.reset()
             // 主播调用离开游戏接口
             if getRole(uid: "\(UserInfo.userId)") == .broadcaster {
-                viewModel.leaveGame(roleType: gameRoleType)
+                viewModel.leaveGame(roleType: gameRoleType, type: requestType)
                 AgoraScreenShare.shareInstance().stopService()
                 agoraKit?.leaveChannelEx(screenConnection, leaveChannelBlock: nil)
             }
@@ -373,6 +381,7 @@ class GameLiveController: PKLiveController {
         if isStart {
             var gameApplyModel = GameApplyInfoModel()
             gameApplyModel.status = .playing
+            gameApplyModel.gameId = gameCenterModel?.type ?? .guess
             SyncUtil.update(id: channelName, key: SYNC_MANAGER_GAME_APPLY_INFO, params: JSONObject.toJson(gameApplyModel))
             return
         }

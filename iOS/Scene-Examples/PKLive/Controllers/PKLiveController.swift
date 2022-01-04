@@ -233,7 +233,7 @@ class PKLiveController: SignleLiveController {
         updatePKInfoStatusToEnd()
     }
     
-    public func updatePKUIStatus(isStart: Bool) {
+    private func updatePKUIStatus(isStart: Bool) {
         vsImageView.isHidden = !isStart
         countTimeLabel.isHidden = !isStart
         pkProgressView.isHidden = !isStart

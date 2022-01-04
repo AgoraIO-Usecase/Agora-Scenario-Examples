@@ -153,6 +153,7 @@ class SignleLiveController: BaseViewController {
         agoraKit?.setClientRole(getRole(uid: currentUserId))
         if getRole(uid: currentUserId) == .broadcaster {
             agoraKit?.enableVideo()
+            agoraKit?.enableAudio()
         }
         /// 开启扬声器
         agoraKit?.setDefaultAudioRouteToSpeakerphone(true)

@@ -29,7 +29,7 @@ class OnoToOneGameView: UIView {
     }()
     private lazy var webView: GameWebView = {
         let webView = GameWebView()
-        webView.backgroundColor = .init(hex: "#2176F0")
+        webView.backgroundColor = .init(hex: "#B8C4D6")
         return webView
     }()
     private lazy var closeButton: AGEButton = {
@@ -50,6 +50,10 @@ class OnoToOneGameView: UIView {
     
     func setLoadUrl(urlString: String, roomId: String, roleType: GameRoleType) {
         webView.loadUrl(urlString: urlString, roomId: roomId, roleType: roleType)
+    }
+    
+    func reset() {
+        webView.reset()
     }
     
     private func setupUI() {

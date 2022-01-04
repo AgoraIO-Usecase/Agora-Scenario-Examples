@@ -30,7 +30,7 @@ class GameCenterView: UIView {
     }()
     public lazy var collectionLayout: AGECollectionView = {
         let view = AGECollectionView()
-        let w = (Screen.width - 15 * 4) / 4
+        let w = (Screen.width - 15 * 5) / 4
         view.itemSize = CGSize(width: w, height: 123)
         view.minInteritemSpacing = 0
         view.minLineSpacing = 15
@@ -42,10 +42,17 @@ class GameCenterView: UIView {
                       forCellWithReuseIdentifier: GameModeViewCell.description())
         return view
     }()
+    
+    init(sceneType: SceneType) {
+        super.init(frame: .zero)
+        setupUI()
+        collectionLayout.dataArray = GameCenterModel.createDatas(sceneType: sceneType)
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
-        collectionLayout.dataArray = GameCenterModel.createDatas()
+        collectionLayout.dataArray = GameCenterModel.createDatas(sceneType: .game)
     }
     
     required init?(coder: NSCoder) {
@@ -96,11 +103,13 @@ extension GameCenterView: AGECollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: GameModeViewCell.description(),
                                                       for: indexPath) as! GameModeViewCell
-        cell.setupGameCenterData(model: GameCenterModel.createDatas()[indexPath.item])
+        guard let model = collectionLayout.dataArray?[indexPath.item] as? GameCenterModel else { return cell }
+        cell.setupGameCenterData(model: model)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        didGameCenterItemClosure?(GameCenterModel.createDatas()[indexPath.item])
+        guard let model = collectionLayout.dataArray?[indexPath.item] as? GameCenterModel else { return }
+        didGameCenterItemClosure?(model)
     }
 }

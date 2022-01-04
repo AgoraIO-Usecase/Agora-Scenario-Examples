@@ -61,6 +61,10 @@ class OneToOneViewController: BaseViewController {
     private(set) var currentUserId: String = ""
     private var isCloseGame: Bool = false
     private var isSelfExitGame: Bool = false
+    private var gameInfoModel = GameInfoModel()
+    private var requestType: String {
+        gameInfoModel.gameId?.requestParams ?? ""
+    }
     
     init(channelName: String, sceneType: SceneType, userId: String, agoraKit: AgoraRtcEngineKit? = nil) {
         super.init(nibName: nil, bundle: nil)
@@ -113,9 +117,9 @@ class OneToOneViewController: BaseViewController {
             guard let self = self else { return }
             if type == .exit {
                 self.controlView.isHidden = false
-                self.viewModel.leaveGame(roleType: self.roleType)
+                self.viewModel.leaveGame(roleType: self.roleType, type: self.requestType)
                 self.isCloseGame = false
-                let gameInfo = GameInfoModel(status: .end, gameUid: UserInfo.uid, gameId: .you_draw_i_guess)
+                let gameInfo = GameInfoModel(status: .end, gameUid: UserInfo.uid, gameId: self.gameInfoModel.gameId ?? .guess)
                 SyncUtil.update(id: self.channelName, key: SYNC_MANAGER_GAME_INFO, params: JSONObject.toJson(gameInfo))
                 self.isSelfExitGame = true
                 return
@@ -129,6 +133,7 @@ class OneToOneViewController: BaseViewController {
         SyncUtil.subscribe(id: channelName, key: SYNC_MANAGER_GAME_INFO, onUpdated: { [weak self] object in
             guard let self = self else { return }
             let model = JSONObject.toModel(GameInfoModel.self, value: object.toJson())
+            self.gameInfoModel.gameId = model?.gameId
             if model?.status == .playing {
                 self.isSelfExitGame = false
                 self.showAlert(title: "对方邀请您玩游戏", message: "") {
@@ -139,8 +144,9 @@ class OneToOneViewController: BaseViewController {
                 }
             } else if model?.status == .end && !self.isSelfExitGame{
                 AlertManager.hiddenView()
-                ToastView.show(text: "游戏已结束")
-                self.viewModel.leaveGame(roleType: self.roleType)
+                ToastView.show(text: "游戏已结束", view: self.view)
+                self.onoToOneGameView.reset()
+                self.viewModel.leaveGame(roleType: self.roleType, type: self.requestType)
                 self.isSelfExitGame = false
             }
         }, onSubscribed: {
@@ -163,11 +169,15 @@ class OneToOneViewController: BaseViewController {
             showAlert(title: "退出游戏", message: "确定退出退出游戏 ？") {
                 self.controlView.isHidden = false
                 AlertManager.hiddenView()
-                self.viewModel.leaveGame(roleType: self.roleType)
+                self.onoToOneGameView.reset()
+                self.viewModel.leaveGame(roleType: self.roleType, type: self.requestType)
             }
             
         case .back:
             showAlert(title: "关闭直播间", message: "关闭直播间后，其他用户将不能再和您连线。确定关闭 ？") {
+                self.viewModel.leaveGame(roleType: self.roleType, type: self.requestType)
+                let gameInfo = GameInfoModel(status: .end, gameUid: UserInfo.uid, gameId: self.gameInfoModel.gameId)
+                SyncUtil.update(id: self.channelName, key: SYNC_MANAGER_GAME_INFO, params: JSONObject.toJson(gameInfo))
                 self.navigationController?.popViewController(animated: true)
             }
             
@@ -187,9 +197,10 @@ class OneToOneViewController: BaseViewController {
         let gameCenterView = GameCenterView()
         gameCenterView.didGameCenterItemClosure = { [weak self] gameCenterModel in
             guard let self = self else { return }
+            self.gameInfoModel.gameId = gameCenterModel.type
             self.onoToOneGameView.setLoadUrl(urlString: gameCenterModel.type.gameUrl, roomId: self.channelName, roleType: self.roleType)
             AlertManager.show(view: self.onoToOneGameView, alertPostion: .bottom, didCoverDismiss: false)
-            let gameInfo = GameInfoModel(status: .playing, gameUid: UserInfo.uid, gameId: .you_draw_i_guess)
+            let gameInfo = GameInfoModel(status: .playing, gameUid: UserInfo.uid, gameId: gameCenterModel.type)
             SyncUtil.update(id: self.channelName, key: SYNC_MANAGER_GAME_INFO, params: JSONObject.toJson(gameInfo))
         }
         AlertManager.show(view: gameCenterView, alertPostion: .bottom)
@@ -236,6 +247,7 @@ class OneToOneViewController: BaseViewController {
         agoraKit?.setLogFile(LogUtils.sdkLogPath())
         agoraKit?.setClientRole(.broadcaster)
         agoraKit?.enableVideo()
+        agoraKit?.enableAudio()
         agoraKit?.setVideoEncoderConfiguration(
             AgoraVideoEncoderConfiguration(size: CGSize(width: 320, height: 240),
                                            frameRate: .fps30,
@@ -294,6 +306,7 @@ extension OneToOneViewController: AgoraRtcEngineDelegate {
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, didJoinChannel channel: String, withUid uid: UInt, elapsed: Int) {
         LogUtils.log(message: "Join \(channel) with uid \(uid) elapsed \(elapsed)ms", level: .info)
+        agoraKit?.enableLocalAudio(true)
         createAgoraVideoCanvas(uid: uid, isLocal: true)
     }
     
