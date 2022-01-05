@@ -15,29 +15,25 @@
 
     <permission-group android:name="io.agora.scene.andpermission"/>
 
-    <application
-        android:allowBackup="false"
-        android:requestLegacyExternalStorage="true"
-        android:screenOrientation="portrait"
-        android:supportsRtl="true"
-        tools:ignore="GoogleAppIndexingWarning">
-        <meta-data
-            android:name="android.max_aspect"
-            android:value="2.4" />
+    <application>
 
         <activity
+            android:theme="@style/single_host_live_AppTheme"
             android:name="io.agora.sample.singlehostlive.RoomListActivity"
             android:launchMode="singleTop"/>
 
         <activity
+            android:theme="@style/single_host_live_AppTheme"
             android:name="io.agora.sample.singlehostlive.PreviewActivity"
             android:launchMode="singleTop"/>
 
         <activity
+            android:theme="@style/single_host_live_AppTheme"
             android:name="io.agora.sample.singlehostlive.HostDetailActivity"
             android:launchMode="singleTop"/>
 
         <activity
+            android:theme="@style/single_host_live_AppTheme"
             android:name="io.agora.sample.singlehostlive.AudienceDetailActivity"
             android:launchMode="singleTop"/>
 
