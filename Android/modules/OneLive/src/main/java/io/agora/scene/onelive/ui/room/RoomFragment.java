@@ -37,8 +37,12 @@ import io.agora.scene.onelive.databinding.OneFragmentRoomBinding;
 import io.agora.scene.onelive.repo.GameRepo;
 import io.agora.scene.onelive.ui.room.game.GameListDialog;
 import io.agora.scene.onelive.util.NormalContainerInsetsListener;
+import io.agora.scene.onelive.util.OneConstants;
 import io.agora.scene.onelive.util.OneUtil;
 import io.agora.scene.onelive.util.ViewStatus;
+import io.agora.syncmanager.rtm.IObject;
+import io.agora.syncmanager.rtm.Sync;
+import io.agora.syncmanager.rtm.SyncManagerException;
 
 public class RoomFragment extends BaseNavFragment<OneFragmentRoomBinding> {
     private boolean amHost;
@@ -224,7 +228,6 @@ public class RoomFragment extends BaseNavFragment<OneFragmentRoomBinding> {
                         mViewModel.endCall();
                     else findNavController().popBackStack();
                 })
-                .setMessage(R.string.one_exit_game_msg)
                 .setCancelable(false)
                 .show();
     }
@@ -235,9 +238,9 @@ public class RoomFragment extends BaseNavFragment<OneFragmentRoomBinding> {
      */
     private void showAlertExitGameDialog() {
         new AlertDialog.Builder(requireContext()).setTitle(R.string.one_exit_game)
+                .setMessage(R.string.one_exit_game_msg)
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> mViewModel.requestEndGame())
-                .setMessage(R.string.one_exit_game_msg)
                 .setCancelable(false)
                 .show();
     }
@@ -345,13 +348,13 @@ public class RoomFragment extends BaseNavFragment<OneFragmentRoomBinding> {
             lp.rightMargin = (int) (inset.right + BaseUtil.dp2px(16));
             lp.topMargin = (int) (inset.top + BaseUtil.dp2px(16));
             mBinding.hostViewFgRoom.getViewportContainer().setLayoutParams(lp);
-            return WindowInsetsCompat.CONSUMED;
+            return insets;
         });
         ViewCompat.setOnApplyWindowInsetsListener(mBinding.overlayFgRoom, (v, insets) -> {
             Insets inset = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             mBinding.overlayFgRoom.setPadding(0, inset.top, 0, 0);
             sheetBehavior.setPeekHeight((int) BaseUtil.dp2px(36) + inset.bottom);
-            return WindowInsetsCompat.CONSUMED;
+            return insets;
         });
     }
 

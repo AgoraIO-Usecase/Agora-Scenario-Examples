@@ -105,6 +105,7 @@ public class RoomListFragment extends BaseNavFragment<OneFragmentRoomListBinding
             CoordinatorLayout.LayoutParams lpBtn = (CoordinatorLayout.LayoutParams) mBinding.btnCreateFgList.getLayoutParams();
             lpBtn.bottomMargin = inset.bottom + ((int) BaseUtil.dp2px(24));
             mBinding.btnCreateFgList.setLayoutParams(lpBtn);
+            mBinding.recyclerViewFgList.setPaddingRelative(0, 0, 0, inset.bottom);
 
             return WindowInsetsCompat.CONSUMED;
         });
