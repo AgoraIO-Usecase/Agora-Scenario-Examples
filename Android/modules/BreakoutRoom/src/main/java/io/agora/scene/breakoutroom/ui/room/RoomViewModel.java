@@ -19,6 +19,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import io.agora.example.base.BaseUtil;
+import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
 import io.agora.rtc2.IRtcEngineEventHandler;
 import io.agora.rtc2.RtcEngine;
@@ -279,6 +280,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
                 RtcEngine engine = RtcEngine.create(config);
                 engine.enableAudio();
                 engine.enableVideo();
+                engine.startPreview();
                 _mEngine.postValue(engine);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -298,7 +300,12 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         RtcEngine engine = _mEngine.getValue();
         if (engine != null) {
             Context context = ((RtcEngineImpl) engine).getContext();
-            engine.joinChannel(context.getString(R.string.rtc_app_token), currentRoomInfo.getUserId() + roomName, null, Integer.parseInt(RoomConstant.userId));
+//            engine.joinChannel(context.getString(R.string.rtc_app_token), currentRoomInfo.getUserId() + roomName, null, Integer.parseInt(RoomConstant.userId));
+            ChannelMediaOptions options = new ChannelMediaOptions();
+            options.autoSubscribeAudio = true;
+            options.autoSubscribeVideo = true;
+            options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
+            engine.joinChannel(context.getString(R.string.rtc_app_token), currentRoomInfo.getUserId() + roomName, Integer.parseInt(RoomConstant.userId), options);
         }
     }
 

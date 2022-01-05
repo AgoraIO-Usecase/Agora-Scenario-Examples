@@ -1,0 +1,434 @@
+package io.agora.scene.onelive.ui.room;
+
+import android.content.Context;
+import android.view.TextureView;
+
+import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+
+import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Objects;
+
+import io.agora.example.base.BaseUtil;
+import io.agora.rtc2.ChannelMediaOptions;
+import io.agora.rtc2.Constants;
+import io.agora.rtc2.DataStreamConfig;
+import io.agora.rtc2.IRtcEngineEventHandler;
+import io.agora.rtc2.RtcEngine;
+import io.agora.rtc2.RtcEngineConfig;
+import io.agora.rtc2.RtcEngineEx;
+import io.agora.rtc2.internal.RtcEngineImpl;
+import io.agora.rtc2.video.VideoCanvas;
+import io.agora.scene.onelive.R;
+import io.agora.scene.onelive.bean.AgoraGame;
+import io.agora.scene.onelive.bean.GameInfo;
+import io.agora.scene.onelive.bean.LocalUser;
+import io.agora.scene.onelive.bean.RoomInfo;
+import io.agora.scene.onelive.repo.GameRepo;
+import io.agora.scene.onelive.util.OneSyncEventListener;
+import io.agora.scene.onelive.util.OneConstants;
+import io.agora.scene.onelive.util.ViewStatus;
+import io.agora.syncmanager.rtm.IObject;
+import io.agora.syncmanager.rtm.SceneReference;
+import io.agora.syncmanager.rtm.Sync;
+import io.agora.syncmanager.rtm.SyncManagerException;
+
+
+/**
+ * @author lq
+ */
+@Keep
+public class RoomViewModel extends ViewModel {
+
+    //<editor-fold desc="Persistent variable">
+    // 当前用户是否为主播
+    public final boolean amHost;
+    // 当前房间信息
+    public final RoomInfo currentRoom;
+    // 当前在玩游戏信息
+    @Nullable
+    public AgoraGame currentGame;
+    // 当前用户信息
+    @NonNull
+    public final LocalUser localUser;
+    // SyncManager 必须
+    @Nullable
+    public SceneReference currentSceneRef = null;
+    private int dataStreamId = -1;
+    //</editor-fold>
+
+
+    //<editor-fold desc="Live data">
+    // RTC engine 初始化结果
+    private final MutableLiveData<RtcEngineEx> _mEngine = new MutableLiveData<>();
+    // UI状态
+    private final MutableLiveData<ViewStatus> _viewStatus = new MutableLiveData<>();
+    // 对方主播信息
+    private final MutableLiveData<LocalUser> _targetUser = new MutableLiveData<>();
+    // 当前游戏信息
+    private final MutableLiveData<GameInfo> _gameInfo = new MutableLiveData<>();
+    // RTC 音频状态
+    public final MutableLiveData<Boolean> isLocalMicMuted = new MutableLiveData<>(false);
+    //</editor-fold>
+
+    //<editor-fold desc="Init and end">
+    public RoomViewModel(@NonNull Context context, @NonNull LocalUser localUser, @NonNull RoomInfo roomInfo) {
+        this.currentRoom = roomInfo;
+        this.localUser = localUser;
+
+        this.amHost = Objects.equals(currentRoom.getUserId(), localUser.getUserId());
+
+        initRTC(context, new IRtcEngineEventHandler() {
+            @Override
+            public void onUserJoined(int uid, int elapsed) {
+                BaseUtil.logD("onUserJoined:" + uid);
+                if (!amHost) return;
+                if (_targetUser.getValue() == null)
+                    _targetUser.postValue(new LocalUser(String.valueOf(uid)));
+            }
+
+            @Override
+            public void onUserOffline(int uid, int reason) {
+                BaseUtil.logD("onUserOffline:" + uid);
+                if (_targetUser.getValue() != null) {
+                    if (_targetUser.getValue().getUserId().equals(String.valueOf(uid)))
+                        _targetUser.postValue(null);
+                }
+                if (currentGame != null){
+                    requestEndGame();
+                }
+            }
+
+            @Override
+            public void onConnectionStateChanged(int state, int reason) {
+                BaseUtil.logD("state changed:" + state + "," + reason);
+            }
+
+            @Override
+            public void onError(int err) {
+                BaseUtil.logD("err: " + err + " ==> " + RtcEngine.getErrorDescription(err));
+            }
+
+            @Override
+            public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
+                BaseUtil.logD("onJoinChannelSuccess:" + uid);
+                if (!amHost)
+                    // 副主播只能与房主连线
+                    _targetUser.postValue(new LocalUser(currentRoom.getUserId()));
+            }
+
+            /**
+             * 收到对方 "kill-uid" 消息 ==> 挂断
+             */
+            @Override
+            public void onStreamMessage(int uid, int streamId, byte[] data) {
+                BaseUtil.logD("onStreamMessage:");
+                super.onStreamMessage(uid, streamId, data);
+                String userId = String.valueOf(uid);
+                if (Objects.equals(userId, currentRoom.getUserId())) {
+                    String message = new String(data);
+                    BaseUtil.logD("onStreamMessage:" + message);
+                    if (Objects.equals("kill-" + localUser.getUserId(), message)) {
+                        _viewStatus.postValue(new ViewStatus.Error(""));
+                    }
+                }
+            }
+        });
+    }
+
+    private void onJoinRTMSucceed(@NonNull SceneReference sceneReference) {
+        BaseUtil.logD("RTM ready");
+        currentSceneRef = sceneReference;
+        subscribeAttr();
+    }
+
+    private void subscribeAttr() {
+        if (currentSceneRef != null) {
+            if (amHost)
+                currentSceneRef.update(OneConstants.GAME_INFO, new GameInfo(GameInfo.END, -1), null);
+            else
+                currentSceneRef.get(OneConstants.GAME_INFO, (GetAttrCallback) this::handleGetGameInfo);
+            currentSceneRef.subscribe(OneConstants.GAME_INFO, new OneSyncEventListener(OneConstants.GAME_INFO, this::handleGameInfo));
+        }
+    }
+
+    private void handleGetGameInfo(@Nullable IObject iObject) {
+        GameInfo gameInfo = tryHandleIObject(iObject, GameInfo.class);
+        if (gameInfo != null) {
+            switch (gameInfo.getStatus()) {
+                case GameInfo.IDLE:
+                    break;
+                case GameInfo.START: {
+                    currentGame = GameRepo.getGameDetail(gameInfo.getGameId());
+                    _gameInfo.postValue(gameInfo);
+                    break;
+                }
+                case GameInfo.END: {
+                    currentGame = null;
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * 游戏 未开始：不做任何操作
+     * 已开始：加载
+     * 结束： 发送网络请求
+     */
+    private void handleGameInfo(@Nullable IObject iObject) {
+        GameInfo gameInfo = tryHandleIObject(iObject, GameInfo.class);
+        if (gameInfo != null) {
+            switch (gameInfo.getStatus()) {
+                case GameInfo.IDLE:
+                    break;
+                case GameInfo.START: {
+                    currentGame = GameRepo.getGameDetail(gameInfo.getGameId());
+                    _gameInfo.postValue(gameInfo);
+                    break;
+                }
+                case GameInfo.END: {
+                    _gameInfo.postValue(gameInfo);
+                    if (currentGame != null) {
+                        GameRepo.endThisGame(currentRoom, currentGame);
+                        currentGame = null;
+                    }
+                    if (currentSceneRef != null)
+                        currentSceneRef.update(OneConstants.GAME_INFO, new GameInfo(GameInfo.IDLE, gameInfo.getGameId()), (GetAttrCallback) this::handleGameInfo);
+                    break;
+                }
+            }
+        }
+    }
+
+    @Nullable
+    private <T> T tryHandleIObject(@Nullable IObject result, @NonNull Class<T> modelClass) {
+        if (result == null) return null;
+        T obj = null;
+        try {
+            obj = result.toObject(modelClass);
+        } catch (Exception ignored) {
+        }
+        return obj;
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        new Thread(() -> {
+            if (currentGame != null) {
+                GameRepo.endThisGame(currentRoom, currentGame);
+            }
+            // destroy RTE
+            RtcEngine engine = _mEngine.getValue();
+            if (engine != null) {
+                engine.leaveChannel();
+                RtcEngine.destroy();
+            }
+            // destroy RTM
+            if (currentSceneRef != null) {
+                if (amHost)
+                    currentSceneRef.delete(new Sync.Callback() {
+                        @Override
+                        public void onSuccess() {
+                            BaseUtil.logD("delete onSuccess");
+                        }
+
+                        @Override
+                        public void onFail(SyncManagerException exception) {
+                            BaseUtil.logD("delete onFail");
+                        }
+                    });
+                else currentSceneRef.unsubscribe(null);
+            }
+        }).start();
+    }
+    //</editor-fold>
+
+    @NonNull
+    public LiveData<RtcEngineEx> mEngine() {
+        return _mEngine;
+    }
+
+    @NonNull
+    public LiveData<ViewStatus> viewStatus() {
+        return _viewStatus;
+    }
+
+    @NonNull
+    public LiveData<LocalUser> targetUser() {
+        return _targetUser;
+    }
+
+    @NonNull
+    public LiveData<GameInfo> gameInfo() {
+        return _gameInfo;
+    }
+
+    public void requestStartGame(@NonNull AgoraGame agoraGame) {
+        if (currentSceneRef != null) {
+            GameInfo gameInfo = new GameInfo(GameInfo.START, agoraGame.getGameId());
+            currentSceneRef.update(OneConstants.GAME_INFO, gameInfo, null);
+        }
+    }
+
+    public void requestEndGame() {
+        if (currentSceneRef != null && currentGame != null) {
+            currentSceneRef.update(OneConstants.GAME_INFO, new GameInfo(GameInfo.END, currentGame.getGameId()), null);
+        }
+    }
+
+    public void initRTM() {
+        new Thread(() -> Sync.Instance().joinScene(currentRoom.getId(), new Sync.JoinSceneCallback() {
+            @Override
+            public void onSuccess(SceneReference sceneReference) {
+                BaseUtil.logD("加入频道成功");
+                onJoinRTMSucceed(sceneReference);
+            }
+
+            @Override
+            public void onFail(SyncManagerException e) {
+                BaseUtil.logD("加入频道失败");
+                _viewStatus.postValue(new ViewStatus.Error("加入RTM失败"));
+            }
+        })).start();
+    }
+
+    //<editor-fold desc="RTC related">
+
+    public void toggleMute() {
+        boolean isMute = isLocalMicMuted.getValue() == Boolean.TRUE;
+        isLocalMicMuted.setValue(!isMute);
+        RtcEngineEx engine = _mEngine.getValue();
+        if (engine != null) {
+            engine.muteLocalAudioStream(!isMute);
+        }
+    }
+
+    public void flipCamera() {
+        RtcEngineEx engine = _mEngine.getValue();
+        if (engine != null) {
+            engine.switchCamera();
+        }
+    }
+
+    /**
+     * 给对方发消息结束通话
+     */
+    public void endCall() {
+        new Thread(() -> {
+            RtcEngineEx rtcEngineEx = _mEngine.getValue();
+            LocalUser targetUser = _targetUser.getValue();
+            if (rtcEngineEx != null && targetUser != null && !targetUser.getName().isEmpty()) {
+                // 对方 userId
+                int uid = -1;
+                try {
+                    uid = Integer.parseInt(targetUser.getUserId());
+                } catch (Exception ignored) {
+                }
+                // 本地userId
+                int localUserId = -1;
+                try {
+                    localUserId = Integer.parseInt(localUser.getUserId());
+                } catch (Exception ignored) {
+                }
+                if (uid != -1 && localUserId != -1 && dataStreamId != -1)
+                    rtcEngineEx.sendStreamMessage(dataStreamId, ("kill-" + uid).getBytes(StandardCharsets.UTF_8));
+            }
+        }).start();
+    }
+
+    public void createDataStream(@NonNull RtcEngineEx engine) {
+        dataStreamId = engine.createDataStream(new DataStreamConfig());
+        if (dataStreamId >= 0)
+            BaseUtil.logD("createDataStream success");
+        else
+            BaseUtil.logD("createDataStream failed: " + dataStreamId);
+    }
+
+    public void joinRoom(@NonNull RtcEngineEx engine) {
+        new Thread(() -> {
+            BaseUtil.logD("joinRoom");
+            ChannelMediaOptions options = new ChannelMediaOptions();
+            options.autoSubscribeAudio = true;
+            options.autoSubscribeVideo = true;
+            options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
+
+            engine.joinChannel(((RtcEngineImpl) engine).getContext().getString(R.string.rtc_app_token), currentRoom.getId(), Integer.parseInt(localUser.getUserId()), options);
+        }).start();
+    }
+
+    public void initRTC(@NonNull Context mContext, @NonNull IRtcEngineEventHandler mEventHandler) {
+        new Thread(() -> {
+            String appID = mContext.getString(R.string.rtc_app_id);
+            if (appID.isEmpty() || appID.codePointCount(0, appID.length()) != 32) {
+                _viewStatus.postValue(new ViewStatus.Error("APP ID is not valid"));
+                _mEngine.postValue(null);
+            } else {
+                RtcEngineConfig config = new RtcEngineConfig();
+                config.mContext = mContext;
+                config.mAppId = appID;
+                config.mEventHandler = mEventHandler;
+                RtcEngineConfig.LogConfig logConfig = new RtcEngineConfig.LogConfig();
+                logConfig.level = Constants.LogLevel.LOG_LEVEL_ERROR.ordinal();
+                File cacheDir = mContext.getExternalCacheDir();
+                boolean isCacheDirExist = cacheDir.exists();
+                if (!isCacheDirExist) {
+                    isCacheDirExist = cacheDir.mkdir();
+                }
+                if (isCacheDirExist)
+                    logConfig.filePath = cacheDir.getAbsolutePath();
+                config.mLogConfig = logConfig;
+                config.mChannelProfile = Constants.CHANNEL_PROFILE_LIVE_BROADCASTING;
+
+                try {
+                    RtcEngineEx engineEx = (RtcEngineEx) RtcEngineEx.create(config);
+                    _mEngine.postValue(engineEx);
+                    createDataStream(engineEx);
+                    joinRoom(engineEx);
+                    initRTM();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    _viewStatus.postValue(new ViewStatus.Error(e));
+                    _mEngine.postValue(null);
+                }
+            }
+        }).start();
+    }
+
+    public void setupLocalView(@NonNull TextureView view) {
+        RtcEngineEx engine = _mEngine.getValue();
+        if (engine != null) {
+            engine.enableAudio();
+            engine.enableVideo();
+            engine.startPreview();
+            engine.setupLocalVideo(new VideoCanvas(view, Constants.RENDER_MODE_HIDDEN, Integer.parseInt(localUser.getUserId())));
+        }
+    }
+
+    /**
+     * @param view 用来构造 videoCanvas
+     */
+    public void setupRemoteView(@NonNull TextureView view, int uid) {
+        RtcEngineEx engine = _mEngine.getValue();
+        if (engine != null) {
+            VideoCanvas videoCanvas = new VideoCanvas(view, Constants.RENDER_MODE_HIDDEN, uid);
+            engine.setupRemoteVideo(videoCanvas);
+        }
+    }
+
+    //</editor-fold>
+
+    private interface GetAttrCallback extends Sync.DataItemCallback {
+        @Override
+        default void onFail(SyncManagerException exception) {
+
+        }
+    }
+}

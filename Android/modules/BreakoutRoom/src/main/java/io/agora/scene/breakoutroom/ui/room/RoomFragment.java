@@ -175,7 +175,7 @@ public class RoomFragment extends BaseNavFragment<RoomFragmentRoomBinding> {
     private Map<Integer,Boolean> getDiffMap(Set<Integer> dataSet){
         Map<Integer, Boolean> resMap = new HashMap<>();
         ConstraintLayout container = mBinding.dynamicViewFgRoom.flexContainer;
-        int childCount = container.getChildCount();
+        int childCount = container == null ? 0 : container.getChildCount();
 
         // 将现有 View 的 Tag 添加到 map,赋值为false
         for (int i = 1; i < childCount; i++) {
@@ -256,7 +256,7 @@ public class RoomFragment extends BaseNavFragment<RoomFragmentRoomBinding> {
 
     private void pendingSwitchRoom(@NonNull String roomName) {
         ConstraintLayout container = mBinding.dynamicViewFgRoom.flexContainer;
-        int childCount = container.getChildCount();
+        int childCount = container == null ? 0 : container.getChildCount();
         for (int i = 1; i < childCount; i++) {
             mBinding.dynamicViewFgRoom.dynamicRemoveView(container.getChildAt(i));
         }

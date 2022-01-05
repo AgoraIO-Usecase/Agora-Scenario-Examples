@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.MainThread;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -45,6 +46,8 @@ public class LivePKListActivity extends BaseActivity<PkActivityListBinding> {
                 long currTime = System.currentTimeMillis();
                 createRoom(new RoomInfo(currTime, currTime + "", roomName));
             });
+
+    private final ActivityResultLauncher<String[]> launcher = BaseUtil.registerForActivityResult(this, resultCallback);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -114,7 +117,7 @@ public class LivePKListActivity extends BaseActivity<PkActivityListBinding> {
     }
 
     private void alertCreateDialog() {
-        BaseUtil.checkPermissionBeforeNextOP(this, permissions, resultCallback);
+        BaseUtil.checkPermissionBeforeNextOP(this, launcher, permissions, resultCallback);
     }
 
 

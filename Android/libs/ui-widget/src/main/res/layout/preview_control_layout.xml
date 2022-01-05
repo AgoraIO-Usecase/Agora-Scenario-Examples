@@ -5,6 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:background="@android:color/darker_gray">
 
+
+    <FrameLayout
+        android:id="@+id/video_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/preview_control_shadow_height"

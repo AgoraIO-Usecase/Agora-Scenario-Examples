@@ -15,4 +15,7 @@
 <!--    小班课-->
     <string name="app_breakout_room_name">BreakoutRoom</string>
     <string name="app_breakout_room_description">Multi-person meeting, small meeting room can be established for discussion</string>
+<!--    1V1直播-->
+    <string name="app_one_live_name">Live 1v1</string>
+    <string name="app_one_live_description">2 in 1 game</string>
 </resources>

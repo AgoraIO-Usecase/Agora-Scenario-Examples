@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/one_space_normal"
+    android:drawablePadding="@dimen/one_space_normal"
+    android:gravity="center"
+    android:stateListAnimator="@animator/one_scale_on_touch"
+    tools:drawableTopCompat="@drawable/one_ic_game_1"
+    tools:text="@string/one_app_name" />

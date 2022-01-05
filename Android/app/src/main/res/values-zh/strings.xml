@@ -14,4 +14,7 @@
 
     <string name="app_live_game_name">互动游戏</string>
     <string name="app_live_game_description">互动游戏</string>
+
+    <string name="app_one_live_name">1V1直播</string>
+    <string name="app_one_live_description">直播间双人游戏</string>
 </resources>

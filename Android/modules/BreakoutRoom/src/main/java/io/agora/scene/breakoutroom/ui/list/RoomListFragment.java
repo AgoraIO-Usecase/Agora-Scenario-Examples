@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -55,14 +56,16 @@ public class RoomListFragment extends BaseNavFragment<RoomFragmentRoomListBindin
 
         @Override
         public void onPermissionRefused(String[] refusedPermissions) {
-            showPermissionAlertDialog(refusedPermissions);
+            showPermissionAlertDialog();
         }
 
         @Override
         public void showReasonDialog(String[] refusedPermissions) {
-            showPermissionAlertDialog();
+            showPermissionRequestDialog();
         }
     };
+
+    private final ActivityResultLauncher<String[]> launcher = BaseUtil.registerForActivityResult(this, permissionResultCallback);
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -78,6 +81,7 @@ public class RoomListFragment extends BaseNavFragment<RoomFragmentRoomListBindin
 
             CoordinatorLayout.LayoutParams lpFab = (CoordinatorLayout.LayoutParams) mBinding.fabFgList.getLayoutParams();
             lpFab.bottomMargin = desiredBottom;
+            mBinding.fabFgList.setLayoutParams(lpFab);
 
             return WindowInsetsCompat.CONSUMED;
         });
@@ -102,7 +106,7 @@ public class RoomListFragment extends BaseNavFragment<RoomFragmentRoomListBindin
     @Override
     public void onItemClick(@NonNull RoomInfo data, @NonNull View view, int position, long viewType) {
         this.tempRoom = listAdapter.getItemData(position);
-        BaseUtil.checkPermissionBeforeNextOP(this, permissions, permissionResultCallback);
+        BaseUtil.checkPermissionBeforeNextOP(this, launcher, permissions, permissionResultCallback);
     }
 
     private void initListener() {
@@ -126,9 +130,10 @@ public class RoomListFragment extends BaseNavFragment<RoomFragmentRoomListBindin
                     showLoading();
                 else
                     onLoadingStatus(true);
-            } else if (viewStatus instanceof ViewStatus.Done)
+            } else if (viewStatus instanceof ViewStatus.Done) {
+                mBinding.fabFgList.setExpanded(false);
                 dismissLoading();
-            else if (viewStatus instanceof ViewStatus.Error) {
+            }else if (viewStatus instanceof ViewStatus.Error) {
                 dismissLoading();
                 BaseUtil.toast(requireContext(), ((ViewStatus.Error) viewStatus).msg);
             }
@@ -141,7 +146,7 @@ public class RoomListFragment extends BaseNavFragment<RoomFragmentRoomListBindin
                     onErrorStatus();
                 }
             } else {
-                listAdapter.submitListWithDiffCallback(new RoomListDiffCallback(listAdapter.dataList, resList));
+                listAdapter.submitListAndPurge(resList);
                 if (resList.isEmpty()) {
                     onEmptyStatus();
                 } else {
@@ -183,17 +188,16 @@ public class RoomListFragment extends BaseNavFragment<RoomFragmentRoomListBindin
         findNavController().navigate(R.id.action_roomListFragment_to_roomFragment, bundle);
     }
 
+    private void showPermissionRequestDialog() {
+        new AlertDialog.Builder(requireContext()).setMessage(R.string.room_permission_alert)
+                .setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(android.R.string.ok, ((dialogInterface, i) -> launcher.launch(permissions)))
+                .show();
+    }
+
     private void showPermissionAlertDialog() {
         new AlertDialog.Builder(requireContext()).setMessage(R.string.room_permission_refused)
                 .setPositiveButton(android.R.string.ok, null).show();
-    }
-
-    private void showPermissionAlertDialog(@NonNull String[] permissions) {
-        new AlertDialog.Builder(requireContext()).setMessage(R.string.room_permission_alert)
-                .setNegativeButton(android.R.string.cancel, null)
-                .setPositiveButton(android.R.string.ok, ((dialogInterface, i) ->
-                        BaseUtil.registerForActivityResult(RoomListFragment.this, permissionResultCallback).launch(permissions)))
-                .show();
     }
 
     @StringRes
@@ -228,6 +232,6 @@ public class RoomListFragment extends BaseNavFragment<RoomFragmentRoomListBindin
 
     private void onContentStatus() {
         mBinding.swipeFgList.setRefreshing(false);
-        mBinding.emptyImageFgList.setVisibility(View.GONE);
+        mBinding.emptyViewFgList.setVisibility(View.GONE);
     }
 }

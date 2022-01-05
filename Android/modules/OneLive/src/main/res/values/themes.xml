@@ -1,0 +1,96 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="one_BaseTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/one_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/one_colorPrimaryDark</item>
+        <item name="colorAccent">@color/one_colorAccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+        <item name="android:colorControlActivated" tools:targetApi="lollipop">
+            @color/one_colorAccent
+        </item>
+        <item name="android:colorControlHighlight" tools:targetApi="lollipop">
+            @color/one_colorAccent
+        </item>
+
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@android:color/transparent
+        </item>
+        <item name="android:navigationBarColor" tools:targetApi="lollipop">
+            @android:color/transparent
+        </item>
+
+        <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
+
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
+    </style>
+
+    <style name="one_AppTheme" parent="one_BaseTheme">
+        <item name="colorSurface">@android:color/white</item>
+        <item name="colorOnSurface">@android:color/black</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="colorOnBackground">@android:color/black</item>
+    </style>
+
+    <style name="one_LiveButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="backgroundTint">@color/one_colorHalfTransparent</item>
+        <item name="backgroundTintMode">src_in</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:stateListAnimator">@animator/one_scale_on_touch</item>
+        <item name="rippleColor">@android:color/transparent</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="iconTint">@null</item>
+        <item name="shapeAppearance">@style/one_roundStyle</item>
+    </style>
+
+    <style name="one_roundStyle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="one_cornerTinyStyle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">4dp</item>
+    </style>
+
+    <style name="one_cornerSmallStyle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/one_space_small</item>
+    </style>
+
+    <style name="one_cornerNormalStyle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/one_space_normal</item>
+    </style>
+
+    <style name="one_cornerBigStyle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/one_space_big</item>
+    </style>
+
+    <style name="one_cornerNormalTopStyle">
+        <item name="cornerFamilyTopLeft">rounded</item>
+        <item name="cornerFamilyTopRight">rounded</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerSizeTopLeft">@dimen/one_space_normal</item>
+        <item name="cornerSizeTopRight">@dimen/one_space_normal</item>
+    </style>
+
+    <style name="one_cornerTinyBottomStyle">
+        <item name="cornerFamilyBottomLeft">rounded</item>
+        <item name="cornerFamilyBottomRight">rounded</item>
+        <item name="cornerSizeBottomLeft">4dp</item>
+        <item name="cornerSizeBottomRight">4dp</item>
+        <item name="cornerSizeTopLeft">0dp</item>
+        <item name="cornerSizeTopRight">0dp</item>
+    </style>
+
+</resources>

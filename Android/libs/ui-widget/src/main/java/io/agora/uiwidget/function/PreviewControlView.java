@@ -9,7 +9,6 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import io.agora.uiwidget.R;
 import io.agora.uiwidget.databinding.PreviewControlLayoutBinding;
 import io.agora.uiwidget.utils.RandomUtil;
 
@@ -65,6 +64,10 @@ public class PreviewControlView extends FrameLayout {
                 liveBtn.onClick(v, mBinding.roomNameEdit.getText().toString());
             }
         });
+    }
+
+    public FrameLayout getVideoContainer(){
+        return mBinding.videoContainer;
     }
 
     public interface GoLiveListener {
