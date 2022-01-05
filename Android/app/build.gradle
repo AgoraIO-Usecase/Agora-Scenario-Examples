@@ -10,8 +10,8 @@ android {
         applicationId "io.agora.scene"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 1
-        versionName "1.0.0"
+        versionCode 3
+        versionName "1.0.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -46,7 +46,7 @@ dependencies {
 
     runtimeOnly(project(':modules:LivePK'))
     runtimeOnly(project(':modules:BreakoutRoom'))
-    runtimeOnly(project(':modules:SingleHostLive'))
+//    runtimeOnly(project(':modules:SingleHostLive'))
     runtimeOnly(project(':modules:RTEGame'))
     runtimeOnly(project(':modules:OneLive'))
 

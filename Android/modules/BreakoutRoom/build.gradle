@@ -40,7 +40,7 @@ dependencies {
     implementation('com.google.code.gson:gson:2.8.9')
 
     // Agora
-    implementation 'com.github.AgoraIO-Community:SyncManager-Android:1.0.0'
+    implementation 'com.github.AgoraIO-Community:SyncManager-Android:1.0.4'
     implementation('com.github.agorabuilder:agora-full-preview:4.0.0.preview.3')
 
     // Google
