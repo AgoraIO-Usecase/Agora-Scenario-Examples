@@ -85,8 +85,7 @@ extension BORHomeViewController: AGECollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let item = roomView.dataArray?[indexPath.item] as? BORLiveModel else { return }
         let params = JSONObject.toJson(item)
-        SyncUtil.joinScene(id: item.id, userId: item.userId, property: params) { results in
-            guard let result = results.first else { return }
+        SyncUtil.joinScene(id: item.id, userId: item.userId, property: params) { result in
             let channelName = result.getPropertyWith(key: "id", type: String.self) as? String
             let ownerId = result.getPropertyWith(key: "userId", type: String.self) as? String
             let roomDetailVC = BORRoomDetailController(channelName: channelName ?? "", ownerId: ownerId ?? "")

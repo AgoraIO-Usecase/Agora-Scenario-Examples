@@ -73,9 +73,18 @@ struct GameCenterModel {
         var dataArray = [GameCenterModel]()
         
         if sceneType == .playTogether {
-            let model = GameCenterModel(iconName: "Game/draw",
+            var model = GameCenterModel(iconName: "Game/draw",
                                         title: "你画我猜",
                                         type: .guess_together)
+            dataArray.append(model)
+            model = GameCenterModel(iconName: "Game/draw",
+                                    title: "谁是卧底",
+                                    type: .undercover)
+            dataArray.append(model)
+            
+            model = GameCenterModel(iconName: "Game/draw",
+                                    title: "大话骰",
+                                    type: .dahuashai)
             dataArray.append(model)
             return dataArray
         }

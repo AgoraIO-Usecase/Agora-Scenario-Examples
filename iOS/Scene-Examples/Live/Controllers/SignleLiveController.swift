@@ -126,12 +126,20 @@ class SignleLiveController: BaseViewController {
         liveView.setupRemoteVideoClosure = { [weak self] canvas, connection in
             self?.agoraKit?.setupRemoteVideoEx(canvas, connection: connection)
         }
+        
+        guard getRole(uid: UserInfo.uid) == .audience else { return }
+        SyncUtil.subscribe(id: channleName, key: nil, onDeleted: { _ in
+            self.showAlert(title: "直播已结束", message: "") {
+                self.navigationController?.popViewController(animated: true)
+            }
+        })
     }
     
     private func clickCloseLive() {
-        if getRole(uid: "\(UserInfo.userId)") == .broadcaster {
+        if getRole(uid: UserInfo.uid) == .broadcaster {
             showAlert(title: "Live_End".localized, message: "Confirm_End_Live".localized) { [weak self] in
                 self?.closeLiveHandler()
+//                SyncUtil.delete(id: self?.channleName ?? "")
                 self?.navigationController?.popViewController(animated: true)
             }
 
@@ -142,9 +150,7 @@ class SignleLiveController: BaseViewController {
     }
     
     /// 关闭直播
-    public func closeLiveHandler() {
-        SyncUtil.delete(id: channleName)
-    }
+    public func closeLiveHandler() { }
     
     private func setupAgoraKit() {
         guard agoraKit == nil else { return }

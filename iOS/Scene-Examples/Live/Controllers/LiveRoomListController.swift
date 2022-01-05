@@ -50,8 +50,11 @@ class LiveRoomListController: BaseViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        getLiveData()
         navigationTransparent(isTransparent: false)
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        getLiveData()
     }
     
     private func getLiveData() {
@@ -92,8 +95,7 @@ class LiveRoomListController: BaseViewController {
                 let params = JSONObject.toJson(model)
                 SyncUtil.joinScene(id: model?.roomId ?? "",
                                    userId: model?.userId ?? "",
-                                   property: params, success: { results in
-                    guard let result = results.first else { return }
+                                   property: params, success: { result in
                     self.joinSceneHandler(result: result)
                 })
             }
@@ -139,8 +141,7 @@ extension LiveRoomListController: AGECollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let item = roomView.dataArray?[indexPath.item] as? LiveRoomInfo else { return }
         let params = JSONObject.toJson(item)
-        SyncUtil.joinScene(id: item.roomId, userId: item.userId, property: params, success: { results in
-            guard let result = results.first else { return }
+        SyncUtil.joinScene(id: item.roomId, userId: item.userId, property: params, success: { result in
             self.joinSceneHandler(result: result)
         })
 

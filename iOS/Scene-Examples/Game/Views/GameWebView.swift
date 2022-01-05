@@ -8,7 +8,7 @@
 import UIKit
 import WebKit
 
-enum GameRoleType: Int {
+enum GameRoleType: Int, CaseIterable {
     ///  房主
     case broadcast = 1
     /// 观众
@@ -44,7 +44,7 @@ class GameWebView: UIView {
     }
     
     func reset() {
-        guard let url = URL(string: "http://") else { return }
+        guard let url = URL(string: "http://resetwebview.com") else { return }
         let request = URLRequest(url: url)
         webView.load(request)
     }

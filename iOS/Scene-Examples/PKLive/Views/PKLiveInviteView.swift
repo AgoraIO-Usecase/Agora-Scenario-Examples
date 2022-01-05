@@ -179,8 +179,7 @@ class PKLiveInviteViewCell: UITableViewCell {
         sender.isEnabled = !sender.isEnabled
         
         // 加入要pk主播的channel
-        SyncUtil.joinScene(id: model.roomId, userId: model.userId, property: JSONObject.toJson(model), success: { results in
-            guard let result = results.first else { return }
+        SyncUtil.joinScene(id: model.roomId, userId: model.userId, property: JSONObject.toJson(model), success: { result in
             let channelName = result.getPropertyWith(key: "roomId", type: String.self) as? String
             SyncUtil.fetch(id: channelName ?? "", key: SceneType.pkApply.rawValue) { object in
                 let pkApplyInfo = JSONObject.toModel(PKApplyInfoModel.self, value: object?.toJson())

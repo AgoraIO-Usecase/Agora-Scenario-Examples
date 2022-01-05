@@ -85,11 +85,6 @@ class PlayTogetherViewController: SignleLiveController {
     
     // 游戏
     private func clickGamePKHandler() {
-//        let modeView = GameModeView()
-//        modeView.didGameModeItemClosure = { model in
-//
-//        }
-//        AlertManager.show(view: modeView, alertPostion: .bottom)
         let gameCenterView = GameCenterView(sceneType: .playTogether)
         gameCenterView.didGameCenterItemClosure = { [weak self] gameCenterModel in
             self?.gameCenterModel = gameCenterModel
@@ -107,8 +102,6 @@ class PlayTogetherViewController: SignleLiveController {
             self?.updateUIStatus(isStart: false)
             self?.updateGameInfoStatus(isStart: false)
         }
-//        self?.viewModel.postBarrage()
-//        viewModel.postGiftHandler(type: .delay)
     }
     
     /// 收到礼物
@@ -161,7 +154,7 @@ class PlayTogetherViewController: SignleLiveController {
     /// 更新游戏状态
     private func updateGameInfoStatus(isStart: Bool) {
         var gameInfoModel = GameInfoModel()
-        gameInfoModel.gameId = .guess
+        gameInfoModel.gameId = gameCenterModel?.type ?? .guess
         gameInfoModel.gameUid = currentUserId
         gameInfoModel.status = isStart ? .playing : .no_start
         SyncUtil.update(id: channleName,

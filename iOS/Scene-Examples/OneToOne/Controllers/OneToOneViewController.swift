@@ -113,6 +113,12 @@ class OneToOneViewController: BaseViewController {
     }
     
     private func eventHandler() {
+        SyncUtil.subscribe(id: channelName, key: nil, onDeleted: { object in
+            LogUtils.log(message: "删除房间 == \(object.toJson() ?? "")", level: .info)
+            AGEToastView.show(text: "房间已关闭", duration: 2)
+            self.navigationController?.popViewController(animated: true)
+        })
+
         onoToOneGameView.onClickControlButtonClosure = { [weak self] type, isSelected in
             guard let self = self else { return }
             if type == .exit {
@@ -137,9 +143,13 @@ class OneToOneViewController: BaseViewController {
             if model?.status == .playing {
                 self.isSelfExitGame = false
                 self.showAlert(title: "对方邀请您玩游戏", message: "") {
+                    var roleType: GameRoleType = self.roleType
+                    if model?.gameId == .kingdom && roleType == .audience {
+                        roleType = GameRoleType.allCases.randomElement() ?? .audience
+                    }
                     self.onoToOneGameView.setLoadUrl(urlString: model?.gameId?.gameUrl ?? "",
                                                      roomId: self.channelName,
-                                                     roleType: self.roleType)
+                                                     roleType: roleType)
                     AlertManager.show(view: self.onoToOneGameView, alertPostion: .bottom, didCoverDismiss: false)
                 }
             } else if model?.status == .end && !self.isSelfExitGame{
@@ -178,6 +188,9 @@ class OneToOneViewController: BaseViewController {
                 self.viewModel.leaveGame(roleType: self.roleType, type: self.requestType)
                 let gameInfo = GameInfoModel(status: .end, gameUid: UserInfo.uid, gameId: self.gameInfoModel.gameId)
                 SyncUtil.update(id: self.channelName, key: SYNC_MANAGER_GAME_INFO, params: JSONObject.toJson(gameInfo))
+                if self.roleType == .broadcast {
+//                    SyncUtil.delete(id: self.channelName)
+                }
                 self.navigationController?.popViewController(animated: true)
             }
             
@@ -198,7 +211,11 @@ class OneToOneViewController: BaseViewController {
         gameCenterView.didGameCenterItemClosure = { [weak self] gameCenterModel in
             guard let self = self else { return }
             self.gameInfoModel.gameId = gameCenterModel.type
-            self.onoToOneGameView.setLoadUrl(urlString: gameCenterModel.type.gameUrl, roomId: self.channelName, roleType: self.roleType)
+            var roleType: GameRoleType = self.roleType
+            if gameCenterModel.type == .kingdom && roleType == .audience {
+                roleType = GameRoleType.allCases.randomElement() ?? .audience
+            }
+            self.onoToOneGameView.setLoadUrl(urlString: gameCenterModel.type.gameUrl, roomId: self.channelName, roleType: roleType)
             AlertManager.show(view: self.onoToOneGameView, alertPostion: .bottom, didCoverDismiss: false)
             let gameInfo = GameInfoModel(status: .playing, gameUid: UserInfo.uid, gameId: gameCenterModel.type)
             SyncUtil.update(id: self.channelName, key: SYNC_MANAGER_GAME_INFO, params: JSONObject.toJson(gameInfo))

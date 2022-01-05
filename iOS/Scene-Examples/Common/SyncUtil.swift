@@ -27,7 +27,7 @@ class SyncUtil: NSObject {
     class func joinScene(id: String,
                          userId: String,
                          property: [String: Any]?,
-                         success: SuccessBlock? = nil,
+                         success: SuccessBlockObj? = nil,
                          fail: FailBlock? = nil) {
         guard let manager = manager else { return }
         let jsonString = JSONObject.toJsonString(dict: property) ?? ""
