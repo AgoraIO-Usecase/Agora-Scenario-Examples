@@ -123,8 +123,8 @@ class GameModeViewCell: UICollectionViewCell {
     }
     
     func setupGameCenterData(model: GameCenterModel) {
-        button.setImage(UIImage(named: model.iconName), for: .normal)
-        titleLabel.text = model.title
+        button.setImage(UIImage(named: model.iconName ?? ""), for: .normal)
+        titleLabel.text = model.gameName
     }
     
     private func setupUI() {

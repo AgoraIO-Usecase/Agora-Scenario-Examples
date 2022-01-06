@@ -42,21 +42,36 @@ class GameCenterView: UIView {
                       forCellWithReuseIdentifier: GameModeViewCell.description())
         return view
     }()
+    private var sceneType: SceneType = .game
+    private lazy var viewMdoel = GameViewModel(channleName: "", ownerId: "")
+    private var dataArray: [GameCenterModel]? {
+        didSet {
+            collectionLayout.dataArray = dataArray
+        }
+    }
     
     init(sceneType: SceneType) {
         super.init(frame: .zero)
+        self.sceneType = sceneType
         setupUI()
-        collectionLayout.dataArray = GameCenterModel.createDatas(sceneType: sceneType)
+        getGameList()
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
-        collectionLayout.dataArray = GameCenterModel.createDatas(sceneType: .game)
+        getGameList()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func getGameList() {
+        viewMdoel.getGameList(sceneType: sceneType) { [weak self] list in
+            guard let list = list else { return }
+            self?.dataArray = list
+        }
     }
     
     private func setupUI() {

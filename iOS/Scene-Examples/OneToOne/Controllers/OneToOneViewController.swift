@@ -131,7 +131,9 @@ class OneToOneViewController: BaseViewController {
             guard let self = self else { return }
             if type == .exit {
                 self.controlView.isHidden = false
-                self.viewModel.leaveGame(roleType: self.currentGameRoleType, type: self.requestType)
+                self.viewModel.leaveGame(gameId: self.gameInfoModel.gameId?.rawValue ?? "",
+                                         roleType: self.currentGameRoleType,
+                                         type: self.requestType)
                 self.isCloseGame = false
                 let gameInfo = GameInfoModel(status: .end, gameUid: UserInfo.uid, gameId: self.gameInfoModel.gameId ?? .guess)
                 SyncUtil.update(id: self.channelName, key: SYNC_MANAGER_GAME_INFO, params: JSONObject.toJson(gameInfo))
@@ -151,7 +153,7 @@ class OneToOneViewController: BaseViewController {
             if model?.status == .playing {
                 self.isSelfExitGame = false
                 self.showAlert(title: "对方邀请您玩游戏", message: "") {
-                    self.onoToOneGameView.setLoadUrl(urlString: model?.gameId?.gameUrl ?? "",
+                    self.onoToOneGameView.setLoadUrl(gameId: model?.gameId?.rawValue ?? "",
                                                      roomId: self.channelName,
                                                      roleType: self.currentGameRoleType)
                     AlertManager.show(view: self.onoToOneGameView, alertPostion: .bottom, didCoverDismiss: false)
@@ -160,7 +162,9 @@ class OneToOneViewController: BaseViewController {
                 AlertManager.hiddenView()
                 ToastView.show(text: "游戏已结束", view: self.view)
                 self.onoToOneGameView.reset()
-                self.viewModel.leaveGame(roleType: self.currentGameRoleType, type: self.requestType)
+                self.viewModel.leaveGame(gameId: model?.gameId?.rawValue ?? "",
+                                         roleType: self.currentGameRoleType,
+                                         type: self.requestType)
                 self.isSelfExitGame = false
             }
         }, onSubscribed: {
@@ -184,12 +188,15 @@ class OneToOneViewController: BaseViewController {
                 self.controlView.isHidden = false
                 AlertManager.hiddenView()
                 self.onoToOneGameView.reset()
-                self.viewModel.leaveGame(roleType: self.currentGameRoleType, type: self.requestType)
+                let gameId = self.gameInfoModel.gameId?.rawValue ?? ""
+                self.viewModel.leaveGame(gameId: gameId, roleType: self.currentGameRoleType, type: self.requestType)
             }
             
         case .back:
             showAlert(title: "关闭直播间", message: "关闭直播间后，其他用户将不能再和您连线。确定关闭 ？") {
-                self.viewModel.leaveGame(roleType: self.currentGameRoleType, type: self.requestType)
+                self.viewModel.leaveGame(gameId: self.gameInfoModel.gameId?.rawValue ?? "",
+                                         roleType: self.currentGameRoleType,
+                                         type: self.requestType)
                 let gameInfo = GameInfoModel(status: .end, gameUid: UserInfo.uid, gameId: self.gameInfoModel.gameId)
                 SyncUtil.update(id: self.channelName, key: SYNC_MANAGER_GAME_INFO, params: JSONObject.toJson(gameInfo))
                 if self.roleType == .broadcast {
@@ -211,13 +218,13 @@ class OneToOneViewController: BaseViewController {
             AlertManager.show(view: onoToOneGameView, alertPostion: .bottom, didCoverDismiss: false)
             return
         }
-        let gameCenterView = GameCenterView()
+        let gameCenterView = GameCenterView(sceneType: .oneToOne)
         gameCenterView.didGameCenterItemClosure = { [weak self] gameCenterModel in
             guard let self = self else { return }
-            self.gameInfoModel.gameId = gameCenterModel.type
-            self.onoToOneGameView.setLoadUrl(urlString: gameCenterModel.type.gameUrl, roomId: self.channelName, roleType: self.currentGameRoleType)
+            self.gameInfoModel.gameId = gameCenterModel.gameId
+            self.onoToOneGameView.setLoadUrl(gameId: gameCenterModel.gameId.rawValue, roomId: self.channelName, roleType: self.currentGameRoleType)
             AlertManager.show(view: self.onoToOneGameView, alertPostion: .bottom, didCoverDismiss: false)
-            let gameInfo = GameInfoModel(status: .playing, gameUid: UserInfo.uid, gameId: gameCenterModel.type)
+            let gameInfo = GameInfoModel(status: .playing, gameUid: UserInfo.uid, gameId: gameCenterModel.gameId)
             SyncUtil.update(id: self.channelName, key: SYNC_MANAGER_GAME_INFO, params: JSONObject.toJson(gameInfo))
         }
         AlertManager.show(view: gameCenterView, alertPostion: .bottom)

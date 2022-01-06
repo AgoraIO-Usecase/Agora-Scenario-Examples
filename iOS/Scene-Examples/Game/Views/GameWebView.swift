@@ -27,6 +27,7 @@ class GameWebView: UIView {
         return webView
     }()
     private lazy var methodNames: [String] = []
+    private lazy var viewModel = GameViewModel(channleName: "", ownerId: "")
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -36,12 +37,13 @@ class GameWebView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func loadUrl(urlString: String, roomId: String, roleType: GameRoleType) {
+    func loadUrl(gameId: String, roomId: String, roleType: GameRoleType) {
         let avatarUrl = "https://gimg2.baidu.com/image_search/src=http://c-ssl.duitang.com/uploads/blog/202011/17/20201117105437_45d41.thumb.1000_0.jpeg"
-        let string = urlString + "?user_id=\(UserInfo.userId)&app_id=\(KeyCenter.gameAppId)&room_id=\(roomId)&identity=\(roleType.rawValue)&token=\(KeyCenter.gameToken)&name=User-\(UserInfo.userId)&avatar=\(avatarUrl)"
-        guard let url = URL(string: string) else { return }
-        let request = URLRequest(url: url)
-        webView.load(request)
+        viewModel.joinGame(gameId: gameId, roomId: roomId, identity: "\(roleType.rawValue)", avatar: avatarUrl) { [weak self] url in
+            guard let url = URL(string: url) else { return }
+            let request = URLRequest(url: url)
+            self?.webView.load(request)
+        }
     }
     
     func reset() {

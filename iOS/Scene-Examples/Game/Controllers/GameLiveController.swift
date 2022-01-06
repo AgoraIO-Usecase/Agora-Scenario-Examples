@@ -47,7 +47,7 @@ class GameLiveController: PKLiveController {
         targetChannelName.isEmpty ? .audience : .broadcast
     }
     private var requestType: String {
-        let type = gameCenterModel?.type.requestParams ?? gameApplyInfoModel?.gameId.requestParams ?? gameInfoModel?.gameId?.requestParams
+        let type = gameCenterModel?.gameId.requestParams ?? gameApplyInfoModel?.gameId.requestParams ?? gameInfoModel?.gameId?.requestParams
         return type ?? ""
     }
     public var screenUserID: UInt {
@@ -127,11 +127,13 @@ class GameLiveController: PKLiveController {
         }
         /// 发消息
         liveView.onClickSendMessageClosure = { [weak self] meesageModel in
-            self?.viewModel.postBarrage(type: self?.requestType ?? "")
+            let gameId = (self?.gameInfoModel?.gameId ?? self?.gameCenterModel?.gameId ?? self?.gameApplyInfoModel?.gameId)?.rawValue ?? ""
+            self?.viewModel.postBarrage(gameId: gameId, type: self?.requestType ?? "")
         }
         /// 发礼物
         liveView.onSendGiftClosure = { [weak self] giftModel in
-            self?.viewModel.postGiftHandler(giftType: giftModel.giftType, type: self?.requestType ?? "")
+            let gameId = (self?.gameInfoModel?.gameId ?? self?.gameCenterModel?.gameId ?? self?.gameApplyInfoModel?.gameId)?.rawValue ?? ""
+            self?.viewModel.postGiftHandler(gameId: gameId, giftType: giftModel.giftType, type: self?.requestType ?? "")
         }
     }
     
@@ -281,7 +283,7 @@ class GameLiveController: PKLiveController {
             ToastView.show(text: "游戏开始", postion: .top, duration: 3)
             if getRole(uid: UserInfo.uid) == .broadcaster {
                 let channelName = targetChannelName.isEmpty ? channleName : targetChannelName
-                webView.loadUrl(urlString: gameCenterModel?.type.gameUrl ?? gameApplyInfoModel?.gameId.gameUrl ?? "",
+                webView.loadUrl(gameId: (gameCenterModel?.gameId ?? gameApplyInfoModel?.gameId)?.rawValue ?? "",
                                 roomId: channelName,
                                 roleType: gameRoleType)
                 // 调用屏幕共享
@@ -313,7 +315,8 @@ class GameLiveController: PKLiveController {
             webView.reset()
             // 主播调用离开游戏接口
             if getRole(uid: "\(UserInfo.userId)") == .broadcaster {
-                viewModel.leaveGame(roleType: gameRoleType, type: requestType)
+                let gameId = (gameInfoModel?.gameId ?? gameCenterModel?.gameId ?? gameApplyInfoModel?.gameId)?.rawValue ?? ""
+                viewModel.leaveGame(gameId: gameId, roleType: gameRoleType, type: requestType)
                 AgoraScreenShare.shareInstance().stopService()
                 agoraKit?.leaveChannelEx(screenConnection, leaveChannelBlock: nil)
             }
@@ -381,7 +384,7 @@ class GameLiveController: PKLiveController {
         if isStart {
             var gameApplyModel = GameApplyInfoModel()
             gameApplyModel.status = .playing
-            gameApplyModel.gameId = gameCenterModel?.type ?? .guess
+            gameApplyModel.gameId = gameCenterModel?.gameId ?? .guess
             SyncUtil.update(id: channelName, key: SYNC_MANAGER_GAME_APPLY_INFO, params: JSONObject.toJson(gameApplyModel))
             return
         }

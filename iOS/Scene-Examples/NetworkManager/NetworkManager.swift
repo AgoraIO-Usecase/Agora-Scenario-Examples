@@ -17,7 +17,10 @@ class NetworkManager {
     
     private lazy var sessionConfig: URLSessionConfiguration = {
         let config = URLSessionConfiguration.default
-        config.httpAdditionalHeaders = ["Content-Type": "application/x-www-form-urlencoded"]
+        config.httpAdditionalHeaders = ["Content-Type": "application/json",
+                                        "X-LC-Id": "fkUjxadPMmvYF3F3BI4uvmjo-gzGzoHsz",
+                                        "X-LC-Key": "QAvFS62IOR28GfSFQO5ze45s",
+                                        "X-LC-Session": "qmdj8pdidnmyzp0c7yqil91oc"]
         config.timeoutIntervalForRequest = 30
         config.timeoutIntervalForResource = 30
         config.requestCachePolicy = .reloadIgnoringLocalCacheData
@@ -26,6 +29,7 @@ class NetworkManager {
     
     static let shared = NetworkManager()
     private init() { }
+    private let baseUrl = "https://agoraktv.xyz/1.1/functions/"
     
     func getRequest(urlString: String, success: SuccessClosure?, failure: FailClosure?) {
         DispatchQueue.global().async {
@@ -72,13 +76,15 @@ class NetworkManager {
                             method: HTTPMethods,
                             success: SuccessClosure?,
                             failure: FailClosure?) -> URLRequest? {
-        guard let url = URL(string: urlString) else {
+        
+        let string = urlString.hasPrefix("http") ? urlString : baseUrl.appending(urlString)
+        guard let url = URL(string: string) else {
             return nil
         }
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         if method == .POST {
-            request.httpBody = convertParams(params: params).data(using: .utf8)
+            request.httpBody = try? JSONSerialization.data(withJSONObject: params ?? [], options: .sortedKeys)//convertParams(params: params).data(using: .utf8)
         }
         let curl = request.cURL(pretty: true)
         debugPrint("curl == \(curl)")

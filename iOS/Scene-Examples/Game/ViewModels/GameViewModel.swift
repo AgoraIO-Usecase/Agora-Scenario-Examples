@@ -15,17 +15,39 @@ class GameViewModel: NSObject {
         self.ownerId = ownerId
     }
     
-    func getGameList() {
-        
+    func getGameList(sceneType: SceneType, success: @escaping ([GameCenterModel]?) -> Void) {
+        NetworkManager.shared.postRequest(urlString: "getGames", params: ["type": sceneType.gameType]) { response in
+            let result = response["result"] as? String
+            let list = JSONObject.toArray(jsonString: result ?? "")?.compactMap({ JSONObject.toModel(GameCenterModel.self, value: $0) })
+            success(list)
+        } failure: { error in
+            LogUtils.log(message: "error == \(error)", level: .error)
+        }
+    }
+    
+    func joinGame(gameId: String, roomId: String, identity: String, avatar: String, success: @escaping (String) -> Void) {
+        let params: [String: Any] = ["user_id": UserInfo.userId,
+                                     "app_id": gameId,
+                                     "room_id": roomId,
+                                     "identity": identity,
+                                     "token": KeyCenter.gameToken,
+                                     "name": "User-\(UserInfo.uid)",
+                                     "avatar": avatar]
+        NetworkManager.shared.postRequest(urlString: "getJoinUrl", params: params) { response in
+            let result = response["result"] as? String
+            success(result ?? "")
+        } failure: { error in
+            LogUtils.log(message: "error == \(error)", level: .error)
+        }
     }
     
     /// 发送礼物
-    func postGiftHandler(giftType: LiveGiftModel.GiftType, type: String) {
-        postGiftHandler(giftType: giftType, type: type, playerId: ownerId)
+    func postGiftHandler(gameId: String, giftType: LiveGiftModel.GiftType, type: String) {
+        postGiftHandler(gameId: gameId, giftType: giftType, type: type, playerId: ownerId)
     }
-    func postGiftHandler(giftType: LiveGiftModel.GiftType, type: String, playerId: String) {
+    func postGiftHandler(gameId: String, giftType: LiveGiftModel.GiftType, type: String, playerId: String) {
         var params: [String: Any] = ["user_id": UserInfo.userId,
-                                     "app_id": Int(KeyCenter.gameAppId) ?? 0,
+                                     "app_id": gameId,
                                      "room_id": Int(channelName) ?? 0,
                                      "name": "User-\(UserInfo.userId)",
                                      "token": KeyCenter.gameToken,
@@ -46,13 +68,13 @@ class GameViewModel: NSObject {
     }
     
     /// 发弹幕
-    func postBarrage(type: String) {
-        postBarrage(type: type, playerId: ownerId)
+    func postBarrage(gameId: String, type: String) {
+        postBarrage(gameId: gameId, type: type, playerId: ownerId)
     }
-    func postBarrage(type: String, playerId: String) {
+    func postBarrage(gameId: String, type: String, playerId: String) {
         let barrage = GameBarrageType.allCases.randomElement() ?? .salvo
-        let params: [String: Any] = ["user_id": "\(UserInfo.userId)",
-                                     "app_id": KeyCenter.gameAppId,
+        var params: [String: Any] = ["user_id": "\(UserInfo.userId)",
+                                     "app_id": gameId,
                                      "room_id": channelName,
                                      "name": "User-\(UserInfo.userId)",
                                      "token": KeyCenter.gameToken,
@@ -60,8 +82,10 @@ class GameViewModel: NSObject {
                                      "nonce_str": "".timeStamp,
                                      "barrage": barrage.rawValue,
                                      "count": 1,
-                                     "player": playerId,
-                                     "sign": KeyCenter.gameAppSecrets]
+                                     "player": playerId]
+        let sign = NetworkManager.shared.generateSignature(params: params,
+                                                           token: KeyCenter.gameAppSecrets)
+        params["sign"] = sign
         NetworkManager.shared.postRequest(urlString: "http://testgame.yuanqihuyu.com/\(type)/barrage", params: params, success: { result in
             LogUtils.log(message: "barrge == \(result)", level: .info)
         }, failure: { error in
@@ -70,11 +94,11 @@ class GameViewModel: NSObject {
     }
     
     /// 离开游戏
-    func leaveGame(roleType: GameRoleType, type: String) {
+    func leaveGame(gameId: String, roleType: GameRoleType, type: String) {
         var params: [String: Any] = ["user_id": UserInfo.userId,
-                                     "app_id": Int(KeyCenter.gameAppId) ?? 0,
+                                     "app_id": gameId,
                                      "identity": roleType.rawValue,
-                                     "room_id": Int(channelName) ?? 0,
+                                     "room_id": channelName,
                                      "token": KeyCenter.gameToken,
                                      "timestamp": "".timeStamp,
                                      "nonce_str": "".timeStamp16]

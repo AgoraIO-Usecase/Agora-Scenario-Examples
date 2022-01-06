@@ -28,6 +28,15 @@ enum SceneType: String {
         default: return ""
         }
     }
+    
+    var gameType: Int {
+        switch self {
+        case .game: return 3
+        case .playTogether: return 2
+        case .oneToOne: return 1
+        default: return 0
+        }
+    }
 }
 
 struct MainModel {

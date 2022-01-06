@@ -48,8 +48,8 @@ class OnoToOneGameView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setLoadUrl(urlString: String, roomId: String, roleType: GameRoleType) {
-        webView.loadUrl(urlString: urlString, roomId: roomId, roleType: roleType)
+    func setLoadUrl(gameId: String, roomId: String, roleType: GameRoleType) {
+        webView.loadUrl(gameId: gameId, roomId: roomId, roleType: roleType)
     }
     
     func reset() {

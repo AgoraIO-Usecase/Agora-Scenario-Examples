@@ -22,7 +22,7 @@ class PlayTogetherViewController: SignleLiveController {
         getRole(uid: UserInfo.uid) == .broadcaster ? .broadcast : .audience
     }
     private var roleType: GameRoleType {
-        let gameId = gameInfoModel?.gameId ?? gameCenterModel?.type
+        let gameId = gameInfoModel?.gameId ?? gameCenterModel?.gameId
         if gameId == .kingdom && gameRoleType == .audience {
             return GameRoleType.allCases.randomElement() ?? .audience
         }
@@ -31,7 +31,7 @@ class PlayTogetherViewController: SignleLiveController {
     private lazy var currentGameRoleType: GameRoleType = roleType
     
     private var requestType: String {
-        gameInfoModel?.gameId?.requestParams ?? gameCenterModel?.type.requestParams ?? ""
+        gameInfoModel?.gameId?.requestParams ?? gameCenterModel?.gameId.requestParams ?? ""
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -117,12 +117,17 @@ class PlayTogetherViewController: SignleLiveController {
     private func receiveGiftHandler(giftModel: LiveGiftModel, type: RecelivedType) {
         liveView.playGifView.isHidden = !webView.isHidden
         let playerId = gameInfoModel?.status == .playing ? UserInfo.uid : currentUserId
-        viewModel.postGiftHandler(giftType: giftModel.giftType, type: requestType, playerId: playerId)
+        viewModel.postGiftHandler(gameId:gameInfoModel?.gameId?.rawValue ?? "",
+                                  giftType: giftModel.giftType,
+                                  type: requestType,
+                                  playerId: playerId)
     }
     /// 发消息
     private func sendMessage(messageModel: ChatMessageModel) {
         let playerId = gameInfoModel?.status == .playing ? UserInfo.uid : currentUserId
-        viewModel.postBarrage(type: requestType, playerId: playerId)
+        viewModel.postBarrage(gameId: gameInfoModel?.gameId?.rawValue ?? "",
+                              type: requestType,
+                              playerId: playerId)
         if getRole(uid: UserInfo.uid) == .audience
             && messageModel.message.trimmingCharacters(in: .whitespacesAndNewlines) == "主播yyds"
             && gameInfoModel?.status == .playing {
@@ -149,7 +154,7 @@ class PlayTogetherViewController: SignleLiveController {
         }
         if isStart {
             ToastView.show(text: "游戏开始", postion: .top, duration: 3)
-            webView.loadUrl(urlString: gameCenterModel?.type.gameUrl ?? gameInfoModel?.gameId?.gameUrl ?? "",
+            webView.loadUrl(gameId: (gameCenterModel?.gameId ?? gameInfoModel?.gameId)?.rawValue ?? "",
                             roomId: channleName,
                             roleType: currentGameRoleType)
             
@@ -158,14 +163,15 @@ class PlayTogetherViewController: SignleLiveController {
         } else {
             liveView.updateLiveLayout(postion: .full)
             webView.reset()
+            let gameId = (gameInfoModel?.gameId ?? gameCenterModel?.gameId)?.rawValue ?? ""
             // 离开游戏接口
-            viewModel.leaveGame(roleType: currentGameRoleType, type: requestType)
+            viewModel.leaveGame(gameId: gameId, roleType: currentGameRoleType, type: requestType)
         }
     }
     /// 更新游戏状态
     private func updateGameInfoStatus(isStart: Bool) {
         var gameInfoModel = GameInfoModel()
-        gameInfoModel.gameId = gameCenterModel?.type ?? .guess
+        gameInfoModel.gameId = gameCenterModel?.gameId ?? .guess
         gameInfoModel.gameUid = currentUserId
         gameInfoModel.status = isStart ? .playing : .no_start
         SyncUtil.update(id: channleName,
