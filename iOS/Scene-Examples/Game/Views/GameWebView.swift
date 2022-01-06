@@ -26,6 +26,7 @@ class GameWebView: UIView {
         webView.backgroundColor = .clear
         return webView
     }()
+    private lazy var methodNames: [String] = []
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -49,6 +50,11 @@ class GameWebView: UIView {
         webView.load(request)
     }
     
+    private func injectJsBridge(methodName: String) {
+        webView.configuration.userContentController.add(WeakScriptMessageDelegate(self), name: methodName)
+        methodNames.append(methodName)
+    }
+    
     private func setupUI() {
         webView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(webView)
@@ -56,5 +62,36 @@ class GameWebView: UIView {
         webView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         webView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         webView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+    }
+    
+    deinit {
+        methodNames.forEach({
+            webView.configuration.userContentController.removeScriptMessageHandler(forName: $0)
+        })
+        print("WKWebViewController is deinit")
+    }
+}
+
+extension GameWebView: WKScriptMessageHandler {
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        LogUtils.log(message: "messageName == \(message.name)", level: .info)
+        LogUtils.log(message: "messageBody == \(message.body)", level: .info)
+    }
+}
+
+class WeakScriptMessageDelegate: NSObject, WKScriptMessageHandler {
+    weak var scriptDelegate: WKScriptMessageHandler?
+    
+    init(_ scriptDelegate: WKScriptMessageHandler) {
+        self.scriptDelegate = scriptDelegate
+        super.init()
+    }
+    
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        scriptDelegate?.userContentController(userContentController, didReceive: message)
+    }
+    
+    deinit {
+        print("WeakScriptMessageDelegate is deinit")
     }
 }

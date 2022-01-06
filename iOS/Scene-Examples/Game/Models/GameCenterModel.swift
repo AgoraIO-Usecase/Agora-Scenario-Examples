@@ -86,6 +86,10 @@ struct GameCenterModel {
                                     title: "大话骰",
                                     type: .dahuashai)
             dataArray.append(model)
+            model = GameCenterModel(iconName: "Game/draw",
+                                    title: "王国激战",
+                                    type: .kingdom)
+            dataArray.append(model)
             return dataArray
         }
         

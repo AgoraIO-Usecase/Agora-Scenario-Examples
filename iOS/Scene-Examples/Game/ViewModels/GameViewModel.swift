@@ -15,8 +15,15 @@ class GameViewModel: NSObject {
         self.ownerId = ownerId
     }
     
+    func getGameList() {
+        
+    }
+    
     /// 发送礼物
     func postGiftHandler(giftType: LiveGiftModel.GiftType, type: String) {
+        postGiftHandler(giftType: giftType, type: type, playerId: ownerId)
+    }
+    func postGiftHandler(giftType: LiveGiftModel.GiftType, type: String, playerId: String) {
         var params: [String: Any] = ["user_id": UserInfo.userId,
                                      "app_id": Int(KeyCenter.gameAppId) ?? 0,
                                      "room_id": Int(channelName) ?? 0,
@@ -25,7 +32,7 @@ class GameViewModel: NSObject {
                                      "timestamp": "".timeStamp,
                                      "gift": giftType.rawValue,
                                      "count": 1,
-                                     "player": Int(ownerId) ?? 0,
+                                     "player": Int(playerId) ?? 0,
                                      "nonce_str": "".timeStamp16]
         let sign = NetworkManager.shared.generateSignature(params: params,
                                                            token: KeyCenter.gameAppSecrets)
@@ -40,6 +47,9 @@ class GameViewModel: NSObject {
     
     /// 发弹幕
     func postBarrage(type: String) {
+        postBarrage(type: type, playerId: ownerId)
+    }
+    func postBarrage(type: String, playerId: String) {
         let barrage = GameBarrageType.allCases.randomElement() ?? .salvo
         let params: [String: Any] = ["user_id": "\(UserInfo.userId)",
                                      "app_id": KeyCenter.gameAppId,
@@ -50,7 +60,7 @@ class GameViewModel: NSObject {
                                      "nonce_str": "".timeStamp,
                                      "barrage": barrage.rawValue,
                                      "count": 1,
-                                     "player": ownerId,
+                                     "player": playerId,
                                      "sign": KeyCenter.gameAppSecrets]
         NetworkManager.shared.postRequest(urlString: "http://testgame.yuanqihuyu.com/\(type)/barrage", params: params, success: { result in
             LogUtils.log(message: "barrge == \(result)", level: .info)
