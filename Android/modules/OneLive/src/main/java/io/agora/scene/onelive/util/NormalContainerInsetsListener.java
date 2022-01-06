@@ -19,7 +19,7 @@ public class NormalContainerInsetsListener implements OnApplyWindowInsetsListene
     public WindowInsetsCompat onApplyWindowInsets(View v, WindowInsetsCompat insets) {
         Insets inset = insets.getInsets(WindowInsetsCompat.Type.systemBars());
         v.setPadding(inset.left, inset.top, inset.right, inset.bottom);
-        return WindowInsetsCompat.CONSUMED;
+        return insets;
     }
 
 }

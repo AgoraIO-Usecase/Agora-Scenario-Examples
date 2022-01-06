@@ -35,7 +35,7 @@ public class GameInfo {
     public String toString() {
         return "GameInfo{" +
                 "status=" + status +
-                ", gameId='" + gameId + '\'' +
+                ", gameId=" + gameId +
                 '}';
     }
 }
