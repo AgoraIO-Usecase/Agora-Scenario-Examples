@@ -37,12 +37,8 @@ import io.agora.scene.onelive.databinding.OneFragmentRoomBinding;
 import io.agora.scene.onelive.repo.GameRepo;
 import io.agora.scene.onelive.ui.room.game.GameListDialog;
 import io.agora.scene.onelive.util.NormalContainerInsetsListener;
-import io.agora.scene.onelive.util.OneConstants;
 import io.agora.scene.onelive.util.OneUtil;
 import io.agora.scene.onelive.util.ViewStatus;
-import io.agora.syncmanager.rtm.IObject;
-import io.agora.syncmanager.rtm.Sync;
-import io.agora.syncmanager.rtm.SyncManagerException;
 
 public class RoomFragment extends BaseNavFragment<OneFragmentRoomBinding> {
     private boolean amHost;
@@ -224,9 +220,7 @@ public class RoomFragment extends BaseNavFragment<OneFragmentRoomBinding> {
                 .setMessage(R.string.one_end_call_msg)
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                    if (amHost)
-                        mViewModel.endCall();
-                    else findNavController().popBackStack();
+                    findNavController().popBackStack();
                 })
                 .setCancelable(false)
                 .show();
@@ -259,6 +253,30 @@ public class RoomFragment extends BaseNavFragment<OneFragmentRoomBinding> {
 
     private void showGameCenterDialog() {
         new GameListDialog().show(getChildFragmentManager(), GameListDialog.TAG);
+    }
+
+    private void showGameInviteDialog(GameInfo game){
+        new AlertDialog.Builder(requireContext()).setTitle(R.string.one_invite_received)
+                .setMessage(R.string.one_invite_received_msg)
+                .setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(android.R.string.ok, ((dialog, which) -> RoomFragment.this.startGame(game)))
+                .setCancelable(false)
+                .show();
+    }
+
+    private void startGame(GameInfo gameInfo) {
+        // FIXME DO IN BACKGROUND
+        AgoraGame agoraGame = GameRepo.getGameDetail(gameInfo.getGameId());
+        if (agoraGame != null) {
+            mViewModel.currentGame = agoraGame;
+
+            mBinding.btnStartGameFgRoom.setEnabled(false);
+            mBinding.btnStartGameFgRoom.setAlpha(0.5f);
+            mBinding.overlayFgRoom.setVisibility(View.VISIBLE);
+            mBinding.getRoot().post(() -> sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED));
+            GameRepo.gameStart(mBinding.gameViewFgRoom, agoraGame, mViewModel.localUser, amHost, Integer.parseInt(currentRoom.getId()));
+        }
+
     }
     //</editor-fold>
 
@@ -296,26 +314,22 @@ public class RoomFragment extends BaseNavFragment<OneFragmentRoomBinding> {
 
     private void onGameStatusChanged(@NonNull GameInfo gameInfo) {
         BaseUtil.logD("onGameStatusChanged:" + gameInfo.getStatus());
-        boolean btnGameEnabled = gameInfo.getStatus() != GameInfo.START;
-        mBinding.btnStartGameFgRoom.setEnabled(btnGameEnabled);
-        mBinding.btnStartGameFgRoom.setAlpha(btnGameEnabled ? 1f : 0.5f);
 
-        switch (gameInfo.getStatus()) {
-            case GameInfo.IDLE:
-                break;
-            case GameInfo.START:
-                AgoraGame agoraGame = mViewModel.currentGame;
-                if (agoraGame != null) {
-                    mBinding.overlayFgRoom.setVisibility(View.VISIBLE);
-                    mBinding.getRoot().post(() -> sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED));
-                    GameRepo.gameStart(mBinding.gameViewFgRoom, agoraGame, mViewModel.localUser, amHost, Integer.parseInt(currentRoom.getId()));
-                }
-                break;
-            default:
-                mBinding.gameViewFgRoom.loadUrl("");
-                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                mBinding.overlayFgRoom.setVisibility(View.GONE);
-                break;
+        if (gameInfo.getStatus() == GameInfo.START) {
+            if (mViewModel.startedByMe)
+                startGame(gameInfo);
+            else
+                showGameInviteDialog(gameInfo);
+
+            mViewModel.startedByMe = false;
+        } else {
+
+            mBinding.btnStartGameFgRoom.setEnabled(true);
+            mBinding.btnStartGameFgRoom.setAlpha(1f);
+
+            mBinding.gameViewFgRoom.loadUrl("");
+            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            mBinding.overlayFgRoom.setVisibility(View.GONE);
         }
     }
 

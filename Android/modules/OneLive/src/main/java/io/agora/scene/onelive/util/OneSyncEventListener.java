@@ -9,7 +9,7 @@ import io.agora.syncmanager.rtm.IObject;
 import io.agora.syncmanager.rtm.Sync;
 import io.agora.syncmanager.rtm.SyncManagerException;
 
-public class OneSyncEventListener implements Sync.EventListener{
+public class OneSyncEventListener implements Sync.EventListener {
 
     private final OnUpdateListener listener;
     private final String tag;
@@ -21,26 +21,24 @@ public class OneSyncEventListener implements Sync.EventListener{
 
     @Override
     public void onCreated(@NonNull IObject item) {
-        if (Objects.equals(item.getId(), tag))
-            listener.update(item);
+        listener.update(item);
     }
 
     @Override
     public void onUpdated(@NonNull IObject item) {
-        if (Objects.equals(item.getId(), tag))
-            listener.update(item);
+        listener.update(item);
     }
 
     @Override
     public void onDeleted(@NonNull IObject item) {
-        if (Objects.equals(item.getId(), tag))
-            listener.update(item);
+        listener.update(item);
     }
 
     @Override
     public void onSubscribeError(@NonNull SyncManagerException ex) {
     }
-    public interface OnUpdateListener{
+
+    public interface OnUpdateListener {
         void update(@Nullable IObject iObject);
     }
 }

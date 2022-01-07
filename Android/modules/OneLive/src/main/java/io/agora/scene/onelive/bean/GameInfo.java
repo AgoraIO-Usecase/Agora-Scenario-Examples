@@ -4,7 +4,6 @@ import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 
 public class GameInfo {
-    public static final int IDLE = 1;
     public static final int START = 2;
     public static final int END = 3;
 
@@ -13,12 +12,12 @@ public class GameInfo {
     // 游戏ID
     private final int gameId;
 
-    public GameInfo(@IntRange(from = IDLE, to = END) int status, int gameId) {
+    public GameInfo(@IntRange(from = START, to = END) int status, int gameId) {
         this.status = status;
         this.gameId = gameId;
     }
 
-    public void setStatus(@IntRange(from = IDLE, to = END) int status) {
+    public void setStatus(@IntRange(from = START, to = END) int status) {
         this.status = status;
     }
 

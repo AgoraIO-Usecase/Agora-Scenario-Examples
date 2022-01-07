@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModel;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Objects;
 
 import io.agora.example.base.BaseUtil;
@@ -46,6 +45,9 @@ import io.agora.syncmanager.rtm.SyncManagerException;
 @Keep
 public class RoomViewModel extends ViewModel {
 
+    // 用此标识游戏发起端
+    public boolean startedByMe = false;
+
     //<editor-fold desc="Persistent variable">
     // 当前用户是否为主播
     public final boolean amHost;
@@ -60,7 +62,6 @@ public class RoomViewModel extends ViewModel {
     // SyncManager 必须
     @Nullable
     public SceneReference currentSceneRef = null;
-    private int dataStreamId = -1;
     //</editor-fold>
 
 
@@ -100,19 +101,9 @@ public class RoomViewModel extends ViewModel {
                     if (_targetUser.getValue().getUserId().equals(String.valueOf(uid)))
                         _targetUser.postValue(null);
                 }
-                if (currentGame != null){
+                if (currentGame != null) {
                     requestEndGame();
                 }
-            }
-
-            @Override
-            public void onConnectionStateChanged(int state, int reason) {
-                BaseUtil.logD("state changed:" + state + "," + reason);
-            }
-
-            @Override
-            public void onError(int err) {
-                BaseUtil.logD("err: " + err + " ==> " + RtcEngine.getErrorDescription(err));
             }
 
             @Override
@@ -123,22 +114,6 @@ public class RoomViewModel extends ViewModel {
                     _targetUser.postValue(new LocalUser(currentRoom.getUserId()));
             }
 
-            /**
-             * 收到对方 "kill-uid" 消息 ==> 挂断
-             */
-            @Override
-            public void onStreamMessage(int uid, int streamId, byte[] data) {
-                BaseUtil.logD("onStreamMessage:");
-                super.onStreamMessage(uid, streamId, data);
-                String userId = String.valueOf(uid);
-                if (Objects.equals(userId, currentRoom.getUserId())) {
-                    String message = new String(data);
-                    BaseUtil.logD("onStreamMessage:" + message);
-                    if (Objects.equals("kill-" + localUser.getUserId(), message)) {
-                        _viewStatus.postValue(new ViewStatus.Error(""));
-                    }
-                }
-            }
         });
     }
 
@@ -155,6 +130,27 @@ public class RoomViewModel extends ViewModel {
             else
                 currentSceneRef.get(OneConstants.GAME_INFO, (GetAttrCallback) this::handleGetGameInfo);
             currentSceneRef.subscribe(OneConstants.GAME_INFO, new OneSyncEventListener(OneConstants.GAME_INFO, this::handleGameInfo));
+            currentSceneRef.subscribe(new Sync.EventListener() {
+                @Override
+                public void onCreated(IObject item) {
+
+                }
+
+                @Override
+                public void onUpdated(IObject item) {
+
+                }
+
+                @Override
+                public void onDeleted(IObject item) {
+                    _viewStatus.postValue(new ViewStatus.Error(""));
+                }
+
+                @Override
+                public void onSubscribeError(SyncManagerException ex) {
+
+                }
+            });
         }
     }
 
@@ -162,10 +158,7 @@ public class RoomViewModel extends ViewModel {
         GameInfo gameInfo = tryHandleIObject(iObject, GameInfo.class);
         if (gameInfo != null) {
             switch (gameInfo.getStatus()) {
-                case GameInfo.IDLE:
-                    break;
                 case GameInfo.START: {
-                    currentGame = GameRepo.getGameDetail(gameInfo.getGameId());
                     _gameInfo.postValue(gameInfo);
                     break;
                 }
@@ -186,8 +179,6 @@ public class RoomViewModel extends ViewModel {
         GameInfo gameInfo = tryHandleIObject(iObject, GameInfo.class);
         if (gameInfo != null) {
             switch (gameInfo.getStatus()) {
-                case GameInfo.IDLE:
-                    break;
                 case GameInfo.START: {
                     currentGame = GameRepo.getGameDetail(gameInfo.getGameId());
                     _gameInfo.postValue(gameInfo);
@@ -199,8 +190,6 @@ public class RoomViewModel extends ViewModel {
                         GameRepo.endThisGame(currentRoom, currentGame);
                         currentGame = null;
                     }
-                    if (currentSceneRef != null)
-                        currentSceneRef.update(OneConstants.GAME_INFO, new GameInfo(GameInfo.IDLE, gameInfo.getGameId()), (GetAttrCallback) this::handleGameInfo);
                     break;
                 }
             }
@@ -273,6 +262,7 @@ public class RoomViewModel extends ViewModel {
 
     public void requestStartGame(@NonNull AgoraGame agoraGame) {
         if (currentSceneRef != null) {
+            startedByMe = true;
             GameInfo gameInfo = new GameInfo(GameInfo.START, agoraGame.getGameId());
             currentSceneRef.update(OneConstants.GAME_INFO, gameInfo, null);
         }
@@ -318,40 +308,6 @@ public class RoomViewModel extends ViewModel {
         }
     }
 
-    /**
-     * 给对方发消息结束通话
-     */
-    public void endCall() {
-        new Thread(() -> {
-            RtcEngineEx rtcEngineEx = _mEngine.getValue();
-            LocalUser targetUser = _targetUser.getValue();
-            if (rtcEngineEx != null && targetUser != null && !targetUser.getName().isEmpty()) {
-                // 对方 userId
-                int uid = -1;
-                try {
-                    uid = Integer.parseInt(targetUser.getUserId());
-                } catch (Exception ignored) {
-                }
-                // 本地userId
-                int localUserId = -1;
-                try {
-                    localUserId = Integer.parseInt(localUser.getUserId());
-                } catch (Exception ignored) {
-                }
-                if (uid != -1 && localUserId != -1 && dataStreamId != -1)
-                    rtcEngineEx.sendStreamMessage(dataStreamId, ("kill-" + uid).getBytes(StandardCharsets.UTF_8));
-            }
-        }).start();
-    }
-
-    public void createDataStream(@NonNull RtcEngineEx engine) {
-        dataStreamId = engine.createDataStream(new DataStreamConfig());
-        if (dataStreamId >= 0)
-            BaseUtil.logD("createDataStream success");
-        else
-            BaseUtil.logD("createDataStream failed: " + dataStreamId);
-    }
-
     public void joinRoom(@NonNull RtcEngineEx engine) {
         new Thread(() -> {
             BaseUtil.logD("joinRoom");
@@ -390,7 +346,6 @@ public class RoomViewModel extends ViewModel {
                 try {
                     RtcEngineEx engineEx = (RtcEngineEx) RtcEngineEx.create(config);
                     _mEngine.postValue(engineEx);
-                    createDataStream(engineEx);
                     joinRoom(engineEx);
                     initRTM();
                 } catch (Exception e) {

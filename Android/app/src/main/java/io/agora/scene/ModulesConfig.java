@@ -14,12 +14,12 @@ public class ModulesConfig {
 
     private ModulesConfig() {
         // Single Live Host
-        moduleInfo.add(new ModuleInfo(
-                R.string.app_live_single_host_name,
-                R.string.app_live_single_host_description,
-                R.drawable.app_banner_live_single_host,
-                "io.agora.sample.singlehostlive.RoomListActivity"
-        ));
+//        moduleInfo.add(new ModuleInfo(
+//                R.string.app_live_single_host_name,
+//                R.string.app_live_single_host_description,
+//                R.drawable.app_banner_live_single_host,
+//                "io.agora.sample.singlehostlive.RoomListActivity"
+//        ));
         // Live PK
         this.moduleInfo.add(new ModuleInfo(
                 R.string.app_live_pk_name,
