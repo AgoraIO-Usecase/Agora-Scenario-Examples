@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_fg_create"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/com_live_ic_close"
+        app:title=""
+        tools:menu="@menu/com_live_menu_create_room"
+        tools:title="@string/com_live_app_name" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/com_live_space_normal"
+        android:alpha="0.3"
+        android:background="?attr/colorOnSurface"
+        app:layout_constraintBottom_toBottomOf="@id/btn_random_fg_create"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btn_random_fg_create"
+        app:shapeAppearance="@style/com_live_cornerNormalStyle" />
+
+    <TextView
+        android:id="@+id/title_name_fg_create"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:alpha="0.5"
+        android:text="@string/com_live_title_room_name"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="@id/btn_random_fg_create"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btn_random_fg_create" />
+
+    <TextView
+        android:id="@+id/name_fg_create"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:textColor="@android:color/white"
+        android:textIsSelectable="false"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toBottomOf="@id/btn_random_fg_create"
+        app:layout_constraintEnd_toStartOf="@id/btn_random_fg_create"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@id/title_name_fg_create"
+        app:layout_constraintTop_toTopOf="@id/btn_random_fg_create"
+        tools:text="@string/com_live_app_name" />
+
+    <ImageButton
+        android:id="@+id/btn_random_fg_create"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/com_live_space_normal"
+        android:layout_marginTop="@dimen/com_live_space_big"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/com_live_random_room_name"
+        android:padding="@dimen/com_live_space_normal"
+        android:src="@drawable/com_live_ic_dice"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_fg_create" />
+
+    <!--    Bottom-->
+    <ImageButton
+        android:id="@+id/btn_beauty_fg_create"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/com_live_beauty"
+        android:src="@mipmap/com_live_ic_launcher"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/btn_live_fg_create"
+        app:layout_constraintEnd_toStartOf="@id/btn_live_fg_create"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btn_live_fg_create" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_live_fg_create"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="36dp"
+        android:letterSpacing="0"
+        android:textSize="16sp"
+        android:paddingHorizontal="@dimen/com_live_space_big"
+        android:paddingVertical="@dimen/com_live_space_normal"
+        app:shapeAppearance="@style/com_live_roundStyle"
+        android:text="@string/com_live_live_begin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btn_setting_fg_create"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/com_live_beauty"
+        android:src="@mipmap/com_live_ic_launcher"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/btn_live_fg_create"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btn_live_fg_create"
+        app:layout_constraintTop_toTopOf="@id/btn_live_fg_create" />
+</androidx.constraintlayout.widget.ConstraintLayout>

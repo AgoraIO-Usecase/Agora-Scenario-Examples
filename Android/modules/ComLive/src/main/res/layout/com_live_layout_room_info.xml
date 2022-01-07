@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:paddingHorizontal="@dimen/com_live_space_normal"
+    android:paddingTop="@dimen/com_live_space_normal"
+    app:layout_constraintEnd_toEndOf="parent"
+    tools:layout_gravity="end"
+    tools:paddingTop="@dimen/com_live_space_normal">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/container_host_info_layout_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="?attr/scrimBackground"
+        app:cardElevation="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearance="@style/com_live_roundStyle">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingVertical="3dp"
+            android:paddingStart="3dp"
+            android:paddingEnd="12dp">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/avatar_host_fg_room"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_gravity="center_vertical"
+                android:src="@mipmap/com_live_ic_launcher"
+                app:shapeAppearance="@style/com_live_roundStyle" />
+
+            <TextView
+                android:id="@+id/name_host_fg_room"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="30dp"
+                android:textSize="12sp"
+                android:textColor="@android:color/white"
+                android:textIsSelectable="false"
+                tools:text="@string/com_live_app_name" />
+        </FrameLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginEnd="@dimen/com_live_space_small"
+        android:src="@drawable/com_live_portrait01"
+        app:shapeAppearance="@style/com_live_roundStyle" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginEnd="@dimen/com_live_space_small"
+        android:src="@drawable/com_live_portrait02"
+        app:shapeAppearance="@style/com_live_roundStyle" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginEnd="@dimen/com_live_space_small"
+        android:src="@drawable/com_live_portrait03"
+        app:shapeAppearance="@style/com_live_roundStyle" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginEnd="@dimen/com_live_space_small"
+        android:src="@drawable/com_live_portrait04"
+        app:shapeAppearance="@style/com_live_roundStyle" />
+
+    <com.google.android.material.chip.Chip
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:text="10"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        app:textStartPadding="0dp"
+        app:textEndPadding="0dp"
+        app:chipEndPadding="@dimen/com_live_space_small"
+        app:chipStartPadding="@dimen/com_live_space_small"
+        app:iconEndPadding="4dp"
+        app:iconStartPadding="0dp"
+        app:chipIcon="@drawable/com_live_ic_people_count"
+        app:chipIconSize="18dp"
+        app:chipIconVisible="true"
+        app:chipMinTouchTargetSize="0dp"
+        app:chipSurfaceColor="?attr/scrimBackground"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</LinearLayout>

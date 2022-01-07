@@ -90,9 +90,9 @@ public class HostDetailActivity extends AppCompatActivity {
     }
 
     private void initRtcManager() {
-        rtcManager.init(this, getString(R.string.single_host_live_agora_app_id), null);
+        rtcManager.init(this, getString(R.string.rtc_app_id), null);
         rtcManager.renderLocalVideo(mBinding.fullVideoContainer, null);
-        rtcManager.joinChannel(roomInfo.roomId, roomInfo.userId, getString(R.string.single_host_live_agora_token), true, new RtcManager.OnChannelListener() {
+        rtcManager.joinChannel(roomInfo.roomId, roomInfo.userId, getString(R.string.rtc_app_token), true, new RtcManager.OnChannelListener() {
             @Override
             public void onError(int code, String message) {
                 runOnUiThread(() -> {

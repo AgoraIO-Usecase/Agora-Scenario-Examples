@@ -84,8 +84,8 @@ public class AudienceDetailActivity extends AppCompatActivity {
     }
 
     private void initRtcManager() {
-        rtcManager.init(this, getString(R.string.single_host_live_agora_app_id), null);
-        rtcManager.joinChannel(roomInfo.roomId, RoomManager.getCacheUserId(), getString(R.string.single_host_live_agora_token), false, new RtcManager.OnChannelListener() {
+        rtcManager.init(this, getString(R.string.rtc_app_id), null);
+        rtcManager.joinChannel(roomInfo.roomId, RoomManager.getCacheUserId(), getString(R.string.rtc_app_token), false, new RtcManager.OnChannelListener() {
             @Override
             public void onError(int code, String message) {
 

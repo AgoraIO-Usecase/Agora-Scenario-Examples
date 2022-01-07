@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="com_live_colorPrimary">#0088EB</color>
+    <color name="com_live_colorPrimaryDark">#0649F3</color>
+    <color name="com_live_colorAccent">#0088EB</color>
+
+    <color name="com_live_colorHint">#999999</color>
+    <color name="com_live_colorHalfTransparent">#66000000</color>
+
+    <color name="com_live_btn_gradient_start_color">#FF087D</color>
+    <color name="com_live_btn_gradient_end_color">#294B8D</color>
+
+    <color name="com_live_alert_message_color">#9949129A</color>
+</resources>

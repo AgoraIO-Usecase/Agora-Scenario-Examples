@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_game.xml"
+    app:startDestination="@id/splashFragment">
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="io.agora.scene.comlive.ui.splash.SplashFragment"
+        android:label="SplashFragment"
+        tools:layout="@layout/com_live_fragment_splash">
+        <action
+            android:id="@+id/action_splashFragment_to_roomListFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:destination="@id/roomListFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/roomListFragment"
+        android:name="io.agora.scene.comlive.ui.list.RoomListFragment"
+        android:label="RoomListFragment"
+        tools:layout="@layout/com_live_fragment_room_list">
+        <action
+            android:id="@+id/action_roomListFragment_to_roomFragment"
+            app:enterAnim="@anim/com_live_slide_in_right"
+            app:popEnterAnim="@anim/com_live_slide_in_left"
+            app:exitAnim="@anim/com_live_slide_out_left"
+            app:popExitAnim="@anim/com_live_slide_out_right"
+            app:destination="@id/roomFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/roomCreateFragment"
+        android:name="io.agora.scene.comlive.ui.create.RoomCreateFragment"
+        android:label="RoomCreateFragment"
+        tools:layout="@layout/com_live_fragment_create_room">
+    </fragment>
+    <fragment
+        android:id="@+id/roomFragment"
+        android:name="io.agora.scene.comlive.ui.room.RoomFragment"
+        android:label="RoomFragment"
+        tools:layout="@layout/com_live_fragment_room">
+        <action
+            android:id="@+id/action_roomFragment_to_roomCreateFragment"
+            app:enterAnim="@anim/com_live_slide_in_right"
+            app:popEnterAnim="@anim/com_live_slide_in_left"
+            app:exitAnim="@anim/com_live_slide_out_left"
+            app:popExitAnim="@anim/com_live_slide_out_right"
+            app:destination="@id/roomCreateFragment" />
+    </fragment>
+</navigation>

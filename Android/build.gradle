@@ -10,8 +10,9 @@ buildscript {
                 BreakoutRoom : "room_",
                 RTEGame : "game_",
                 LivePK : "pk_",
-                SingleHostLive : "single_",
-                OneLive : "one_"
+                SingleHostLive : "single_host_live",
+                OneLive : "one_",
+                ComLive : "com_live"
         ]
 //        resMap = [
 //                app : "0x7F",
