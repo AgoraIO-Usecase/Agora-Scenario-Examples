@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AgoraRtcKit
 
 class PlayTogetherViewController: SignleLiveController {
     private lazy var webView: GameWebView = {
@@ -30,9 +31,6 @@ class PlayTogetherViewController: SignleLiveController {
     }
     private lazy var currentGameRoleType: GameRoleType = roleType
     
-    private var requestType: String {
-        gameInfoModel?.gameId?.requestParams ?? gameCenterModel?.gameId.requestParams ?? ""
-    }
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -59,7 +57,7 @@ class PlayTogetherViewController: SignleLiveController {
             let gameInfoModel = JSONObject.toModel(GameInfoModel.self, value: result?.toJson())
             self.gameInfoModel = gameInfoModel
             if gameInfoModel?.status == .playing {
-                self.sendMessage(messageModel: ChatMessageModel(message: "", messageType: .notice))
+                self.liveView.sendMessage(message: "", messageType: .notice)
             }
         })
     }
@@ -75,6 +73,8 @@ class PlayTogetherViewController: SignleLiveController {
                 LogUtils.log(message: "gameInfo == \(object.toJson() ?? "")", level: .info)
                 if model.status == .playing {
                     self?.liveView.sendMessage(message: "", messageType: .notice)
+                } else {
+                    self?.updateUIStatus(isStart: false)
                 }
             })
         }
@@ -89,6 +89,17 @@ class PlayTogetherViewController: SignleLiveController {
         }
         liveView.onClickSendMessageClosure = { [weak self] messageModel in
             self?.sendMessage(messageModel: messageModel)
+        }
+        
+        webView.onMuteAudioClosure = { [weak self] isMute in
+            guard let self = self else { return }
+            let option = self.channelMediaOptions
+            option.publishAudioTrack = .of(isMute)
+            option.publishCameraTrack = .of(self.getRole(uid: UserInfo.uid) == .broadcaster)
+            if self.getRole(uid: UserInfo.uid) == .audience {
+                option.clientRoleType = isMute ? .of((Int32)(AgoraClientRole.broadcaster.rawValue)) : .of((Int32)(AgoraClientRole.audience.rawValue))
+            }
+            self.agoraKit?.updateChannel(with: option)
         }
     }
     
@@ -119,14 +130,12 @@ class PlayTogetherViewController: SignleLiveController {
         let playerId = gameInfoModel?.status == .playing ? UserInfo.uid : currentUserId
         viewModel.postGiftHandler(gameId:gameInfoModel?.gameId?.rawValue ?? "",
                                   giftType: giftModel.giftType,
-                                  type: requestType,
                                   playerId: playerId)
     }
     /// 发消息
     private func sendMessage(messageModel: ChatMessageModel) {
         let playerId = gameInfoModel?.status == .playing ? UserInfo.uid : currentUserId
         viewModel.postBarrage(gameId: gameInfoModel?.gameId?.rawValue ?? "",
-                              type: requestType,
                               playerId: playerId)
         if getRole(uid: UserInfo.uid) == .audience
             && messageModel.message.trimmingCharacters(in: .whitespacesAndNewlines) == "主播yyds"
@@ -165,7 +174,7 @@ class PlayTogetherViewController: SignleLiveController {
             webView.reset()
             let gameId = (gameInfoModel?.gameId ?? gameCenterModel?.gameId)?.rawValue ?? ""
             // 离开游戏接口
-            viewModel.leaveGame(gameId: gameId, roleType: currentGameRoleType, type: requestType)
+            viewModel.leaveGame(gameId: gameId, roleType: currentGameRoleType)
         }
     }
     /// 更新游戏状态

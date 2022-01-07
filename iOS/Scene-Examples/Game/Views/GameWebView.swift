@@ -16,6 +16,7 @@ enum GameRoleType: Int, CaseIterable {
 }
 
 class GameWebView: UIView {
+    var onMuteAudioClosure: ((Bool) -> Void)?
     private(set) lazy var webView: WKWebView = {
         let config = WKWebViewConfiguration()
         config.allowsAirPlayForMediaPlayback = true
@@ -31,6 +32,7 @@ class GameWebView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+        injectJsBridge(methodName: "agoraJSBridge_enableAudio")
     }
     
     required init?(coder: NSCoder) {
@@ -77,7 +79,12 @@ class GameWebView: UIView {
 extension GameWebView: WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         LogUtils.log(message: "messageName == \(message.name)", level: .info)
+        let params = message.body as? [String: Any]
         LogUtils.log(message: "messageBody == \(message.body)", level: .info)
+        if message.name == "agoraJSBridge_enableAudio" {
+            let state = params?["state"] as? Int ?? 1
+            onMuteAudioClosure?(state == 1)
+        }
     }
 }
 

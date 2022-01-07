@@ -46,10 +46,6 @@ class GameLiveController: PKLiveController {
     private var gameRoleType: GameRoleType {
         targetChannelName.isEmpty ? .audience : .broadcast
     }
-    private var requestType: String {
-        let type = gameCenterModel?.gameId.requestParams ?? gameApplyInfoModel?.gameId.requestParams ?? gameInfoModel?.gameId?.requestParams
-        return type ?? ""
-    }
     public var screenUserID: UInt {
         UserInfo.userId + 10000
     }
@@ -128,12 +124,12 @@ class GameLiveController: PKLiveController {
         /// 发消息
         liveView.onClickSendMessageClosure = { [weak self] meesageModel in
             let gameId = (self?.gameInfoModel?.gameId ?? self?.gameCenterModel?.gameId ?? self?.gameApplyInfoModel?.gameId)?.rawValue ?? ""
-            self?.viewModel.postBarrage(gameId: gameId, type: self?.requestType ?? "")
+            self?.viewModel.postBarrage(gameId: gameId)
         }
         /// 发礼物
         liveView.onSendGiftClosure = { [weak self] giftModel in
             let gameId = (self?.gameInfoModel?.gameId ?? self?.gameCenterModel?.gameId ?? self?.gameApplyInfoModel?.gameId)?.rawValue ?? ""
-            self?.viewModel.postGiftHandler(gameId: gameId, giftType: giftModel.giftType, type: self?.requestType ?? "")
+            self?.viewModel.postGiftHandler(gameId: gameId, giftType: giftModel.giftType)
         }
     }
     
@@ -316,7 +312,7 @@ class GameLiveController: PKLiveController {
             // 主播调用离开游戏接口
             if getRole(uid: "\(UserInfo.userId)") == .broadcaster {
                 let gameId = (gameInfoModel?.gameId ?? gameCenterModel?.gameId ?? gameApplyInfoModel?.gameId)?.rawValue ?? ""
-                viewModel.leaveGame(gameId: gameId, roleType: gameRoleType, type: requestType)
+                viewModel.leaveGame(gameId: gameId, roleType: gameRoleType)
                 AgoraScreenShare.shareInstance().stopService()
                 agoraKit?.leaveChannelEx(screenConnection, leaveChannelBlock: nil)
             }

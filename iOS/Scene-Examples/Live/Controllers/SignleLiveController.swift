@@ -21,7 +21,7 @@ class SignleLiveController: BaseViewController {
         config.areaCode = .global
         return config
     }()
-    private lazy var channelMediaOptions: AgoraRtcChannelMediaOptions = {
+    public lazy var channelMediaOptions: AgoraRtcChannelMediaOptions = {
         let option = AgoraRtcChannelMediaOptions()
         option.autoSubscribeAudio = .of(true)
         option.autoSubscribeVideo = .of(true)

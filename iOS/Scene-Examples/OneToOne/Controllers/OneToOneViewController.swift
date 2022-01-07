@@ -132,8 +132,7 @@ class OneToOneViewController: BaseViewController {
             if type == .exit {
                 self.controlView.isHidden = false
                 self.viewModel.leaveGame(gameId: self.gameInfoModel.gameId?.rawValue ?? "",
-                                         roleType: self.currentGameRoleType,
-                                         type: self.requestType)
+                                         roleType: self.currentGameRoleType)
                 self.isCloseGame = false
                 let gameInfo = GameInfoModel(status: .end, gameUid: UserInfo.uid, gameId: self.gameInfoModel.gameId ?? .guess)
                 SyncUtil.update(id: self.channelName, key: SYNC_MANAGER_GAME_INFO, params: JSONObject.toJson(gameInfo))
@@ -163,8 +162,7 @@ class OneToOneViewController: BaseViewController {
                 ToastView.show(text: "游戏已结束", view: self.view)
                 self.onoToOneGameView.reset()
                 self.viewModel.leaveGame(gameId: model?.gameId?.rawValue ?? "",
-                                         roleType: self.currentGameRoleType,
-                                         type: self.requestType)
+                                         roleType: self.currentGameRoleType)
                 self.isSelfExitGame = false
             }
         }, onSubscribed: {
@@ -189,14 +187,13 @@ class OneToOneViewController: BaseViewController {
                 AlertManager.hiddenView()
                 self.onoToOneGameView.reset()
                 let gameId = self.gameInfoModel.gameId?.rawValue ?? ""
-                self.viewModel.leaveGame(gameId: gameId, roleType: self.currentGameRoleType, type: self.requestType)
+                self.viewModel.leaveGame(gameId: gameId, roleType: self.currentGameRoleType)
             }
             
         case .back:
             showAlert(title: "关闭直播间", message: "关闭直播间后，其他用户将不能再和您连线。确定关闭 ？") {
                 self.viewModel.leaveGame(gameId: self.gameInfoModel.gameId?.rawValue ?? "",
-                                         roleType: self.currentGameRoleType,
-                                         type: self.requestType)
+                                         roleType: self.currentGameRoleType)
                 let gameInfo = GameInfoModel(status: .end, gameUid: UserInfo.uid, gameId: self.gameInfoModel.gameId)
                 SyncUtil.update(id: self.channelName, key: SYNC_MANAGER_GAME_INFO, params: JSONObject.toJson(gameInfo))
                 if self.roleType == .broadcast {

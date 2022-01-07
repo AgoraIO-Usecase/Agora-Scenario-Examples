@@ -65,7 +65,7 @@ enum GameBarrageType: Int, Codable, CaseIterable {
 }
 
 struct GameCenterModel: Codable {
-    var iconName: String? = ""
+    var iconName: String?
     var gameName: String = ""
     var gameId: GameCenterType = .guess
     var gameDesc: String?

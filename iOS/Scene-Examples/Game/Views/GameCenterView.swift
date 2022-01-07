@@ -36,6 +36,7 @@ class GameCenterView: UIView {
         view.minLineSpacing = 15
         view.edge = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0)
         view.delegate = self
+        view.emptyTitle = "没有游戏"
         view.scrollDirection = .horizontal
         view.showsHorizontalScrollIndicator = false
         view.register(GameModeViewCell.self,
@@ -43,7 +44,6 @@ class GameCenterView: UIView {
         return view
     }()
     private var sceneType: SceneType = .game
-    private lazy var viewMdoel = GameViewModel(channleName: "", ownerId: "")
     private var dataArray: [GameCenterModel]? {
         didSet {
             collectionLayout.dataArray = dataArray
@@ -68,7 +68,7 @@ class GameCenterView: UIView {
     }
     
     private func getGameList() {
-        viewMdoel.getGameList(sceneType: sceneType) { [weak self] list in
+        GameViewModel.shared.getGameList(sceneType: sceneType) { [weak self] list in
             guard let list = list else { return }
             self?.dataArray = list
         }
