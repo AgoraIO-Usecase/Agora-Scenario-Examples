@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_dialog_host_list"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/com_live_host_list"
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_dialog_host_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="360dp"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:itemCount="20"
+        tools:listitem="@layout/com_live_item_dialog_host" />
+
+    <ProgressBar
+        android:id="@+id/loading_dialog_host_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <LinearLayout
+        android:id="@+id/empty_dialog_host_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:clipToPadding="false"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/com_live_space_big"
+        android:visibility="invisible"
+        tools:visibility="visible">
+
+        <ImageView
+            android:id="@+id/empty_image_dialog_host_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/com_live_empty_host_list"
+            android:src="@drawable/com_live_ic_empty_list" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_refresh_dialog_host_list"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/com_live_space_normal"
+            android:text="@string/com_live_empty_host_list" />
+    </LinearLayout>
+</FrameLayout>

@@ -23,7 +23,7 @@ public class RoomListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_host_live_room_list_activity);
 
-        RoomManager.getInstance().init(this, getString(R.string.single_host_live_agora_app_id), getString(R.string.single_host_live_agora_token));
+        RoomManager.getInstance().init(this, getString(R.string.rtm_app_id), getString(R.string.rtm_app_token));
 
         RoomListView roomListView = findViewById(R.id.room_list_view);
         roomListView.setListAdapter(new RoomListView.AbsRoomListAdapter<RoomInfo>() {

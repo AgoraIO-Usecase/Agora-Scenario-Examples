@@ -94,7 +94,7 @@ public class PreviewActivity extends AppCompatActivity {
     }
 
     private void initPreview() {
-        rtcManager.init(this, getString(R.string.single_host_live_agora_app_id), null);
+        rtcManager.init(this, getString(R.string.rtc_app_id), null);
 
         FrameLayout surfaceViewContainer = findViewById(R.id.surface_view_container);
         rtcManager.renderLocalVideo(surfaceViewContainer, null);

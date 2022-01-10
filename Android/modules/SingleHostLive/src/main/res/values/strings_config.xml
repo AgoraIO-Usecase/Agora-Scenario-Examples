@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="single_host_live_agora_app_id" translatable="false"><=AGORA APP ID=></string>
-    <string name="single_host_live_agora_token" translatable="false"><=AGORA TOKEN=></string>
-</resources>

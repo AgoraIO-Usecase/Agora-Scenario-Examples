@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.button.MaterialButton xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:checkable="true"
+    android:paddingVertical="@dimen/com_live_space_big"
+    app:elevation="0dp"
+    app:iconGravity="top"
+    app:iconTint="@android:color/transparent"
+    app:iconTintMode="src_atop"
+    app:strokeColor="@color/com_live_selector_color_accent"
+    tools:icon="@drawable/com_live_gift_01_bell"
+    tools:text="@string/com_live_gift" />
