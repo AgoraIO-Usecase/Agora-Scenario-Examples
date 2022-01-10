@@ -41,12 +41,19 @@ public class ModulesConfig {
                 R.drawable.app_banner_live_game,
                 "io.agora.scene.rtegame.MainActivity"
         ));
-        //
+        // OneLive
         this.moduleInfo.add(new ModuleInfo(
                 R.string.app_one_live_name,
                 R.string.app_one_live_description,
                 R.drawable.app_banner_live_shopping,
                 "io.agora.scene.onelive.MainActivity"
+        ));
+        // ComLive
+        this.moduleInfo.add(new ModuleInfo(
+                R.string.app_com_live_name,
+                R.string.app_com_live_description,
+                R.drawable.app_banner_live_shopping,
+                "io.agora.scene.comlive.MainActivity"
         ));
     }
 

@@ -17,4 +17,7 @@
 
     <string name="app_one_live_name">1V1直播</string>
     <string name="app_one_live_description">直播间双人游戏</string>
+
+    <string name="app_com_live_name">同玩直播</string>
+    <string name="app_com_live_description">直播间主播与观众同玩</string>
 </resources>
