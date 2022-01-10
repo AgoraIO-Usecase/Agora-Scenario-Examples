@@ -21,7 +21,6 @@ import io.agora.rtc2.RtcEngineConfig;
 import io.agora.rtc2.RtcEngineEx;
 import io.agora.rtc2.internal.RtcEngineImpl;
 import io.agora.rtc2.video.VideoCanvas;
-import io.agora.rtm.jni.IFileMessage;
 import io.agora.scene.comlive.GlobalViewModel;
 import io.agora.scene.comlive.R;
 import io.agora.scene.comlive.bean.AgoraGame;
@@ -49,7 +48,6 @@ import io.agora.syncmanager.rtm.SyncManagerException;
 public class RoomViewModel extends ViewModel implements RoomApi {
     @NonNull
     private final RoomInfo currentRoom;
-    @NonNull
     private final boolean amHost;
     @NonNull
     public LocalUser localUser;
@@ -222,9 +220,9 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         if (currentSceneRef != null)
             currentSceneRef.update(ComLiveConstants.GIFT_INFO, giftInfo, null);
 
-        if (ComLiveUtil.currentGame != null) {
-            GameRepo.sendGift(localUser, Integer.parseInt(currentRoom.getId()), amHost ? 1 : 2, giftInfo);
-        }
+//        if (ComLiveUtil.currentGame != null) {
+//            GameRepo.sendGift(localUser, Integer.parseInt(currentRoom.getId()), amHost ? 1 : 2, giftInfo);
+//        }
     }
 
     public void requestExitGame() {

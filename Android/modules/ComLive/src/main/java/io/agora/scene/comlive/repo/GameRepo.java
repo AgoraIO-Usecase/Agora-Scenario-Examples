@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import io.agora.example.base.BaseUtil;
 import io.agora.scene.comlive.GlobalViewModel;
@@ -21,15 +22,29 @@ import retrofit2.Response;
 
 public class GameRepo {
 
+    public static final AgoraGame[] gameList =  {
+                  new AgoraGame(1, "10020", "你画我猜",
+            "https://imgsecond.yuanqiyouxi.com/test/DrawAndGuess_More/index.html",
+            "https://testgame.yuanqihuyu.com/guess/leave",
+            "https://testgame.yuanqihuyu.com/guess/gift",
+            "https://testgame.yuanqihuyu.com/guess/barrage"),
+
+            new AgoraGame(2, "10020", "谁是卧底",
+            "https://imgsecond.yuanqiyouxi.com/test/spy/index.html",
+            "https://testgame.yuanqihuyu.com/spy/leave",
+            "https://testgame.yuanqihuyu.com/spy/gift",
+            "https://testgame.yuanqihuyu.com/spy/barrage"),
+
+            new AgoraGame(3, "10020", "大话骰",
+            "https://imgsecond.yuanqiyouxi.com/test/Dice_ShengWang/index.html",
+            "https://testgame.yuanqihuyu.com/dice/leave",
+            "https://testgame.yuanqihuyu.com/dice/gift",
+            "https://testgame.yuanqihuyu.com/dice/barrage")
+    };
+
     @Nullable
     public static AgoraGame getGameDetail(int gameId){
-        if (gameId == 1){
-            return new AgoraGame(gameId, "10020", "你画我猜",
-                    "https://imgsecond.yuanqiyouxi.com/test/DrawAndGuess/index.html",
-                    "https://testgame.yuanqihuyu.com/guess/leave",
-                    "https://testgame.yuanqihuyu.com/guess/gift",
-                    "https://testgame.yuanqihuyu.com/guess/barrage");
-        } else return null;
+        return gameList[gameId - 1];
     }
 
     public static void endThisGame(int targetRoomId, int userId){
