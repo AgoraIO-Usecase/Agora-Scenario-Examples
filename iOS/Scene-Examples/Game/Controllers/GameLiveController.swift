@@ -44,7 +44,9 @@ class GameLiveController: PKLiveController {
     public var gameApplyInfoModel: GameApplyInfoModel?
     public var gameInfoModel: GameInfoModel?
     private var gameRoleType: GameRoleType {
-        targetChannelName.isEmpty ? .audience : .broadcast
+        let role: GameRoleType = targetChannelName.isEmpty ? .audience : .broadcast
+        let gameId = gameCenterModel?.gameId ?? gameApplyInfoModel?.gameId
+        return gameId == .kingdom && getRole(uid: UserInfo.uid) == .broadcaster ? .broadcast : role
     }
     public var screenUserID: UInt {
         UserInfo.userId + 10000
@@ -244,6 +246,7 @@ class GameLiveController: PKLiveController {
     /// pk结束
     override func pkLiveEndHandler() {
         super.pkLiveEndHandler()
+        updatePKUIStatus(isStart: false)
         liveView.updateLiveLayout(postion: .full)
         if getRole(uid: UserInfo.uid) == .broadcaster {
             liveView.updateBottomButtonType(type: [.game, .tool, .close])
@@ -266,7 +269,6 @@ class GameLiveController: PKLiveController {
     private func updatePKUIStatus(isStart: Bool) {
         vsImageView.isHidden = true
         countTimeLabel.isHidden = true//!isStart
-        pkProgressView.isHidden = !isStart
         webView.isHidden = !isStart
         if currentUserId == UserInfo.uid && isStart {
             liveView.updateBottomButtonType(type: [.exitgame, .tool, .close])
@@ -286,18 +288,21 @@ class GameLiveController: PKLiveController {
                 onClickScreenShareButton()
                 viewModel.channelName = channelName
             } else { // 观众拉取屏幕共享流
-                guard gameInfoModel != nil else { return }
+                guard let gameInfoModel = gameInfoModel else { return }
+                if gameInfoModel.gameId == .kingdom {
+                    self.liveView.sendMessage(message: "", messageType: .notice)
+                }
                 let canvas = AgoraRtcVideoCanvas()
-                canvas.uid = UInt(gameInfoModel?.gameUid ?? "0") ?? 0
+                canvas.uid = UInt(gameInfoModel.gameUid ?? "0") ?? 0
                 canvas.view = webView.webView
                 canvas.renderMode = .fit
                 screenConnection.localUid = UserInfo.userId
                 joinScreenShare(isBroadcast: false)
-                pkProgressView.isHidden = gameInfoModel == nil
                 agoraKit?.setupRemoteVideoEx(canvas, connection: screenConnection)
             }
             
             liveView.updateLiveLayout(postion: .bottom)
+            pkProgressView.isHidden = false
 //            timer.scheduledSecondsTimer(withName: sceneType.rawValue, timeInterval: 900, queue: .main) { [weak self] _, duration in
 //                self?.countTimeLabel.setTitle("PK剩余 \("".timeFormat(secounds: duration))", for: .normal)
 //                if duration <= 0 {
@@ -307,6 +312,7 @@ class GameLiveController: PKLiveController {
 //            }
         } else {
             liveView.updateLiveLayout(postion: .center)
+            pkProgressView.isHidden = true
             pkProgressView.reset()
             webView.reset()
             // 主播调用离开游戏接口

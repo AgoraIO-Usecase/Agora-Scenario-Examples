@@ -117,9 +117,11 @@ class PKLiveController: SignleLiveController {
                     self.leaveChannel(uid: UserInfo.userId, channelName: model.roomId)
                 }
                 self.liveView.updateLiveLayout(postion: .full)
+                self.hiddenPkProgressView(isHidden: true)
             } else {
                 self.joinAudienceChannel(channelName: model.roomId, pkUid:  UInt(model.userId) ?? 0)
                 self.liveView.updateLiveLayout(postion: .center)
+                self.hiddenPkProgressView(isHidden: false)
             }
         }, onSubscribed: {
             LogUtils.log(message: "onSubscribed pkInfo", level: .info)
@@ -144,6 +146,7 @@ class PKLiveController: SignleLiveController {
             let channelName = model.targetUserId == UserInfo.uid ? model.roomId : model.targetRoomId
             leaveChannel(uid: UserInfo.userId, channelName: channelName ?? "")
             liveView.updateLiveLayout(postion: .full)
+            hiddenPkProgressView(isHidden: true)
             // PK结束
             pkLiveEndHandler()
             
@@ -155,6 +158,7 @@ class PKLiveController: SignleLiveController {
             
         } else if model.status == .accept {
             liveView.updateLiveLayout(postion: .center)
+            hiddenPkProgressView(isHidden: false)
             // 把自己加入到对方的channel
             let channelName = model.targetUserId == UserInfo.uid ? model.roomId : model.targetRoomId
             let userId = model.userId == currentUserId ? model.targetUserId : model.userId
@@ -234,9 +238,6 @@ class PKLiveController: SignleLiveController {
     }
     
     private func updatePKUIStatus(isStart: Bool) {
-        vsImageView.isHidden = !isStart
-        countTimeLabel.isHidden = !isStart
-        pkProgressView.isHidden = !isStart
         if currentUserId == "\(UserInfo.userId)" && isStart {
             liveView.updateBottomButtonType(type: [.tool, .close])
         } else if currentUserId == "\(UserInfo.userId)" && !isStart {
@@ -259,12 +260,20 @@ class PKLiveController: SignleLiveController {
         }
     }
     
+    private func hiddenPkProgressView(isHidden: Bool) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + (isHidden ? 0 : 0.5)) {
+            self.vsImageView.isHidden = isHidden
+            self.countTimeLabel.isHidden = isHidden
+            self.pkProgressView.isHidden = isHidden
+        }
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         let channelName = targetChannelName.isEmpty ? channleName : targetChannelName
         SyncUtil.unsubscribe(id: channleName, key: SYNC_MANAGER_PK_INFO)
         SyncUtil.deleteCollection(id: channelName, className: sceneType.rawValue)
-        deleteSubscribe()
+         deleteSubscribe()
     }
     
     override func didOfflineOfUid(uid: UInt) {

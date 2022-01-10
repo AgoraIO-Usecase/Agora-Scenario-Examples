@@ -171,14 +171,15 @@ class PlayTogetherViewController: SignleLiveController {
             
         } else {
             liveView.updateLiveLayout(postion: .full)
-            webView.reset()
             let gameId = (gameInfoModel?.gameId ?? gameCenterModel?.gameId)?.rawValue ?? ""
             // 离开游戏接口
             viewModel.leaveGame(gameId: gameId, roleType: currentGameRoleType)
+            webView.reset()
         }
     }
     /// 更新游戏状态
     private func updateGameInfoStatus(isStart: Bool) {
+        guard getRole(uid: UserInfo.uid) == .audience else { return }
         var gameInfoModel = GameInfoModel()
         gameInfoModel.gameId = gameCenterModel?.gameId ?? .guess
         gameInfoModel.gameUid = currentUserId
