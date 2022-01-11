@@ -311,7 +311,8 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
     //<editor-fold desc="RTC related">
     public void enableMic(boolean enable) {
-        isMicEnabled.setValue(enable);
+        BaseUtil.logD(Thread.currentThread().getName() + "enableMic "+enable);
+        isMicEnabled.postValue(enable);
         RtcEngineEx engine = rtcEngine.getValue();
         if (engine != null) {
             engine.muteLocalAudioStream(!enable);
@@ -319,8 +320,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     }
 
     public void enableCamera(boolean enable) {
-        BaseUtil.logD("enableCamera:" + enable);
-        isCameraEnabled.setValue(enable);
+        isCameraEnabled.postValue(enable);
         RtcEngineEx engine = rtcEngine.getValue();
         if (engine != null) {
             engine.muteLocalVideoStream(!enable);

@@ -42,7 +42,6 @@ public class TranslateInsetsAnimationListener extends WindowInsetsAnimationCompa
             view.setVisibility(GONE);
 
         boolean imeVisibleOnScreen = insets.getInsets(desiredAnimationInsets).bottom > 0f;
-        BaseUtil.logD("onApplyWindowInsets==>"+imeVisibleOnScreen);
         setTranslationY(insets, imeVisibleOnScreen ? 1f : 0f);
         // Normal-op
         return insets;
@@ -67,7 +66,6 @@ public class TranslateInsetsAnimationListener extends WindowInsetsAnimationCompa
         if (deferredThisTime && (animation.getTypeMask() & desiredAnimationInsets) != 0){
             deferredThisTime = false;
             if (lastWindowInsets != null && view != null) {
-                BaseUtil.logD("onEnd");
                 setTranslationY(lastWindowInsets, 1);
                 ViewCompat.dispatchApplyWindowInsets(view, lastWindowInsets);
                 view.post(this::checkFocus);
@@ -80,7 +78,6 @@ public class TranslateInsetsAnimationListener extends WindowInsetsAnimationCompa
         if (view != null){
             Insets desiredAnimationInset = insets.getInsets(desiredAnimationInsets);
             float desiredY = ComLiveUtil.lerp(view.getMeasuredHeight(), -desiredAnimationInset.bottom, fraction);
-            BaseUtil.logD("desiredY ->>>"+ desiredY);
             view.setTranslationY(desiredY);
         }
     }
@@ -90,10 +87,8 @@ public class TranslateInsetsAnimationListener extends WindowInsetsAnimationCompa
         if (insets != null) {
             boolean imeVisible = insets.isVisible(desiredAnimationInsets);
             if (imeVisible) {
-                BaseUtil.logD("requestFocus");
                 view.requestFocus();
             } else {
-                BaseUtil.logD("clearFocus");
                 view.clearFocus();
             }
         }

@@ -224,8 +224,14 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
     private void needGameView(boolean need) {
         if (need) {
             mBinding.hostContainerFgRoom.createDefaultGameView();
+            WebView webViewHostView = mBinding.hostContainerFgRoom.webViewHostView;
+            if (webViewHostView != null)
+                webViewHostView.addJavascriptInterface(new AgoraJsBridge(mViewModel),"agoraJSBridge");
+
             onLayoutTypeChanged(LiveHostLayout.Type.HOST_IN_GAME);
         } else {
+            WebView webViewHostView = mBinding.hostContainerFgRoom.webViewHostView;
+            if (webViewHostView != null) webViewHostView.destroy();
             mBinding.hostContainerFgRoom.removeGameView();
             onLayoutTypeChanged(LiveHostLayout.Type.HOST_ONLY);
         }
