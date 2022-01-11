@@ -11,9 +11,10 @@ public class GameInfo {
     //        屏幕共享对应的uid
     private final String gameUid;
     // 游戏ID
-    private final int gameId;
+    @NonNull
+    private final String gameId;
 
-    public GameInfo(int status, @NonNull String gameUid, int gameId) {
+    public GameInfo(int status, @NonNull String gameUid, @NonNull String gameId) {
         this.status = status;
         this.gameUid = gameUid;
         this.gameId = gameId;
@@ -32,7 +33,8 @@ public class GameInfo {
         return gameUid;
     }
 
-    public int getGameId() {
+    @NonNull
+    public String getGameId() {
         return gameId;
     }
 

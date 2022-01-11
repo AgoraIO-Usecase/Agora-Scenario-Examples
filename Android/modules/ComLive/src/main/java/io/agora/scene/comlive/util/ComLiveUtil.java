@@ -99,7 +99,7 @@ public class ComLiveUtil {
     }
 
     @DrawableRes
-    public static int getGameBgdByGameId(int gameId){
+    public static int getGameBgdByGameId(String gameId){
             return R.drawable.com_live_pic_bgd_game_1;
     }
 
