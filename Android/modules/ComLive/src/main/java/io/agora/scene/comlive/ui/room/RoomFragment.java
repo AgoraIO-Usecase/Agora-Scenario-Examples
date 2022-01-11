@@ -409,6 +409,7 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
             boolean imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime());
             if (!imeVisible)
                 mBinding.editTextFgRoom.clearFocus();
+                mBinding.editTextFgRoom.setText("");
 //            if (imeVisible) {
 //                mBinding.inputLayoutFgRoom.setVisibility(View.VISIBLE);
 //                mBinding.inputLayoutFgRoom.requestFocus();
