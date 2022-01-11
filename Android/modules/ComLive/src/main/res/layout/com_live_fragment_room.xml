@@ -42,22 +42,35 @@
             tools:listitem="@layout/com_live_item_room_message" />
 
         <!--    Bottom Part-->
-        <com.google.android.material.chip.Chip
+        <androidx.cardview.widget.CardView
             android:id="@+id/input_fg_room"
             android:layout_width="0dp"
             android:layout_height="38dp"
             android:layout_marginStart="@dimen/com_live_space_small"
             android:layout_marginEnd="@dimen/com_live_space_normal"
             android:layout_marginBottom="@dimen/com_live_space_normal"
-            android:stateListAnimator="@null"
-            android:text="@string/com_live_input_hint"
-            android:textColor="@android:color/white"
-            app:chipEndPadding="@dimen/com_live_space_big"
-            app:chipMinTouchTargetSize="0dp"
-            app:chipSurfaceColor="?attr/scrimBackground"
+            app:cardBackgroundColor="?attr/scrimBackground"
+            app:cardCornerRadius="19dp"
+            app:cardElevation="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btn_exit_game_fg_room"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent">
+
+            <EditText
+                android:id="@+id/edit_text_fg_room"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:hint="@string/com_live_input_hint"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingHorizontal="@dimen/com_live_space_normal"
+                android:paddingVertical="0dp"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/white"
+                android:textSize="12sp" />
+        </androidx.cardview.widget.CardView>
 
         <com.google.android.material.chip.Chip
             android:id="@+id/btn_exit_game_fg_room"
@@ -152,28 +165,7 @@
         android:layout_height="match_parent"
         android:clickable="false"
         android:contentDescription="@string/com_live_gift"
-        android:focusable="false" />
-
-    <!--    Input Box-->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/input_layout_fg_room"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_gravity="bottom"
-        android:visibility="gone"
-        app:hintAnimationEnabled="false"
-        app:hintEnabled="false">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edit_text_fg_room"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="@string/com_live_input_hint"
-            android:imeOptions="actionDone"
-            android:inputType="text"
-            android:maxLines="1"
-            android:padding="0dp"
-            tools:text="@string/com_live_app_name" />
-    </com.google.android.material.textfield.TextInputLayout>
+        android:focusable="false"
+        tools:visibility="gone" />
 
 </FrameLayout>

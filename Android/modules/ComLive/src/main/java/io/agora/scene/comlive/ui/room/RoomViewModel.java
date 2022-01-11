@@ -83,6 +83,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         super.onCleared();
 
         // destroy RTC
+        ComLiveUtil.currentGame = null;
         RtcEngine engine = rtcEngine.getValue();
         if (engine != null) {
             engine.leaveChannel();
@@ -119,11 +120,13 @@ public class RoomViewModel extends ViewModel implements RoomApi {
                 Sync.Instance().joinScene(currentRoom.getId(), new Sync.JoinSceneCallback() {
                     @Override
                     public void onSuccess(SceneReference sceneReference) {
+                        BaseUtil.logD("success");
                         onJoinRTMSucceed(sceneReference);
                     }
 
                     @Override
                     public void onFail(SyncManagerException e) {
+                        e.printStackTrace();
                         viewStatus.postValue(new ViewStatus.Error("主播已下播💔"));
                     }
                 });

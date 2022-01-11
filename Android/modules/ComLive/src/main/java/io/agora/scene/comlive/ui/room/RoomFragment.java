@@ -114,7 +114,6 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
         new Handler(Looper.getMainLooper()).post(() -> {
             if (mBinding != null) {
                 // GameView = WebView || 屏幕共享View
-                //
                 int dp12 = (int) BaseUtil.dp2px(12);
                 // 设置 Game View 距离顶部距离 (+ 12dp)
                 int topMargin = (int) (mBinding.layoutRoomInfo.getRoot().getBottom() + dp12);
@@ -151,8 +150,6 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
         // "退出直播间"按钮点击事件
         mBinding.btnExitFgRoom.setOnClickListener(v -> requireActivity().onBackPressed());
         mBinding.editTextFgRoom.setShowSoftInputOnFocus(true);
-        // 显示键盘按钮
-        mBinding.inputFgRoom.setOnClickListener(v -> BaseUtil.showKeyboardCompat(mBinding.inputLayoutFgRoom));
     }
 
     private void initObserver() {
@@ -214,7 +211,7 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
             if (aMHost)
                 mBinding.btnGameFgRoom.setVisibility(GONE);
             mBinding.btnExitGameFgRoom.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             needGameView(false);
             if (aMHost)
                 mBinding.btnGameFgRoom.setVisibility(View.VISIBLE);
@@ -317,8 +314,11 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
      * 直播间滚动消息
      */
     private void insertUserMessage(String msg) {
-        if (!aMHost && msg.equalsIgnoreCase("主播yyds")){
-            mViewModel.requestStartGame();
+        if (!aMHost && msg.equalsIgnoreCase("主播yyds")) {
+            if (ComLiveUtil.currentGame != null)
+                BaseUtil.toast(requireContext(), "您已加入游戏");
+            else
+                mViewModel.requestStartGame();
         }
         Spanned userMessage = Html.fromHtml(getString(R.string.com_live_user_msg, mViewModel.localUser.getName(), msg));
         insertNewMessage(userMessage);
@@ -396,15 +396,17 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
             mBinding.containerOverlayFgRoom.setPadding(inset.left, inset.top, inset.right, inset.bottom);
             // 输入框显隐及位置偏移
             boolean imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime());
-            if (imeVisible) {
-                mBinding.inputLayoutFgRoom.setVisibility(View.VISIBLE);
-                mBinding.inputLayoutFgRoom.requestFocus();
-                int desiredY = -insets.getInsets(WindowInsetsCompat.Type.ime()).bottom;
-                mBinding.inputLayoutFgRoom.setTranslationY(desiredY);
-            } else {
-                mBinding.inputLayoutFgRoom.setVisibility(GONE);
-                mBinding.inputLayoutFgRoom.clearFocus();
-            }
+            if (!imeVisible)
+                mBinding.editTextFgRoom.clearFocus();
+//            if (imeVisible) {
+//                mBinding.inputLayoutFgRoom.setVisibility(View.VISIBLE);
+//                mBinding.inputLayoutFgRoom.requestFocus();
+//                int desiredY = -insets.getInsets(WindowInsetsCompat.Type.ime()).bottom;
+//                mBinding.inputLayoutFgRoom.setTranslationY(desiredY);
+//            } else {
+//                mBinding.inputLayoutFgRoom.setVisibility(GONE);
+//                mBinding.inputLayoutFgRoom.clearFocus();
+//            }
             return WindowInsetsCompat.CONSUMED;
         });
     }
