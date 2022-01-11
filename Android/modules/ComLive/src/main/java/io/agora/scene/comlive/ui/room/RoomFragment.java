@@ -80,7 +80,7 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (GlobalViewModel.localUser == null) return null;
 
-        GlobalViewModel mGlobalModel = ComLiveUtil.getViewModel(requireActivity(), GlobalViewModel.class);
+        GlobalViewModel mGlobalModel = ComLiveUtil.getAndroidViewModel(this, GlobalViewModel.class);
         // hold current RoomInfo
         if (mGlobalModel.roomInfo.getValue() != null)
             currentRoom = mGlobalModel.roomInfo.getValue().peekContent();

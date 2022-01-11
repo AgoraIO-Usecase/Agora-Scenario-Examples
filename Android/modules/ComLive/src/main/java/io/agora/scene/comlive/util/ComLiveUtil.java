@@ -164,8 +164,8 @@ public class ComLiveUtil {
         return new ViewModelProvider(fragment.getViewModelStore(), factory).get(viewModelClass);
     }
 
-    public static <T extends ViewModel> T getViewModel(@NonNull ComponentActivity activity, @NonNull Class<T> viewModelClass) {
-        return new ViewModelProvider(activity, new GlobalViewModelFactory(activity)).get(viewModelClass);
+    public static <T extends ViewModel> T getAndroidViewModel(@NonNull Fragment fragment, @NonNull Class<T> viewModelClass) {
+        return new ViewModelProvider(fragment.requireActivity(), new GlobalViewModelFactory(fragment.requireActivity().getApplication())).get(viewModelClass);
     }
 
     public static float lerp(float startValue, float endValue, float fraction) {
