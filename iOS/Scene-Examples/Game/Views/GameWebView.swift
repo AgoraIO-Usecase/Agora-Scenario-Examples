@@ -11,12 +11,17 @@ import WebKit
 enum GameRoleType: Int, CaseIterable {
     ///  房主
     case broadcast = 1
+    /// 玩家
+    case player = 2
     /// 观众
-    case audience = 2
+    case audience = 3
 }
 
 class GameWebView: UIView {
     var onMuteAudioClosure: ((Bool) -> Void)?
+    var onLeaveGameClosure: (() -> Void)?
+    var onChangeGameRoleClosure: ((_ oldRole: GameRoleType, _ newRole: GameRoleType) -> Void)?
+    
     private(set) lazy var webView: WKWebView = {
         let config = WKWebViewConfiguration()
         config.allowsAirPlayForMediaPlayback = true
@@ -33,6 +38,8 @@ class GameWebView: UIView {
         super.init(frame: frame)
         setupUI()
         injectJsBridge(methodName: "agoraJSBridge_enableAudio")
+        injectJsBridge(methodName: "agoraJSBridge_leave")
+        injectJsBridge(methodName: "agoraJSBridge_setRole")
     }
     
     required init?(coder: NSCoder) {
@@ -84,6 +91,13 @@ extension GameWebView: WKScriptMessageHandler {
         if message.name == "agoraJSBridge_enableAudio" {
             let state = params?["state"] as? Int ?? 1
             onMuteAudioClosure?(state == 1)
+        } else if message.name == "agoraJSBridge_leave" {
+            onLeaveGameClosure?()
+        } else if message.name == "agoraJSBridge_setRole" {
+            let oldRole = params?["oldRole"] as? Int ?? 2
+            let newRole = params?["newRole"] as? Int ?? 2
+            onChangeGameRoleClosure?(GameRoleType(rawValue: oldRole) ?? .audience,
+                                     GameRoleType(rawValue: newRole) ?? .player)
         }
     }
 }

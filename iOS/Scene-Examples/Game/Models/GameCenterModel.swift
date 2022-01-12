@@ -19,16 +19,6 @@ enum GameCenterType: String, Codable {
     /// 王国激战
     case kingdom = "b234547ca08d684fa327c90e174dcc93"
     
-    var gameUrl: String {
-        switch self {
-        case .guess: return "https://imgsecond.yuanqiyouxi.com/test/DrawAndGuess/index.html"
-        case .guess_together: return "https://imgsecond.yuanqiyouxi.com/test/DrawAndGuess_More/index.html"
-        case .undercover: return "https://imgsecond.yuanqiyouxi.com/test/spy/index.html"
-        case .dahuashai: return "https://imgsecond.yuanqiyouxi.com/test/Dice_ShengWang/index.html"
-        case .kingdom: return "https://imgsecond.yuanqiyouxi.com/test/War/web-mobile/index.html"
-        }
-    }
-    
     var bgImage: UIImage? {
         switch self {
         case .guess:
@@ -41,16 +31,6 @@ enum GameCenterType: String, Codable {
             return UIImage(named: "Game/draw_bg")
         case .kingdom:
             return UIImage(named: "Game/draw_bg")
-        }
-    }
-    
-    var requestParams: String {
-        switch self {
-        case .guess: return "guess"
-        case .guess_together: return "guess"
-        case .undercover: return ""
-        case .dahuashai: return ""
-        case .kingdom: return "war"
         }
     }
 }

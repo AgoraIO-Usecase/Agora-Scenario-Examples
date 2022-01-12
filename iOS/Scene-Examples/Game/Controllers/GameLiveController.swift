@@ -44,9 +44,11 @@ class GameLiveController: PKLiveController {
     public var gameApplyInfoModel: GameApplyInfoModel?
     public var gameInfoModel: GameInfoModel?
     private var gameRoleType: GameRoleType {
-        let role: GameRoleType = targetChannelName.isEmpty ? .audience : .broadcast
-        let gameId = gameCenterModel?.gameId ?? gameApplyInfoModel?.gameId
-        return gameId == .kingdom && getRole(uid: UserInfo.uid) == .broadcaster ? .broadcast : role
+        targetChannelName.isEmpty ? .player : .broadcast
+    }
+    private var gameId: GameCenterType {
+        let gameId = gameInfoModel?.gameId ?? gameCenterModel?.gameId ?? gameApplyInfoModel?.gameId
+        return gameId ?? .guess
     }
     public var screenUserID: UInt {
         UserInfo.userId + 10000
@@ -104,12 +106,12 @@ class GameLiveController: PKLiveController {
                   let model = JSONObject.toModel(GameInfoModel.self, value: object.toJson()) else { return }
             self.gameInfoModel = model
             if model.status == .no_start {
-                self.updatePKUIStatus(isStart: false)
+                self.updatePKUIStatus(isStart: false, isAudience: true)
             } else if model.status == .playing {
-                self.updatePKUIStatus(isStart: true)
+                self.updatePKUIStatus(isStart: true, isAudience: true)
                 self.view.layer.contents = model.gameId?.bgImage?.cgImage
             } else {
-                self.updatePKUIStatus(isStart: false)
+                self.updatePKUIStatus(isStart: false, isAudience: true)
             }
             self.stopBroadcastButton.isHidden = true
         } onSubscribed: {
@@ -124,14 +126,18 @@ class GameLiveController: PKLiveController {
             self?.exitGameHandler()
         }
         /// 发消息
-        liveView.onClickSendMessageClosure = { [weak self] meesageModel in
-            let gameId = (self?.gameInfoModel?.gameId ?? self?.gameCenterModel?.gameId ?? self?.gameApplyInfoModel?.gameId)?.rawValue ?? ""
-            self?.viewModel.postBarrage(gameId: gameId)
+        liveView.onClickSendMessageClosure = { [weak self] mesageModel in
+            guard let self = self else { return }
+            if mesageModel.message.trimmingCharacters(in: .whitespacesAndNewlines) == "主播yyds"
+                && self.gameInfoModel?.status == .playing
+                && self.getRole(uid: UserInfo.uid) == .audience {
+                self.updatePKUIStatus(isStart: true, isAudience: true)
+            }
+            self.viewModel.postBarrage(gameId: self.gameId.rawValue)
         }
         /// 发礼物
         liveView.onSendGiftClosure = { [weak self] giftModel in
-            let gameId = (self?.gameInfoModel?.gameId ?? self?.gameCenterModel?.gameId ?? self?.gameApplyInfoModel?.gameId)?.rawValue ?? ""
-            self?.viewModel.postGiftHandler(gameId: gameId, giftType: giftModel.giftType)
+            self?.viewModel.postGiftHandler(gameId: (self?.gameId ?? .guess).rawValue, giftType: giftModel.giftType)
         }
     }
     
@@ -154,6 +160,7 @@ class GameLiveController: PKLiveController {
         gameInfoModel.status = model.status
         gameInfoModel.gameUid = "\(screenUserID)"
         gameInfoModel.gameId = model.gameId
+        gameInfoModel.roomId = targetChannelName.isEmpty ? channleName : targetChannelName
         
         if model.status == .no_start {
             updatePKUIStatus(isStart: false)
@@ -213,11 +220,10 @@ class GameLiveController: PKLiveController {
     // 退出游戏
     private func exitGameHandler() {
         showAlert(title: "退出游戏", message: "退出游戏将会终止游戏PK", cancel: nil) { [weak self] in
-            self?.updatePKUIStatus(isStart: false)
-            self?.updateGameInfoStatus(isStart: false)
+            guard let self = self else { return }
+            self.updatePKUIStatus(isStart: false)
+            self.updateGameInfoStatus(isStart: false)
         }
-//        self?.viewModel.postBarrage()
-//        viewModel.postGiftHandler(type: .delay)
     }
     
     /// 获取pk状态
@@ -246,7 +252,8 @@ class GameLiveController: PKLiveController {
     /// pk结束
     override func pkLiveEndHandler() {
         super.pkLiveEndHandler()
-        updatePKUIStatus(isStart: false)
+        updatePKUIStatus(isStart: false,
+                         isAudience: getRole(uid: UserInfo.uid) == .audience)
         liveView.updateLiveLayout(postion: .full)
         if getRole(uid: UserInfo.uid) == .broadcaster {
             liveView.updateBottomButtonType(type: [.game, .tool, .close])
@@ -266,7 +273,7 @@ class GameLiveController: PKLiveController {
         AgoraScreenShare.shareInstance().stopService()
     }
     
-    private func updatePKUIStatus(isStart: Bool) {
+    private func updatePKUIStatus(isStart: Bool, isAudience: Bool = false) {
         vsImageView.isHidden = true
         countTimeLabel.isHidden = true//!isStart
         webView.isHidden = !isStart
@@ -279,27 +286,12 @@ class GameLiveController: PKLiveController {
         }
         if isStart {
             ToastView.show(text: "游戏开始", postion: .top, duration: 3)
-            if getRole(uid: UserInfo.uid) == .broadcaster {
-                let channelName = targetChannelName.isEmpty ? channleName : targetChannelName
-                webView.loadUrl(gameId: (gameCenterModel?.gameId ?? gameApplyInfoModel?.gameId)?.rawValue ?? "",
-                                roomId: channelName,
-                                roleType: gameRoleType)
-                // 调用屏幕共享
-                onClickScreenShareButton()
-                viewModel.channelName = channelName
-            } else { // 观众拉取屏幕共享流
-                guard let gameInfoModel = gameInfoModel else { return }
-                if gameInfoModel.gameId == .kingdom {
-                    self.liveView.sendMessage(message: "", messageType: .notice)
-                }
-                let canvas = AgoraRtcVideoCanvas()
-                canvas.uid = UInt(gameInfoModel.gameUid ?? "0") ?? 0
-                canvas.view = webView.webView
-                canvas.renderMode = .fit
-                screenConnection.localUid = UserInfo.userId
-                joinScreenShare(isBroadcast: false)
-                agoraKit?.setupRemoteVideoEx(canvas, connection: screenConnection)
-            }
+            let channelName = isAudience ? gameInfoModel?.roomId : targetChannelName.isEmpty ? channleName : targetChannelName
+            webView.loadUrl(gameId: gameId.rawValue,
+                            roomId: channelName ?? "",
+                            roleType: isAudience ? .audience : gameRoleType)
+            
+            viewModel.channelName = channelName ?? ""
             
             liveView.updateLiveLayout(postion: .bottom)
             pkProgressView.isHidden = false
@@ -313,75 +305,16 @@ class GameLiveController: PKLiveController {
         } else {
             liveView.updateLiveLayout(postion: .center)
             pkProgressView.isHidden = true
+            viewModel.leaveGame(gameId: gameId.rawValue, roleType: isAudience ? .audience : gameRoleType)
             pkProgressView.reset()
             webView.reset()
-            // 主播调用离开游戏接口
-            if getRole(uid: "\(UserInfo.userId)") == .broadcaster {
-                let gameId = (gameInfoModel?.gameId ?? gameCenterModel?.gameId ?? gameApplyInfoModel?.gameId)?.rawValue ?? ""
-                viewModel.leaveGame(gameId: gameId, roleType: gameRoleType)
-                AgoraScreenShare.shareInstance().stopService()
-                agoraKit?.leaveChannelEx(screenConnection, leaveChannelBlock: nil)
-            }
             isLoadScreenShare = false
-        }
-    }
-    
-    private func joinScreenShare(isBroadcast: Bool) {
-        // 屏幕共享辅频道
-        let optionEx = AgoraRtcChannelMediaOptions()
-        optionEx.clientRoleType = AgoraRtcIntOptional.of(Int32(AgoraClientRole.broadcaster.rawValue))
-        // 不订阅
-        optionEx.autoSubscribeAudio = AgoraRtcBoolOptional.of(!isBroadcast)
-        optionEx.autoSubscribeVideo = AgoraRtcBoolOptional.of(!isBroadcast)
-        // 关闭辅频道麦克风(通过主频道开启即可)
-        optionEx.publishAudioTrack = .of(false)
-        optionEx.publishCustomVideoTrack = .of(isBroadcast)
-        optionEx.publishCustomAudioTrack = .of(isBroadcast)
-        let config = AgoraVideoEncoderConfiguration()
-        config.frameRate = .fps15
-        config.dimensions = CGSize(width: Screen.width, height: webView.frame.height)
-        agoraKit?.setVideoEncoderConfigurationEx(config, connection: screenConnection)
-        agoraKit?.joinChannelEx(byToken: KeyCenter.Token,
-                                connection: screenConnection,
-                                delegate: nil,
-                                mediaOptions: optionEx,
-                                joinSuccess: nil)
-
-        if getRole(uid: "\(UserInfo.userId)") == .broadcaster {
-            // mute 辅频道流
-            agoraKit?.muteRemoteAudioStream(screenUserID, mute: true)
-            agoraKit?.muteRemoteVideoStream(screenUserID, mute: true)
-        }
-    }
-    
-    /// 屏幕共享
-    private func onClickScreenShareButton() {
-        guard let agoraKit = agoraKit, isLoadScreenShare == false else { return }
-        isLoadScreenShare = true
-        joinScreenShare(isBroadcast: true)
-        AgoraScreenShare.shareInstance().startService(with: agoraKit, connection: screenConnection, regionRect: webView.frame)
-        if #available(iOS 12.0, *) {
-            let systemBroadcastPicker = RPSystemBroadcastPickerView(frame: .zero)
-            systemBroadcastPicker.showsMicrophoneButton = false
-            systemBroadcastPicker.autoresizingMask = [.flexibleTopMargin, .flexibleRightMargin]
-            if let url = Bundle.main.url(forResource: "Agora-ScreenShare-Extension", withExtension: "appex", subdirectory: "PlugIns") {
-                if let bundle = Bundle(url: url) {
-                    systemBroadcastPicker.preferredExtension = bundle.bundleIdentifier
-                }
-            }
-            let button = systemBroadcastPicker.subviews.first { view in
-                view.isKind(of: UIButton.self)
-            }
-            if let button = button {
-                (button as! UIButton).sendActions(for: .allTouchEvents)
-            }
-        } else {
-            showAlert(message: "Minimum support iOS version is 12.0")
         }
     }
     
     /// 更新游戏状态
     private func updateGameInfoStatus(isStart: Bool) {
+        guard getRole(uid: UserInfo.uid) == .broadcaster else { return }
         let channelName = targetChannelName.isEmpty ? channleName : targetChannelName
         if isStart {
             var gameApplyModel = GameApplyInfoModel()

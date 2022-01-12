@@ -14,5 +14,7 @@ struct GameInfoModel: Codable {
     
     var gameUid: String? = ""
     
+    var roomId: String? = ""
+    
     var gameId: GameCenterType? = .guess
 }

@@ -10,6 +10,8 @@ import AgoraUIKit_iOS
 
 class OnoToOneGameView: UIView {
     var onClickControlButtonClosure: ((OneToOneControlType, Bool) -> Void)?
+    var onLeaveGameClosure: (() -> Void)?
+    
     private lazy var micButton: AGEButton = {
         let button = AGEButton(style: .mic(imageColor: .white))
         button.backgroundColor = .init(hex: "#737374")
@@ -87,6 +89,8 @@ class OnoToOneGameView: UIView {
         closeButton.centerXAnchor.constraint(equalTo: webView.centerXAnchor).isActive = true
         closeButton.topAnchor.constraint(equalTo: webView.topAnchor, constant: 13).isActive = true
         closeButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        
+        webView.onLeaveGameClosure = onLeaveGameClosure
     }
     
     @objc

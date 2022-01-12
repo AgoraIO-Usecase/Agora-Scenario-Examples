@@ -22,14 +22,6 @@ class PlayTogetherViewController: SignleLiveController {
     private var gameRoleType: GameRoleType {
         getRole(uid: UserInfo.uid) == .broadcaster ? .broadcast : .audience
     }
-    private var roleType: GameRoleType {
-        let gameId = gameInfoModel?.gameId ?? gameCenterModel?.gameId
-        if gameId == .kingdom && gameRoleType == .audience {
-            return GameRoleType.allCases.randomElement() ?? .audience
-        }
-        return gameRoleType
-    }
-    private lazy var currentGameRoleType: GameRoleType = roleType
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,7 +64,8 @@ class PlayTogetherViewController: SignleLiveController {
                 self?.gameInfoModel = model
                 LogUtils.log(message: "gameInfo == \(object.toJson() ?? "")", level: .info)
                 if model.status == .playing {
-                    self?.liveView.sendMessage(message: "", messageType: .notice)
+//                    self?.liveView.sendMessage(message: "", messageType: .notice)
+                    self?.updateUIStatus(isStart: true)
                 } else {
                     self?.updateUIStatus(isStart: false)
                 }
@@ -100,6 +93,10 @@ class PlayTogetherViewController: SignleLiveController {
                 option.clientRoleType = isMute ? .of((Int32)(AgoraClientRole.broadcaster.rawValue)) : .of((Int32)(AgoraClientRole.audience.rawValue))
             }
             self.agoraKit?.updateChannel(with: option)
+        }
+        
+        webView.onLeaveGameClosure = { [weak self] in
+            self?.updateUIStatus(isStart: false)
         }
     }
     
@@ -165,7 +162,7 @@ class PlayTogetherViewController: SignleLiveController {
             ToastView.show(text: "游戏开始", postion: .top, duration: 3)
             webView.loadUrl(gameId: (gameCenterModel?.gameId ?? gameInfoModel?.gameId)?.rawValue ?? "",
                             roomId: channleName,
-                            roleType: currentGameRoleType)
+                            roleType: gameRoleType)
             
             liveView.updateLiveLayout(postion: .signle)
             
@@ -173,17 +170,17 @@ class PlayTogetherViewController: SignleLiveController {
             liveView.updateLiveLayout(postion: .full)
             let gameId = (gameInfoModel?.gameId ?? gameCenterModel?.gameId)?.rawValue ?? ""
             // 离开游戏接口
-            viewModel.leaveGame(gameId: gameId, roleType: currentGameRoleType)
+            viewModel.leaveGame(gameId: gameId, roleType: gameRoleType)
             webView.reset()
         }
     }
     /// 更新游戏状态
     private func updateGameInfoStatus(isStart: Bool) {
-        guard getRole(uid: UserInfo.uid) == .audience else { return }
+        guard getRole(uid: UserInfo.uid) == .broadcaster else { return }
         var gameInfoModel = GameInfoModel()
         gameInfoModel.gameId = gameCenterModel?.gameId ?? .guess
         gameInfoModel.gameUid = currentUserId
-        gameInfoModel.status = isStart ? .playing : .no_start
+        gameInfoModel.status = isStart ? .playing : .end
         SyncUtil.update(id: channleName,
                         key: SYNC_MANAGER_GAME_INFO,
                         params: JSONObject.toJson(gameInfoModel))

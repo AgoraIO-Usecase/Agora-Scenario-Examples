@@ -24,8 +24,8 @@ class GameViewModel: NSObject {
             return
         }
         NetworkManager.shared.postRequest(urlString: "getGames", params: ["type": sceneType.gameType]) { response in
-            let result = response["result"] as? String
-            let list = JSONObject.toArray(jsonString: result ?? "")?.compactMap({ JSONObject.toModel(GameCenterModel.self, value: $0) })
+            let result = response["result"] as? [[String: Any]]
+            let list = result?.compactMap({ JSONObject.toModel(GameCenterModel.self, value: $0) })
             success(list)
             self.gameList = list
         } failure: { error in

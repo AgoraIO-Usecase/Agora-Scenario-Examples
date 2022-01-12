@@ -56,11 +56,11 @@ class OneToOneViewController: BaseViewController {
     public var canvasDataArray = [LiveCanvasModel]()
     private(set) var sceneType: SceneType = .singleLive
     private var roleType: GameRoleType {
-        currentUserId == UserInfo.uid ? .broadcast : .audience
+        currentUserId == UserInfo.uid ? .broadcast : .player
     }
     private var gameRoleType: GameRoleType {
         if gameInfoModel.gameId == .kingdom && roleType == .audience {
-            return GameRoleType.allCases.randomElement() ?? .audience
+            return GameRoleType.allCases.randomElement() ?? .player
         }
         return roleType
     }
@@ -70,9 +70,6 @@ class OneToOneViewController: BaseViewController {
     private var isCloseGame: Bool = false
     private var isSelfExitGame: Bool = false
     private var gameInfoModel = GameInfoModel()
-    private var requestType: String {
-        gameInfoModel.gameId?.requestParams ?? ""
-    }
     
     init(channelName: String, sceneType: SceneType, userId: String, agoraKit: AgoraRtcEngineKit? = nil) {
         super.init(nibName: nil, bundle: nil)
@@ -160,14 +157,23 @@ class OneToOneViewController: BaseViewController {
             } else if model?.status == .end && !self.isSelfExitGame{
                 AlertManager.hiddenView()
                 ToastView.show(text: "游戏已结束", view: self.view)
-                self.onoToOneGameView.reset()
                 self.viewModel.leaveGame(gameId: model?.gameId?.rawValue ?? "",
                                          roleType: self.currentGameRoleType)
+                self.onoToOneGameView.reset()
                 self.isSelfExitGame = false
             }
         }, onSubscribed: {
             LogUtils.log(message: "onSubscribed One To One", level: .info)
         })
+        
+        onoToOneGameView.onLeaveGameClosure = { [weak self] in
+            guard let self = self else { return }
+            AlertManager.hiddenView()
+            self.viewModel.leaveGame(gameId: self.gameInfoModel.gameId?.rawValue ?? "",
+                                     roleType: self.currentGameRoleType)
+            self.onoToOneGameView.reset()
+            self.isSelfExitGame = false
+        }
     }
     
     private func clickControlViewHandler(controlType: OneToOneControlType, isSelected: Bool) {

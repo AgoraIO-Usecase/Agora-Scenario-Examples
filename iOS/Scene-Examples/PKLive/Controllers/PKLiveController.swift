@@ -249,7 +249,7 @@ class PKLiveController: SignleLiveController {
         if isStart {
             vsImageView.centerYAnchor.constraint(equalTo: view.topAnchor,
                                                  constant: liveView.liveCanvasViewHeight).isActive = true
-            timer.scheduledSecondsTimer(withName: sceneType.rawValue, timeInterval: 180, queue: .main) { [weak self] _, duration in
+            timer.scheduledSecondsTimer(withName: sceneType.rawValue, timeInterval: 600, queue: .main) { [weak self] _, duration in
                 self?.countTimeLabel.text = "".timeFormat(secounds: duration)
                 if duration <= 0 {
                     self?.updatePKInfoStatusToEnd()
