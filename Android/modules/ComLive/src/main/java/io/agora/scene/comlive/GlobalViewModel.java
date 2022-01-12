@@ -1,28 +1,29 @@
 package io.agora.scene.comlive;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import java.util.HashMap;
 
 import io.agora.scene.comlive.bean.LocalUser;
 import io.agora.scene.comlive.bean.RoomInfo;
 import io.agora.scene.comlive.repo.RoomCreateApi;
-import io.agora.scene.comlive.util.Event;
 import io.agora.scene.comlive.util.ComLiveConstants;
 import io.agora.scene.comlive.util.ComLiveUtil;
+import io.agora.scene.comlive.util.Event;
 import io.agora.syncmanager.rtm.Sync;
 import io.agora.syncmanager.rtm.SyncManagerException;
 
 @Keep
-public class GlobalViewModel extends ViewModel implements RoomCreateApi {
+public class GlobalViewModel extends AndroidViewModel implements RoomCreateApi {
     @Nullable
     public static LocalUser localUser;
 
@@ -35,11 +36,11 @@ public class GlobalViewModel extends ViewModel implements RoomCreateApi {
 
     public final MutableLiveData<Event<RoomInfo>> roomInfo = new MutableLiveData<>();
 
-    public GlobalViewModel(@NonNull Context context) {
-        GlobalViewModel.localUser = checkLocalOrGenerate(context);
-        initSyncManager(context);
+    public GlobalViewModel(@NonNull Application application) {
+        super(application);
+        GlobalViewModel.localUser = checkLocalOrGenerate(application.getApplicationContext());
+        initSyncManager(application.getApplicationContext());
     }
-
     /**
      * 本地存在==> 本地生成
      * 本地不存在==> 随机生成

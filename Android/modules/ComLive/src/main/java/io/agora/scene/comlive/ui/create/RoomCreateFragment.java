@@ -26,7 +26,7 @@ public class RoomCreateFragment extends BaseNavFragment<ComLiveFragmentCreateRoo
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mGlobalModel = ComLiveUtil.getViewModel(requireActivity(), GlobalViewModel.class);
+        mGlobalModel = ComLiveUtil.getAndroidViewModel(this, GlobalViewModel.class);
         initListener();
 
         setupRandomName();

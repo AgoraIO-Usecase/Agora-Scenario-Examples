@@ -17,7 +17,6 @@ public class NormalContainerInsetsListener implements OnApplyWindowInsetsListene
     @SuppressLint("UnknownNullness")
     @Override
     public WindowInsetsCompat onApplyWindowInsets(View v, WindowInsetsCompat insets) {
-        BaseUtil.logD("Normal onApplyWindowInsets");
         Insets inset = insets.getInsets(WindowInsetsCompat.Type.systemBars());
         v.setPadding(inset.left, inset.top, inset.right, inset.bottom);
         return WindowInsetsCompat.CONSUMED;

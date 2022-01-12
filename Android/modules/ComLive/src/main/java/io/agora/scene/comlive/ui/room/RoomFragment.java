@@ -9,8 +9,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Html;
 import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.style.ImageSpan;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,8 +22,6 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -48,13 +46,11 @@ import io.agora.scene.comlive.GlobalViewModel;
 import io.agora.scene.comlive.R;
 import io.agora.scene.comlive.base.BaseNavFragment;
 import io.agora.scene.comlive.bean.AgoraGame;
-import io.agora.scene.comlive.bean.GameApplyInfo;
 import io.agora.scene.comlive.bean.GameInfo;
 import io.agora.scene.comlive.bean.GiftInfo;
 import io.agora.scene.comlive.bean.RoomInfo;
 import io.agora.scene.comlive.databinding.ComLiveFragmentRoomBinding;
 import io.agora.scene.comlive.databinding.ComLiveItemRoomMessageBinding;
-import io.agora.scene.comlive.repo.GameRepo;
 import io.agora.scene.comlive.ui.room.donate.DonateDialog;
 import io.agora.scene.comlive.ui.room.game.GameListDialog;
 import io.agora.scene.comlive.ui.room.tool.MoreDialog;
@@ -80,7 +76,7 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (GlobalViewModel.localUser == null) return null;
 
-        GlobalViewModel mGlobalModel = ComLiveUtil.getViewModel(requireActivity(), GlobalViewModel.class);
+        GlobalViewModel mGlobalModel = ComLiveUtil.getAndroidViewModel(this, GlobalViewModel.class);
         // hold current RoomInfo
         if (mGlobalModel.roomInfo.getValue() != null)
             currentRoom = mGlobalModel.roomInfo.getValue().peekContent();
@@ -114,7 +110,6 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
         new Handler(Looper.getMainLooper()).post(() -> {
             if (mBinding != null) {
                 // GameView = WebView || 屏幕共享View
-                //
                 int dp12 = (int) BaseUtil.dp2px(12);
                 // 设置 Game View 距离顶部距离 (+ 12dp)
                 int topMargin = (int) (mBinding.layoutRoomInfo.getRoot().getBottom() + dp12);
@@ -151,8 +146,6 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
         // "退出直播间"按钮点击事件
         mBinding.btnExitFgRoom.setOnClickListener(v -> requireActivity().onBackPressed());
         mBinding.editTextFgRoom.setShowSoftInputOnFocus(true);
-        // 显示键盘按钮
-        mBinding.inputFgRoom.setOnClickListener(v -> BaseUtil.showKeyboardCompat(mBinding.inputLayoutFgRoom));
     }
 
     private void initObserver() {
@@ -172,6 +165,11 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
                 BaseUtil.toast(requireContext(), ((ViewStatus.Error) viewStatus).msg);
                 findNavController().popBackStack();
             }
+        });
+        mViewModel.gameStartUrl.observe(getViewLifecycleOwner(), stringEvent -> {
+            WebView webView = mBinding.hostContainerFgRoom.webViewHostView;
+            if (webView != null)
+                webView.loadUrl(stringEvent.peekContent());
         });
     }
 
@@ -209,12 +207,12 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
             needGameView(true);
             WebView webView = mBinding.hostContainerFgRoom.webViewHostView;
             if (webView != null) {
-                mViewModel.startGame(game.getGameId(), webView);
+                mViewModel.startGame(game.getGameId());
             }
             if (aMHost)
                 mBinding.btnGameFgRoom.setVisibility(GONE);
             mBinding.btnExitGameFgRoom.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             needGameView(false);
             if (aMHost)
                 mBinding.btnGameFgRoom.setVisibility(View.VISIBLE);
@@ -226,8 +224,14 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
     private void needGameView(boolean need) {
         if (need) {
             mBinding.hostContainerFgRoom.createDefaultGameView();
+            WebView webViewHostView = mBinding.hostContainerFgRoom.webViewHostView;
+            if (webViewHostView != null)
+                webViewHostView.addJavascriptInterface(new AgoraJsBridge(mViewModel),"agoraJSBridge");
+
             onLayoutTypeChanged(LiveHostLayout.Type.HOST_IN_GAME);
         } else {
+            WebView webViewHostView = mBinding.hostContainerFgRoom.webViewHostView;
+            if (webViewHostView != null) webViewHostView.destroy();
             mBinding.hostContainerFgRoom.removeGameView();
             onLayoutTypeChanged(LiveHostLayout.Type.HOST_ONLY);
         }
@@ -317,8 +321,11 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
      * 直播间滚动消息
      */
     private void insertUserMessage(String msg) {
-        if (!aMHost && msg.equalsIgnoreCase("主播yyds")){
-            mViewModel.requestStartGame();
+        if (!aMHost && msg.equalsIgnoreCase("主播yyds")) {
+            if (ComLiveUtil.currentGame != null)
+                BaseUtil.toast(requireContext(), "您已加入游戏");
+            else
+                mViewModel.requestStartGame();
         }
         Spanned userMessage = Html.fromHtml(getString(R.string.com_live_user_msg, mViewModel.localUser.getName(), msg));
         insertNewMessage(userMessage);
@@ -330,8 +337,12 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
     private void insertAlertMessage() {
         Spanned userMessage = Html.fromHtml(getString(R.string.com_live_alert_msg));
         SpannableString spanMessage = new SpannableString(userMessage);
-        spanMessage.setSpan(ContextCompat.getDrawable(requireContext(), R.drawable.ic_post_board), 0, 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-
+        Drawable drawable = ContextCompat.getDrawable(requireContext(), R.drawable.com_live_ic_post_board);
+        if (drawable != null) {
+            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+            ImageSpan imageSpan = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
+            spanMessage.setSpan(imageSpan, 0, 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        }
         insertNewMessage(new MessageHolder.LiveMessage(1, spanMessage));
     }
 
@@ -355,7 +366,7 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
 
         if (type == LiveHostLayout.Type.DOUBLE_IN_GAME) {
             if (ComLiveUtil.currentGame != null)
-                setRoomBgd(false, ComLiveUtil.getGameBgdByGameId(ComLiveUtil.currentGame.getGameId()));
+                setRoomBgd(false, 0);
         } else {
             setRoomBgd(true, ComLiveUtil.getBgdByRoomBgdId(currentRoom.getBackgroundId()));
         }
@@ -396,15 +407,18 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
             mBinding.containerOverlayFgRoom.setPadding(inset.left, inset.top, inset.right, inset.bottom);
             // 输入框显隐及位置偏移
             boolean imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime());
-            if (imeVisible) {
-                mBinding.inputLayoutFgRoom.setVisibility(View.VISIBLE);
-                mBinding.inputLayoutFgRoom.requestFocus();
-                int desiredY = -insets.getInsets(WindowInsetsCompat.Type.ime()).bottom;
-                mBinding.inputLayoutFgRoom.setTranslationY(desiredY);
-            } else {
-                mBinding.inputLayoutFgRoom.setVisibility(GONE);
-                mBinding.inputLayoutFgRoom.clearFocus();
-            }
+            if (!imeVisible)
+                mBinding.editTextFgRoom.clearFocus();
+                mBinding.editTextFgRoom.setText("");
+//            if (imeVisible) {
+//                mBinding.inputLayoutFgRoom.setVisibility(View.VISIBLE);
+//                mBinding.inputLayoutFgRoom.requestFocus();
+//                int desiredY = -insets.getInsets(WindowInsetsCompat.Type.ime()).bottom;
+//                mBinding.inputLayoutFgRoom.setTranslationY(desiredY);
+//            } else {
+//                mBinding.inputLayoutFgRoom.setVisibility(GONE);
+//                mBinding.inputLayoutFgRoom.clearFocus();
+//            }
             return WindowInsetsCompat.CONSUMED;
         });
     }

@@ -99,7 +99,7 @@ public class ComLiveUtil {
     }
 
     @DrawableRes
-    public static int getGameBgdByGameId(int gameId){
+    public static int getGameBgdByGameId(String gameId){
             return R.drawable.com_live_pic_bgd_game_1;
     }
 
@@ -164,8 +164,8 @@ public class ComLiveUtil {
         return new ViewModelProvider(fragment.getViewModelStore(), factory).get(viewModelClass);
     }
 
-    public static <T extends ViewModel> T getViewModel(@NonNull ComponentActivity activity, @NonNull Class<T> viewModelClass) {
-        return new ViewModelProvider(activity, new GlobalViewModelFactory(activity)).get(viewModelClass);
+    public static <T extends ViewModel> T getAndroidViewModel(@NonNull Fragment fragment, @NonNull Class<T> viewModelClass) {
+        return new ViewModelProvider(fragment.requireActivity(), new GlobalViewModelFactory(fragment.requireActivity().getApplication())).get(viewModelClass);
     }
 
     public static float lerp(float startValue, float endValue, float fraction) {

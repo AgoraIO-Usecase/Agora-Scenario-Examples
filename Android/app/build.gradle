@@ -49,6 +49,7 @@ dependencies {
 //    runtimeOnly(project(':modules:SingleHostLive'))
     runtimeOnly(project(':modules:RTEGame'))
     runtimeOnly(project(':modules:OneLive'))
+    runtimeOnly(project(':modules:ComLive'))
 
 
     // Test

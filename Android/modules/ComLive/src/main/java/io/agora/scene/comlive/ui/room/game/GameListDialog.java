@@ -10,16 +10,12 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.agora.example.base.BaseBottomSheetDialogFragment;
 import io.agora.example.base.BaseRecyclerViewAdapter;
 import io.agora.example.base.OnItemClickListener;
 import io.agora.scene.comlive.bean.AgoraGame;
 import io.agora.scene.comlive.databinding.ComLiveDialogGameListBinding;
 import io.agora.scene.comlive.databinding.ComLiveItemGameBinding;
-import io.agora.scene.comlive.repo.GameRepo;
 import io.agora.scene.comlive.ui.room.RoomViewModel;
 import io.agora.scene.comlive.util.ComLiveUtil;
 
@@ -36,11 +32,13 @@ public class GameListDialog extends BaseBottomSheetDialogFragment<ComLiveDialogG
         roomViewModel = ComLiveUtil.getViewModel(requireParentFragment(), RoomViewModel.class);
         WindowCompat.setDecorFitsSystemWindows(requireDialog().getWindow(), false);
         initView();
+        roomViewModel.gameList.observe(getViewLifecycleOwner(), agoraGames -> mAdapter.submitListAndPurge(agoraGames));
+        roomViewModel.fetchGameList();
     }
 
     private void initView() {
         ComLiveUtil.setBottomDialogBackground(mBinding.getRoot());
-        mAdapter = new BaseRecyclerViewAdapter<>(fetchAllGameList(), this, ItemGameHolder.class);
+        mAdapter = new BaseRecyclerViewAdapter<>(null, this, ItemGameHolder.class);
         mBinding.recyclerViewDialogGameList.setAdapter(mAdapter);
 
         ViewCompat.setOnApplyWindowInsetsListener(requireDialog().getWindow().getDecorView(), (v, insets) -> {
@@ -55,12 +53,4 @@ public class GameListDialog extends BaseBottomSheetDialogFragment<ComLiveDialogG
         roomViewModel.requestStartGame(game.getGameId());
         dismiss();
     }
-
-
-    private List<AgoraGame> fetchAllGameList(){
-        List<AgoraGame> gameList = new ArrayList<>();
-        gameList.add(GameRepo.getGameDetail(1));
-        return gameList;
-    }
-
 }

@@ -10,6 +10,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import io.agora.example.base.BaseBottomSheetDialogFragment;
+import io.agora.example.base.BaseUtil;
 import io.agora.scene.comlive.databinding.ComLiveDialogMoreBinding;
 import io.agora.scene.comlive.ui.room.RoomViewModel;
 import io.agora.scene.comlive.util.ComLiveUtil;
@@ -55,6 +56,8 @@ public class MoreDialog extends BaseBottomSheetDialogFragment<ComLiveDialogMoreB
 
         // Update Status
         roomViewModel.isCameraEnabled.observe(getViewLifecycleOwner(), enabled -> mBinding.btnCameraDialogMore.setChecked(enabled));
-        roomViewModel.isMicEnabled.observe(getViewLifecycleOwner(), enabled -> mBinding.btnMicDialogMore.setChecked(enabled));
+        roomViewModel.isMicEnabled.observe(getViewLifecycleOwner(), enabled -> {
+            mBinding.btnMicDialogMore.setChecked(enabled);
+        });
     }
 }

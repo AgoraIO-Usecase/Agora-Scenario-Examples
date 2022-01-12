@@ -18,4 +18,7 @@
 <!--    1V1直播-->
     <string name="app_one_live_name">Live 1v1</string>
     <string name="app_one_live_description">2 in 1 game</string>
+<!--    同玩直播-->
+    <string name="app_com_live_name">Live Com</string>
+    <string name="app_com_live_description">Play Games with audiences</string>
 </resources>

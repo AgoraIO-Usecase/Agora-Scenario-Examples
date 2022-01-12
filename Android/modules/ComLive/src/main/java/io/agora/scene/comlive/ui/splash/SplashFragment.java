@@ -20,7 +20,7 @@ public class SplashFragment extends BaseNavFragment<ComLiveFragmentSplashBinding
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        globalViewModel = ComLiveUtil.getViewModel(requireActivity(), GlobalViewModel.class);
+        globalViewModel = ComLiveUtil.getAndroidViewModel(this, GlobalViewModel.class);
 
         initListener();
     }

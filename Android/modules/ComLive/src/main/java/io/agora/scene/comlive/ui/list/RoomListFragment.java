@@ -67,15 +67,8 @@ public class RoomListFragment extends BaseNavFragment<ComLiveFragmentRoomListBin
         super.onViewCreated(view, savedInstanceState);
         mViewModel = ComLiveUtil.getViewModel(this, RoomListViewModel.class);
 
-        mGlobalModel = ComLiveUtil.getViewModel(requireActivity(), GlobalViewModel.class);
+        mGlobalModel = ComLiveUtil.getAndroidViewModel(this, GlobalViewModel.class);
         mGlobalModel.clearRoomInfo();
-        // FIXME To avoid APP be killed in background
-        //       Apparently this is gonna trigger a second request
-        //       Works well, so be it
-        mGlobalModel.isRTMInit().observe(getViewLifecycleOwner(), new EventObserver<>(aBoolean -> {
-            BaseUtil.logD("mGlobalModel");
-            if (aBoolean == TRUE) mViewModel.fetchRoomList();
-        }));
         initView();
         initListener();
     }
