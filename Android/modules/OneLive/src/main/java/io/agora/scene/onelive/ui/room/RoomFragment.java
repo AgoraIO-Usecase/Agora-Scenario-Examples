@@ -93,7 +93,10 @@ public class RoomFragment extends BaseNavFragment<OneFragmentRoomBinding> {
                 return true;
             }
         });
+        mBinding.gameViewFgRoom.addJavascriptInterface(new AgoraJsBridge(mViewModel),"agoraJSBridge");
+        // 给 WebView 添加透明背景
         mBinding.gameViewFgRoom.setBackgroundColor(BaseUtil.getColorInt(requireContext(), R.attr.colorPrimary));
+        // 给 WebView 添加圆角
         float webViewCorner = BaseUtil.dp2px(8);
         mBinding.gameViewFgRoom.setOutlineProvider(new ViewOutlineProvider() {
             @Override
@@ -153,8 +156,12 @@ public class RoomFragment extends BaseNavFragment<OneFragmentRoomBinding> {
         // 停止连麦 按钮
         mBinding.btnEndCallFgRoom.setOnClickListener(v -> RoomFragment.this.showAlertEndCallDialog());
 
-        mBinding.btnMicFgRoom.setOnClickListener(v -> mViewModel.toggleMute());
-        mBinding.btnMic2FgRoom.setOnClickListener(v -> mViewModel.toggleMute());
+        mBinding.btnMicFgRoom.addOnCheckedChangeListener((button, isChecked) -> {
+            if(button.isPressed()) mViewModel.enableMic(button.isChecked());
+        });
+        mBinding.btnMic2FgRoom.addOnCheckedChangeListener((button, isChecked) -> {
+            if(button.isPressed()) mViewModel.enableMic(button.isChecked());
+        });
 
     }
 
@@ -193,11 +200,12 @@ public class RoomFragment extends BaseNavFragment<OneFragmentRoomBinding> {
         mViewModel.gameInfo().observe(getViewLifecycleOwner(), this::onGameStatusChanged);
 
         // 静音状态
-        mViewModel.isLocalMicMuted.observe(getViewLifecycleOwner(), isMute -> {
-            int resId = isMute ? R.drawable.one_ic_microphone_off : R.drawable.one_ic_microphone;
-
+        mViewModel.isLocalMicMuted.observe(getViewLifecycleOwner(), isMuted -> {
+            int resId = isMuted ? R.drawable.one_ic_microphone_off : R.drawable.one_ic_microphone;
             mBinding.btnMicFgRoom.setIconResource(resId);
+            mBinding.btnMicFgRoom.setChecked(!isMuted);
             mBinding.btnMic2FgRoom.setIconResource(resId);
+            mBinding.btnMic2FgRoom.setChecked(!isMuted);
         });
 
         mViewModel.viewStatus().observe(getViewLifecycleOwner(), viewStatus -> {

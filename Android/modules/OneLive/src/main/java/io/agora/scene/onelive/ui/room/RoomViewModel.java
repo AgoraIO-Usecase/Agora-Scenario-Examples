@@ -292,12 +292,11 @@ public class RoomViewModel extends ViewModel {
 
     //<editor-fold desc="RTC related">
 
-    public void toggleMute() {
-        boolean isMute = isLocalMicMuted.getValue() == Boolean.TRUE;
-        isLocalMicMuted.setValue(!isMute);
+    public void enableMic(boolean enable) {
+        isLocalMicMuted.setValue(!enable);
         RtcEngineEx engine = _mEngine.getValue();
         if (engine != null) {
-            engine.muteLocalAudioStream(!isMute);
+            engine.muteLocalAudioStream(!enable);
         }
     }
 
