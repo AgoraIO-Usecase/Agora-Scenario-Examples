@@ -15,34 +15,21 @@ import io.agora.syncmanager.rtm.Sync;
 
 public class MainActivity extends BaseActivity<OneActivityMainBinding> {
 
-    private GlobalViewModel globalViewModel;
-
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        globalViewModel = OneUtil.getViewModel(this, GlobalViewModel.class);
-
+        OneUtil.getAndroidViewModel(this, GlobalViewModel.class);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
     }
 
     @Override
     public void finish() {
         super.finish();
-
-        new Thread(() -> {
 //        RTMDestroy
-            Sync.Instance().destroy();
+        Sync.Instance().destroy();
 //        RTCDestroy
-            RtcEngine.destroy();
-        }).start();
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (globalViewModel != null)
-            globalViewModel.focused.setValue(hasFocus);
+        RtcEngine.destroy();
     }
 }

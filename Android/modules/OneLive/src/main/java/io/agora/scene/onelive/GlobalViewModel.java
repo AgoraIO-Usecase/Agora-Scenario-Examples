@@ -1,13 +1,14 @@
 package io.agora.scene.onelive;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import java.util.HashMap;
 
@@ -20,11 +21,9 @@ import io.agora.syncmanager.rtm.Sync;
 import io.agora.syncmanager.rtm.SyncManagerException;
 
 @Keep
-public class GlobalViewModel extends ViewModel {
+public class GlobalViewModel extends AndroidViewModel {
     @NonNull
     public LocalUser localUser;
-
-    public final MutableLiveData<Boolean> focused = new MutableLiveData<>(true);
 
     private final MutableLiveData<Event<Boolean>> _isRTMInit = new MutableLiveData<>();
 
@@ -35,9 +34,10 @@ public class GlobalViewModel extends ViewModel {
 
     public final MutableLiveData<Event<RoomInfo>> roomInfo = new MutableLiveData<>();
 
-    public GlobalViewModel(@NonNull Context context) {
-        this.localUser = checkLocalOrGenerate(context);
-        initSyncManager(context);
+    public GlobalViewModel(@NonNull Application application) {
+        super(application);
+        this.localUser = checkLocalOrGenerate(application.getApplicationContext());
+        initSyncManager(application.getApplicationContext());
     }
 
     /**

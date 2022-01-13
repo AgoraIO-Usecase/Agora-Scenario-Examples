@@ -1,7 +1,5 @@
 package io.agora.scene.onelive.ui.list;
 
-import static java.lang.Boolean.TRUE;
-
 import android.Manifest;
 import android.os.Bundle;
 import android.view.View;
@@ -65,26 +63,12 @@ public class RoomListFragment extends BaseNavFragment<OneFragmentRoomListBinding
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mViewModel = OneUtil.getViewModel(this, RoomListViewModel.class);
-
-        mGlobalModel = OneUtil.getViewModel(requireActivity(), GlobalViewModel.class);
+        mGlobalModel = OneUtil.getAndroidViewModel(this, GlobalViewModel.class);
         mGlobalModel.clearRoomInfo();
-        // FIXME To avoid APP be killed in background
-        //       Apparently this is gonna trigger a second request
-        //       Works well, so be it
-        mGlobalModel.isRTMInit().observe(getViewLifecycleOwner(), new EventObserver<>(aBoolean -> {
-            if (aBoolean == TRUE) mViewModel.fetchRoomList();
-        }));
+        mViewModel = OneUtil.getViewModel(this, RoomListViewModel.class);
         initView();
         initListener();
     }
-
-    //    @Override
-//    public void onResume() {
-//        super.onResume();
-    // 退出房间 更新列表 FIXME 更好的方式实现监听退出房间更新列表
-//        mBinding.getRoot().postDelayed(() -> mViewModel.fetchRoomList(),300);
-//    }
 
     private void initView() {
         mAdapter = new BaseRecyclerViewAdapter<>(null, this, RoomListHolder.class);

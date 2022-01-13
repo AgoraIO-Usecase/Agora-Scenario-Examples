@@ -50,7 +50,7 @@ public class RoomFragment extends BaseNavFragment<OneFragmentRoomBinding> {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        GlobalViewModel mGlobalModel = OneUtil.getViewModel(requireActivity(), GlobalViewModel.class);
+        GlobalViewModel mGlobalModel = OneUtil.getAndroidViewModel(this, GlobalViewModel.class);
         // hold current RoomInfo
         if (mGlobalModel.roomInfo.getValue() != null)
             currentRoom = mGlobalModel.roomInfo.getValue().peekContent();
