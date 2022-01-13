@@ -139,7 +139,7 @@ class SignleLiveController: BaseViewController {
         if getRole(uid: UserInfo.uid) == .broadcaster {
             showAlert(title: "Live_End".localized, message: "Confirm_End_Live".localized) { [weak self] in
                 self?.closeLiveHandler()
-//                SyncUtil.delete(id: self?.channleName ?? "")
+                SyncUtil.delete(id: self?.channleName ?? "")
                 self?.navigationController?.popViewController(animated: true)
             }
 

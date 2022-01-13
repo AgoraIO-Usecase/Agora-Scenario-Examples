@@ -43,8 +43,19 @@ class GameLiveController: PKLiveController {
     private lazy var timer = GCDTimer()
     public var gameApplyInfoModel: GameApplyInfoModel?
     public var gameInfoModel: GameInfoModel?
+    private var _gameRoleType: GameRoleType?
     private var gameRoleType: GameRoleType {
-        targetChannelName.isEmpty ? .player : .broadcast
+        get {
+            if _gameRoleType != nil {
+                return _gameRoleType ?? .player
+            }
+            let role: GameRoleType = targetChannelName.isEmpty ? .player : .broadcast
+            _gameRoleType = role
+            return role
+        }
+        set {
+            _gameRoleType = newValue
+        }
     }
     private var gameId: GameCenterType {
         let gameId = gameInfoModel?.gameId ?? gameCenterModel?.gameId ?? gameApplyInfoModel?.gameId
@@ -108,10 +119,11 @@ class GameLiveController: PKLiveController {
             if model.status == .no_start {
                 self.updatePKUIStatus(isStart: false, isAudience: true)
             } else if model.status == .playing {
-                self.updatePKUIStatus(isStart: true, isAudience: true)
+                self.gameRoleType = .audience
+                self.updatePKUIStatus(isStart: true)
                 self.view.layer.contents = model.gameId?.bgImage?.cgImage
             } else {
-                self.updatePKUIStatus(isStart: false, isAudience: true)
+                self.updatePKUIStatus(isStart: false)
             }
             self.stopBroadcastButton.isHidden = true
         } onSubscribed: {
@@ -138,6 +150,27 @@ class GameLiveController: PKLiveController {
         /// 发礼物
         liveView.onSendGiftClosure = { [weak self] giftModel in
             self?.viewModel.postGiftHandler(gameId: (self?.gameId ?? .guess).rawValue, giftType: giftModel.giftType)
+        }
+        
+        webView.onMuteAudioClosure = { [weak self] isMute in
+            guard let self = self else { return }
+            let option = self.channelMediaOptions
+            option.publishAudioTrack = .of(isMute)
+            option.publishCameraTrack = .of(self.getRole(uid: UserInfo.uid) == .broadcaster)
+            if self.getRole(uid: UserInfo.uid) == .audience {
+                option.clientRoleType = isMute ? .of((Int32)(AgoraClientRole.broadcaster.rawValue)) : .of((Int32)(AgoraClientRole.audience.rawValue))
+            }
+            self.agoraKit?.updateChannel(with: option)
+        }
+        
+        webView.onLeaveGameClosure = { [weak self] in
+            self?.updatePKUIStatus(isStart: false)
+        }
+        
+        webView.onChangeGameRoleClosure = { [weak self] oldRole, newRole in
+            let gameId = self?.gameInfoModel?.gameId ?? self?.gameCenterModel?.gameId
+            self?.viewModel.changeRole(gameId: gameId?.rawValue ?? "", oldRole: oldRole, newRole: newRole)
+            self?.gameRoleType = newRole
         }
     }
     
@@ -252,8 +285,7 @@ class GameLiveController: PKLiveController {
     /// pk结束
     override func pkLiveEndHandler() {
         super.pkLiveEndHandler()
-        updatePKUIStatus(isStart: false,
-                         isAudience: getRole(uid: UserInfo.uid) == .audience)
+        updatePKUIStatus(isStart: false)
         liveView.updateLiveLayout(postion: .full)
         if getRole(uid: UserInfo.uid) == .broadcaster {
             liveView.updateBottomButtonType(type: [.game, .tool, .close])
@@ -305,7 +337,7 @@ class GameLiveController: PKLiveController {
         } else {
             liveView.updateLiveLayout(postion: .center)
             pkProgressView.isHidden = true
-            viewModel.leaveGame(gameId: gameId.rawValue, roleType: isAudience ? .audience : gameRoleType)
+            viewModel.leaveGame(gameId: gameId.rawValue, roleType: gameRoleType)
             pkProgressView.reset()
             webView.reset()
             isLoadScreenShare = false

@@ -69,21 +69,21 @@ struct MainModel {
         dataArray.append(model)
         
         model = MainModel()
-        model.title = "游戏直播"
+        model.title = "游戏PK直播"
         model.desc = "你画我猜"
         model.imageNmae = "pic-Virtual"
         model.sceneType = .game
         dataArray.append(model)
         
         model = MainModel()
-        model.title = "同玩直播"
+        model.title = "游戏同玩直播"
         model.desc = "你画我猜"
         model.imageNmae = "pic-Virtual"
         model.sceneType = .playTogether
         dataArray.append(model)
         
         model = MainModel()
-        model.title = "1V1直播"
+        model.title = "游戏1V1直播"
         model.desc = "你画我猜"
         model.imageNmae = "pic-Virtual"
         model.sceneType = .oneToOne

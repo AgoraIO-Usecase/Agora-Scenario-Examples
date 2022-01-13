@@ -120,4 +120,18 @@ class GameViewModel: NSObject {
             print("error == \(error)")
         }
     }
+    
+    func changeRole(gameId: String, oldRole: GameRoleType, newRole: GameRoleType) {
+        let params: [String: Any] = ["user_id": UserInfo.userId,
+                                     "app_id": gameId,
+                                     "room_id": channelName,
+                                     "oldRole": oldRole.rawValue,
+                                     "newRole": newRole.rawValue]
+    
+        NetworkManager.shared.postRequest(urlString: "changeRole", params: params) { result in
+            print("result == \(result)")
+        } failure: { error in
+            print("error == \(error)")
+        }
+    }
 }

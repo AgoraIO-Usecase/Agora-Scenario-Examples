@@ -47,7 +47,7 @@ class GameWebView: UIView {
     }
     
     func loadUrl(gameId: String, roomId: String, roleType: GameRoleType) {
-        let avatarUrl = "https://gimg2.baidu.com/image_search/src=http://c-ssl.duitang.com/uploads/blog/202011/17/20201117105437_45d41.thumb.1000_0.jpeg"
+        let avatarUrl = "https://c-ssl.duitang.com/uploads/blog/202011/17/20201117105437_45d41.thumb.1000_0.jpeg"
         viewModel.joinGame(gameId: gameId, roomId: roomId, identity: "\(roleType.rawValue)", avatar: avatarUrl) { [weak self] url in
             guard let url = URL(string: url) else { return }
             let request = URLRequest(url: url)
@@ -56,9 +56,7 @@ class GameWebView: UIView {
     }
     
     func reset() {
-        guard let url = URL(string: "http://resetwebview.com") else { return }
-        let request = URLRequest(url: url)
-        webView.load(request)
+        webView.loadHTMLString("<!DOCTYPE html>", baseURL: nil)
     }
     
     private func injectJsBridge(methodName: String) {

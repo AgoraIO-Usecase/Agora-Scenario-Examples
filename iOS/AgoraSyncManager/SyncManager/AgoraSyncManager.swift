@@ -27,7 +27,7 @@ public class AgoraSyncManager: NSObject {
     ///   - scene: 房间实体
     /// - Returns: `SceneReference`
     public func joinScene(scene: Scene,
-                          success: SuccessBlock?,
+                          success: SuccessBlockObj?,
                           fail: FailBlock? = nil) -> SceneReference {
         proxy.joinScene(scene: scene,
                         manager: self,
@@ -36,8 +36,8 @@ public class AgoraSyncManager: NSObject {
     }
     
     /// 获取房间列表
-    public func getScenes(success: SuccessBlock?,
-                          fail: FailBlock?) {
+    public func getScenes(success: SuccessBlock? = nil,
+                          fail: FailBlock? = nil) {
         proxy.getScenes(success: success,
                         fail: fail)
     }
@@ -46,8 +46,8 @@ public class AgoraSyncManager: NSObject {
     /// - Parameters:
     ///   - attributesByKeys: 房间id列表
     public func deleteScenes(sceneIds: [String],
-                             success: SuccessBlockVoid?,
-                             fail: FailBlock?) {
+                             success: SuccessBlockVoid? = nil,
+                             fail: FailBlock? = nil) {
         proxy.deleteScenes(sceneIds: sceneIds,
                            success: success,
                            fail: fail)

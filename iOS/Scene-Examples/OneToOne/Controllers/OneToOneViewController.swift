@@ -203,7 +203,7 @@ class OneToOneViewController: BaseViewController {
                 let gameInfo = GameInfoModel(status: .end, gameUid: UserInfo.uid, gameId: self.gameInfoModel.gameId)
                 SyncUtil.update(id: self.channelName, key: SYNC_MANAGER_GAME_INFO, params: JSONObject.toJson(gameInfo))
                 if self.roleType == .broadcast {
-//                    SyncUtil.delete(id: self.channelName)
+                    SyncUtil.delete(id: self.channelName)
                 }
                 self.navigationController?.popViewController(animated: true)
             }

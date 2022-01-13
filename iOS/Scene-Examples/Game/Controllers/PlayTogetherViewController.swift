@@ -19,8 +19,19 @@ class PlayTogetherViewController: SignleLiveController {
     private var gameCenterModel: GameCenterModel?
     private lazy var viewModel = GameViewModel(channleName: channleName,
                                                ownerId: UserInfo.uid)
+    private var _gameRoleType: GameRoleType?
     private var gameRoleType: GameRoleType {
-        getRole(uid: UserInfo.uid) == .broadcaster ? .broadcast : .audience
+        get {
+            if _gameRoleType != nil {
+                return _gameRoleType ?? .audience
+            }
+            let role: GameRoleType = getRole(uid: UserInfo.uid) == .broadcaster ? .broadcast : .audience
+            _gameRoleType = role
+            return role
+        }
+        set {
+            _gameRoleType = newValue
+        }
     }
     
     override func viewDidLoad() {
@@ -49,7 +60,7 @@ class PlayTogetherViewController: SignleLiveController {
             let gameInfoModel = JSONObject.toModel(GameInfoModel.self, value: result?.toJson())
             self.gameInfoModel = gameInfoModel
             if gameInfoModel?.status == .playing {
-                self.liveView.sendMessage(message: "", messageType: .notice)
+                self.updateUIStatus(isStart: true)
             }
         })
     }
@@ -64,7 +75,6 @@ class PlayTogetherViewController: SignleLiveController {
                 self?.gameInfoModel = model
                 LogUtils.log(message: "gameInfo == \(object.toJson() ?? "")", level: .info)
                 if model.status == .playing {
-//                    self?.liveView.sendMessage(message: "", messageType: .notice)
                     self?.updateUIStatus(isStart: true)
                 } else {
                     self?.updateUIStatus(isStart: false)
@@ -97,6 +107,12 @@ class PlayTogetherViewController: SignleLiveController {
         
         webView.onLeaveGameClosure = { [weak self] in
             self?.updateUIStatus(isStart: false)
+        }
+        
+        webView.onChangeGameRoleClosure = { [weak self] oldRole, newRole in
+            let gameId = self?.gameInfoModel?.gameId ?? self?.gameCenterModel?.gameId
+            self?.viewModel.changeRole(gameId: gameId?.rawValue ?? "", oldRole: oldRole, newRole: newRole)
+            self?.gameRoleType = newRole
         }
     }
     
