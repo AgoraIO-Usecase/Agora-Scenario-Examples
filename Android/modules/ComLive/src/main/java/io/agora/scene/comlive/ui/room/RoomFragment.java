@@ -169,7 +169,7 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
         mViewModel.gameStartUrl.observe(getViewLifecycleOwner(), stringEvent -> {
             WebView webView = mBinding.hostContainerFgRoom.webViewHostView;
             if (webView != null)
-                webView.loadUrl(stringEvent.peekContent());
+                webView.loadUrl(stringEvent.getContentIfNotHandled());
         });
     }
 

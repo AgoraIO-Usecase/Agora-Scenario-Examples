@@ -34,7 +34,6 @@ import io.agora.scene.comlive.bean.RoomInfo;
 import io.agora.scene.comlive.databinding.ComLiveFragmentRoomListBinding;
 import io.agora.scene.comlive.databinding.ComLiveItemRoomListBinding;
 import io.agora.scene.comlive.util.Event;
-import io.agora.scene.comlive.util.EventObserver;
 import io.agora.scene.comlive.util.ComLiveUtil;
 import io.agora.scene.comlive.util.ViewStatus;
 
