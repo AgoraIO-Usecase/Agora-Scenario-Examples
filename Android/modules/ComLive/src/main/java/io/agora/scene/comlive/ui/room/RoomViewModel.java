@@ -32,7 +32,6 @@ import io.agora.scene.comlive.bean.RoomInfo;
 import io.agora.scene.comlive.repo.GameRepo;
 import io.agora.scene.comlive.repo.RoomApi;
 import io.agora.scene.comlive.util.ComLiveConstants;
-import io.agora.scene.comlive.util.ComLiveUtil;
 import io.agora.scene.comlive.util.Event;
 import io.agora.scene.comlive.util.GamSyncEventListener;
 import io.agora.scene.comlive.util.ViewStatus;
@@ -59,22 +58,21 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     public SceneReference currentSceneRef;
 
     @NonNull
+    public MutableLiveData<AgoraGame> currentGame = new MutableLiveData<>();
+    @NonNull
     public MutableLiveData<Boolean> isMicEnabled = new MutableLiveData<>(true);
     @NonNull
     public MutableLiveData<Boolean> isCameraEnabled = new MutableLiveData<>(true);
     @NonNull
-    public MutableLiveData<GameInfo> roomGame = new MutableLiveData<>();
-    @NonNull
     public MutableLiveData<Event<GiftInfo>> gift = new MutableLiveData<>();
     @NonNull
-    public MutableLiveData<AgoraGame> currentGame = new MutableLiveData<>();
+    public MutableLiveData<GameInfo> gameInfo = new MutableLiveData<>();
     @NonNull
     public MutableLiveData<RtcEngineEx> rtcEngine = new MutableLiveData<>();
     @NonNull
     public MutableLiveData<ViewStatus> viewStatus = new MutableLiveData<>();
     @NonNull
     public MutableLiveData<List<AgoraGame>> gameList = new MutableLiveData<>();
-
     @NonNull
     public MutableLiveData<Event<String>> gameStartUrl = new MutableLiveData<>();
 
@@ -97,7 +95,6 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         super.onCleared();
 
         // destroy RTC
-        ComLiveUtil.currentGame = null;
         RtcEngine engine = rtcEngine.getValue();
         if (engine != null) {
             engine.leaveChannel();
@@ -211,11 +208,11 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     private void tryHandleGameInfo(@Nullable IObject item) {
         GameInfo gameInfo = handleIObject(item, GameInfo.class);
         if (gameInfo != null) {
-            if (amHost) {
-                ComLiveUtil.currentGame = new AgoraGame(gameInfo.getGameId(), "");
-                currentGame.postValue(ComLiveUtil.currentGame);
-            }
-            this.roomGame.postValue(gameInfo);
+            if (gameInfo.getStatus() == GameInfo.END)
+                this.currentGame.postValue(null);
+            else
+                this.currentGame.postValue(new AgoraGame(gameInfo.getGameId(), ""));
+            this.gameInfo.postValue(gameInfo);
         }
     }
 
@@ -244,11 +241,8 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
     public void requestExitGame() {
         if (amHost) {
-            AgoraGame game = currentGame.getValue();
-            if (game != null) {
-                if (currentSceneRef != null)
-                    currentSceneRef.update(ComLiveConstants.GAME_INFO, new GameInfo(GameInfo.END, "0", game.getGameId()), null);
-            }
+            if (currentGame.getValue() != null && currentSceneRef != null)
+                currentSceneRef.update(ComLiveConstants.GAME_INFO, new GameInfo(GameInfo.END, "0", currentGame.getValue().getGameId()), null);
         } else {
             exitGame();
         }
@@ -259,26 +253,9 @@ public class RoomViewModel extends ViewModel implements RoomApi {
      * 2. 清除游戏信息
      */
     public void exitGame() {
-        AgoraGame currentGame = ComLiveUtil.currentGame;
-        if (currentGame != null) {
-            GameRepo.leaveGame(currentGame.getGameId(), localUser, currentRoom.getId(), amHost ? "1" : "2");
-            ComLiveUtil.currentGame = null;
-            this.currentGame.setValue(null);
-        }
-    }
-
-    /**
-     * 观众加入
-     */
-    public void requestStartGame() {
-        GameInfo gameInfo = roomGame.getValue();
-        if (gameInfo != null) {
-            if (gameInfo.getStatus() == GameInfo.END)
-                viewStatus.postValue(new ViewStatus.Message("游戏已结束"));
-            else if (gameInfo.getStatus() == GameInfo.START) {
-                ComLiveUtil.currentGame = new AgoraGame(gameInfo.getGameId(), "");
-                currentGame.postValue(ComLiveUtil.currentGame);
-            }
+        if (currentGame.getValue() != null) {
+            GameRepo.leaveGame(currentGame.getValue().getGameId(), localUser, currentRoom.getId(), amHost ? "1" : "3");
+            currentGame.postValue(null);
         }
     }
 
@@ -291,7 +268,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     }
 
     public void startGame(@NonNull String gameId) {
-        GameRepo.getJoinUrl(gameId, localUser, currentRoom.getId(), amHost ? "1" : "2", new Callback<AppServerResult<String>>() {
+        GameRepo.getJoinUrl(gameId, localUser, currentRoom.getId(), amHost ? "1" : "3", new Callback<AppServerResult<String>>() {
             @Override
             public void onResponse(Call<AppServerResult<String>> call, Response<AppServerResult<String>> response) {
                 AppServerResult<String> body = response.body();
@@ -311,7 +288,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
     //<editor-fold desc="RTC related">
     public void enableMic(boolean enable) {
-        BaseUtil.logD(Thread.currentThread().getName() + "enableMic "+enable);
+        BaseUtil.logD(Thread.currentThread().getName() + "enableMic " + enable);
         isMicEnabled.postValue(enable);
         RtcEngineEx engine = rtcEngine.getValue();
         if (engine != null) {

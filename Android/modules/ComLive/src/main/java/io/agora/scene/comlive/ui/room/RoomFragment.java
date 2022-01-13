@@ -8,9 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Html;
-import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.style.ImageSpan;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,18 +16,15 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.WebView;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.gif.GifDrawable;
@@ -85,8 +80,6 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
             return null;
         }
         mViewModel = ComLiveUtil.getViewModel(this, RoomViewModel.class, new RoomViewModelFactory(requireContext(), currentRoom));
-        //  See if current user is the host
-
         aMHost = currentRoom.getUserId().equals(mViewModel.localUser.getUserId());
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -95,6 +88,7 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        setRoomBgd();
         initView();
         initListener();
         initObserver();
@@ -154,10 +148,9 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
         // 礼物监听
         mViewModel.gift.observe(getViewLifecycleOwner(), new EventObserver<>(this::onGiftUpdated));
         // 房间内游戏监听
-        mViewModel.roomGame.observe(getViewLifecycleOwner(), this::onGameChanged);
-        // 本机游戏监听
+        mViewModel.gameInfo.observe(getViewLifecycleOwner(), this::onGameInfoChanged);
+        // 当前游戏状态监听
         mViewModel.currentGame.observe(getViewLifecycleOwner(), this::onCurrentGameChanged);
-
         mViewModel.viewStatus.observe(getViewLifecycleOwner(), viewStatus -> {
             if (viewStatus instanceof ViewStatus.Message)
                 insertNewMessage(((ViewStatus.Message) viewStatus).msg);
@@ -191,11 +184,12 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
     }
 
     //<editor-fold desc="游戏相关">
-    private void onGameChanged(GameInfo gameInfo) {
-        if (gameInfo.getStatus() == GameInfo.END)
+    private void onGameInfoChanged(GameInfo gameInfo) {
+        if (gameInfo.getStatus() == GameInfo.END) {
             mViewModel.exitGame();
-        if (!aMHost && gameInfo.getStatus() == GameInfo.START)
-            insertAlertMessage();
+        } else if (gameInfo.getStatus() == GameInfo.START) {
+            mViewModel.startGame(gameInfo.getGameId());
+        }
     }
 
     /**
@@ -220,13 +214,12 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
         }
     }
 
-
     private void needGameView(boolean need) {
         if (need) {
             mBinding.hostContainerFgRoom.createDefaultGameView();
             WebView webViewHostView = mBinding.hostContainerFgRoom.webViewHostView;
             if (webViewHostView != null)
-                webViewHostView.addJavascriptInterface(new AgoraJsBridge(mViewModel),"agoraJSBridge");
+                webViewHostView.addJavascriptInterface(new AgoraJsBridge(mViewModel), "agoraJSBridge");
 
             onLayoutTypeChanged(LiveHostLayout.Type.HOST_IN_GAME);
         } else {
@@ -321,12 +314,6 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
      * 直播间滚动消息
      */
     private void insertUserMessage(String msg) {
-        if (!aMHost && msg.equalsIgnoreCase("主播yyds")) {
-            if (ComLiveUtil.currentGame != null)
-                BaseUtil.toast(requireContext(), "您已加入游戏");
-            else
-                mViewModel.requestStartGame();
-        }
         Spanned userMessage = Html.fromHtml(getString(R.string.com_live_user_msg, mViewModel.localUser.getName(), msg));
         insertNewMessage(userMessage);
     }
@@ -335,15 +322,7 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
      * 公告消息
      */
     private void insertAlertMessage() {
-        Spanned userMessage = Html.fromHtml(getString(R.string.com_live_alert_msg));
-        SpannableString spanMessage = new SpannableString(userMessage);
-        Drawable drawable = ContextCompat.getDrawable(requireContext(), R.drawable.com_live_ic_post_board);
-        if (drawable != null) {
-            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-            ImageSpan imageSpan = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
-            spanMessage.setSpan(imageSpan, 0, 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        }
-        insertNewMessage(new MessageHolder.LiveMessage(1, spanMessage));
+
     }
 
     private void insertNewMessage(CharSequence msg) {
@@ -364,13 +343,6 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
         BaseUtil.logD("onLayoutTypeChanged:" + type.ordinal());
         mBinding.hostContainerFgRoom.setType(type);
 
-        if (type == LiveHostLayout.Type.DOUBLE_IN_GAME) {
-            if (ComLiveUtil.currentGame != null)
-                setRoomBgd(false, 0);
-        } else {
-            setRoomBgd(true, ComLiveUtil.getBgdByRoomBgdId(currentRoom.getBackgroundId()));
-        }
-
         if (aMHost) {
             if (type == LiveHostLayout.Type.HOST_ONLY) {
                 mBinding.btnExitGameFgRoom.setVisibility(GONE);
@@ -380,12 +352,9 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
         }
     }
 
-    private void setRoomBgd(boolean blurring, @DrawableRes int drawableId) {
-        RequestBuilder<Drawable> load = Glide.with(this).asDrawable().load(drawableId);
-        if (blurring)
-            load = load.apply(RequestOptions.bitmapTransform(new BlurTransformation(requireContext())));
-
-        load.into(new CustomTarget<Drawable>() {
+    private void setRoomBgd() {
+        Glide.with(this).asDrawable().load(ComLiveUtil.getBgdByRoomBgdId(currentRoom.getId()))
+                .apply(RequestOptions.bitmapTransform(new BlurTransformation(requireContext()))).into(new CustomTarget<Drawable>() {
             @Override
             public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                 mBinding.getRoot().setBackground(resource);
@@ -409,7 +378,7 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
             boolean imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime());
             if (!imeVisible)
                 mBinding.editTextFgRoom.clearFocus();
-                mBinding.editTextFgRoom.setText("");
+            mBinding.editTextFgRoom.setText("");
 //            if (imeVisible) {
 //                mBinding.inputLayoutFgRoom.setVisibility(View.VISIBLE);
 //                mBinding.inputLayoutFgRoom.requestFocus();
