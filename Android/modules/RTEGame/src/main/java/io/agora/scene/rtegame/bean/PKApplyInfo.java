@@ -16,13 +16,13 @@ public class PKApplyInfo implements Cloneable{
 //    1 - 申请中, 2 - 已接受, 3 - 已拒绝, 4-已结束
     private int status;
 //    1 - 你画我猜
-    private final int gameId;
+    private final String gameId;
 //    自己直播间的RoomID
     private final String roomId;
 //    对方直播间的RoomID
     private final String targetRoomId;
 
-    public PKApplyInfo(@NonNull String userId, @NonNull String targetUserId, @NonNull String userName, int status, int gameId, @NonNull String roomId, @NonNull String targetRoomId) {
+    public PKApplyInfo(@NonNull String userId, @NonNull String targetUserId, @NonNull String userName, int status,@NonNull String gameId, @NonNull String roomId, @NonNull String targetRoomId) {
         this.userId = userId;
         this.targetUserId = targetUserId;
         this.userName = userName;
@@ -55,7 +55,8 @@ public class PKApplyInfo implements Cloneable{
         return status;
     }
 
-    public int getGameId() {
+    @NonNull
+    public String getGameId() {
         return gameId;
     }
 

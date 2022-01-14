@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 import io.agora.example.base.BaseUtil;
+import io.agora.scene.rtegame.GlobalViewModel;
 import io.agora.scene.rtegame.GlobalViewModelFactory;
 import io.agora.scene.rtegame.R;
 import io.agora.scene.rtegame.bean.AgoraGame;
@@ -28,8 +29,6 @@ import io.agora.scene.rtegame.bean.RoomInfo;
 import io.agora.syncmanager.rtm.Scene;
 
 public class GameUtil {
-    @Nullable
-    public static AgoraGame currentGame = null;
     private static final String[] avatarList = {
             "https://terrigen-cdn-dev.marvel.com/content/prod/1x/012scw_ons_crd_02.jpg",
             "https://terrigen-cdn-dev.marvel.com/content/prod/1x/003cap_ons_crd_03.jpg",
@@ -164,8 +163,14 @@ public class GameUtil {
         return new ViewModelProvider(fragment.getViewModelStore(), factory).get(viewModelClass);
     }
 
-    public static <T extends ViewModel> T getViewModel(@NonNull ComponentActivity activity, @NonNull Class<T> viewModelClass) {
-        return new ViewModelProvider(activity, new GlobalViewModelFactory(activity)).get(viewModelClass);
+    @NonNull
+    public static GlobalViewModel getAndroidViewModel(@NonNull ComponentActivity activity) {
+        return new ViewModelProvider(activity, new GlobalViewModelFactory(activity.getApplication())).get(GlobalViewModel.class);
+    }
+
+    @NonNull
+    public static GlobalViewModel getAndroidViewModel(@NonNull Fragment fragment) {
+        return new ViewModelProvider(fragment.requireActivity(), new GlobalViewModelFactory(fragment.requireActivity().getApplication())).get(GlobalViewModel.class);
     }
 
     public static float lerp(float startValue, float endValue, float fraction) {

@@ -1,13 +1,7 @@
 package io.agora.scene.rtegame.ui.room;
 
-import static android.app.Activity.RESULT_OK;
-
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,7 +16,6 @@ import android.view.inputmethod.EditorInfo;
 import android.webkit.WebView;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
@@ -58,10 +51,8 @@ import io.agora.scene.rtegame.bean.PKApplyInfo;
 import io.agora.scene.rtegame.bean.RoomInfo;
 import io.agora.scene.rtegame.databinding.GameFragmentRoomBinding;
 import io.agora.scene.rtegame.databinding.GameItemRoomMessageBinding;
-import io.agora.scene.rtegame.repo.GameRepo;
-import io.agora.scene.rtegame.service.MediaProjectService;
 import io.agora.scene.rtegame.ui.room.donate.DonateDialog;
-import io.agora.scene.rtegame.ui.room.game.GameModeDialog;
+import io.agora.scene.rtegame.ui.room.game.GameListDialog;
 import io.agora.scene.rtegame.ui.room.tool.MoreDialog;
 import io.agora.scene.rtegame.util.BlurTransformation;
 import io.agora.scene.rtegame.util.EventObserver;
@@ -79,8 +70,6 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
 
     private BaseRecyclerViewAdapter<GameItemRoomMessageBinding, CharSequence, MessageHolder> mMessageAdapter;
 
-    // 请求权限
-    private ActivityResultLauncher<Intent> activityResultLauncher;
     private RoomInfo currentRoom;
     private boolean aMHost;
     private boolean shouldShowInputBox = false;
@@ -89,7 +78,7 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        GlobalViewModel mGlobalModel = GameUtil.getViewModel(requireActivity(), GlobalViewModel.class);
+        GlobalViewModel mGlobalModel = GameUtil.getAndroidViewModel(this);
         // hold current RoomInfo
         if (mGlobalModel.roomInfo.getValue() != null)
             currentRoom = mGlobalModel.roomInfo.getValue().peekContent();
@@ -100,8 +89,6 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
         mViewModel = GameUtil.getViewModel(this, RoomViewModel.class, new RoomViewModelFactory(requireContext(), currentRoom));
         //  See if current user is the host
         aMHost = currentRoom.getUserId().equals(mViewModel.localUser.getUserId());
-        if (aMHost)
-            mGlobalModel.focused.observe(getViewLifecycleOwner(), mViewModel::handleScreenCapture);
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -114,16 +101,11 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
         initListener();
     }
 
-    @Override
-    public void onDestroy() {
-        stopScreenCaptureService();
-        super.onDestroy();
-    }
-
     private void initView() {
-        Glide.with(this).load(mViewModel.localUser.getAvatar())
-                .centerCrop()
-                .placeholder(R.mipmap.game_ic_launcher_round).into(mBinding.layoutRoomInfo.avatarHostFgRoom);
+//        setRoomBgd(true, GameUtil.getBgdByRoomBgdId(currentRoom.getId()));
+//        Glide.with(this).load(mViewModel.localUser.getAvatar())
+//                .centerCrop()
+//                .placeholder(R.mipmap.game_ic_launcher_round).into(mBinding.layoutRoomInfo.avatarHostFgRoom);
         mBinding.layoutRoomInfo.nameHostFgRoom.setText(currentRoom.getTempUserName());
 
         // config game view
@@ -134,8 +116,6 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
                 lp.height = (int) (mBinding.getRoot().getMeasuredWidth() * recyclerViewHeightOnWidthPercent);
                 mBinding.recyclerViewFgRoom.setLayoutParams(lp);
 
-                // GameView = WebView || 屏幕共享View
-                /////
                 int dp12 = (int) BaseUtil.dp2px(12);
                 // 设置 Game View 距离顶部距离 (+ 12dp)
                 int topMargin = (int) (mBinding.layoutRoomInfo.getRoot().getBottom() + dp12);
@@ -143,7 +123,7 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
                 int marginBottom = mBinding.getRoot().getMeasuredHeight() - mBinding.btnExitFgRoom.getTop() + dp12;
                 // Game View 高度
                 int height = mBinding.btnExitFgRoom.getTop() - lp.height - dp12 * 2 - topMargin;
-                mBinding.hostContainerFgRoom.initParams(!aMHost, topMargin, height, marginBottom, mBinding.recyclerViewFgRoom.getPaddingLeft());
+                mBinding.hostContainerFgRoom.initParams(topMargin, height, marginBottom, mBinding.recyclerViewFgRoom.getPaddingLeft());
             }
         });
 
@@ -163,18 +143,6 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
     }
 
     private void initListener() {
-        // handle request screen record callback
-        // since onActivityResult() is deprecated
-        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                if (mBinding.hostContainerFgRoom.webViewHostView != null) {
-                    Rect rect = new Rect();
-                    mBinding.hostContainerFgRoom.webViewHostView.getHitRect(rect);
-                    mViewModel.startScreenCapture(result.getData(), rect);
-                }
-            }
-        });
-
         handleWindowInset();
 
         // 本地消息
@@ -191,7 +159,7 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
         // "更多"弹窗
         mBinding.btnMoreFgRoom.setOnClickListener(v -> new MoreDialog().show(getChildFragmentManager(), MoreDialog.TAG));
         // "游戏"弹窗
-        mBinding.btnGameFgRoom.setOnClickListener(v -> new GameModeDialog().show(getChildFragmentManager(), GameModeDialog.TAG));
+        mBinding.btnGameFgRoom.setOnClickListener(v -> new GameListDialog().show(getChildFragmentManager(), GameListDialog.TAG));
         // "退出游戏"按钮
         mBinding.btnExitGameFgRoom.setOnClickListener(v -> mViewModel.requestExitGame());
         // "终止连麦"按钮
@@ -217,7 +185,7 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
         if (aMHost) {
             // 游戏开始
             mViewModel.applyInfo().observe(getViewLifecycleOwner(), this::onPKApplyInfoChanged);
-            mViewModel.currentGame().observe(getViewLifecycleOwner(), this::onGameChanged);
+            mViewModel.currentGame().observe(getViewLifecycleOwner(), this::onGameInfoChanged);
         } else {
             mViewModel.gameShareInfo().observe(getViewLifecycleOwner(), this::onGameShareInfoChanged);
             mViewModel.localHostId().observe(getViewLifecycleOwner(), this::onLocalHostJoin);
@@ -227,17 +195,21 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
             if (viewStatus instanceof ViewStatus.Error)
                 insertNewMessage(((ViewStatus.Error) viewStatus).msg);
         });
+
+        mViewModel.gameStartUrl.observe(getViewLifecycleOwner(), url -> {
+            WebView webView = mBinding.hostContainerFgRoom.webViewHostView;
+            if (webView != null) {
+                webView.loadUrl(url.getContentIfNotHandled());
+            }
+        });
     }
 
     private void onGameShareInfoChanged(GameInfo gameInfo) {
         if (gameInfo == null) return;
         if (gameInfo.getStatus() == GameInfo.START) {
-            GameUtil.currentGame = GameRepo.getGameDetail(gameInfo.getGameId());
             insertNewMessage("加载远端游戏画面");
             needGameView(true);
-            if (mBinding.hostContainerFgRoom.gameHostView != null) {
-                mViewModel.setupScreenView(mBinding.hostContainerFgRoom.gameHostView.renderTextureView, Integer.parseInt(gameInfo.getGameUid()));
-            }
+            mViewModel.startGame();
         } else if (gameInfo.getStatus() == GameInfo.END) {
             insertNewMessage("停止远端游戏画面");
             needGameView(false);
@@ -281,34 +253,26 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
     //</editor-fold>
 
     //<editor-fold desc="游戏相关">
-    private void onGameChanged(GameApplyInfo currentGame) {
+    private void onGameInfoChanged(GameApplyInfo currentGame) {
         if (currentGame == null) return;
         BaseUtil.logD("game status->" + currentGame.getStatus());
-
-        GameUtil.currentGame = GameRepo.getGameDetail(currentGame.getGameId());
         if (!aMHost) {
             return;
         }
         if (currentGame.getStatus() == GameApplyInfo.PLAYING) {
             needGameView(true);
-            WebView webView = mBinding.hostContainerFgRoom.webViewHostView;
-            if (webView != null) {
-                mViewModel.startGame(currentGame, webView);
-            }
-            startScreenCaptureService();
+            mViewModel.startGame();
         } else if (currentGame.getStatus() == GameApplyInfo.END) {
             needGameView(false);
-            stopScreenCaptureService();
-            mViewModel.endScreenCapture();
         }
     }
 
     private void needGameView(boolean need) {
         if (need) {
-            mBinding.hostContainerFgRoom.createDefaultGameView();
+            mBinding.hostContainerFgRoom.createWebView();
             onLayoutTypeChanged(LiveHostLayout.Type.DOUBLE_IN_GAME);
         } else {
-            mBinding.hostContainerFgRoom.removeGameView();
+            mBinding.hostContainerFgRoom.removeWebView();
             onLayoutTypeChanged(LiveHostLayout.Type.DOUBLE);
         }
     }
@@ -364,7 +328,6 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
             insertNewMessage("RTC 初始化成功");
             // 如果是房主，创建View开始直播
             if (aMHost) initLocalView();
-
             mViewModel.joinRoom(mViewModel.localUser);
         }
     }
@@ -377,7 +340,7 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
     private void initLocalView() {
         LiveHostCardView view = mBinding.hostContainerFgRoom.createHostView();
         onLayoutTypeChanged(LiveHostLayout.Type.HOST_ONLY);
-        mViewModel.setupLocalView(view.renderTextureView, mViewModel.localUser);
+        mViewModel.setupLocalView(view.renderTextureView);
         insertNewMessage("画面加载完成");
     }
 
@@ -434,35 +397,11 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
             mBinding.recyclerViewFgRoom.smoothScrollToPosition(count - 1);
     }
 
-    private void startScreenCaptureService() {
-        Intent mediaProjectionIntent = new Intent(requireActivity(), MediaProjectService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            requireContext().startForegroundService(mediaProjectionIntent);
-        } else {
-            requireContext().startService(mediaProjectionIntent);
-        }
-
-        MediaProjectionManager mpm = (MediaProjectionManager) requireContext().getSystemService(Context.MEDIA_PROJECTION_SERVICE);
-        Intent intent = mpm.createScreenCaptureIntent();
-        activityResultLauncher.launch(intent);
-    }
-
-    private void stopScreenCaptureService() {
-        Intent mediaProjectionIntent = new Intent(requireActivity(), MediaProjectService.class);
-        requireContext().stopService(mediaProjectionIntent);
-    }
-
     private void onLayoutTypeChanged(LiveHostLayout.Type type) {
         BaseUtil.logD("onLayoutTypeChanged:" + type.ordinal());
         mBinding.hostContainerFgRoom.setType(type);
         adjustMessageWidth(type == LiveHostLayout.Type.HOST_ONLY);
 
-        if (type == LiveHostLayout.Type.DOUBLE_IN_GAME) {
-            if (GameUtil.currentGame != null)
-                setRoomBgd(false, GameUtil.getGameBgdByGameId(GameUtil.currentGame.getGameId()));
-        } else {
-            setRoomBgd(true, GameUtil.getBgdByRoomBgdId(currentRoom.getBackgroundId()));
-        }
         if (aMHost) {
             if (type == LiveHostLayout.Type.HOST_ONLY) {
                 mBinding.btnExitPkFgRoom.setVisibility(View.GONE);
@@ -486,7 +425,7 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
         ConstraintLayout.LayoutParams lp = (ConstraintLayout.LayoutParams) mBinding.recyclerViewFgRoom.getLayoutParams();
         lp.matchConstraintPercentWidth = fullWidth ? 0.6f : 0.44f;
         mBinding.recyclerViewFgRoom.setLayoutParams(lp);
-        mBinding.getRoot().post(()->mBinding.recyclerViewFgRoom.requestLayout());
+        mBinding.getRoot().post(() -> mBinding.recyclerViewFgRoom.requestLayout());
     }
 
     private void setRoomBgd(boolean blurring, @DrawableRes int drawableId) {

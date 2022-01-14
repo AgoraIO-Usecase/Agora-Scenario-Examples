@@ -6,6 +6,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import io.agora.example.base.BaseUtil;
 import io.agora.scene.rtegame.GlobalViewModel;
 import io.agora.scene.rtegame.R;
 import io.agora.scene.rtegame.base.BaseFragment;
@@ -20,8 +21,7 @@ public class SplashFragment extends BaseFragment<GameFragmentSplashBinding> {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        globalViewModel = GameUtil.getViewModel(requireActivity(), GlobalViewModel.class);
-
+        globalViewModel = GameUtil.getAndroidViewModel(this);
         initListener();
     }
 

@@ -45,7 +45,7 @@ public class RoomListViewModel extends ViewModel implements RoomListApi {
 
     @Override
     public void fetchRoomList() {
-        _viewStatus.postValue(new ViewStatus.Loading(false));
+        _viewStatus.postValue(new ViewStatus.Loading(true));
 
         try {
             Sync.Instance().getScenes(new Sync.DataListCallback() {

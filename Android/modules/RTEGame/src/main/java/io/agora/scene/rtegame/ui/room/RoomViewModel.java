@@ -13,6 +13,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.List;
 import java.util.Objects;
 
 import io.agora.example.base.BaseUtil;
@@ -29,6 +30,8 @@ import io.agora.rtc2.video.VideoCanvas;
 import io.agora.rtc2.video.VideoEncoderConfiguration;
 import io.agora.scene.rtegame.GlobalViewModel;
 import io.agora.scene.rtegame.R;
+import io.agora.scene.rtegame.bean.AgoraGame;
+import io.agora.scene.rtegame.bean.AppServerResult;
 import io.agora.scene.rtegame.bean.GameApplyInfo;
 import io.agora.scene.rtegame.bean.GameInfo;
 import io.agora.scene.rtegame.bean.GiftInfo;
@@ -47,6 +50,10 @@ import io.agora.syncmanager.rtm.IObject;
 import io.agora.syncmanager.rtm.SceneReference;
 import io.agora.syncmanager.rtm.Sync;
 import io.agora.syncmanager.rtm.SyncManagerException;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -57,6 +64,8 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
     //<editor-fold desc="Persistent variable">
     public final RoomInfo currentRoom;
+    @Nullable
+    public AgoraGame roomGame;
     @NonNull
     public final LocalUser localUser;
     public final boolean amHost;
@@ -67,9 +76,6 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
     public boolean isLocalVideoMuted = false;
     public boolean isLocalMicMuted = false;
-
-    private final String screenShareUId = "101024";
-    private final RtcConnection screenShareConnection = new RtcConnection();
 
     private PKInfo pkInfo = null;
     //</editor-fold>
@@ -83,6 +89,9 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     public LiveData<RtcEngineEx> mEngine() {
         return _mEngine;
     }
+
+    public final MutableLiveData<List<AgoraGame>> gameList = new MutableLiveData<>();
+    public final MutableLiveData<Event<String>> gameStartUrl = new MutableLiveData<>();
 
     // UI状态
     private final MutableLiveData<ViewStatus> _viewStatus = new MutableLiveData<>();
@@ -128,7 +137,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     private final MutableLiveData<GameInfo> _gameShareInfo = new MutableLiveData<>();
 
     @NonNull
-    public LiveData<GameInfo> gameShareInfo(){
+    public LiveData<GameInfo> gameShareInfo() {
         return _gameShareInfo;
     }
 
@@ -150,11 +159,14 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     //<editor-fold desc="Init and end">
     public RoomViewModel(@NonNull Context context, @NonNull RoomInfo roomInfo) {
         this.currentRoom = roomInfo;
-        screenShareConnection.channelId = currentRoom.getId();
-        screenShareConnection.localUid = Integer.parseInt(screenShareUId);
 
         localUser = GlobalViewModel.localUser == null ? GlobalViewModel.checkLocalOrGenerate(context) : GlobalViewModel.localUser;
         this.amHost = Objects.equals(currentRoom.getUserId(), localUser.getUserId());
+
+        // Consume at the beginning
+        Event<String> objectEvent = new Event<>("");
+        objectEvent.getContentIfNotHandled();
+        gameStartUrl.setValue(objectEvent);
 
         initRTC(context, new IRtcEngineEventHandler() {
             @Override
@@ -164,6 +176,11 @@ public class RoomViewModel extends ViewModel implements RoomApi {
                     RoomViewModel.this._LocalHostId.postValue(uid);
             }
 
+            @Override
+            public void onError(int err) {
+                BaseUtil.logD("onError:"+err);
+                RtcEngine.getErrorDescription(err);
+            }
         });
     }
 
@@ -179,7 +196,6 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     @Override
     protected void onCleared() {
         super.onCleared();
-        GameUtil.currentGame = null;
         new Thread(() -> {
             // destroy RTE
             RtcEngine engine = _mEngine.getValue();
@@ -211,64 +227,6 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     }
     //</editor-fold>
 
-    //<editor-fold desc="ScreenCapture">
-    /**
-     * Step 1. set parameters and startScreenCapture.
-     * Step 2. joinChannelEx and publishScreenTrack on this channel
-     * Step 3. update GameInfo
-     */
-    public void startScreenCapture(@NonNull Intent intent, @NonNull Rect rect) {
-        RtcEngineEx rtcEngine = _mEngine.getValue();
-        if (rtcEngine != null) {
-            // public abstract int joinChannelEx(String token, RtcConnection connection, ChannelMediaOptions options, IRtcEngineEventHandler eventHandler);
-
-            // Step 1
-            ScreenCaptureParameters parameters = new ScreenCaptureParameters();
-            parameters.setFrameRate(15);
-            parameters.setVideoDimensions(new VideoEncoderConfiguration.VideoDimensions(rect.width(), rect.height()));
-//            parameters.setCropRect(rect);
-            rtcEngine.startScreenCapture(intent, parameters);
-
-            // Step 2
-            ChannelMediaOptions options = new ChannelMediaOptions();
-            options.autoSubscribeAudio = false;
-            options.autoSubscribeVideo = false;
-            options.publishScreenTrack = true;
-            options.publishCameraTrack = false;
-            options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
-            options.channelProfile = Constants.CHANNEL_PROFILE_LIVE_BROADCASTING;
-            Context context = ((RtcEngineImpl) rtcEngine).getContext();
-            rtcEngine.joinChannelEx(context.getString(R.string.rtc_app_token), screenShareConnection, options, new IRtcEngineEventHandler() {});
-
-            // Step 3
-            if (currentSceneRef != null && GameUtil.currentGame != null) {
-                BaseUtil.logD("GAME_INFO update->"+ System.currentTimeMillis());
-                GameInfo gameInfo = new GameInfo(GameInfo.START, screenShareUId, GameUtil.currentGame.getGameId());
-                currentSceneRef.update(GameConstants.GAME_INFO, gameInfo, null);
-            }
-        }
-    }
-
-    public void endScreenCapture() {
-        RtcEngineEx rtcEngine = _mEngine.getValue();
-        if (rtcEngine != null) {
-            rtcEngine.stopScreenCapture();
-            rtcEngine.leaveChannelEx(screenShareConnection);
-        }
-    }
-
-    public void handleScreenCapture(boolean needCapture) {
-        BaseUtil.logD("needCapture:" + needCapture);
-        RtcEngineEx rtcEngine = _mEngine.getValue();
-        if (rtcEngine != null) {
-            ChannelMediaOptions options = new ChannelMediaOptions();
-            options.publishScreenTrack = needCapture;
-
-            rtcEngine.updateChannelMediaOptionsEx(options, screenShareConnection);
-        }
-    }
-    //</editor-fold>
-
     //<editor-fold desc="SyncManager related">
 
     public void subscribeAttr(@NonNull SceneReference sceneRef, @NonNull RoomInfo targetRoom) {
@@ -286,7 +244,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
                 sceneRef.get(GameConstants.GAME_APPLY_INFO, (GetAttrCallback) RoomViewModel.this::tryHandleGameApplyInfo);
                 sceneRef.subscribe(GameConstants.GAME_APPLY_INFO, new GamSyncEventListener(GameConstants.GAME_APPLY_INFO, this::tryHandleGameApplyInfo));
-            }else{
+            } else {
                 sceneRef.get(GameConstants.PK_APPLY_INFO, (GetAttrCallback) this::justFetchValue);
                 sceneRef.subscribe(GameConstants.PK_APPLY_INFO, new GamSyncEventListener(GameConstants.PK_APPLY_INFO, this::justFetchValue));
 
@@ -303,7 +261,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     //<editor-fold desc="Gift related">
 
     private void tryHandleGiftInfo(IObject item) {
-        BaseUtil.logD("tryHandleGiftInfo->"+ System.currentTimeMillis());
+        BaseUtil.logD("tryHandleGiftInfo->" + System.currentTimeMillis());
         GiftInfo giftInfo = handleIObject(item, GiftInfo.class);
         if (giftInfo != null) {
             _gift.postValue(new Event<>(giftInfo));
@@ -331,22 +289,10 @@ public class RoomViewModel extends ViewModel implements RoomApi {
             currentSceneRef.update(GameConstants.GIFT_INFO, gift, null);
         }
         // Currently in game mode, report it
-        GameInfo gameInfo = _gameShareInfo.getValue();
-        if (gameInfo != null && gameInfo.getStatus() == GameInfo.START){
-            try {
-                PKApplyInfo pkApplyInfo = _applyInfo.getValue();
-                if (pkApplyInfo != null) {
-                    GameRepo.sendGift(localUser, Integer.parseInt(pkApplyInfo.getTargetRoomId()), Integer.parseInt(currentRoom.getUserId()), gift);
-                }else{  // 有一种情况为本地没有 PKApplyInfo 的信息，说明客户端为发起方
-                    // FIXME 临时解决方法
-                    RoomInfo roomInfo = _subRoomInfo.getValue();
-                    if (roomInfo != null)
-                        GameRepo.sendGift(localUser, Integer.parseInt(roomInfo.getId()), Integer.parseInt(currentRoom.getUserId()), gift);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+//        GameInfo gameInfo = _gameShareInfo.getValue();
+//        if (gameInfo != null && gameInfo.getStatus() == GameInfo.START) {
+//           // TODO APP Server SendGift
+//        }
     }
     //</editor-fold>
 
@@ -359,7 +305,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         }
     }
 
-    private void justFetchValue(IObject item){
+    private void justFetchValue(IObject item) {
         PKApplyInfo pkApplyInfo = handleIObject(item, PKApplyInfo.class);
         if (pkApplyInfo != null) {
             _applyInfo.postValue(pkApplyInfo);
@@ -370,7 +316,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
      * 仅主播调用
      */
     private void onPKApplyInfoChanged(@NonNull PKApplyInfo pkApplyInfo) {
-        BaseUtil.logD("onPKApplyInfoChanged:"+pkApplyInfo.toString());
+        BaseUtil.logD("onPKApplyInfoChanged:" + pkApplyInfo.toString());
         _applyInfo.postValue(pkApplyInfo);
         switch (pkApplyInfo.getStatus()) {
             case PKApplyInfo.APPLYING: {
@@ -418,7 +364,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         if (startedByMe) {
             if (targetSceneRef != null)
                 targetSceneRef.update(GameConstants.PK_APPLY_INFO, desiredPK, null);
-        }else{
+        } else {
             if (currentSceneRef != null)
                 currentSceneRef.update(GameConstants.PK_APPLY_INFO, desiredPK, null);
         }
@@ -436,7 +382,8 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         GameApplyInfo gameApplyInfo = new GameApplyInfo(GameApplyInfo.PLAYING, pkApplyInfo.getGameId());
         if (Objects.equals(localUser.getUserId(), pkApplyInfo.getUserId())) {//      客户端为发起方
             pkInfo = new PKInfo(PKInfo.AGREED, pkApplyInfo.getTargetRoomId(), pkApplyInfo.getTargetUserId());
-            if (targetSceneRef != null) targetSceneRef.update(GameConstants.GAME_APPLY_INFO, gameApplyInfo, null);
+            if (targetSceneRef != null)
+                targetSceneRef.update(GameConstants.GAME_APPLY_INFO, gameApplyInfo, null);
         } else {//      客户端为接收方,当前房间内所有人需要知道发起方的 roomId 和 UserId
             pkInfo = new PKInfo(PKInfo.AGREED, pkApplyInfo.getRoomId(), pkApplyInfo.getUserId());
         }
@@ -459,7 +406,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
      * @param targetRoom    对方的 RoomInfo
      * @param gameId        Currently only have one game. Ignore this.
      */
-    public void sendApplyPKInvite(@NonNull RoomViewModel roomViewModel, @NonNull RoomInfo targetRoom, int gameId) {
+    public void sendApplyPKInvite(@NonNull RoomViewModel roomViewModel, @NonNull RoomInfo targetRoom, @NonNull String gameId) {
         if (targetSceneRef != null)
             doSendApplyPKInvite(roomViewModel, targetSceneRef, targetRoom, gameId);
         else
@@ -478,7 +425,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
             });
     }
 
-    private void doSendApplyPKInvite(@NonNull RoomViewModel roomViewModel, @NonNull SceneReference sceneReference, RoomInfo targetRoom, int gameId) {
+    private void doSendApplyPKInvite(@NonNull RoomViewModel roomViewModel, @NonNull SceneReference sceneReference, RoomInfo targetRoom, @NonNull String gameId) {
         PKApplyInfo pkApplyInfo = new PKApplyInfo(roomViewModel.currentRoom.getUserId(), targetRoom.getUserId(), localUser.getName(), PKApplyInfo.APPLYING, gameId,
                 roomViewModel.currentRoom.getId(), targetRoom.getId());
 
@@ -513,13 +460,17 @@ public class RoomViewModel extends ViewModel implements RoomApi {
      */
     private void onGameInfoChanged(@NonNull GameInfo gameInfo) {
         BaseUtil.logD("onGameShareInfoChanged");
+        if (gameInfo.getStatus() == GameInfo.START)
+            roomGame = new AgoraGame(gameInfo.getGameId(), "");
+        else
+            roomGame = null;
         _gameShareInfo.postValue(gameInfo);
     }
     //</editor-fold>
 
     //<editor-fold desc="GameApplyInfo">
     private void tryHandleGameApplyInfo(IObject item) {
-        BaseUtil.logD("tryHandleGameApplyInfo->"+item.toString());
+        BaseUtil.logD("tryHandleGameApplyInfo->" + item.toString());
         GameApplyInfo currentGame = handleIObject(item, GameApplyInfo.class);
         if (currentGame != null) {
             if (_currentGame.getValue() == null || !Objects.equals(_currentGame.getValue().toString(), currentGame.toString()))
@@ -528,13 +479,20 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     }
 
     private void onGameApplyInfoChanged(@NonNull GameApplyInfo currentGame) {
-        BaseUtil.logD("onGameApplyInfoChanged:"+currentGame.toString());
-        _currentGame.postValue(currentGame);
-        if (currentGame.getStatus() == GameInfo.END) {
+        BaseUtil.logD("onGameApplyInfoChanged:" + currentGame.toString());
+        if (currentGame.getStatus() == GameApplyInfo.PLAYING) {
+            roomGame = new AgoraGame(currentGame.getGameId(), "");
+            PKApplyInfo applyInfo = _applyInfo.getValue();
+            if (currentSceneRef != null && applyInfo != null) {
+                String targetRoomId = applyInfo.getTargetRoomId().equals(currentRoom.getId()) ? applyInfo.getTargetRoomId() : applyInfo.getRoomId();
+                currentSceneRef.update(GameConstants.GAME_INFO, new GameInfo(GameInfo.START, targetRoomId, currentGame.getGameId()), null);
+            }
+        } else if (currentGame.getStatus() == GameApplyInfo.END) {
             exitGame();
             if (currentSceneRef != null)
-                currentSceneRef.update(GameConstants.GAME_INFO, new GameInfo(GameInfo.END, screenShareUId, currentGame.getGameId()), null);
+                currentSceneRef.update(GameConstants.GAME_INFO, new GameInfo(GameInfo.END, "", currentGame.getGameId()), null);
         }
+        _currentGame.postValue(currentGame);
     }
 
     /**
@@ -553,7 +511,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
             if (!startedByMe) {
                 if (currentSceneRef != null)
                     currentSceneRef.update(GameConstants.GAME_APPLY_INFO, desiredGameApplyInfo, null);
-            }else{
+            } else {
                 if (targetSceneRef != null)
                     targetSceneRef.update(GameConstants.GAME_APPLY_INFO, desiredGameApplyInfo, null);
             }
@@ -569,11 +527,12 @@ public class RoomViewModel extends ViewModel implements RoomApi {
                 onPKInfoChanged(pkInfo);
         }
     }
+
     /**
      * {@link PKInfo#AGREED} 加入对方频道，拉流 | {@link PKInfo#END} 退出频道
      */
     private void onPKInfoChanged(@NonNull PKInfo pkInfo) {
-        BaseUtil.logD("onPKInfoChanged:"+pkInfo.toString());
+        BaseUtil.logD("onPKInfoChanged:" + pkInfo.toString());
         this.pkInfo = pkInfo;
         if (pkInfo.getStatus() == PKInfo.AGREED) {
             // 只用来加入频道，只使用 roomId 字段
@@ -599,9 +558,9 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         }
         if (currentSceneRef != null) {
             currentSceneRef.update(GameConstants.PK_INFO, pkInfo, null);
-                if (pkApplyInfo != null && !startedByMe) {
-                    currentSceneRef.update(GameConstants.PK_APPLY_INFO, pkApplyInfo, null);
-                }
+            if (pkApplyInfo != null && !startedByMe) {
+                currentSceneRef.update(GameConstants.PK_APPLY_INFO, pkApplyInfo, null);
+            }
         }
         if (targetSceneRef != null) {
             if (pkApplyInfo != null && startedByMe)
@@ -614,24 +573,6 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
     //</editor-fold>
 
-    //<editor-fold desc="YuanQi Game">
-    public void startGame(@NonNull GameApplyInfo currentGame, @NonNull WebView webView) {
-        PKApplyInfo pkApplyInfo = _applyInfo.getValue();
-        if (pkApplyInfo == null) return;
-        boolean isOrganizer = Objects.equals(_applyInfo.getValue().getRoomId(), currentRoom.getId());
-        GameRepo.gameStart(webView, localUser, isOrganizer, Integer.parseInt(pkApplyInfo.getTargetRoomId()));
-    }
-    /**
-     * 监听到修改成功，退出游戏
-     */
-    public void exitGame() {
-        if (GameUtil.currentGame == null) return;
-        PKApplyInfo applyInfo = _applyInfo.getValue();
-        if (applyInfo != null) {
-            GameRepo.endThisGame(Integer.parseInt(applyInfo.getTargetRoomId()));
-        }
-    }
-    //</editor-fold>
 
     @Nullable
     private <T> T handleIObject(IObject obj, Class<T> clazz) {
@@ -682,22 +623,16 @@ public class RoomViewModel extends ViewModel implements RoomApi {
                 ChannelMediaOptions options = new ChannelMediaOptions();
                 options.autoSubscribeAudio = true;
                 options.autoSubscribeVideo = true;
-                if (amHost) {
-                    engine.enableAudio();
-                    engine.enableVideo();
-                    engine.startPreview();
-                    options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
-                } else {
-                    options.clientRoleType = Constants.CLIENT_ROLE_AUDIENCE;
-                }
-
+                options.publishCameraTrack = amHost;
+                options.publishAudioTrack = amHost;
+                options.clientRoleType = amHost ? Constants.CLIENT_ROLE_BROADCASTER : Constants.CLIENT_ROLE_AUDIENCE;
                 engine.joinChannel(((RtcEngineImpl) engine).getContext().getString(R.string.rtc_app_token), currentRoom.getId(), Integer.parseInt(localUser.getUserId()), options);
             }
         }).start();
     }
 
     /**
-     * 加入其他主播房间前先退出现在房间
+     * 加入其他主播房间前先退出当前已加入的其他主播房间
      * 加入成功监听到对方主播上线《==》UI更新
      */
     @Override
@@ -715,7 +650,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
             engine.joinChannelEx(((RtcEngineImpl) engine).getContext().getString(R.string.rtc_app_token), connection, options, new IRtcEngineEventHandler() {
                 @Override
                 public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
-                    BaseUtil.logD("onJoinChannelSuccess:"+channel+uid);
+                    BaseUtil.logD("onJoinChannelSuccess:" + channel + uid);
                     _subRoomInfo.postValue(subRoomInfo);
                 }
             });
@@ -726,7 +661,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         RoomInfo tempRoom = _subRoomInfo.getValue();
         if (tempRoom == null) return;
         String roomId = tempRoom.getId();
-        BaseUtil.logD("leaveSubRoom:"+roomId);
+        BaseUtil.logD("leaveSubRoom:" + roomId);
         _subRoomInfo.postValue(null);
         RtcEngineEx engine = _mEngine.getValue();
         if (engine != null) {
@@ -751,10 +686,11 @@ public class RoomViewModel extends ViewModel implements RoomApi {
                 RtcEngineConfig.LogConfig logConfig = new RtcEngineConfig.LogConfig();
                 logConfig.filePath = mContext.getExternalCacheDir().getAbsolutePath();
                 config.mLogConfig = logConfig;
-                config.mChannelProfile = Constants.CHANNEL_PROFILE_LIVE_BROADCASTING;
 
                 try {
-                    _mEngine.postValue((RtcEngineEx) RtcEngineEx.create(config));
+                    RtcEngineEx engineEx = (RtcEngineEx) RtcEngine.create(config);
+                    configRTC(engineEx);
+                    _mEngine.postValue(engineEx);
                 } catch (Exception e) {
                     e.printStackTrace();
                     _viewStatus.postValue(new ViewStatus.Error(e));
@@ -777,9 +713,18 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         }).start();
     }
 
-    public void setupLocalView(@NonNull TextureView view, @NonNull LocalUser localUser) {
+    private void configRTC(@NonNull RtcEngineEx engine) {
+        if (amHost) {
+            engine.enableAudio();
+            engine.enableVideo();
+            engine.startPreview();
+        }
+    }
+
+    public void setupLocalView(@NonNull TextureView view) {
         RtcEngineEx engine = _mEngine.getValue();
         if (engine != null) {
+            BaseUtil.logD("id:"+localUser.getUserId());
             engine.setupLocalVideo(new VideoCanvas(view, Constants.RENDER_MODE_HIDDEN, Integer.parseInt(localUser.getUserId())));
         }
     }
@@ -804,16 +749,60 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         }
     }
 
-    /**
-     * 设置屏幕共享视图
-     * 只有观众调用
-     */
-    public void setupScreenView(@NonNull TextureView view, int gameUid) {
-        RtcEngineEx engine = _mEngine.getValue();
-        if (engine != null) {
-            VideoCanvas videoCanvas = new VideoCanvas(view, Constants.RENDER_MODE_FIT, gameUid);
-            engine.setupRemoteVideo(videoCanvas);
+    //</editor-fold>
+
+    //<editor-fold desc="YuanQi Game">
+    public void startGame() {
+        if (roomGame == null) return;
+        String roomId = null;
+        if (amHost){
+            PKApplyInfo pkApplyInfo = _applyInfo.getValue();
+            if (pkApplyInfo != null)
+                roomId = pkApplyInfo.getRoomId().equals(currentRoom.getId()) ? pkApplyInfo.getTargetRoomId() : currentRoom.getId();
+        }else{
+            GameInfo gameShareInfo = _gameShareInfo.getValue();
+            if (gameShareInfo != null)
+                roomId = gameShareInfo.getRoomId();
         }
+        if(roomId != null)
+        GameRepo.getJoinUrl(roomGame.getGameId(), localUser, roomId, getIdentification(roomId), new Callback<AppServerResult<String>>() {
+            @Override
+            public void onResponse(@NonNull Call<AppServerResult<String>> call, @NonNull Response<AppServerResult<String>> response) {
+                AppServerResult<String> body = response.body();
+                if (body != null)
+                    gameStartUrl.postValue(new Event<>(body.getResult()));
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<AppServerResult<String>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private String getIdentification(String gameRoomId) {
+        if (amHost) {
+            if (Objects.equals(currentRoom.getId(), gameRoomId))
+                return "1";
+            else return "2";
+        } else {
+            return "3";
+        }
+    }
+
+    /**
+     * 监听到修改成功，退出游戏
+     */
+    public void exitGame() {
+        if (roomGame == null) return;
+        PKApplyInfo applyInfo = _applyInfo.getValue();
+        if (applyInfo != null) {
+            GameRepo.leaveGame(roomGame.getGameId(), localUser, applyInfo.getTargetRoomId(), getIdentification(applyInfo.getTargetRoomId()));
+        }
+    }
+
+    public void fetchGameList() {
+        GameRepo.getGameList("3", gameList);
     }
     //</editor-fold>
 

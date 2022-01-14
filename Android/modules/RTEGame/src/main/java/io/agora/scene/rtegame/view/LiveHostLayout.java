@@ -27,13 +27,9 @@ public class LiveHostLayout extends ConstraintLayout {
     @Nullable
     public LiveHostCardView subHostView;
     @Nullable
-    public LiveHostCardView gameHostView;
-    @Nullable
     public WebView webViewHostView;
 
     private Type type = Type.HOST_ONLY;
-
-    private boolean watchGame = false;
 
     public LiveHostLayout(@NonNull Context context) {
         this(context, null);
@@ -56,8 +52,7 @@ public class LiveHostLayout extends ConstraintLayout {
         }
     }
 
-    public void initParams(boolean watchGame, int topMarginForGameView, int heightForGameView, int bottomMarginInGameType, int paddingForHostViewInGame){
-        this.watchGame = watchGame;
+    public void initParams(int topMarginForGameView, int heightForGameView, int bottomMarginInGameType, int paddingForHostViewInGame) {
         this.topMarginForGameView = topMarginForGameView;
         this.heightForGameView = heightForGameView;
         this.bottomMarginInGameType = bottomMarginInGameType;
@@ -65,39 +60,32 @@ public class LiveHostLayout extends ConstraintLayout {
     }
 
     @NonNull
-    public LiveHostCardView createHostView(){
+    public LiveHostCardView createHostView() {
         if (hostView != null && hostView.getParent() == this)
             this.removeView(hostView);
 
         hostView = new LiveHostCardView(getContext());
         hostView.setId(View.generateViewId());
-        this.addView(hostView , new LayoutParams(0, 0));
+        this.addView(hostView, new LayoutParams(0, 0));
         return hostView;
     }
 
     @NonNull
-    public LiveHostCardView createSubHostView(){
+    public LiveHostCardView createSubHostView() {
         if (subHostView != null && subHostView.getParent() == this)
             this.removeView(subHostView);
 
         subHostView = new LiveHostCardView(getContext());
         subHostView.setId(View.generateViewId());
-        this.addView(subHostView, new LayoutParams(0 ,0));
+        this.addView(subHostView, new LayoutParams(0, 0));
         return subHostView;
     }
 
-    public void createDefaultGameView(){
-        if (!watchGame){
-            if (webViewHostView != null && webViewHostView.getParent() == this)
-                removeView(webViewHostView);
-            webViewHostView = generateWebView();
-            this.addView(webViewHostView, new LayoutParams(0, heightForGameView));
-        }else{
-            if (gameHostView != null && gameHostView.getParent() == this)
-                removeView(gameHostView);
-            gameHostView = new LiveHostCardView(getContext());
-            this.addView(gameHostView, new LayoutParams(0, heightForGameView));
-        }
+    public void createWebView() {
+        if (webViewHostView != null && webViewHostView.getParent() == this)
+            removeView(webViewHostView);
+        webViewHostView = generateWebView();
+        this.addView(webViewHostView, new LayoutParams(0, heightForGameView));
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -108,7 +96,7 @@ public class LiveHostLayout extends ConstraintLayout {
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
 
-        webView.setWebViewClient(new WebViewClient(){
+        webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 if (request.getUrl().getScheme().contains("http"))
@@ -119,21 +107,18 @@ public class LiveHostLayout extends ConstraintLayout {
         return webView;
     }
 
-    public void removeGameView(){
-        if (watchGame){
-            if (gameHostView != null && gameHostView.getParent() == this)
-                removeView(gameHostView);
-            gameHostView = null;
-        }else{
-            if (webViewHostView != null && webViewHostView.getParent() == this)
-                removeView(webViewHostView);
-            webViewHostView = null;
+    public void removeWebView() {
+        if (webViewHostView != null && webViewHostView.getParent() == this) {
+            removeView(webViewHostView);
+            webViewHostView.destroy();
         }
+        webViewHostView = null;
     }
 
     private void onDoubleInGamePerformed() {
         String dimension = "80:106";
-        float desiredWidthPercent = 96/375f;
+        float desiredWidthPercent = 96 / 375f;
+
         if (subHostView != null && subHostView.getParent() == this) {
             subHostView.setVisibility(VISIBLE);
 
@@ -170,26 +155,15 @@ public class LiveHostLayout extends ConstraintLayout {
             }
             hostView.setLayoutParams(lp);
         }
-
-        if (watchGame){
-            tryRemoveView(webViewHostView);
-            if (gameHostView != null && gameHostView.getParent() == this) {
-                gameHostView.setVisibility(VISIBLE);
-                setUpGameView(gameHostView);
-            }
-        }else{
-            tryRemoveView(gameHostView);
-            if (webViewHostView != null && webViewHostView.getParent() == this)
-                webViewHostView.setVisibility(VISIBLE);
-                setUpGameView(webViewHostView);
+        if (webViewHostView != null && webViewHostView.getParent() == this) {
+            webViewHostView.setVisibility(VISIBLE);
+            setUpWebView(webViewHostView);
         }
-
     }
 
     private void onDoublePerformed() {
 
         tryRemoveView(webViewHostView);
-        tryRemoveView(gameHostView);
 
         if (subHostView != null && subHostView.getParent() == this) {
             subHostView.setVisibility(VISIBLE);
@@ -221,7 +195,6 @@ public class LiveHostLayout extends ConstraintLayout {
     private void onHostOnlyPerformed() {
         tryRemoveView(subHostView);
         tryRemoveView(webViewHostView);
-        tryRemoveView(gameHostView);
 
         if (hostView != null && hostView.getParent() == this) {
             LayoutParams lp = (LayoutParams) hostView.getLayoutParams();
@@ -234,7 +207,7 @@ public class LiveHostLayout extends ConstraintLayout {
         }
     }
 
-    private void setUpGameView(@NonNull View view){
+    private void setUpWebView(@NonNull WebView view) {
         LayoutParams lp = (LayoutParams) view.getLayoutParams();
         clearRequiredViewParams(lp);
         lp.leftToLeft = ConstraintSet.PARENT_ID;
@@ -264,11 +237,7 @@ public class LiveHostLayout extends ConstraintLayout {
         lp.bottomToTop = ConstraintSet.UNSET;
     }
 
-    public boolean isCurrentlyInGame(){
-        return webViewHostView != null || gameHostView != null;
-    }
-
-    public void tryRemoveView(@Nullable View view){
+    public void tryRemoveView(@Nullable View view) {
         if (view == null || view.getParent() != this) return;
         view.setVisibility(GONE);
         removeView(view);
@@ -295,6 +264,10 @@ public class LiveHostLayout extends ConstraintLayout {
                 break;
             }
         }
+    }
+
+    public boolean isCurrentlyInGame() {
+        return webViewHostView != null;
     }
 
     public enum Type {

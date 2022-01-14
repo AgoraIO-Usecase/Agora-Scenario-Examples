@@ -1,17 +1,21 @@
 package io.agora.scene.rtegame;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.HashMap;
 
+import io.agora.example.base.BaseUtil;
+import io.agora.rtc2.RtcEngine;
 import io.agora.scene.rtegame.bean.LocalUser;
 import io.agora.scene.rtegame.bean.RoomInfo;
 import io.agora.scene.rtegame.repo.RoomCreateApi;
@@ -22,11 +26,9 @@ import io.agora.syncmanager.rtm.Sync;
 import io.agora.syncmanager.rtm.SyncManagerException;
 
 @Keep
-public class GlobalViewModel extends ViewModel implements RoomCreateApi {
-    @Nullable
-    public static LocalUser localUser;
+public class GlobalViewModel extends AndroidViewModel implements RoomCreateApi {
 
-    public final MutableLiveData<Boolean> focused = new MutableLiveData<>(true);
+    public static LocalUser localUser;
 
     private final MutableLiveData<Event<Boolean>> _isRTMInit = new MutableLiveData<>();
 
@@ -37,9 +39,17 @@ public class GlobalViewModel extends ViewModel implements RoomCreateApi {
 
     public final MutableLiveData<Event<RoomInfo>> roomInfo = new MutableLiveData<>();
 
-    public GlobalViewModel(@NonNull Context context) {
-        GlobalViewModel.localUser = checkLocalOrGenerate(context);
-        initSyncManager(context);
+    public GlobalViewModel(@NonNull Application application) {
+        super(application);
+        GlobalViewModel.localUser = checkLocalOrGenerate(application.getApplicationContext());
+        initSyncManager(application.getApplicationContext());
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        Sync.Instance().destroy();
+        RtcEngine.destroy();
     }
 
     /**
@@ -110,17 +120,4 @@ public class GlobalViewModel extends ViewModel implements RoomCreateApi {
             }
         });
     }
-
-    public void destroySyncManager() {
-//        SyncManager.Instance()
-    }
-
-    public void leaveRoom() {
-//        if (_scene.getValue() != null) {
-//            // TODO leave channel
-//            _scene.setValue(null);
-//        }
-    }
-    //</editor-fold>
-
 }
