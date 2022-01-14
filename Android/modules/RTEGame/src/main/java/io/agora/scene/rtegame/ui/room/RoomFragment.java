@@ -270,6 +270,9 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
     private void needGameView(boolean need) {
         if (need) {
             mBinding.hostContainerFgRoom.createWebView();
+            WebView webViewHostView = mBinding.hostContainerFgRoom.webViewHostView;
+            if (webViewHostView != null)
+                webViewHostView.addJavascriptInterface(new AgoraJsBridge(mViewModel), "agoraJSBridge");
             onLayoutTypeChanged(LiveHostLayout.Type.DOUBLE_IN_GAME);
         } else {
             mBinding.hostContainerFgRoom.removeWebView();
@@ -383,6 +386,7 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
      * 直播间滚动消息
      */
     private void insertUserMessage(String msg) {
+        mViewModel.sendBarrage(msg);
         Spanned userMessage = Html.fromHtml(getString(R.string.game_user_msg, mViewModel.localUser.getName(), msg));
         insertNewMessage(userMessage);
     }

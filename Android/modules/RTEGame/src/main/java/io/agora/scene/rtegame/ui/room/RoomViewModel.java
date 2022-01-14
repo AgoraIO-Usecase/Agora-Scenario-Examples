@@ -178,7 +178,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
             @Override
             public void onError(int err) {
-                BaseUtil.logD("onError:"+err);
+                BaseUtil.logD("onError:" + err);
                 RtcEngine.getErrorDescription(err);
             }
         });
@@ -289,11 +289,14 @@ public class RoomViewModel extends ViewModel implements RoomApi {
             currentSceneRef.update(GameConstants.GIFT_INFO, gift, null);
         }
         // Currently in game mode, report it
-//        GameInfo gameInfo = _gameShareInfo.getValue();
-//        if (gameInfo != null && gameInfo.getStatus() == GameInfo.START) {
-//           // TODO APP Server SendGift
-//        }
+        if (!amHost) {
+            GameInfo gameInfo = _gameShareInfo.getValue();
+            if (gameInfo != null && gameInfo.getStatus() == GameInfo.START) {
+                GameRepo.sendGift(gameInfo.getGameId(), localUser, gameInfo.getRoomId(), gift.getGiftType(), currentRoom.getUserId());
+            }
+        }
     }
+
     //</editor-fold>
 
     //<editor-fold desc="PKApplyInfo related">
@@ -484,7 +487,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
             roomGame = new AgoraGame(currentGame.getGameId(), "");
             PKApplyInfo applyInfo = _applyInfo.getValue();
             if (currentSceneRef != null && applyInfo != null) {
-                String targetRoomId = applyInfo.getTargetRoomId().equals(currentRoom.getId()) ? applyInfo.getTargetRoomId() : applyInfo.getRoomId();
+                String targetRoomId = applyInfo.getRoomId().equals(currentRoom.getId()) ? applyInfo.getTargetRoomId(): currentRoom.getId();
                 currentSceneRef.update(GameConstants.GAME_INFO, new GameInfo(GameInfo.START, targetRoomId, currentGame.getGameId()), null);
             }
         } else if (currentGame.getStatus() == GameApplyInfo.END) {
@@ -724,7 +727,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     public void setupLocalView(@NonNull TextureView view) {
         RtcEngineEx engine = _mEngine.getValue();
         if (engine != null) {
-            BaseUtil.logD("id:"+localUser.getUserId());
+            BaseUtil.logD("id:" + localUser.getUserId());
             engine.setupLocalVideo(new VideoCanvas(view, Constants.RENDER_MODE_HIDDEN, Integer.parseInt(localUser.getUserId())));
         }
     }
@@ -755,29 +758,29 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     public void startGame() {
         if (roomGame == null) return;
         String roomId = null;
-        if (amHost){
+        if (amHost) {
             PKApplyInfo pkApplyInfo = _applyInfo.getValue();
             if (pkApplyInfo != null)
                 roomId = pkApplyInfo.getRoomId().equals(currentRoom.getId()) ? pkApplyInfo.getTargetRoomId() : currentRoom.getId();
-        }else{
+        } else {
             GameInfo gameShareInfo = _gameShareInfo.getValue();
             if (gameShareInfo != null)
                 roomId = gameShareInfo.getRoomId();
         }
-        if(roomId != null)
-        GameRepo.getJoinUrl(roomGame.getGameId(), localUser, roomId, getIdentification(roomId), new Callback<AppServerResult<String>>() {
-            @Override
-            public void onResponse(@NonNull Call<AppServerResult<String>> call, @NonNull Response<AppServerResult<String>> response) {
-                AppServerResult<String> body = response.body();
-                if (body != null)
-                    gameStartUrl.postValue(new Event<>(body.getResult()));
-            }
+        if (roomId != null)
+            GameRepo.getJoinUrl(roomGame.getGameId(), localUser, roomId, getIdentification(roomId), new Callback<AppServerResult<String>>() {
+                @Override
+                public void onResponse(@NonNull Call<AppServerResult<String>> call, @NonNull Response<AppServerResult<String>> response) {
+                    AppServerResult<String> body = response.body();
+                    if (body != null)
+                        gameStartUrl.postValue(new Event<>(body.getResult()));
+                }
 
-            @Override
-            public void onFailure(@NonNull Call<AppServerResult<String>> call, Throwable t) {
+                @Override
+                public void onFailure(@NonNull Call<AppServerResult<String>> call, Throwable t) {
 
-            }
-        });
+                }
+            });
     }
 
     private String getIdentification(String gameRoomId) {
@@ -803,6 +806,11 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
     public void fetchGameList() {
         GameRepo.getGameList("3", gameList);
+    }
+
+    public void sendBarrage(@NonNull String barrage) {
+        if (roomGame != null)
+            GameRepo.sendBarrage(barrage, roomGame.getGameId(), localUser, currentRoom.getId(), getIdentification(currentRoom.getId()), currentRoom.getId());
     }
     //</editor-fold>
 

@@ -32,9 +32,17 @@ public interface Game1API {
 
     @NonNull
     @POST("getJoinUrl")
-    Call<AppServerResult<String>> getJoinUrl(@Body @NonNull Map<String, String> gameId);
+    Call<AppServerResult<String>> getJoinUrl(@Body @NonNull Map<String, String> params);
 
     @NonNull
     @POST("leaveGame")
-    Call<AppServerResult<AppServerResult<Map<String,String>>>> leaveGame(@Body @NonNull Map<String, String> gameId);
+    Call<AppServerResult<AppServerResult<Map<String,String>>>> leaveGame(@Body @NonNull Map<String, String> params);
+
+    @NonNull
+    @POST("gift")
+    Call<AppServerResult<AppServerResult<Map<String,String>>>> sendGift(@Body @NonNull Map<String, Object> params);
+
+    @NonNull
+    @POST("barrage")
+    Call<AppServerResult<AppServerResult<Map<String,String>>>> sendBarrage(@Body @NonNull Map<String, Object> params);
 }

@@ -93,5 +93,60 @@ public class GameRepo {
         });
     }
 
+    /**
+     * 获取加入游戏 URL
+     */
+    public static void sendGift(@NonNull String gameId, @NonNull LocalUser localUser, @NonNull String roomId, int gift,@NonNull String playerId) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("user_id", localUser.getUserId());
+        map.put("name", localUser.getName());
+        map.put("app_id", gameId);
+        map.put("room_id", roomId);
+        map.put("gift", gift);
+        map.put("count", 1);
+        map.put("timestamp", System.currentTimeMillis());
+        map.put("player", playerId);
+
+        YuanQiHttp.getAPI().sendGift(map).enqueue(new Callback<AppServerResult<AppServerResult<Map<String, String>>>>() {
+            @Override
+            public void onResponse(Call<AppServerResult<AppServerResult<Map<String, String>>>> call, Response<AppServerResult<AppServerResult<Map<String, String>>>> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<AppServerResult<AppServerResult<Map<String, String>>>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    /**
+     * 获取加入游戏 URL
+     */
+    public static void sendBarrage(@NonNull String barrage, @NonNull String gameId, @NonNull LocalUser localUser, @NonNull String roomId, @NonNull String identification,@NonNull String player) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("user_id", localUser.getUserId());
+        map.put("name", localUser.getName());
+        map.put("app_id", gameId);
+        map.put("identity", identification);
+        map.put("room_id", roomId);
+        map.put("barrage", barrage);
+        map.put("count", 1);
+        map.put("timestamp", System.currentTimeMillis());
+        map.put("player", player);
+
+        YuanQiHttp.getAPI().sendBarrage(map).enqueue(new Callback<AppServerResult<AppServerResult<Map<String, String>>>>() {
+            @Override
+            public void onResponse(Call<AppServerResult<AppServerResult<Map<String, String>>>> call, Response<AppServerResult<AppServerResult<Map<String, String>>>> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<AppServerResult<AppServerResult<Map<String, String>>>> call, Throwable t) {
+
+            }
+        });
+    }
+
 
 }
