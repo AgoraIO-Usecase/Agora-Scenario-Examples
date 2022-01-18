@@ -11,7 +11,6 @@ import java.util.Objects;
 
 import io.agora.example.base.BaseUtil;
 import io.agora.scene.rtegame.bean.RoomInfo;
-import io.agora.scene.rtegame.repo.RoomListApi;
 import io.agora.scene.rtegame.util.ViewStatus;
 import io.agora.syncmanager.rtm.IObject;
 import io.agora.syncmanager.rtm.Sync;
@@ -21,7 +20,7 @@ import io.agora.syncmanager.rtm.SyncManagerException;
 /**
  * @author lq
  */
-public class RoomListViewModel extends ViewModel implements RoomListApi {
+public class RoomListViewModel extends ViewModel {
 
     /* UI 状态管理*/
     private final MutableLiveData<ViewStatus> _viewStatus = new MutableLiveData<>();
@@ -43,7 +42,6 @@ public class RoomListViewModel extends ViewModel implements RoomListApi {
         fetchRoomList();
     }
 
-    @Override
     public void fetchRoomList() {
         _viewStatus.postValue(new ViewStatus.Loading(true));
 

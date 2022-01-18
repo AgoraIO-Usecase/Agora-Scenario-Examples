@@ -41,18 +41,19 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/btn_create_fg_list"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/com_live_space_big"
-        app:cardElevation="6dp"
         app:cardBackgroundColor="@android:color/transparent"
         app:cardCornerRadius="28dp"
-        android:layout_width="56dp"
-        android:layout_height="56dp">
+        app:cardElevation="6dp">
+
         <FrameLayout
-            android:background="@drawable/com_live_ic_launcher_background"
-            android:foreground="@drawable/com_live_ic_create_room"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:background="@drawable/com_live_ic_launcher_background"
+            android:foreground="@drawable/com_live_ic_create_room" />
     </com.google.android.material.card.MaterialCardView>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -65,12 +66,12 @@
             android:id="@+id/recycler_view_fg_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clipToPadding="false"
             android:overScrollMode="never"
-            tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            tools:spanCount="2"
             tools:itemCount="12"
+            tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             tools:listitem="@layout/com_live_item_room_list"
-            tools:paddingTop="?attr/actionBarSize" />
+            tools:spanCount="2" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

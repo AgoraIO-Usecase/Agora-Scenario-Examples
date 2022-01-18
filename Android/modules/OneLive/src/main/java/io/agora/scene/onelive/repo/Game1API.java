@@ -26,9 +26,13 @@ public interface Game1API {
 
     @NonNull
     @POST("getJoinUrl")
-    Call<AppServerResult<String>> getJoinUrl(@Body @NonNull Map<String, String> gameId);
+    Call<AppServerResult<String>> getJoinUrl(@Body @NonNull Map<String, String> params);
 
     @NonNull
     @POST("leaveGame")
-    Call<AppServerResult<AppServerResult<Map<String,String>>>> leaveGame(@Body @NonNull Map<String, String> gameId);
+    Call<AppServerResult<Map<String,String>>> leaveGame(@Body @NonNull Map<String, String> params);
+
+    @NonNull
+    @POST("changeRole")
+    Call<AppServerResult<Map<String,String>>> changeRole(@Body @NonNull Map<String, Object> params);
 }

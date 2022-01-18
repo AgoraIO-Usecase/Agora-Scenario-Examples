@@ -15,7 +15,6 @@ import java.util.HashMap;
 
 import io.agora.scene.comlive.bean.LocalUser;
 import io.agora.scene.comlive.bean.RoomInfo;
-import io.agora.scene.comlive.repo.RoomCreateApi;
 import io.agora.scene.comlive.util.ComLiveConstants;
 import io.agora.scene.comlive.util.ComLiveUtil;
 import io.agora.scene.comlive.util.Event;
@@ -23,7 +22,7 @@ import io.agora.syncmanager.rtm.Sync;
 import io.agora.syncmanager.rtm.SyncManagerException;
 
 @Keep
-public class GlobalViewModel extends AndroidViewModel implements RoomCreateApi {
+public class GlobalViewModel extends AndroidViewModel {
     @Nullable
     public static LocalUser localUser;
 
@@ -75,7 +74,6 @@ public class GlobalViewModel extends AndroidViewModel implements RoomCreateApi {
         roomInfo.setValue(roomInfoEvent);
     }
 
-    @Override
     public void createRoom(@NonNull RoomInfo room) {
         Sync.Instance().createScene(ComLiveUtil.getSceneFromRoomInfo(room), new Sync.Callback() {
 

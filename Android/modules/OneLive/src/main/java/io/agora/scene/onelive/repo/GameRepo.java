@@ -71,7 +71,7 @@ public class GameRepo {
     }
 
     /**
-     * 获取加入游戏 URL
+     * 离开游戏
      */
     public static void leaveGame(@NonNull String gameId, @NonNull LocalUser localUser, @NonNull String roomId, @NonNull String identification) {
         Map<String, String> map = new HashMap<>();
@@ -80,18 +80,34 @@ public class GameRepo {
         map.put("identity", identification);
         map.put("room_id", roomId);
 
-        YuanQiHttp.getAPI().leaveGame(map).enqueue(new Callback<AppServerResult<AppServerResult<Map<String, String>>>>() {
-            @Override
-            public void onResponse(Call<AppServerResult<AppServerResult<Map<String, String>>>> call, Response<AppServerResult<AppServerResult<Map<String, String>>>> response) {
-
-            }
-
-            @Override
-            public void onFailure(Call<AppServerResult<AppServerResult<Map<String, String>>>> call, Throwable t) {
-
-            }
-        });
+        YuanQiHttp.getAPI().leaveGame(map).enqueue(new EmptyCallBack());
     }
 
+    /**
+     * 角色改变通知声网
+     */
+    public static void changeRole(@NonNull String gameId, @NonNull LocalUser localUser, @NonNull String roomId, int oldRole, int newRole) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("user_id", localUser.getUserId());
+        map.put("app_id", gameId);
+        map.put("room_id", roomId);
+        map.put("oldRole", oldRole);
+        map.put("newRole", newRole);
+
+        YuanQiHttp.getAPI().changeRole(map).enqueue(new EmptyCallBack());
+    }
+
+    public static class EmptyCallBack implements Callback<AppServerResult<Map<String, String>>>{
+
+        @Override
+        public void onResponse(@NonNull Call<AppServerResult<Map<String, String>>> call, @NonNull Response<AppServerResult<Map<String, String>>> response) {
+
+        }
+
+        @Override
+        public void onFailure(@NonNull Call<AppServerResult<Map<String, String>>> call, @NonNull Throwable t) {
+
+        }
+    }
 
 }

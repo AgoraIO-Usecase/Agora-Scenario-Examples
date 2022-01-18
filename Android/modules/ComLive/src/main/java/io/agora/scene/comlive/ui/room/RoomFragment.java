@@ -100,6 +100,13 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
                 .placeholder(R.mipmap.com_live_ic_launcher_round).into(mBinding.layoutRoomInfo.avatarHostFgRoom);
         mBinding.layoutRoomInfo.nameHostFgRoom.setText(currentRoom.getTempUserName());
 
+        mBinding.layoutRoomInfo.nameHostFgRoom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewModel.jsEnableMic(true);
+
+            }
+        });
         // config game view
         new Handler(Looper.getMainLooper()).post(() -> {
             if (mBinding != null) {
@@ -181,14 +188,13 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
     private void hideBtnByCurrentRole() {
         mBinding.btnMoreFgRoom.setVisibility(aMHost ? View.VISIBLE : GONE);
         mBinding.btnGameFgRoom.setVisibility(aMHost ? View.VISIBLE : GONE);
+        mBinding.btnExitGameFgRoom.setVisibility(aMHost ? View.VISIBLE : GONE);
     }
 
     //<editor-fold desc="游戏相关">
     private void onGameInfoChanged(GameInfo gameInfo) {
         if (gameInfo.getStatus() == GameInfo.END) {
             mViewModel.exitGame();
-        } else if (gameInfo.getStatus() == GameInfo.START) {
-            mViewModel.startGame(gameInfo.getGameId());
         }
     }
 
@@ -203,14 +209,16 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
             if (webView != null) {
                 mViewModel.startGame(game.getGameId());
             }
-            if (aMHost)
+            if (aMHost) {
                 mBinding.btnGameFgRoom.setVisibility(GONE);
-            mBinding.btnExitGameFgRoom.setVisibility(View.VISIBLE);
+                mBinding.btnExitGameFgRoom.setVisibility(View.VISIBLE);
+            }
         } else {
             needGameView(false);
-            if (aMHost)
+            if (aMHost) {
                 mBinding.btnGameFgRoom.setVisibility(View.VISIBLE);
-            mBinding.btnExitGameFgRoom.setVisibility(GONE);
+                mBinding.btnExitGameFgRoom.setVisibility(GONE);
+            }
         }
     }
 
@@ -278,7 +286,7 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
         if (engine == null) findNavController().popBackStack();
         else {
             insertNewMessage("RTC 初始化成功");
-            mViewModel.joinRoom(mViewModel.localUser);
+            mViewModel.joinRoom(engine);
 
             if (aMHost) initLocalView(); // 如果是房主，创建View开始直播
             else initRemoteView(); // 如果是观众，加载主播画面

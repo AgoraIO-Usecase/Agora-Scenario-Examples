@@ -30,7 +30,6 @@ import io.agora.scene.comlive.bean.GiftInfo;
 import io.agora.scene.comlive.bean.LocalUser;
 import io.agora.scene.comlive.bean.RoomInfo;
 import io.agora.scene.comlive.repo.GameRepo;
-import io.agora.scene.comlive.repo.RoomApi;
 import io.agora.scene.comlive.util.ComLiveConstants;
 import io.agora.scene.comlive.util.Event;
 import io.agora.scene.comlive.util.GamSyncEventListener;
@@ -48,7 +47,7 @@ import retrofit2.Response;
  * @author lq
  */
 @Keep
-public class RoomViewModel extends ViewModel implements RoomApi {
+public class RoomViewModel extends ViewModel {
     @NonNull
     private final RoomInfo currentRoom;
     private final boolean amHost;
@@ -131,7 +130,6 @@ public class RoomViewModel extends ViewModel implements RoomApi {
                 Sync.Instance().joinScene(currentRoom.getId(), new Sync.JoinSceneCallback() {
                     @Override
                     public void onSuccess(SceneReference sceneReference) {
-                        BaseUtil.logD("success");
                         onJoinRTMSucceed(sceneReference);
                     }
 
@@ -153,7 +151,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     private void onJoinRTMSucceed(@NonNull SceneReference sceneReference) {
         BaseUtil.logD("onJoinRTMSucceed");
         currentSceneRef = sceneReference;
-        viewStatus.postValue(new ViewStatus.Message("加入RTM成功"));
+        viewStatus.postValue(new ViewStatus.Message(localUser.getName() + " 加入频道成功"));
         if (currentSceneRef != null) {
             currentSceneRef.subscribe(new Sync.EventListener() {
                 @Override
@@ -208,9 +206,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     private void tryHandleGameInfo(@Nullable IObject item) {
         GameInfo gameInfo = handleIObject(item, GameInfo.class);
         if (gameInfo != null) {
-            if (gameInfo.getStatus() == GameInfo.END)
-                this.currentGame.postValue(null);
-            else
+            if (gameInfo.getStatus() != GameInfo.END)
                 this.currentGame.postValue(new AgoraGame(gameInfo.getGameId(), ""));
             this.gameInfo.postValue(gameInfo);
         }
@@ -288,11 +284,33 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
     //<editor-fold desc="RTC related">
     public void enableMic(boolean enable) {
-        BaseUtil.logD(Thread.currentThread().getName() + "enableMic " + enable);
         isMicEnabled.postValue(enable);
         RtcEngineEx engine = rtcEngine.getValue();
         if (engine != null) {
             engine.muteLocalAudioStream(!enable);
+        }
+    }
+
+    /**
+     * 2022.01.17 11:00
+     * 负责人表示游戏内 JS 对麦克风的启停只影响其他玩家，不影响主播
+     * @param enable true 启用；false 禁用
+     */
+    public void jsEnableMic(boolean enable){
+        if (amHost) return;
+        BaseUtil.logD(Thread.currentThread().getName() + "enableMic " + enable);
+        isMicEnabled.postValue(enable);
+        RtcEngineEx engine = rtcEngine.getValue();
+        if (engine != null) {
+            ChannelMediaOptions options = new ChannelMediaOptions();
+            options.autoSubscribeAudio = true;
+            options.autoSubscribeVideo = true;
+            options.publishAudioTrack = enable;
+            options.publishCameraTrack = false;
+            options.clientRoleType = enable ? Constants.CLIENT_ROLE_BROADCASTER : Constants.CLIENT_ROLE_AUDIENCE;
+            int ret = engine.updateChannelMediaOptions(options);
+            engine.enableLocalAudio(enable);
+            BaseUtil.logD(Thread.currentThread().getName() + "updateChannelMediaOptions " + ret);
         }
     }
 
@@ -312,24 +330,27 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     }
 
 
-    @Override
-    public void joinRoom(@NonNull LocalUser localUser) {
-        RtcEngineEx engine = this.rtcEngine.getValue();
-        if (engine != null) {
-            ChannelMediaOptions options = new ChannelMediaOptions();
-            options.autoSubscribeAudio = true;
-            options.autoSubscribeVideo = true;
-            options.publishCameraTrack = amHost;
-            options.publishAudioTrack = amHost;
-            options.clientRoleType = amHost ? Constants.CLIENT_ROLE_BROADCASTER : Constants.CLIENT_ROLE_AUDIENCE;
-            engine.joinChannel(((RtcEngineImpl) engine).getContext().getString(R.string.rtc_app_token), currentRoom.getId(), Integer.parseInt(localUser.getUserId()), options);
+    public void changeRole(int oldRole, int newRole) {
+        AgoraGame game = currentGame.getValue();
+        if (game != null) {
+            GameRepo.changeRole(game.getGameId(), localUser, currentRoom.getId(), oldRole, newRole);
         }
+    }
 
+    public void joinRoom(@NonNull RtcEngine engine) {
+        ChannelMediaOptions options = new ChannelMediaOptions();
+        options.autoSubscribeAudio = true;
+        options.autoSubscribeVideo = true;
+        options.publishAudioTrack = amHost;
+        options.publishCameraTrack = amHost;
+        options.clientRoleType = amHost ? Constants.CLIENT_ROLE_BROADCASTER : Constants.CLIENT_ROLE_AUDIENCE;
+        engine.joinChannel(((RtcEngineImpl) engine).getContext().getString(R.string.rtc_app_token), currentRoom.getId(), Integer.parseInt(localUser.getUserId()), options);
     }
 
     public void setupLocalView(@NonNull TextureView view) {
         RtcEngine engine = rtcEngine.getValue();
         if (engine != null) {
+            engine.startPreview();
             engine.setupLocalVideo(new VideoCanvas(view, Constants.RENDER_MODE_HIDDEN, Integer.parseInt(localUser.getUserId())));
         }
     }
@@ -341,13 +362,9 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         }
     }
 
-
     private void configRTC(@NonNull RtcEngineEx engine) {
-        if (amHost) {
-            engine.enableAudio();
-            engine.enableVideo();
-            engine.startPreview();
-        }
+        engine.enableAudio();
+        engine.enableVideo();
     }
 //</editor-fold>
 

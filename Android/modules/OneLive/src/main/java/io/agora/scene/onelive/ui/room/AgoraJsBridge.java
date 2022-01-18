@@ -20,6 +20,7 @@ public class AgoraJsBridge {
      */
     @JavascriptInterface
     public void enableAudio(int option){
+        BaseUtil.logD("JS - enableAudio:" + option);
         roomViewModel.enableMic(option == 1);
     }
 
@@ -30,6 +31,7 @@ public class AgoraJsBridge {
      */
     @JavascriptInterface
     public void leave(int option){
+        BaseUtil.logD("JS - leave:" + option);
         roomViewModel.requestEndGame();
     }
 
@@ -37,9 +39,11 @@ public class AgoraJsBridge {
      * 适用于观众在游戏中改变角色(旁观, 玩家)
      * 在观众端游戏视图内, 点击加入游戏后需要通过jsBridge通知声网
      *
-     * @param role: 2 玩家, 3 旁观 (和加入游戏的identify一致)
+     *  2 玩家, 3 旁观 (和加入游戏的identify一致)
      */
-    public void setRole(int role){
-        BaseUtil.logD("setRole:" + role);
+    @JavascriptInterface
+    public void setRole(int oldRole, int newRole){
+        BaseUtil.logD("JS - setRole:" + oldRole + " ->" + newRole);
+        roomViewModel.changeRole(oldRole, newRole);
     }
 }

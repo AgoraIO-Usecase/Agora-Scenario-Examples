@@ -36,5 +36,9 @@ public interface Game1API {
 
     @NonNull
     @POST("leaveGame")
-    Call<AppServerResult<AppServerResult<Map<String,String>>>> leaveGame(@Body @NonNull Map<String, String> gameId);
+    Call<AppServerResult<Map<String,String>>> leaveGame(@Body @NonNull Map<String, String> gameId);
+
+    @NonNull
+    @POST("changeRole")
+    Call<AppServerResult<Map<String,String>>> changeRole(@Body @NonNull Map<String, Object> params);
 }

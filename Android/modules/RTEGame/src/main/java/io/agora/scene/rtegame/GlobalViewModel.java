@@ -6,19 +6,15 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import java.util.HashMap;
 
-import io.agora.example.base.BaseUtil;
 import io.agora.rtc2.RtcEngine;
 import io.agora.scene.rtegame.bean.LocalUser;
 import io.agora.scene.rtegame.bean.RoomInfo;
-import io.agora.scene.rtegame.repo.RoomCreateApi;
 import io.agora.scene.rtegame.util.Event;
 import io.agora.scene.rtegame.util.GameConstants;
 import io.agora.scene.rtegame.util.GameUtil;
@@ -26,7 +22,7 @@ import io.agora.syncmanager.rtm.Sync;
 import io.agora.syncmanager.rtm.SyncManagerException;
 
 @Keep
-public class GlobalViewModel extends AndroidViewModel implements RoomCreateApi {
+public class GlobalViewModel extends AndroidViewModel {
 
     public static LocalUser localUser;
 
@@ -86,7 +82,6 @@ public class GlobalViewModel extends AndroidViewModel implements RoomCreateApi {
         roomInfo.setValue(roomInfoEvent);
     }
 
-    @Override
     public void createRoom(@NonNull RoomInfo room) {
         Sync.Instance().createScene(GameUtil.getSceneFromRoomInfo(room), new Sync.Callback() {
 

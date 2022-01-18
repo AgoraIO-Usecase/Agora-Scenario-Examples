@@ -333,6 +333,13 @@ public class RoomViewModel extends ViewModel {
         }
     }
 
+    public void changeRole(int oldRole, int newRole){
+        if (currentGame != null) {
+            GameRepo.changeRole(currentGame.getGameId(), localUser, currentRoom.getId(), oldRole, newRole);
+        }
+    }
+
+
     public void flipCamera() {
         RtcEngineEx engine = _mEngine.getValue();
         if (engine != null) {

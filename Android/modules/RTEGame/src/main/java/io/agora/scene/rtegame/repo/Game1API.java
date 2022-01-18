@@ -36,13 +36,17 @@ public interface Game1API {
 
     @NonNull
     @POST("leaveGame")
-    Call<AppServerResult<AppServerResult<Map<String,String>>>> leaveGame(@Body @NonNull Map<String, String> params);
+    Call<AppServerResult<Map<String,String>>> leaveGame(@Body @NonNull Map<String, String> params);
+
+    @NonNull
+    @POST("changeRole")
+    Call<AppServerResult<Map<String,String>>> changeRole(@Body @NonNull Map<String, Object> params);
 
     @NonNull
     @POST("gift")
-    Call<AppServerResult<AppServerResult<Map<String,String>>>> sendGift(@Body @NonNull Map<String, Object> params);
+    Call<AppServerResult<Map<String,String>>> sendGift(@Body @NonNull Map<String, Object> params);
 
     @NonNull
     @POST("barrage")
-    Call<AppServerResult<AppServerResult<Map<String,String>>>> sendBarrage(@Body @NonNull Map<String, Object> params);
+    Call<AppServerResult<Map<String,String>>> sendBarrage(@Body @NonNull Map<String, Object> params);
 }

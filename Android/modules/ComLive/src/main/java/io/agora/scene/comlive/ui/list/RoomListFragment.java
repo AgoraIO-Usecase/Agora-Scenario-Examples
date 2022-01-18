@@ -92,6 +92,7 @@ public class RoomListFragment extends BaseNavFragment<ComLiveFragmentRoomListBin
             lpBtn.bottomMargin = inset.bottom + ((int) BaseUtil.dp2px(24));
             mBinding.btnCreateFgList.setLayoutParams(lpBtn);
 
+            mBinding.recyclerViewFgList.setPaddingRelative(0,0,0,inset.bottom);
             return WindowInsetsCompat.CONSUMED;
         });
 

@@ -1,10 +1,7 @@
 package io.agora.scene.rtegame.ui.room;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Rect;
 import android.view.TextureView;
-import android.webkit.WebView;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
@@ -25,9 +22,7 @@ import io.agora.rtc2.RtcEngine;
 import io.agora.rtc2.RtcEngineConfig;
 import io.agora.rtc2.RtcEngineEx;
 import io.agora.rtc2.internal.RtcEngineImpl;
-import io.agora.rtc2.video.ScreenCaptureParameters;
 import io.agora.rtc2.video.VideoCanvas;
-import io.agora.rtc2.video.VideoEncoderConfiguration;
 import io.agora.scene.rtegame.GlobalViewModel;
 import io.agora.scene.rtegame.R;
 import io.agora.scene.rtegame.bean.AgoraGame;
@@ -40,17 +35,14 @@ import io.agora.scene.rtegame.bean.PKApplyInfo;
 import io.agora.scene.rtegame.bean.PKInfo;
 import io.agora.scene.rtegame.bean.RoomInfo;
 import io.agora.scene.rtegame.repo.GameRepo;
-import io.agora.scene.rtegame.repo.RoomApi;
 import io.agora.scene.rtegame.util.Event;
 import io.agora.scene.rtegame.util.GamSyncEventListener;
 import io.agora.scene.rtegame.util.GameConstants;
-import io.agora.scene.rtegame.util.GameUtil;
 import io.agora.scene.rtegame.util.ViewStatus;
 import io.agora.syncmanager.rtm.IObject;
 import io.agora.syncmanager.rtm.SceneReference;
 import io.agora.syncmanager.rtm.Sync;
 import io.agora.syncmanager.rtm.SyncManagerException;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -60,7 +52,7 @@ import retrofit2.Response;
  * @author lq
  */
 @Keep
-public class RoomViewModel extends ViewModel implements RoomApi {
+public class RoomViewModel extends ViewModel {
 
     //<editor-fold desc="Persistent variable">
     public final RoomInfo currentRoom;
@@ -187,7 +179,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     private void onJoinRTMSucceed(@NonNull SceneReference sceneReference) {
         BaseUtil.logD("onJoinRTMSucceed");
         currentSceneRef = sceneReference;
-        _viewStatus.postValue(new ViewStatus.Error("加入RTM成功"));
+        _viewStatus.postValue(new ViewStatus.Error(localUser.getName() +" 加入RTM成功"));
         if (currentSceneRef != null) {
             subscribeAttr(currentSceneRef, currentRoom);
         }
@@ -618,7 +610,6 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     /**
      * 加入当前房间
      */
-    @Override
     public void joinRoom(@NonNull LocalUser localUser) {
         new Thread(() -> {
             RtcEngineEx engine = _mEngine.getValue();
@@ -638,7 +629,6 @@ public class RoomViewModel extends ViewModel implements RoomApi {
      * 加入其他主播房间前先退出当前已加入的其他主播房间
      * 加入成功监听到对方主播上线《==》UI更新
      */
-    @Override
     public void joinSubRoom(@NonNull RoomInfo subRoomInfo) {
         leaveSubRoom();
 
@@ -768,7 +758,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
                 roomId = gameShareInfo.getRoomId();
         }
         if (roomId != null)
-            GameRepo.getJoinUrl(roomGame.getGameId(), localUser, roomId, getIdentification(roomId), new Callback<AppServerResult<String>>() {
+            GameRepo.getJoinUrl(roomGame.getGameId(), localUser, currentRoom, roomId, getIdentification(roomId), new Callback<AppServerResult<String>>() {
                 @Override
                 public void onResponse(@NonNull Call<AppServerResult<String>> call, @NonNull Response<AppServerResult<String>> response) {
                     AppServerResult<String> body = response.body();
@@ -811,6 +801,10 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     public void sendBarrage(@NonNull String barrage) {
         if (roomGame != null)
             GameRepo.sendBarrage(barrage, roomGame.getGameId(), localUser, currentRoom.getId(), getIdentification(currentRoom.getId()), currentRoom.getId());
+    }
+    public void setRole(int oldRole, int newRole){
+        if (roomGame != null)
+            GameRepo.changeRole(roomGame.getGameId(), localUser, currentRoom.getId(), oldRole, newRole);
     }
     //</editor-fold>
 

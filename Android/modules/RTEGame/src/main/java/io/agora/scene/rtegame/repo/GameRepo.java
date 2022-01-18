@@ -11,6 +11,7 @@ import java.util.Map;
 import io.agora.scene.rtegame.bean.AgoraGame;
 import io.agora.scene.rtegame.bean.AppServerResult;
 import io.agora.scene.rtegame.bean.LocalUser;
+import io.agora.scene.rtegame.bean.RoomInfo;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -57,7 +58,7 @@ public class GameRepo {
     /**
      * 获取加入游戏 URL
      */
-    public static void getJoinUrl(@NonNull String gameId, @NonNull LocalUser localUser, @NonNull String roomId, @NonNull String identification, @NonNull Callback<AppServerResult<String>> callback) {
+    public static void getJoinUrl(@NonNull String gameId, @NonNull LocalUser localUser, @NonNull RoomInfo currentRoom,@NonNull String roomId, @NonNull String identification, @NonNull Callback<AppServerResult<String>> callback) {
         Map<String, String> map = new HashMap<>();
         map.put("user_id", localUser.getUserId());
         map.put("name", localUser.getName());
@@ -65,6 +66,8 @@ public class GameRepo {
         map.put("token", "aa"); // TEST
         map.put("app_id", gameId);
         map.put("room_id", roomId);
+        if (identification.equals("3"))
+            map.put("to_user", currentRoom.getUserId());
         map.put("identity", identification);
 
         YuanQiHttp.getAPI().getJoinUrl(map).enqueue(callback);
@@ -80,19 +83,22 @@ public class GameRepo {
         map.put("identity", identification);
         map.put("room_id", roomId);
 
-        YuanQiHttp.getAPI().leaveGame(map).enqueue(new Callback<AppServerResult<AppServerResult<Map<String, String>>>>() {
-            @Override
-            public void onResponse(Call<AppServerResult<AppServerResult<Map<String, String>>>> call, Response<AppServerResult<AppServerResult<Map<String, String>>>> response) {
-
-            }
-
-            @Override
-            public void onFailure(Call<AppServerResult<AppServerResult<Map<String, String>>>> call, Throwable t) {
-
-            }
-        });
+        YuanQiHttp.getAPI().leaveGame(map).enqueue(new EmptyCallBack());
     }
 
+    /**
+     * 角色改变通知声网
+     */
+    public static void changeRole(@NonNull String gameId, @NonNull LocalUser localUser, @NonNull String roomId, int oldRole, int newRole) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("user_id", localUser.getUserId());
+        map.put("app_id", gameId);
+        map.put("room_id", roomId);
+        map.put("oldRole", oldRole);
+        map.put("newRole", newRole);
+
+        YuanQiHttp.getAPI().changeRole(map).enqueue(new EmptyCallBack());
+    }
     /**
      * 获取加入游戏 URL
      */
@@ -107,17 +113,7 @@ public class GameRepo {
         map.put("timestamp", System.currentTimeMillis());
         map.put("player", playerId);
 
-        YuanQiHttp.getAPI().sendGift(map).enqueue(new Callback<AppServerResult<AppServerResult<Map<String, String>>>>() {
-            @Override
-            public void onResponse(Call<AppServerResult<AppServerResult<Map<String, String>>>> call, Response<AppServerResult<AppServerResult<Map<String, String>>>> response) {
-
-            }
-
-            @Override
-            public void onFailure(Call<AppServerResult<AppServerResult<Map<String, String>>>> call, Throwable t) {
-
-            }
-        });
+        YuanQiHttp.getAPI().sendGift(map).enqueue(new EmptyCallBack());
     }
 
     /**
@@ -135,17 +131,22 @@ public class GameRepo {
         map.put("timestamp", System.currentTimeMillis());
         map.put("player", player);
 
-        YuanQiHttp.getAPI().sendBarrage(map).enqueue(new Callback<AppServerResult<AppServerResult<Map<String, String>>>>() {
-            @Override
-            public void onResponse(Call<AppServerResult<AppServerResult<Map<String, String>>>> call, Response<AppServerResult<AppServerResult<Map<String, String>>>> response) {
+        YuanQiHttp.getAPI().sendBarrage(map).enqueue(new EmptyCallBack());
+    }
 
-            }
 
-            @Override
-            public void onFailure(Call<AppServerResult<AppServerResult<Map<String, String>>>> call, Throwable t) {
 
-            }
-        });
+    public static class EmptyCallBack implements Callback<AppServerResult<Map<String, String>>>{
+
+        @Override
+        public void onResponse(@NonNull Call<AppServerResult<Map<String, String>>> call, @NonNull Response<AppServerResult<Map<String, String>>> response) {
+
+        }
+
+        @Override
+        public void onFailure(@NonNull Call<AppServerResult<Map<String, String>>> call, @NonNull Throwable t) {
+
+        }
     }
 
 
