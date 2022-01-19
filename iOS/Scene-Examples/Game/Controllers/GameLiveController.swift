@@ -282,6 +282,7 @@ class GameLiveController: PKLiveController {
     override func pkLiveEndHandler() {
         super.pkLiveEndHandler()
         updatePKUIStatus(isStart: false)
+        updateGameInfoStatus(isStart: false)
         liveView.updateLiveLayout(postion: .full)
         if getRole(uid: UserInfo.uid) == .broadcaster {
             liveView.updateBottomButtonType(type: [.game, .tool, .close])
