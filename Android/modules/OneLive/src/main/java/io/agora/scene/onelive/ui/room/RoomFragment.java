@@ -23,6 +23,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.Observer;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
@@ -36,6 +37,7 @@ import io.agora.scene.onelive.bean.RoomInfo;
 import io.agora.scene.onelive.databinding.OneFragmentRoomBinding;
 import io.agora.scene.onelive.repo.GameRepo;
 import io.agora.scene.onelive.ui.room.game.GameListDialog;
+import io.agora.scene.onelive.util.Event;
 import io.agora.scene.onelive.util.NormalContainerInsetsListener;
 import io.agora.scene.onelive.util.OneUtil;
 import io.agora.scene.onelive.util.ViewStatus;
@@ -50,7 +52,7 @@ public class RoomFragment extends BaseNavFragment<OneFragmentRoomBinding> {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        GlobalViewModel mGlobalModel = OneUtil.getViewModel(requireActivity(), GlobalViewModel.class);
+        GlobalViewModel mGlobalModel = OneUtil.getAndroidViewModel(this, GlobalViewModel.class);
         // hold current RoomInfo
         if (mGlobalModel.roomInfo.getValue() != null)
             currentRoom = mGlobalModel.roomInfo.getValue().peekContent();
@@ -93,7 +95,10 @@ public class RoomFragment extends BaseNavFragment<OneFragmentRoomBinding> {
                 return true;
             }
         });
+        mBinding.gameViewFgRoom.addJavascriptInterface(new AgoraJsBridge(mViewModel), "agoraJSBridge");
+        // 给 WebView 添加透明背景
         mBinding.gameViewFgRoom.setBackgroundColor(BaseUtil.getColorInt(requireContext(), R.attr.colorPrimary));
+        // 给 WebView 添加圆角
         float webViewCorner = BaseUtil.dp2px(8);
         mBinding.gameViewFgRoom.setOutlineProvider(new ViewOutlineProvider() {
             @Override
@@ -153,8 +158,12 @@ public class RoomFragment extends BaseNavFragment<OneFragmentRoomBinding> {
         // 停止连麦 按钮
         mBinding.btnEndCallFgRoom.setOnClickListener(v -> RoomFragment.this.showAlertEndCallDialog());
 
-        mBinding.btnMicFgRoom.setOnClickListener(v -> mViewModel.toggleMute());
-        mBinding.btnMic2FgRoom.setOnClickListener(v -> mViewModel.toggleMute());
+        mBinding.btnMicFgRoom.addOnCheckedChangeListener((button, isChecked) -> {
+            if (button.isPressed()) mViewModel.enableMic(button.isChecked());
+        });
+        mBinding.btnMic2FgRoom.addOnCheckedChangeListener((button, isChecked) -> {
+            if (button.isPressed()) mViewModel.enableMic(button.isChecked());
+        });
 
     }
 
@@ -193,11 +202,12 @@ public class RoomFragment extends BaseNavFragment<OneFragmentRoomBinding> {
         mViewModel.gameInfo().observe(getViewLifecycleOwner(), this::onGameStatusChanged);
 
         // 静音状态
-        mViewModel.isLocalMicMuted.observe(getViewLifecycleOwner(), isMute -> {
-            int resId = isMute ? R.drawable.one_ic_microphone_off : R.drawable.one_ic_microphone;
-
+        mViewModel.isLocalMicMuted.observe(getViewLifecycleOwner(), isMuted -> {
+            int resId = isMuted ? R.drawable.one_ic_microphone_off : R.drawable.one_ic_microphone;
             mBinding.btnMicFgRoom.setIconResource(resId);
+            mBinding.btnMicFgRoom.setChecked(!isMuted);
             mBinding.btnMic2FgRoom.setIconResource(resId);
+            mBinding.btnMic2FgRoom.setChecked(!isMuted);
         });
 
         mViewModel.viewStatus().observe(getViewLifecycleOwner(), viewStatus -> {
@@ -206,6 +216,8 @@ public class RoomFragment extends BaseNavFragment<OneFragmentRoomBinding> {
                 findNavController().popBackStack();
             }
         });
+
+        mViewModel.gameStartUrl.observe(getViewLifecycleOwner(), stringEvent -> mBinding.gameViewFgRoom.loadUrl(stringEvent.getContentIfNotHandled()));
     }
 
     //<editor-fold desc="Dialog Related">
@@ -255,7 +267,7 @@ public class RoomFragment extends BaseNavFragment<OneFragmentRoomBinding> {
         new GameListDialog().show(getChildFragmentManager(), GameListDialog.TAG);
     }
 
-    private void showGameInviteDialog(GameInfo game){
+    private void showGameInviteDialog(GameInfo game) {
         new AlertDialog.Builder(requireContext()).setTitle(R.string.one_invite_received)
                 .setMessage(R.string.one_invite_received_msg)
                 .setNegativeButton(android.R.string.cancel, null)
@@ -266,17 +278,14 @@ public class RoomFragment extends BaseNavFragment<OneFragmentRoomBinding> {
 
     private void startGame(GameInfo gameInfo) {
         // FIXME DO IN BACKGROUND
-        AgoraGame agoraGame = GameRepo.getGameDetail(gameInfo.getGameId());
-        if (agoraGame != null) {
-            mViewModel.currentGame = agoraGame;
+        mViewModel.currentGame = new AgoraGame(gameInfo.getGameId(), "");
 
-            mBinding.btnStartGameFgRoom.setEnabled(false);
-            mBinding.btnStartGameFgRoom.setAlpha(0.5f);
-            mBinding.overlayFgRoom.setVisibility(View.VISIBLE);
-            mBinding.getRoot().post(() -> sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED));
-            GameRepo.gameStart(mBinding.gameViewFgRoom, agoraGame, mViewModel.localUser, amHost, Integer.parseInt(currentRoom.getId()));
-        }
+        mBinding.btnStartGameFgRoom.setEnabled(false);
+        mBinding.btnStartGameFgRoom.setAlpha(0.5f);
+        mBinding.overlayFgRoom.setVisibility(View.VISIBLE);
+        mBinding.getRoot().post(() -> sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED));
 
+        mViewModel.startGame(gameInfo.getGameId());
     }
     //</editor-fold>
 

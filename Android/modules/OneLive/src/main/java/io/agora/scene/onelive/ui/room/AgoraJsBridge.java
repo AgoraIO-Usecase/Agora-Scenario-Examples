@@ -1,4 +1,4 @@
-package io.agora.scene.comlive.ui.room;
+package io.agora.scene.onelive.ui.room;
 
 import android.webkit.JavascriptInterface;
 
@@ -13,10 +13,15 @@ public class AgoraJsBridge {
         this.roomViewModel = mViewModel;
     }
 
+    /**
+     * 开关麦克风接口
+     *
+     * @param option int	1: 开麦, 2:关麦
+     */
     @JavascriptInterface
     public void enableAudio(int option){
-        BaseUtil.logD("JS - enableAudio:"+option);
-        roomViewModel.jsEnableMic(option == 1);
+        BaseUtil.logD("JS - enableAudio:" + option);
+        roomViewModel.enableMic(option == 1);
     }
 
     /**
@@ -27,7 +32,7 @@ public class AgoraJsBridge {
     @JavascriptInterface
     public void leave(int option){
         BaseUtil.logD("JS - leave:" + option);
-        roomViewModel.requestExitGame();
+        roomViewModel.requestEndGame();
     }
 
     /**

@@ -10,6 +10,7 @@ import androidx.core.view.WindowCompat;
 import io.agora.example.base.BaseActivity;
 import io.agora.rtc2.RtcEngine;
 import io.agora.scene.rtegame.databinding.GameActivityMainBinding;
+import io.agora.scene.rtegame.repo.GameRepo;
 import io.agora.scene.rtegame.util.GameUtil;
 import io.agora.syncmanager.rtm.Sync;
 
@@ -20,9 +21,14 @@ public class MainActivity extends BaseActivity<GameActivityMainBinding> {
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        globalViewModel = GameUtil.getAndroidViewModel(this);
         super.onCreate(savedInstanceState);
+
+        GameRepo.X_LC_ID = getString(R.string.x_lc_Id);
+        GameRepo.X_LC_KEY = getString(R.string.x_lc_Key);
+        GameRepo.X_LC_SESSION = getString(R.string.x_lc_Session);
+
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        globalViewModel = GameUtil.getViewModel(this, GlobalViewModel.class);
 
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
     }
@@ -37,12 +43,5 @@ public class MainActivity extends BaseActivity<GameActivityMainBinding> {
 //        RTCDestroy
             RtcEngine.destroy();
         }).start();
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (globalViewModel != null)
-            globalViewModel.focused.setValue(hasFocus);
     }
 }

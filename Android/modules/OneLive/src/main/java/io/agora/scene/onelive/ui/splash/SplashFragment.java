@@ -20,7 +20,7 @@ public class SplashFragment extends BaseNavFragment<OneFragmentSplashBinding> {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        globalViewModel = OneUtil.getViewModel(requireActivity(), GlobalViewModel.class);
+        globalViewModel = OneUtil.getAndroidViewModel(this, GlobalViewModel.class);
 
         initListener();
     }

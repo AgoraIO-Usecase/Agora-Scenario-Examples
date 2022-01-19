@@ -28,8 +28,6 @@ import io.agora.scene.comlive.bean.RoomInfo;
 import io.agora.syncmanager.rtm.Scene;
 
 public class ComLiveUtil {
-    @Nullable
-    public static AgoraGame currentGame = null;
     private static final String[] avatarList = {
             "https://terrigen-cdn-dev.marvel.com/content/prod/1x/012scw_ons_crd_02.jpg",
             "https://terrigen-cdn-dev.marvel.com/content/prod/1x/003cap_ons_crd_03.jpg",

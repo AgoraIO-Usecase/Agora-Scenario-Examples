@@ -11,13 +11,13 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import io.agora.example.base.BaseUtil;
 import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
-import io.agora.rtc2.DataStreamConfig;
 import io.agora.rtc2.IRtcEngineEventHandler;
 import io.agora.rtc2.RtcEngine;
 import io.agora.rtc2.RtcEngineConfig;
@@ -26,17 +26,22 @@ import io.agora.rtc2.internal.RtcEngineImpl;
 import io.agora.rtc2.video.VideoCanvas;
 import io.agora.scene.onelive.R;
 import io.agora.scene.onelive.bean.AgoraGame;
+import io.agora.scene.onelive.bean.AppServerResult;
 import io.agora.scene.onelive.bean.GameInfo;
 import io.agora.scene.onelive.bean.LocalUser;
 import io.agora.scene.onelive.bean.RoomInfo;
 import io.agora.scene.onelive.repo.GameRepo;
-import io.agora.scene.onelive.util.OneSyncEventListener;
+import io.agora.scene.onelive.util.Event;
 import io.agora.scene.onelive.util.OneConstants;
+import io.agora.scene.onelive.util.OneSyncEventListener;
 import io.agora.scene.onelive.util.ViewStatus;
 import io.agora.syncmanager.rtm.IObject;
 import io.agora.syncmanager.rtm.SceneReference;
 import io.agora.syncmanager.rtm.Sync;
 import io.agora.syncmanager.rtm.SyncManagerException;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -76,6 +81,10 @@ public class RoomViewModel extends ViewModel {
     private final MutableLiveData<GameInfo> _gameInfo = new MutableLiveData<>();
     // RTC 音频状态
     public final MutableLiveData<Boolean> isLocalMicMuted = new MutableLiveData<>(false);
+    // RTC 音频状态
+    public final MutableLiveData<List<AgoraGame>> gameList = new MutableLiveData<>(new ArrayList<>());
+    @NonNull
+    public MutableLiveData<Event<String>> gameStartUrl = new MutableLiveData<>();
     //</editor-fold>
 
     //<editor-fold desc="Init and end">
@@ -84,6 +93,11 @@ public class RoomViewModel extends ViewModel {
         this.localUser = localUser;
 
         this.amHost = Objects.equals(currentRoom.getUserId(), localUser.getUserId());
+
+        // Consume at the beginning
+        Event<String> objectEvent = new Event<>("");
+        objectEvent.getContentIfNotHandled();
+        gameStartUrl.setValue(objectEvent);
 
         initRTC(context, new IRtcEngineEventHandler() {
             @Override
@@ -126,7 +140,7 @@ public class RoomViewModel extends ViewModel {
     private void subscribeAttr() {
         if (currentSceneRef != null) {
             if (amHost)
-                currentSceneRef.update(OneConstants.GAME_INFO, new GameInfo(GameInfo.END, -1), null);
+                currentSceneRef.update(OneConstants.GAME_INFO, new GameInfo(GameInfo.END, "0"), null);
             else
                 currentSceneRef.get(OneConstants.GAME_INFO, (GetAttrCallback) this::handleGetGameInfo);
             currentSceneRef.subscribe(OneConstants.GAME_INFO, new OneSyncEventListener(OneConstants.GAME_INFO, this::handleGameInfo));
@@ -180,14 +194,14 @@ public class RoomViewModel extends ViewModel {
         if (gameInfo != null) {
             switch (gameInfo.getStatus()) {
                 case GameInfo.START: {
-                    currentGame = GameRepo.getGameDetail(gameInfo.getGameId());
+                    currentGame = new AgoraGame(gameInfo.getGameId(), "");
                     _gameInfo.postValue(gameInfo);
                     break;
                 }
                 case GameInfo.END: {
                     _gameInfo.postValue(gameInfo);
                     if (currentGame != null) {
-                        GameRepo.endThisGame(currentRoom, currentGame);
+                        GameRepo.leaveGame(currentGame.getGameId(), localUser, currentRoom.getId(), amHost ? "1" : "2");
                         currentGame = null;
                     }
                     break;
@@ -212,7 +226,7 @@ public class RoomViewModel extends ViewModel {
         super.onCleared();
         new Thread(() -> {
             if (currentGame != null) {
-                GameRepo.endThisGame(currentRoom, currentGame);
+                GameRepo.leaveGame(currentGame.getGameId(), localUser, currentRoom.getId(), amHost ? "1" : "2");
             }
             // destroy RTE
             RtcEngine engine = _mEngine.getValue();
@@ -289,17 +303,42 @@ public class RoomViewModel extends ViewModel {
             }
         })).start();
     }
+    //<editor-fold desc="APP Server">
+    public void startGame(@NonNull String gameId) {
+        GameRepo.getJoinUrl(gameId, localUser, currentRoom.getId(), amHost ? "1" : "2", new Callback<AppServerResult<String>>() {
+            @Override
+            public void onResponse(Call<AppServerResult<String>> call, Response<AppServerResult<String>> response) {
+                AppServerResult<String> body = response.body();
+                if (body != null)
+                    gameStartUrl.postValue(new Event<>(body.getResult()));
+            }
+
+            @Override
+            public void onFailure(Call<AppServerResult<String>> call, Throwable t) {
+            }
+        });
+    }
+    public void fetchGameList() {
+        GameRepo.getGameList("1", gameList);
+    }
+    //</editor-fold>
 
     //<editor-fold desc="RTC related">
 
-    public void toggleMute() {
-        boolean isMute = isLocalMicMuted.getValue() == Boolean.TRUE;
-        isLocalMicMuted.setValue(!isMute);
+    public void enableMic(boolean enable) {
+        isLocalMicMuted.setValue(!enable);
         RtcEngineEx engine = _mEngine.getValue();
         if (engine != null) {
-            engine.muteLocalAudioStream(!isMute);
+            engine.muteLocalAudioStream(!enable);
         }
     }
+
+    public void changeRole(int oldRole, int newRole){
+        if (currentGame != null) {
+            GameRepo.changeRole(currentGame.getGameId(), localUser, currentRoom.getId(), oldRole, newRole);
+        }
+    }
+
 
     public void flipCamera() {
         RtcEngineEx engine = _mEngine.getValue();

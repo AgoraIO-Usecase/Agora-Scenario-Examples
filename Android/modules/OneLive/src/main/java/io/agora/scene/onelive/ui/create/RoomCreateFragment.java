@@ -14,7 +14,6 @@ import io.agora.example.base.BaseUtil;
 import io.agora.scene.onelive.GlobalViewModel;
 import io.agora.scene.onelive.R;
 import io.agora.scene.onelive.base.BaseNavFragment;
-import io.agora.scene.onelive.bean.LocalUser;
 import io.agora.scene.onelive.bean.RoomInfo;
 import io.agora.scene.onelive.databinding.OneFragmentCreateRoomBinding;
 import io.agora.scene.onelive.util.EventObserver;
@@ -27,7 +26,7 @@ public class RoomCreateFragment extends BaseNavFragment<OneFragmentCreateRoomBin
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mGlobalModel = OneUtil.getViewModel(requireActivity(), GlobalViewModel.class);
+        mGlobalModel = OneUtil.getAndroidViewModel(this, GlobalViewModel.class);
         initListener();
 
         setupRandomName();

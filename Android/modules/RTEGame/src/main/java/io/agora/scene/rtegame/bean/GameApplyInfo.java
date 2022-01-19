@@ -9,10 +9,9 @@ public class GameApplyInfo {
 
     //        1 - 未开始, 2 - 进行中, 3 - 已结束 (需要游戏有一个加载完成的回调)
     private int status;
-    //       1 你画我猜
-    private final int gameId;
+    private final String gameId;
 
-    public GameApplyInfo(int status, int gameUid) {
+    public GameApplyInfo(int status,@NonNull String gameUid) {
         this.status = status; 
         this.gameId = gameUid;
     }
@@ -25,7 +24,8 @@ public class GameApplyInfo {
         return status;
     }
 
-    public int getGameId() {
+    @NonNull
+    public String getGameId() {
         return gameId;
     }
 
@@ -34,7 +34,7 @@ public class GameApplyInfo {
     public String toString() {
         return "GameApplyInfo{" +
                 "status=" + status +
-                ", gameId=" + gameId +
+                ", gameId='" + gameId + '\'' +
                 '}';
     }
 }

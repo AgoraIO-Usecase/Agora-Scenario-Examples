@@ -34,7 +34,6 @@ import io.agora.scene.rtegame.bean.RoomInfo;
 import io.agora.scene.rtegame.databinding.GameFragmentRoomListBinding;
 import io.agora.scene.rtegame.databinding.GameItemRoomListBinding;
 import io.agora.scene.rtegame.util.Event;
-import io.agora.scene.rtegame.util.EventObserver;
 import io.agora.scene.rtegame.util.GameUtil;
 import io.agora.scene.rtegame.util.ViewStatus;
 
@@ -65,27 +64,13 @@ public class RoomListFragment extends BaseFragment<GameFragmentRoomListBinding> 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mGlobalModel = GameUtil.getAndroidViewModel(this);
+        mGlobalModel.clearRoomInfo();
         mViewModel = GameUtil.getViewModel(this, RoomListViewModel.class);
 
-        mGlobalModel = GameUtil.getViewModel(requireActivity(), GlobalViewModel.class);
-        mGlobalModel.clearRoomInfo();
-        // FIXME To avoid APP be killed in background
-        //       Apparently this is gonna trigger a second request
-        //       Works well, so be it
-        mGlobalModel.isRTMInit().observe(getViewLifecycleOwner(), new EventObserver<>(aBoolean -> {
-            BaseUtil.logD("mGlobalModel");
-            if (aBoolean == TRUE) mViewModel.fetchRoomList();
-        }));
         initView();
         initListener();
     }
-
-    //    @Override
-//    public void onResume() {
-//        super.onResume();
-        // 退出房间 更新列表 FIXME 更好的方式实现监听退出房间更新列表
-//        mBinding.getRoot().postDelayed(() -> mViewModel.fetchRoomList(),300);
-//    }
 
     private void initView() {
         int spanCount = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? 2 : 4;
@@ -110,32 +95,6 @@ public class RoomListFragment extends BaseFragment<GameFragmentRoomListBinding> 
             return WindowInsetsCompat.CONSUMED;
         });
 
-        // FIXME 点击标题栏清除房间信息(仅限调试)
-//        mBinding.toolbarFgList.setOnLongClickListener(v -> {
-//            try {
-//                Field mISyncManager = Sync.class.getDeclaredField("mISyncManager");
-//                mISyncManager.setAccessible(true);
-//                DataSyncImpl impl = (DataSyncImpl) mISyncManager.get(Sync.Instance());
-//
-//                Field client = DataSyncImpl.class.getDeclaredField("client");
-//                client.setAccessible(true);
-//                RtmClient rtmClient = (RtmClient) client.get(impl);
-//                List<String> rooms = new ArrayList<>();
-//                for (RoomInfo roomInfo : mAdapter.dataList) {
-//                    rooms.add(roomInfo.getId());
-//                    BaseUtil.logD("delete:"+roomInfo.getRoomName());
-//                }
-//                if (rtmClient != null) {
-////                  deleteChannelAttributesByKeys (String channelId, List< String > attributeKeys, ChannelAttributeOptions option
-//                    rtmClient.deleteChannelAttributesByKeys(GameConstants.globalChannel,rooms, new ChannelAttributeOptions(true), null);
-//                }
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//
-//            return true;
-//        });
         // "创建房间"按钮
         mBinding.btnCreateFgList.setOnClickListener((v) -> checkPermissionBeforeToNextPage(null));
         // 下拉刷新监听

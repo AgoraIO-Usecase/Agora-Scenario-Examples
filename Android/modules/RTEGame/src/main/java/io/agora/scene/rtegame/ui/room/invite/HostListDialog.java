@@ -36,7 +36,8 @@ import io.agora.scene.rtegame.util.ViewStatus;
 public class HostListDialog extends BaseBottomSheetDialogFragment<GameDialogHostListBinding> implements OnItemClickListener<RoomInfo> {
     public static final String TAG = "HostListDialog";
 
-    public int desiredGameId = -1;
+    @NonNull
+    public String desiredGameId = "";
 
     private RoomViewModel roomViewModel;
     // 用于获取可PK主播
@@ -47,13 +48,13 @@ public class HostListDialog extends BaseBottomSheetDialogFragment<GameDialogHost
     public HostListDialog() {
     }
 
-    public HostListDialog(int desiredGameId) {
+    public HostListDialog(@NonNull String desiredGameId) {
         this.desiredGameId = desiredGameId;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        if (desiredGameId == -1){
+        if (desiredGameId.isEmpty()){
             dismiss();
             return;
         }

@@ -40,10 +40,6 @@
          <font color=\'#FFFFFF\'>%s：</font>%s
         ]]></string>
 
-    <string name="com_live_alert_msg"><![CDATA[
-         <font color=\'#FFFFFF\'>T公告：</font>在公屏上打出“主播yyds”有机会和主播一起玩游戏哦！！！
-        ]]></string>
-
     <string name="com_live_game_mode">游戏模式</string>
     <string name="com_live_pk_with_mic">连麦PK</string>
 

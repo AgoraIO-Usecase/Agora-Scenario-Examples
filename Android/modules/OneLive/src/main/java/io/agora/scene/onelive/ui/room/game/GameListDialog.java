@@ -11,17 +11,12 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import io.agora.example.base.BaseBottomSheetDialogFragment;
 import io.agora.example.base.BaseRecyclerViewAdapter;
 import io.agora.example.base.OnItemClickListener;
 import io.agora.scene.onelive.bean.AgoraGame;
 import io.agora.scene.onelive.databinding.OneDialogGameListBinding;
 import io.agora.scene.onelive.databinding.OneItemGameBinding;
-import io.agora.scene.onelive.repo.GameRepo;
 import io.agora.scene.onelive.ui.room.RoomViewModel;
 import io.agora.scene.onelive.util.OneUtil;
 
@@ -30,6 +25,7 @@ public class GameListDialog extends BaseBottomSheetDialogFragment<OneDialogGameL
 
     @Nullable
     private RoomViewModel roomViewModel;
+    private BaseRecyclerViewAdapter<OneItemGameBinding, AgoraGame, ItemGameHolder> mAdapter;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -37,11 +33,13 @@ public class GameListDialog extends BaseBottomSheetDialogFragment<OneDialogGameL
         roomViewModel = OneUtil.getViewModel(requireParentFragment(), RoomViewModel.class);
         WindowCompat.setDecorFitsSystemWindows(requireDialog().getWindow(), false);
         initView();
+        roomViewModel.fetchGameList();
+        roomViewModel.gameList.observe(getViewLifecycleOwner(), agoraGames -> mAdapter.submitListAndPurge(agoraGames));
     }
 
     private void initView() {
         OneUtil.setBottomDialogBackground(mBinding.getRoot());
-        BaseRecyclerViewAdapter<OneItemGameBinding, AgoraGame, ItemGameHolder> mAdapter = new BaseRecyclerViewAdapter<>(fetchAllGameList(), this, ItemGameHolder.class);
+        mAdapter = new BaseRecyclerViewAdapter<>(null, this, ItemGameHolder.class);
         mBinding.recyclerViewDialogGameList.setAdapter(mAdapter);
 
         ViewCompat.setOnApplyWindowInsetsListener(requireDialog().getWindow().getDecorView(), (v, insets) -> {
@@ -61,12 +59,6 @@ public class GameListDialog extends BaseBottomSheetDialogFragment<OneDialogGameL
             roomViewModel.requestStartGame(data);
             dismiss();
         }
-    }
-
-    private List<AgoraGame> fetchAllGameList(){
-        List<AgoraGame> gameList = new ArrayList<>(Arrays.asList(GameRepo.gameList));
-        gameList.remove(1);
-        return gameList;
     }
 
 }

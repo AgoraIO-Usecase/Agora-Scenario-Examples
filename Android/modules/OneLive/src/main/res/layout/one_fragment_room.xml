@@ -9,7 +9,7 @@
     <io.agora.scene.onelive.ui.HostView
         android:id="@+id/host_view_fg_room"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <!-- Button -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -48,6 +48,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginBottom="32dp"
+            android:checkable="true"
             app:icon="@drawable/one_ic_microphone"
             app:layout_constraintBottom_toTopOf="@id/btn_end_call_fg_room"
             app:layout_constraintEnd_toStartOf="@id/btn_end_live_fg_room"
@@ -102,6 +103,7 @@
             android:layout_height="60dp"
             android:layout_marginTop="40dp"
             android:layout_marginEnd="36dp"
+            android:checkable="true"
             app:icon="@drawable/one_ic_microphone"
             app:layout_constraintEnd_toStartOf="@id/btn_exit_game_fg_room"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -121,8 +123,8 @@
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:layout_marginTop="140dp">
+            android:layout_marginTop="140dp"
+            android:background="@android:color/transparent">
 
             <FrameLayout
                 android:id="@+id/bottom_sheet_fg_room"
@@ -132,11 +134,11 @@
                 app:behavior_peekHeight="36dp"
                 app:layout_behavior="@string/bottom_sheet_behavior">
 
-<!--                FIXME Inflate WebView in MainThread is so slow-->
+                <!--                FIXME Inflate WebView in MainThread is so slow-->
                 <WebView
                     android:id="@+id/game_view_fg_room"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent" />
 
                 <io.agora.uiwidget.IndicatorView
                     android:id="@+id/indicator_sheet_fg_room"

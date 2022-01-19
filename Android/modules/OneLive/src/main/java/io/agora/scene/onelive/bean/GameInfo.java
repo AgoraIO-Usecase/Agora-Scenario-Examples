@@ -10,9 +10,9 @@ public class GameInfo {
     //        1 - 未开始, 2 - 进行中, 3 - 已结束 (需要游戏有一个加载完成的回调)
     private int status;
     // 游戏ID
-    private final int gameId;
+    private final String gameId;
 
-    public GameInfo(@IntRange(from = START, to = END) int status, int gameId) {
+    public GameInfo(@IntRange(from = START, to = END) int status, @NonNull String gameId) {
         this.status = status;
         this.gameId = gameId;
     }
@@ -25,7 +25,8 @@ public class GameInfo {
         return status;
     }
 
-    public int getGameId() {
+    @NonNull
+    public String getGameId() {
         return gameId;
     }
 
