@@ -49,7 +49,8 @@ class GameLiveController: PKLiveController {
             if _gameRoleType != nil {
                 return _gameRoleType ?? .player
             }
-            let role: GameRoleType = targetChannelName.isEmpty ? .player : .broadcast
+            let channelName = pkApplyInfoModel?.targetRoomId ?? channleName
+            let role: GameRoleType = channelName == self.channleName ? .broadcast : .player
             _gameRoleType = role
             return role
         }
@@ -119,8 +120,7 @@ class GameLiveController: PKLiveController {
             if model.status == .no_start {
                 self.updatePKUIStatus(isStart: false, isAudience: true)
             } else if model.status == .playing {
-                self.gameRoleType = .audience
-                self.updatePKUIStatus(isStart: true)
+                self.updatePKUIStatus(isStart: true, isAudience: true)
                 self.view.layer.contents = model.gameId?.bgImage?.cgImage
             } else {
                 self.updatePKUIStatus(isStart: false)
@@ -193,7 +193,8 @@ class GameLiveController: PKLiveController {
         gameInfoModel.status = model.status
         gameInfoModel.gameUid = "\(screenUserID)"
         gameInfoModel.gameId = model.gameId
-        gameInfoModel.roomId = targetChannelName.isEmpty ? channleName : targetChannelName
+        gameInfoModel.roomId = pkApplyInfoModel?.targetRoomId ?? channleName
+        self.gameInfoModel = gameInfoModel
         
         if model.status == .no_start {
             updatePKUIStatus(isStart: false)
@@ -215,11 +216,6 @@ class GameLiveController: PKLiveController {
     
     // 游戏PK
     private func clickGamePKHandler() {
-//        let modeView = GameModeView()
-//        modeView.didGameModeItemClosure = { model in
-//
-//        }
-//        AlertManager.show(view: modeView, alertPostion: .bottom)
         let gameCenterView = GameCenterView()
         gameCenterView.didGameCenterItemClosure = { [weak self] gameCenterModel in
             self?.gameCenterModel = gameCenterModel
@@ -232,7 +228,6 @@ class GameLiveController: PKLiveController {
         let pkInviteListView = PKLiveInviteView(channelName: channleName, sceneType: sceneType)
         pkInviteListView.pkInviteSubscribe = { [weak self] id in
             guard let self = self else { return }
-            self.targetChannelName = id
             // 加入到对方的channel 订阅对方
             SyncUtil.subscribe(id: id, key: self.sceneType.rawValue, onUpdated: { object in
                 self.pkSubscribeHandler(object: object)
@@ -264,7 +259,8 @@ class GameLiveController: PKLiveController {
         super.getBroadcastPKStatus()
         SyncUtil.fetch(id: channleName, key: SYNC_MANAGER_GAME_INFO, success: { result in
             self.gameInfoModel = JSONObject.toModel(GameInfoModel.self, value: result?.toJson())
-            self.updatePKUIStatus(isStart: self.gameInfoModel?.status == .playing && self.pkInfoModel?.status == .accept)
+            self.updatePKUIStatus(isStart: self.gameInfoModel?.status == .playing && self.pkInfoModel?.status == .accept,
+                                  isAudience: true)
             if self.gameInfoModel?.status != .playing && self.pkInfoModel?.status == .accept {
                 self.liveView.updateLiveLayout(postion: .center)
             } else if self.gameInfoModel?.status == .playing && self.pkInfoModel?.status == .accept {
@@ -278,7 +274,7 @@ class GameLiveController: PKLiveController {
     /// pk开始
     override func pkLiveStartHandler() {
         super.pkLiveStartHandler()
-        guard !targetChannelName.isEmpty else { return }
+        guard pkApplyInfoModel?.targetRoomId != channleName else { return }
         updateGameInfoStatus(isStart: true)
     }
     
@@ -318,9 +314,10 @@ class GameLiveController: PKLiveController {
         }
         if isStart {
             ToastView.show(text: "游戏开始", postion: .top, duration: 3)
-            let channelName = isAudience ? gameInfoModel?.roomId : targetChannelName.isEmpty ? channleName : targetChannelName
+            let channelName = isAudience ? gameInfoModel?.roomId : pkApplyInfoModel?.targetRoomId
             webView.loadUrl(gameId: gameId.rawValue,
                             roomId: channelName ?? "",
+                            toUser: currentUserId,
                             roleType: isAudience ? .audience : gameRoleType)
             
             viewModel.channelName = channelName ?? ""
@@ -347,7 +344,7 @@ class GameLiveController: PKLiveController {
     /// 更新游戏状态
     private func updateGameInfoStatus(isStart: Bool) {
         guard getRole(uid: UserInfo.uid) == .broadcaster else { return }
-        let channelName = targetChannelName.isEmpty ? channleName : targetChannelName
+        let channelName = pkApplyInfoModel?.targetRoomId ?? channleName
         if isStart {
             var gameApplyModel = GameApplyInfoModel()
             gameApplyModel.status = .playing
@@ -364,15 +361,17 @@ class GameLiveController: PKLiveController {
         super.viewDidDisappear(animated)
         SyncUtil.unsubscribe(id: channleName, key: SYNC_MANAGER_GAME_APPLY_INFO)
         SyncUtil.unsubscribe(id: channleName, key: SYNC_MANAGER_GAME_INFO)
-        if !targetChannelName.isEmpty {
-            SyncUtil.unsubscribe(id: targetChannelName, key: SYNC_MANAGER_GAME_APPLY_INFO)
+        if pkApplyInfoModel?.targetRoomId != channleName {
+            SyncUtil.unsubscribe(id: pkApplyInfoModel?.targetRoomId ?? "",
+                                 key: SYNC_MANAGER_GAME_APPLY_INFO)
         }
     }
     
     override func deleteSubscribe() {
         super.deleteSubscribe()
-        if !targetChannelName.isEmpty {
-            SyncUtil.unsubscribe(id: targetChannelName, key: SYNC_MANAGER_GAME_APPLY_INFO)
+        if pkApplyInfoModel?.targetRoomId != channleName {
+            SyncUtil.unsubscribe(id: pkApplyInfoModel?.targetRoomId ?? "",
+                                 key: SYNC_MANAGER_GAME_APPLY_INFO)
         }
     }
 }

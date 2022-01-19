@@ -33,13 +33,14 @@ class GameViewModel: NSObject {
         }
     }
     
-    func joinGame(gameId: String, roomId: String, identity: String, avatar: String, success: @escaping (String) -> Void) {
+    func joinGame(gameId: String, roomId: String, identity: String, avatar: String, toUser: String? = nil, success: @escaping (String) -> Void) {
         let params: [String: Any] = ["user_id": UserInfo.userId,
                                      "app_id": gameId,
                                      "room_id": roomId,
                                      "identity": identity,
                                      "token": KeyCenter.gameToken,
                                      "name": "User-\(UserInfo.uid)",
+                                     "to_user": toUser ?? "",
                                      "avatar": avatar]
         NetworkManager.shared.postRequest(urlString: "getJoinUrl", params: params) { response in
             let result = response["result"] as? String

@@ -46,9 +46,9 @@ class GameWebView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func loadUrl(gameId: String, roomId: String, roleType: GameRoleType) {
+    func loadUrl(gameId: String, roomId: String, toUser: String? = nil, roleType: GameRoleType) {
         let avatarUrl = "https://c-ssl.duitang.com/uploads/blog/202011/17/20201117105437_45d41.thumb.1000_0.jpeg"
-        viewModel.joinGame(gameId: gameId, roomId: roomId, identity: "\(roleType.rawValue)", avatar: avatarUrl) { [weak self] url in
+        viewModel.joinGame(gameId: gameId, roomId: roomId, identity: "\(roleType.rawValue)", avatar: avatarUrl, toUser: toUser) { [weak self] url in
             guard let url = URL(string: url) else { return }
             let request = URLRequest(url: url)
             self?.webView.load(request)

@@ -42,7 +42,6 @@ class PKLiveController: SignleLiveController {
     
     public var pkInfoModel: PKInfoModel?
     private lazy var timer = GCDTimer()
-    public var targetChannelName: String = ""
     public var pkApplyInfoModel: PKApplyInfoModel?
     
     override func viewDidLoad() {
@@ -270,7 +269,7 @@ class PKLiveController: SignleLiveController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        let channelName = targetChannelName.isEmpty ? channleName : targetChannelName
+        let channelName = pkApplyInfoModel?.targetRoomId ?? channleName
         SyncUtil.unsubscribe(id: channleName, key: SYNC_MANAGER_PK_INFO)
         SyncUtil.deleteCollection(id: channelName, className: sceneType.rawValue)
          deleteSubscribe()
@@ -284,17 +283,18 @@ class PKLiveController: SignleLiveController {
     private func updatePKInfoStatusToEnd() {
         guard var applyModel = pkApplyInfoModel else { return }
         applyModel.status = .end
-        let channelName = targetChannelName.isEmpty ? channleName : targetChannelName
+        let channelName = applyModel.targetRoomId ?? channleName
         SyncUtil.update(id: channelName, key: sceneType.rawValue, params: JSONObject.toJson(applyModel))
     }
     
     public func deleteSubscribe() {
         timer.destoryTimer(withName: sceneType.rawValue)
-        if !targetChannelName.isEmpty {
-            leaveChannel(uid: UserInfo.userId, channelName: targetChannelName)
-            SyncUtil.unsubscribe(id: targetChannelName, key: sceneType.rawValue)
-            SyncUtil.unsubscribe(id: targetChannelName, key: SYNC_MANAGER_GIFT_INFO)
-            SyncUtil.leaveScene(id: targetChannelName)
+        let channelName = pkApplyInfoModel?.targetRoomId ?? channleName
+        if channelName != self.channleName {
+            leaveChannel(uid: UserInfo.userId, channelName: channelName)
+            SyncUtil.unsubscribe(id: channelName, key: sceneType.rawValue)
+            SyncUtil.unsubscribe(id: channelName, key: SYNC_MANAGER_GIFT_INFO)
+            SyncUtil.leaveScene(id: channelName)
         } else {
             guard let applyModel = pkApplyInfoModel else { return }
             leaveChannel(uid: UserInfo.userId, channelName: applyModel.roomId)
@@ -305,7 +305,6 @@ class PKLiveController: SignleLiveController {
         let pkInviteListView = PKLiveInviteView(channelName: channleName, sceneType: sceneType)
         pkInviteListView.pkInviteSubscribe = { [weak self] id in
             guard let self = self else { return }
-            self.targetChannelName = id
             // 加入到对方的channel 订阅对方
             SyncUtil.subscribe(id: id, key: self.sceneType.rawValue, onUpdated: { object  in
                 self.pkSubscribeHandler(object: object)

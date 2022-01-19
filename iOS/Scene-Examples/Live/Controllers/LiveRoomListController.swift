@@ -20,6 +20,7 @@ class LiveRoomListController: BaseViewController {
         let w = (viewW - view.minLineSpacing - view.edge.left - view.edge.right) / 2.0
         view.itemSize = CGSize(width: w, height: w)
         view.scrollDirection = .vertical
+        view.isPagingEnabled = false
         view.addRefresh()
         view.register(LiveRoomListCell.self,
                       forCellWithReuseIdentifier: LiveRoomListCell.description())
