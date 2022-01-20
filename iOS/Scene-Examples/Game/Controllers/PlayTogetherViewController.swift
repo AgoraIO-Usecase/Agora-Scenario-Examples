@@ -129,7 +129,7 @@ class PlayTogetherViewController: BaseViewController {
         liveView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
         webView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(webView)
+        liveView.insertSubview(webView, belowSubview: liveView.playGifView)
         webView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         webView.topAnchor.constraint(equalTo: liveView.avatarview.bottomAnchor, constant: 15).isActive = true
         webView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true

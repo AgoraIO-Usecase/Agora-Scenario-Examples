@@ -77,7 +77,7 @@ class GameLiveController: PKLiveController {
         liveView.updateBottomButtonType(type: bottomType)
         
         webView.translatesAutoresizingMaskIntoConstraints = false
-        liveView.insertSubview(webView, at: 0)
+        liveView.insertSubview(webView, belowSubview: liveView.playGifView)
         webView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         webView.topAnchor.constraint(equalTo: liveView.avatarview.bottomAnchor, constant: 15).isActive = true
         webView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
@@ -303,9 +303,9 @@ class GameLiveController: PKLiveController {
         AgoraScreenShare.shareInstance().stopService()
     }
     
+    override func hiddenPkProgressView(isHidden: Bool) { }
+    
     private func updatePKUIStatus(isStart: Bool, isAudience: Bool = false) {
-        vsImageView.isHidden = true
-        countTimeLabel.isHidden = true//!isStart
         webView.isHidden = !isStart
         if currentUserId == UserInfo.uid && isStart {
             liveView.updateBottomButtonType(type: [.exitgame, .tool, .close])

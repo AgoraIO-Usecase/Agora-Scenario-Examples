@@ -18,17 +18,6 @@ enum PKApplyInfoStatus: Int, Codable {
     case end = 4
 }
 
-enum PKGameType: Int, Codable {
-    /// 你画我猜
-    case draw = 1
-    
-    var title: String {
-        switch self {
-        case .draw: return "你画我猜"
-        }
-    }
-}
-
 struct PKApplyInfoModel: Codable {
     var objectId: String = ""
     /// 用户id
@@ -40,7 +29,7 @@ struct PKApplyInfoModel: Codable {
     /// pk邀请状态
     var status: PKApplyInfoStatus = .invite
     /// 游戏ID
-    var gameId: PKGameType = .draw
+    var gameId: GameCenterType = .guess
     /// 自己的房间ID
     var roomId: String = ""
     /// 对方直播间的roomId

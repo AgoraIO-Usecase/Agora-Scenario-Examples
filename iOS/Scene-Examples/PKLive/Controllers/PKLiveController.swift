@@ -248,7 +248,7 @@ class PKLiveController: SignleLiveController {
         if isStart {
             vsImageView.centerYAnchor.constraint(equalTo: view.topAnchor,
                                                  constant: liveView.liveCanvasViewHeight).isActive = true
-            timer.scheduledSecondsTimer(withName: sceneType.rawValue, timeInterval: 600, queue: .main) { [weak self] _, duration in
+            timer.scheduledSecondsTimer(withName: sceneType.rawValue, timeInterval: 3600, queue: .main) { [weak self] _, duration in
                 self?.countTimeLabel.text = "".timeFormat(secounds: duration)
                 if duration <= 0 {
                     self?.updatePKInfoStatusToEnd()
@@ -259,7 +259,7 @@ class PKLiveController: SignleLiveController {
         }
     }
     
-    private func hiddenPkProgressView(isHidden: Bool) {
+    public func hiddenPkProgressView(isHidden: Bool) {
         DispatchQueue.main.asyncAfter(deadline: .now() + (isHidden ? 0 : 0.5)) {
             self.vsImageView.isHidden = isHidden
             self.countTimeLabel.isHidden = isHidden

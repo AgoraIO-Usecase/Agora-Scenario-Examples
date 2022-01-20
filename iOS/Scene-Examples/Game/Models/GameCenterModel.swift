@@ -33,6 +33,16 @@ enum GameCenterType: String, Codable {
             return UIImage(named: "Game/draw_bg")
         }
     }
+    
+    var title: String {
+        switch self {
+        case .guess: fallthrough
+        case .guess_together: return "你画我猜"
+        case .undercover: return "谁是卧底"
+        case .dahuashai: return "大话骰"
+        case .kingdom: return "王国激战"
+        }
+    }
 }
 
 enum GameBarrageType: Int, Codable, CaseIterable {
