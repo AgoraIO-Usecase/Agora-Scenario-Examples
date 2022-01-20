@@ -50,7 +50,7 @@ class GameLiveController: PKLiveController {
                 return _gameRoleType ?? .player
             }
             let channelName = pkApplyInfoModel?.targetRoomId ?? channleName
-            let role: GameRoleType = channelName == self.channleName ? .broadcast : .player
+            let role: GameRoleType = channelName == self.channleName ? .player : .broadcast
             _gameRoleType = role
             return role
         }
@@ -77,7 +77,7 @@ class GameLiveController: PKLiveController {
         liveView.updateBottomButtonType(type: bottomType)
         
         webView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(webView)
+        liveView.insertSubview(webView, at: 0)
         webView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         webView.topAnchor.constraint(equalTo: liveView.avatarview.bottomAnchor, constant: 15).isActive = true
         webView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
@@ -211,7 +211,7 @@ class GameLiveController: PKLiveController {
         }
 
         guard getRole(uid: "\(UserInfo.userId)") == .broadcaster else { return }
-        stopBroadcastButton.isHidden = model.status != .end
+        stopBroadcastButton.isHidden = pkApplyInfoModel?.status == .end || model.status != .end
     }
     
     // 游戏PK
@@ -228,6 +228,7 @@ class GameLiveController: PKLiveController {
         let pkInviteListView = PKLiveInviteView(channelName: channleName, sceneType: sceneType)
         pkInviteListView.pkInviteSubscribe = { [weak self] id in
             guard let self = self else { return }
+            
             // 加入到对方的channel 订阅对方
             SyncUtil.subscribe(id: id, key: self.sceneType.rawValue, onUpdated: { object in
                 self.pkSubscribeHandler(object: object)
@@ -334,11 +335,15 @@ class GameLiveController: PKLiveController {
 //            }
         } else {
             liveView.updateLiveLayout(postion: .center)
+            if pkApplyInfoModel?.status == .end {
+                liveView.updateLiveLayout(postion: .full)
+            }
             pkProgressView.isHidden = true
             viewModel.leaveGame(gameId: gameId.rawValue, roleType: gameRoleType)
             pkProgressView.reset()
             webView.reset()
             isLoadScreenShare = false
+            _gameRoleType = nil
         }
     }
     

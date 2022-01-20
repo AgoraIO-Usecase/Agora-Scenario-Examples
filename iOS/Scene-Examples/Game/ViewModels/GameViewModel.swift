@@ -12,22 +12,22 @@ class GameViewModel: NSObject {
     var channelName: String = ""
     
     private var ownerId: String = ""
-    private var gameList: [GameCenterModel]?
+    private var gameList: [SceneType: [GameCenterModel]]?
     init(channleName: String, ownerId: String) {
         self.channelName = channleName
         self.ownerId = ownerId
     }
     
     func getGameList(sceneType: SceneType, success: @escaping ([GameCenterModel]?) -> Void) {
-        if gameList != nil {
-            success(gameList)
+        if gameList?[sceneType] != nil {
+            success(gameList?[sceneType])
             return
         }
         NetworkManager.shared.postRequest(urlString: "getGames", params: ["type": sceneType.gameType]) { response in
             let result = response["result"] as? [[String: Any]]
             let list = result?.compactMap({ JSONObject.toModel(GameCenterModel.self, value: $0) })
             success(list)
-            self.gameList = list
+            self.gameList?[sceneType] = list
         } failure: { error in
             LogUtils.log(message: "error == \(error)", level: .error)
         }

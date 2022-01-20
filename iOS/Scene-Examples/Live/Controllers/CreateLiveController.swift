@@ -48,7 +48,6 @@ class CreateLiveController: BaseViewController {
         config.appId = KeyCenter.AppId
         config.channelProfile = .liveBroadcasting
         config.areaCode = .global
-        config.channelProfile = .liveBroadcasting
         return config
     }()
     private lazy var channelMediaOptions: AgoraRtcChannelMediaOptions = {
@@ -131,6 +130,7 @@ class CreateLiveController: BaseViewController {
         agoraKit?.setLogFile(LogUtils.sdkLogPath())
         agoraKit?.setClientRole(.broadcaster)
         agoraKit?.enableVideo()
+        agoraKit?.enableAudio()
         agoraKit?.setVideoEncoderConfiguration(
             AgoraVideoEncoderConfiguration(size: CGSize(width: 320, height: 240),
                                            frameRate: .fps30,

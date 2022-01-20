@@ -151,13 +151,14 @@ extension RtmSyncManager {
         if let onDeleteBlockTemp = onDeleteBlock {
             for i in onlyA {
                 if isDefaultChannelhandle {
+                    if i.getId() != self.sceneName { /** 过滤非本房间的删除事件 **/
+                        Log.info(text: "--- be ignore, not local scene id", tag: "RtmSyncManager")
+                        continue
+                    }
+                    
+                    /// 本房间的删除事件
                     Log.info(text: "--- invoke onDeleteBlock", tag: "RtmSyncManager")
                     onDeleteBlockTemp(i)
-                    continue
-                }
-                
-                if isDefaultChannelhandle, i.getId() != self.sceneName { /** 过滤非本房间的删除事件 **/
-                    Log.info(text: "--- be ignore, not local scene id", tag: "RtmSyncManager")
                     continue
                 }
             }

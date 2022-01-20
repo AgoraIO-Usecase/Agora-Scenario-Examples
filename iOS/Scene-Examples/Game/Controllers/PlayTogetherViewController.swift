@@ -8,17 +8,42 @@
 import UIKit
 import AgoraRtcKit
 
-class PlayTogetherViewController: SignleLiveController {
+class PlayTogetherViewController: BaseViewController {
+    private lazy var liveView: LiveBaseView = {
+        let view = LiveBaseView(channelName: channleName, currentUserId: currentUserId)
+        return view
+    }()
+    private var agoraKit: AgoraRtcEngineKit?
+    private lazy var rtcEngineConfig: AgoraRtcEngineConfig = {
+        let config = AgoraRtcEngineConfig()
+        config.appId = KeyCenter.AppId
+        config.channelProfile = .liveBroadcasting
+        config.areaCode = .global
+        return config
+    }()
+    public lazy var channelMediaOptions: AgoraRtcChannelMediaOptions = {
+        let option = AgoraRtcChannelMediaOptions()
+        option.autoSubscribeAudio = .of(true)
+        option.autoSubscribeVideo = .of(true)
+        return option
+    }()
     private lazy var webView: GameWebView = {
         let view = GameWebView()
         view.isHidden = true
         return view
     }()
     
+    private(set) var channleName: String = ""
+    private(set) var currentUserId: String = ""
+    private(set) var sceneType: SceneType = .playTogether
     private var gameInfoModel: GameInfoModel?
     private var gameCenterModel: GameCenterModel?
     private lazy var viewModel = GameViewModel(channleName: channleName,
                                                ownerId: UserInfo.uid)
+    /// 用户角色
+    private func getRole(uid: String) -> AgoraClientRole {
+        uid == currentUserId ? .broadcaster : .audience
+    }
     private var _gameRoleType: GameRoleType?
     private var gameRoleType: GameRoleType {
         get {
@@ -34,17 +59,74 @@ class PlayTogetherViewController: SignleLiveController {
         }
     }
     
+    init(channelName: String, sceneType: SceneType, userId: String, agoraKit: AgoraRtcEngineKit? = nil) {
+        super.init(nibName: nil, bundle: nil)
+        self.channleName = channelName
+        self.sceneType = sceneType
+        self.agoraKit = agoraKit
+        self.currentUserId = userId
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        if getRole(uid: UserInfo.uid) == .audience {
-            getBroadcastGameStatus()
-        }
+        setupAgoraKit()
+        eventHandler()
+        getBroadcastGameStatus()
+        // 设置屏幕常亮
+        UIApplication.shared.isIdleTimerDisabled = true
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationTransparent(isTransparent: true)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        joinChannel()
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = currentUserId != UserInfo.uid
+        var controllers = navigationController?.viewControllers ?? []
+        guard let index = controllers.firstIndex(where: { $0 is CreateLiveController }) else { return }
+        controllers.remove(at: index)
+        navigationController?.viewControllers = controllers
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        agoraKit?.disableAudio()
+        agoraKit?.disableVideo()
+        agoraKit?.muteAllRemoteAudioStreams(true)
+        agoraKit?.muteAllRemoteVideoStreams(true)
+        agoraKit?.destroyMediaPlayer(nil)
+        leaveChannel()
+        SyncUtil.unsubscribe(id: channleName, key: sceneType.rawValue)
+        SyncUtil.unsubscribe(id: channleName, key: SYNC_MANAGER_GAME_APPLY_INFO)
+        SyncUtil.unsubscribe(id: channleName, key: SYNC_MANAGER_GIFT_INFO)
+        SyncUtil.leaveScene(id: channleName)
+        navigationTransparent(isTransparent: false)
+        UIApplication.shared.isIdleTimerDisabled = false
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+    }
+
     private func setupUI() {
         let bottomType: [LiveBottomView.LiveBottomType] = currentUserId == "\(UserInfo.userId)" ? [.game, .gift, .tool, .close] : [.gift, .close]
         liveView.updateBottomButtonType(type: bottomType)
+        
+        view.backgroundColor = .init(hex: "#404B54")
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: UIView())
+        liveView.translatesAutoresizingMaskIntoConstraints = false
+    
+        view.addSubview(liveView)
+        
+        liveView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        liveView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        liveView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        liveView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
         webView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(webView)
@@ -52,8 +134,42 @@ class PlayTogetherViewController: SignleLiveController {
         webView.topAnchor.constraint(equalTo: liveView.avatarview.bottomAnchor, constant: 15).isActive = true
         webView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         webView.bottomAnchor.constraint(equalTo: liveView.chatView.topAnchor, constant: -10).isActive = true
-        
     }
+    
+    /// 加入channel
+    private func joinChannel() {
+        
+        let canvasModel = LiveCanvasModel()
+        canvasModel.canvas = LiveCanvasModel.createCanvas(uid: UInt(currentUserId) ?? 0)
+        let connection = LiveCanvasModel.createConnection(channelName: channleName, uid: UserInfo.userId)
+        canvasModel.connection = connection
+        canvasModel.channelName = channleName
+        liveView.setupCanvasData(data: canvasModel)
+        
+        if getRole(uid: UserInfo.uid) == .broadcaster {
+            channelMediaOptions.clientRoleType = .of((Int32)(AgoraClientRole.broadcaster.rawValue))
+            channelMediaOptions.publishAudioTrack = .of(true)
+            channelMediaOptions.publishCameraTrack = .of(true)
+            channelMediaOptions.autoSubscribeVideo = .of(true)
+            channelMediaOptions.autoSubscribeAudio = .of(true)
+        }
+        let result = agoraKit?.joinChannel(byToken: KeyCenter.Token,
+                                           channelId: channleName,
+                                           uid: UserInfo.userId,
+                                           mediaOptions: channelMediaOptions,
+                                           joinSuccess: nil)
+        if result == 0 {
+            LogUtils.log(message: "加入房间成功", level: .info)
+        }
+        liveView.sendMessage(message: "\(UserInfo.userId)加入房间", messageType: .message)
+    }
+    
+    private func leaveChannel() {
+        agoraKit?.leaveChannel({ state in
+            LogUtils.log(message: "leave channel state == \(state)", level: .info)
+        })
+    }
+    
     /// 获取主播游戏状态
     private func getBroadcastGameStatus() {
         SyncUtil.fetch(id: channleName, key: SYNC_MANAGER_GAME_INFO, success: { result in
@@ -65,8 +181,39 @@ class PlayTogetherViewController: SignleLiveController {
         })
     }
     
-    override func eventHandler() {
-        super.eventHandler()
+    private func setupAgoraKit() {
+        guard agoraKit == nil else { return }
+        agoraKit = AgoraRtcEngineKit.sharedEngine(with: rtcEngineConfig, delegate: self)
+        agoraKit?.setLogFile(LogUtils.sdkLogPath())
+        agoraKit?.setClientRole(getRole(uid: currentUserId))
+        if getRole(uid: currentUserId) == .broadcaster {
+            agoraKit?.enableVideo()
+            agoraKit?.enableAudio()
+        }
+        /// 开启扬声器
+        agoraKit?.setDefaultAudioRouteToSpeakerphone(true)
+    }
+    
+    private func eventHandler() {
+        liveView.onClickCloseLiveClosure = { [weak self] in
+            self?.clickCloseLive()
+        }
+        liveView.onClickSwitchCameraClosure = { [weak self] isSelected in
+            self?.agoraKit?.switchCamera()
+        }
+        liveView.onClickIsMuteCameraClosure = { [weak self] isSelected in
+            self?.agoraKit?.muteLocalVideoStream(isSelected)
+        }
+        liveView.onClickIsMuteMicClosure = { [weak self] isSelected in
+            self?.agoraKit?.muteLocalAudioStream(isSelected)
+        }
+        liveView.setupLocalVideoClosure = { [weak self] canvas in
+            self?.agoraKit?.setupLocalVideo(canvas)
+            self?.agoraKit?.startPreview()
+        }
+        liveView.setupRemoteVideoClosure = { [weak self] canvas, connection in
+            self?.agoraKit?.setupRemoteVideoEx(canvas, connection: connection)
+        }
         /// 监听游戏
         if getRole(uid: UserInfo.uid) == .audience {
             SyncUtil.subscribe(id: channleName, key: SYNC_MANAGER_GAME_INFO, onUpdated: { [weak self] object in
@@ -78,6 +225,11 @@ class PlayTogetherViewController: SignleLiveController {
                     self?.updateUIStatus(isStart: true)
                 } else {
                     self?.updateUIStatus(isStart: false)
+                }
+            })
+            SyncUtil.subscribe(id: channleName, key: nil, onDeleted: { _ in
+                self.showAlert(title: "直播已结束", message: "") {
+                    self.navigationController?.popViewController(animated: true)
                 }
             })
         }
@@ -97,12 +249,15 @@ class PlayTogetherViewController: SignleLiveController {
         webView.onMuteAudioClosure = { [weak self] isMute in
             guard let self = self else { return }
             let option = self.channelMediaOptions
-            option.publishAudioTrack = .of(isMute)
+            option.publishAudioTrack = self.getRole(uid: UserInfo.uid) == .broadcaster ? .of(true) : .of(isMute)
             option.publishCameraTrack = .of(self.getRole(uid: UserInfo.uid) == .broadcaster)
             if self.getRole(uid: UserInfo.uid) == .audience {
                 option.clientRoleType = isMute ? .of((Int32)(AgoraClientRole.broadcaster.rawValue)) : .of((Int32)(AgoraClientRole.audience.rawValue))
             }
             self.agoraKit?.updateChannel(with: option)
+            if self.getRole(uid: UserInfo.uid) == .audience {
+                self.agoraKit?.enableLocalAudio(isMute)
+            }
         }
         
         webView.onLeaveGameClosure = { [weak self] in
@@ -113,6 +268,18 @@ class PlayTogetherViewController: SignleLiveController {
             let gameId = self?.gameInfoModel?.gameId ?? self?.gameCenterModel?.gameId
             self?.viewModel.changeRole(gameId: gameId?.rawValue ?? "", oldRole: oldRole, newRole: newRole)
             self?.gameRoleType = newRole
+        }
+    }
+    
+    private func clickCloseLive() {
+        if getRole(uid: UserInfo.uid) == .broadcaster {
+            showAlert(title: "Live_End".localized, message: "Confirm_End_Live".localized) { [weak self] in
+                SyncUtil.delete(id: self?.channleName ?? "")
+                self?.navigationController?.popViewController(animated: true)
+            }
+
+        } else {
+            navigationController?.popViewController(animated: true)
         }
     }
     
@@ -169,8 +336,6 @@ class PlayTogetherViewController: SignleLiveController {
             liveView.updateBottomButtonType(type: [.exitgame, .gift, .tool, .close])
         } else if currentUserId == UserInfo.uid && !isStart {
             liveView.updateBottomButtonType(type: [.game, .gift, .tool, .close])
-        } else if isStart {
-            liveView.updateBottomButtonType(type: [.exitgame, .gift, .close])
         } else {
             liveView.updateBottomButtonType(type: [.gift, .close])
         }
@@ -201,10 +366,48 @@ class PlayTogetherViewController: SignleLiveController {
                         key: SYNC_MANAGER_GAME_INFO,
                         params: JSONObject.toJson(gameInfoModel))
     }
+}
+
+extension PlayTogetherViewController: AgoraRtcEngineDelegate {
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        SyncUtil.unsubscribe(id: channleName, key: SYNC_MANAGER_GAME_APPLY_INFO)
-        SyncUtil.unsubscribe(id: channleName, key: SYNC_MANAGER_GAME_INFO)
+    func rtcEngine(_ engine: AgoraRtcEngineKit, didOccurWarning warningCode: AgoraWarningCode) {
+        LogUtils.log(message: "warning: \(warningCode.description)", level: .warning)
+    }
+    func rtcEngine(_ engine: AgoraRtcEngineKit, didOccurError errorCode: AgoraErrorCode) {
+        LogUtils.log(message: "error: \(errorCode)", level: .error)
+        showAlert(title: "Error", message: "Error \(errorCode.description) occur")
+    }
+    
+    func rtcEngine(_ engine: AgoraRtcEngineKit, didJoinChannel channel: String, withUid uid: UInt, elapsed: Int) {
+        LogUtils.log(message: "Join \(channel) with uid \(uid) elapsed \(elapsed)ms", level: .info)
+    }
+    
+    func rtcEngine(_ engine: AgoraRtcEngineKit, didJoinedOfUid uid: UInt, elapsed: Int) {
+        LogUtils.log(message: "remote user join: \(uid) \(elapsed)ms", level: .info)
+    }
+
+    func rtcEngine(_ engine: AgoraRtcEngineKit, didOfflineOfUid uid: UInt, reason: AgoraUserOfflineReason) {
+        LogUtils.log(message: "remote user leval: \(uid) reason \(reason)", level: .info)
+    }
+
+    func rtcEngine(_ engine: AgoraRtcEngineKit, reportRtcStats stats: AgoraChannelStats) {
+//        localVideo.statsInfo?.updateChannelStats(stats)
+    }
+    
+    func rtcEngine(_ engine: AgoraRtcEngineKit, localVideoStats stats: AgoraRtcLocalVideoStats) {
+//        localVideo.statsInfo?.updateLocalVideoStats(stats)
+    }
+
+    func rtcEngine(_ engine: AgoraRtcEngineKit, localAudioStats stats: AgoraRtcLocalAudioStats) {
+//        localVideo.statsInfo?.updateLocalAudioStats(stats)
+    }
+    
+    func rtcEngine(_ engine: AgoraRtcEngineKit, remoteVideoStats stats: AgoraRtcRemoteVideoStats) {
+//        remoteVideo.statsInfo?.updateVideoStats(stats)
+        LogUtils.log(message: "remoteVideoWidth== \(stats.width) Height == \(stats.height)", level: .info)
+    }
+    
+    func rtcEngine(_ engine: AgoraRtcEngineKit, remoteAudioStats stats: AgoraRtcRemoteAudioStats) {
+//        remoteVideo.statsInfo?.updateAudioStats(stats)
     }
 }

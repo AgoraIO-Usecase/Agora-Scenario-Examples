@@ -163,7 +163,7 @@ class LogUtil {
             outputStream.open()
             for log in logs {
                 let msg = log.description + "\n"
-                let bytesWritten = outputStream.write(msg, maxLength: 2)
+                let bytesWritten = outputStream.write(msg, maxLength: msg.count)
                 if bytesWritten < 0 { print("write failure") }
             }
             outputStream.close()
