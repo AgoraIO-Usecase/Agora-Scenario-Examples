@@ -10,7 +10,8 @@ target 'Scene-Examples' do
   pod 'AgoraRtcEngine_iOS_Preview', '4.0.0.preview.3'
   pod 'AgoraScreenShare', :path => 'sdk'
   pod 'AgoraUIKit-iOS', '~> 1.0.0'
-  pod 'AgoraSyncManager', '1.0.2'
+#  pod 'AgoraSyncManager', '1.0.2'
+  pod 'AgoraSyncManager', :path => 'AgoraSyncManager'
   # Pods for Scene-Examples
 
 end

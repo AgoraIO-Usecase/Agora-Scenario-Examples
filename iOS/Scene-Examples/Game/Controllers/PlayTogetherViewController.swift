@@ -98,8 +98,10 @@ class PlayTogetherViewController: BaseViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        agoraKit?.disableAudio()
-        agoraKit?.disableVideo()
+        if getRole(uid: UserInfo.uid) == .broadcaster {
+            agoraKit?.disableAudio()
+            agoraKit?.disableVideo()
+        }
         agoraKit?.muteAllRemoteAudioStreams(true)
         agoraKit?.muteAllRemoteVideoStreams(true)
         agoraKit?.destroyMediaPlayer(nil)
@@ -185,8 +187,8 @@ class PlayTogetherViewController: BaseViewController {
         guard agoraKit == nil else { return }
         agoraKit = AgoraRtcEngineKit.sharedEngine(with: rtcEngineConfig, delegate: self)
         agoraKit?.setLogFile(LogUtils.sdkLogPath())
-        agoraKit?.setClientRole(getRole(uid: currentUserId))
-        if getRole(uid: currentUserId) == .broadcaster {
+        agoraKit?.setClientRole(getRole(uid: UserInfo.uid))
+        if getRole(uid: UserInfo.uid) == .broadcaster {
             agoraKit?.enableVideo()
             agoraKit?.enableAudio()
         }
