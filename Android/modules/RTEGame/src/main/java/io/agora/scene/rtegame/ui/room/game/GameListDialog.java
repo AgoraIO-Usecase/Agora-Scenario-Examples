@@ -9,6 +9,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.lifecycle.Observer;
 
 import java.util.ArrayList;
@@ -49,6 +50,13 @@ public class GameListDialog extends BaseBottomSheetDialogFragment<GameDialogGame
             mBinding.getRoot().setPadding(inset.left, 0, inset.right, inset.bottom);
             return WindowInsetsCompat.CONSUMED;
         });
+
+        WindowInsetsControllerCompat controller = ViewCompat.getWindowInsetsController(requireDialog().getWindow().getDecorView());
+        if (controller!=null) {
+            boolean isNightMode = GameUtil.isNightMode(getResources().getConfiguration());
+            controller.setAppearanceLightStatusBars(!isNightMode);
+            controller.setAppearanceLightNavigationBars(!isNightMode);
+        }
     }
 
     @Override

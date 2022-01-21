@@ -5,16 +5,22 @@ import static android.view.View.VISIBLE;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.ThemeUtils;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.color.MaterialColors;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,9 +86,26 @@ public class HostListDialog extends BaseBottomSheetDialogFragment<GameDialogHost
     private void initListener() {
         ViewCompat.setOnApplyWindowInsetsListener(requireDialog().getWindow().getDecorView(), (v, insets) -> {
             Insets inset = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            mBinding.getRoot().setPadding(inset.left, 0, inset.right, inset.bottom);
+            mBinding.getRoot().setPadding(inset.left, 0, inset.right, 0);
+            mBinding.recyclerViewDialogHostList.setPaddingRelative(0,0,0,inset.bottom);
+
+            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mBinding.getRoot().getLayoutParams();
+            layoutParams.topMargin = inset.top;
+            mBinding.getRoot().setLayoutParams(layoutParams);
+
+            FrameLayout.LayoutParams lp4Empty = (FrameLayout.LayoutParams) mBinding.emptyDialogHostList.getLayoutParams();
+            lp4Empty.bottomMargin = inset.bottom;
+            mBinding.emptyDialogHostList.setLayoutParams(lp4Empty);
+
             return WindowInsetsCompat.CONSUMED;
         });
+
+        WindowInsetsControllerCompat controller = ViewCompat.getWindowInsetsController(requireDialog().getWindow().getDecorView());
+        if (controller!=null) {
+            boolean isNightMode = GameUtil.isNightMode(getResources().getConfiguration());
+            controller.setAppearanceLightStatusBars(!isNightMode);
+            controller.setAppearanceLightNavigationBars(!isNightMode);
+        }
 
         mBinding.btnRefreshDialogHostList.setOnClickListener((v) -> roomListViewModel.fetchRoomList());
         mBinding.appBarDialogHostList.setOnClickListener(v -> mBinding.recyclerViewDialogHostList.smoothScrollToPosition(0));
