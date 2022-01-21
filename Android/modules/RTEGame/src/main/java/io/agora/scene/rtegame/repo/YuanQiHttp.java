@@ -29,7 +29,7 @@ public class YuanQiHttp {
 
     private static Retrofit init() {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(BaseUtil::logD);
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
                     Request request = chain.request().newBuilder()

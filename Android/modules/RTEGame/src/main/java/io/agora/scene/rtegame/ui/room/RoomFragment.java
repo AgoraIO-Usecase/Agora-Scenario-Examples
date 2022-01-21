@@ -232,14 +232,14 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
      */
     private void showPKDialog(PKApplyInfo pkApplyInfo) {
         if (pkApplyInfo.getRoomId().equals(currentRoom.getId())) {
-            insertNewMessage("你画我猜即将开始，等待其他玩家...");
-            currentDialog = new AlertDialog.Builder(requireContext()).setMessage("你画我猜即将开始，等待其他玩家...").setCancelable(false)
+            insertNewMessage(getString(R.string.game_ready_message));
+            currentDialog = new AlertDialog.Builder(requireContext()).setMessage(R.string.game_ready_message).setCancelable(false)
                     .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
                         mViewModel.cancelApplyPK(pkApplyInfo);
                         dialog.dismiss();
                     }).show();
         } else {
-            currentDialog = new AlertDialog.Builder(requireContext()).setMessage("您的好友邀请您加入游戏").setCancelable(false)
+            currentDialog = new AlertDialog.Builder(requireContext()).setMessage(getString(R.string.game_accept_message, pkApplyInfo.getUserName())).setCancelable(false)
                     .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                         mViewModel.acceptApplyPK(pkApplyInfo);
                         dialog.dismiss();

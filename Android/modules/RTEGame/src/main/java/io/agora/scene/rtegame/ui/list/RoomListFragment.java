@@ -92,6 +92,8 @@ public class RoomListFragment extends BaseFragment<GameFragmentRoomListBinding> 
             lpBtn.bottomMargin = inset.bottom + ((int) BaseUtil.dp2px(24));
             mBinding.btnCreateFgList.setLayoutParams(lpBtn);
 
+            mBinding.recyclerViewFgList.setPaddingRelative(inset.left, inset.top, inset.right, inset.bottom);
+
             return WindowInsetsCompat.CONSUMED;
         });
 

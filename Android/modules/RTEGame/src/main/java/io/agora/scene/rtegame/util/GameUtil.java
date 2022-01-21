@@ -1,6 +1,8 @@
 package io.agora.scene.rtegame.util;
 
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.view.View;
 
@@ -147,6 +149,14 @@ public class GameUtil {
         desiredColor = getMaterialBackgroundColor(desiredColor);
         materialShapeDrawable.setFillColor(ColorStateList.valueOf(desiredColor));
         ViewCompat.setBackground(view, materialShapeDrawable);
+    }
+
+    public static boolean isNightMode() {
+        return isNightMode(Resources.getSystem().getConfiguration());
+    }
+
+    public static boolean isNightMode(@NonNull Configuration configuration) {
+        return (configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
     }
 
     public static int getMaterialBackgroundColor(int color) {

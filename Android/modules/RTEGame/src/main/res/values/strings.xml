@@ -33,6 +33,8 @@
     <string name="game_game">游戏</string>
     <string name="game_exit_game">退出游戏</string>
     <string name="game_exit_pk">终止连麦</string>
+    <string name="game_ready_message">游戏即将开始，等待其他玩家…</string>
+    <string name="game_accept_message">%s邀请您加入游戏</string>
 
     <string name="game_donate">赠送</string>
     <string name="game_gift">礼物</string>

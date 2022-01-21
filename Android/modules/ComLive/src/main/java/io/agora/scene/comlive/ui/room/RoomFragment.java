@@ -100,13 +100,6 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
                 .placeholder(R.mipmap.com_live_ic_launcher_round).into(mBinding.layoutRoomInfo.avatarHostFgRoom);
         mBinding.layoutRoomInfo.nameHostFgRoom.setText(currentRoom.getTempUserName());
 
-        mBinding.layoutRoomInfo.nameHostFgRoom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mViewModel.jsEnableMic(true);
-
-            }
-        });
         // config game view
         new Handler(Looper.getMainLooper()).post(() -> {
             if (mBinding != null) {
