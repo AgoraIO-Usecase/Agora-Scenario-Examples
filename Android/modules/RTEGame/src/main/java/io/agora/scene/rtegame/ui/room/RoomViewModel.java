@@ -180,6 +180,7 @@ public class RoomViewModel extends ViewModel {
         BaseUtil.logD("onJoinRTMSucceed");
         currentSceneRef = sceneReference;
         _viewStatus.postValue(new ViewStatus.Error(localUser.getName() +" 加入RTM成功"));
+        // 初始化时，监听当前频道属性
         if (currentSceneRef != null) {
             subscribeAttr(currentSceneRef, currentRoom);
         }
@@ -322,7 +323,8 @@ public class RoomViewModel extends ViewModel {
                         public void onSuccess(SceneReference sceneReference) {
                             if (targetSceneRef == null)
                                 targetSceneRef = sceneReference;
-                            targetSceneRef.subscribe(GameConstants.PK_APPLY_INFO, new GamSyncEventListener(GameConstants.PK_APPLY_INFO, RoomViewModel.this::tryHandleApplyPKInfo));
+                            subscribeAttr(targetSceneRef, new RoomInfo(pkApplyInfo.getRoomId(), "", pkApplyInfo.getUserId()));
+//                            targetSceneRef.subscribe(GameConstants.PK_APPLY_INFO, new GamSyncEventListener(GameConstants.PK_APPLY_INFO, RoomViewModel.this::tryHandleApplyPKInfo));
                         }
 
                         @Override
@@ -376,10 +378,19 @@ public class RoomViewModel extends ViewModel {
         PKInfo pkInfo;
         GameApplyInfo gameApplyInfo = new GameApplyInfo(GameApplyInfo.PLAYING, pkApplyInfo.getGameId());
         if (Objects.equals(localUser.getUserId(), pkApplyInfo.getUserId())) {//      客户端为发起方
+            BaseUtil.logD("发起方");
             pkInfo = new PKInfo(PKInfo.AGREED, pkApplyInfo.getTargetRoomId(), pkApplyInfo.getTargetUserId());
-            if (targetSceneRef != null)
-                targetSceneRef.update(GameConstants.GAME_APPLY_INFO, gameApplyInfo, null);
+            if (targetSceneRef != null) {
+                BaseUtil.logD("targetSceneRef");
+                targetSceneRef.update(GameConstants.GAME_APPLY_INFO, gameApplyInfo, new GetAttrCallback() {
+                    @Override
+                    public void onSuccess(IObject result) {
+                        BaseUtil.logD("onSuccess(:"+result.toString());
+                    }
+                });
+            }
         } else {//      客户端为接收方,当前房间内所有人需要知道发起方的 roomId 和 UserId
+            BaseUtil.logD("接收方");
             pkInfo = new PKInfo(PKInfo.AGREED, pkApplyInfo.getRoomId(), pkApplyInfo.getUserId());
         }
 
@@ -409,6 +420,7 @@ public class RoomViewModel extends ViewModel {
                 @Override
                 public void onSuccess(SceneReference sceneReference) {
                     targetSceneRef = sceneReference;
+                    // 发起邀请，监听对方频道
                     roomViewModel.subscribeAttr(sceneReference, targetRoom);
                     doSendApplyPKInvite(roomViewModel, targetSceneRef, targetRoom, gameId);
                 }
