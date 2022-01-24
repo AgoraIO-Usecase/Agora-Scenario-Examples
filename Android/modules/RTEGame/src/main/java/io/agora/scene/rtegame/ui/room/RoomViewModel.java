@@ -788,8 +788,8 @@ public class RoomViewModel extends ViewModel {
     private String getIdentification(String gameRoomId) {
         if (amHost) {
             if (Objects.equals(currentRoom.getId(), gameRoomId))
-                return "1";
-            else return "2";
+                return "2";
+            else return "1";
         } else {
             return "3";
         }
