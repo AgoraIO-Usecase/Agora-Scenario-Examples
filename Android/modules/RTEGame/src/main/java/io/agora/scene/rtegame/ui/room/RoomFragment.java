@@ -195,7 +195,7 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
         mViewModel.viewStatus().observe(getViewLifecycleOwner(), viewStatus -> {
             if (viewStatus instanceof ViewStatus.Message)
                 insertNewMessage(((ViewStatus.Message) viewStatus).msg);
-            else if(viewStatus instanceof ViewStatus.Error){
+            else if (viewStatus instanceof ViewStatus.Error) {
                 BaseUtil.toast(requireContext(), ((ViewStatus.Error) viewStatus).msg);
                 findNavController().popBackStack();
             }
@@ -281,10 +281,7 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
             onLayoutTypeChanged(LiveHostLayout.Type.DOUBLE_IN_GAME);
         } else {
             mBinding.hostContainerFgRoom.removeWebView();
-            if(mBinding.hostContainerFgRoom.getChildCount() == 2)
-                onLayoutTypeChanged(LiveHostLayout.Type.DOUBLE);
-            else
-                onLayoutTypeChanged(mBinding.hostContainerFgRoom.getType());
+            onLayoutTypeChanged(mBinding.hostContainerFgRoom.getChildCount() == 2 ? LiveHostLayout.Type.DOUBLE : mBinding.hostContainerFgRoom.getType());
         }
     }
     //</editor-fold>
@@ -384,7 +381,7 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
         } else {
             insertNewMessage("正在加载连麦主播【" + subRoomInfo.getTempUserName() + "】视频");
             LiveHostCardView view = container.createSubHostView();
-            onLayoutTypeChanged(LiveHostLayout.Type.DOUBLE);
+            onLayoutTypeChanged(container.getChildCount() == 2 ? LiveHostLayout.Type.DOUBLE : container.getType());
             mViewModel.setupRemoteView(view.renderTextureView, subRoomInfo, false);
         }
     }
@@ -410,7 +407,7 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
     }
 
     private void onLayoutTypeChanged(LiveHostLayout.Type type) {
-        BaseUtil.logD("onLayoutTypeChanged:" + type.ordinal());
+        BaseUtil.logD(System.currentTimeMillis() + "onLayoutTypeChanged:" + type.ordinal());
         mBinding.hostContainerFgRoom.setType(type);
         adjustMessageWidth(type == LiveHostLayout.Type.HOST_ONLY);
 
