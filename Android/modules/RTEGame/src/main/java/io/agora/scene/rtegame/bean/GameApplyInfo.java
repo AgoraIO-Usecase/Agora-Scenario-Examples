@@ -11,9 +11,9 @@ public class GameApplyInfo {
     private int status;
     private final String gameId;
 
-    public GameApplyInfo(int status,@NonNull String gameUid) {
-        this.status = status; 
-        this.gameId = gameUid;
+    public GameApplyInfo(int status,@NonNull String gameId) {
+        this.status = status;
+        this.gameId = gameId;
     }
 
     public void setStatus(int status) {

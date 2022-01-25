@@ -179,10 +179,31 @@ public class RoomViewModel extends ViewModel {
     private void onJoinRTMSucceed(@NonNull SceneReference sceneReference) {
         BaseUtil.logD("onJoinRTMSucceed");
         currentSceneRef = sceneReference;
-        _viewStatus.postValue(new ViewStatus.Error(localUser.getName() +" 加入RTM成功"));
+        _viewStatus.postValue(new ViewStatus.Message(localUser.getName() + " 加入RTM成功"));
         // 初始化时，监听当前频道属性
         if (currentSceneRef != null) {
             subscribeAttr(currentSceneRef, currentRoom);
+            currentSceneRef.subscribe(new Sync.EventListener() {
+                @Override
+                public void onCreated(IObject item) {
+
+                }
+
+                @Override
+                public void onUpdated(IObject item) {
+
+                }
+
+                @Override
+                public void onDeleted(IObject item) {
+                    _viewStatus.postValue(new ViewStatus.Error("主播已下播💔"));
+                }
+
+                @Override
+                public void onSubscribeError(SyncManagerException ex) {
+
+                }
+            });
         }
     }
 
@@ -196,6 +217,16 @@ public class RoomViewModel extends ViewModel {
                 engine.leaveChannel();
                 RtcEngine.destroy();
             }
+
+            if (amHost) {
+                // Step 1
+//                requestExitGame();
+                // Step 2
+                endPK();
+                // Step 3
+                exitGame();
+            }
+
             // destroy RTM
             if (currentSceneRef != null) {
                 if (amHost)
@@ -340,6 +371,10 @@ public class RoomViewModel extends ViewModel {
             }
             case PKApplyInfo.REFUSED:
             case PKApplyInfo.END: {
+                // ensure game end
+                if (currentSceneRef != null)
+                    currentSceneRef.update(GameConstants.GAME_INFO, new GameInfo(GameInfo.END, "",""), null);
+
                 endPK();
                 break;
             }
@@ -382,12 +417,7 @@ public class RoomViewModel extends ViewModel {
             pkInfo = new PKInfo(PKInfo.AGREED, pkApplyInfo.getTargetRoomId(), pkApplyInfo.getTargetUserId());
             if (targetSceneRef != null) {
                 BaseUtil.logD("targetSceneRef");
-                targetSceneRef.update(GameConstants.GAME_APPLY_INFO, gameApplyInfo, new GetAttrCallback() {
-                    @Override
-                    public void onSuccess(IObject result) {
-                        BaseUtil.logD("onSuccess(:"+result.toString());
-                    }
-                });
+                targetSceneRef.update(GameConstants.GAME_APPLY_INFO, gameApplyInfo, (GetAttrCallback) result -> BaseUtil.logD("onSuccess(:" + result.toString()));
             }
         } else {//      客户端为接收方,当前房间内所有人需要知道发起方的 roomId 和 UserId
             BaseUtil.logD("接收方");
@@ -480,8 +510,7 @@ public class RoomViewModel extends ViewModel {
         BaseUtil.logD("tryHandleGameApplyInfo->" + item.toString());
         GameApplyInfo currentGame = handleIObject(item, GameApplyInfo.class);
         if (currentGame != null) {
-            if (_currentGame.getValue() == null || !Objects.equals(_currentGame.getValue().toString(), currentGame.toString()))
-                onGameApplyInfoChanged(currentGame);
+            onGameApplyInfoChanged(currentGame);
         }
     }
 
@@ -491,7 +520,7 @@ public class RoomViewModel extends ViewModel {
             roomGame = new AgoraGame(currentGame.getGameId(), "");
             PKApplyInfo applyInfo = _applyInfo.getValue();
             if (currentSceneRef != null && applyInfo != null) {
-                String targetRoomId = applyInfo.getRoomId().equals(currentRoom.getId()) ? applyInfo.getTargetRoomId(): currentRoom.getId();
+                String targetRoomId = applyInfo.getRoomId().equals(currentRoom.getId()) ? applyInfo.getTargetRoomId() : currentRoom.getId();
                 currentSceneRef.update(GameConstants.GAME_INFO, new GameInfo(GameInfo.START, targetRoomId, currentGame.getGameId()), null);
             }
         } else if (currentGame.getStatus() == GameApplyInfo.END) {
@@ -529,10 +558,8 @@ public class RoomViewModel extends ViewModel {
     //<editor-fold desc="PKInfo">
     private void tryHandlePKInfo(IObject item) {
         PKInfo pkInfo = handleIObject(item, PKInfo.class);
-        if (pkInfo != null) {
-            if (this.pkInfo == null || !Objects.equals(pkInfo.toString(), this.pkInfo.toString()))
-                onPKInfoChanged(pkInfo);
-        }
+        if (pkInfo != null)
+            onPKInfoChanged(pkInfo);
     }
 
     /**
@@ -681,7 +708,7 @@ public class RoomViewModel extends ViewModel {
         new Thread(() -> {
             String appID = mContext.getString(R.string.rtc_app_id);
             if (appID.isEmpty() || appID.codePointCount(0, appID.length()) != 32) {
-                _viewStatus.postValue(new ViewStatus.Error("APP ID is not valid"));
+                _viewStatus.postValue(new ViewStatus.Message("APP ID is not valid"));
                 _mEngine.postValue(null);
             } else {
                 RtcEngineConfig config = new RtcEngineConfig();
@@ -698,7 +725,6 @@ public class RoomViewModel extends ViewModel {
                     _mEngine.postValue(engineEx);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    _viewStatus.postValue(new ViewStatus.Error(e));
                     _mEngine.postValue(null);
                 }
 
@@ -711,7 +737,7 @@ public class RoomViewModel extends ViewModel {
 
                     @Override
                     public void onFail(SyncManagerException e) {
-                        _viewStatus.postValue(new ViewStatus.Error("加入RTM失败"));
+                        _viewStatus.postValue(new ViewStatus.Message("加入RTM失败"));
                     }
                 });
             }
@@ -814,7 +840,8 @@ public class RoomViewModel extends ViewModel {
         if (roomGame != null)
             GameRepo.sendBarrage(barrage, roomGame.getGameId(), localUser, currentRoom.getId(), getIdentification(currentRoom.getId()), currentRoom.getId());
     }
-    public void setRole(int oldRole, int newRole){
+
+    public void setRole(int oldRole, int newRole) {
         if (roomGame != null)
             GameRepo.changeRole(roomGame.getGameId(), localUser, currentRoom.getId(), oldRole, newRole);
     }

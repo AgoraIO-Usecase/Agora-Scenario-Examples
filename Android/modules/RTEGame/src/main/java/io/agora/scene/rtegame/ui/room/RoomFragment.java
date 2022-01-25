@@ -12,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.WebView;
 
@@ -192,8 +193,12 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
         }
 
         mViewModel.viewStatus().observe(getViewLifecycleOwner(), viewStatus -> {
-            if (viewStatus instanceof ViewStatus.Error)
-                insertNewMessage(((ViewStatus.Error) viewStatus).msg);
+            if (viewStatus instanceof ViewStatus.Message)
+                insertNewMessage(((ViewStatus.Message) viewStatus).msg);
+            else if(viewStatus instanceof ViewStatus.Error){
+                BaseUtil.toast(requireContext(), ((ViewStatus.Error) viewStatus).msg);
+                findNavController().popBackStack();
+            }
         });
 
         mViewModel.gameStartUrl.observe(getViewLifecycleOwner(), url -> {
@@ -276,7 +281,10 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
             onLayoutTypeChanged(LiveHostLayout.Type.DOUBLE_IN_GAME);
         } else {
             mBinding.hostContainerFgRoom.removeWebView();
-            onLayoutTypeChanged(LiveHostLayout.Type.DOUBLE);
+            if(mBinding.hostContainerFgRoom.getChildCount() == 2)
+                onLayoutTypeChanged(LiveHostLayout.Type.DOUBLE);
+            else
+                onLayoutTypeChanged(mBinding.hostContainerFgRoom.getType());
         }
     }
     //</editor-fold>
@@ -376,7 +384,7 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
         } else {
             insertNewMessage("正在加载连麦主播【" + subRoomInfo.getTempUserName() + "】视频");
             LiveHostCardView view = container.createSubHostView();
-            container.setType(container.isCurrentlyInGame() ? LiveHostLayout.Type.DOUBLE_IN_GAME : LiveHostLayout.Type.DOUBLE);
+            onLayoutTypeChanged(LiveHostLayout.Type.DOUBLE);
             mViewModel.setupRemoteView(view.renderTextureView, subRoomInfo, false);
         }
     }
@@ -408,7 +416,9 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
 
         if (aMHost) {
             if (type == LiveHostLayout.Type.HOST_ONLY) {
+                mBinding.btnGameFgRoom.setVisibility(View.VISIBLE);
                 mBinding.btnExitPkFgRoom.setVisibility(View.GONE);
+                mBinding.btnExitGameFgRoom.setVisibility(View.GONE);
             } else if (type == LiveHostLayout.Type.DOUBLE) {
                 mBinding.btnGameFgRoom.setVisibility(View.VISIBLE);
                 mBinding.btnExitGameFgRoom.setVisibility(View.GONE);
