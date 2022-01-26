@@ -12,6 +12,7 @@ class LiveRoomListCell: UICollectionViewCell {
         let label = UILabel()
         label.textColor = UIColor(hex: "#ffffff")
         label.font = UIFont.systemFont(ofSize: 14)
+        label.numberOfLines = 0
         return label
     }()
     private lazy var bgImageView: UIImageView = {
@@ -50,7 +51,7 @@ class LiveRoomListCell: UICollectionViewCell {
             bgImageView.image = UIImage(named: info.backgroundId)
         }
         if let info = info as? LiveRoomInfo {
-            titleLabel.text = info.roomName
+            titleLabel.text = "\(info.roomName)\n房间号:\(info.roomId)"
             bgImageView.image = UIImage(named: info.backgroundId)
         }
     }

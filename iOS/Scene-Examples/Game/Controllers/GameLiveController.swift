@@ -335,7 +335,7 @@ class GameLiveController: PKLiveController {
 //            }
         } else {
             liveView.updateLiveLayout(postion: .center)
-            if pkApplyInfoModel?.status == .end {
+            if pkApplyInfoModel?.status == .end || pkInfoModel?.status == .end {
                 liveView.updateLiveLayout(postion: .full)
             }
             pkProgressView.isHidden = true
