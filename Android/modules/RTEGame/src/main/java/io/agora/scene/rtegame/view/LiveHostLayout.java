@@ -264,6 +264,7 @@ public class LiveHostLayout extends ConstraintLayout {
                 break;
             }
         }
+        requestLayout();
     }
 
     public boolean isCurrentlyInGame() {

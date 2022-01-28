@@ -19,6 +19,14 @@ public class ViewStatus {
     }
 
     public static class Done extends ViewStatus{}
+    public static class Message extends ViewStatus{
+        @NonNull
+        public String msg;
+
+        public Message(@NonNull String msg) {
+            this.msg = msg;
+        }
+    }
     public static class Loading extends ViewStatus{
         public boolean showLoading;
 
