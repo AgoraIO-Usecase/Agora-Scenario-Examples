@@ -18,6 +18,12 @@ class LiveBottomView: UIView {
         case pk = 4
         case game = 5
         case exitgame = 6
+        /// 美声
+        case belcanto = 7
+        /// 音效
+        case effect = 8
+        /// 音效工具
+        case effect_tool = 9
         var imageName: String {
             switch self {
             case .tool: return "icon-more-gray"
@@ -26,6 +32,9 @@ class LiveBottomView: UIView {
             case .pk: return "PK/pic-PK"
             case .game: return "Game/gameicon"
             case .exitgame: return ""
+            case .belcanto: return "icon-美声"
+            case .effect: return "icon-音效"
+            case .effect_tool: return "icon-more-gray"
             }
         }
         
@@ -60,7 +69,7 @@ class LiveBottomView: UIView {
         button.backgroundColor = UIColor(hex: "#000000", alpha: 0.6)
         button.setTitle("Live_Text_Input_Placeholder".localized, for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 14)
+        button.titleLabel?.font = .systemFont(ofSize: 14.fit)
         button.layer.cornerRadius = 19
         button.layer.masksToBounds = true
         button.setContentHuggingPriority(.defaultLow, for: .horizontal)

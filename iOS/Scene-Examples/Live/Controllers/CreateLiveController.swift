@@ -16,11 +16,13 @@ class CreateLiveController: BaseViewController {
     }()
     private lazy var localView: UIView = {
         let view = UIView()
+        view.isHidden = sceneType == .agoraVoice
         return view
     }()
     private lazy var cameraChangeButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "icon-camera-change"), for: .normal)
+        let imageName = sceneType == .agoraVoice ? "icon-BG" : "icon-camera-change"
+        button.setImage(UIImage(named: imageName), for: .normal)
         button.addTarget(self, action: #selector(clickCameraChangeButton(sender:)), for: .touchUpInside)
         return button
     }()
@@ -29,6 +31,7 @@ class CreateLiveController: BaseViewController {
         button.setImage(UIImage(named: "icon-setting-normal"), for: .normal)
         button.setImage(UIImage(named: "icon-setting"), for: .selected)
         button.addTarget(self, action: #selector(clickSettingLiveButton(sender:)), for: .touchUpInside)
+        button.isHidden = sceneType == .agoraVoice
         return button
     }()
     private lazy var startLiveButton: UIButton = {
@@ -42,6 +45,15 @@ class CreateLiveController: BaseViewController {
         button.addTarget(self, action: #selector(clickStartLiveButton), for: .touchUpInside)
         return button
     }()
+    private lazy var changeRoomView: ChangeRoomBgView = {
+        let view = ChangeRoomBgView()
+        view.didSelectedBgImageClosure = { [weak self] imageNmae in
+            self?.bgImageName = imageNmae
+            self?.view.layer.contents = UIImage(named: imageNmae)?.cgImage
+        }
+        return view
+    }()
+    
     private var agoraKit: AgoraRtcEngineKit?
     private lazy var rtcEngineConfig: AgoraRtcEngineConfig = {
        let config = AgoraRtcEngineConfig()
@@ -61,6 +73,7 @@ class CreateLiveController: BaseViewController {
     }()
     private var liveSettingModel: LiveSettingUseData?
     private var sceneType: SceneType = .singleLive
+    private var bgImageName: String = "BG01"
     
     init(sceneType: SceneType) {
         super.init(nibName: nil, bundle: nil)
@@ -75,7 +88,6 @@ class CreateLiveController: BaseViewController {
         super.viewDidLoad()
         setupAgoraKit()
         setupUI()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -123,14 +135,16 @@ class CreateLiveController: BaseViewController {
                        tagImage: UIImage(named: "icon-yellow-caution"),
                        postion: .bottom,
                        view: view)
+        
+        if sceneType == .agoraVoice {
+            view.layer.contents = UIImage(named: "BG01")?.cgImage
+        }
     }
     
     private func setupAgoraKit() {
         agoraKit = AgoraRtcEngineKit.sharedEngine(with: rtcEngineConfig, delegate: nil)
         agoraKit?.setLogFile(LogUtils.sdkLogPath())
         agoraKit?.setClientRole(.broadcaster)
-        agoraKit?.enableVideo()
-        agoraKit?.enableAudio()
         agoraKit?.setVideoEncoderConfiguration(
             AgoraVideoEncoderConfiguration(size: CGSize(width: 320, height: 240),
                                            frameRate: .fps30,
@@ -140,16 +154,26 @@ class CreateLiveController: BaseViewController {
         /// 开启扬声器
         agoraKit?.setDefaultAudioRouteToSpeakerphone(true)
         
+        if sceneType == .agoraVoice {
+            agoraKit?.enableAudio()
+            return
+        }
         let canvas = AgoraRtcVideoCanvas()
         canvas.uid = UserInfo.userId
         canvas.renderMode = .hidden
         canvas.view = localView
         agoraKit?.setupLocalVideo(canvas)
+        agoraKit?.enableAudio()
+        agoraKit?.enableVideo()
         agoraKit?.startPreview()
     }
     
     @objc
     private func clickCameraChangeButton(sender: UIButton) {
+        if sceneType == .agoraVoice {
+            AlertManager.show(view: changeRoomView, alertPostion: .bottom)
+            return
+        }
         agoraKit?.switchCamera()
     }
     @objc
@@ -172,7 +196,10 @@ class CreateLiveController: BaseViewController {
     }
     @objc
     private func clickStartLiveButton() {
-        let roomInfo = LiveRoomInfo(roomName: randomNameView.text)
+        var roomInfo = LiveRoomInfo(roomName: randomNameView.text)
+        if sceneType == .agoraVoice {
+            roomInfo.backgroundId = bgImageName            
+        }
         let params = JSONObject.toJson(roomInfo)
         SyncUtil.joinScene(id: roomInfo.roomId, userId: roomInfo.userId, property: params, success: { result in
             self.startLiveHandler(result: result)
@@ -181,6 +208,7 @@ class CreateLiveController: BaseViewController {
     
     private func startLiveHandler(result: IObject) {
         LogUtils.log(message: "result == \(result.toJson() ?? "")", level: .info)
+        let roomInfo = JSONObject.toModel(LiveRoomInfo.self, value: result.toJson())
         let channelName = result.getPropertyWith(key: "roomId", type: String.self) as? String
         
         switch sceneType {
@@ -218,7 +246,12 @@ class CreateLiveController: BaseViewController {
                                                     userId: UserInfo.uid,
                                                     agoraKit: agoraKit)
             navigationController?.pushViewController(oneToOneVC, animated: true)
-        
+            
+        case .agoraVoice:
+            let agoraVoiceVC = AgoraVoiceController(roomInfo: roomInfo,
+                                                    agoraKit: agoraKit)
+            navigationController?.pushViewController(agoraVoiceVC, animated: true)
+            
         default: break
         }
     }

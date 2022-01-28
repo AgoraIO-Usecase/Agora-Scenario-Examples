@@ -92,7 +92,7 @@ class OneToOneViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationTransparent(isTransparent: true)
+        navigationTransparent(isTransparent: true, isHiddenNavBar: true)
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)

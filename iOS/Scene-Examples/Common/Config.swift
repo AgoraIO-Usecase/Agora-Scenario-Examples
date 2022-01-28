@@ -20,6 +20,8 @@ let SYNC_MANAGER_GAME_APPLY_INFO = "gameApplyInfo"
 let SYNC_MANAGER_GAME_INFO = "gameInfo"
 /// pk信息
 let SYNC_MANAGER_PK_INFO = "pkInfo"
+/// 用户信息
+let SYNC_MANAGER_AGORA_VOICE_USERS = "agoraVoiceUsers"
 
 struct UserInfo {
     static var userId: UInt {

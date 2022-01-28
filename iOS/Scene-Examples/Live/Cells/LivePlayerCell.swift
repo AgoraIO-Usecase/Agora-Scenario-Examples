@@ -27,7 +27,7 @@ class LivePlayerCell: UICollectionViewCell {
         liveView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         liveView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
         liveView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
-        liveView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+        liveView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 44).isActive = true
     }
     
     func setupPlayerCanvas(with item: Any?) {

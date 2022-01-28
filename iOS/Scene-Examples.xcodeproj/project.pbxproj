@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		9BBBCEFD3169C583A481C92C /* Pods_Agora_ScreenShare_Extension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6A12BD14C6C12D3D9AB21A6 /* Pods_Agora_ScreenShare_Extension.framework */; };
 		B5DF969B7ED11BACA57C6864 /* Pods_Scene_Examples.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AED837A3EC68965AC33FE2E6 /* Pods_Scene_Examples.framework */; };
+		E710AE2F27A0F23300124356 /* ChangeRoomBgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E710AE2E27A0F23300124356 /* ChangeRoomBgView.swift */; };
 		E7440E262772CADF00CBF4D8 /* OneToOneControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7440E252772CADF00CBF4D8 /* OneToOneControlView.swift */; };
 		E7440E2C277420F200CBF4D8 /* LiveBaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7440E2B277420F200CBF4D8 /* LiveBaseView.swift */; };
 		E7499C1B276A078500E799FF /* LiveOnlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C1A276A078500E799FF /* LiveOnlineView.swift */; };
@@ -91,6 +92,20 @@
 		E79C264A273D003B00909CD4 /* LiveRoomInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2649273D003B00909CD4 /* LiveRoomInfo.swift */; };
 		E79C264C273D053E00909CD4 /* LiveRoomListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C264B273D053E00909CD4 /* LiveRoomListController.swift */; };
 		E79C264E273D062400909CD4 /* LiveRoomListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C264D273D062400909CD4 /* LiveRoomListCell.swift */; };
+		E7EDBCAC27A0F98900E763A6 /* AgoraVoiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCAB27A0F98900E763A6 /* AgoraVoiceController.swift */; };
+		E7EDBCAE27A1281200E763A6 /* AgoraVoiceUsersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCAD27A1281200E763A6 /* AgoraVoiceUsersView.swift */; };
+		E7EDBCB027A131BC00E763A6 /* AgoraVoiceBelCantoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCAF27A131BC00E763A6 /* AgoraVoiceBelCantoView.swift */; };
+		E7EDBCB227A1463700E763A6 /* AgoraVoiceBelCantoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCB127A1463700E763A6 /* AgoraVoiceBelCantoModel.swift */; };
+		E7EDBCB427A23EEF00E763A6 /* AgoraVoiceSoundEffectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCB327A23EEF00E763A6 /* AgoraVoiceSoundEffectModel.swift */; };
+		E7EDBCB627A26E7C00E763A6 /* AgoraVoicePitchCorrectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCB527A26E7C00E763A6 /* AgoraVoicePitchCorrectionHeaderView.swift */; };
+		E7EDBCB827A284AB00E763A6 /* AgoraVoiceToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCB727A284AB00E763A6 /* AgoraVoiceToolView.swift */; };
+		E7EDBCBA27A28BD300E763A6 /* AgoraVoiceMusicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCB927A28BD300E763A6 /* AgoraVoiceMusicView.swift */; };
+		E7EDBCBC27A2918D00E763A6 /* AgoraVoiceMusicModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCBB27A2918D00E763A6 /* AgoraVoiceMusicModel.swift */; };
+		E7EDBCBE27A2A41900E763A6 /* RTEStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCBD27A2A41900E763A6 /* RTEStatistics.swift */; };
+		E7EDBCC027A2A4CA00E763A6 /* RTCRealTimeDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCBF27A2A4CA00E763A6 /* RTCRealTimeDataView.swift */; };
+		E7EDBCC227A2B0F100E763A6 /* AgoraVoiceUsersModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCC127A2B0F100E763A6 /* AgoraVoiceUsersModel.swift */; };
+		E7EDBCC427A3927B00E763A6 /* AgoraVoiceInviteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCC327A3927B00E763A6 /* AgoraVoiceInviteView.swift */; };
+		E7EDBCC627A3BDCD00E763A6 /* AgoraVoiceChangeBGModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCC527A3BDCD00E763A6 /* AgoraVoiceChangeBGModel.swift */; };
 		E7F9493D277B0C17005C57F1 /* OnoToOneGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F9493C277B0C17005C57F1 /* OnoToOneGameView.swift */; };
 /* End PBXBuildFile section */
 
@@ -125,6 +140,7 @@
 		A6A12BD14C6C12D3D9AB21A6 /* Pods_Agora_ScreenShare_Extension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Agora_ScreenShare_Extension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AED837A3EC68965AC33FE2E6 /* Pods_Scene_Examples.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Scene_Examples.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C99DD6A332A83A34EF8B5943 /* Pods-Scene-Examples.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Scene-Examples.release.xcconfig"; path = "Target Support Files/Pods-Scene-Examples/Pods-Scene-Examples.release.xcconfig"; sourceTree = "<group>"; };
+		E710AE2E27A0F23300124356 /* ChangeRoomBgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeRoomBgView.swift; sourceTree = "<group>"; };
 		E7440E252772CADF00CBF4D8 /* OneToOneControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneToOneControlView.swift; sourceTree = "<group>"; };
 		E7440E2B277420F200CBF4D8 /* LiveBaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveBaseView.swift; sourceTree = "<group>"; };
 		E7499C1A276A078500E799FF /* LiveOnlineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveOnlineView.swift; sourceTree = "<group>"; };
@@ -214,6 +230,20 @@
 		E79C2649273D003B00909CD4 /* LiveRoomInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRoomInfo.swift; sourceTree = "<group>"; };
 		E79C264B273D053E00909CD4 /* LiveRoomListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRoomListController.swift; sourceTree = "<group>"; };
 		E79C264D273D062400909CD4 /* LiveRoomListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRoomListCell.swift; sourceTree = "<group>"; };
+		E7EDBCAB27A0F98900E763A6 /* AgoraVoiceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraVoiceController.swift; sourceTree = "<group>"; };
+		E7EDBCAD27A1281200E763A6 /* AgoraVoiceUsersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraVoiceUsersView.swift; sourceTree = "<group>"; };
+		E7EDBCAF27A131BC00E763A6 /* AgoraVoiceBelCantoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraVoiceBelCantoView.swift; sourceTree = "<group>"; };
+		E7EDBCB127A1463700E763A6 /* AgoraVoiceBelCantoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraVoiceBelCantoModel.swift; sourceTree = "<group>"; };
+		E7EDBCB327A23EEF00E763A6 /* AgoraVoiceSoundEffectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraVoiceSoundEffectModel.swift; sourceTree = "<group>"; };
+		E7EDBCB527A26E7C00E763A6 /* AgoraVoicePitchCorrectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraVoicePitchCorrectionHeaderView.swift; sourceTree = "<group>"; };
+		E7EDBCB727A284AB00E763A6 /* AgoraVoiceToolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraVoiceToolView.swift; sourceTree = "<group>"; };
+		E7EDBCB927A28BD300E763A6 /* AgoraVoiceMusicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraVoiceMusicView.swift; sourceTree = "<group>"; };
+		E7EDBCBB27A2918D00E763A6 /* AgoraVoiceMusicModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraVoiceMusicModel.swift; sourceTree = "<group>"; };
+		E7EDBCBD27A2A41900E763A6 /* RTEStatistics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RTEStatistics.swift; sourceTree = "<group>"; };
+		E7EDBCBF27A2A4CA00E763A6 /* RTCRealTimeDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTCRealTimeDataView.swift; sourceTree = "<group>"; };
+		E7EDBCC127A2B0F100E763A6 /* AgoraVoiceUsersModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraVoiceUsersModel.swift; sourceTree = "<group>"; };
+		E7EDBCC327A3927B00E763A6 /* AgoraVoiceInviteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraVoiceInviteView.swift; sourceTree = "<group>"; };
+		E7EDBCC527A3BDCD00E763A6 /* AgoraVoiceChangeBGModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraVoiceChangeBGModel.swift; sourceTree = "<group>"; };
 		E7F9493C277B0C17005C57F1 /* OnoToOneGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnoToOneGameView.swift; sourceTree = "<group>"; };
 		EA2989DBAC3CC73E3574369E /* Pods-Agora-ScreenShare-Extension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Agora-ScreenShare-Extension.debug.xcconfig"; path = "Target Support Files/Pods-Agora-ScreenShare-Extension/Pods-Agora-ScreenShare-Extension.debug.xcconfig"; sourceTree = "<group>"; };
 		F13F3E8380132BD39CD228E0 /* Pods-Scene-Examples.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Scene-Examples.debug.xcconfig"; path = "Target Support Files/Pods-Scene-Examples/Pods-Scene-Examples.debug.xcconfig"; sourceTree = "<group>"; };
@@ -498,6 +528,7 @@
 				E79C2619273B6F4800909CD4 /* AppDelegate */,
 				E79C2617273B6F3700909CD4 /* Main */,
 				E79C25F2273B685100909CD4 /* BreakOutRoom */,
+				E7EDBCA727A0F94800E763A6 /* AgoraVoice */,
 				E79C2620273B7B5C00909CD4 /* Live */,
 				E79BEF612741FCEB009FA838 /* PKLive */,
 				E79BEF8E2746729D009FA838 /* Game */,
@@ -634,6 +665,7 @@
 				E79BEF3E273D3EF0009FA838 /* LiveToolView.swift */,
 				E79BEF42273E3709009FA838 /* LiveGiftView.swift */,
 				E7440E2B277420F200CBF4D8 /* LiveBaseView.swift */,
+				E710AE2E27A0F23300124356 /* ChangeRoomBgView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -667,6 +699,51 @@
 				E79C2601273B689A00909CD4 /* AgoraExtension.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		E7EDBCA727A0F94800E763A6 /* AgoraVoice */ = {
+			isa = PBXGroup;
+			children = (
+				E7EDBCAA27A0F97500E763A6 /* Models */,
+				E7EDBCA927A0F96E00E763A6 /* Views */,
+				E7EDBCA827A0F96600E763A6 /* Controllers */,
+			);
+			path = AgoraVoice;
+			sourceTree = "<group>";
+		};
+		E7EDBCA827A0F96600E763A6 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				E7EDBCAB27A0F98900E763A6 /* AgoraVoiceController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		E7EDBCA927A0F96E00E763A6 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E7EDBCAD27A1281200E763A6 /* AgoraVoiceUsersView.swift */,
+				E7EDBCAF27A131BC00E763A6 /* AgoraVoiceBelCantoView.swift */,
+				E7EDBCC327A3927B00E763A6 /* AgoraVoiceInviteView.swift */,
+				E7EDBCB727A284AB00E763A6 /* AgoraVoiceToolView.swift */,
+				E7EDBCB927A28BD300E763A6 /* AgoraVoiceMusicView.swift */,
+				E7EDBCBF27A2A4CA00E763A6 /* RTCRealTimeDataView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		E7EDBCAA27A0F97500E763A6 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				E7EDBCBD27A2A41900E763A6 /* RTEStatistics.swift */,
+				E7EDBCB527A26E7C00E763A6 /* AgoraVoicePitchCorrectionHeaderView.swift */,
+				E7EDBCB127A1463700E763A6 /* AgoraVoiceBelCantoModel.swift */,
+				E7EDBCB327A23EEF00E763A6 /* AgoraVoiceSoundEffectModel.swift */,
+				E7EDBCBB27A2918D00E763A6 /* AgoraVoiceMusicModel.swift */,
+				E7EDBCC127A2B0F100E763A6 /* AgoraVoiceUsersModel.swift */,
+				E7EDBCC527A3BDCD00E763A6 /* AgoraVoiceChangeBGModel.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -858,6 +935,8 @@
 			files = (
 				E79BEF37273D15D6009FA838 /* Screen.swift in Sources */,
 				E79C2611273B689B00909CD4 /* SyncUtil.swift in Sources */,
+				E7EDBCC627A3BDCD00E763A6 /* AgoraVoiceChangeBGModel.swift in Sources */,
+				E7EDBCBE27A2A41900E763A6 /* RTEStatistics.swift in Sources */,
 				E79BEF5B273E5768009FA838 /* GIFImageView.swift in Sources */,
 				E79BEF8A274644A9009FA838 /* BORLiveModel.swift in Sources */,
 				E79BEF45273E4D99009FA838 /* LiveGiftModel.swift in Sources */,
@@ -865,19 +944,24 @@
 				E79C264A273D003B00909CD4 /* LiveRoomInfo.swift in Sources */,
 				E79C2610273B689B00909CD4 /* KeyCenter.swift in Sources */,
 				E79C262D273BC0CA00909CD4 /* ToastView.swift in Sources */,
+				E7EDBCB227A1463700E763A6 /* AgoraVoiceBelCantoModel.swift in Sources */,
 				E79C2644273BE7C000909CD4 /* LiveSettingView.swift in Sources */,
 				E79BEF3B273D21FD009FA838 /* LiveChatView.swift in Sources */,
 				E79BF0302754761A009FA838 /* GameApplyInfoModel.swift in Sources */,
 				E7499C2C2770537C00E799FF /* MessageCell.swift in Sources */,
 				E79BEF3F273D3EF0009FA838 /* LiveToolView.swift in Sources */,
 				E79BF02B274B81A0009FA838 /* GameInfoModel.swift in Sources */,
+				E7EDBCB027A131BC00E763A6 /* AgoraVoiceBelCantoView.swift in Sources */,
 				E79C2626273B7BDA00909CD4 /* CreateLiveController.swift in Sources */,
 				E79BEF8627463FA5009FA838 /* BORRoomDetailController.swift in Sources */,
+				E7EDBCAE27A1281200E763A6 /* AgoraVoiceUsersView.swift in Sources */,
 				E79BEF7D27463F79009FA838 /* BORSubRoomModel.swift in Sources */,
 				E79BEF39273D18B4009FA838 /* LiveAvatarView.swift in Sources */,
 				E79C261C273B712000909CD4 /* BaseViewController.swift in Sources */,
 				E79BEF752744FD8B009FA838 /* GCDTimer.swift in Sources */,
+				E7EDBCB627A26E7C00E763A6 /* AgoraVoicePitchCorrectionHeaderView.swift in Sources */,
 				E79BEF68274203ED009FA838 /* PKLiveInviteView.swift in Sources */,
+				E7EDBCB427A23EEF00E763A6 /* AgoraVoiceSoundEffectModel.swift in Sources */,
 				E79BEF33273D0F0C009FA838 /* LiveCanvasModel.swift in Sources */,
 				E7499C2A2770534400E799FF /* NoticeCell.swift in Sources */,
 				E79C25E3273B67DB00909CD4 /* MainViewController.swift in Sources */,
@@ -886,15 +970,18 @@
 				E79C264C273D053E00909CD4 /* LiveRoomListController.swift in Sources */,
 				E79C261F273B737100909CD4 /* MainTableViewCell.swift in Sources */,
 				E79BEF3D273D327F009FA838 /* LiveBottomView.swift in Sources */,
+				E7EDBCC427A3927B00E763A6 /* AgoraVoiceInviteView.swift in Sources */,
 				E79C2638273BC8DF00909CD4 /* MainModel.swift in Sources */,
 				E79C2613273B689B00909CD4 /* UIColor+Extension.swift in Sources */,
 				E79BF029274B77C7009FA838 /* GameViewModel.swift in Sources */,
 				E7440E262772CADF00CBF4D8 /* OneToOneControlView.swift in Sources */,
+				E7EDBCC227A2B0F100E763A6 /* AgoraVoiceUsersModel.swift in Sources */,
 				E79BEF6A27420933009FA838 /* PKApplyInfoModel.swift in Sources */,
 				E79BEF35273D1304009FA838 /* LivePlayerCell.swift in Sources */,
 				E79BEF8527463FA5009FA838 /* BORHomeViewController.swift in Sources */,
 				E79C2636273BC6C400909CD4 /* LiveRandomNameView.swift in Sources */,
 				E79C2642273BE5C500909CD4 /* AlertManager.swift in Sources */,
+				E7EDBCBA27A28BD300E763A6 /* AgoraVoiceMusicView.swift in Sources */,
 				E79BEFA1274796F7009FA838 /* NetworkManager.swift in Sources */,
 				E79BEF772745036E009FA838 /* PKLiveProgressView.swift in Sources */,
 				E79BEF9427474C36009FA838 /* GameLiveController.swift in Sources */,
@@ -907,8 +994,11 @@
 				E79C2632273BC17B00909CD4 /* String+Extension.swift in Sources */,
 				E79C262A273B7D8900909CD4 /* DeviceAssistant.swift in Sources */,
 				E7499C282770308A00E799FF /* PlayTogetherViewController.swift in Sources */,
+				E7EDBCB827A284AB00E763A6 /* AgoraVoiceToolView.swift in Sources */,
 				E79BEF43273E3709009FA838 /* LiveGiftView.swift in Sources */,
+				E710AE2F27A0F23300124356 /* ChangeRoomBgView.swift in Sources */,
 				E7499C1B276A078500E799FF /* LiveOnlineView.swift in Sources */,
+				E7EDBCC027A2A4CA00E763A6 /* RTCRealTimeDataView.swift in Sources */,
 				E79BEF9827475677009FA838 /* GameModeView.swift in Sources */,
 				E79C260F273B689B00909CD4 /* JSONObject.swift in Sources */,
 				E79C25DF273B67DB00909CD4 /* AppDelegate.swift in Sources */,
@@ -919,8 +1009,10 @@
 				E7499C30277173BC00E799FF /* OneToOneViewController.swift in Sources */,
 				E79C260D273B689B00909CD4 /* Config.swift in Sources */,
 				E79BEF9E27477F66009FA838 /* GameCenterModel.swift in Sources */,
+				E7EDBCBC27A2918D00E763A6 /* AgoraVoiceMusicModel.swift in Sources */,
 				E79C25E1273B67DB00909CD4 /* SceneDelegate.swift in Sources */,
 				E79BEF88274640A6009FA838 /* BORVideoRoomDetailCell.swift in Sources */,
+				E7EDBCAC27A0F98900E763A6 /* AgoraVoiceController.swift in Sources */,
 				E79C260C273B689B00909CD4 /* MBHUD.swift in Sources */,
 				E7F9493D277B0C17005C57F1 /* OnoToOneGameView.swift in Sources */,
 			);
@@ -972,7 +1064,7 @@
 			baseConfigurationReference = EA2989DBAC3CC73E3574369E /* Pods-Agora-ScreenShare-Extension.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YS397FG5PA;
 				ENABLE_BITCODE = NO;
@@ -1001,9 +1093,9 @@
 			baseConfigurationReference = 4EAC22A0ABCEA5BE7ED7FCFA /* Pods-Agora-ScreenShare-Extension.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = YS397FG5PA;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Agora-ScreenShare-Extension/Info.plist";
@@ -1150,7 +1242,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1223;
 				DEVELOPMENT_TEAM = YS397FG5PA;
 				ENABLE_BITCODE = NO;
@@ -1188,9 +1280,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1223;
-				DEVELOPMENT_TEAM = YS397FG5PA;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Scene-Examples/Info.plist";

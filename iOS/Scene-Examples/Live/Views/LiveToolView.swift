@@ -12,12 +12,21 @@ enum LiveToolType {
     case switch_camera
     case camera
     case mic
+    /// 耳返
+    case earphone_monitor
+    case music
+    case backgroundImage
+    case real_time_data
     
     var imageName: String {
         switch self {
         case .switch_camera: return "icon-rotate"
         case .camera: return "icon-video on"
         case .mic: return "icon-speaker on"
+        case .earphone_monitor: return "icon-耳返-off"
+        case .music: return "icon-music"
+        case .backgroundImage: return "icon-背景"
+        case .real_time_data: return "icon-data"
         }
     }
     
@@ -26,6 +35,10 @@ enum LiveToolType {
         case .switch_camera: return "icon-rotate"
         case .camera: return "icon-video off"
         case .mic: return "icon-speaker off"
+        case .earphone_monitor: return "icon-耳返-on"
+        case .music: return "icon-music"
+        case .backgroundImage: return "icon-背景"
+        case .real_time_data: return "icon-data"
         }
     }
     
@@ -34,6 +47,10 @@ enum LiveToolType {
         case .switch_camera: return "Switch_Camera".localized
         case .camera: return "Camera".localized
         case .mic: return "Mic".localized
+        case .earphone_monitor: return "耳返".localized
+        case .music: return "音乐".localized
+        case .backgroundImage: return "背景".localized
+        case .real_time_data: return "实时数据".localized
         }
     }
 }

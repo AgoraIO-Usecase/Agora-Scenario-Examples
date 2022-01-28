@@ -12,6 +12,8 @@ enum SceneType: String {
     case singleLive = "signleLive"
     /// 超级小班课
     case breakoutRoom = "BreakOutRoom"
+    /// 音效
+    case agoraVoice = "agoraVoice"
     /// 游戏
     case game = "interactiveGame"
     /// PKApply
@@ -66,6 +68,13 @@ struct MainModel {
         model.desc = "多人会议, 可建立小会议室讨论"
         model.imageNmae = "pic-multiple"
         model.sceneType = .breakoutRoom
+        dataArray.append(model)
+        
+        model = MainModel()
+        model.title = "音效"
+        model.desc = "音效"
+        model.imageNmae = "pic-goods"
+        model.sceneType = .agoraVoice
         dataArray.append(model)
         
         model = MainModel()

@@ -24,12 +24,12 @@ class BaseViewController: UIViewController {
         navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
     
-    func navigationTransparent(isTransparent: Bool) {
+    func navigationTransparent(isTransparent: Bool, isHiddenNavBar: Bool = false) {
         let image = isTransparent ? UIImage() : nil
         navigationController?.navigationBar.setBackgroundImage(image, for: .default)
         navigationController?.navigationBar.shadowImage = image
         navigationController?.navigationBar.barTintColor = isTransparent ? .clear : .white
-        navigationController?.navigationBar.isHidden = isTransparent
+        navigationController?.navigationBar.isHidden = isHiddenNavBar
     }
 
     func showAlert(title: String? = nil, message: String) {

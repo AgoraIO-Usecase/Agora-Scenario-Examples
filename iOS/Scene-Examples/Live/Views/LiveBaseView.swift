@@ -155,7 +155,7 @@ class LiveBaseView: UIView {
     /// 更新直播布局
     func updateLiveLayout(postion: LiveLayoutPostion) {
         var leading: CGFloat = 0
-        var top: CGFloat = -Screen.statusHeight()
+        var top: CGFloat = -Screen.kNavHeight
         var bottom: CGFloat = Screen.safeAreaBottomHeight()
         var trailing: CGFloat = 0
         var itemWidth: CGFloat = Screen.width
@@ -247,6 +247,8 @@ class LiveBaseView: UIView {
                     
                     case .mic:
                         self.onClickIsMuteMicClosure?(isSelected)
+                    
+                    default: break
                     }
                 }
                 AlertManager.show(view: self.liveToolView, alertPostion: .bottom)
@@ -268,6 +270,8 @@ class LiveBaseView: UIView {
                 
             case .exitgame:
                 self.onClickExitGameButtonClosure?()
+                
+            default: break
             }
         }
         subscribeGift(channelName: channelName, type: .me)
@@ -288,7 +292,7 @@ class LiveBaseView: UIView {
         addSubview(onlineView)
         
         canvasLeadingConstraint = liveCanvasView.leadingAnchor.constraint(equalTo: leadingAnchor)
-        canvasTopConstraint = liveCanvasView.topAnchor.constraint(equalTo: topAnchor, constant: -Screen.statusHeight())
+        canvasTopConstraint = liveCanvasView.topAnchor.constraint(equalTo: topAnchor, constant: -Screen.kNavHeight)
         canvasBottomConstraint = liveCanvasView.bottomAnchor.constraint(equalTo: bottomAnchor)
         canvasTrailingConstraint = liveCanvasView.trailingAnchor.constraint(equalTo: trailingAnchor)
         canvasTopConstraint?.isActive = true

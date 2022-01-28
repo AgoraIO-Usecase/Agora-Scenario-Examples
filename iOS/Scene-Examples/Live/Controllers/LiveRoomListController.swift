@@ -133,6 +133,11 @@ class LiveRoomListController: BaseViewController {
             let oneToOneVC = OneToOneViewController(channelName: channelName ?? "", sceneType: sceneType, userId: ownerId ?? "")
             navigationController?.pushViewController(oneToOneVC, animated: true)
             
+        case .agoraVoice:
+            let roomInfo = JSONObject.toModel(LiveRoomInfo.self, value: result.toJson())
+            let agoraVoiceVC = AgoraVoiceController(roomInfo: roomInfo)
+            navigationController?.pushViewController(agoraVoiceVC, animated: true)
+            
         default: break
         }
     }

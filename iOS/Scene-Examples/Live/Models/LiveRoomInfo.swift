@@ -12,4 +12,5 @@ struct LiveRoomInfo: Codable {
     var roomId: String = "\(arc4random_uniform(899999) + 100000)"
     var userId: String = "\(UserInfo.userId)"
     var backgroundId: String = String(format: "portrait%02d", arc4random_uniform(13) + 1)
+    var objectId: String?
 }
