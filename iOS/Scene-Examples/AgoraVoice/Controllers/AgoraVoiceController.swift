@@ -165,11 +165,11 @@ class AgoraVoiceController: BaseViewController {
         if getRole(uid: UserInfo.uid) == .audience {
             option.clientRoleType = isVoice ? .of((Int32)(AgoraClientRole.broadcaster.rawValue)) : .of((Int32)(AgoraClientRole.audience.rawValue))
         }
+        bottomView.updateButtonType(type: isVoice ? [.belcanto, .effect, .close] : [.close])
         agoraKit?.updateChannel(with: option)
         if getRole(uid: UserInfo.uid) == .audience {
             agoraKit?.enableLocalAudio(isVoice)
         }
-        bottomView.updateButtonType(type: isVoice ? [.belcanto, .effect, .close] : [.close])
     }
     
     private func setupAgoraKit() {
@@ -257,6 +257,7 @@ class AgoraVoiceController: BaseViewController {
             default: break
             }
         }
+        
         usersView.muteAudioClosure = { [weak self] isVoice in
             self?.muteAudioHandler(isVoice: isVoice)
         }
