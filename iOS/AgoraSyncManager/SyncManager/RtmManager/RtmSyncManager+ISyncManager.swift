@@ -49,7 +49,7 @@ extension RtmSyncManager: ISyncManager {
                 return
             }
             self?.rtmKit?.getChannelAllAttributes(name,
-                                            completion: { (attrs, code) in
+                                                  completion: { (attrs, code) in
                 guard let channel = self?.rtmKit?.createChannel(withId: name, delegate: self) else {
                     let error = SyncError(message: "createChannel fail in joinScene", code: -1)
                     fail?(error)
@@ -174,6 +174,50 @@ extension RtmSyncManager: ISyncManager {
         })
     }
     
+    /// id 是Collection item 的obj id
+    public func update(reference: CollectionReference,
+                       id: String,
+                       data: [String : Any?],
+                       success: SuccessBlockVoid?,
+                       fail: FailBlock?) {
+        let attr = AgoraRtmChannelAttribute()
+        let item = Utils.getJson(dict: data as NSDictionary)
+        attr.key = id
+        attr.value = item
+        let option = AgoraRtmChannelAttributeOptions()
+        option.enableNotificationToChannelMembers = true
+        rtmKit?.addOrUpdateChannel(reference.className, attributes: [attr], options: option, completion: { code in
+            guard code == .attributeOperationErrorOk else {
+                let error = SyncError(message: "update CollectionReference data fail",
+                                      code: code.rawValue)
+                fail?(error)
+                return
+            }
+            success?()
+        })
+    }
+    
+    /// id 是Collection item 的obj id
+    public func delete(reference: CollectionReference,
+                       id: String,
+                       success: SuccessBlockVoid?,
+                       fail: FailBlock?) {
+        let option = AgoraRtmChannelAttributeOptions()
+        option.enableNotificationToChannelMembers = true
+        rtmKit?.deleteChannel(reference.className,
+                              attributesByKeys: [id],
+                              options: option,
+                              completion: { code in
+            guard code == .attributeOperationErrorOk else {
+                let error = SyncError(message: "update CollectionReference data fail",
+                                      code: code.rawValue)
+                fail?(error)
+                return
+            }
+            success?()
+        })
+    }
+    
     public func update(reference: DocumentReference,
                        key: String?,
                        data: [String : Any?],
@@ -197,6 +241,8 @@ extension RtmSyncManager: ISyncManager {
             success?([attribute])
         })
     }
+    
+    
     
     public func deleteScenes(sceneIds: [String],
                              success: SuccessBlockVoid?,

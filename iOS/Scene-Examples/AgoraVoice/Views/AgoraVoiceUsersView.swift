@@ -108,9 +108,16 @@ class AgoraVoiceUsersView: UIView {
                 controller?.present(alert, animated: true, completion: nil)
                 return
             }
+            if model.status == .end && model.userId == UserInfo.uid {
+                self.muteAudioClosure?(false)
+            }
             self.fetchAgoraVoiceUserInfoData()
 
-        }, onDeleted: { _ in
+        }, onDeleted: { object in
+            guard let model = JSONObject.toModel(AgoraVoiceUsersModel.self, value: object.toJson()) else { return }
+            if model.userId == UserInfo.uid {
+                self.muteAudioClosure?(false)
+            }
             self.fetchAgoraVoiceUserInfoData()
             
         }, onSubscribed: {
@@ -132,11 +139,9 @@ extension AgoraVoiceUsersView: AGECollectionViewDelegate {
         let controller = UIApplication.topMostViewController
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let close = UIAlertAction(title: "封麦".localized, style: .destructive) { _ in
-            let userModel = model as? AgoraVoiceUsersModel
-            SyncUtil.deleteDocument(id: self.channelName, className: SYNC_MANAGER_AGORA_VOICE_USERS, objectId: userModel?.objectId ?? "")
-            if userModel?.userId == UserInfo.uid {
-                self.muteAudioClosure?(false)
-            }
+            var userModel = model as? AgoraVoiceUsersModel
+            userModel?.status = .end
+            SyncUtil.updateCollection(id: self.channelName, className: SYNC_MANAGER_AGORA_VOICE_USERS, objectId: userModel?.objectId ?? "", params: JSONObject.toJson(userModel))
         }
         let cancel = UIAlertAction(title: "取消".localized, style: .cancel, handler: nil)
         if model is String {

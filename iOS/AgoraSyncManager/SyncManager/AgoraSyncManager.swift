@@ -92,6 +92,28 @@ public class AgoraSyncManager: NSObject {
                   fail: fail)
     }
     
+    func update(reference: CollectionReference,
+                id: String,
+                data: [String : Any?],
+                success: SuccessBlockVoid?,
+                fail: FailBlock?) {
+        proxy.update(reference: reference,
+                     id: id,
+                     data: data,
+                     success: success,
+                     fail: fail)
+    }
+    
+    func delete(reference: CollectionReference,
+                id: String,
+                success: SuccessBlockVoid?,
+                fail: FailBlock?) {
+        proxy.delete(reference: reference,
+                     id: id,
+                     success: success,
+                     fail: fail)
+    }
+    
     /// 更新或者增加数据（Document）
     /// - Parameters:
     ///   - reference: `Document`类型实体

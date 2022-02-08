@@ -79,6 +79,7 @@ class AgoraVoiceController: BaseViewController {
         self.channelName = roomInfo?.roomId ?? ""
         self.agoraKit = agoraKit
         self.currentUserId = roomInfo?.userId ?? ""
+        view.backgroundColor = .clear
         view.layer.contents = UIImage(named: roomInfo?.backgroundId ?? "BG01")?.cgImage
     }
     
@@ -94,7 +95,11 @@ class AgoraVoiceController: BaseViewController {
         // 设置屏幕常亮
         UIApplication.shared.isIdleTimerDisabled = true
     }
-
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        .lightContent
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationTransparent(isTransparent: true, isHiddenNavBar: true)
@@ -119,6 +124,7 @@ class AgoraVoiceController: BaseViewController {
             SyncUtil.delete(id: channelName)
         }
         leaveChannel()
+        SyncUtil.deleteDocument(id: channelName, className: SYNC_MANAGER_AGORA_VOICE_USERS, objectId: currentUserModel?.objectId ?? "")
         SyncUtil.leaveScene(id: channelName)
         navigationTransparent(isTransparent: false)
         UIApplication.shared.isIdleTimerDisabled = false
@@ -139,6 +145,8 @@ class AgoraVoiceController: BaseViewController {
         if result == 0 {
             LogUtils.log(message: "加入房间成功", level: .info)
         }
+        agoraKit?.setClientRole(getRole(uid: UserInfo.uid))
+        
         var messageModel = ChatMessageModel()
         messageModel.message = "\(UserInfo.uid) 加入房间"
         chatView.sendMessage(messageModel: messageModel)
@@ -226,7 +234,7 @@ class AgoraVoiceController: BaseViewController {
         mucisView.clickPlayButtonClosure = { [weak self] mucisModel, isPlay in
             guard let model = mucisModel else { return }
             if isPlay {
-                self?.agoraKit?.startAudioMixing(model.url, loopback: true, replace: false, cycle: 1)
+                self?.agoraKit?.startAudioMixing(model.url, loopback: false, replace: false, cycle: 1)
                 return
             }
             self?.agoraKit?.stopAudioMixing()
@@ -276,8 +284,8 @@ class AgoraVoiceController: BaseViewController {
     }
     
     private func updateBGImage(object: IObject?) {
-        let roomInfo = JSONObject.toModel(LiveRoomInfo.self, value: object?.toJson())
-        view.layer.contents = UIImage(named: roomInfo?.backgroundId ?? "BG01")?.cgImage
+        guard let roomInfo = JSONObject.toModel(LiveRoomInfo.self, value: object?.toJson()) else { return }
+        view.layer.contents = UIImage(named: roomInfo.backgroundId)?.cgImage
         self.roomInfo = roomInfo
     }
     

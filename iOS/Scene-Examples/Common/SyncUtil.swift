@@ -102,10 +102,10 @@ class SyncUtil: NSObject {
                                 className: String,
                                 objectId: String,
                                 params: [String: Any],
-                                success: SuccessBlock? = nil,
+                                success: SuccessBlockVoid? = nil,
                                 fail: FailBlock? = nil) {
         let sceneRef = sceneRefs[id]
-        sceneRef?.collection(className: className).document(id: objectId).update(key: nil, data: params, success: success, fail: fail)
+        sceneRef?.collection(className: className).update(id: objectId, data: params, success: success, fail: fail)
     }
     
     class func subscribeCollection(id: String,
@@ -150,11 +150,11 @@ class SyncUtil: NSObject {
     class func deleteDocument(id: String,
                               className: String,
                               objectId: String?,
-                              success: SuccessBlock? = nil,
+                              success: SuccessBlockVoid? = nil,
                               fail: FailBlock? = nil) {
         let sceneRef = sceneRefs[id]
         /// 删除单条数据
-        sceneRef?.collection(className: className).document(id: objectId ?? "").delete(success: success, fail: fail)
+        sceneRef?.collection(className: className).delete(id: objectId ?? "", success: success, fail: fail)
     }
     
     class func deleteCollection(id: String,
