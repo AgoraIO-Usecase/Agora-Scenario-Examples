@@ -17,4 +17,6 @@ struct GameInfoModel: Codable {
     var roomId: String? = ""
     
     var gameId: GameCenterType? = .guess
+    
+    var timestamp: String = "".timeStamp16
 }

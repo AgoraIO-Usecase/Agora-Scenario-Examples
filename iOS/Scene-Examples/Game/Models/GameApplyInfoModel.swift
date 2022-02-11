@@ -22,4 +22,6 @@ struct GameApplyInfoModel: Codable {
     var status: GameStatus = .no_start
     
     var gameId: GameCenterType = .guess
+    
+    var timestamp: String = "".timeStamp16
 }
