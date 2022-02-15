@@ -89,7 +89,7 @@ class PlayTogetherViewController: BaseViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         joinChannel()
-        navigationController?.interactivePopGestureRecognizer?.isEnabled = currentUserId != UserInfo.uid
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         var controllers = navigationController?.viewControllers ?? []
         guard let index = controllers.firstIndex(where: { $0 is CreateLiveController }) else { return }
         controllers.remove(at: index)
@@ -98,10 +98,8 @@ class PlayTogetherViewController: BaseViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        if getRole(uid: UserInfo.uid) == .broadcaster {
-            agoraKit?.disableAudio()
-            agoraKit?.disableVideo()
-        }
+        agoraKit?.disableAudio()
+        agoraKit?.disableVideo()
         agoraKit?.muteAllRemoteAudioStreams(true)
         agoraKit?.muteAllRemoteVideoStreams(true)
         agoraKit?.destroyMediaPlayer(nil)
@@ -188,10 +186,9 @@ class PlayTogetherViewController: BaseViewController {
         agoraKit = AgoraRtcEngineKit.sharedEngine(with: rtcEngineConfig, delegate: self)
         agoraKit?.setLogFile(LogUtils.sdkLogPath())
         agoraKit?.setClientRole(getRole(uid: UserInfo.uid))
-        if getRole(uid: UserInfo.uid) == .broadcaster {
-            agoraKit?.enableVideo()
-            agoraKit?.enableAudio()
-        }
+        agoraKit?.enableVideo()
+        agoraKit?.enableAudio()
+
         /// 开启扬声器
         agoraKit?.setDefaultAudioRouteToSpeakerphone(true)
     }
@@ -214,7 +211,7 @@ class PlayTogetherViewController: BaseViewController {
             self?.agoraKit?.startPreview()
         }
         liveView.setupRemoteVideoClosure = { [weak self] canvas, connection in
-            self?.agoraKit?.setupRemoteVideoEx(canvas, connection: connection)
+            self?.agoraKit?.setupRemoteVideo(canvas)
         }
         /// 监听游戏
         if getRole(uid: UserInfo.uid) == .audience {

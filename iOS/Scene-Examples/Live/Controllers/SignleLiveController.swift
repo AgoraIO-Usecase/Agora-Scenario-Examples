@@ -157,10 +157,8 @@ class SignleLiveController: BaseViewController {
         agoraKit = AgoraRtcEngineKit.sharedEngine(with: rtcEngineConfig, delegate: self)
         agoraKit?.setLogFile(LogUtils.sdkLogPath())
         agoraKit?.setClientRole(getRole(uid: currentUserId))
-        if getRole(uid: currentUserId) == .broadcaster {
-            agoraKit?.enableVideo()
-            agoraKit?.enableAudio()
-        }
+        agoraKit?.enableVideo()
+        agoraKit?.enableAudio()
         /// 开启扬声器
         agoraKit?.setDefaultAudioRouteToSpeakerphone(true)
     }
