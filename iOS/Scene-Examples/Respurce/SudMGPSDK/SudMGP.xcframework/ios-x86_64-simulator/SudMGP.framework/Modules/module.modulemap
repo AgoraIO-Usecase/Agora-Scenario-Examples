@@ -1,0 +1,6 @@
+framework module SudMGP {
+  umbrella header "SudMGP-umbrella.h"
+
+  export *
+  module * { export * }
+}

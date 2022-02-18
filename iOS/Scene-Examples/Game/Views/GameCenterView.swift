@@ -68,10 +68,44 @@ class GameCenterView: UIView {
     }
     
     private func getGameList() {
-        GameViewModel.shared.getGameList(sceneType: sceneType) { [weak self] list in
-            guard let list = list else { return }
-            self?.dataArray = list
+//        GameViewModel.shared.getGameList(sceneType: sceneType) { [weak self] list in
+//            guard let list = list else { return }
+//            self?.dataArray = list
+//        }
+//        return
+//        SudMGP.getMGList { code, error, value in
+//            let dict = JSONObject.toDictionary(jsonString: value)
+//            let data = dict["data"] as? [String: Any]
+//            let list = data?["mg_info_list"] as? [[String: Any]]
+//            print(list)
+//        }
+        var tempArray = [GameCenterModel]()
+        for i in 0..<16 {
+            var model = GameCenterModel()
+            switch i {
+            case 0: model.gameId = .bumper
+            case 1: model.gameId = .knife
+            case 2: model.gameId = .draw_and_guess
+            case 3: model.gameId = .gobang
+            case 4: model.gameId = .ludo
+            case 5: model.gameId = .reversi
+            case 6: model.gameId = .skating
+            case 7: model.gameId = .roll
+            case 8: model.gameId = .rsp
+            case 9: model.gameId = .number_bomb
+            case 10: model.gameId = .mine
+            case 11: model.gameId = .sayGuess
+            case 12: model.gameId = .teenPatti
+            case 13: model.gameId = .UMO
+            case 14: model.gameId = .deminers
+            case 15: model.gameId = .TWMahjong
+            default: break
+            }
+            model.gameName = model.gameId.title
+            model.sources = .sud
+            tempArray.append(model)
         }
+        self.dataArray = tempArray
     }
     
     private func setupUI() {

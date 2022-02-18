@@ -19,6 +19,37 @@ enum GameCenterType: String, Codable {
     /// 王国激战
     case kingdom = "b234547ca08d684fa327c90e174dcc93"
     
+    
+    /// 碰碰我最强
+    case bumper = "1461227817776713818"
+    /// 飞镖达人
+    case knife = "1461228379255603251"
+    /// 你画我猜
+    case draw_and_guess = "1461228410184400899"
+    /// 五子棋
+    case gobang = "1461297734886621238"
+    /// 飞行棋
+    case ludo = "1468180338417074177"
+    /// 黑白棋
+    case reversi = "1461297789198663710"
+    /// 短道速滑
+    case skating = "1468090257126719572"
+    /// 数字转轮
+    case roll = "1468434637562912769"
+    /// 石头剪刀布
+    case rsp = "1468434723902660610"
+    /// 数字炸弹
+    case number_bomb = "1468091457989509190"
+    /// 扫雷
+    case mine = "1468434401847222273"
+    /// 你说我猜
+    case sayGuess = "1468434504892882946"
+    
+    case teenPatti = "1472142478505271298"
+    case UMO = "1472142559912517633"
+    case deminers = "1472142640866779138"
+    case TWMahjong = "1472142695162044417"
+    
     var bgImage: UIImage? {
         switch self {
         case .guess:
@@ -31,6 +62,9 @@ enum GameCenterType: String, Codable {
             return UIImage(named: "Game/draw_bg")
         case .kingdom:
             return UIImage(named: "Game/draw_bg")
+            
+        default:
+            return UIImage(named: "Game/draw_bg")
         }
     }
     
@@ -41,8 +75,30 @@ enum GameCenterType: String, Codable {
         case .undercover: return "谁是卧底"
         case .dahuashai: return "大话骰"
         case .kingdom: return "王国激战"
+            
+        case .bumper: return "碰碰我最强"
+        case .knife: return "飞镖达人"
+        case .draw_and_guess: return "你画我猜"
+        case .gobang: return "五子棋"
+        case .ludo: return "飞行棋"
+        case .reversi: return "黑白棋"
+        case .skating: return "短道速滑"
+        case .roll: return "数字转轮"
+        case .rsp: return "石头剪刀布"
+        case .number_bomb: return "数字炸弹"
+        case .mine: return "扫雷"
+        case .sayGuess: return "你说我猜"
+        case .teenPatti: return "TeenPatti"
+        case .UMO: return "UMO"
+        case .deminers: return "排雷兵"
+        case .TWMahjong: return "台湾麻将"
         }
     }
+}
+
+enum GameSourcesType: String, Codable {
+    case yuanqi
+    case sud
 }
 
 enum GameBarrageType: Int, Codable, CaseIterable {
@@ -64,6 +120,7 @@ struct GameCenterModel: Codable {
     var playPattern: GamePlayPattern?
     var billing: GameBillingModel?
     var updateTime: String?
+    var sources: GameSourcesType? = .yuanqi
     
     
     static func createDatas(sceneType: SceneType) -> [GameCenterModel] {

@@ -35,7 +35,6 @@ class BORHomeViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "超级小班课"
         setupUI()
         showWaitHUD()
     }

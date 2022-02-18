@@ -12,6 +12,9 @@ class NetworkManager {
         case GET = "GET"
         case POST = "POST"
     }
+    
+    var gameToken: String = ""
+    
     typealias SuccessClosure = ([String: Any]) -> Void
     typealias FailClosure = (String) -> Void
     

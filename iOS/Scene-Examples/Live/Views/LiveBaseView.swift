@@ -285,10 +285,10 @@ class LiveBaseView: UIView {
         playGifView.translatesAutoresizingMaskIntoConstraints = false
         onlineView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(liveCanvasView)
+        addSubview(playGifView)
         addSubview(avatarview)
         addSubview(chatView)
         addSubview(bottomView)
-        addSubview(playGifView)
         addSubview(onlineView)
         
         canvasLeadingConstraint = liveCanvasView.leadingAnchor.constraint(equalTo: leadingAnchor)

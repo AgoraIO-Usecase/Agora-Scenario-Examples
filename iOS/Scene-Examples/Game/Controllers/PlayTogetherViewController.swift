@@ -32,6 +32,11 @@ class PlayTogetherViewController: BaseViewController {
         view.isHidden = true
         return view
     }()
+    private lazy var gameView: UIView = {
+        let view = UIView()
+        view.isHidden = true
+        return view
+    }()
     
     private(set) var channleName: String = ""
     private(set) var currentUserId: String = ""
@@ -40,6 +45,7 @@ class PlayTogetherViewController: BaseViewController {
     private var gameCenterModel: GameCenterModel?
     private lazy var viewModel = GameViewModel(channleName: channleName,
                                                ownerId: UserInfo.uid)
+    private var fsmApp2MG: ISudFSTAPP?
     /// 用户角色
     private func getRole(uid: String) -> AgoraClientRole {
         uid == currentUserId ? .broadcaster : .audience
@@ -107,8 +113,10 @@ class PlayTogetherViewController: BaseViewController {
         SyncUtil.unsubscribe(id: channleName, key: sceneType.rawValue)
         SyncUtil.unsubscribe(id: channleName, key: SYNC_MANAGER_GAME_APPLY_INFO)
         SyncUtil.unsubscribe(id: channleName, key: SYNC_MANAGER_GIFT_INFO)
+        SyncUtil.unsubscribe(id: channleName, key: SYNC_MANAGER_GAME_INFO)
         SyncUtil.leaveScene(id: channleName)
         navigationTransparent(isTransparent: false)
+        fsmApp2MG?.destroyMG()
         UIApplication.shared.isIdleTimerDisabled = false
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
@@ -134,6 +142,13 @@ class PlayTogetherViewController: BaseViewController {
         webView.topAnchor.constraint(equalTo: liveView.avatarview.bottomAnchor, constant: 15).isActive = true
         webView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         webView.bottomAnchor.constraint(equalTo: liveView.chatView.topAnchor, constant: -10).isActive = true
+        
+        gameView.translatesAutoresizingMaskIntoConstraints = false
+        liveView.insertSubview(gameView, belowSubview: liveView.playGifView)
+        gameView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        gameView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        gameView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        gameView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
     
     /// 加入channel
@@ -330,7 +345,10 @@ class PlayTogetherViewController: BaseViewController {
     }
     
     private func updateUIStatus(isStart: Bool) {
-        webView.isHidden = !isStart
+        let sources = gameCenterModel?.sources ?? gameInfoModel?.sources
+        webView.isHidden = sources == .sud || !isStart
+        gameView.isHidden = sources == .yuanqi || !isStart
+        
         if currentUserId == UserInfo.uid && isStart {
             liveView.updateBottomButtonType(type: [.exitgame, .gift, .tool, .close])
         } else if currentUserId == UserInfo.uid && !isStart {
@@ -339,19 +357,27 @@ class PlayTogetherViewController: BaseViewController {
             liveView.updateBottomButtonType(type: [.gift, .close])
         }
         if isStart {
-            ToastView.show(text: "游戏开始", postion: .top, duration: 3)
-            webView.loadUrl(gameId: (gameCenterModel?.gameId ?? gameInfoModel?.gameId)?.rawValue ?? "",
-                            roomId: channleName,
-                            roleType: gameRoleType)
-            
+            ToastView.show(text: "游戏开始", postion: .top, duration: 3, view: view)
+            let gameId = Int64((gameCenterModel?.gameId ?? gameInfoModel?.gameId)?.rawValue ?? "") ?? 0
+            if sources == .sud {
+                fsmApp2MG = SudMGP.loadMG(UserInfo.uid, roomId: channleName, code: NetworkManager.shared.gameToken, mgId: gameId, language: "zh-CN", fsmMG: self, rootView: gameView)
+            } else {
+                webView.loadUrl(gameId: (gameCenterModel?.gameId ?? gameInfoModel?.gameId)?.rawValue ?? "",
+                                roomId: channleName,
+                                roleType: gameRoleType)
+            }
             liveView.updateLiveLayout(postion: .signle)
             
         } else {
             liveView.updateLiveLayout(postion: .full)
-            let gameId = (gameInfoModel?.gameId ?? gameCenterModel?.gameId)?.rawValue ?? ""
-            // 离开游戏接口
-            viewModel.leaveGame(gameId: gameId, roleType: gameRoleType)
-            webView.reset()
+            if sources == .yuanqi {
+                let gameId = (gameInfoModel?.gameId ?? gameCenterModel?.gameId)?.rawValue ?? ""
+                // 离开游戏接口
+                viewModel.leaveGame(gameId: gameId, roleType: gameRoleType)
+                webView.reset()
+            } else {
+                fsmApp2MG?.destroyMG()
+            }
         }
     }
     /// 更新游戏状态
@@ -361,6 +387,7 @@ class PlayTogetherViewController: BaseViewController {
         gameInfoModel.gameId = gameCenterModel?.gameId ?? .guess
         gameInfoModel.gameUid = currentUserId
         gameInfoModel.status = isStart ? .playing : .end
+        gameInfoModel.sources = gameCenterModel?.sources ?? .yuanqi
         SyncUtil.update(id: channleName,
                         key: SYNC_MANAGER_GAME_INFO,
                         params: JSONObject.toJson(gameInfoModel))
@@ -408,5 +435,49 @@ extension PlayTogetherViewController: AgoraRtcEngineDelegate {
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, remoteAudioStats stats: AgoraRtcRemoteAudioStats) {
 //        remoteVideo.statsInfo?.updateAudioStats(stats)
+    }
+}
+
+extension PlayTogetherViewController: ISudFSMMG {
+    func onGameLog(_ dataJson: String) {
+        LogUtils.log(message: "onGameLog == \(dataJson)", level: .info)
+    }
+    
+    func onGameStarted() {
+        LogUtils.log(message: "onGameStarted", level: .info)
+    }
+    
+    func onGameDestroyed() {
+        LogUtils.log(message: "onGameDestroyed", level: .info)
+    }
+    
+    func onExpireCode(_ handle: ISudFSMStateHandle, dataJson: String) {
+        LogUtils.log(message: "onExpireCode == \(dataJson)", level: .info)
+    }
+    
+    func onGetGameViewInfo(_ handle: ISudFSMStateHandle, dataJson: String) {
+        LogUtils.log(message: "onGetGameViewInfo == \(dataJson)", level: .info)
+        let rect = UIScreen.main.bounds
+        let scale = UIScreen.main.nativeScale
+        let top = liveView.avatarview.frame.maxY
+        let width = rect.width * scale
+        let height = rect.height * scale
+        let bottom = liveView.chatView.frame.minY + 30
+        let rectDict = ["top": top, "left": 0, "bottom": bottom, "right": 0]
+        let viewDict = ["width": width, "height": height]
+        let dataDict = ["ret_code": 0, "ret_msg": "return form APP onGetGameViewInfo", "view_size": viewDict, "view_game_rect": rectDict] as [String : Any]
+        handle.success(JSONObject.toJsonString(dict: dataDict) ?? "")
+    }
+    
+    func onGetGameCfg(_ handle: ISudFSMStateHandle, dataJson: String) {
+        LogUtils.log(message: "onGetGameCfg == \(dataJson)", level: .info)
+    }
+    
+    func onGameStateChange(_ handle: ISudFSMStateHandle, state: String, dataJson: String) {
+        LogUtils.log(message: "onGameStateChange == \(dataJson)", level: .info)
+    }
+    
+    func onPlayerStateChange(_ handle: ISudFSMStateHandle?, userId: String, state: String, dataJson: String) {
+        LogUtils.log(message: "onPlayerStateChange == \(dataJson)", level: .info)
     }
 }
