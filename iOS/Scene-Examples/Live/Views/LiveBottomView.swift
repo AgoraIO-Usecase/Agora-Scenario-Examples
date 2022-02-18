@@ -40,7 +40,7 @@ class LiveBottomView: UIView {
         
         var title: String {
             switch self {
-            case .exitgame: return "退出游戏"
+            case .exitgame: return "quit_the_game".localized
             default: return ""
             }
         }

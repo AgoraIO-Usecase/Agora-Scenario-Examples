@@ -47,10 +47,10 @@ enum LiveToolType {
         case .switch_camera: return "Switch_Camera".localized
         case .camera: return "Camera".localized
         case .mic: return "Mic".localized
-        case .earphone_monitor: return "耳返".localized
-        case .music: return "音乐".localized
-        case .backgroundImage: return "背景".localized
-        case .real_time_data: return "实时数据".localized
+        case .earphone_monitor: return "Audio_Loop".localized
+        case .music: return "Music".localized
+        case .backgroundImage: return "background".localized
+        case .real_time_data: return "Real_Data".localized
         }
     }
 }

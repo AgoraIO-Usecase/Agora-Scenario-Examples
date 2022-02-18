@@ -26,7 +26,7 @@ class PKLiveInviteView: UIView {
         let view = AGETableView()
         view.estimatedRowHeight = 44
         view.delegate = self
-        view.emptyTitle = "暂时没有主播"
+        view.emptyTitle = "no_anchor_being".localized
         view.emptyImage = nil
         view.register(PKLiveInviteViewCell.self,
                       forCellWithReuseIdentifier: PKLiveInviteViewCell.description())

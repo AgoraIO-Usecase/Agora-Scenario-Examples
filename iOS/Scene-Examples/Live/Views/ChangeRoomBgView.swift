@@ -18,7 +18,7 @@ class ChangeRoomBgView: UIView {
     
     private lazy var titleLabel: AGELabel = {
         let label = AGELabel(colorStyle: .white, fontStyle: .middle)
-        label.text = "背景".localized
+        label.text = "background".localized
         label.colorStyle = .white
         return label
     }()

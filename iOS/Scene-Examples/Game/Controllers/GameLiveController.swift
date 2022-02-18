@@ -248,7 +248,9 @@ class GameLiveController: PKLiveController {
 
     // 退出游戏
     private func exitGameHandler() {
-        showAlert(title: "退出游戏", message: "退出游戏将会终止游戏PK", cancel: nil) { [weak self] in
+        showAlert(title: "quit_the_game".localized,
+                  message: "quitting_game_will_terminate_game_PK".localized,
+                  cancel: nil) { [weak self] in
             guard let self = self else { return }
             self.updatePKUIStatus(isStart: false)
             self.updateGameInfoStatus(isStart: false)
@@ -315,7 +317,7 @@ class GameLiveController: PKLiveController {
             liveView.updateBottomButtonType(type: [.gift, .close])
         }
         if isStart {
-            ToastView.show(text: "游戏开始", postion: .top, duration: 3)
+            ToastView.show(text: "game_start".localized, postion: .top, duration: 3)
             let channelName = isAudience ? gameInfoModel?.roomId : pkApplyInfoModel?.targetRoomId
             webView.loadUrl(gameId: gameId.rawValue,
                             roomId: channelName ?? "",

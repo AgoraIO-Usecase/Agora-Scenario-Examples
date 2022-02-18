@@ -176,7 +176,7 @@ class PlayTogetherViewController: BaseViewController {
         if result == 0 {
             LogUtils.log(message: "加入房间成功", level: .info)
         }
-        liveView.sendMessage(message: "\(UserInfo.userId)加入房间", messageType: .message)
+        liveView.sendMessage(message: "\(UserInfo.userId)" + "Join_Live_Room".localized, messageType: .message)
     }
     
     private func leaveChannel() {
@@ -242,7 +242,7 @@ class PlayTogetherViewController: BaseViewController {
                 }
             })
             SyncUtil.subscribe(id: channleName, key: nil, onDeleted: { _ in
-                self.showAlert(title: "直播已结束", message: "") {
+                self.showAlert(title: "live_broadcast_over".localized, message: "") {
                     self.navigationController?.popViewController(animated: true)
                 }
             })
@@ -312,7 +312,7 @@ class PlayTogetherViewController: BaseViewController {
     }
     // 退出游戏
     private func exitGameHandler() {
-        showAlert(title: "退出游戏", message: "", cancel: nil) { [weak self] in
+        showAlert(title: "quit_the_game".localized, message: "", cancel: nil) { [weak self] in
             self?.updateUIStatus(isStart: false)
             self?.updateGameInfoStatus(isStart: false)
         }
@@ -357,7 +357,7 @@ class PlayTogetherViewController: BaseViewController {
             liveView.updateBottomButtonType(type: [.gift, .close])
         }
         if isStart {
-            ToastView.show(text: "游戏开始", postion: .top, duration: 3, view: view)
+            ToastView.show(text: "game_start".localized, postion: .top, duration: 3, view: view)
             let gameId = Int64((gameCenterModel?.gameId ?? gameInfoModel?.gameId)?.rawValue ?? "") ?? 0
             if sources == .sud {
                 fsmApp2MG = SudMGP.loadMG(UserInfo.uid, roomId: channleName, code: NetworkManager.shared.gameToken, mgId: gameId, language: "zh-CN", fsmMG: self, rootView: gameView)

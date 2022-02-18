@@ -92,7 +92,7 @@ class LiveRoomListController: BaseViewController {
     private func clickCreateLiveButton() {
         let model = dataArray.filter({ $0.userId == UserInfo.uid }).first
         if model != nil {
-            showAlert(title: "您已创建房间, 将为您跳转进入", message: "") {
+            showAlert(title: "you_have_created_the_room_will_jump_into_you".localized, message: "") {
                 let params = JSONObject.toJson(model)
                 SyncUtil.joinScene(id: model?.roomId ?? "",
                                    userId: model?.userId ?? "",

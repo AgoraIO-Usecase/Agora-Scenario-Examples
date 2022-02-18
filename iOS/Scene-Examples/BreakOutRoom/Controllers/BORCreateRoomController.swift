@@ -19,7 +19,7 @@ class BORCreateRoomController: BaseViewController {
         textField.leftView = UIView(frame: CGRect(x: 10, y: 0, width: 10, height: 0))
         textField.leftViewMode = .always
         textField.font = .systemFont(ofSize: 14)
-        textField.placeholder = "Please enter a room name"
+        textField.placeholder = "Please_enter_a_room_name".localized
         return textField
     }()
     private lazy var createRoomButton: UIButton = {
@@ -41,7 +41,7 @@ class BORCreateRoomController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "create room"
+        title = "create_room".localized
         setupUI()
     }
     
@@ -68,15 +68,15 @@ class BORCreateRoomController: BaseViewController {
     private func clickCreateRoomButton(_ sender: UIButton) {
         let text = textField.text ?? ""
         guard !text.isEmpty else {
-            showHUDError(error: "Can't be empty")
+            showHUDError(error: "Cant_be_empty".localized)
             return
         }
         guard text.count < 11 else {
-            showHUDError(error: "Over length limit")
+            showHUDError(error: "Over_length_limit".localized)
             return
         }
         guard !text.isChinese(str: text) else {
-            showHUDError(error: "Chinese not supported")
+            showHUDError(error: "Chinese_not_supported".localized)
             return
         }
         showWaitHUD(title: "")

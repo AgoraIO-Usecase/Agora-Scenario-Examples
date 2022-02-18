@@ -46,7 +46,7 @@ private let minHUDWidth: CGFloat = 0.0
 extension UIViewController {
     @discardableResult
     func showWaitHUD() -> MBProgressHUD {
-        return showWaitHUD(title: "加载中…")
+        return showWaitHUD(title: "loading".localized)
     }
 
     @discardableResult
@@ -153,7 +153,7 @@ extension UIViewController {
 extension UIView {
     @discardableResult
     func showWaitHUD() -> MBProgressHUD {
-        return showWaitHUD(title: "加载中")
+        return showWaitHUD(title: "loading".localized)
     }
     
     @discardableResult

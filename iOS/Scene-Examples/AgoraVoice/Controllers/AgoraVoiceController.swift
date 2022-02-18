@@ -148,7 +148,7 @@ class AgoraVoiceController: BaseViewController {
         agoraKit?.setClientRole(getRole(uid: UserInfo.uid))
         
         var messageModel = ChatMessageModel()
-        messageModel.message = "\(UserInfo.uid) 加入房间"
+        messageModel.message = "\(UserInfo.uid) " + "Join_Live_Room".localized
         chatView.sendMessage(messageModel: messageModel)
         let params = JSONObject.toJson(AgoraVoiceUsersModel())
         SyncUtil.addCollection(id: channelName, className: SYNC_MANAGER_AGORA_VOICE_USERS, params: params, success: { object in
@@ -213,7 +213,7 @@ class AgoraVoiceController: BaseViewController {
         }
         belCantoView.didAgoraVoiceBelCantoItemClosure = { [weak self] model in
             guard let self = self, let model = model else { return }
-            if model.title == "女性" {
+            if model.title == "女性".localized {
                 self.agoraKit?.setVoiceBeautifierParameters(model.voiceBeautifierPreset, param1: 2, param2: 3)
                 return
             }
@@ -274,7 +274,7 @@ class AgoraVoiceController: BaseViewController {
         SyncUtil.subscribe(id: channelName, key: nil, onUpdated: { object in
             self.updateBGImage(object: object)
         }, onDeleted: { _ in
-            self.showAlert(title: "房间已关闭", message: "") {
+            self.showAlert(title: "room_is_closed".localized, message: "") {
                 self.navigationController?.popViewController(animated: true)
             }
         })
@@ -348,14 +348,14 @@ extension AgoraVoiceController: AgoraRtcEngineDelegate {
     func rtcEngine(_ engine: AgoraRtcEngineKit, didJoinedOfUid uid: UInt, elapsed: Int) {
         LogUtils.log(message: "remote user join: \(uid) \(elapsed)ms", level: .info)
         var messageModel = ChatMessageModel()
-        messageModel.message = "\(uid) 加入房间"
+        messageModel.message = "\(uid) " + "Join_Live_Room".localized
         chatView.sendMessage(messageModel: messageModel)
     }
 
     func rtcEngine(_ engine: AgoraRtcEngineKit, didOfflineOfUid uid: UInt, reason: AgoraUserOfflineReason) {
         LogUtils.log(message: "remote user leval: \(uid) reason \(reason)", level: .info)
         var messageModel = ChatMessageModel()
-        messageModel.message = "\(uid) 离开房间"
+        messageModel.message = "\(uid) " + "Leave_Live_Room".localized
         chatView.sendMessage(messageModel: messageModel)
     }
 

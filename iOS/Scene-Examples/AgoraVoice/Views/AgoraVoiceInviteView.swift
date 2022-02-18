@@ -25,7 +25,7 @@ class AgoraVoiceInviteView: UIView {
         let view = AGETableView()
         view.estimatedRowHeight = 44
         view.delegate = self
-        view.emptyTitle = "暂时没有观众"
+        view.emptyTitle = "暂时没有观众".localized
         view.emptyImage = nil
         view.register(AgoraVoiceInviteViewCell.self,
                       forCellWithReuseIdentifier: AgoraVoiceInviteViewCell.description())

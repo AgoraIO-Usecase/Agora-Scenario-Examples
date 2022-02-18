@@ -21,41 +21,41 @@ enum SoundEffectType: Int, CaseIterable {
         case .space:
             var model = AgoraVoiceSoundEffectModel(imageName: "icon-KTV", title: "KTV", effectPreset: .roomAcousticsKTV)
             tempArray.append(model)
-            model = AgoraVoiceSoundEffectModel(imageName: "icon-演唱会", title: "演唱会", effectPreset: .roomAcousVocalConcer)
+            model = AgoraVoiceSoundEffectModel(imageName: "icon-演唱会", title: "vocal_concert".localized, effectPreset: .roomAcousVocalConcer)
             tempArray.append(model)
-            model = AgoraVoiceSoundEffectModel(imageName: "icon-录音棚", title: "录音棚", effectPreset: .roomAcousStudio)
+            model = AgoraVoiceSoundEffectModel(imageName: "icon-录音棚", title: "recording_studio".localized, effectPreset: .roomAcousStudio)
             tempArray.append(model)
-            model = AgoraVoiceSoundEffectModel(imageName: "icon-留声机", title: "留声机", effectPreset: .roomAcousPhonograph)
+            model = AgoraVoiceSoundEffectModel(imageName: "icon-留声机", title: "phonograph".localized, effectPreset: .roomAcousPhonograph)
             tempArray.append(model)
-            model = AgoraVoiceSoundEffectModel(imageName: "icon-虚拟立体声", title: "虚拟立体声", effectPreset: .roomAcousVirtualStereo)
+            model = AgoraVoiceSoundEffectModel(imageName: "icon-虚拟立体声", title: "virtual_stereo".localized, effectPreset: .roomAcousVirtualStereo)
             tempArray.append(model)
-            model = AgoraVoiceSoundEffectModel(imageName: "icon-空旷", title: "空旷", effectPreset: .roomAcousSpatial)
+            model = AgoraVoiceSoundEffectModel(imageName: "icon-空旷", title: "empty".localized, effectPreset: .roomAcousSpatial)
             tempArray.append(model)
-            model = AgoraVoiceSoundEffectModel(imageName: "icon-空灵", title: "空灵", effectPreset: .roomAcousEthereal)
+            model = AgoraVoiceSoundEffectModel(imageName: "icon-空灵", title: "empty_spirit".localized, effectPreset: .roomAcousEthereal)
             tempArray.append(model)
-            model = AgoraVoiceSoundEffectModel(imageName: "icon-3D人声", title: "3D人声", effectPreset: .roomAcous3DVoice)
+            model = AgoraVoiceSoundEffectModel(imageName: "icon-3D人声", title: "three_d_human".localized, effectPreset: .roomAcous3DVoice)
             tempArray.append(model)
             
         case .voiceChangerEffect:
-            var model = AgoraVoiceSoundEffectModel(imageName: "icon-大叔磁性", title: "大叔", effectPreset: .voiceChangerEffectUncle)
+            var model = AgoraVoiceSoundEffectModel(imageName: "icon-大叔磁性", title: "uncle".localized, effectPreset: .voiceChangerEffectUncle)
             tempArray.append(model)
-            model = AgoraVoiceSoundEffectModel(imageName: "icon-老年人", title: "老男人", effectPreset: .voiceChangerEffectOldMan)
+            model = AgoraVoiceSoundEffectModel(imageName: "icon-老年人", title: "old_man".localized, effectPreset: .voiceChangerEffectOldMan)
             tempArray.append(model)
-            model = AgoraVoiceSoundEffectModel(imageName: "icon-小男孩", title: "小男孩", effectPreset: .voiceChangerEffectBoy)
+            model = AgoraVoiceSoundEffectModel(imageName: "icon-小男孩", title: "little_boy".localized, effectPreset: .voiceChangerEffectBoy)
             tempArray.append(model)
-            model = AgoraVoiceSoundEffectModel(imageName: "icon-小姐姐", title: "小姐姐", effectPreset: .voiceChangerEffectSister)
+            model = AgoraVoiceSoundEffectModel(imageName: "icon-小姐姐", title: "little_sister".localized, effectPreset: .voiceChangerEffectSister)
             tempArray.append(model)
-            model = AgoraVoiceSoundEffectModel(imageName: "icon-小女孩", title: "小女孩", effectPreset: .voiceChangerEffectGirl)
+            model = AgoraVoiceSoundEffectModel(imageName: "icon-小女孩", title: "little_girl".localized, effectPreset: .voiceChangerEffectGirl)
             tempArray.append(model)
-            model = AgoraVoiceSoundEffectModel(imageName: "icon-猪八戒", title: "猪八戒", effectPreset: .voiceChangerEffectPigKin)
+            model = AgoraVoiceSoundEffectModel(imageName: "icon-猪八戒", title: "pigsy".localized, effectPreset: .voiceChangerEffectPigKin)
             tempArray.append(model)
-            model = AgoraVoiceSoundEffectModel(imageName: "icon-绿巨人", title: "绿巨人", effectPreset: .voiceChangerEffectHulk)
+            model = AgoraVoiceSoundEffectModel(imageName: "icon-绿巨人", title: "hulk".localized, effectPreset: .voiceChangerEffectHulk)
             tempArray.append(model)
             
         case .styleTransformation:
             var model = AgoraVoiceSoundEffectModel(imageName: "icon-R&B", title: "R&B", effectPreset: .styleTransformationRnb)
             tempArray.append(model)
-            model = AgoraVoiceSoundEffectModel(imageName: "icon-流行", title: "流行", effectPreset: .styleTransformationPopular)
+            model = AgoraVoiceSoundEffectModel(imageName: "icon-流行", title: "popular".localized, effectPreset: .styleTransformationPopular)
             tempArray.append(model)
 
         case .pitchCorrection:
@@ -91,11 +91,11 @@ enum SoundEffectType: Int, CaseIterable {
     
     var title: String {
         switch self {
-        case .space:               return "空间塑造".localized
-        case .voiceChangerEffect:  return "变声音效".localized
-        case .styleTransformation: return "曲风音效".localized
-        case .pitchCorrection:     return "电音音效".localized
-        case .magicTone:           return "魔力音阶".localized
+        case .space:               return "space_shape".localized
+        case .voiceChangerEffect:  return "voice_sound".localized
+        case .styleTransformation: return "style_sound".localized
+        case .pitchCorrection:     return "electronic_music_sound".localized
+        case .magicTone:           return "magic_scale".localized
         }
     }
     

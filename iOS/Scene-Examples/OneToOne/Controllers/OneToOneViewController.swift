@@ -120,7 +120,7 @@ class OneToOneViewController: BaseViewController {
     private func eventHandler() {
         SyncUtil.subscribe(id: channelName, key: nil, onDeleted: { object in
             LogUtils.log(message: "删除房间 == \(object.toJson() ?? "")", level: .info)
-            AGEToastView.show(text: "房间已关闭", duration: 2)
+            AGEToastView.show(text: "room_is_closed".localized, duration: 2)
             self.navigationController?.popViewController(animated: true)
         })
 
@@ -148,7 +148,7 @@ class OneToOneViewController: BaseViewController {
             self.gameInfoModel.gameId = model?.gameId
             if model?.status == .playing {
                 self.isSelfExitGame = false
-                self.showAlert(title: "对方邀请您玩游戏", message: "") {
+                self.showAlert(title: "you_invited_to_play_game".localized, message: "") {
                     self.onoToOneGameView.setLoadUrl(gameId: model?.gameId?.rawValue ?? "",
                                                      roomId: self.channelName,
                                                      roleType: self.currentGameRoleType)
@@ -156,7 +156,7 @@ class OneToOneViewController: BaseViewController {
                 }
             } else if model?.status == .end && !self.isSelfExitGame{
                 AlertManager.hiddenView()
-                ToastView.show(text: "游戏已结束", view: self.view)
+                ToastView.show(text: "game_over".localized, view: self.view)
                 self.viewModel.leaveGame(gameId: model?.gameId?.rawValue ?? "",
                                          roleType: self.currentGameRoleType)
                 self.onoToOneGameView.reset()
@@ -188,7 +188,7 @@ class OneToOneViewController: BaseViewController {
             agoraKit?.muteLocalAudioStream(isSelected)
             
         case .exit:
-            showAlert(title: "退出游戏", message: "确定退出退出游戏 ？") {
+            showAlert(title: "quit_the_game".localized, message: "confirm_exit_game".localized) {
                 self.controlView.isHidden = false
                 AlertManager.hiddenView()
                 self.onoToOneGameView.reset()
@@ -197,7 +197,7 @@ class OneToOneViewController: BaseViewController {
             }
             
         case .back:
-            showAlert(title: "关闭直播间", message: "关闭直播间后，其他用户将不能再和您连线。确定关闭 ？") {
+            showAlert(title: "close_studio".localized, message: "after_closing_live_broadcast_room".localized) {
                 self.viewModel.leaveGame(gameId: self.gameInfoModel.gameId?.rawValue ?? "",
                                          roleType: self.currentGameRoleType)
                 let gameInfo = GameInfoModel(status: .end, gameUid: UserInfo.uid, gameId: self.gameInfoModel.gameId)

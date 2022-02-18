@@ -13,8 +13,8 @@ enum AudioEffectType {
         
     var title: String {
         switch self {
-        case .belCanto:    return "美声".localized
-        case .soundEffect: return "音效".localized
+        case .belCanto:    return "bel_canto".localized
+        case .soundEffect: return "sound_effect".localized
         }
     }
     
@@ -62,7 +62,7 @@ class AgoraVoiceBelCantoView: UIView {
     
     private lazy var titleLabel: AGELabel = {
         let label = AGELabel(colorStyle: .white, fontStyle: .middle)
-        label.text = "美声".localized
+        label.text = "bel_canto".localized
         label.colorStyle = .white
         return label
     }()
@@ -109,7 +109,7 @@ class AgoraVoiceBelCantoView: UIView {
         view.edge = currentType.edges(belCantoType: belCantoType, soundEffectType: soundEffectType)
         view.delegate = self
         view.scrollDirection = .vertical
-        view.emptyTitle = "即将发布"
+        view.emptyTitle = "upcoming_release".localized
         view.emptyImage = UIImage(named: "pic-coming soon")
         view.emptyTopMargin = 40
         view.register(AgoraVoiceBelCantoViewCell.self,
@@ -221,7 +221,7 @@ class AgoraVoiceBelCantoViewCell: UICollectionViewCell {
     }()
     private lazy var titleLabel: AGELabel = {
         let label = AGELabel(colorStyle: .disabled, fontStyle: .small)
-        label.text = "磁性(男)"
+        label.text = "magnetism_male".localized
         label.colorStyle = .disabled
         label.fontStyle = .small
         label.textAlignment = .center

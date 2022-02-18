@@ -107,9 +107,9 @@ class OnoToOneGameView: UIView {
     @objc
     private func clickExitButton() {
         let controller = UIApplication.topMostViewController
-        let alertVC = UIAlertController(title: "退出游戏", message: "确定退出退出游戏 ？", preferredStyle: .alert)
-        let cancel = UIAlertAction(title: "取消", style: .cancel)
-        let ok = UIAlertAction(title: "确定", style: .default) { _ in
+        let alertVC = UIAlertController(title: "quit_the_game".localized, message: "confirm_exit_game".localized, preferredStyle: .alert)
+        let cancel = UIAlertAction(title: "Cancel".localized, style: .cancel)
+        let ok = UIAlertAction(title: "Confirm".localized, style: .default) { _ in
             AlertManager.hiddenView(all: true) {
                 self.onClickControlButtonClosure?(.exit, false)
             }

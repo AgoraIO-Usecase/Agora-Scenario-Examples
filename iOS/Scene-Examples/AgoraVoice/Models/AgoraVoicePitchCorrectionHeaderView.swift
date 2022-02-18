@@ -13,7 +13,7 @@ class AgoraVoicePitchCorrectionHeaderView: UICollectionReusableView {
     var clickSegmentViewClosure: ((Int) -> Void)?
     private lazy var titleLabel: AGELabel = {
         let label = AGELabel(colorStyle: .disabled)
-        label.text = "启动电音".localized
+        label.text = "start_electric".localized
         return label
     }()
     private lazy var swicthUI: UISwitch = {
@@ -25,7 +25,7 @@ class AgoraVoicePitchCorrectionHeaderView: UICollectionReusableView {
         return switchUI
     }()
     private lazy var segmentView: UISegmentedControl = {
-        let segmentView = UISegmentedControl(items: ["大调".localized, "小调".localized, "和风".localized])
+        let segmentView = UISegmentedControl(items: ["major".localized, "minor".localized, "and_the_wind".localized])
         segmentView.selectedSegmentTintColor = .blueColor
         segmentView.backgroundColor = .init(hex: "#62626F")
         segmentView.tintColor = .blueColor
@@ -35,7 +35,7 @@ class AgoraVoicePitchCorrectionHeaderView: UICollectionReusableView {
     }()
     private lazy var selectedLabel: AGELabel = {
         let label = AGELabel(colorStyle: .white, fontStyle: .large)
-        label.text = "选择起始音阶".localized
+        label.text = "select_initial_scale".localized
         return label
     }()
     override init(frame: CGRect) {

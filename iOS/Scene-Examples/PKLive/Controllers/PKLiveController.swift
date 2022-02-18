@@ -11,7 +11,7 @@ import AgoraSyncManager
 class PKLiveController: SignleLiveController {
     public lazy var stopBroadcastButton: UIButton = {
         let button = UIButton()
-        button.setTitle("停止连麦", for: .normal)
+        button.setTitle("stop_wheat".localized, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 13)
         button.backgroundColor = .init(hex: "#000000", alpha: 0.7)
@@ -178,7 +178,7 @@ class PKLiveController: SignleLiveController {
             })
             
         } else if model.status == .invite && "\(UserInfo.userId)" != model.userId {
-            let message = sceneType == .game ? "您的好友\(model.userName)邀请\n您加入\(model.gameId.title)游戏" : ""
+            let message = sceneType == .game ? String(format: "your_friends_invite_you_join_game".localized, model.userName, model.gameId.title) : ""
             showAlert(title: sceneType.alertTitle, message: message) { [weak self] in
                 guard let self = self else { return }
                 model.status = .refuse
@@ -319,7 +319,7 @@ class PKLiveController: SignleLiveController {
     
     @objc
     private func clickStopBroadcast() { /// 停止连麦
-        showAlert(title: "终止连麦", message: "", cancel: nil) { [weak self] in
+        showAlert(title: "End_Broadcasting".localized, message: "", cancel: nil) { [weak self] in
             self?.updatePKInfoStatusToEnd()
             self?.stopBroadcastButton.isHidden = true
         }

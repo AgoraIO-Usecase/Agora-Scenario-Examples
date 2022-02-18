@@ -13,7 +13,7 @@ class AgoraVoiceMusicView: UIView {
     var clickSliderValueChangeClosure: ((Float) -> Void)?
     private lazy var titleLabel: AGELabel = {
         let label = AGELabel(colorStyle: .white)
-        label.text = "背景音乐".localized
+        label.text = "BGM".localized
         return label
     }()
     private lazy var loudspeakerImageView: AGEImageView = {

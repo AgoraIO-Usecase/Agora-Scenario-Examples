@@ -21,34 +21,34 @@ enum AgoraVoiceBelCantoType: Int, CaseIterable {
         var tempArray = [AgoraVoiceBelCantoModel]()
         switch self {
         case .voice:
-            var model = AgoraVoiceBelCantoModel(imageName: "icon-大叔磁性", title: "磁性(男)", voiceBeautifierPreset: .presetChatBeautifierMagnetic)
+            var model = AgoraVoiceBelCantoModel(imageName: "icon-大叔磁性", title: "magnetism_male".localized, voiceBeautifierPreset: .presetChatBeautifierMagnetic)
             tempArray.append(model)
-            model = AgoraVoiceBelCantoModel(imageName: "icon-清新女", title: "清新(女)", voiceBeautifierPreset: .presetChatBeautifierFresh)
+            model = AgoraVoiceBelCantoModel(imageName: "icon-清新女", title: "fresh_female".localized, voiceBeautifierPreset: .presetChatBeautifierFresh)
             tempArray.append(model)
-            model = AgoraVoiceBelCantoModel(imageName: "icon-活力女", title: "活力(女)", voiceBeautifierPreset: .presetChatBeautifierVitality)
+            model = AgoraVoiceBelCantoModel(imageName: "icon-活力女", title: "energy_female".localized, voiceBeautifierPreset: .presetChatBeautifierVitality)
             tempArray.append(model)
         case .sound:
-            var model = AgoraVoiceBelCantoModel(imageName: "", title: "男性", voiceBeautifierPreset: .presetSingingBeautifier)
+            var model = AgoraVoiceBelCantoModel(imageName: "", title: "men".localized, voiceBeautifierPreset: .presetSingingBeautifier)
             tempArray.append(model)
-            model = AgoraVoiceBelCantoModel(imageName: "", title: "女性", voiceBeautifierPreset: .presetSingingBeautifier)
+            model = AgoraVoiceBelCantoModel(imageName: "", title: "women".localized, voiceBeautifierPreset: .presetSingingBeautifier)
             tempArray.append(model)
             
         case .change:
-            var model = AgoraVoiceBelCantoModel(imageName: "", title: "浑厚", voiceBeautifierPreset: .timbreTransformationVigorous)
+            var model = AgoraVoiceBelCantoModel(imageName: "", title: "vigorous".localized, voiceBeautifierPreset: .timbreTransformationVigorous)
             tempArray.append(model)
-            model = AgoraVoiceBelCantoModel(imageName: "", title: "低沉", voiceBeautifierPreset: .timbreTransformationDeep)
+            model = AgoraVoiceBelCantoModel(imageName: "", title: "a_low".localized, voiceBeautifierPreset: .timbreTransformationDeep)
             tempArray.append(model)
-            model = AgoraVoiceBelCantoModel(imageName: "", title: "圆润", voiceBeautifierPreset: .timbreTransformationMellow)
+            model = AgoraVoiceBelCantoModel(imageName: "", title: "round".localized, voiceBeautifierPreset: .timbreTransformationMellow)
             tempArray.append(model)
-            model = AgoraVoiceBelCantoModel(imageName: "", title: "假音", voiceBeautifierPreset: .timbreTransformationFalsetto)
+            model = AgoraVoiceBelCantoModel(imageName: "", title: "falsetto".localized, voiceBeautifierPreset: .timbreTransformationFalsetto)
             tempArray.append(model)
-            model = AgoraVoiceBelCantoModel(imageName: "", title: "饱满", voiceBeautifierPreset: .timbreTransformationFull)
+            model = AgoraVoiceBelCantoModel(imageName: "", title: "full".localized, voiceBeautifierPreset: .timbreTransformationFull)
             tempArray.append(model)
-            model = AgoraVoiceBelCantoModel(imageName: "", title: "清澈", voiceBeautifierPreset: .timbreTransformationClear)
+            model = AgoraVoiceBelCantoModel(imageName: "", title: "clear".localized, voiceBeautifierPreset: .timbreTransformationClear)
             tempArray.append(model)
-            model = AgoraVoiceBelCantoModel(imageName: "", title: "高亢", voiceBeautifierPreset: .timbreTransformationResounding)
+            model = AgoraVoiceBelCantoModel(imageName: "", title: "high".localized, voiceBeautifierPreset: .timbreTransformationResounding)
             tempArray.append(model)
-            model = AgoraVoiceBelCantoModel(imageName: "", title: "嘹亮", voiceBeautifierPreset: .timbreTransformatRinging)
+            model = AgoraVoiceBelCantoModel(imageName: "", title: "loud".localized, voiceBeautifierPreset: .timbreTransformatRinging)
             tempArray.append(model)
         }
         return tempArray
@@ -56,9 +56,9 @@ enum AgoraVoiceBelCantoType: Int, CaseIterable {
     
     var title: String {
         switch self {
-        case .voice: return "语聊美声".localized
-        case .sound: return "歌唱美声".localized
-        case .change: return "音色变换".localized
+        case .voice: return "bel_canto_language_chat".localized
+        case .sound: return "bel_canto_singing".localized
+        case .change: return "timbre_transformation".localized
         }
     }
     

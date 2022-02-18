@@ -83,13 +83,13 @@ class AgoraVoiceUsersView: UIView {
             guard var model = JSONObject.toModel(AgoraVoiceUsersModel.self, value: object.toJson()) else { return }
             let controller = UIApplication.topMostViewController
             if model.userId == UserInfo.uid && model.status == .invite {
-                let alert = UIAlertController(title: "主播邀请您上麦", message: nil, preferredStyle: .alert)
-                let cancel = UIAlertAction(title: "取消".localized, style: .cancel) { _ in
+                let alert = UIAlertController(title: "host_invites_you_on_the_mic".localized, message: nil, preferredStyle: .alert)
+                let cancel = UIAlertAction(title: "Cancel".localized, style: .cancel) { _ in
                     model.status = .refuse
                     let params = JSONObject.toJson(model)
                     SyncUtil.updateCollection(id: self.channelName, className: SYNC_MANAGER_AGORA_VOICE_USERS, objectId: model.objectId ?? "", params: params)
                 }
-                let invite = UIAlertAction(title: "上麦".localized, style: .default) { _ in
+                let invite = UIAlertAction(title: /*上麦*/"Became_A_Host".localized, style: .default) { _ in
                     model.status = .accept
                     let params = JSONObject.toJson(model)
                     SyncUtil.updateCollection(id: self.channelName, className: SYNC_MANAGER_AGORA_VOICE_USERS, objectId: model.objectId ?? "", params: params)
@@ -103,7 +103,7 @@ class AgoraVoiceUsersView: UIView {
             }
             if self.currentRole == .broadcaster && model.status == .refuse {
                 let alert = UIAlertController(title: "User-\(model.userId)拒绝了您的邀请", message: nil, preferredStyle: .alert)
-                let cancel = UIAlertAction(title: "确定".localized, style: .default, handler: nil)
+                let cancel = UIAlertAction(title: "Confirm".localized, style: .default, handler: nil)
                 alert.addAction(cancel)
                 controller?.present(alert, animated: true, completion: nil)
                 return
@@ -138,14 +138,14 @@ extension AgoraVoiceUsersView: AGECollectionViewDelegate {
         let model = self.collectionView.dataArray?[indexPath.item]
         let controller = UIApplication.topMostViewController
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        let close = UIAlertAction(title: "封麦".localized, style: .destructive) { _ in
+        let close = UIAlertAction(title: /*封麦*/"Seat_Close".localized, style: .destructive) { _ in
             var userModel = model as? AgoraVoiceUsersModel
             userModel?.status = .end
             SyncUtil.updateCollection(id: self.channelName, className: SYNC_MANAGER_AGORA_VOICE_USERS, objectId: userModel?.objectId ?? "", params: JSONObject.toJson(userModel))
         }
-        let cancel = UIAlertAction(title: "取消".localized, style: .cancel, handler: nil)
+        let cancel = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
         if model is String {
-            let invite = UIAlertAction(title: "邀请".localized, style: .default) { _ in
+            let invite = UIAlertAction(title: "Invite".localized, style: .default) { _ in
                 AlertManager.show(view: AgoraVoiceInviteView(channelName: self.channelName), alertPostion: .bottom)
             }
             alert.addAction(invite)

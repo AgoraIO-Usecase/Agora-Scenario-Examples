@@ -51,7 +51,7 @@ class LiveRoomListCell: UICollectionViewCell {
             bgImageView.image = UIImage(named: info.backgroundId)
         }
         if let info = info as? LiveRoomInfo {
-            titleLabel.text = "\(info.roomName)\n房间号:\(info.roomId)"
+            titleLabel.text = "\(info.roomName)\n" + "room_number".localized + ":\(info.roomId)"
             bgImageView.image = UIImage(named: info.backgroundId)
         }
     }

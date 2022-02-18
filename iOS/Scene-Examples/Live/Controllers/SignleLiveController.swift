@@ -129,7 +129,7 @@ class SignleLiveController: BaseViewController {
         
         guard getRole(uid: UserInfo.uid) == .audience else { return }
         SyncUtil.subscribe(id: channleName, key: nil, onDeleted: { _ in
-            self.showAlert(title: "直播已结束", message: "") {
+            self.showAlert(title: "live_broadcast_over".localized, message: "") {
                 self.navigationController?.popViewController(animated: true)
             }
         })
@@ -184,7 +184,7 @@ class SignleLiveController: BaseViewController {
         if result == 0 {
             LogUtils.log(message: "主播进入房间", level: .info)
         }
-        liveView.sendMessage(message: "\(UserInfo.userId)加入房间", messageType: .message)
+        liveView.sendMessage(message: "\(UserInfo.userId)" + "Join_Live_Room".localized, messageType: .message)
     }
     
     /// 观众加入channel
@@ -213,7 +213,8 @@ class SignleLiveController: BaseViewController {
         if joinResult == 0 {
             LogUtils.log(message: "join audience success uid == \(pkUid) channelName == \(channelName)", level: .info)
             let userId = pkUid == (UInt(currentUserId) ?? 0) ? UserInfo.userId : pkUid
-            liveView.sendMessage(message: "\(userId)加入房间", messageType: .message)
+            liveView.sendMessage(message: "\(userId)" + "Join_Live_Room".localized,
+                                 messageType: .message)
             return
         }
         LogUtils.log(message: "join audience error uid == \(pkUid) channelName == \(channelName)", level: .error)
@@ -244,7 +245,8 @@ class SignleLiveController: BaseViewController {
             liveView.removeData(index: index)
         }
         guard "\(uid)" != currentUserId else { return }
-        liveView.sendMessage(message: "\(uid)离开房间", messageType: .message)
+        liveView.sendMessage(message: "\(uid)" + "Leave_Live_Room".localized,
+                             messageType: .message)
     }
     
     deinit {

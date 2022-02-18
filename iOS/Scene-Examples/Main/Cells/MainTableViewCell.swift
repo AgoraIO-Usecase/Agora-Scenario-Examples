@@ -16,14 +16,14 @@ class MainTableViewCell: UITableViewCell {
     }()
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "单主播直播"
+        label.text = "Single_Broadcaster".localized
         label.textColor = .white
         label.font = .boldSystemFont(ofSize: 15)
         return label
     }()
     private lazy var descLabel: UILabel = {
         let label = UILabel()
-        label.text = "单主播直播"
+        label.text = "Single_Broadcaster".localized
         label.textColor = .white
         label.font = .systemFont(ofSize: 12)
         label.numberOfLines = 0

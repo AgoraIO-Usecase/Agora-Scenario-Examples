@@ -10,7 +10,7 @@ import UIKit
 class LiveRandomNameView: UIView {
     private lazy var liveNameLabel: UILabel = {
         let label = UILabel()
-        label.text = "直播间的名字: "
+        label.text = "Create_NameLabel".localized//"直播间的名字: "
         label.textColor = .white
         label.font = .systemFont(ofSize: 12)
         return label

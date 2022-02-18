@@ -196,7 +196,7 @@ class BORRoomDetailController: BaseViewController {
         // Error code description can be found at:
         // en: https://docs.agora.io/en/Voice/API%20Reference/oc/Constants/AgoraErrorCode.html
         // cn: https://docs.agora.io/cn/Voice/API%20Reference/oc/Constants/AgoraErrorCode.html
-        self.showAlert(title: "Error", message: "joinChannel call failed: \(String(describing: result)), please check your params")
+        self.showAlert(title: "Error".localized, message: "joinChannel call failed: \(String(describing: result)), please check your params")
     }
     private func leaveChannel() {
         agoraKit?.leaveChannel({ state in
@@ -216,13 +216,13 @@ class BORRoomDetailController: BaseViewController {
     
     @objc
     private func clickAddButton() {
-        showTextFieldAlert(title: "Please enter a subroom name", message: "") { [weak self] text in
+        showTextFieldAlert(title: "Please_enter_a_subroom_name".localized, message: "") { [weak self] text in
             guard text.count < 11 else {
-                self?.showHUDError(error: "Over length limit")
+                self?.showHUDError(error: "Over_length_limit".localized)
                 return
             }
             guard !text.isChinese(str: text) else {
-                self?.showHUDError(error: "Chinese not supported")
+                self?.showHUDError(error: "Chinese_not_supported".localized)
                 return
             }
             let roomModel = BORSubRoomModel(subRoom: text)

@@ -18,7 +18,7 @@ class GameCenterView: UIView {
     }()
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "游戏中心"
+        label.text = "game_center".localized
         label.textColor = .black
         label.font = .systemFont(ofSize: 14)
         return label

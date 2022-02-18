@@ -143,7 +143,7 @@ class LiveBaseView: UIView {
             if type == .me {
                 self.playGifView.isHidden = false
                 self.playGifView.loadGIFName(gifName: model.gifName)
-                let model = ChatMessageModel(message: model.userId + "送出了一个" + model.title, messageType: .message)
+                let model = ChatMessageModel(message: model.userId + "i_gave_one_away".localized + model.title, messageType: .message)
                 self.chatView.sendMessage(messageModel: model)
             }
             self.onReceivedGiftClosure?(model, type)

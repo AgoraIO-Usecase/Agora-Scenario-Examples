@@ -23,13 +23,13 @@ struct GameModeModel {
     static func createDatas() -> [GameModeModel] {
         var dataArray = [GameModeModel]()
         var model = GameModeModel(iconName: "Game/pkgame-icon",
-                                  title: "连麦PK",
+                                  title: "even_michael_PK".localized,
                                   bgColor: .init(hex: "#F5A623"),
                                   type: .game_pk)
         dataArray.append(model)
         
         model = GameModeModel(iconName: "Game/fansgame",
-                              title: "粉丝互动游戏",
+                              title: "fan_interactive_games".localized,
                               bgColor: .init(hex: "#4A90E2"),
                               type: .together)
         dataArray.append(model)
