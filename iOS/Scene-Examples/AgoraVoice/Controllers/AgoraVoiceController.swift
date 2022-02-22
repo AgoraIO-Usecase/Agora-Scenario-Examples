@@ -213,7 +213,7 @@ class AgoraVoiceController: BaseViewController {
         }
         belCantoView.didAgoraVoiceBelCantoItemClosure = { [weak self] model in
             guard let self = self, let model = model else { return }
-            if model.title == "女性".localized {
+            if model.title == "women".localized {
                 self.agoraKit?.setVoiceBeautifierParameters(model.voiceBeautifierPreset, param1: 2, param2: 3)
                 return
             }
