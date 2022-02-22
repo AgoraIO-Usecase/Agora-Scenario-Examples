@@ -22,23 +22,6 @@ class MainViewController: BaseViewController {
         super.viewDidLoad()
         title = "home".localized
         setupUI()
-        signIn()
-    }
-    
-    private func signIn() {
-        SudMGP.initSDK("1461564080052506636", appKey: "03pNxK2lEXsKiiwrBQ9GbH541Fk2Sfnc", isTestEnv: true) { code, _ in
-            guard code == 0 else { return }
-            print("初始化成功")
-        }
-        
-        NetworkManager.shared.postRequest(urlString: "https://fat-mgp-hello.sudden.ltd/login/v2", params: ["user_id": UserInfo.uid]) { reponse in
-            print("signIn response == \(reponse)")
-            let data = reponse["data"] as? [String: Any]
-            let token = data?["code"] as? String
-            NetworkManager.shared.gameToken = token ?? ""
-        } failure: { error in
-            print("sign in error == \(error)")
-        }
     }
     
     private func setupUI() {

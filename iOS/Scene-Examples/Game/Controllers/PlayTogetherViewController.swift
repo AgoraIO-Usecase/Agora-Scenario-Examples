@@ -45,7 +45,7 @@ class PlayTogetherViewController: BaseViewController {
     private var gameCenterModel: GameCenterModel?
     private lazy var viewModel = GameViewModel(channleName: channleName,
                                                ownerId: UserInfo.uid)
-    private var fsmApp2MG: ISudFSTAPP?
+//    private var fsmApp2MG: ISudFSTAPP?
     /// 用户角色
     private func getRole(uid: String) -> AgoraClientRole {
         uid == currentUserId ? .broadcaster : .audience
@@ -116,7 +116,6 @@ class PlayTogetherViewController: BaseViewController {
         SyncUtil.unsubscribe(id: channleName, key: SYNC_MANAGER_GAME_INFO)
         SyncUtil.leaveScene(id: channleName)
         navigationTransparent(isTransparent: false)
-        fsmApp2MG?.destroyMG()
         UIApplication.shared.isIdleTimerDisabled = false
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
@@ -359,25 +358,17 @@ class PlayTogetherViewController: BaseViewController {
         if isStart {
             ToastView.show(text: "game_start".localized, postion: .top, duration: 3, view: view)
             let gameId = Int64((gameCenterModel?.gameId ?? gameInfoModel?.gameId)?.rawValue ?? "") ?? 0
-            if sources == .sud {
-                fsmApp2MG = SudMGP.loadMG(UserInfo.uid, roomId: channleName, code: NetworkManager.shared.gameToken, mgId: gameId, language: "zh-CN", fsmMG: self, rootView: gameView)
-            } else {
-                webView.loadUrl(gameId: (gameCenterModel?.gameId ?? gameInfoModel?.gameId)?.rawValue ?? "",
-                                roomId: channleName,
-                                roleType: gameRoleType)
-            }
+            webView.loadUrl(gameId: "\(gameId)",
+                             roomId: channleName,
+                             roleType: gameRoleType)
             liveView.updateLiveLayout(postion: .signle)
             
         } else {
             liveView.updateLiveLayout(postion: .full)
-            if sources == .yuanqi {
-                let gameId = (gameInfoModel?.gameId ?? gameCenterModel?.gameId)?.rawValue ?? ""
-                // 离开游戏接口
-                viewModel.leaveGame(gameId: gameId, roleType: gameRoleType)
-                webView.reset()
-            } else {
-                fsmApp2MG?.destroyMG()
-            }
+            let gameId = (gameInfoModel?.gameId ?? gameCenterModel?.gameId)?.rawValue ?? ""
+            // 离开游戏接口
+            viewModel.leaveGame(gameId: gameId, roleType: gameRoleType)
+            webView.reset()
         }
     }
     /// 更新游戏状态
@@ -435,49 +426,5 @@ extension PlayTogetherViewController: AgoraRtcEngineDelegate {
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, remoteAudioStats stats: AgoraRtcRemoteAudioStats) {
 //        remoteVideo.statsInfo?.updateAudioStats(stats)
-    }
-}
-
-extension PlayTogetherViewController: ISudFSMMG {
-    func onGameLog(_ dataJson: String) {
-        LogUtils.log(message: "onGameLog == \(dataJson)", level: .info)
-    }
-    
-    func onGameStarted() {
-        LogUtils.log(message: "onGameStarted", level: .info)
-    }
-    
-    func onGameDestroyed() {
-        LogUtils.log(message: "onGameDestroyed", level: .info)
-    }
-    
-    func onExpireCode(_ handle: ISudFSMStateHandle, dataJson: String) {
-        LogUtils.log(message: "onExpireCode == \(dataJson)", level: .info)
-    }
-    
-    func onGetGameViewInfo(_ handle: ISudFSMStateHandle, dataJson: String) {
-        LogUtils.log(message: "onGetGameViewInfo == \(dataJson)", level: .info)
-        let rect = UIScreen.main.bounds
-        let scale = UIScreen.main.nativeScale
-        let top = liveView.avatarview.frame.maxY
-        let width = rect.width * scale
-        let height = rect.height * scale
-        let bottom = liveView.chatView.frame.minY + 30
-        let rectDict = ["top": top, "left": 0, "bottom": bottom, "right": 0]
-        let viewDict = ["width": width, "height": height]
-        let dataDict = ["ret_code": 0, "ret_msg": "return form APP onGetGameViewInfo", "view_size": viewDict, "view_game_rect": rectDict] as [String : Any]
-        handle.success(JSONObject.toJsonString(dict: dataDict) ?? "")
-    }
-    
-    func onGetGameCfg(_ handle: ISudFSMStateHandle, dataJson: String) {
-        LogUtils.log(message: "onGetGameCfg == \(dataJson)", level: .info)
-    }
-    
-    func onGameStateChange(_ handle: ISudFSMStateHandle, state: String, dataJson: String) {
-        LogUtils.log(message: "onGameStateChange == \(dataJson)", level: .info)
-    }
-    
-    func onPlayerStateChange(_ handle: ISudFSMStateHandle?, userId: String, state: String, dataJson: String) {
-        LogUtils.log(message: "onPlayerStateChange == \(dataJson)", level: .info)
     }
 }

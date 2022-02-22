@@ -20,5 +20,5 @@ struct GameInfoModel: Codable {
     
     var timestamp: String? = "".timeStamp16
     
-    var sources: GameSourcesType? = .sud
+    var sources: GameSourcesType? = .yuanqi
 }
