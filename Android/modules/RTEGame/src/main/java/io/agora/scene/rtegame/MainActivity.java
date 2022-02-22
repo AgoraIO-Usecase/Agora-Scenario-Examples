@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.core.view.WindowCompat;
 
 import io.agora.example.base.BaseActivity;
+import io.agora.example.base.BaseUtil;
 import io.agora.rtc2.RtcEngine;
 import io.agora.scene.rtegame.databinding.GameActivityMainBinding;
 import io.agora.scene.rtegame.repo.GameRepo;
@@ -16,13 +17,11 @@ import io.agora.syncmanager.rtm.Sync;
 
 public class MainActivity extends BaseActivity<GameActivityMainBinding> {
 
-    private GlobalViewModel globalViewModel;
-
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        globalViewModel = GameUtil.getAndroidViewModel(this);
         super.onCreate(savedInstanceState);
+        GameUtil.getAndroidViewModel(this);
 
         GameRepo.X_LC_ID = getString(R.string.x_lc_Id);
         GameRepo.X_LC_KEY = getString(R.string.x_lc_Key);
@@ -33,15 +32,4 @@ public class MainActivity extends BaseActivity<GameActivityMainBinding> {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
     }
 
-    @Override
-    public void finish() {
-        super.finish();
-
-        new Thread(() -> {
-//        RTMDestroy
-            Sync.Instance().destroy();
-//        RTCDestroy
-            RtcEngine.destroy();
-        }).start();
-    }
 }

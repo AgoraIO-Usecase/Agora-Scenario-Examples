@@ -5,7 +5,7 @@
     <string name="game_exit">退出</string>
 
     <!--    Splash page-->
-    <string name="game_error_desc">RTM初始化出错</string>
+    <string name="game_error_desc">%s初始化出错</string>
     <string name="game_error_happened_click_to_refresh">出错了，再试一次</string>
     <!--    Room List-->
     <string name="game_please_create_a_room">请创建一个直播间</string>

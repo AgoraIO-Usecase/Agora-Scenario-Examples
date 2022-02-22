@@ -20,6 +20,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +56,6 @@ public class RoomListFragment extends BaseFragment<GameFragmentRoomListBinding> 
         }
     });
     ////////////////////////////////////// -- VIEW MODEL --//////////////////////////////////////////////////////////////
-    private GlobalViewModel mGlobalModel;
     private RoomListViewModel mViewModel;
 
     ////////////////////////////////////// -- DATA --//////////////////////////////////////////////////////////////
@@ -64,8 +65,7 @@ public class RoomListFragment extends BaseFragment<GameFragmentRoomListBinding> 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mGlobalModel = GameUtil.getAndroidViewModel(this);
-        mGlobalModel.clearRoomInfo();
+        GlobalViewModel.currentRoom = null;
         mViewModel = GameUtil.getViewModel(this, RoomListViewModel.class);
 
         initView();
@@ -171,7 +171,7 @@ public class RoomListFragment extends BaseFragment<GameFragmentRoomListBinding> 
 
     private void toNextPage() {
         if (tempRoom != null)
-            mGlobalModel.roomInfo.setValue(new Event<>(tempRoom));
+            GlobalViewModel.currentRoom = tempRoom;
 
         findNavController().navigate(R.id.action_roomListFragment_to_roomFragment);
     }

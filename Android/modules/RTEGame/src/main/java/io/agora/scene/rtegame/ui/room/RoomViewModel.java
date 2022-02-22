@@ -1,6 +1,5 @@
 package io.agora.scene.rtegame.ui.room;
 
-import android.content.Context;
 import android.view.TextureView;
 
 import androidx.annotation.Keep;
@@ -18,12 +17,9 @@ import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
 import io.agora.rtc2.IRtcEngineEventHandler;
 import io.agora.rtc2.RtcConnection;
-import io.agora.rtc2.RtcEngine;
-import io.agora.rtc2.RtcEngineConfig;
 import io.agora.rtc2.RtcEngineEx;
 import io.agora.rtc2.internal.RtcEngineImpl;
 import io.agora.rtc2.video.VideoCanvas;
-import io.agora.scene.rtegame.GlobalViewModel;
 import io.agora.scene.rtegame.R;
 import io.agora.scene.rtegame.bean.AgoraGame;
 import io.agora.scene.rtegame.bean.AppServerResult;
@@ -56,6 +52,7 @@ public class RoomViewModel extends ViewModel {
 
     //<editor-fold desc="Persistent variable">
     public final RoomInfo currentRoom;
+    private final RtcEngineEx rtcEngineEx;
     @Nullable
     public AgoraGame roomGame;
     @NonNull
@@ -69,19 +66,10 @@ public class RoomViewModel extends ViewModel {
     public boolean isLocalVideoMuted = false;
     public boolean isLocalMicMuted = false;
 
-    private PKInfo pkInfo = null;
     //</editor-fold>
 
 
     //<editor-fold desc="Live data">
-    // RTC engine 初始化结果
-    private final MutableLiveData<RtcEngineEx> _mEngine = new MutableLiveData<>();
-
-    @NonNull
-    public LiveData<RtcEngineEx> mEngine() {
-        return _mEngine;
-    }
-
     public final MutableLiveData<List<AgoraGame>> gameList = new MutableLiveData<>();
     public final MutableLiveData<Event<String>> gameStartUrl = new MutableLiveData<>();
 
@@ -91,14 +79,6 @@ public class RoomViewModel extends ViewModel {
     @NonNull
     public LiveData<ViewStatus> viewStatus() {
         return _viewStatus;
-    }
-
-    ///////////////////// 本房间主播 在 RTC 中的 id /////////////////////////
-    private final MutableLiveData<Integer> _LocalHostId = new MutableLiveData<>();
-
-    @NonNull
-    public LiveData<Integer> localHostId() {
-        return _LocalHostId;
     }
 
     // 直播间礼物信息
@@ -149,10 +129,10 @@ public class RoomViewModel extends ViewModel {
     //</editor-fold>
 
     //<editor-fold desc="Init and end">
-    public RoomViewModel(@NonNull Context context, @NonNull RoomInfo roomInfo) {
+    public RoomViewModel(@NonNull RoomInfo roomInfo, @NonNull LocalUser localUser, @NonNull RtcEngineEx rtcEngineEx) {
         this.currentRoom = roomInfo;
-
-        localUser = GlobalViewModel.localUser == null ? GlobalViewModel.checkLocalOrGenerate(context) : GlobalViewModel.localUser;
+        this.localUser = localUser;
+        this.rtcEngineEx = rtcEngineEx;
         this.amHost = Objects.equals(currentRoom.getUserId(), localUser.getUserId());
 
         // Consume at the beginning
@@ -160,20 +140,8 @@ public class RoomViewModel extends ViewModel {
         objectEvent.getContentIfNotHandled();
         gameStartUrl.setValue(objectEvent);
 
-        initRTC(context, new IRtcEngineEventHandler() {
-            @Override
-            public void onUserJoined(int uid, int elapsed) {
-                BaseUtil.logD("onUserJoined:" + uid);
-                if (String.valueOf(uid).equals(currentRoom.getUserId()))
-                    RoomViewModel.this._LocalHostId.postValue(uid);
-            }
-
-            @Override
-            public void onError(int err) {
-                BaseUtil.logD("onError:" + err);
-                RtcEngine.getErrorDescription(err);
-            }
-        });
+        configRTC(rtcEngineEx);
+        configRTM();
     }
 
     private void onJoinRTMSucceed(@NonNull SceneReference sceneReference) {
@@ -210,44 +178,36 @@ public class RoomViewModel extends ViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        new Thread(() -> {
-            // destroy RTE
-            RtcEngine engine = _mEngine.getValue();
-            if (engine != null) {
-                engine.leaveChannel();
-                RtcEngine.destroy();
-            }
-
-            if (amHost) {
-                // Step 1
+        rtcEngineEx.leaveChannel();
+        if (amHost) {
+            // Step 1
 //                requestExitGame();
-                // Step 2
-                endPK();
-                // Step 3
-                exitGame();
-            }
+            // Step 2
+            endPK();
+            // Step 3
+            exitGame();
+        }
 
-            // destroy RTM
-            if (currentSceneRef != null) {
-                if (amHost)
-                    currentSceneRef.delete(new Sync.Callback() {
-                        @Override
-                        public void onSuccess() {
-                            BaseUtil.logD("delete onSuccess");
-                        }
+        // destroy RTM
+        if (currentSceneRef != null) {
+            if (amHost)
+                currentSceneRef.delete(new Sync.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        BaseUtil.logD("delete onSuccess");
+                    }
 
-                        @Override
-                        public void onFail(SyncManagerException exception) {
-                            BaseUtil.logD("delete onFail");
-                        }
-                    });
-                else currentSceneRef.unsubscribe(null);
-            }
-            if (targetSceneRef != null) {
-                currentSceneRef.unsubscribe(null);
-                currentSceneRef = null;
-            }
-        }).start();
+                    @Override
+                    public void onFail(SyncManagerException exception) {
+                        BaseUtil.logD("delete onFail");
+                    }
+                });
+            else currentSceneRef.unsubscribe(null);
+        }
+        if (targetSceneRef != null) {
+            currentSceneRef.unsubscribe(null);
+            currentSceneRef = null;
+        }
     }
     //</editor-fold>
 
@@ -343,7 +303,7 @@ public class RoomViewModel extends ViewModel {
      * 仅主播调用
      */
     private void onPKApplyInfoChanged(@NonNull PKApplyInfo pkApplyInfo) {
-        BaseUtil.logD("onPKApplyInfoChanged:" + pkApplyInfo.toString());
+        BaseUtil.logD("onPKApplyInfoChanged:" + pkApplyInfo);
         _applyInfo.postValue(pkApplyInfo);
         switch (pkApplyInfo.getStatus()) {
             case PKApplyInfo.APPLYING: {
@@ -373,7 +333,7 @@ public class RoomViewModel extends ViewModel {
             case PKApplyInfo.END: {
                 // ensure game end
                 if (currentSceneRef != null)
-                    currentSceneRef.update(GameConstants.GAME_INFO, new GameInfo(GameInfo.END, "",""), null);
+                    currentSceneRef.update(GameConstants.GAME_INFO, new GameInfo(GameInfo.END, "", ""), null);
 
                 endPK();
                 break;
@@ -469,7 +429,7 @@ public class RoomViewModel extends ViewModel {
         sceneReference.update(GameConstants.PK_APPLY_INFO, pkApplyInfo, new Sync.DataItemCallback() {
             @Override
             public void onSuccess(IObject result) {
-                BaseUtil.logD("success update:" + result.getId() + "->" + result.toString());
+                BaseUtil.logD("success update:" + result.getId() + "->" + result);
                 _pkResult.postValue(new Event<>(true));
             }
 
@@ -515,7 +475,7 @@ public class RoomViewModel extends ViewModel {
     }
 
     private void onGameApplyInfoChanged(@NonNull GameApplyInfo currentGame) {
-        BaseUtil.logD("onGameApplyInfoChanged:" + currentGame.toString());
+        BaseUtil.logD("onGameApplyInfoChanged:" + currentGame);
         if (currentGame.getStatus() == GameApplyInfo.PLAYING) {
             roomGame = new AgoraGame(currentGame.getGameId(), "");
             PKApplyInfo applyInfo = _applyInfo.getValue();
@@ -566,8 +526,7 @@ public class RoomViewModel extends ViewModel {
      * {@link PKInfo#AGREED} 加入对方频道，拉流 | {@link PKInfo#END} 退出频道
      */
     private void onPKInfoChanged(@NonNull PKInfo pkInfo) {
-        BaseUtil.logD("onPKInfoChanged:" + pkInfo.toString());
-        this.pkInfo = pkInfo;
+        BaseUtil.logD("onPKInfoChanged:" + pkInfo);
         if (pkInfo.getStatus() == PKInfo.AGREED) {
             // 只用来加入频道，只使用 roomId 字段
             // this variable will only for join channel so room name doesn't matter.
@@ -625,43 +584,29 @@ public class RoomViewModel extends ViewModel {
     //<editor-fold desc="RTC related">
     public void muteLocalVideoStream(boolean mute) {
         isLocalVideoMuted = mute;
-        RtcEngineEx engine = _mEngine.getValue();
-        if (engine != null) {
-            engine.muteLocalVideoStream(isLocalVideoMuted);
-        }
+        rtcEngineEx.muteLocalVideoStream(isLocalVideoMuted);
     }
 
     public void muteLocalAudioStream(boolean mute) {
         isLocalMicMuted = mute;
-        RtcEngineEx engine = _mEngine.getValue();
-        if (engine != null) {
-            engine.muteLocalAudioStream(isLocalMicMuted);
-        }
+        rtcEngineEx.muteLocalAudioStream(isLocalMicMuted);
     }
 
     public void flipCamera() {
-        RtcEngineEx engine = _mEngine.getValue();
-        if (engine != null) {
-            engine.switchCamera();
-        }
+        rtcEngineEx.switchCamera();
     }
 
     /**
      * 加入当前房间
      */
     public void joinRoom(@NonNull LocalUser localUser) {
-        new Thread(() -> {
-            RtcEngineEx engine = _mEngine.getValue();
-            if (engine != null) {
-                ChannelMediaOptions options = new ChannelMediaOptions();
-                options.autoSubscribeAudio = true;
-                options.autoSubscribeVideo = true;
-                options.publishCameraTrack = amHost;
-                options.publishAudioTrack = amHost;
-                options.clientRoleType = amHost ? Constants.CLIENT_ROLE_BROADCASTER : Constants.CLIENT_ROLE_AUDIENCE;
-                engine.joinChannel(((RtcEngineImpl) engine).getContext().getString(R.string.rtc_app_token), currentRoom.getId(), Integer.parseInt(localUser.getUserId()), options);
-            }
-        }).start();
+        ChannelMediaOptions options = new ChannelMediaOptions();
+        options.autoSubscribeAudio = true;
+        options.autoSubscribeVideo = true;
+        options.publishCameraTrack = amHost;
+        options.publishAudioTrack = amHost;
+        options.clientRoleType = amHost ? Constants.CLIENT_ROLE_BROADCASTER : Constants.CLIENT_ROLE_AUDIENCE;
+        rtcEngineEx.joinChannel(((RtcEngineImpl) rtcEngineEx).getContext().getString(R.string.rtc_app_token), currentRoom.getId(), Integer.parseInt(localUser.getUserId()), options);
     }
 
     /**
@@ -670,23 +615,19 @@ public class RoomViewModel extends ViewModel {
      */
     public void joinSubRoom(@NonNull RoomInfo subRoomInfo) {
         leaveSubRoom();
+        RtcConnection connection = new RtcConnection();
+        connection.channelId = subRoomInfo.getId();
+        connection.localUid = -Integer.parseInt(localUser.getUserId());
 
-        RtcEngineEx engine = _mEngine.getValue();
-        if (engine != null) {
-            RtcConnection connection = new RtcConnection();
-            connection.channelId = subRoomInfo.getId();
-            connection.localUid = -Integer.parseInt(localUser.getUserId());
-
-            ChannelMediaOptions options = new ChannelMediaOptions();
+        ChannelMediaOptions options = new ChannelMediaOptions();
 //            public abstract int joinChannelEx(String token, RtcConnection connection, ChannelMediaOptions options, IRtcEngineEventHandler eventHandler);
-            engine.joinChannelEx(((RtcEngineImpl) engine).getContext().getString(R.string.rtc_app_token), connection, options, new IRtcEngineEventHandler() {
-                @Override
-                public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
-                    BaseUtil.logD("onJoinChannelSuccess:" + channel + uid);
-                    _subRoomInfo.postValue(subRoomInfo);
-                }
-            });
-        }
+        rtcEngineEx.joinChannelEx(((RtcEngineImpl) rtcEngineEx).getContext().getString(R.string.rtc_app_token), connection, options, new IRtcEngineEventHandler() {
+            @Override
+            public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
+                BaseUtil.logD("onJoinChannelSuccess:" + channel + uid);
+                _subRoomInfo.postValue(subRoomInfo);
+            }
+        });
     }
 
     public void leaveSubRoom() {
@@ -695,53 +636,10 @@ public class RoomViewModel extends ViewModel {
         String roomId = tempRoom.getId();
         BaseUtil.logD("leaveSubRoom:" + roomId);
         _subRoomInfo.postValue(null);
-        RtcEngineEx engine = _mEngine.getValue();
-        if (engine != null) {
-            RtcConnection connection = new RtcConnection();
-            connection.channelId = roomId;
-            connection.localUid = -Integer.parseInt(localUser.getUserId());
-            engine.leaveChannelEx(connection);
-        }
-    }
-
-    public void initRTC(@NonNull Context mContext, @NonNull IRtcEngineEventHandler mEventHandler) {
-        new Thread(() -> {
-            String appID = mContext.getString(R.string.rtc_app_id);
-            if (appID.isEmpty() || appID.codePointCount(0, appID.length()) != 32) {
-                _viewStatus.postValue(new ViewStatus.Message("APP ID is not valid"));
-                _mEngine.postValue(null);
-            } else {
-                RtcEngineConfig config = new RtcEngineConfig();
-                config.mContext = mContext;
-                config.mAppId = appID;
-                config.mEventHandler = mEventHandler;
-                RtcEngineConfig.LogConfig logConfig = new RtcEngineConfig.LogConfig();
-                logConfig.filePath = mContext.getExternalCacheDir().getAbsolutePath();
-                config.mLogConfig = logConfig;
-
-                try {
-                    RtcEngineEx engineEx = (RtcEngineEx) RtcEngine.create(config);
-                    configRTC(engineEx);
-                    _mEngine.postValue(engineEx);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    _mEngine.postValue(null);
-                }
-
-                // 监听当前房间数据 <==> 礼物、PK、
-                Sync.Instance().joinScene(currentRoom.getId(), new Sync.JoinSceneCallback() {
-                    @Override
-                    public void onSuccess(SceneReference sceneReference) {
-                        onJoinRTMSucceed(sceneReference);
-                    }
-
-                    @Override
-                    public void onFail(SyncManagerException e) {
-                        _viewStatus.postValue(new ViewStatus.Message("加入RTM失败"));
-                    }
-                });
-            }
-        }).start();
+        RtcConnection connection = new RtcConnection();
+        connection.channelId = roomId;
+        connection.localUid = -Integer.parseInt(localUser.getUserId());
+        rtcEngineEx.leaveChannelEx(connection);
     }
 
     private void configRTC(@NonNull RtcEngineEx engine) {
@@ -752,12 +650,27 @@ public class RoomViewModel extends ViewModel {
         }
     }
 
-    public void setupLocalView(@NonNull TextureView view) {
-        RtcEngineEx engine = _mEngine.getValue();
-        if (engine != null) {
-            BaseUtil.logD("id:" + localUser.getUserId());
-            engine.setupLocalVideo(new VideoCanvas(view, Constants.RENDER_MODE_HIDDEN, Integer.parseInt(localUser.getUserId())));
-        }
+    private void configRTM() {
+        // 监听当前房间数据 <==> 礼物、PK、
+        Sync.Instance().joinScene(currentRoom.getId(), new Sync.JoinSceneCallback() {
+            @Override
+            public void onSuccess(SceneReference sceneReference) {
+                onJoinRTMSucceed(sceneReference);
+            }
+
+            @Override
+            public void onFail(SyncManagerException e) {
+                _viewStatus.postValue(new ViewStatus.Error("主播已下播💔"));
+            }
+        });
+    }
+
+    public void setupLocalPreview(@NonNull TextureView view) {
+        rtcEngineEx.setupLocalVideo(new VideoCanvas(view, Constants.RENDER_MODE_HIDDEN, Integer.parseInt(localUser.getUserId())));
+    }
+
+    public void stopLocalPreview(){
+        rtcEngineEx.stopPreview();
     }
 
     /**
@@ -765,18 +678,15 @@ public class RoomViewModel extends ViewModel {
      * @param roomInfo    isLocalHost => current RoomInfo，!isLocalHost => 对方的 RoomInfo
      * @param isLocalHost 是否是当前房间主播
      */
-    public void setupRemoteView(@NonNull TextureView view, @NonNull RoomInfo roomInfo, boolean isLocalHost) {
-        RtcEngineEx engine = _mEngine.getValue();
-        if (engine != null) {
-            VideoCanvas videoCanvas = new VideoCanvas(view, Constants.RENDER_MODE_HIDDEN, Integer.parseInt(roomInfo.getUserId()));
-            if (isLocalHost) {
-                engine.setupRemoteVideo(videoCanvas);
-            } else {
-                RtcConnection connection = new RtcConnection();
-                connection.channelId = roomInfo.getId();
-                connection.localUid = -Integer.parseInt(localUser.getUserId());
-                engine.setupRemoteVideoEx(videoCanvas, connection);
-            }
+    public void setupRemotePreview(@NonNull TextureView view, @NonNull RoomInfo roomInfo, boolean isLocalHost) {
+        VideoCanvas videoCanvas = new VideoCanvas(view, Constants.RENDER_MODE_HIDDEN, Integer.parseInt(roomInfo.getUserId()));
+        if (isLocalHost) {
+            rtcEngineEx.setupRemoteVideo(videoCanvas);
+        } else {
+            RtcConnection connection = new RtcConnection();
+            connection.channelId = roomInfo.getId();
+            connection.localUid = -Integer.parseInt(localUser.getUserId());
+            rtcEngineEx.setupRemoteVideoEx(videoCanvas, connection);
         }
     }
 
@@ -805,8 +715,9 @@ public class RoomViewModel extends ViewModel {
                 }
 
                 @Override
-                public void onFailure(@NonNull Call<AppServerResult<String>> call, Throwable t) {
-
+                public void onFailure(@NonNull Call<AppServerResult<String>> call,@NonNull Throwable t) {
+                    _viewStatus.postValue(new ViewStatus.Message("join failed"));
+                    t.printStackTrace();
                 }
             });
     }
