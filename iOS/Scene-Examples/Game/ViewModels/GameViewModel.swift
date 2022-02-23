@@ -41,7 +41,8 @@ class GameViewModel: NSObject {
                                      "token": KeyCenter.gameToken,
                                      "name": "User-\(UserInfo.uid)",
                                      "to_user": toUser ?? "",
-                                     "avatar": avatar]
+                                     "avatar": avatar,
+                                     "local": Locale.current.languageCode == "zh" ? "0" : "1"]
         NetworkManager.shared.postRequest(urlString: "getJoinUrl", params: params) { response in
             let result = response["result"] as? String
             success(result ?? "")
