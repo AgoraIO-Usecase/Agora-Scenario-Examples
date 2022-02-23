@@ -113,7 +113,7 @@ enum GameBarrageType: Int, Codable, CaseIterable {
 struct GameCenterModel: Codable {
     var iconName: String?
     var gameName: String = ""
-    var gameId: GameCenterType = .guess
+    var gameId: String = ""//GameCenterType = .guess
     var gameDesc: String?
     var vendorId: String?
     var display: GameDisplayModel?
@@ -121,54 +121,6 @@ struct GameCenterModel: Codable {
     var billing: GameBillingModel?
     var updateTime: String?
     var sources: GameSourcesType? = .yuanqi
-    
-    
-    static func createDatas(sceneType: SceneType) -> [GameCenterModel] {
-        var dataArray = [GameCenterModel]()
-        
-        if sceneType == .playTogether {
-            var model = GameCenterModel(iconName: "Game/draw",
-                                        gameName: "你画我猜",
-                                        gameId: .guess_together)
-            dataArray.append(model)
-            model = GameCenterModel(iconName: "Game/draw",
-                                    gameName: "谁是卧底",
-                                    gameId: .undercover)
-            dataArray.append(model)
-            
-            model = GameCenterModel(iconName: "Game/draw",
-                                    gameName: "大话骰",
-                                    gameId: .dahuashai)
-            dataArray.append(model)
-            model = GameCenterModel(iconName: "Game/draw",
-                                    gameName: "王国激战",
-                                    gameId: .kingdom)
-            dataArray.append(model)
-            return dataArray
-        }
-        
-        var model = GameCenterModel(iconName: "Game/draw",
-                                    gameName: "你画我猜",
-                                    gameId: .guess)
-        dataArray.append(model)
-        
-        model = GameCenterModel(iconName: "Game/draw",
-                                gameName: "谁是卧底",
-                                gameId: .undercover)
-        dataArray.append(model)
-        
-        model = GameCenterModel(iconName: "Game/draw",
-                                gameName: "大话骰",
-                                gameId: .dahuashai)
-        dataArray.append(model)
-        
-        model = GameCenterModel(iconName: "Game/draw",
-                                gameName: "王国激战",
-                                gameId: .kingdom)
-        dataArray.append(model)
-        
-        return dataArray
-    }
 }
 
 struct GameDisplayModel: Codable {

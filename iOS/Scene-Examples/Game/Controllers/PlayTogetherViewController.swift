@@ -279,7 +279,7 @@ class PlayTogetherViewController: BaseViewController {
         
         webView.onChangeGameRoleClosure = { [weak self] oldRole, newRole in
             let gameId = self?.gameInfoModel?.gameId ?? self?.gameCenterModel?.gameId
-            self?.viewModel.changeRole(gameId: gameId?.rawValue ?? "", oldRole: oldRole, newRole: newRole)
+            self?.viewModel.changeRole(gameId: gameId ?? "", oldRole: oldRole, newRole: newRole)
             self?.gameRoleType = newRole
         }
     }
@@ -321,14 +321,14 @@ class PlayTogetherViewController: BaseViewController {
     private func receiveGiftHandler(giftModel: LiveGiftModel, type: RecelivedType) {
         liveView.playGifView.isHidden = !webView.isHidden
         let playerId = gameInfoModel?.status == .playing ? UserInfo.uid : currentUserId
-        viewModel.postGiftHandler(gameId:gameInfoModel?.gameId?.rawValue ?? "",
+        viewModel.postGiftHandler(gameId:gameInfoModel?.gameId ?? "",
                                   giftType: giftModel.giftType,
                                   playerId: playerId)
     }
     /// 发消息
     private func sendMessage(messageModel: ChatMessageModel) {
         let playerId = gameInfoModel?.status == .playing ? UserInfo.uid : currentUserId
-        viewModel.postBarrage(gameId: gameInfoModel?.gameId?.rawValue ?? "",
+        viewModel.postBarrage(gameId: gameInfoModel?.gameId ?? "",
                               playerId: playerId)
         if getRole(uid: UserInfo.uid) == .audience
             && messageModel.message.trimmingCharacters(in: .whitespacesAndNewlines) == "主播yyds"
@@ -357,15 +357,14 @@ class PlayTogetherViewController: BaseViewController {
         }
         if isStart {
             ToastView.show(text: "game_start".localized, postion: .top, duration: 3, view: view)
-            let gameId = Int64((gameCenterModel?.gameId ?? gameInfoModel?.gameId)?.rawValue ?? "") ?? 0
-            webView.loadUrl(gameId: "\(gameId)",
+            webView.loadUrl(gameId: gameCenterModel?.gameId ?? gameInfoModel?.gameId ?? "",
                              roomId: channleName,
                              roleType: gameRoleType)
             liveView.updateLiveLayout(postion: .signle)
             
         } else {
             liveView.updateLiveLayout(postion: .full)
-            let gameId = (gameInfoModel?.gameId ?? gameCenterModel?.gameId)?.rawValue ?? ""
+            let gameId = (gameInfoModel?.gameId ?? gameCenterModel?.gameId) ?? ""
             // 离开游戏接口
             viewModel.leaveGame(gameId: gameId, roleType: gameRoleType)
             webView.reset()
@@ -375,7 +374,7 @@ class PlayTogetherViewController: BaseViewController {
     private func updateGameInfoStatus(isStart: Bool) {
         guard getRole(uid: UserInfo.uid) == .broadcaster else { return }
         var gameInfoModel = GameInfoModel()
-        gameInfoModel.gameId = gameCenterModel?.gameId ?? .guess
+        gameInfoModel.gameId = gameCenterModel?.gameId ?? ""
         gameInfoModel.gameUid = currentUserId
         gameInfoModel.status = isStart ? .playing : .end
         gameInfoModel.sources = gameCenterModel?.sources ?? .yuanqi

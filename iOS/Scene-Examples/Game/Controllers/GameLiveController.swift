@@ -58,9 +58,9 @@ class GameLiveController: PKLiveController {
             _gameRoleType = newValue
         }
     }
-    private var gameId: GameCenterType {
+    private var gameId: String {
         let gameId = gameInfoModel?.gameId ?? gameCenterModel?.gameId ?? gameApplyInfoModel?.gameId
-        return gameId ?? .guess
+        return gameId ?? ""
     }
     public var screenUserID: UInt {
         UserInfo.userId + 10000
@@ -121,7 +121,7 @@ class GameLiveController: PKLiveController {
                 self.updatePKUIStatus(isStart: false, isAudience: true)
             } else if model.status == .playing {
                 self.updatePKUIStatus(isStart: true, isAudience: true)
-                self.view.layer.contents = model.gameId?.bgImage?.cgImage
+//                self.view.layer.contents = model.gameId?.bgImage?.cgImage
             } else {
                 self.updatePKUIStatus(isStart: false)
             }
@@ -145,11 +145,11 @@ class GameLiveController: PKLiveController {
                 && self.getRole(uid: UserInfo.uid) == .audience {
                 self.updatePKUIStatus(isStart: true, isAudience: true)
             }
-            self.viewModel.postBarrage(gameId: self.gameId.rawValue)
+            self.viewModel.postBarrage(gameId: self.gameId)
         }
         /// 发礼物
         liveView.onSendGiftClosure = { [weak self] giftModel in
-            self?.viewModel.postGiftHandler(gameId: (self?.gameId ?? .guess).rawValue, giftType: giftModel.giftType)
+            self?.viewModel.postGiftHandler(gameId: self?.gameId ?? "", giftType: giftModel.giftType)
         }
         
         webView.onMuteAudioClosure = { [weak self] isMute in
@@ -169,7 +169,7 @@ class GameLiveController: PKLiveController {
         
         webView.onChangeGameRoleClosure = { [weak self] oldRole, newRole in
             let gameId = self?.gameInfoModel?.gameId ?? self?.gameCenterModel?.gameId
-            self?.viewModel.changeRole(gameId: gameId?.rawValue ?? "", oldRole: oldRole, newRole: newRole)
+            self?.viewModel.changeRole(gameId: gameId ?? "", oldRole: oldRole, newRole: newRole)
             self?.gameRoleType = newRole
         }
     }
@@ -199,7 +199,7 @@ class GameLiveController: PKLiveController {
         if model.status == .no_start {
             updatePKUIStatus(isStart: false)
         } else if model.status == .playing {
-            view.layer.contents = model.gameId.bgImage?.cgImage
+//            view.layer.contents = model.gameId.bgImage?.cgImage
             updatePKUIStatus(isStart: true)
             // 通知观众拉取屏幕流
             SyncUtil.update(id: channleName, key: SYNC_MANAGER_GAME_INFO, params: JSONObject.toJson(gameInfoModel))
@@ -318,7 +318,7 @@ class GameLiveController: PKLiveController {
         if isStart {
             ToastView.show(text: "game_start".localized, postion: .top, duration: 3)
             let channelName = isAudience ? gameInfoModel?.roomId : pkApplyInfoModel?.targetRoomId
-            webView.loadUrl(gameId: gameId.rawValue,
+            webView.loadUrl(gameId: gameId,
                             roomId: channelName ?? "",
                             toUser: currentUserId,
                             roleType: isAudience ? .audience : gameRoleType)
@@ -340,7 +340,7 @@ class GameLiveController: PKLiveController {
                 liveView.updateLiveLayout(postion: .full)
             }
             pkProgressView.isHidden = true
-            viewModel.leaveGame(gameId: gameId.rawValue, roleType: gameRoleType)
+            viewModel.leaveGame(gameId: gameId, roleType: gameRoleType)
             pkProgressView.reset()
             webView.reset()
             isLoadScreenShare = false
@@ -355,7 +355,7 @@ class GameLiveController: PKLiveController {
         if isStart {
             var gameApplyModel = GameApplyInfoModel()
             gameApplyModel.status = .playing
-            gameApplyModel.gameId = gameCenterModel?.gameId ?? .guess
+            gameApplyModel.gameId = gameCenterModel?.gameId ?? ""
             SyncUtil.update(id: channelName, key: SYNC_MANAGER_GAME_APPLY_INFO, params: JSONObject.toJson(gameApplyModel))
             return
         }

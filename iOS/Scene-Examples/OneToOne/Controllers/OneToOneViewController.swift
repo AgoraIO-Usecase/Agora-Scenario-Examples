@@ -59,7 +59,7 @@ class OneToOneViewController: BaseViewController {
         currentUserId == UserInfo.uid ? .broadcast : .player
     }
     private var gameRoleType: GameRoleType {
-        if gameInfoModel.gameId == .kingdom && roleType == .audience {
+        if gameInfoModel.gameId == GameCenterType.kingdom.rawValue && roleType == .audience {
             return GameRoleType.allCases.randomElement() ?? .player
         }
         return roleType
@@ -128,10 +128,10 @@ class OneToOneViewController: BaseViewController {
             guard let self = self else { return }
             if type == .exit {
                 self.controlView.isHidden = false
-                self.viewModel.leaveGame(gameId: self.gameInfoModel.gameId?.rawValue ?? "",
+                self.viewModel.leaveGame(gameId: self.gameInfoModel.gameId ?? "",
                                          roleType: self.currentGameRoleType)
                 self.isCloseGame = false
-                let gameInfo = GameInfoModel(status: .end, gameUid: UserInfo.uid, gameId: self.gameInfoModel.gameId ?? .guess)
+                let gameInfo = GameInfoModel(status: .end, gameUid: UserInfo.uid, gameId: self.gameInfoModel.gameId ?? "")
                 SyncUtil.update(id: self.channelName, key: SYNC_MANAGER_GAME_INFO, params: JSONObject.toJson(gameInfo))
                 self.isSelfExitGame = true
                 return
@@ -149,7 +149,7 @@ class OneToOneViewController: BaseViewController {
             if model?.status == .playing {
                 self.isSelfExitGame = false
                 self.showAlert(title: "you_invited_to_play_game".localized, message: "") {
-                    self.onoToOneGameView.setLoadUrl(gameId: model?.gameId?.rawValue ?? "",
+                    self.onoToOneGameView.setLoadUrl(gameId: model?.gameId ?? "",
                                                      roomId: self.channelName,
                                                      roleType: self.currentGameRoleType)
                     AlertManager.show(view: self.onoToOneGameView, alertPostion: .bottom, didCoverDismiss: false)
@@ -157,7 +157,7 @@ class OneToOneViewController: BaseViewController {
             } else if model?.status == .end && !self.isSelfExitGame{
                 AlertManager.hiddenView()
                 ToastView.show(text: "game_over".localized, view: self.view)
-                self.viewModel.leaveGame(gameId: model?.gameId?.rawValue ?? "",
+                self.viewModel.leaveGame(gameId: model?.gameId ?? "",
                                          roleType: self.currentGameRoleType)
                 self.onoToOneGameView.reset()
                 self.isSelfExitGame = false
@@ -169,7 +169,7 @@ class OneToOneViewController: BaseViewController {
         onoToOneGameView.onLeaveGameClosure = { [weak self] in
             guard let self = self else { return }
             AlertManager.hiddenView()
-            self.viewModel.leaveGame(gameId: self.gameInfoModel.gameId?.rawValue ?? "",
+            self.viewModel.leaveGame(gameId: self.gameInfoModel.gameId ?? "",
                                      roleType: self.currentGameRoleType)
             self.onoToOneGameView.reset()
             self.isSelfExitGame = false
@@ -192,13 +192,13 @@ class OneToOneViewController: BaseViewController {
                 self.controlView.isHidden = false
                 AlertManager.hiddenView()
                 self.onoToOneGameView.reset()
-                let gameId = self.gameInfoModel.gameId?.rawValue ?? ""
+                let gameId = self.gameInfoModel.gameId ?? ""
                 self.viewModel.leaveGame(gameId: gameId, roleType: self.currentGameRoleType)
             }
             
         case .back:
             showAlert(title: "close_studio".localized, message: "after_closing_live_broadcast_room".localized) {
-                self.viewModel.leaveGame(gameId: self.gameInfoModel.gameId?.rawValue ?? "",
+                self.viewModel.leaveGame(gameId: self.gameInfoModel.gameId ?? "",
                                          roleType: self.currentGameRoleType)
                 let gameInfo = GameInfoModel(status: .end, gameUid: UserInfo.uid, gameId: self.gameInfoModel.gameId)
                 SyncUtil.update(id: self.channelName, key: SYNC_MANAGER_GAME_INFO, params: JSONObject.toJson(gameInfo))
@@ -225,7 +225,7 @@ class OneToOneViewController: BaseViewController {
         gameCenterView.didGameCenterItemClosure = { [weak self] gameCenterModel in
             guard let self = self else { return }
             self.gameInfoModel.gameId = gameCenterModel.gameId
-            self.onoToOneGameView.setLoadUrl(gameId: gameCenterModel.gameId.rawValue, roomId: self.channelName, roleType: self.currentGameRoleType)
+            self.onoToOneGameView.setLoadUrl(gameId: gameCenterModel.gameId, roomId: self.channelName, roleType: self.currentGameRoleType)
             AlertManager.show(view: self.onoToOneGameView, alertPostion: .bottom, didCoverDismiss: false)
             let gameInfo = GameInfoModel(status: .playing, gameUid: UserInfo.uid, gameId: gameCenterModel.gameId)
             SyncUtil.update(id: self.channelName, key: SYNC_MANAGER_GAME_INFO, params: JSONObject.toJson(gameInfo))

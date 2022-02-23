@@ -16,7 +16,7 @@ struct GameInfoModel: Codable {
     
     var roomId: String? = ""
     
-    var gameId: GameCenterType? = .guess
+    var gameId: String? = ""//GameCenterType? = .guess
     
     var timestamp: String? = "".timeStamp16
     
