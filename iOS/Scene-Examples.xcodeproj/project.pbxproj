@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9BBBCEFD3169C583A481C92C /* Pods_Agora_ScreenShare_Extension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6A12BD14C6C12D3D9AB21A6 /* Pods_Agora_ScreenShare_Extension.framework */; };
 		B5DF969B7ED11BACA57C6864 /* Pods_Scene_Examples.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AED837A3EC68965AC33FE2E6 /* Pods_Scene_Examples.framework */; };
 		E710AE2F27A0F23300124356 /* ChangeRoomBgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E710AE2E27A0F23300124356 /* ChangeRoomBgView.swift */; };
 		E7440E262772CADF00CBF4D8 /* OneToOneControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7440E252772CADF00CBF4D8 /* OneToOneControlView.swift */; };
@@ -56,9 +55,6 @@
 		E79BEF9C27477E16009FA838 /* GameCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF9B27477E16009FA838 /* GameCenterView.swift */; };
 		E79BEF9E27477F66009FA838 /* GameCenterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF9D27477F66009FA838 /* GameCenterModel.swift */; };
 		E79BEFA1274796F7009FA838 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEFA0274796F7009FA838 /* NetworkManager.swift */; };
-		E79BF01A274B6902009FA838 /* ReplayKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E79BF019274B6902009FA838 /* ReplayKit.framework */; };
-		E79BF01E274B6902009FA838 /* SampleHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = E79BF01D274B6902009FA838 /* SampleHandler.m */; };
-		E79BF022274B6902009FA838 /* Agora-ScreenShare-Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = E79BF018274B6902009FA838 /* Agora-ScreenShare-Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		E79BF029274B77C7009FA838 /* GameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BF028274B77C7009FA838 /* GameViewModel.swift */; };
 		E79BF02B274B81A0009FA838 /* GameInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BF02A274B819F009FA838 /* GameInfoModel.swift */; };
 		E79BF0302754761A009FA838 /* GameApplyInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BF02F2754761A009FA838 /* GameApplyInfoModel.swift */; };
@@ -109,16 +105,6 @@
 		E7F9493D277B0C17005C57F1 /* OnoToOneGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F9493C277B0C17005C57F1 /* OnoToOneGameView.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		E79BF020274B6902009FA838 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = E79C25D3273B67DB00909CD4 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = E79BF017274B6902009FA838;
-			remoteInfo = "Agora-ScreenShare-Extension(Socket)";
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
 		E79BF023274B6902009FA838 /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -126,7 +112,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				E79BF022274B6902009FA838 /* Agora-ScreenShare-Extension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -187,7 +172,6 @@
 		E79BEF9B27477E16009FA838 /* GameCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterView.swift; sourceTree = "<group>"; };
 		E79BEF9D27477F66009FA838 /* GameCenterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterModel.swift; sourceTree = "<group>"; };
 		E79BEFA0274796F7009FA838 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
-		E79BF018274B6902009FA838 /* Agora-ScreenShare-Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Agora-ScreenShare-Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E79BF019274B6902009FA838 /* ReplayKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReplayKit.framework; path = System/Library/Frameworks/ReplayKit.framework; sourceTree = SDKROOT; };
 		E79BF01C274B6902009FA838 /* SampleHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SampleHandler.h; sourceTree = "<group>"; };
 		E79BF01D274B6902009FA838 /* SampleHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SampleHandler.m; sourceTree = "<group>"; };
@@ -250,15 +234,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		E79BF015274B6902009FA838 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E79BF01A274B6902009FA838 /* ReplayKit.framework in Frameworks */,
-				9BBBCEFD3169C583A481C92C /* Pods_Agora_ScreenShare_Extension.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		E79C25D8273B67DB00909CD4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -512,7 +487,6 @@
 			isa = PBXGroup;
 			children = (
 				E79C25DB273B67DB00909CD4 /* Scene-Examples.app */,
-				E79BF018274B6902009FA838 /* Agora-ScreenShare-Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -749,24 +723,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E79BF017274B6902009FA838 /* Agora-ScreenShare-Extension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E79BF026274B6902009FA838 /* Build configuration list for PBXNativeTarget "Agora-ScreenShare-Extension" */;
-			buildPhases = (
-				28F02EB1C0409B8C31A68CF9 /* [CP] Check Pods Manifest.lock */,
-				E79BF014274B6902009FA838 /* Sources */,
-				E79BF015274B6902009FA838 /* Frameworks */,
-				E79BF016274B6902009FA838 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "Agora-ScreenShare-Extension";
-			productName = "Agora-ScreenShare-Extension(Socket)";
-			productReference = E79BF018274B6902009FA838 /* Agora-ScreenShare-Extension.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
 		E79C25DA273B67DB00909CD4 /* Scene-Examples */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E79C25EF273B67DD00909CD4 /* Build configuration list for PBXNativeTarget "Scene-Examples" */;
@@ -781,7 +737,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				E79BF021274B6902009FA838 /* PBXTargetDependency */,
 			);
 			name = "Scene-Examples";
 			productName = "Scene-Examples";
@@ -798,9 +753,6 @@
 				LastSwiftUpdateCheck = 1300;
 				LastUpgradeCheck = 1300;
 				TargetAttributes = {
-					E79BF017274B6902009FA838 = {
-						CreatedOnToolsVersion = 13.0;
-					};
 					E79C25DA273B67DB00909CD4 = {
 						CreatedOnToolsVersion = 13.0;
 					};
@@ -821,19 +773,11 @@
 			projectRoot = "";
 			targets = (
 				E79C25DA273B67DB00909CD4 /* Scene-Examples */,
-				E79BF017274B6902009FA838 /* Agora-ScreenShare-Extension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		E79BF016274B6902009FA838 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		E79C25D9273B67DB00909CD4 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -896,39 +840,9 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Scene-Examples/Pods-Scene-Examples-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		28F02EB1C0409B8C31A68CF9 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Agora-ScreenShare-Extension-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		E79BF014274B6902009FA838 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E79BF01E274B6902009FA838 /* SampleHandler.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		E79C25D7273B67DB00909CD4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1020,14 +934,6 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		E79BF021274B6902009FA838 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = E79BF017274B6902009FA838 /* Agora-ScreenShare-Extension */;
-			targetProxy = E79BF020274B6902009FA838 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXVariantGroup section */
 		E79C25E4273B67DB00909CD4 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
@@ -1059,64 +965,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		E79BF024274B6902009FA838 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = EA2989DBAC3CC73E3574369E /* Pods-Agora-ScreenShare-Extension.debug.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = YS397FG5PA;
-				ENABLE_BITCODE = NO;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Agora-ScreenShare-Extension/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Agora-ScreenShare-Extension";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "io.agora.scene.examples.Agora-ScreenShare-Extension";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		E79BF025274B6902009FA838 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4EAC22A0ABCEA5BE7ED7FCFA /* Pods-Agora-ScreenShare-Extension.release.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				ENABLE_BITCODE = NO;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Agora-ScreenShare-Extension/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Agora-ScreenShare-Extension";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "io.agora.scene.examples.Agora-ScreenShare-Extension";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 		E79C25ED273B67DD00909CD4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1314,15 +1162,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E79BF026274B6902009FA838 /* Build configuration list for PBXNativeTarget "Agora-ScreenShare-Extension" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E79BF024274B6902009FA838 /* Debug */,
-				E79BF025274B6902009FA838 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		E79C25D6273B67DB00909CD4 /* Build configuration list for PBXProject "Scene-Examples" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

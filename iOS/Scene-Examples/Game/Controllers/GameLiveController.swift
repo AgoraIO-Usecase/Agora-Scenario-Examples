@@ -302,7 +302,6 @@ class GameLiveController: PKLiveController {
         super.applicationWillTerminate()
         guard getRole(uid: UserInfo.uid) == .broadcaster else { return }
         updateGameInfoStatus(isStart: false)
-        AgoraScreenShare.shareInstance().stopService()
     }
     
     override func hiddenPkProgressView(isHidden: Bool) { }
