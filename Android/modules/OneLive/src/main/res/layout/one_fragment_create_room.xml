@@ -4,6 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <SurfaceView
+        android:id="@+id/camera_preview_fg_create"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_fg_create"

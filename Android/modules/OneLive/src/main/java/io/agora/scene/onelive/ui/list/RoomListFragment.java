@@ -23,8 +23,6 @@ import io.agora.scene.onelive.base.BaseNavFragment;
 import io.agora.scene.onelive.bean.RoomInfo;
 import io.agora.scene.onelive.databinding.OneFragmentRoomListBinding;
 import io.agora.scene.onelive.databinding.OneItemRoomListBinding;
-import io.agora.scene.onelive.util.Event;
-import io.agora.scene.onelive.util.EventObserver;
 import io.agora.scene.onelive.util.OneUtil;
 import io.agora.scene.onelive.util.ViewStatus;
 
@@ -53,7 +51,6 @@ public class RoomListFragment extends BaseNavFragment<OneFragmentRoomListBinding
     private final ActivityResultLauncher<String[]> requestPermissionLauncher = BaseUtil.registerForActivityResult(RoomListFragment.this, callback);
 
     ////////////////////////////////////// -- VIEW MODEL --//////////////////////////////////////////////////////////////
-    private GlobalViewModel mGlobalModel;
     private RoomListViewModel mViewModel;
 
     ////////////////////////////////////// -- DATA --//////////////////////////////////////////////////////////////
@@ -63,8 +60,7 @@ public class RoomListFragment extends BaseNavFragment<OneFragmentRoomListBinding
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mGlobalModel = OneUtil.getAndroidViewModel(this, GlobalViewModel.class);
-        mGlobalModel.clearRoomInfo();
+        GlobalViewModel.currentRoom = null;
         mViewModel = OneUtil.getViewModel(this, RoomListViewModel.class);
         initView();
         initListener();
@@ -134,7 +130,7 @@ public class RoomListFragment extends BaseNavFragment<OneFragmentRoomListBinding
 
     private void toNextPage() {
         if (tempRoom != null)
-            mGlobalModel.roomInfo.setValue(new Event<>(tempRoom));
+            GlobalViewModel.currentRoom = tempRoom;
 
         findNavController().navigate(R.id.action_roomListFragment_to_roomFragment);
     }

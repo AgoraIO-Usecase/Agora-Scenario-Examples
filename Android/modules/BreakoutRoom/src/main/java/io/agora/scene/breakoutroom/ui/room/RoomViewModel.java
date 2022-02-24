@@ -136,13 +136,11 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     @Override
     protected void onCleared() {
         super.onCleared();
-        new Thread(() -> {
-            RtcEngine engine = _mEngine.getValue();
-            if (engine != null) {
-                engine.leaveChannel();
-                RtcEngine.destroy();
-            }
-        }).start();
+        RtcEngine engine = _mEngine.getValue();
+        if (engine != null) {
+            engine.leaveChannel();
+            RtcEngine.destroy();
+        }
     }
 
     //<editor-fold desc="SyncManager related">
