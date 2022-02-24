@@ -8,8 +8,9 @@
 |单主播直播|[SingleHostLive](./modules/SingleHostLive/)|
 |PK直播|[LivePK](./modules/LivePK/)|
 |小班课|[BreakoutRoom](./modules/BreakoutRoom/)|
-|互动游戏|[RTEGame](./modules/RTEGame/)|
-|1V1直播|[OneLive](./modules/OneLive/)|
+|游戏主播PK主播|[RTEGame](./modules/RTEGame/)|
+|游戏直播间1V1|[OneLive](./modules/OneLive/)|
+|游戏直播间同玩|[ComLive](./modules/ComLive/)|
 
 # 前提条件
 开始前，请确保你的开发环境满足如下条件：
@@ -18,8 +19,14 @@
 
 # 使用
 #### 注册Agora
-前往 [Agora官网](https://console.agora.io/) 注册项目，生产appId，然后替换工程**data**中 **strings_config.xml** 中 **rtc_app_id**，如果启用了token模式，需要替换 **rtc_app_token**。
+前往 [Agora官网](https://console.agora.io/) 注册项目，生产appId
 
+然后替换工程**libs/base-library**中 **strings_config.xml** 中 **rtc_app_id**
 
-#### 数据源
-- 场景示例使用了 Agora RTM SDK 功能，需要同步替换**rtm_app_id**、**rtm_app_token**字段。
+如果启用了token模式，需要替换 **rtc_app_token**
+
+**rtm_app_id**可以与**rtc_app_id**一致
+
+**rtm_app_token**可以与**rtc_app_token**一致
+
+其余字段请联系技术支持团队获取
