@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 import io.agora.example.base.BaseUtil;
+import io.agora.scene.comlive.GlobalViewModel;
 import io.agora.scene.comlive.GlobalViewModelFactory;
 import io.agora.scene.comlive.R;
 import io.agora.scene.comlive.bean.AgoraGame;
@@ -162,8 +163,14 @@ public class ComLiveUtil {
         return new ViewModelProvider(fragment.getViewModelStore(), factory).get(viewModelClass);
     }
 
-    public static <T extends ViewModel> T getAndroidViewModel(@NonNull Fragment fragment, @NonNull Class<T> viewModelClass) {
-        return new ViewModelProvider(fragment.requireActivity(), new GlobalViewModelFactory(fragment.requireActivity().getApplication())).get(viewModelClass);
+    @NonNull
+    public static GlobalViewModel getAndroidViewModel(@NonNull Fragment fragment) {
+        return new ViewModelProvider(fragment.requireActivity(), new GlobalViewModelFactory(fragment.requireActivity().getApplication())).get(GlobalViewModel.class);
+    }
+
+    @NonNull
+    public static GlobalViewModel getAndroidViewModel(@NonNull ComponentActivity activity) {
+        return new ViewModelProvider(activity, new GlobalViewModelFactory(activity.getApplication())).get(GlobalViewModel.class);
     }
 
     public static float lerp(float startValue, float endValue, float fraction) {

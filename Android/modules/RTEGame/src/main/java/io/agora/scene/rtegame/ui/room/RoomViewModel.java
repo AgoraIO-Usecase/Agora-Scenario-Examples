@@ -142,6 +142,7 @@ public class RoomViewModel extends ViewModel {
 
         configRTC(rtcEngineEx);
         configRTM();
+        joinRoom();
     }
 
     private void onJoinRTMSucceed(@NonNull SceneReference sceneReference) {
@@ -599,7 +600,7 @@ public class RoomViewModel extends ViewModel {
     /**
      * 加入当前房间
      */
-    public void joinRoom(@NonNull LocalUser localUser) {
+    public void joinRoom() {
         ChannelMediaOptions options = new ChannelMediaOptions();
         options.autoSubscribeAudio = true;
         options.autoSubscribeVideo = true;

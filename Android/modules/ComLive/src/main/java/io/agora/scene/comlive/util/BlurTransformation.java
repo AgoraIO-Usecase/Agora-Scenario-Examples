@@ -19,27 +19,31 @@ import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapResource;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 
+import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 import java.security.MessageDigest;
 
 
 public class BlurTransformation extends BitmapTransformation {
     private static final float DEFAULT_DOWN_SAMPLING = 0.5f;
 
-    private final Context context;
+    private final WeakReference<Context> mContext;
 
     public BlurTransformation(@NonNull Context context) {
-        this.context = context;
+        this.mContext = new WeakReference<>(context);
     }
 
     @Nullable
     @Override
     protected Bitmap transform(@NonNull BitmapPool pool, @NonNull Bitmap toTransform, int outWidth, int outHeight) {
+        Context tempContext = this.mContext.get();
+        if (tempContext == null) return null;
         int scaledWidth = (int) (toTransform.getWidth() * DEFAULT_DOWN_SAMPLING);
         int scaledHeight = (int) (toTransform.getHeight() * DEFAULT_DOWN_SAMPLING);
         Bitmap bitmap = pool.get(scaledWidth, scaledHeight, Bitmap.Config.ARGB_8888);
         BitmapResource obtain = BitmapResource.obtain(
                 blurBitmap(
-                        context,
+                        tempContext,
                         toTransform,
                         bitmap,
                         Color.argb(90, 255, 255, 255)

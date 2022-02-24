@@ -84,7 +84,7 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
         }
 
 
-        mViewModel = GameUtil.getViewModel(this, RoomViewModel.class, new RoomViewModelFactory(currentRoom, GlobalViewModel.localUser, GlobalViewModel.rtcEngine));
+        mViewModel = GameUtil.getViewModel(RoomViewModel.class, new RoomViewModelFactory(currentRoom, GlobalViewModel.localUser, GlobalViewModel.rtcEngine), this);
         aMHost = mViewModel.amHost;
 
         return super.onCreateView(inflater, container, savedInstanceState);
@@ -119,7 +119,7 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
 
                 int dp12 = (int) BaseUtil.dp2px(12);
                 // 设置 Game View 距离顶部距离 (+ 12dp)
-                int topMargin = (int) (mBinding.layoutRoomInfo.getRoot().getBottom() + dp12);
+                int topMargin = mBinding.layoutRoomInfo.getRoot().getBottom() + dp12;
                 // Game Mode 下摄像头预览距离底部距离
                 int marginBottom = mBinding.getRoot().getMeasuredHeight() - mBinding.btnExitFgRoom.getTop() + dp12;
                 // Game View 高度
@@ -328,7 +328,6 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
      */
     private void onRTCInit() {
         BaseUtil.logD("onRTCInit");
-        mViewModel.joinRoom(mViewModel.localUser);
         // 如果是房主，创建View开始直播
         if (aMHost) initLocalPreview();
         else initRemotePreview();

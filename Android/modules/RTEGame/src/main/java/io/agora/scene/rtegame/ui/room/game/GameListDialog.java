@@ -35,7 +35,7 @@ public class GameListDialog extends BaseBottomSheetDialogFragment<GameDialogGame
         super.onViewCreated(view, savedInstanceState);
         WindowCompat.setDecorFitsSystemWindows(requireDialog().getWindow(), false);
         initView();
-        RoomViewModel roomViewModel = GameUtil.getViewModel(requireParentFragment(), RoomViewModel.class);
+        RoomViewModel roomViewModel = GameUtil.getViewModel(RoomViewModel.class, requireParentFragment());
         roomViewModel.fetchGameList();
         roomViewModel.gameList.observe(getViewLifecycleOwner(), agoraGames -> mAdapter.submitListAndPurge(agoraGames));
     }

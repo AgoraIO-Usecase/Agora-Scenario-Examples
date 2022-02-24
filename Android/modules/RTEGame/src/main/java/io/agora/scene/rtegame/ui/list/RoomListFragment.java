@@ -66,7 +66,7 @@ public class RoomListFragment extends BaseFragment<GameFragmentRoomListBinding> 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         GlobalViewModel.currentRoom = null;
-        mViewModel = GameUtil.getViewModel(this, RoomListViewModel.class);
+        mViewModel = GameUtil.getViewModel( RoomListViewModel.class, this);
 
         initView();
         initListener();

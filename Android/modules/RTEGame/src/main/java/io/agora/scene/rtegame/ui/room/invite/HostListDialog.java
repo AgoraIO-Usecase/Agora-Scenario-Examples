@@ -67,8 +67,8 @@ public class HostListDialog extends BaseBottomSheetDialogFragment<GameDialogHost
         super.onViewCreated(view, savedInstanceState);
         WindowCompat.setDecorFitsSystemWindows(requireDialog().getWindow(), false);
 
-        roomViewModel = GameUtil.getViewModel(requireParentFragment(), RoomViewModel.class);
-        roomListViewModel = GameUtil.getViewModel(this, RoomListViewModel.class);
+        roomViewModel = GameUtil.getViewModel(RoomViewModel.class, requireParentFragment());
+        roomListViewModel = GameUtil.getViewModel(RoomListViewModel.class, this);
 
         initView();
         initListener();

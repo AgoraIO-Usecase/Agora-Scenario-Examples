@@ -27,7 +27,7 @@ public class RoomCreateFragment extends BaseFragment<GameFragmentCreateRoomBindi
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mViewModel = GameUtil.getViewModel(this, CreateViewModel.class);
+        mViewModel = GameUtil.getViewModel(CreateViewModel.class, this);
         initListener();
 
         setupRandomName();

@@ -1,4 +1,4 @@
-package io.agora.scene.rtegame.ui.create;
+package io.agora.scene.comlive.ui.create;
 
 import android.view.SurfaceView;
 
@@ -11,11 +11,10 @@ import androidx.lifecycle.ViewModel;
 import io.agora.rtc2.Constants;
 import io.agora.rtc2.RtcEngineEx;
 import io.agora.rtc2.video.VideoCanvas;
-import io.agora.scene.rtegame.GlobalViewModel;
-import io.agora.scene.rtegame.bean.LocalUser;
-import io.agora.scene.rtegame.bean.RoomInfo;
-import io.agora.scene.rtegame.util.Event;
-import io.agora.scene.rtegame.util.GameUtil;
+import io.agora.scene.comlive.GlobalViewModel;
+import io.agora.scene.comlive.bean.LocalUser;
+import io.agora.scene.comlive.bean.RoomInfo;
+import io.agora.scene.comlive.util.ComLiveUtil;
 import io.agora.syncmanager.rtm.Sync;
 import io.agora.syncmanager.rtm.SyncManagerException;
 
@@ -24,10 +23,11 @@ public class CreateViewModel extends ViewModel {
     @Nullable
     private final RtcEngineEx rtcEngineEx = GlobalViewModel.rtcEngine;
 
-    private final MutableLiveData<Event<Boolean>> _isRoomCreateSuccess = new MutableLiveData<>();
+
+    private final MutableLiveData<Boolean> _isRoomCreateSuccess = new MutableLiveData<>();
 
     @NonNull
-    public LiveData<Event<Boolean>> isRoomCreateSuccess() {
+    public LiveData<Boolean> isRoomCreateSuccess() {
         return _isRoomCreateSuccess;
     }
 
@@ -48,20 +48,20 @@ public class CreateViewModel extends ViewModel {
         LocalUser localUser = GlobalViewModel.localUser;
         if (localUser != null) {
             RoomInfo pendingRoom = new RoomInfo(roomName, localUser.getUserId());
-            Sync.Instance().createScene(GameUtil.getSceneFromRoomInfo(pendingRoom), new Sync.Callback() {
+            Sync.Instance().createScene(ComLiveUtil.getSceneFromRoomInfo(pendingRoom), new Sync.Callback() {
                 @Override
                 public void onSuccess() {
                     GlobalViewModel.currentRoom = pendingRoom;
-                    _isRoomCreateSuccess.postValue(new Event<>(true));
+                    _isRoomCreateSuccess.postValue(true);
                 }
 
                 @Override
                 public void onFail(SyncManagerException exception) {
-                    _isRoomCreateSuccess.setValue(new Event<>(false));
+                    _isRoomCreateSuccess.setValue(false);
                 }
             });
         } else {
-            _isRoomCreateSuccess.setValue(new Event<>(false));
+            _isRoomCreateSuccess.setValue(false);
         }
     }
 }

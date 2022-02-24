@@ -132,8 +132,13 @@ public class GlobalViewModel extends AndroidViewModel {
     }
 
     private void initSyncManager(@NonNull Context context) {
+        String appID = context.getString(R.string.rtm_app_id);
+        if (appID.isEmpty() || appID.codePointCount(0, appID.length()) != 32) {
+            setInitResult(RTM_SDK, false);
+            return;
+        }
         HashMap<String, String> map = new HashMap<>();
-        map.put("appid", context.getString(R.string.rtm_app_id));
+        map.put("appid", appID);
         map.put("token", context.getString(R.string.rtm_app_token));
         map.put("defaultChannel", GameConstants.globalChannel);
         Sync.Instance().init(context, map, new Sync.Callback() {
@@ -159,4 +164,5 @@ public class GlobalViewModel extends AndroidViewModel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }}
+    }
+}

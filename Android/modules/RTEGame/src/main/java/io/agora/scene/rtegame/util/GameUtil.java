@@ -15,6 +15,7 @@ import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.ShapeAppearanceModel;
@@ -165,12 +166,12 @@ public class GameUtil {
         else return color;
     }
 
-    public static <T extends ViewModel> T getViewModel(@NonNull Fragment fragment, @NonNull Class<T> viewModelClass) {
-        return new ViewModelProvider(fragment.getViewModelStore(), new ViewModelProvider.NewInstanceFactory()).get(viewModelClass);
+    public static <T extends ViewModel> T getViewModel(@NonNull Class<T> viewModelClass, @NonNull ViewModelStoreOwner owner) {
+        return new ViewModelProvider(owner, new ViewModelProvider.NewInstanceFactory()).get(viewModelClass);
     }
 
-    public static <T extends ViewModel> T getViewModel(@NonNull Fragment fragment, @NonNull Class<T> viewModelClass, @NonNull ViewModelProvider.NewInstanceFactory factory) {
-        return new ViewModelProvider(fragment.getViewModelStore(), factory).get(viewModelClass);
+    public static <T extends ViewModel> T getViewModel(@NonNull Class<T> viewModelClass, @NonNull ViewModelProvider.NewInstanceFactory factory, @NonNull ViewModelStoreOwner owner) {
+        return new ViewModelProvider(owner, factory).get(viewModelClass);
     }
 
     @NonNull

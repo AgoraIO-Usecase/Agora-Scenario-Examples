@@ -20,25 +20,37 @@ public class SplashFragment extends BaseNavFragment<ComLiveFragmentSplashBinding
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        globalViewModel = ComLiveUtil.getAndroidViewModel(this, GlobalViewModel.class);
-
+        globalViewModel = ComLiveUtil.getAndroidViewModel(this);
         initListener();
     }
 
     private void initListener() {
-        globalViewModel.isRTMInit().observe(getViewLifecycleOwner(), new EventObserver<>(succeed -> {
-            if (succeed == Boolean.TRUE) toRoomListPage();
-            else showError();
-        }));
-
+        globalViewModel.isSDKsReady().observe(getViewLifecycleOwner(), this::checkInitResult);
     }
+    private void checkInitResult(int initResult) {
+        int initResultMask = 0b001010;
+        if ((initResult & initResultMask) == initResultMask) {
+            StringBuilder initFailedSDKString = new StringBuilder();
+            if ((initResult & 0b000001) == 0)
+                initFailedSDKString.append("RTM,");
+            if ((initResult & 0b000100) == 0)
+                initFailedSDKString.append("RTC,");
 
+            if (initFailedSDKString.length() != 0) {
+                initFailedSDKString.deleteCharAt(initFailedSDKString.length() - 1);
+                showError(initFailedSDKString.toString());
+            } else {
+                toRoomListPage();
+            }
+        }
+    }
     private void toRoomListPage() {
         findNavController().popBackStack(R.id.splashFragment, true);
         findNavController().navigate(R.id.roomListFragment);
     }
 
-    private void showError() {
+    private void showError(String errorMsg) {
+        mBinding.btnFgSplash.setText(getString(R.string.com_live_error_desc, errorMsg));
         mBinding.loadingStatus.setVisibility(View.GONE);
         mBinding.errorStatus.setVisibility(View.VISIBLE);
     }
