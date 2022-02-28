@@ -13,11 +13,10 @@ import io.agora.scene.breakoutroom.R;
 import io.agora.scene.breakoutroom.databinding.RoomBreakoutRoomActivityMainBinding;
 
 public class MainActivity extends BaseActivity<RoomBreakoutRoomActivityMainBinding> {
-    private MainViewModel mainViewModel;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainViewModel = new ViewModelProvider(this, new MainViewModelFactory(this)).get(MainViewModel.class);
+        new ViewModelProvider(this, new GlobalViewModelFactory(this.getApplication())).get(GlobalViewModel.class);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
     }
 
