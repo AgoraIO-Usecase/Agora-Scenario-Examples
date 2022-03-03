@@ -173,9 +173,6 @@
 		E79BEF9D27477F66009FA838 /* GameCenterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterModel.swift; sourceTree = "<group>"; };
 		E79BEFA0274796F7009FA838 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		E79BF019274B6902009FA838 /* ReplayKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReplayKit.framework; path = System/Library/Frameworks/ReplayKit.framework; sourceTree = SDKROOT; };
-		E79BF01C274B6902009FA838 /* SampleHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SampleHandler.h; sourceTree = "<group>"; };
-		E79BF01D274B6902009FA838 /* SampleHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SampleHandler.m; sourceTree = "<group>"; };
-		E79BF01F274B6902009FA838 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E79BF028274B77C7009FA838 /* GameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewModel.swift; sourceTree = "<group>"; };
 		E79BF02A274B819F009FA838 /* GameInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameInfoModel.swift; sourceTree = "<group>"; };
 		E79BF02F2754761A009FA838 /* GameApplyInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameApplyInfoModel.swift; sourceTree = "<group>"; };
@@ -453,16 +450,6 @@
 			path = NetworkManager;
 			sourceTree = "<group>";
 		};
-		E79BF01B274B6902009FA838 /* Agora-ScreenShare-Extension */ = {
-			isa = PBXGroup;
-			children = (
-				E79BF01C274B6902009FA838 /* SampleHandler.h */,
-				E79BF01D274B6902009FA838 /* SampleHandler.m */,
-				E79BF01F274B6902009FA838 /* Info.plist */,
-			);
-			path = "Agora-ScreenShare-Extension";
-			sourceTree = "<group>";
-		};
 		E79BF027274B77B3009FA838 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
@@ -475,7 +462,6 @@
 			isa = PBXGroup;
 			children = (
 				E79C25DD273B67DB00909CD4 /* Scene-Examples */,
-				E79BF01B274B6902009FA838 /* Agora-ScreenShare-Extension */,
 				E79C25DC273B67DB00909CD4 /* Products */,
 				E79C263D273BCC0A00909CD4 /* Localizable.strings */,
 				220C86AB99C410077231BCD4 /* Pods */,
@@ -1090,7 +1076,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1223;
 				DEVELOPMENT_TEAM = YS397FG5PA;
 				ENABLE_BITCODE = NO;
@@ -1128,7 +1114,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1223;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;

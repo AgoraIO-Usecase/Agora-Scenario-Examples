@@ -19,7 +19,7 @@ enum SceneType: String {
     /// PKApply
     case pkApply = "pkApplyInfo"
     /// 同玩
-    case playTogether = "sudPlayTogether"//"playTogether"
+    case playTogether = "playTogether"
     /// 1v1
     case oneToOne = "oneToOne"
     

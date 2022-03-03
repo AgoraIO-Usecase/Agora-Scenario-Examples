@@ -263,7 +263,7 @@ class PKLiveController: SignleLiveController {
         DispatchQueue.main.asyncAfter(deadline: .now() + (isHidden ? 0 : 0.5)) {
             self.vsImageView.isHidden = isHidden
             self.countTimeLabel.isHidden = isHidden
-            self.pkProgressView.isHidden = isHidden
+            self.pkProgressView.isHidden = true//isHidden
         }
     }
     

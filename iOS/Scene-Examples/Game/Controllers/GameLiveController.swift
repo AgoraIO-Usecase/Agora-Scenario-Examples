@@ -326,7 +326,7 @@ class GameLiveController: PKLiveController {
             viewModel.channelName = channelName ?? ""
             
             liveView.updateLiveLayout(postion: .bottom)
-            pkProgressView.isHidden = false
+            pkProgressView.isHidden = true
 //            timer.scheduledSecondsTimer(withName: sceneType.rawValue, timeInterval: 900, queue: .main) { [weak self] _, duration in
 //                self?.countTimeLabel.setTitle("PK剩余 \("".timeFormat(secounds: duration))", for: .normal)
 //                if duration <= 0 {
