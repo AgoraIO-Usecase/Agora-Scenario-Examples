@@ -36,7 +36,6 @@ import com.bumptech.glide.request.transition.Transition;
 
 import io.agora.example.base.BaseRecyclerViewAdapter;
 import io.agora.example.base.BaseUtil;
-import io.agora.rtc2.RtcEngine;
 import io.agora.scene.comlive.GlobalViewModel;
 import io.agora.scene.comlive.R;
 import io.agora.scene.comlive.base.BaseNavFragment;
@@ -69,18 +68,21 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (GlobalViewModel.localUser == null) return null;
 
-        GlobalViewModel mGlobalModel = ComLiveUtil.getAndroidViewModel(this, GlobalViewModel.class);
-        // hold current RoomInfo
-        if (mGlobalModel.roomInfo.getValue() != null)
-            currentRoom = mGlobalModel.roomInfo.getValue().peekContent();
+        if (GlobalViewModel.rtcEngine == null || GlobalViewModel.localUser == null) {
+            findNavController().popBackStack();
+            return null;
+        }
+
+        currentRoom = GlobalViewModel.currentRoom;
         if (currentRoom == null) {
             findNavController().navigate(R.id.action_roomFragment_to_roomCreateFragment);
             return null;
         }
-        mViewModel = ComLiveUtil.getViewModel(this, RoomViewModel.class, new RoomViewModelFactory(requireContext(), currentRoom));
-        aMHost = currentRoom.getUserId().equals(mViewModel.localUser.getUserId());
+
+
+        mViewModel = ComLiveUtil.getViewModel(this, RoomViewModel.class, new RoomViewModelFactory(currentRoom, GlobalViewModel.localUser, GlobalViewModel.rtcEngine));
+        aMHost = mViewModel.amHost;
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -92,6 +94,14 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
         initView();
         initListener();
         initObserver();
+        onRTCInit();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (mViewModel != null)
+            mViewModel.stopLocalPreview();
     }
 
     private void initView() {
@@ -106,7 +116,7 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
                 // GameView = WebView || 屏幕共享View
                 int dp12 = (int) BaseUtil.dp2px(12);
                 // 设置 Game View 距离顶部距离 (+ 12dp)
-                int topMargin = (int) (mBinding.layoutRoomInfo.getRoot().getBottom() + dp12);
+                int topMargin = mBinding.layoutRoomInfo.getRoot().getBottom() + dp12;
                 // Game Mode 下摄像头预览距离底部距离
                 int marginBottom = mBinding.getRoot().getMeasuredHeight() - mBinding.btnExitFgRoom.getTop() + dp12;
                 // Game View 高度
@@ -143,8 +153,6 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
     }
 
     private void initObserver() {
-        // RTC engine 初始化监听
-        mViewModel.rtcEngine.observe(getViewLifecycleOwner(), this::onRTCInit);
         // 礼物监听
         mViewModel.gift.observe(getViewLifecycleOwner(), new EventObserver<>(this::onGiftUpdated));
         // 房间内游戏监听
@@ -275,15 +283,11 @@ public class RoomFragment extends BaseNavFragment<ComLiveFragmentRoomBinding> {
     /**
      * RTC 初始化成功
      */
-    private void onRTCInit(RtcEngine engine) {
-        if (engine == null) findNavController().popBackStack();
-        else {
-            insertNewMessage("RTC 初始化成功");
-            mViewModel.joinRoom(engine);
+    private void onRTCInit() {
+        insertNewMessage("RTC 初始化成功");
 
-            if (aMHost) initLocalView(); // 如果是房主，创建View开始直播
-            else initRemoteView(); // 如果是观众，加载主播画面
-        }
+        if (aMHost) initLocalView(); // 如果是房主，创建View开始直播
+        else initRemoteView(); // 如果是观众，加载主播画面
     }
 
     /**

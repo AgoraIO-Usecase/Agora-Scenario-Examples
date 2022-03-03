@@ -1,6 +1,5 @@
 package io.agora.scene.comlive.ui.room;
 
-import android.content.Context;
 import android.view.TextureView;
 
 import androidx.annotation.Keep;
@@ -15,13 +14,9 @@ import java.util.Objects;
 import io.agora.example.base.BaseUtil;
 import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
-import io.agora.rtc2.IRtcEngineEventHandler;
-import io.agora.rtc2.RtcEngine;
-import io.agora.rtc2.RtcEngineConfig;
 import io.agora.rtc2.RtcEngineEx;
 import io.agora.rtc2.internal.RtcEngineImpl;
 import io.agora.rtc2.video.VideoCanvas;
-import io.agora.scene.comlive.GlobalViewModel;
 import io.agora.scene.comlive.R;
 import io.agora.scene.comlive.bean.AgoraGame;
 import io.agora.scene.comlive.bean.AppServerResult;
@@ -50,9 +45,11 @@ import retrofit2.Response;
 public class RoomViewModel extends ViewModel {
     @NonNull
     private final RoomInfo currentRoom;
-    private final boolean amHost;
+    public final boolean amHost;
     @NonNull
     public LocalUser localUser;
+    @NonNull
+    public RtcEngineEx rtcEngineEx;
     @Nullable
     public SceneReference currentSceneRef;
 
@@ -67,38 +64,32 @@ public class RoomViewModel extends ViewModel {
     @NonNull
     public MutableLiveData<GameInfo> gameInfo = new MutableLiveData<>();
     @NonNull
-    public MutableLiveData<RtcEngineEx> rtcEngine = new MutableLiveData<>();
-    @NonNull
     public MutableLiveData<ViewStatus> viewStatus = new MutableLiveData<>();
     @NonNull
     public MutableLiveData<List<AgoraGame>> gameList = new MutableLiveData<>();
     @NonNull
     public MutableLiveData<Event<String>> gameStartUrl = new MutableLiveData<>();
 
-    public RoomViewModel(@NonNull Context context, @NonNull RoomInfo currentRoom) {
+    public RoomViewModel(@NonNull RoomInfo currentRoom, @NonNull LocalUser localUser, @NonNull RtcEngineEx rtcEngineEx) {
         this.currentRoom = currentRoom;
-        assert GlobalViewModel.localUser != null;
-        localUser = GlobalViewModel.localUser;
+        this.localUser = localUser;
+        this.rtcEngineEx = rtcEngineEx;
+        amHost = Objects.equals(currentRoom.getUserId(), localUser.getUserId());
         // Consume at the beginning
         Event<String> objectEvent = new Event<>("");
         objectEvent.getContentIfNotHandled();
         gameStartUrl.setValue(objectEvent);
 
-        amHost = Objects.equals(currentRoom.getUserId(), localUser.getUserId());
-        initSDK(context, new IRtcEngineEventHandler() {
-        });
+        configRTC(rtcEngineEx);
+        configRTM();
+        joinRoom();
     }
 
     @Override
     protected void onCleared() {
         super.onCleared();
 
-        // destroy RTC
-        RtcEngine engine = rtcEngine.getValue();
-        if (engine != null) {
-            engine.leaveChannel();
-            RtcEngine.destroy();
-        }
+        rtcEngineEx.leaveChannel();
 
         if (currentSceneRef != null) {
             if (amHost)
@@ -107,46 +98,21 @@ public class RoomViewModel extends ViewModel {
         }
     }
 
-    public void initSDK(@NonNull Context mContext, @NonNull IRtcEngineEventHandler mEventHandler) {
-        String appID = mContext.getString(R.string.rtc_app_id);
-        if (appID.isEmpty() || appID.codePointCount(0, appID.length()) != 32) {
-            viewStatus.postValue(new ViewStatus.Message("APP ID is not valid"));
-            rtcEngine.postValue(null);
-        } else {
-            RtcEngineConfig config = new RtcEngineConfig();
-            config.mContext = mContext;
-            config.mAppId = appID;
-            config.mEventHandler = mEventHandler;
-            RtcEngineConfig.LogConfig logConfig = new RtcEngineConfig.LogConfig();
-            logConfig.filePath = mContext.getExternalCacheDir().getAbsolutePath();
-            config.mLogConfig = logConfig;
-            config.mChannelProfile = Constants.CHANNEL_PROFILE_LIVE_BROADCASTING;
-
-            try {
-                RtcEngineEx engine = (RtcEngineEx) RtcEngineEx.create(config);
-                configRTC(engine);
-                rtcEngine.postValue(engine);
-                // 监听当前房间数据 <==> 礼物、PK、
-                Sync.Instance().joinScene(currentRoom.getId(), new Sync.JoinSceneCallback() {
-                    @Override
-                    public void onSuccess(SceneReference sceneReference) {
-                        onJoinRTMSucceed(sceneReference);
-                    }
-
-                    @Override
-                    public void onFail(SyncManagerException e) {
-                        e.printStackTrace();
-                        viewStatus.postValue(new ViewStatus.Error("主播已下播💔"));
-                    }
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-                viewStatus.postValue(new ViewStatus.Error(e));
-                rtcEngine.postValue(null);
+    private void configRTM() {
+        // 监听当前房间数据 <==> 礼物、PK、
+        Sync.Instance().joinScene(currentRoom.getId(), new Sync.JoinSceneCallback() {
+            @Override
+            public void onSuccess(SceneReference sceneReference) {
+                onJoinRTMSucceed(sceneReference);
             }
-        }
-    }
 
+            @Override
+            public void onFail(SyncManagerException e) {
+                e.printStackTrace();
+                viewStatus.postValue(new ViewStatus.Error("主播已下播💔"));
+            }
+        });
+    }
 
     private void onJoinRTMSucceed(@NonNull SceneReference sceneReference) {
         BaseUtil.logD("onJoinRTMSucceed");
@@ -266,14 +232,14 @@ public class RoomViewModel extends ViewModel {
     public void startGame(@NonNull String gameId) {
         GameRepo.getJoinUrl(gameId, localUser, currentRoom.getId(), amHost ? "1" : "3", new Callback<AppServerResult<String>>() {
             @Override
-            public void onResponse(Call<AppServerResult<String>> call, Response<AppServerResult<String>> response) {
+            public void onResponse(@NonNull Call<AppServerResult<String>> call, @NonNull Response<AppServerResult<String>> response) {
                 AppServerResult<String> body = response.body();
                 if (body != null)
                     gameStartUrl.postValue(new Event<>(body.getResult()));
             }
 
             @Override
-            public void onFailure(Call<AppServerResult<String>> call, Throwable t) {
+            public void onFailure(@NonNull Call<AppServerResult<String>> call, @NonNull Throwable t) {
             }
         });
     }
@@ -285,48 +251,37 @@ public class RoomViewModel extends ViewModel {
     //<editor-fold desc="RTC related">
     public void enableMic(boolean enable) {
         isMicEnabled.postValue(enable);
-        RtcEngineEx engine = rtcEngine.getValue();
-        if (engine != null) {
-            engine.muteLocalAudioStream(!enable);
-        }
+        rtcEngineEx.muteLocalAudioStream(!enable);
     }
 
     /**
      * 2022.01.17 11:00
      * 负责人表示游戏内 JS 对麦克风的启停只影响其他玩家，不影响主播
+     *
      * @param enable true 启用；false 禁用
      */
-    public void jsEnableMic(boolean enable){
+    public void jsEnableMic(boolean enable) {
         if (amHost) return;
         BaseUtil.logD(Thread.currentThread().getName() + "enableMic " + enable);
         isMicEnabled.postValue(enable);
-        RtcEngineEx engine = rtcEngine.getValue();
-        if (engine != null) {
-            ChannelMediaOptions options = new ChannelMediaOptions();
-            options.autoSubscribeAudio = true;
-            options.autoSubscribeVideo = true;
-            options.publishAudioTrack = enable;
-            options.publishCameraTrack = false;
-            options.clientRoleType = enable ? Constants.CLIENT_ROLE_BROADCASTER : Constants.CLIENT_ROLE_AUDIENCE;
-            int ret = engine.updateChannelMediaOptions(options);
-            engine.enableLocalAudio(enable);
-            BaseUtil.logD(Thread.currentThread().getName() + "updateChannelMediaOptions " + ret);
-        }
+        ChannelMediaOptions options = new ChannelMediaOptions();
+        options.autoSubscribeAudio = true;
+        options.autoSubscribeVideo = true;
+        options.publishAudioTrack = enable;
+        options.publishCameraTrack = false;
+        options.clientRoleType = enable ? Constants.CLIENT_ROLE_BROADCASTER : Constants.CLIENT_ROLE_AUDIENCE;
+        int ret = rtcEngineEx.updateChannelMediaOptions(options);
+        rtcEngineEx.enableLocalAudio(enable);
+        BaseUtil.logD(Thread.currentThread().getName() + "updateChannelMediaOptions " + ret);
     }
 
     public void enableCamera(boolean enable) {
         isCameraEnabled.postValue(enable);
-        RtcEngineEx engine = rtcEngine.getValue();
-        if (engine != null) {
-            engine.muteLocalVideoStream(!enable);
-        }
+        rtcEngineEx.muteLocalVideoStream(!enable);
     }
 
     public void flipCamera() {
-        RtcEngineEx engine = this.rtcEngine.getValue();
-        if (engine != null) {
-            engine.switchCamera();
-        }
+        rtcEngineEx.switchCamera();
     }
 
 
@@ -337,34 +292,32 @@ public class RoomViewModel extends ViewModel {
         }
     }
 
-    public void joinRoom(@NonNull RtcEngine engine) {
+    public void joinRoom() {
         ChannelMediaOptions options = new ChannelMediaOptions();
         options.autoSubscribeAudio = true;
         options.autoSubscribeVideo = true;
         options.publishAudioTrack = amHost;
         options.publishCameraTrack = amHost;
         options.clientRoleType = amHost ? Constants.CLIENT_ROLE_BROADCASTER : Constants.CLIENT_ROLE_AUDIENCE;
-        engine.joinChannel(((RtcEngineImpl) engine).getContext().getString(R.string.rtc_app_token), currentRoom.getId(), Integer.parseInt(localUser.getUserId()), options);
+        rtcEngineEx.joinChannel(((RtcEngineImpl) rtcEngineEx).getContext().getString(R.string.rtc_app_token), currentRoom.getId(), Integer.parseInt(localUser.getUserId()), options);
     }
 
     public void setupLocalView(@NonNull TextureView view) {
-        RtcEngine engine = rtcEngine.getValue();
-        if (engine != null) {
-            engine.startPreview();
-            engine.setupLocalVideo(new VideoCanvas(view, Constants.RENDER_MODE_HIDDEN, Integer.parseInt(localUser.getUserId())));
-        }
+        rtcEngineEx.startPreview();
+        rtcEngineEx.setupLocalVideo(new VideoCanvas(view, Constants.RENDER_MODE_HIDDEN, Integer.parseInt(localUser.getUserId())));
     }
 
     public void setupRemoteView(@NonNull TextureView view) {
-        RtcEngine engine = rtcEngine.getValue();
-        if (engine != null) {
-            engine.setupRemoteVideo(new VideoCanvas(view, Constants.RENDER_MODE_HIDDEN, Integer.parseInt(currentRoom.getUserId())));
-        }
+        rtcEngineEx.setupRemoteVideo(new VideoCanvas(view, Constants.RENDER_MODE_HIDDEN, Integer.parseInt(currentRoom.getUserId())));
     }
 
     private void configRTC(@NonNull RtcEngineEx engine) {
         engine.enableAudio();
         engine.enableVideo();
+    }
+
+    public void stopLocalPreview() {
+        rtcEngineEx.stopPreview();
     }
 //</editor-fold>
 

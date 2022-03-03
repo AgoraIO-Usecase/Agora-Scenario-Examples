@@ -33,7 +33,6 @@ import io.agora.scene.comlive.base.BaseNavFragment;
 import io.agora.scene.comlive.bean.RoomInfo;
 import io.agora.scene.comlive.databinding.ComLiveFragmentRoomListBinding;
 import io.agora.scene.comlive.databinding.ComLiveItemRoomListBinding;
-import io.agora.scene.comlive.util.Event;
 import io.agora.scene.comlive.util.ComLiveUtil;
 import io.agora.scene.comlive.util.ViewStatus;
 
@@ -54,7 +53,6 @@ public class RoomListFragment extends BaseNavFragment<ComLiveFragmentRoomListBin
         }
     });
     ////////////////////////////////////// -- VIEW MODEL --//////////////////////////////////////////////////////////////
-    private GlobalViewModel mGlobalModel;
     private RoomListViewModel mViewModel;
 
     ////////////////////////////////////// -- DATA --//////////////////////////////////////////////////////////////
@@ -66,8 +64,7 @@ public class RoomListFragment extends BaseNavFragment<ComLiveFragmentRoomListBin
         super.onViewCreated(view, savedInstanceState);
         mViewModel = ComLiveUtil.getViewModel(this, RoomListViewModel.class);
 
-        mGlobalModel = ComLiveUtil.getAndroidViewModel(this, GlobalViewModel.class);
-        mGlobalModel.clearRoomInfo();
+        GlobalViewModel.currentRoom = null;
         initView();
         initListener();
     }
@@ -170,7 +167,7 @@ public class RoomListFragment extends BaseNavFragment<ComLiveFragmentRoomListBin
 
     private void toNextPage() {
         if (tempRoom != null)
-            mGlobalModel.roomInfo.setValue(new Event<>(tempRoom));
+            GlobalViewModel.currentRoom = tempRoom;
 
         findNavController().navigate(R.id.action_roomListFragment_to_roomFragment);
     }

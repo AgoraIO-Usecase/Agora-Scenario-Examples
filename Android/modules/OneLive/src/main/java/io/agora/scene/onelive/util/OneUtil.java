@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 import io.agora.example.base.BaseUtil;
+import io.agora.scene.onelive.GlobalViewModel;
 import io.agora.scene.onelive.GlobalViewModelFactory;
 import io.agora.scene.onelive.R;
 import io.agora.scene.onelive.bean.RoomInfo;
@@ -156,12 +157,14 @@ public class OneUtil {
         return new ViewModelProvider(fragment.getViewModelStore(), factory).get(viewModelClass);
     }
 
-    public static <T extends ViewModel> T getAndroidViewModel(@NonNull ComponentActivity activity, @NonNull Class<T> viewModelClass) {
-        return new ViewModelProvider(activity, new GlobalViewModelFactory(activity.getApplication())).get(viewModelClass);
+    @NonNull
+    public static GlobalViewModel getAndroidViewModel(@NonNull ComponentActivity activity) {
+        return new ViewModelProvider(activity, new GlobalViewModelFactory(activity.getApplication())).get(GlobalViewModel.class);
     }
 
-    public static <T extends ViewModel> T getAndroidViewModel(@NonNull Fragment fragment, @NonNull Class<T> viewModelClass) {
-        return new ViewModelProvider(fragment.requireActivity(), new GlobalViewModelFactory(fragment.requireActivity().getApplication())).get(viewModelClass);
+    @NonNull
+    public static GlobalViewModel getAndroidViewModel(@NonNull Fragment fragment) {
+        return new ViewModelProvider(fragment.requireActivity(), new GlobalViewModelFactory(fragment.requireActivity().getApplication())).get(GlobalViewModel.class);
     }
 
     public static float lerp(float startValue, float endValue, float fraction) {

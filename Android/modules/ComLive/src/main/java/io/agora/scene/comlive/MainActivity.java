@@ -12,6 +12,7 @@ import io.agora.example.base.BaseActivity;
 import io.agora.rtc2.RtcEngine;
 import io.agora.scene.comlive.databinding.ComLiveActivityMainBinding;
 import io.agora.scene.comlive.repo.GameRepo;
+import io.agora.scene.comlive.util.ComLiveUtil;
 import io.agora.syncmanager.rtm.Sync;
 
 public class MainActivity extends BaseActivity<ComLiveActivityMainBinding> {
@@ -25,20 +26,9 @@ public class MainActivity extends BaseActivity<ComLiveActivityMainBinding> {
         GameRepo.X_LC_KEY = getString(R.string.x_lc_Key);
         GameRepo.X_LC_SESSION = getString(R.string.x_lc_Session);
 
-        new ViewModelProvider(this, new GlobalViewModelFactory(this.getApplication())).get(GlobalViewModel.class);
+        ComLiveUtil.getAndroidViewModel(this);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
     }
 
-    @Override
-    public void finish() {
-        super.finish();
-
-        new Thread(() -> {
-//        RTMDestroy
-            Sync.Instance().destroy();
-//        RTCDestroy
-            RtcEngine.destroy();
-        }).start();
-    }
 }

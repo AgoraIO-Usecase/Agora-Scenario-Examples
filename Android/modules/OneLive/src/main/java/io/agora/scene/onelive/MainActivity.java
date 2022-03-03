@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.core.view.WindowCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import io.agora.example.base.BaseActivity;
 import io.agora.rtc2.RtcEngine;
@@ -26,16 +27,8 @@ public class MainActivity extends BaseActivity<OneActivityMainBinding> {
         GameRepo.X_LC_KEY = getString(R.string.x_lc_Key);
         GameRepo.X_LC_SESSION = getString(R.string.x_lc_Session);
 
-        OneUtil.getAndroidViewModel(this, GlobalViewModel.class);
+        OneUtil.getAndroidViewModel(this);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-//        RTMDestroy
-        Sync.Instance().destroy();
-//        RTCDestroy
-        RtcEngine.destroy();
     }
 }

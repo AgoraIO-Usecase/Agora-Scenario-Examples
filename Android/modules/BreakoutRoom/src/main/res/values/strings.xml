@@ -14,7 +14,7 @@
 
     <string name="room_empty_click_to_refresh">暂无可用房间，点击刷新</string>
     <string name="room_error_click_to_refresh">获取房间失败，点击刷新</string>
-    <string name="room_error_desc">RTM初始化出错</string>
+    <string name="room_error_desc">%s初始化出错</string>
     <string name="room_error_happened_click_to_refresh">出错了，再试一次</string>
     <string name="room_page_data_empty">页面数据为空</string>
 

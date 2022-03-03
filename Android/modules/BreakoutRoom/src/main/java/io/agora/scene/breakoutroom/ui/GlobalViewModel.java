@@ -1,13 +1,11 @@
-package io.agora.scene.rtegame;
+package io.agora.scene.breakoutroom.ui;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 
 import androidx.annotation.IntRange;
-import androidx.annotation.Keep;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,23 +21,19 @@ import io.agora.rtc2.IRtcEngineEventHandler;
 import io.agora.rtc2.RtcEngine;
 import io.agora.rtc2.RtcEngineConfig;
 import io.agora.rtc2.RtcEngineEx;
-import io.agora.scene.rtegame.bean.LocalUser;
-import io.agora.scene.rtegame.bean.RoomInfo;
-import io.agora.scene.rtegame.util.GameConstants;
+import io.agora.scene.breakoutroom.R;
+import io.agora.scene.breakoutroom.RoomConstant;
 import io.agora.syncmanager.rtm.Sync;
 import io.agora.syncmanager.rtm.SyncManagerException;
 
-@Keep
+/**
+ * @author lq
+ */
 public class GlobalViewModel extends AndroidViewModel {
-
-    @Nullable
-    public static RoomInfo currentRoom = null;
 
     public static final int RTM_SDK = 0;
     public static final int RTC_SDK = 1;
 
-    @Nullable
-    public static LocalUser localUser;
     @Nullable
     public static RtcEngineEx rtcEngine;
 
@@ -54,7 +48,6 @@ public class GlobalViewModel extends AndroidViewModel {
     public GlobalViewModel(@NonNull Application application) {
         super(application);
         BaseUtil.logD("GlobalViewModel init " + this);
-        GlobalViewModel.localUser = checkLocalOrGenerate(application.getApplicationContext());
         initSyncManager(application.getApplicationContext());
         initRtcSDK(application.getApplicationContext());
     }
@@ -102,35 +95,6 @@ public class GlobalViewModel extends AndroidViewModel {
 
     }
 
-    /**
-     * 生成用户信息
-     * 本地存在==> 本地生成
-     * 本地不存在==> 随机生成
-     */
-    @NonNull
-    public static LocalUser checkLocalOrGenerate(@NonNull Context context) {
-        SharedPreferences sp = context.getSharedPreferences("sp_rte_game", Context.MODE_PRIVATE);
-        String userId = sp.getString("id", "-1");
-
-        boolean isValidUser = true;
-
-        try {
-            int i = Integer.parseInt(userId);
-            if (i == -1) isValidUser = false;
-        } catch (NumberFormatException e) {
-            isValidUser = false;
-        }
-
-        LocalUser localUser;
-        if (isValidUser)
-            localUser = new LocalUser(userId);
-        else
-            localUser = new LocalUser();
-        sp.edit().putString("id", localUser.getUserId()).apply();
-
-        return localUser;
-    }
-
     private void initSyncManager(@NonNull Context context) {
         String appID = context.getString(R.string.rtm_app_id);
         if (appID.isEmpty() || appID.codePointCount(0, appID.length()) != 32) {
@@ -140,7 +104,7 @@ public class GlobalViewModel extends AndroidViewModel {
         HashMap<String, String> map = new HashMap<>();
         map.put("appid", appID);
         map.put("token", context.getString(R.string.rtm_app_token));
-        map.put("defaultChannel", GameConstants.globalChannel);
+        map.put("defaultChannel", RoomConstant.globalChannel);
         Sync.Instance().init(context, map, new Sync.Callback() {
             @Override
             public void onSuccess() {

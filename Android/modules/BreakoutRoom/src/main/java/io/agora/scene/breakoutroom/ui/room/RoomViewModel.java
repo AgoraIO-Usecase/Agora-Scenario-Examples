@@ -22,8 +22,7 @@ import io.agora.example.base.BaseUtil;
 import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
 import io.agora.rtc2.IRtcEngineEventHandler;
-import io.agora.rtc2.RtcEngine;
-import io.agora.rtc2.RtcEngineConfig;
+import io.agora.rtc2.RtcEngineEx;
 import io.agora.rtc2.internal.RtcEngineImpl;
 import io.agora.rtc2.video.VideoCanvas;
 import io.agora.scene.breakoutroom.R;
@@ -45,22 +44,17 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
     @NonNull
     public RoomInfo currentRoomInfo;
-    public @Nullable
-    String currentSubRoom;
+    @Nullable
+    public String currentSubRoom;
     private SceneReference currentSceneRef = null;
 
-    private boolean isMuted = false;
-
-    private final MutableLiveData<RtcEngine> _mEngine = new MutableLiveData<>();
-
-    @NonNull
-    public LiveData<RtcEngine> mEngine() {
-        return _mEngine;
-    }
+    private final RtcEngineEx rtcEngineEx;
 
     // UI状态
     private final MutableLiveData<ViewStatus> _viewStatus = new MutableLiveData<>();
 
+    @NonNull
+    public MutableLiveData<Boolean> isMicEnabled = new MutableLiveData<>(true);
     @NonNull
     public LiveData<ViewStatus> viewStatus() {
         return _viewStatus;
@@ -82,10 +76,69 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         return _subRoomList;
     }
 
-    public RoomViewModel(@NonNull Context context, @NonNull RoomInfo currentRoomInfo) {
-        BaseUtil.logD("RoomViewModel-> init:" + currentRoomInfo.toString());
-        this.currentRoomInfo = currentRoomInfo;
+    @NonNull
+    private final IRtcEngineEventHandler roomEventHandler = new IRtcEngineEventHandler() {
+        @Override
+        public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
+            BaseUtil.logD("onJoinChannelSuccess:" + channel);
+            Boolean enabled = isMicEnabled.getValue();
+            enableMic(enabled != Boolean.FALSE);
+//                setupLocalView((ViewGroup) mBinding.dynamicViewFgRoom.flexContainer.getChildAt(0));
+        }
 
+        /**
+         * {@see <a href="https://docs.agora.io/cn/Interactive%20Broadcast/API%20Reference/java/classio_1_1agora_1_1rtc_1_1_i_rtc_engine_event_handler.html?platform=Android#a31b2974a574ec45e62bb768e17d1f49e">}
+         */
+        @Override
+        public void onConnectionStateChanged(int state, int reason) {
+            BaseUtil.logD("onConnectionStateChanged:" + state + "," + reason);
+        }
+
+        @Override
+        public void onUserJoined(int uid, int elapsed) {
+            Set<Integer> set = _rtcUserSet.getValue();
+            if (set == null) set = new LinkedHashSet<>();
+            set.add(uid);
+            _rtcUserSet.postValue(set);
+        }
+
+        @Override
+        public void onUserOffline(int uid, int reason) {
+            Set<Integer> set = _rtcUserSet.getValue();
+            if (set != null && set.remove(uid)) {
+                _rtcUserSet.postValue(set);
+            }
+        }
+    };
+
+    public RoomViewModel(@NonNull RoomInfo currentRoomInfo, @NonNull RtcEngineEx rtcEngineEx) {
+        BaseUtil.logD("RoomViewModel-> init:" + currentRoomInfo);
+        this.currentRoomInfo = currentRoomInfo;
+        this.rtcEngineEx = rtcEngineEx;
+
+        configRTC();
+        configRTM();
+
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        rtcEngineEx.removeHandler(roomEventHandler);
+        rtcEngineEx.leaveChannel();
+        if (currentSceneRef != null)
+            currentSceneRef.unsubscribe(null);
+    }
+
+    private void configRTC() {
+        rtcEngineEx.enableAudio();
+        rtcEngineEx.enableVideo();
+        rtcEngineEx.startPreview();
+        rtcEngineEx.addHandler(roomEventHandler);
+        joinRTCRoom(currentRoomInfo.getId());
+    }
+
+    private void configRTM() {
         Sync.Instance().joinScene(currentRoomInfo.getId(), new Sync.JoinSceneCallback() {
             @Override
             public void onSuccess(SceneReference sceneReference) {
@@ -99,50 +152,6 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
             }
         });
-        initRTC(context, new IRtcEngineEventHandler() {
-            @Override
-            public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
-                BaseUtil.logD("onJoinChannelSuccess:" + channel);
-                handleMuteStuff();
-//                setupLocalView((ViewGroup) mBinding.dynamicViewFgRoom.flexContainer.getChildAt(0));
-            }
-
-            /**
-             * {@see <a href="https://docs.agora.io/cn/Interactive%20Broadcast/API%20Reference/java/classio_1_1agora_1_1rtc_1_1_i_rtc_engine_event_handler.html?platform=Android#a31b2974a574ec45e62bb768e17d1f49e">}
-             */
-            @Override
-            public void onConnectionStateChanged(int state, int reason) {
-                BaseUtil.logD("onConnectionStateChanged:" + state + "," + reason);
-            }
-
-            @Override
-            public void onUserJoined(int uid, int elapsed) {
-                Set<Integer> set = _rtcUserSet.getValue();
-                if (set == null) set = new LinkedHashSet<>();
-                set.add(uid);
-                _rtcUserSet.postValue(set);
-            }
-
-            @Override
-            public void onUserOffline(int uid, int reason) {
-                Set<Integer> set = _rtcUserSet.getValue();
-                if (set != null && set.remove(uid)) {
-                    _rtcUserSet.postValue(set);
-                }
-            }
-        });
-    }
-
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        new Thread(() -> {
-            RtcEngine engine = _mEngine.getValue();
-            if (engine != null) {
-                engine.leaveChannel();
-                RtcEngine.destroy();
-            }
-        }).start();
     }
 
     //<editor-fold desc="SyncManager related">
@@ -186,10 +195,11 @@ public class RoomViewModel extends ViewModel implements RoomApi {
                             subRoomInfo = null;
                             BaseUtil.logE(e);
                         }
-                        if (subRoomInfo != null && subRoomInfo.getSubRoom() != subRoomInfo.getCreateTime())
+                        if (subRoomInfo != null && !subRoomInfo.getSubRoom().equals(subRoomInfo.getCreateTime()))
                             res.add(subRoomInfo);
                     }
                     Collections.sort(res);
+                    BaseUtil.logD("res:"+res.size());
                     _subRoomList.postValue(res);
                 }
 
@@ -262,33 +272,6 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     //</editor-fold>
 
     //<editor-fold desc="RTC related">
-    public void initRTC(@NonNull Context mContext, @NonNull IRtcEngineEventHandler mEventHandler) {
-        String appID = mContext.getString(R.string.rtc_app_id);
-        if (appID.length() != 32) {
-            _viewStatus.postValue(new ViewStatus.Error("APPID is not valid"));
-            _mEngine.postValue(null);
-        } else {
-            RtcEngineConfig config = new RtcEngineConfig();
-            config.mContext = mContext;
-            config.mAppId = appID;
-            config.mEventHandler = mEventHandler;
-            RtcEngineConfig.LogConfig logConfig = new RtcEngineConfig.LogConfig();
-            logConfig.filePath = mContext.getExternalCacheDir().getAbsolutePath();
-            config.mLogConfig = logConfig;
-
-            try {
-                RtcEngine engine = RtcEngine.create(config);
-                engine.enableAudio();
-                engine.enableVideo();
-                engine.startPreview();
-                _mEngine.postValue(engine);
-            } catch (Exception e) {
-                e.printStackTrace();
-                _viewStatus.postValue(new ViewStatus.Error(e));
-                _mEngine.postValue(null);
-            }
-        }
-    }
 
     @Override
     public void joinRTCRoom(@NonNull String roomName) {
@@ -297,41 +280,29 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         else
             currentSubRoom = roomName;
 
-        RtcEngine engine = _mEngine.getValue();
-        if (engine != null) {
-            Context context = ((RtcEngineImpl) engine).getContext();
+        Context context = ((RtcEngineImpl) rtcEngineEx).getContext();
 //            engine.joinChannel(context.getString(R.string.rtc_app_token), currentRoomInfo.getUserId() + roomName, null, Integer.parseInt(RoomConstant.userId));
-            ChannelMediaOptions options = new ChannelMediaOptions();
-            options.autoSubscribeAudio = true;
-            options.autoSubscribeVideo = true;
-            options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
-            engine.joinChannel(context.getString(R.string.rtc_app_token), currentRoomInfo.getUserId() + roomName, Integer.parseInt(RoomConstant.userId), options);
-        }
+        ChannelMediaOptions options = new ChannelMediaOptions();
+        options.autoSubscribeAudio = true;
+        options.autoSubscribeVideo = true;
+        options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
+        rtcEngineEx.joinChannel(context.getString(R.string.rtc_app_token), currentRoomInfo.getUserId() + roomName, Integer.parseInt(RoomConstant.userId), options);
     }
 
     public void joinSubRoom(@NonNull String subRoomName) {
-        RtcEngine engine = _mEngine.getValue();
-        if (engine != null) {
-            engine.leaveChannel();
-            joinRTCRoom(subRoomName);
-        }
+        rtcEngineEx.leaveChannel();
+        joinRTCRoom(subRoomName);
     }
 
     public void setupLocalView(@NonNull ViewGroup cardView) {
         View view = ((ViewGroup) cardView.getChildAt(0)).getChildAt(0);
-        RtcEngine engine = _mEngine.getValue();
-        if (engine != null) {
-            engine.setupLocalVideo(new VideoCanvas(view, Constants.RENDER_MODE_HIDDEN, Integer.parseInt(RoomConstant.userId)));
-        }
+        rtcEngineEx.setupLocalVideo(new VideoCanvas(view, Constants.RENDER_MODE_HIDDEN, Integer.parseInt(RoomConstant.userId)));
     }
 
     public void setupRemoteView(@NonNull ViewGroup cardView, int uid) {
         View view = ((ViewGroup) cardView.getChildAt(0)).getChildAt(0);
-        RtcEngine engine = _mEngine.getValue();
-        if (engine != null) {
-            VideoCanvas videoCanvas = new VideoCanvas(view, Constants.RENDER_MODE_HIDDEN, uid);
-            engine.setupRemoteVideo(videoCanvas);
-        }
+        VideoCanvas videoCanvas = new VideoCanvas(view, Constants.RENDER_MODE_HIDDEN, uid);
+        rtcEngineEx.setupRemoteVideo(videoCanvas);
     }
 
     public void onUserLeft(int uid) {
@@ -342,15 +313,8 @@ public class RoomViewModel extends ViewModel implements RoomApi {
     }
     //</editor-fold>
 
-    public void mute(boolean shouldMute) {
-        isMuted = shouldMute;
-        handleMuteStuff();
-    }
-
-    private void handleMuteStuff() {
-        RtcEngine engine = _mEngine.getValue();
-        if (engine != null) {
-            engine.muteLocalAudioStream(isMuted);
-        }
+    public void enableMic(boolean enable) {
+        isMicEnabled.postValue(enable);
+        rtcEngineEx.muteLocalAudioStream(!enable);
     }
 }

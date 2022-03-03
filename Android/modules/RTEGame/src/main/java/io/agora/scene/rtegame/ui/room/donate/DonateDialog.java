@@ -47,7 +47,7 @@ public class DonateDialog extends BaseBottomSheetDialogFragment<GameDialogDonate
             return WindowInsetsCompat.CONSUMED;
         });
 
-        roomViewModel = GameUtil.getViewModel(requireParentFragment(), RoomViewModel.class);
+        roomViewModel = GameUtil.getViewModel(RoomViewModel.class, requireParentFragment());
         initView();
         fetchAllGift();
     }

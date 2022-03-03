@@ -6,12 +6,10 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import io.agora.example.base.BaseUtil;
 import io.agora.scene.rtegame.GlobalViewModel;
 import io.agora.scene.rtegame.R;
 import io.agora.scene.rtegame.base.BaseFragment;
 import io.agora.scene.rtegame.databinding.GameFragmentSplashBinding;
-import io.agora.scene.rtegame.util.EventObserver;
 import io.agora.scene.rtegame.util.GameUtil;
 
 
@@ -26,19 +24,32 @@ public class SplashFragment extends BaseFragment<GameFragmentSplashBinding> {
     }
 
     private void initListener() {
-        globalViewModel.isRTMInit().observe(getViewLifecycleOwner(), new EventObserver<>(succeed -> {
-            if (succeed == Boolean.TRUE) toRoomListPage();
-            else showError();
-        }));
-
+        globalViewModel.isSDKsReady().observe(getViewLifecycleOwner(), this::checkInitResult);
     }
+    private void checkInitResult(int initResult) {
+        int initResultMask = 0b001010;
+        if ((initResult & initResultMask) == initResultMask) {
+            StringBuilder initFailedSDKString = new StringBuilder();
+            if ((initResult & 0b000001) == 0)
+                initFailedSDKString.append("RTM,");
+            if ((initResult & 0b000100) == 0)
+                initFailedSDKString.append("RTC,");
 
+            if (initFailedSDKString.length() != 0) {
+                initFailedSDKString.deleteCharAt(initFailedSDKString.length() - 1);
+                showError(initFailedSDKString.toString());
+            } else {
+                toRoomListPage();
+            }
+        }
+    }
     private void toRoomListPage() {
         findNavController().popBackStack(R.id.splashFragment, true);
         findNavController().navigate(R.id.roomListFragment);
     }
 
-    private void showError() {
+    private void showError(String errorMsg) {
+        mBinding.btnFgSplash.setText(getString(R.string.game_error_desc, errorMsg));
         mBinding.loadingStatus.setVisibility(View.GONE);
         mBinding.errorStatus.setVisibility(View.VISIBLE);
     }

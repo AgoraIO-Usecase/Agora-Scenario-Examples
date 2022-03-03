@@ -12,12 +12,9 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.WebView;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.annotation.DrawableRes;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,19 +26,14 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.request.transition.Transition;
 
 import io.agora.example.base.BaseRecyclerViewAdapter;
 import io.agora.example.base.BaseUtil;
-import io.agora.rtc2.RtcEngine;
 import io.agora.scene.rtegame.GlobalViewModel;
 import io.agora.scene.rtegame.R;
 import io.agora.scene.rtegame.base.BaseFragment;
@@ -55,7 +47,6 @@ import io.agora.scene.rtegame.databinding.GameItemRoomMessageBinding;
 import io.agora.scene.rtegame.ui.room.donate.DonateDialog;
 import io.agora.scene.rtegame.ui.room.game.GameListDialog;
 import io.agora.scene.rtegame.ui.room.tool.MoreDialog;
-import io.agora.scene.rtegame.util.BlurTransformation;
 import io.agora.scene.rtegame.util.EventObserver;
 import io.agora.scene.rtegame.util.GameUtil;
 import io.agora.scene.rtegame.util.GiftUtil;
@@ -72,6 +63,7 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
     private BaseRecyclerViewAdapter<GameItemRoomMessageBinding, CharSequence, MessageHolder> mMessageAdapter;
 
     private RoomInfo currentRoom;
+    //  See if current user is the host
     private boolean aMHost;
     private boolean shouldShowInputBox = false;
     private AlertDialog currentDialog;
@@ -79,17 +71,21 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        GlobalViewModel mGlobalModel = GameUtil.getAndroidViewModel(this);
-        // hold current RoomInfo
-        if (mGlobalModel.roomInfo.getValue() != null)
-            currentRoom = mGlobalModel.roomInfo.getValue().peekContent();
+
+        if (GlobalViewModel.rtcEngine == null || GlobalViewModel.localUser == null) {
+            findNavController().popBackStack();
+            return null;
+        }
+
+        currentRoom = GlobalViewModel.currentRoom;
         if (currentRoom == null) {
             findNavController().navigate(R.id.action_roomFragment_to_roomCreateFragment);
             return null;
         }
-        mViewModel = GameUtil.getViewModel(this, RoomViewModel.class, new RoomViewModelFactory(requireContext(), currentRoom));
-        //  See if current user is the host
-        aMHost = currentRoom.getUserId().equals(mViewModel.localUser.getUserId());
+
+
+        mViewModel = GameUtil.getViewModel(RoomViewModel.class, new RoomViewModelFactory(currentRoom, GlobalViewModel.localUser, GlobalViewModel.rtcEngine), this);
+        aMHost = mViewModel.amHost;
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -100,13 +96,17 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
 
         initView();
         initListener();
+        onRTCInit();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (mViewModel != null)
+            mViewModel.stopLocalPreview();
     }
 
     private void initView() {
-//        setRoomBgd(true, GameUtil.getBgdByRoomBgdId(currentRoom.getId()));
-//        Glide.with(this).load(mViewModel.localUser.getAvatar())
-//                .centerCrop()
-//                .placeholder(R.mipmap.game_ic_launcher_round).into(mBinding.layoutRoomInfo.avatarHostFgRoom);
         mBinding.layoutRoomInfo.nameHostFgRoom.setText(currentRoom.getTempUserName());
 
         // config game view
@@ -119,7 +119,7 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
 
                 int dp12 = (int) BaseUtil.dp2px(12);
                 // 设置 Game View 距离顶部距离 (+ 12dp)
-                int topMargin = (int) (mBinding.layoutRoomInfo.getRoot().getBottom() + dp12);
+                int topMargin = mBinding.layoutRoomInfo.getRoot().getBottom() + dp12;
                 // Game Mode 下摄像头预览距离底部距离
                 int marginBottom = mBinding.getRoot().getMeasuredHeight() - mBinding.btnExitFgRoom.getTop() + dp12;
                 // Game View 高度
@@ -175,8 +175,6 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
             shouldShowInputBox = true;
             BaseUtil.showKeyboardCompat(mBinding.inputLayoutFgRoom);
         });
-        // RTC engine 初始化监听
-        mViewModel.mEngine().observe(getViewLifecycleOwner(), this::onRTCInit);
         // 连麦成功《==》主播上线
         mViewModel.subRoomInfo().observe(getViewLifecycleOwner(), this::onSubHostJoin);
         // 礼物监听
@@ -189,7 +187,6 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
             mViewModel.currentGame().observe(getViewLifecycleOwner(), this::onGameInfoChanged);
         } else {
             mViewModel.gameShareInfo().observe(getViewLifecycleOwner(), this::onGameShareInfoChanged);
-            mViewModel.localHostId().observe(getViewLifecycleOwner(), this::onLocalHostJoin);
         }
 
         mViewModel.viewStatus().observe(getViewLifecycleOwner(), viewStatus -> {
@@ -329,15 +326,11 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
     /**
      * RTC 初始化成功
      */
-    private void onRTCInit(RtcEngine engine) {
+    private void onRTCInit() {
         BaseUtil.logD("onRTCInit");
-        if (engine == null) findNavController().popBackStack();
-        else {
-            insertNewMessage("RTC 初始化成功");
-            // 如果是房主，创建View开始直播
-            if (aMHost) initLocalView();
-            mViewModel.joinRoom(mViewModel.localUser);
-        }
+        // 如果是房主，创建View开始直播
+        if (aMHost) initLocalPreview();
+        else initRemotePreview();
     }
 
     /**
@@ -345,10 +338,10 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
      * 仅主播本人调用
      */
     @MainThread
-    private void initLocalView() {
+    private void initLocalPreview() {
         LiveHostCardView view = mBinding.hostContainerFgRoom.createHostView();
         onLayoutTypeChanged(LiveHostLayout.Type.HOST_ONLY);
-        mViewModel.setupLocalView(view.renderTextureView);
+        mViewModel.setupLocalPreview(view.renderTextureView);
         insertNewMessage("画面加载完成");
     }
 
@@ -356,15 +349,13 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
      * 主播上线
      */
     @MainThread
-    private void onLocalHostJoin(Integer uid) {
-        BaseUtil.logD("uid:" + uid);
-        if (uid == null) return;
+    private void initRemotePreview() {
         insertNewMessage("正在加载主播【" + currentRoom.getTempUserName() + "】视频");
         LiveHostLayout liveHost = mBinding.hostContainerFgRoom;
 
         LiveHostCardView view = liveHost.createHostView();
         onLayoutTypeChanged(liveHost.getChildCount() == 1 ? LiveHostLayout.Type.HOST_ONLY : liveHost.getType());
-        mViewModel.setupRemoteView(view.renderTextureView, currentRoom, true);
+        mViewModel.setupRemotePreview(view.renderTextureView, currentRoom, true);
     }
 
     /**
@@ -382,7 +373,7 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
             insertNewMessage("正在加载连麦主播【" + subRoomInfo.getTempUserName() + "】视频");
             LiveHostCardView view = container.createSubHostView();
             onLayoutTypeChanged(container.getChildCount() == 2 ? LiveHostLayout.Type.DOUBLE : container.getType());
-            mViewModel.setupRemoteView(view.renderTextureView, subRoomInfo, false);
+            mViewModel.setupRemotePreview(view.renderTextureView, subRoomInfo, false);
         }
     }
 
@@ -437,25 +428,6 @@ public class RoomFragment extends BaseFragment<GameFragmentRoomBinding> {
         lp.matchConstraintPercentWidth = fullWidth ? 0.6f : 0.44f;
         mBinding.recyclerViewFgRoom.setLayoutParams(lp);
         mBinding.getRoot().post(() -> mBinding.recyclerViewFgRoom.requestLayout());
-    }
-
-    private void setRoomBgd(boolean blurring, @DrawableRes int drawableId) {
-        RequestBuilder<Drawable> load = Glide.with(this).asDrawable().load(drawableId);
-        if (blurring)
-            load = load.apply(RequestOptions.bitmapTransform(new BlurTransformation(requireContext())));
-
-        load.into(new CustomTarget<Drawable>() {
-            @Override
-            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                mBinding.getRoot().setBackground(resource);
-            }
-
-            @Override
-            public void onLoadCleared(@Nullable Drawable placeholder) {
-
-            }
-        });
-
     }
 
     private void handleWindowInset() {

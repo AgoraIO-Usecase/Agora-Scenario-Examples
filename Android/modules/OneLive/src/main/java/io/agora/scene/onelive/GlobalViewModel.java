@@ -3,15 +3,26 @@ package io.agora.scene.onelive;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
 
+import androidx.annotation.IntRange;
 import androidx.annotation.Keep;
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.HashMap;
 
+import io.agora.example.base.BaseUtil;
+import io.agora.rtc2.Constants;
+import io.agora.rtc2.IRtcEngineEventHandler;
+import io.agora.rtc2.RtcEngine;
+import io.agora.rtc2.RtcEngineConfig;
+import io.agora.rtc2.RtcEngineEx;
 import io.agora.scene.onelive.bean.LocalUser;
 import io.agora.scene.onelive.bean.RoomInfo;
 import io.agora.scene.onelive.util.Event;
@@ -22,30 +33,83 @@ import io.agora.syncmanager.rtm.SyncManagerException;
 
 @Keep
 public class GlobalViewModel extends AndroidViewModel {
-    @NonNull
-    public LocalUser localUser;
+    @Nullable
+    public static RoomInfo currentRoom = null;
 
-    private final MutableLiveData<Event<Boolean>> _isRTMInit = new MutableLiveData<>();
+    public static final int RTM_SDK = 0;
+    public static final int RTC_SDK = 1;
+
+    @Nullable
+    public static LocalUser localUser;
+    @Nullable
+    public static RtcEngineEx rtcEngine;
+
+    private int initResult;
+    private final MutableLiveData<Integer> _isSDKsReady = new MutableLiveData<>();
 
     @NonNull
-    public LiveData<Event<Boolean>> isRTMInit() {
-        return _isRTMInit;
+    public LiveData<Integer> isSDKsReady() {
+        return _isSDKsReady;
     }
-
-    public final MutableLiveData<Event<RoomInfo>> roomInfo = new MutableLiveData<>();
 
     public GlobalViewModel(@NonNull Application application) {
         super(application);
-        this.localUser = checkLocalOrGenerate(application.getApplicationContext());
+        BaseUtil.logD("GlobalViewModel init " + this);
+        GlobalViewModel.localUser = checkLocalOrGenerate(application.getApplicationContext());
         initSyncManager(application.getApplicationContext());
+        initRtcSDK(application.getApplicationContext());
+    }
+
+
+    @MainThread
+    private void setInitResult(@IntRange(from = RTM_SDK, to = RTC_SDK) int type, boolean success) {
+        // 设置标志位
+        int res = 0b11 << (2 * type);
+        // 设置数值位
+        if (!success)
+            res = res & (0b10 << (2 * type));
+        // 赋值
+        initResult = initResult | res;
+        _isSDKsReady.setValue(initResult);
+    }
+
+    private void initRtcSDK(Context mContext) {
+        String appID = mContext.getString(R.string.rtc_app_id);
+        if (appID.isEmpty() || appID.codePointCount(0, appID.length()) != 32) {
+            setInitResult(RTC_SDK, false);
+        } else {
+
+            RtcEngineConfig config = new RtcEngineConfig();
+            config.mContext = mContext;
+            config.mAppId = appID;
+            config.mEventHandler = new IRtcEngineEventHandler() {
+            };
+            RtcEngineConfig.LogConfig logConfig = new RtcEngineConfig.LogConfig();
+            logConfig.filePath = mContext.getExternalCacheDir().getAbsolutePath();
+            config.mLogConfig = logConfig;
+            config.mChannelProfile = Constants.CHANNEL_PROFILE_LIVE_BROADCASTING;
+
+            try {
+                RtcEngineEx engine = (RtcEngineEx) RtcEngineEx.create(config);
+                engine.enableAudio();
+                engine.enableVideo();
+                rtcEngine = engine;
+                setInitResult(RTC_SDK, true);
+            } catch (Exception e) {
+                e.printStackTrace();
+                setInitResult(RTC_SDK, false);
+            }
+        }
+
     }
 
     /**
+     * 生成用户信息
      * 本地存在==> 本地生成
      * 本地不存在==> 随机生成
      */
     @NonNull
-    public LocalUser checkLocalOrGenerate(@NonNull Context context) {
+    public static LocalUser checkLocalOrGenerate(@NonNull Context context) {
         SharedPreferences sp = context.getSharedPreferences("sp_rte_game", Context.MODE_PRIVATE);
         String userId = sp.getString("id", "-1");
 
@@ -68,55 +132,39 @@ public class GlobalViewModel extends AndroidViewModel {
         return localUser;
     }
 
-    public void clearRoomInfo() {
-        Event<RoomInfo> roomInfoEvent = new Event<>(null);
-        roomInfoEvent.getContentIfNotHandled();
-        roomInfo.setValue(roomInfoEvent);
-    }
-
-    public void createRoom(@NonNull RoomInfo room) {
-        Sync.Instance().createScene(OneUtil.getSceneFromRoomInfo(room), new Sync.Callback() {
-
-            @Override
-            public void onSuccess() {
-                roomInfo.postValue(new Event<>(room));
-            }
-
-            @Override
-            public void onFail(SyncManagerException exception) {
-                roomInfo.postValue(new Event<>(null));
-            }
-        });
-    }
-
-    //<editor-fold desc="SyncManager">
     private void initSyncManager(@NonNull Context context) {
+        String appID = context.getString(R.string.rtm_app_id);
+        if (appID.isEmpty() || appID.codePointCount(0, appID.length()) != 32) {
+            setInitResult(RTM_SDK, false);
+            return;
+        }
         HashMap<String, String> map = new HashMap<>();
-        map.put("appid", context.getString(R.string.rtm_app_id));
+        map.put("appid", appID);
         map.put("token", context.getString(R.string.rtm_app_token));
         map.put("defaultChannel", OneConstants.globalChannel);
         Sync.Instance().init(context, map, new Sync.Callback() {
             @Override
             public void onSuccess() {
-                _isRTMInit.postValue(new Event<>(true));
+                new Handler(Looper.getMainLooper()).post(() -> setInitResult(RTM_SDK, true));
             }
 
             @Override
             public void onFail(SyncManagerException exception) {
-                _isRTMInit.postValue(new Event<>(false));
+                new Handler(Looper.getMainLooper()).post(() -> setInitResult(RTM_SDK, false));
             }
         });
     }
 
-    public void tryReInitSyncManager(@NonNull Context context){
-        Event<Boolean> event = _isRTMInit.getValue();
-        if (event != null) {
-            Boolean hasInit = event.peekContent();
-            if (hasInit == Boolean.FALSE)
-                initSyncManager(context);
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        try {
+            Sync.Instance().destroy();
+            RtcEngine.destroy();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-
-    //</editor-fold>
 
 }

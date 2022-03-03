@@ -26,7 +26,7 @@ public class MoreDialog extends BaseBottomSheetDialogFragment<GameDialogMoreBind
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        roomViewModel = GameUtil.getViewModel(requireParentFragment(), RoomViewModel.class);
+        roomViewModel = GameUtil.getViewModel(RoomViewModel.class, requireParentFragment());
         initView();
         initListener();
     }

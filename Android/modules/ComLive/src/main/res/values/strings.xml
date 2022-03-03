@@ -4,7 +4,7 @@
     <string name="com_live_exit">退出</string>
 
     <!--    Splash page-->
-    <string name="com_live_error_desc">RTM初始化出错</string>
+    <string name="com_live_error_desc">%s初始化出错</string>
     <string name="com_live_error_happened_click_to_refresh">出错了，再试一次</string>
     <!--    Room List-->
     <string name="com_live_please_create_a_room">请创建一个直播间</string>

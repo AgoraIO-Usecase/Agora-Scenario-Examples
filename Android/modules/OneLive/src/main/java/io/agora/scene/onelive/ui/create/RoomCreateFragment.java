@@ -1,11 +1,13 @@
 package io.agora.scene.onelive.ui.create;
 
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -21,27 +23,36 @@ import io.agora.scene.onelive.util.OneUtil;
 
 public class RoomCreateFragment extends BaseNavFragment<OneFragmentCreateRoomBinding> {
 
-    private GlobalViewModel mGlobalModel;
+    private CreateViewModel mViewModel;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mGlobalModel = OneUtil.getAndroidViewModel(this, GlobalViewModel.class);
+        mViewModel = OneUtil.getViewModel(this, CreateViewModel.class);
         initListener();
 
         setupRandomName();
+        mViewModel.startPreview(mBinding.cameraPreviewFgCreate);
+        ObjectAnimator.ofFloat(mBinding.cameraPreviewFgCreate, View.SCALE_X, 0.5f, 1f).setDuration(600L).start();
+        ObjectAnimator.ofFloat(mBinding.cameraPreviewFgCreate, View.SCALE_Y, 0.5f, 1f).setDuration(600L).start();
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (GlobalViewModel.currentRoom == null)
+            mViewModel.stopPreview();
+        super.onDestroyView();
     }
 
     private void initListener() {
         ViewCompat.setOnApplyWindowInsetsListener(mBinding.getRoot(), (v, insets) -> {
             Insets inset = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            mBinding.getRoot().setPaddingRelative(inset.left,inset.top,inset.right,inset.bottom);
 //            // 顶部
-//            mBinding.toolbarFgCreate.setPadding(0,inset.top,0,0);
+            mBinding.toolbarFgCreate.setPadding(0, inset.top, 0, 0);
 //            // 底部
-//            ConstraintLayout.LayoutParams lpBtn = (ConstraintLayout.LayoutParams) mBinding.btnLiveFgCreate.getLayoutParams();
-//            lpBtn.bottomMargin = inset.bottom + ((int) BaseUtil.dp2px(36));
-//            mBinding.btnLiveFgCreate.setLayoutParams(lpBtn);
+            ConstraintLayout.LayoutParams lpBtn = (ConstraintLayout.LayoutParams) mBinding.btnLiveFgCreate.getLayoutParams();
+            lpBtn.bottomMargin = inset.bottom + ((int) BaseUtil.dp2px(36));
+            mBinding.btnLiveFgCreate.setLayoutParams(lpBtn);
 
             return WindowInsetsCompat.CONSUMED;
         });
@@ -55,7 +66,8 @@ public class RoomCreateFragment extends BaseNavFragment<OneFragmentCreateRoomBin
         mBinding.toolbarFgCreate.setNavigationOnClickListener((v) -> navigateToStartPage());
         mBinding.btnRandomFgCreate.setOnClickListener((v) -> setupRandomName());
         mBinding.btnLiveFgCreate.setOnClickListener((v) -> startLive());
-        mGlobalModel.roomInfo.observe(getViewLifecycleOwner(), new EventObserver<>(this::onRoomInfoChanged));
+
+        mViewModel.isRoomCreateSuccess().observe(getViewLifecycleOwner(), this::onRoomInfoChanged);
     }
 
     /**
@@ -63,15 +75,16 @@ public class RoomCreateFragment extends BaseNavFragment<OneFragmentCreateRoomBin
      */
     private void startLive() {
         showLoading();
-        RoomInfo roomInfo = new RoomInfo(mBinding.nameFgCreate.getText().toString(), mGlobalModel.localUser.getUserId());
-        mGlobalModel.createRoom(roomInfo);
+        mViewModel.createRoom(mBinding.nameFgCreate.getText().toString());
     }
 
-    private void onRoomInfoChanged(RoomInfo roomInfo) {
+    private void onRoomInfoChanged(Boolean res) {
         dismissLoading();
-        if (roomInfo == null) {
-            BaseUtil.toast(requireContext(),"create failed");
+        if (res != Boolean.TRUE) {
+            BaseUtil.toast(requireContext(), "create failed");
         } else {
+            // 创建成功，需要进入房间，在另外一个SurfaceView中预览
+            mViewModel.stopPreview();
             findNavController().popBackStack();
         }
     }

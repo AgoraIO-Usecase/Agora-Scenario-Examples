@@ -2,7 +2,9 @@ package io.agora.scene.breakoutroom.ui.room;
 
 import android.os.Bundle;
 import android.text.Editable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
 import androidx.annotation.MainThread;
@@ -28,7 +30,6 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import io.agora.example.base.BaseUtil;
-import io.agora.rtc2.RtcEngine;
 import io.agora.scene.breakoutroom.R;
 import io.agora.scene.breakoutroom.RoomConstant;
 import io.agora.scene.breakoutroom.RoomUtil;
@@ -37,6 +38,7 @@ import io.agora.scene.breakoutroom.base.BaseNavFragment;
 import io.agora.scene.breakoutroom.bean.RoomInfo;
 import io.agora.scene.breakoutroom.bean.SubRoomInfo;
 import io.agora.scene.breakoutroom.databinding.RoomFragmentRoomBinding;
+import io.agora.scene.breakoutroom.ui.GlobalViewModel;
 
 /**
  * @author lq
@@ -51,32 +53,43 @@ public class RoomFragment extends BaseNavFragment<RoomFragmentRoomBinding> {
     private RoomViewModel mViewModel;
     private ViewTreeObserver.OnPreDrawListener mOnPreDrawListener;
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (getArguments() == null || GlobalViewModel.rtcEngine == null) {
+            findNavController().popBackStack();
+            return null;
+        } else {
+            RoomInfo roomInfo = (RoomInfo) getArguments().getSerializable(roomKey);
+            mViewModel = new ViewModelProvider(getViewModelStore(), new RoomViewModelFactory(roomInfo, GlobalViewModel.rtcEngine)).get(RoomViewModel.class);
+        }
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        assert getArguments() != null;
-        RoomInfo roomInfo = (RoomInfo) getArguments().getSerializable(roomKey);
-        if (roomInfo != null) {
-            mViewModel = new ViewModelProvider(getViewModelStore(), new RoomViewModelFactory(requireContext(), roomInfo)).get(RoomViewModel.class);
-            // Set mic control CheckBox's position
-            // 设置麦克风控制按钮的位置
-            ViewCompat.setOnApplyWindowInsetsListener(mBinding.getRoot(), (v, insets) -> {
-                Insets inset = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-                int desiredBottom = Math.max(insets.getInsets(WindowInsetsCompat.Type.ime()).bottom, inset.bottom);
-                CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) mBinding.checkboxMicFgRoom.getLayoutParams();
-                lp.bottomMargin = desiredBottom;
 
-                mBinding.tabLayoutFgRoom.setPadding(0, inset.top, 0, 0);
-
-                return WindowInsetsCompat.CONSUMED;
-            });
-
-            initView();
-            initListener();
-        }
+        initView();
+        initListener();
+        onInitRTCSucceed();
     }
 
     private void initView() {
+
+        // Set mic control CheckBox's position
+        // 设置麦克风控制按钮的位置
+        ViewCompat.setOnApplyWindowInsetsListener(mBinding.getRoot(), (v, insets) -> {
+            Insets inset = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            int desiredBottom = Math.max(insets.getInsets(WindowInsetsCompat.Type.ime()).bottom, inset.bottom);
+            CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) mBinding.checkboxMicFgRoom.getLayoutParams();
+            lp.bottomMargin = desiredBottom;
+
+            mBinding.tabLayoutFgRoom.setPadding(0, inset.top, 0, 0);
+
+            return WindowInsetsCompat.CONSUMED;
+        });
+
         RoomUtil.configInputDialog(mBinding.viewInputFgRoom.getRoot());
         RoomUtil.configTextInputLayout(mBinding.viewInputFgRoom.inputLayoutViewInput);
         mBinding.viewInputFgRoom.titleViewInput.setText(R.string.room_fab_add_sub_room);
@@ -107,7 +120,10 @@ public class RoomFragment extends BaseNavFragment<RoomFragmentRoomBinding> {
             }
         });
 
-        mBinding.checkboxMicFgRoom.setOnCheckedChangeListener((buttonView, isChecked) -> mViewModel.mute(isChecked));
+        mBinding.checkboxMicFgRoom.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (buttonView.isPressed())
+                mViewModel.enableMic(isChecked);
+        });
 
         // Inner Dialog
         mBinding.viewInputFgRoom.btnConfirmViewLayout.setOnClickListener(this::pendingCreateSubRoom);
@@ -122,10 +138,10 @@ public class RoomFragment extends BaseNavFragment<RoomFragmentRoomBinding> {
 
         // Observe SubRoom
         mViewModel.subRoomList().observe(getViewLifecycleOwner(), this::onSubRoomListUpdated);
-        // RTC init 成功
-        mViewModel.mEngine().observe(getViewLifecycleOwner(), this::onEngineInit);
         // 用户加入 RTC 频道
         mViewModel.rtcUserList().observe(getViewLifecycleOwner(), this::onRtcUserSetUpdated);
+
+        mViewModel.isMicEnabled.observe(getViewLifecycleOwner(), enabled -> mBinding.checkboxMicFgRoom.setChecked(enabled));
     }
 
     private void onViewStatusChanged(ViewStatus viewStatus) {
@@ -143,13 +159,6 @@ public class RoomFragment extends BaseNavFragment<RoomFragmentRoomBinding> {
         }
     }
 
-    private void onEngineInit(RtcEngine engine){
-        // RTC 创建失败 ==》返回上一页面
-        if (engine == null) findNavController().popBackStack();
-            // RTC 创建成功 ==》创建本地视图，准备加入频道
-        else onInitRTCSucceed();
-    }
-
     /**
      * We use LinkedHashSet to keep the order.
      */
@@ -158,9 +167,9 @@ public class RoomFragment extends BaseNavFragment<RoomFragmentRoomBinding> {
         for (Integer i : diffMap.keySet()) {
             Boolean res = diffMap.get(i);
             if (res == null) continue;
-            if (res){
+            if (res) {
                 doAddUser(i);
-            }else{
+            } else {
                 doRemoveUser(i);
             }
         }
@@ -172,7 +181,7 @@ public class RoomFragment extends BaseNavFragment<RoomFragmentRoomBinding> {
      * value = true,添加
      * value = false,删除
      */
-    private Map<Integer,Boolean> getDiffMap(Set<Integer> dataSet){
+    private Map<Integer, Boolean> getDiffMap(Set<Integer> dataSet) {
         Map<Integer, Boolean> resMap = new HashMap<>();
         ConstraintLayout container = mBinding.dynamicViewFgRoom.flexContainer;
         int childCount = container == null ? 0 : container.getChildCount();
@@ -198,7 +207,7 @@ public class RoomFragment extends BaseNavFragment<RoomFragmentRoomBinding> {
         // 移除重复的子房间
         if (list.size() > 1) {
             for (int i = list.size() - 1; i > 0; i--) {
-                for (int j = i -1; j >= 0; j--) {
+                for (int j = i - 1; j >= 0; j--) {
                     if (Objects.equals(list.get(i).getSubRoom(), list.get(j).getSubRoom())) {
                         list.remove(i);
                         break;
@@ -208,7 +217,7 @@ public class RoomFragment extends BaseNavFragment<RoomFragmentRoomBinding> {
         }
 
         int desiredTabPos = 0;
-        while (mBinding.tabLayoutFgRoom.getTabCount()>1)
+        while (mBinding.tabLayoutFgRoom.getTabCount() > 1)
             mBinding.tabLayoutFgRoom.removeTabAt(1);
 
         for (SubRoomInfo subRoomInfo : list) {
@@ -251,7 +260,6 @@ public class RoomFragment extends BaseNavFragment<RoomFragmentRoomBinding> {
         mBinding.dynamicViewFgRoom.dynamicAddView(childVideoCardView);
 
         mViewModel.setupLocalView(childVideoCardView);
-        mViewModel.joinRTCRoom(mViewModel.currentRoomInfo.getId());
     }
 
     private void pendingSwitchRoom(@NonNull String roomName) {
@@ -265,7 +273,7 @@ public class RoomFragment extends BaseNavFragment<RoomFragmentRoomBinding> {
 
     @MainThread
     private void doAddUser(int uid) {
-        CardView childVideoCardView = RoomUtil.getChildVideoCardView(requireContext(),false, uid);
+        CardView childVideoCardView = RoomUtil.getChildVideoCardView(requireContext(), false, uid);
         mBinding.dynamicViewFgRoom.dynamicAddView(childVideoCardView);
 
         mViewModel.setupRemoteView(childVideoCardView, uid);

@@ -44,7 +44,6 @@ import io.agora.scene.onelive.util.ViewStatus;
 
 public class RoomFragment extends BaseNavFragment<OneFragmentRoomBinding> {
     private boolean amHost;
-    private RoomInfo currentRoom;
     private BottomSheetBehavior<FrameLayout> sheetBehavior;
 
     private RoomViewModel mViewModel;
@@ -52,18 +51,20 @@ public class RoomFragment extends BaseNavFragment<OneFragmentRoomBinding> {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        GlobalViewModel mGlobalModel = OneUtil.getAndroidViewModel(this, GlobalViewModel.class);
-        // hold current RoomInfo
-        if (mGlobalModel.roomInfo.getValue() != null)
-            currentRoom = mGlobalModel.roomInfo.getValue().peekContent();
+        if (GlobalViewModel.rtcEngine == null || GlobalViewModel.localUser == null) {
+            findNavController().popBackStack();
+            return null;
+        }
+
+        RoomInfo currentRoom = GlobalViewModel.currentRoom;
         if (currentRoom == null) {
             findNavController().navigate(R.id.action_roomFragment_to_roomCreateFragment);
             return null;
         }
-        mViewModel = OneUtil.getViewModel(this, RoomViewModel.class, new RoomViewModelFactory(requireContext(), mGlobalModel.localUser, currentRoom));
-        //  See if current user is the host
-        amHost = currentRoom.getUserId().equals(mViewModel.localUser.getUserId());
 
+        mViewModel = OneUtil.getViewModel(this, RoomViewModel.class, new RoomViewModelFactory(currentRoom, GlobalViewModel.localUser, GlobalViewModel.rtcEngine));
+        //  See if current user is the host
+        amHost = mViewModel.amHost;
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -76,8 +77,15 @@ public class RoomFragment extends BaseNavFragment<OneFragmentRoomBinding> {
         initView();
         initListener();
         initLiveDataObserver();
+        onRTCInit();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (mViewModel != null)
+            mViewModel.stopLocalPreview();
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     public void initView() {
@@ -169,7 +177,7 @@ public class RoomFragment extends BaseNavFragment<OneFragmentRoomBinding> {
 
     private void initLiveDataObserver() {
         // RTC 对方用户
-        mViewModel.targetUser().observe(getViewLifecycleOwner(), localUser -> {
+        mViewModel.targetUser.observe(getViewLifecycleOwner(), localUser -> {
             if (localUser != null) {
                 mBinding.hostViewFgRoom.setSingleHost(false);
                 RoomFragment.this.onDoubleHostState();
@@ -187,17 +195,6 @@ public class RoomFragment extends BaseNavFragment<OneFragmentRoomBinding> {
             }
         });
 
-        // RTC 引擎初始化
-        mViewModel.mEngine().observe(getViewLifecycleOwner(), rtcEngineEx -> {
-            if (rtcEngineEx != null) {
-                BaseUtil.logD("RTC ready");
-                mViewModel.setupLocalView(mBinding.hostViewFgRoom.getCurrentViewport());
-            } else {
-                BaseUtil.toast(requireContext(), "RTC init error");
-                findNavController().popBackStack();
-            }
-        });
-
         // 当前游戏信息
         mViewModel.gameInfo().observe(getViewLifecycleOwner(), this::onGameStatusChanged);
 
@@ -212,12 +209,17 @@ public class RoomFragment extends BaseNavFragment<OneFragmentRoomBinding> {
 
         mViewModel.viewStatus().observe(getViewLifecycleOwner(), viewStatus -> {
             if (viewStatus instanceof ViewStatus.Error) {
-                BaseUtil.toast(requireContext(), "对方已挂断");
+                BaseUtil.toast(requireContext(), getString(R.string.one_user_left));
                 findNavController().popBackStack();
             }
         });
 
         mViewModel.gameStartUrl.observe(getViewLifecycleOwner(), stringEvent -> mBinding.gameViewFgRoom.loadUrl(stringEvent.getContentIfNotHandled()));
+    }
+
+
+    private void onRTCInit() {
+        mViewModel.setupLocalView(mBinding.hostViewFgRoom.getCurrentViewport());
     }
 
     //<editor-fold desc="Dialog Related">
