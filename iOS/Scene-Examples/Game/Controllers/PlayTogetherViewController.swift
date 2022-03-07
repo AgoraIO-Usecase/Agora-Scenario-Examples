@@ -346,7 +346,7 @@ class PlayTogetherViewController: BaseViewController {
     private func updateUIStatus(isStart: Bool) {
         let sources = gameCenterModel?.sources ?? gameInfoModel?.sources
         webView.isHidden = sources == .sud || !isStart
-        gameView.isHidden = sources == .yuanqi || !isStart
+//        gameView.isHidden = sources == .yuanqi || !isStart
         
         if currentUserId == UserInfo.uid && isStart {
             liveView.updateBottomButtonType(type: [.exitgame, .gift, .tool, .close])
