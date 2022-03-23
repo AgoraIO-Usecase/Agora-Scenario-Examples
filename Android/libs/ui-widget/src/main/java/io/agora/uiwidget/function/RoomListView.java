@@ -14,11 +14,16 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.viewbinding.ViewBinding;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 import io.agora.uiwidget.R;
+import io.agora.uiwidget.basic.BindingViewHolder;
+import io.agora.uiwidget.databinding.RoomListItemBinding;
 
 public class RoomListView extends FrameLayout {
     private static final int SPAN_COUNT = 2;
@@ -29,7 +34,7 @@ public class RoomListView extends FrameLayout {
     private View mNoDataBg;
     private View mNetworkErrorBg;
 
-    private AbsRoomListAdapter<?> mListAdapter;
+    private CustRoomListAdapter<?, ?> mListAdapter;
     private final Runnable mPageRefreshRunnable = new Runnable() {
         @Override
         public void run() {
@@ -105,6 +110,10 @@ public class RoomListView extends FrameLayout {
     }
 
     public <Data> void setListAdapter(AbsRoomListAdapter<Data> listAdapter) {
+        setListAdapter((CustRoomListAdapter<Data, RoomListItemBinding>)listAdapter);
+    }
+
+    public <Data, Binding extends ViewBinding> void setListAdapter(CustRoomListAdapter<Data, Binding> listAdapter) {
         if (mListAdapter != null) {
             mListAdapter.releaseInner();
         }
@@ -180,35 +189,69 @@ public class RoomListView extends FrameLayout {
         }
     }
 
-    public static final class RoomListItemViewHolder extends RecyclerView.ViewHolder {
+    public static final class RoomListItemViewHolder extends BindingViewHolder<RoomListItemBinding> {
         public final View bgView;
         public final View participantsLayout;
         public final TextView participantsCount;
         public final TextView roomName;
 
-        public RoomListItemViewHolder(@NonNull View itemView) {
+        public RoomListItemViewHolder(@NonNull RoomListItemBinding itemView) {
             super(itemView);
-            bgView = itemView.findViewById(R.id.room_list_item_background);
-            participantsLayout = itemView.findViewById(R.id.room_list_participants_layout);
-            participantsCount = itemView.findViewById(R.id.room_list_item_participant_count);
-            roomName = itemView.findViewById(R.id.room_list_item_room_name);
+            bgView = itemView.roomListItemBackground;
+            participantsLayout = itemView.roomListParticipantsLayout;
+            participantsCount = itemView.roomListItemParticipantCount;
+            roomName = itemView.roomListItemRoomName;
         }
 
     }
 
-    public abstract static class AbsRoomListAdapter<Data> extends RecyclerView.Adapter<RoomListItemViewHolder> {
+    public abstract static class AbsRoomListAdapter<Data> extends CustRoomListAdapter<Data, RoomListItemBinding> {
+
+        @Override
+        protected void onItemUpdate(BindingViewHolder<RoomListItemBinding> holder, Data item) {
+            onItemUpdate(new RoomListItemViewHolder(holder.binding), item);
+        }
+
+        protected abstract void onItemUpdate(RoomListItemViewHolder holder, Data item);
+
+    }
+
+    public abstract static class CustRoomListAdapter<Data, Binding extends ViewBinding> extends RecyclerView.Adapter<BindingViewHolder<Binding>> {
         public final List<Data> mDataList = new ArrayList<>();
         private Runnable onDataListUpdateRun;
         private Runnable onNetErrorRun;
 
         @NonNull
         @Override
-        public final RoomListItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new RoomListItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.room_list_item, parent, false));
+        public BindingViewHolder<Binding> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return createBindingViewHolder(getClass(), parent);
+        }
+
+        @NonNull
+        private BindingViewHolder<Binding> createBindingViewHolder(Class<?> aClass, @NonNull ViewGroup parent) {
+            Type genericSuperclass = aClass.getGenericSuperclass();
+            Type[] actualTypeArguments;
+            if(!(genericSuperclass instanceof ParameterizedType)){
+                return createBindingViewHolder(aClass.getSuperclass(), parent);
+            }else{
+                actualTypeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
+                if(actualTypeArguments.length < 2 ){
+                    return createBindingViewHolder(aClass.getSuperclass(), parent);
+                }
+            }
+
+            Class<Binding> c = (Class<Binding>) actualTypeArguments[1];
+            Binding binding = null;
+            try {
+                binding = (Binding) c.getDeclaredMethod("inflate", LayoutInflater.class).invoke(null, LayoutInflater.from(parent.getContext()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return new BindingViewHolder<>(binding);
         }
 
         @Override
-        public final void onBindViewHolder(@NonNull RoomListItemViewHolder holder, int position) {
+        public final void onBindViewHolder(@NonNull BindingViewHolder<Binding> holder, int position) {
             Data data = mDataList.get(position);
             onItemUpdate(holder, data);
         }
@@ -235,7 +278,7 @@ public class RoomListView extends FrameLayout {
             }
         }
 
-        protected abstract void onItemUpdate(RoomListItemViewHolder holder, Data item);
+        protected abstract void onItemUpdate(BindingViewHolder<Binding> holder, Data item);
 
         protected abstract void onRefresh();
 

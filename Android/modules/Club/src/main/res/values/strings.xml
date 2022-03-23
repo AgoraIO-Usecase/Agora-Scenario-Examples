@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="club_app_name">Club</string>
+    <string name="club_description">Club</string>
+
+
+    <string name="club_main_title">Hall</string>
+
+    <string name="club_room_list_title">Room List</string>
+
+</resources>

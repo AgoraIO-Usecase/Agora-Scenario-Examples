@@ -1,0 +1,7 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="club_AppTheme" parent="CommonAppTheme">
+        <item name="android:windowBackground">@android:color/black</item>
+    </style>
+</resources>

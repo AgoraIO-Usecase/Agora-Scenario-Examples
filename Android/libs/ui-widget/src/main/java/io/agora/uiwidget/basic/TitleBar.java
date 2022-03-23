@@ -43,31 +43,40 @@ public class TitleBar extends FrameLayout {
         mBgIv = findViewById(R.id.title_bar_bg);
     }
 
-    public void setTitleName(CharSequence name, int color){
+    public TitleBar setDeliverVisible(boolean visible) {
+        mDeliverView.setVisibility(visible ? View.VISIBLE : View.GONE);
+        return this;
+    }
+
+    public TitleBar setTitleName(CharSequence name, int color) {
         mTitleTv.setText(name);
-        if(color != 0){
+        if (color != 0) {
             mTitleTv.setTextColor(color);
         }
+        return this;
     }
 
-    public void setBgDrawable(@DrawableRes int drawableRes){
+    public TitleBar setBgDrawable(@DrawableRes int drawableRes) {
         mBgIv.setImageResource(drawableRes);
+        return this;
     }
 
-    public void setUserIcon(boolean visible, @DrawableRes int drawableRes, OnClickListener onClickListener){
+    public TitleBar setUserIcon(boolean visible, @DrawableRes int drawableRes, OnClickListener onClickListener) {
         mUserIv.setOnClickListener(onClickListener);
         mUserIv.setVisibility(visible ? View.VISIBLE : View.GONE);
-        if(drawableRes != View.NO_ID){
+        if (drawableRes != View.NO_ID) {
             mUserIv.setImageResource(drawableRes);
         }
+        return this;
     }
 
-    public void setBackIcon(boolean visible, @DrawableRes int drawableRes, OnClickListener onClickListener){
+    public TitleBar setBackIcon(boolean visible, @DrawableRes int drawableRes, OnClickListener onClickListener) {
         mBackIv.setOnClickListener(onClickListener);
         mBackIv.setVisibility(visible ? View.VISIBLE : View.GONE);
-        if(drawableRes != View.NO_ID){
+        if (drawableRes != View.NO_ID) {
             mBackIv.setImageResource(drawableRes);
         }
+        return this;
     }
 
 

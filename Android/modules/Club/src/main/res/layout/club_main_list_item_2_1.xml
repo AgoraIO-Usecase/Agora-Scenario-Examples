@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:ignore="MissingDefaultResource">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Latest Release"
+        android:textColor="@android:color/white"
+        android:textSize="21sp"/>
+
+    <include
+        android:id="@+id/tv_card_01"
+        layout="@layout/club_main_list_item_card"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"/>
+
+    <include
+        android:id="@+id/tv_card_02"
+        layout="@layout/club_main_list_item_card"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="13dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_card_01"/>
+
+    <include
+        android:id="@+id/tv_card_03"
+        layout="@layout/club_main_list_item_card"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toEndOf="@id/tv_card_01"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="13dp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_card_02"
+        app:layout_constraintTop_toTopOf="@id/tv_card_01"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

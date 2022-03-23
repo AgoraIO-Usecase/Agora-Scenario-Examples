@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="club_app_name">俱乐部</string>
+    <string name="club_description">俱乐部</string>
+
+
+    <string name="club_main_title">大厅</string>
+
+    <string name="club_room_list_title">房间列表</string>
+
+</resources>
