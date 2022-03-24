@@ -8,4 +8,7 @@
 
     <string name="club_room_list_title">Room List</string>
 
+    <string name="club_room_create_dialog_title">Create Room</string>
+    <string name="club_room_create_dialog_et_hind">Please enter a room name</string>
+
 </resources>

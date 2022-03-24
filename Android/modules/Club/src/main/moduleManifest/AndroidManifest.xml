@@ -23,17 +23,7 @@
 
         <activity
             android:theme="@style/club_AppTheme"
-            android:name=".PreviewActivity"
-            android:launchMode="singleTop"/>
-
-        <activity
-            android:theme="@style/club_AppTheme"
-            android:name=".HostDetailActivity"
-            android:launchMode="singleTop"/>
-
-        <activity
-            android:theme="@style/club_AppTheme"
-            android:name=".AudienceDetailActivity"
+            android:name=".RoomDetailActivity"
             android:launchMode="singleTop"/>
 
 

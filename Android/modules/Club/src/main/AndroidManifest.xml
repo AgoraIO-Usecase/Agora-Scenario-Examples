@@ -45,17 +45,8 @@
             android:exported="true"/>
 
         <activity
-            android:name=".PreviewActivity"
+            android:name=".RoomDetailActivity"
             android:launchMode="singleTop"/>
-
-        <activity
-            android:name=".HostDetailActivity"
-            android:launchMode="singleTop"/>
-
-        <activity
-            android:name=".AudienceDetailActivity"
-            android:launchMode="singleTop"/>
-
 
     </application>
 </manifest>

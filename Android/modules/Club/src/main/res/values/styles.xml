@@ -2,6 +2,20 @@
 
     <!-- Base application theme. -->
     <style name="club_AppTheme" parent="CommonAppTheme">
+        <item name="colorAccent">#CBFB5E</item>
         <item name="android:windowBackground">@android:color/black</item>
+        <item name="alertDialogTheme">@style/club_AlertDialog.Theme</item>
+        <item name="alertDialogStyle">@style/club_AlertDialog</item>
     </style>
+
+    <style name="club_AlertDialog" parent="AlertDialog.AppCompat">
+        <item name="android:layout">@layout/club_alert_dialog_layout</item>
+    </style>
+
+    <style name="club_AlertDialog.Theme" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/club_alert_dialog_bg</item>
+        <item name="android:windowAnimationStyle">@style/Animation.AppCompat.DropDownUp</item>
+    </style>
+
+
 </resources>

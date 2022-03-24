@@ -1,26 +1,24 @@
 package io.agora.sample.club;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import java.lang.ref.WeakReference;
 
-import io.agora.sample.club.databinding.ClubAudienceDetailActivityBinding;
+import io.agora.example.base.BaseActivity;
+import io.agora.sample.club.databinding.ClubRoomDetailActivityBinding;
 import io.agora.uiwidget.function.GiftAnimPlayDialog;
 import io.agora.uiwidget.function.GiftGridDialog;
 import io.agora.uiwidget.function.LiveRoomMessageListView;
 import io.agora.uiwidget.function.TextInputDialog;
 import io.agora.uiwidget.utils.RandomUtil;
 
-public class AudienceDetailActivity extends AppCompatActivity {
+public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBinding> {
 
-    private final RtcManager rtcManager = new RtcManager();
+    private final RtcManager rtcManager = RtcManager.getInstance();
     private final RoomManager roomManager = RoomManager.getInstance();
 
-    private ClubAudienceDetailActivityBinding mBinding;
     private RoomManager.RoomInfo roomInfo;
     private LiveRoomMessageListView.LiveRoomMessageAdapter<RoomManager.MessageInfo> mMessageAdapter;
     private final RoomManager.DataCallback<RoomManager.GiftInfo> giftInfoDataCallback = new RoomManager.DataCallback<RoomManager.GiftInfo>() {
@@ -33,7 +31,7 @@ public class AudienceDetailActivity extends AppCompatActivity {
                         data.getIconId()
                 ));
                 // 播放动画
-                new GiftAnimPlayDialog(AudienceDetailActivity.this)
+                new GiftAnimPlayDialog(RoomDetailActivity.this)
                         .setAnimRes(data.getGifId())
                         .show();
             });
@@ -49,8 +47,6 @@ public class AudienceDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding = ClubAudienceDetailActivityBinding.inflate(LayoutInflater.from(this));
-        setContentView(mBinding.getRoot());
         roomInfo = (RoomManager.RoomInfo) getIntent().getSerializableExtra("roomInfo");
 
         // 房间信息
@@ -84,7 +80,6 @@ public class AudienceDetailActivity extends AppCompatActivity {
     }
 
     private void initRtcManager() {
-        rtcManager.init(this, getString(R.string.rtc_app_id), null);
         rtcManager.joinChannel(roomInfo.roomId, RoomManager.getCacheUserId(), getString(R.string.rtc_app_token), false, new RtcManager.OnChannelListener() {
             @Override
             public void onError(int code, String message) {

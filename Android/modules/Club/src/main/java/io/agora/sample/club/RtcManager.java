@@ -95,6 +95,19 @@ public class RtcManager {
     private OnChannelListener publishChannelListener;
     private String publishChannelId;
 
+    private volatile static RtcManager INSTANCE = null;
+    private RtcManager(){}
+    public static final RtcManager getInstance(){
+        if(INSTANCE == null){
+            synchronized (RtcManager.class){
+                if(INSTANCE == null){
+                    INSTANCE = new RtcManager();
+                }
+            }
+        }
+        return INSTANCE;
+    }
+
     public void init(Context context, String appId, OnInitializeListener listener) {
         if (isInitialized) {
             return;
