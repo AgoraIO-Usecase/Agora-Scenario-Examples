@@ -112,7 +112,6 @@ public class RoomManager {
                     } catch (Exception exception) {
                         callback.onFailed(exception);
                     }
-
                 }
             }
 

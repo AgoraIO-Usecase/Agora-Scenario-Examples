@@ -3,9 +3,7 @@ package io.agora.uiwidget.function;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -16,12 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewbinding.ViewBinding;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-
 import io.agora.uiwidget.R;
+import io.agora.uiwidget.basic.BindingSingleAdapter;
 import io.agora.uiwidget.basic.BindingViewHolder;
 import io.agora.uiwidget.databinding.RoomListItemBinding;
 
@@ -216,49 +210,14 @@ public class RoomListView extends FrameLayout {
 
     }
 
-    public abstract static class CustRoomListAdapter<Data, Binding extends ViewBinding> extends RecyclerView.Adapter<BindingViewHolder<Binding>> {
-        public final List<Data> mDataList = new ArrayList<>();
+    public abstract static class CustRoomListAdapter<Data, Binding extends ViewBinding> extends BindingSingleAdapter<Data, Binding> {
         private Runnable onDataListUpdateRun;
         private Runnable onNetErrorRun;
 
-        @NonNull
-        @Override
-        public BindingViewHolder<Binding> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return createBindingViewHolder(getClass(), parent);
-        }
-
-        @NonNull
-        private BindingViewHolder<Binding> createBindingViewHolder(Class<?> aClass, @NonNull ViewGroup parent) {
-            Type genericSuperclass = aClass.getGenericSuperclass();
-            Type[] actualTypeArguments;
-            if(!(genericSuperclass instanceof ParameterizedType)){
-                return createBindingViewHolder(aClass.getSuperclass(), parent);
-            }else{
-                actualTypeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
-                if(actualTypeArguments.length < 2 ){
-                    return createBindingViewHolder(aClass.getSuperclass(), parent);
-                }
-            }
-
-            Class<Binding> c = (Class<Binding>) actualTypeArguments[1];
-            Binding binding = null;
-            try {
-                binding = (Binding) c.getDeclaredMethod("inflate", LayoutInflater.class).invoke(null, LayoutInflater.from(parent.getContext()));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return new BindingViewHolder<>(binding);
-        }
-
         @Override
         public final void onBindViewHolder(@NonNull BindingViewHolder<Binding> holder, int position) {
-            Data data = mDataList.get(position);
+            Data data = getItem(position);
             onItemUpdate(holder, data);
-        }
-
-        @Override
-        public final int getItemCount() {
-            return mDataList.size();
         }
 
         private void releaseInner() {

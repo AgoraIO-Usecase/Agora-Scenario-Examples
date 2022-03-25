@@ -32,7 +32,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.SurfaceView;
-import android.view.View;
+import android.view.TextureView;
 import android.widget.FrameLayout;
 
 import java.util.Arrays;
@@ -237,7 +237,7 @@ public class RtcManager {
         if (engine == null) {
             return;
         }
-        View videoView = new SurfaceView(container.getContext());
+        TextureView videoView = new TextureView(container.getContext());
         container.addView(videoView);
         firstVideoFramePendingRuns.put(LOCAL_RTC_UID, firstFrame);
         engine.setupLocalVideo(new VideoCanvas(videoView, RENDER_MODE_HIDDEN, LOCAL_RTC_UID));
@@ -310,8 +310,11 @@ public class RtcManager {
     public void release() {
         publishChannelListener = null;
         if (engine != null) {
+            engine.stopPreview();
+            engine = null;
             RtcEngine.destroy();
         }
+        isInitialized = false;
     }
 
     public void switchCamera() {

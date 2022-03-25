@@ -69,7 +69,7 @@ dependencies {
     implementation safeExtGetDependence('com.yanzhenjie:permission', '2.0.2')
 
     implementation safeExtGetDependence('com.github.agorabuilder:agora-full-preview','4.0.0.preview.3')
-    implementation safeExtGetDependence('com.github.AgoraIO-Community:SyncManager-Android', '1.0.0')
+    implementation safeExtGetDependence('com.github.AgoraIO-Community:SyncManager-Android', '1.0.4')
 
     implementation project(':libs:ui-widget')
     implementation project(':libs:base-library')

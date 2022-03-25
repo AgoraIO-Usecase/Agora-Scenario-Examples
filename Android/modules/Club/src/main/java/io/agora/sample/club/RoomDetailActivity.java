@@ -1,6 +1,10 @@
 package io.agora.sample.club;
 
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
+import android.view.View;
+import android.widget.FrameLayout;
 
 import androidx.annotation.Nullable;
 
@@ -8,19 +12,24 @@ import java.lang.ref.WeakReference;
 
 import io.agora.example.base.BaseActivity;
 import io.agora.sample.club.databinding.ClubRoomDetailActivityBinding;
+import io.agora.sample.club.databinding.ClubRoomDetailMsgItemBinding;
+import io.agora.uiwidget.basic.BindingViewHolder;
 import io.agora.uiwidget.function.GiftAnimPlayDialog;
 import io.agora.uiwidget.function.GiftGridDialog;
 import io.agora.uiwidget.function.LiveRoomMessageListView;
 import io.agora.uiwidget.function.TextInputDialog;
 import io.agora.uiwidget.utils.RandomUtil;
+import io.agora.uiwidget.utils.UIUtil;
 
 public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBinding> {
 
     private final RtcManager rtcManager = RtcManager.getInstance();
     private final RoomManager roomManager = RoomManager.getInstance();
 
+    private final FrameLayout[] seatLayouts = new FrameLayout[8];
+
     private RoomManager.RoomInfo roomInfo;
-    private LiveRoomMessageListView.LiveRoomMessageAdapter<RoomManager.MessageInfo> mMessageAdapter;
+    private LiveRoomMessageListView.AbsMessageAdapter<RoomManager.MessageInfo, ClubRoomDetailMsgItemBinding> mMessageAdapter;
     private final RoomManager.DataCallback<RoomManager.GiftInfo> giftInfoDataCallback = new RoomManager.DataCallback<RoomManager.GiftInfo>() {
         @Override
         public void onSuccess(RoomManager.GiftInfo data) {
@@ -49,9 +58,20 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
         super.onCreate(savedInstanceState);
         roomInfo = (RoomManager.RoomInfo) getIntent().getSerializableExtra("roomInfo");
 
-        // 房间信息
-        mBinding.hostNameView.setName(RandomUtil.randomUserName(this));
-        mBinding.hostNameView.setIcon(roomInfo.getAndroidBgId());
+        mBinding.titleBar
+                .setBgDrawable(R.drawable.club_main_title_bar_bg)
+                .setDeliverVisible(false)
+                .setTitleName(roomInfo.roomName, getResources().getColor(R.color.club_title_bar_text_color))
+                .setBackIcon(true, R.drawable.club_ic_arrow_24, v -> finish());
+
+        seatLayouts[0] = UIUtil.setViewCircle(mBinding.seat01.videoContainer);
+        seatLayouts[1] = UIUtil.setViewCircle(mBinding.seat02.videoContainer);
+        seatLayouts[2] = UIUtil.setViewCircle(mBinding.seat03.videoContainer);
+        seatLayouts[3] = UIUtil.setViewCircle(mBinding.seat04.videoContainer);
+        seatLayouts[4] = UIUtil.setViewCircle(mBinding.seat05.videoContainer);
+        seatLayouts[5] = UIUtil.setViewCircle(mBinding.seat06.videoContainer);
+        seatLayouts[6] = UIUtil.setViewCircle(mBinding.seat07.videoContainer);
+        seatLayouts[7] = UIUtil.setViewCircle(mBinding.seat08.videoContainer);
 
         // 底部按钮栏
         mBinding.bottomView.setFun1Visible(true)
@@ -63,10 +83,18 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
         mBinding.bottomView.setupMoreBtn(false, null);
 
         // 消息列表
-        mMessageAdapter = new LiveRoomMessageListView.LiveRoomMessageAdapter<RoomManager.MessageInfo>() {
+        mMessageAdapter = new LiveRoomMessageListView.AbsMessageAdapter<RoomManager.MessageInfo, ClubRoomDetailMsgItemBinding>(){
+
             @Override
-            protected void onItemUpdate(LiveRoomMessageListView.MessageListViewHolder holder, RoomManager.MessageInfo item, int position) {
-                holder.setupMessage(item.userName, item.content, item.giftIcon);
+            protected void onItemUpdate(BindingViewHolder<ClubRoomDetailMsgItemBinding> holder, RoomManager.MessageInfo item, int position) {
+                holder.binding.ivUserAvatar.setImageResource(RandomUtil.randomLiveRoomIcon());
+                holder.binding.tvUserName.setText(item.userName);
+
+                SpannableString contentSs = new SpannableString(item.content + " ");
+                if(item.giftIcon != View.NO_ID){
+                    contentSs.setSpan(new ImageSpan(holder.itemView.getContext(), item.giftIcon), item.content.length(), item.content.length() + 1, SpannableString.SPAN_EXCLUSIVE_INCLUSIVE);
+                }
+                holder.binding.tvContent.setText(contentSs);
             }
         };
         mBinding.messageList.setAdapter(mMessageAdapter);
@@ -80,7 +108,9 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
     }
 
     private void initRtcManager() {
-        rtcManager.joinChannel(roomInfo.roomId, RoomManager.getCacheUserId(), getString(R.string.rtc_app_token), false, new RtcManager.OnChannelListener() {
+        rtcManager.init(this, getString(R.string.rtc_app_id), null);
+        rtcManager.renderLocalVideo(seatLayouts[0], null);
+        rtcManager.joinChannel(roomInfo.roomId, RoomManager.getCacheUserId(), getString(R.string.rtc_app_token), true, new RtcManager.OnChannelListener() {
             @Override
             public void onError(int code, String message) {
 
@@ -94,7 +124,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
             @Override
             public void onUserJoined(String channelId, int uid) {
                 runOnUiThread(() -> {
-                    rtcManager.renderRemoteVideo(mBinding.fullVideoContainer, uid);
+                    // rtcManager.renderRemoteVideo(mBinding.fullVideoContainer, uid);
                     mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix)));
                 });
             }

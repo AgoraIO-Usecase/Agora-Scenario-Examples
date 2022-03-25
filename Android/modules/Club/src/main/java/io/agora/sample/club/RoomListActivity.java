@@ -93,9 +93,8 @@ public class RoomListActivity extends BaseActivity<ClubRoomListActivityBinding> 
                     @Override
                     public void onSuccess(List<RoomInfo> dataList) {
                         runOnUiThread(() -> {
-                            mDataList.clear();
-                            mDataList.addAll(dataList);
-                            notifyDataSetChanged();
+                            removeAll();
+                            insertAll(dataList);
                             triggerDataListUpdateRun();
                         });
                     }
