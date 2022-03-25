@@ -2,6 +2,7 @@ package io.agora.uiwidget.function;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,6 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import io.agora.uiwidget.R;
-
 
 public class LiveBottomView extends RelativeLayout{
     public static final int FUN_ICON_GIFT = R.drawable.live_bottom_btn_gift;
@@ -28,6 +28,8 @@ public class LiveBottomView extends RelativeLayout{
     private AppCompatImageView mMore;
     private AppCompatImageView mFun1;
     private AppCompatImageView mFun2;
+    private AppCompatImageView mFun3;
+    private AppCompatImageView mFun4;
     private AppCompatTextView mInputText;
     private boolean mLight = false;
 
@@ -56,6 +58,8 @@ public class LiveBottomView extends RelativeLayout{
         LayoutInflater.from(getContext()).inflate(layout, this, true);
         mFun1 = findViewById(R.id.live_bottom_btn_fun1);
         mFun2 = findViewById(R.id.live_bottom_btn_fun2);
+        mFun3 = findViewById(R.id.live_bottom_btn_fun3);
+        mFun4 = findViewById(R.id.live_bottom_btn_fun4);
         mInputText = findViewById(R.id.live_bottom_message_input_hint);
         mCancel = findViewById(R.id.live_bottom_btn_close);
         mMore = findViewById(R.id.live_bottom_btn_more);
@@ -90,6 +94,11 @@ public class LiveBottomView extends RelativeLayout{
         return this;
     }
 
+    public LiveBottomView setFun1Background(Drawable drawable){
+        mFun1.setBackgroundDrawable(drawable);
+        return this;
+    }
+
     public LiveBottomView setFun1ClickListener(OnClickListener listener){
         mFun1.setOnClickListener(listener);
         return this;
@@ -100,6 +109,9 @@ public class LiveBottomView extends RelativeLayout{
         return this;
     }
 
+    public boolean isFun1Activated(){
+        return mFun1.isActivated();
+    }
 
     public LiveBottomView setFun2Visible(boolean visible){
         mFun2.setVisibility(visible? View.VISIBLE: View.GONE);
@@ -111,6 +123,11 @@ public class LiveBottomView extends RelativeLayout{
         return this;
     }
 
+    public LiveBottomView setFun2Background(Drawable drawable){
+        mFun2.setBackgroundDrawable(drawable);
+        return this;
+    }
+
     public LiveBottomView setFun2ClickListener(OnClickListener listener){
         mFun2.setOnClickListener(listener);
         return this;
@@ -118,6 +135,68 @@ public class LiveBottomView extends RelativeLayout{
 
     public LiveBottomView setFun2Activated(boolean activated){
         mFun2.setActivated(activated);
+        return this;
+    }
+
+    public boolean isFun2Activated(){
+        return mFun2.isActivated();
+    }
+
+    public LiveBottomView setFun3Visible(boolean visible){
+        mFun3.setVisibility(visible? View.VISIBLE: View.GONE);
+        return this;
+    }
+
+    public LiveBottomView setFun3ImageResource(@DrawableRes int drawable){
+        mFun3.setImageResource(drawable);
+        return this;
+    }
+
+    public LiveBottomView setFun3ClickListener(OnClickListener listener){
+        mFun3.setOnClickListener(listener);
+        return this;
+    }
+
+    public LiveBottomView setFun3Activated(boolean activated){
+        mFun3.setActivated(activated);
+        return this;
+    }
+
+    public LiveBottomView setFun3Background(Drawable drawable){
+        mFun3.setBackgroundDrawable(drawable);
+        return this;
+    }
+
+    public boolean isFun3Activated(){
+        return mFun3.isActivated();
+    }
+
+    public LiveBottomView setFun4Visible(boolean visible){
+        mFun4.setVisibility(visible? View.VISIBLE: View.GONE);
+        return this;
+    }
+
+    public LiveBottomView setFun4ImageResource(@DrawableRes int drawable){
+        mFun4.setImageResource(drawable);
+        return this;
+    }
+
+    public LiveBottomView setFun4ClickListener(OnClickListener listener){
+        mFun4.setOnClickListener(listener);
+        return this;
+    }
+
+    public LiveBottomView setFun4Activated(boolean activated){
+        mFun4.setActivated(activated);
+        return this;
+    }
+
+    public boolean isFun4Activated(){
+        return mFun4.isActivated();
+    }
+
+    public LiveBottomView setFun4Background(Drawable drawable){
+        mFun4.setBackgroundDrawable(drawable);
         return this;
     }
 

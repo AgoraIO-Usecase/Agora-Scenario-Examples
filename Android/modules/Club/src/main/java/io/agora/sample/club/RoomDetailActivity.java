@@ -64,6 +64,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                 .setTitleName(roomInfo.roomName, getResources().getColor(R.color.club_title_bar_text_color))
                 .setBackIcon(true, R.drawable.club_ic_arrow_24, v -> finish());
 
+        // 座位列表
         seatLayouts[0] = UIUtil.setViewCircle(mBinding.seat01.videoContainer);
         seatLayouts[1] = UIUtil.setViewCircle(mBinding.seat02.videoContainer);
         seatLayouts[2] = UIUtil.setViewCircle(mBinding.seat03.videoContainer);
@@ -74,16 +75,32 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
         seatLayouts[7] = UIUtil.setViewCircle(mBinding.seat08.videoContainer);
 
         // 底部按钮栏
-        mBinding.bottomView.setFun1Visible(true)
-                .setFun1ImageResource(R.drawable.live_bottom_btn_gift)
-                .setFun1ClickListener(v -> showGiftGridDialog());
-        mBinding.bottomView.setFun2Visible(false);
-        mBinding.bottomView.setupInputText(true, v -> showTextInputDialog());
-        mBinding.bottomView.setupCloseBtn(true, v -> finish());
-        mBinding.bottomView.setupMoreBtn(false, null);
+        mBinding.bottomView
+                .setupCloseBtn(false, null)
+                .setupMoreBtn(false, null)
+                // 文本输入
+                .setupInputText(true, v -> showTextInputDialog())
+                // 摄像头开关
+                .setFun1Visible(true)
+                .setFun1ImageResource(R.drawable.club_room_detail_ic_cam)
+                .setFun1Activated(true)
+                .setFun1ClickListener(v -> {
+                    mBinding.bottomView.setFun1Activated(!mBinding.bottomView.isFun1Activated());
+                })
+                // 麦克风开关
+                .setFun2Visible(true)
+                .setFun2ImageResource(R.drawable.club_room_detail_ic_mic)
+                .setFun2Activated(true)
+                .setFun2ClickListener(v -> {
+                    mBinding.bottomView.setFun2Activated(!mBinding.bottomView.isFun2Activated());
+                })
+                // 礼物
+                .setFun3Visible(true)
+                .setFun3ImageResource(R.drawable.club_room_detail_gift)
+                .setFun3ClickListener(v -> showGiftGridDialog());
 
         // 消息列表
-        mMessageAdapter = new LiveRoomMessageListView.AbsMessageAdapter<RoomManager.MessageInfo, ClubRoomDetailMsgItemBinding>(){
+        mMessageAdapter = new LiveRoomMessageListView.AbsMessageAdapter<RoomManager.MessageInfo, ClubRoomDetailMsgItemBinding>() {
 
             @Override
             protected void onItemUpdate(BindingViewHolder<ClubRoomDetailMsgItemBinding> holder, RoomManager.MessageInfo item, int position) {
@@ -91,7 +108,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                 holder.binding.tvUserName.setText(item.userName);
 
                 SpannableString contentSs = new SpannableString(item.content + " ");
-                if(item.giftIcon != View.NO_ID){
+                if (item.giftIcon != View.NO_ID) {
                     contentSs.setSpan(new ImageSpan(holder.itemView.getContext(), item.giftIcon), item.content.length(), item.content.length() + 1, SpannableString.SPAN_EXCLUSIVE_INCLUSIVE);
                 }
                 holder.binding.tvContent.setText(contentSs);
@@ -153,7 +170,8 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
 
     private void showTextInputDialog() {
         new TextInputDialog(this)
-                .setOnSendClickListener((v, text) -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(RoomManager.getCacheUserId(), text)))
+                .setOnSendClickListener((v, text) ->
+                        mMessageAdapter.addMessage(new RoomManager.MessageInfo(RoomManager.getCacheUserId(), text)))
                 .show();
     }
 
