@@ -3,7 +3,6 @@ package io.agora.sample.club;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -16,7 +15,6 @@ import androidx.appcompat.app.AlertDialog;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.runtime.Permission;
 
-import java.util.List;
 import java.util.Random;
 
 import io.agora.example.base.BaseActivity;
@@ -89,24 +87,11 @@ public class RoomListActivity extends BaseActivity<ClubRoomListActivityBinding> 
 
             @Override
             protected void onRefresh() {
-                RoomManager.getInstance().getAllRooms(new RoomManager.DataListCallback<RoomInfo>() {
-                    @Override
-                    public void onSuccess(List<RoomInfo> dataList) {
-                        runOnUiThread(() -> {
-                            removeAll();
-                            insertAll(dataList);
-                            triggerDataListUpdateRun();
-                        });
-                    }
-
-                    @Override
-                    public void onFailed(Exception e) {
-                        Log.e(TAG, "", e);
-                        runOnUiThread(() -> {
-                            triggerDataListUpdateRun();
-                        });
-                    }
-                });
+                RoomManager.getInstance().getAllRooms(dataList -> runOnUiThread(() -> {
+                    removeAll();
+                    insertAll(dataList);
+                    triggerDataListUpdateRun();
+                }));
             }
 
             @Override
@@ -155,17 +140,7 @@ public class RoomListActivity extends BaseActivity<ClubRoomListActivityBinding> 
                     }
                     dialog.dismiss();
                     // 创建房间
-                    RoomManager.getInstance().createRoom(roomName, new RoomManager.DataCallback<RoomInfo>() {
-                        @Override
-                        public void onSuccess(RoomInfo data) {
-                            gotoRoomDetailPage(data);
-                        }
-
-                        @Override
-                        public void onFailed(Exception e) {
-                            Toast.makeText(RoomListActivity.this, "Create room error : " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    RoomManager.getInstance().createRoom(roomName, this::gotoRoomDetailPage);
                 })
                 .setNegativeButton(R.string.common_cancel, (dialog, which) -> dialog.dismiss())
                 .show();

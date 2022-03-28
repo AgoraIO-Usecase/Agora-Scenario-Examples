@@ -2,31 +2,10 @@ package io.agora.sample.club;
 
 
 import static io.agora.rtc2.video.VideoCanvas.RENDER_MODE_HIDDEN;
-import static io.agora.rtc2.video.VideoEncoderConfiguration.FRAME_RATE;
-import static io.agora.rtc2.video.VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_1;
-import static io.agora.rtc2.video.VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_10;
 import static io.agora.rtc2.video.VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15;
-import static io.agora.rtc2.video.VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_24;
-import static io.agora.rtc2.video.VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_30;
-import static io.agora.rtc2.video.VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_7;
 import static io.agora.rtc2.video.VideoEncoderConfiguration.MIRROR_MODE_TYPE;
 import static io.agora.rtc2.video.VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_PORTRAIT;
-import static io.agora.rtc2.video.VideoEncoderConfiguration.VD_120x120;
-import static io.agora.rtc2.video.VideoEncoderConfiguration.VD_1280x720;
-import static io.agora.rtc2.video.VideoEncoderConfiguration.VD_160x120;
-import static io.agora.rtc2.video.VideoEncoderConfiguration.VD_180x180;
-import static io.agora.rtc2.video.VideoEncoderConfiguration.VD_240x180;
-import static io.agora.rtc2.video.VideoEncoderConfiguration.VD_240x240;
-import static io.agora.rtc2.video.VideoEncoderConfiguration.VD_320x180;
-import static io.agora.rtc2.video.VideoEncoderConfiguration.VD_320x240;
-import static io.agora.rtc2.video.VideoEncoderConfiguration.VD_360x360;
-import static io.agora.rtc2.video.VideoEncoderConfiguration.VD_424x240;
-import static io.agora.rtc2.video.VideoEncoderConfiguration.VD_480x360;
-import static io.agora.rtc2.video.VideoEncoderConfiguration.VD_480x480;
 import static io.agora.rtc2.video.VideoEncoderConfiguration.VD_640x360;
-import static io.agora.rtc2.video.VideoEncoderConfiguration.VD_640x480;
-import static io.agora.rtc2.video.VideoEncoderConfiguration.VD_840x480;
-import static io.agora.rtc2.video.VideoEncoderConfiguration.VD_960x720;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -35,9 +14,7 @@ import android.view.SurfaceView;
 import android.view.TextureView;
 import android.widget.FrameLayout;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import io.agora.rtc2.ChannelMediaOptions;
@@ -52,33 +29,6 @@ import io.agora.rtc2.video.VideoEncoderConfiguration;
 public class RtcManager {
     private static final String TAG = "RtcManager";
     private static final int LOCAL_RTC_UID = 0;
-    public static final List<VideoEncoderConfiguration.VideoDimensions> sVideoDimensions = Arrays.asList(
-            VD_120x120,
-            VD_160x120,
-            VD_180x180,
-            VD_240x180,
-            VD_320x180,
-            VD_240x240,
-            VD_320x240,
-            VD_424x240,
-            VD_360x360,
-            VD_480x360,
-            VD_640x360,
-            VD_480x480,
-            VD_640x480,
-            VD_840x480,
-            VD_960x720,
-            VD_1280x720
-    );
-    public static final List<FRAME_RATE> sFrameRates = Arrays.asList(
-            FRAME_RATE_FPS_1,
-            FRAME_RATE_FPS_7,
-            FRAME_RATE_FPS_10,
-            FRAME_RATE_FPS_15,
-            FRAME_RATE_FPS_24,
-            FRAME_RATE_FPS_30
-    );
-
 
     private static CameraCapturerConfiguration.CAMERA_DIRECTION cameraDirection = CameraCapturerConfiguration.CAMERA_DIRECTION.CAMERA_FRONT;
     public static final VideoEncoderConfiguration encoderConfiguration = new VideoEncoderConfiguration(
@@ -96,11 +46,14 @@ public class RtcManager {
     private String publishChannelId;
 
     private volatile static RtcManager INSTANCE = null;
-    private RtcManager(){}
-    public static final RtcManager getInstance(){
-        if(INSTANCE == null){
-            synchronized (RtcManager.class){
-                if(INSTANCE == null){
+
+    private RtcManager() {
+    }
+
+    public static final RtcManager getInstance() {
+        if (INSTANCE == null) {
+            synchronized (RtcManager.class) {
+                if (INSTANCE == null) {
                     INSTANCE = new RtcManager();
                 }
             }
@@ -217,10 +170,10 @@ public class RtcManager {
             engine.enableAudio();
 
             engine.setCameraCapturerConfiguration(new CameraCapturerConfiguration(cameraDirection));
-            if(cameraDirection == CameraCapturerConfiguration.CAMERA_DIRECTION.CAMERA_FRONT){
+            if (cameraDirection == CameraCapturerConfiguration.CAMERA_DIRECTION.CAMERA_FRONT) {
                 encoderConfiguration.mirrorMode = MIRROR_MODE_TYPE.MIRROR_MODE_ENABLED;
                 engine.setVideoEncoderConfiguration(encoderConfiguration);
-            }else{
+            } else {
                 encoderConfiguration.mirrorMode = MIRROR_MODE_TYPE.MIRROR_MODE_DISABLED;
                 engine.setVideoEncoderConfiguration(encoderConfiguration);
             }
@@ -249,18 +202,19 @@ public class RtcManager {
             return;
         }
         int _uid = LOCAL_RTC_UID;
-        if(!TextUtils.isEmpty(uid)){
+        if (!TextUtils.isEmpty(uid)) {
             try {
                 _uid = Integer.parseInt(uid);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         ChannelMediaOptions options = new ChannelMediaOptions();
         options.publishCameraTrack = publish;
         options.publishAudioTrack = publish;
-
-        engine.setClientRole(publish ? Constants.CLIENT_ROLE_BROADCASTER : Constants.CLIENT_ROLE_AUDIENCE);
+        options.autoSubscribeVideo = true;
+        options.autoSubscribeAudio = true;
+        options.clientRoleType = publish ? Constants.CLIENT_ROLE_BROADCASTER : Constants.CLIENT_ROLE_AUDIENCE;
 
         publishChannelId = channelId;
         publishChannelListener = new OnChannelListener() {
@@ -296,6 +250,16 @@ public class RtcManager {
 
         int ret = engine.joinChannel(token, channelId, _uid, options);
         Log.i(TAG, String.format("joinChannel channel %s ret %d", channelId, ret));
+    }
+
+    public void setLocalPublish(boolean publish) {
+        ChannelMediaOptions options = new ChannelMediaOptions();
+        options.publishCameraTrack = true;
+        options.publishAudioTrack = true;
+        options.autoSubscribeAudio = true;
+        options.autoSubscribeVideo = true;
+        options.clientRoleType = publish ? Constants.CLIENT_ROLE_BROADCASTER : Constants.CLIENT_ROLE_AUDIENCE;
+        engine.updateChannelMediaOptions(options);
     }
 
     public void renderRemoteVideo(FrameLayout container, int uid) {

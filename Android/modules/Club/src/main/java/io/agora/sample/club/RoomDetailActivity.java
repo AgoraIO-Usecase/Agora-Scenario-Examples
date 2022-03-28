@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -13,6 +13,7 @@ import java.lang.ref.WeakReference;
 import io.agora.example.base.BaseActivity;
 import io.agora.sample.club.databinding.ClubRoomDetailActivityBinding;
 import io.agora.sample.club.databinding.ClubRoomDetailMsgItemBinding;
+import io.agora.sample.club.databinding.ClubRoomDetailSeatItemBinding;
 import io.agora.uiwidget.basic.BindingViewHolder;
 import io.agora.uiwidget.function.GiftAnimPlayDialog;
 import io.agora.uiwidget.function.GiftGridDialog;
@@ -26,7 +27,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
     private final RtcManager rtcManager = RtcManager.getInstance();
     private final RoomManager roomManager = RoomManager.getInstance();
 
-    private final FrameLayout[] seatLayouts = new FrameLayout[8];
+    private final ClubRoomDetailSeatItemBinding[] seatLayouts = new ClubRoomDetailSeatItemBinding[8];
 
     private RoomManager.RoomInfo roomInfo;
     private LiveRoomMessageListView.AbsMessageAdapter<RoomManager.MessageInfo, ClubRoomDetailMsgItemBinding> mMessageAdapter;
@@ -44,14 +45,19 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                         .setAnimRes(data.getGifId())
                         .show();
             });
-
-        }
-
-        @Override
-        public void onFailed(Exception e) {
-
         }
     };
+    private final RoomManager.DataCallback<RoomManager.UserInfo> userAddOrUpdateCallback = data -> runOnUiThread(() -> {
+        ClubRoomDetailSeatItemBinding userSeatLayout = getUserSeatLayout(data.userId);
+        if (userSeatLayout != null) {
+            userSeatLayout.ivCover.setVisibility(View.VISIBLE);
+            userSeatLayout.ivCover.setImageResource(data.getAvatarResId());
+            rtcManager.renderRemoteVideo(userSeatLayout.videoContainer, Integer.parseInt(data.userId));
+        }
+    });
+    private final RoomManager.DataCallback<RoomManager.UserInfo> userDeleteCallback = data -> runOnUiThread(() -> {
+        removeUserSeatLayout(data.userId);
+    });
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,14 +71,22 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                 .setBackIcon(true, R.drawable.club_ic_arrow_24, v -> finish());
 
         // 座位列表
-        seatLayouts[0] = UIUtil.setViewCircle(mBinding.seat01.videoContainer);
-        seatLayouts[1] = UIUtil.setViewCircle(mBinding.seat02.videoContainer);
-        seatLayouts[2] = UIUtil.setViewCircle(mBinding.seat03.videoContainer);
-        seatLayouts[3] = UIUtil.setViewCircle(mBinding.seat04.videoContainer);
-        seatLayouts[4] = UIUtil.setViewCircle(mBinding.seat05.videoContainer);
-        seatLayouts[5] = UIUtil.setViewCircle(mBinding.seat06.videoContainer);
-        seatLayouts[6] = UIUtil.setViewCircle(mBinding.seat07.videoContainer);
-        seatLayouts[7] = UIUtil.setViewCircle(mBinding.seat08.videoContainer);
+        UIUtil.setViewCircle(mBinding.seat01.videoContainer);
+        seatLayouts[0] = mBinding.seat01;
+        UIUtil.setViewCircle(mBinding.seat02.videoContainer);
+        seatLayouts[1] = mBinding.seat02;
+        UIUtil.setViewCircle(mBinding.seat03.videoContainer);
+        seatLayouts[2] = mBinding.seat03;
+        UIUtil.setViewCircle(mBinding.seat04.videoContainer);
+        seatLayouts[3] = mBinding.seat04;
+        UIUtil.setViewCircle(mBinding.seat05.videoContainer);
+        seatLayouts[4] = mBinding.seat05;
+        UIUtil.setViewCircle(mBinding.seat06.videoContainer);
+        seatLayouts[5] = mBinding.seat06;
+        UIUtil.setViewCircle(mBinding.seat07.videoContainer);
+        seatLayouts[6] = mBinding.seat07;
+        UIUtil.setViewCircle(mBinding.seat08.videoContainer);
+        seatLayouts[7] = mBinding.seat08;
 
         // 底部按钮栏
         mBinding.bottomView
@@ -120,13 +134,70 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
         initRoomManager();
     }
 
-    private void initRoomManager() {
-        roomManager.joinRoom(roomInfo.roomId, () -> roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, new WeakReference<>(giftInfoDataCallback)));
+    private ClubRoomDetailSeatItemBinding getUserSeatLayout(String userId) {
+        for (ClubRoomDetailSeatItemBinding seatLayout : seatLayouts) {
+            Object tag = seatLayout.getRoot().getTag();
+            if (userId.equals(tag)) {
+                return seatLayout;
+            }
+        }
+        ClubRoomDetailSeatItemBinding idleSeatLayout = getIdleSeatLayout();
+        if (idleSeatLayout != null) {
+            idleSeatLayout.getRoot().setTag(userId);
+        }
+        return idleSeatLayout;
     }
+
+    private void removeUserSeatLayout(String userId) {
+        for (ClubRoomDetailSeatItemBinding seatLayout : seatLayouts) {
+            Object tag = seatLayout.getRoot().getTag();
+            if (userId.equals(tag)) {
+                seatLayout.videoContainer.removeAllViews();
+                seatLayout.ivCover.setVisibility(View.GONE);
+                seatLayout.getRoot().setTag(null);
+                break;
+            }
+        }
+    }
+
+
+    private ClubRoomDetailSeatItemBinding getIdleSeatLayout() {
+        for (ClubRoomDetailSeatItemBinding seatLayout : seatLayouts) {
+            Object tag = seatLayout.getRoot().getTag();
+            if (tag == null || "".equals(tag)) {
+                return seatLayout;
+            }
+        }
+        return null;
+    }
+
+    private void initRoomManager() {
+        roomManager.joinRoom(roomInfo.roomId,
+                list -> runOnUiThread(() -> {
+                    roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, new WeakReference<>(giftInfoDataCallback));
+                    roomManager.subscribeUserChangeEvent(roomInfo.roomId, new WeakReference<>(userAddOrUpdateCallback), new WeakReference<>(userDeleteCallback));
+                    for (RoomManager.UserInfo userInfo : list) {
+                        ClubRoomDetailSeatItemBinding seatLayout = getUserSeatLayout(userInfo.userId);
+                        if (seatLayout != null) {
+                            seatLayout.ivCover.setVisibility(View.VISIBLE);
+                            seatLayout.ivCover.setImageResource(userInfo.getAvatarResId());
+                            if (userInfo.userId.equals(RoomManager.getCacheUserId())) {
+                                rtcManager.renderLocalVideo(seatLayout.videoContainer, null);
+                            } else {
+                                rtcManager.renderRemoteVideo(seatLayout.videoContainer, Integer.parseInt(userInfo.userId));
+                            }
+                        }
+                    }
+                }),
+                ex -> runOnUiThread(() -> {
+                    Toast.makeText(RoomDetailActivity.this, ex.getMessage(), Toast.LENGTH_LONG).show();
+                    finish();
+                }));
+    }
+
 
     private void initRtcManager() {
         rtcManager.init(this, getString(R.string.rtc_app_id), null);
-        rtcManager.renderLocalVideo(seatLayouts[0], null);
         rtcManager.joinChannel(roomInfo.roomId, RoomManager.getCacheUserId(), getString(R.string.rtc_app_token), true, new RtcManager.OnChannelListener() {
             @Override
             public void onError(int code, String message) {
@@ -140,10 +211,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
 
             @Override
             public void onUserJoined(String channelId, int uid) {
-                runOnUiThread(() -> {
-                    // rtcManager.renderRemoteVideo(mBinding.fullVideoContainer, uid);
-                    mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix)));
-                });
+                runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
             }
 
             @Override
@@ -177,6 +245,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
 
     @Override
     public void finish() {
+        roomManager.leaveRoom(roomInfo.roomId);
         rtcManager.release();
         super.finish();
     }

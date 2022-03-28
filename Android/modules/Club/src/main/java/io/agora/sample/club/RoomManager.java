@@ -6,8 +6,14 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.IntDef;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.Serializable;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +33,8 @@ public class RoomManager {
     private static final String TAG = "RoomManager";
     private static final String PREFERENCE_KEY_USER_ID = RoomManager.class.getName() + "_userId";
     private static final String SYNC_MANAGER_GIFT_INFO = "giftInfo";
+    private static final String SYNC_MANAGER_USER_INFO_LIST = "agoraClubUsers";
+    private static final int ROOM_MAX_USER = 8;
 
     private static volatile RoomManager INSTANCE;
     private static volatile boolean isInitialized = false;
@@ -56,7 +64,7 @@ public class RoomManager {
         HashMap<String, String> params = new HashMap<>();
         params.put("appid", appId);
         params.put("token", token);
-        params.put("defaultChannel", "Club");
+        params.put("defaultChannel", "agoraClub");
         Sync.Instance().init(context, params, new Sync.Callback() {
             @Override
             public void onSuccess() {
@@ -88,9 +96,7 @@ public class RoomManager {
 
             @Override
             public void onFail(SyncManagerException exception) {
-                if (callback != null) {
-                    callback.onFailed(exception);
-                }
+
             }
         });
     }
@@ -110,55 +116,145 @@ public class RoomManager {
                         }
                         callback.onSuccess(ret);
                     } catch (Exception exception) {
-                        callback.onFailed(exception);
+                        Log.e(TAG, "", exception);
                     }
                 }
             }
 
             @Override
             public void onFail(SyncManagerException exception) {
-                if (callback != null) {
-                    callback.onFailed(exception);
+                Log.e(TAG, "", exception);
+                if (exception.getMessage().equals("empty attributes")) {
+                    if (callback != null) {
+                        callback.onSuccess(new ArrayList<>());
+                    }
                 }
             }
         });
     }
 
-    public void joinRoom(String roomId, Runnable successRun) {
+    public void joinRoom(String roomId, DataListCallback<UserInfo> successRun, DataCallback<Exception> failure) {
         checkInitialized();
+        Runnable onJoinSuccess = () -> {
+            getUserList(roomId, dataList -> {
+                for (UserInfo userInfo : dataList) {
+                    if (userInfo.userId.equals(getCacheUserId())) {
+                        if (successRun != null) {
+                            successRun.onSuccess(dataList);
+                        }
+                        return;
+                    }
+                }
+                if (dataList.size() < ROOM_MAX_USER) {
+                    addLocalUser(roomId, data -> {
+                        dataList.add(data);
+                        if (successRun != null) {
+                            successRun.onSuccess(dataList);
+                        }
+                    });
+                } else {
+                    if (failure != null) {
+                        failure.onSuccess(new Exception("The user count of this room has been over max count " + ROOM_MAX_USER));
+                    }
+                }
+            });
+        };
         SceneReference sceneReference = sceneMap.get(roomId);
         if (sceneReference != null) {
             Log.d(TAG, "The room of " + roomId + " has joined.");
-            if(successRun != null){
-                successRun.run();
-            }
+            onJoinSuccess.run();
             return;
         }
         Sync.Instance().joinScene(roomId, new Sync.JoinSceneCallback() {
             @Override
             public void onSuccess(SceneReference sceneReference) {
                 sceneMap.put(roomId, sceneReference);
-                if(successRun != null){
-                    successRun.run();
-                }
+                onJoinSuccess.run();
             }
 
             @Override
             public void onFail(SyncManagerException exception) {
                 sceneMap.remove(roomId);
+                if (failure != null) {
+                    failure.onSuccess(exception);
+                }
             }
         });
     }
 
-    public void sendGift(String roomId, GiftInfo giftInfo) {
+    public void leaveRoom(String roomId) {
+        deleteLocalUser(roomId);
+    }
+
+    private void getUserList(String roomId, DataListCallback<UserInfo> callback) {
         checkInitialized();
         SceneReference sceneReference = sceneMap.get(roomId);
         if (sceneReference == null) {
             return;
         }
-        sceneReference.update(SYNC_MANAGER_GIFT_INFO, giftInfo, new Sync.DataItemCallback() {
+        sceneReference.collection(SYNC_MANAGER_USER_INFO_LIST).get(new Sync.DataListCallback() {
+            @Override
+            public void onSuccess(List<IObject> result) {
+                if (callback != null) {
+                    List<UserInfo> userInfos = new ArrayList<>();
+                    if (result != null && result.size() > 0) {
+                        for (IObject iObject : result) {
+                            userInfos.add(iObject.toObject(UserInfo.class));
+                        }
+                    }
+                    callback.onSuccess(userInfos);
+                }
+            }
+
+            @Override
+            public void onFail(SyncManagerException exception) {
+                Log.e(TAG, "", exception);
+                if (exception.getMessage().equals("empty attributes")) {
+                    if (callback != null) {
+                        callback.onSuccess(new ArrayList<>());
+                    }
+                }
+            }
+        });
+    }
+
+    private void addLocalUser(String roomId, DataCallback<UserInfo> success) {
+        checkInitialized();
+        SceneReference sceneReference = sceneMap.get(roomId);
+        if (sceneReference == null) {
+            return;
+        }
+        UserInfo userInfo = new UserInfo();
+        String json = new Gson().toJson(userInfo);
+        HashMap<String, Object> ret = new Gson().fromJson(json, new TypeToken<HashMap<String, Object>>() {
+        }.getType());
+        sceneReference.collection(SYNC_MANAGER_USER_INFO_LIST)
+                .add(ret, new Sync.DataItemCallback() {
                     @Override
                     public void onSuccess(IObject result) {
+                        if (success != null) {
+                            success.onSuccess(userInfo);
+                        }
+                    }
+
+                    @Override
+                    public void onFail(SyncManagerException exception) {
+
+                    }
+                });
+    }
+
+    private void deleteLocalUser(String roomId) {
+        checkInitialized();
+        SceneReference sceneReference = sceneMap.get(roomId);
+        if (sceneReference == null) {
+            return;
+        }
+        sceneReference.collection(SYNC_MANAGER_USER_INFO_LIST)
+                .document(getCacheUserId())
+                .delete(new Sync.Callback() {
+                    @Override
+                    public void onSuccess() {
 
                     }
 
@@ -169,7 +265,69 @@ public class RoomManager {
                 });
     }
 
-    public void subscribeGiftReceiveEvent(String roomId, WeakReference<DataCallback<GiftInfo>> callback){
+    public void subscribeUserChangeEvent(String roomId,
+                                         WeakReference<DataCallback<UserInfo>> addOrUpdateCallback,
+                                         WeakReference<DataCallback<UserInfo>> deleteCallback) {
+        checkInitialized();
+        SceneReference sceneReference = sceneMap.get(roomId);
+        if (sceneReference == null) {
+            return;
+        }
+        sceneReference.collection(SYNC_MANAGER_USER_INFO_LIST)
+                .document("")
+                .subscribe(new Sync.EventListener() {
+
+                    @Override
+                    public void onCreated(IObject item) {
+                        UserInfo userInfo = item.toObject(UserInfo.class);
+                        if (addOrUpdateCallback != null && addOrUpdateCallback.get() != null) {
+                            addOrUpdateCallback.get().onSuccess(userInfo);
+                        }
+                    }
+
+                    @Override
+                    public void onUpdated(IObject item) {
+                        UserInfo userInfo = item.toObject(UserInfo.class);
+                        if (addOrUpdateCallback != null && addOrUpdateCallback.get() != null) {
+                            addOrUpdateCallback.get().onSuccess(userInfo);
+                        }
+                    }
+
+                    @Override
+                    public void onDeleted(IObject item) {
+                        UserInfo userInfo = item.toObject(UserInfo.class);
+                        if (deleteCallback != null && deleteCallback.get() != null) {
+                            deleteCallback.get().onSuccess(userInfo);
+                        }
+                    }
+
+                    @Override
+                    public void onSubscribeError(SyncManagerException ex) {
+                        Log.e(TAG, "", ex);
+                    }
+                });
+    }
+
+    public void sendGift(String roomId, GiftInfo giftInfo) {
+        checkInitialized();
+        SceneReference sceneReference = sceneMap.get(roomId);
+        if (sceneReference == null) {
+            return;
+        }
+        sceneReference.update(SYNC_MANAGER_GIFT_INFO, giftInfo, new Sync.DataItemCallback() {
+            @Override
+            public void onSuccess(IObject result) {
+
+            }
+
+            @Override
+            public void onFail(SyncManagerException exception) {
+
+            }
+        });
+    }
+
+    public void subscribeGiftReceiveEvent(String roomId, WeakReference<DataCallback<GiftInfo>> callback) {
         checkInitialized();
         SceneReference sceneReference = sceneMap.get(roomId);
         if (sceneReference == null) {
@@ -184,9 +342,9 @@ public class RoomManager {
             @Override
             public void onUpdated(IObject item) {
                 GiftInfo giftInfo = item.toObject(GiftInfo.class);
-                if(callback != null){
+                if (callback != null) {
                     DataCallback<GiftInfo> cb = callback.get();
-                    if(cb != null){
+                    if (cb != null) {
                         cb.onSuccess(giftInfo);
                     }
                 }
@@ -199,16 +357,10 @@ public class RoomManager {
 
             @Override
             public void onSubscribeError(SyncManagerException ex) {
-                if(callback != null){
-                    DataCallback<GiftInfo> cb = callback.get();
-                    if(cb != null){
-                        cb.onFailed(ex);
-                    }
-                }
+                Log.e(TAG, "", ex);
             }
         });
     }
-
 
     public static String getCacheUserId() {
         String userId = PreferenceUtil.get(PREFERENCE_KEY_USER_ID, "");
@@ -221,24 +373,6 @@ public class RoomManager {
 
     public static String getRandomRoomId() {
         return RandomUtil.randomId() + 10000 + "";
-    }
-
-    public void destroyRoom(String roomId) {
-        checkInitialized();
-        SceneReference sceneReference = sceneMap.get(roomId);
-        if (sceneReference != null) {
-            sceneReference.delete(new Sync.Callback() {
-                @Override
-                public void onSuccess() {
-                    sceneMap.remove(roomId);
-                }
-
-                @Override
-                public void onFail(SyncManagerException exception) {
-
-                }
-            });
-        }
     }
 
     private void checkInitialized() {
@@ -305,7 +439,7 @@ public class RoomManager {
             }
             int bgResId = R.drawable.user_profile_image_1;
             Integer id = RoomBgResMap.get(backgroundId);
-            if(id != null){
+            if (id != null) {
                 bgResId = id;
             }
             return bgResId;
@@ -365,34 +499,60 @@ public class RoomManager {
             }
         }
 
-        public int getIconId(){
+        public int getIconId() {
             Integer ret = IconNameResMap.get(iconName);
-            if(ret == null){
+            if (ret == null) {
                 ret = 0;
             }
             return ret;
         }
 
-        public int getGifId(){
+        public int getGifId() {
             Integer ret = GifNameResMap.get(gifName);
-            if(ret == null){
+            if (ret == null) {
                 ret = 0;
             }
             return ret;
         }
 
+    }
+
+    public static class UserInfo {
+        public String avatar = String.format(Locale.US, "portrait%02d", RandomUtil.randomId(1, 14));
+        public String userId = getCacheUserId();
+        public String userName = "User-" + userId;
+        public @Status
+        int status = Status.END;
+        public String timestamp;
+
+        public int getAvatarResId() {
+            Integer ret = RoomBgResMap.get(avatar);
+            if (ret == null) {
+                ret = 0;
+            }
+            return ret;
+        }
+    }
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({Status.INVITE, Status.ACCEPT, Status.REFUSE, Status.END})
+    public @interface Status {
+        // 邀请中
+        int INVITE = 1;
+        // 已接受
+        int ACCEPT = 2;
+        // 已拒绝
+        int REFUSE = 3;
+        // 已结束
+        int END = 4;
     }
 
 
     public interface DataListCallback<T> {
         void onSuccess(List<T> dataList);
-
-        void onFailed(Exception e);
     }
 
     public interface DataCallback<T> {
         void onSuccess(T data);
-
-        void onFailed(Exception e);
     }
 }
