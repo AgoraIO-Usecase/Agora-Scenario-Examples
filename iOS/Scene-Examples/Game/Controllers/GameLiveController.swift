@@ -8,7 +8,6 @@
 import UIKit
 import AgoraRtcKit
 import ReplayKit
-import AgoraScreenShare
 import AgoraSyncManager
 
 class GameLiveController: PKLiveController {

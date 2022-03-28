@@ -11,11 +11,6 @@ Copyright 2018 agora.io. All rights reserved.
 Copyright 2019 agora.io. All rights reserved.
 
 
-## AgoraScreenShare
-
-Copyright 2018 agora.io. All rights reserved.
-
-
 ## AgoraUIKit-iOS
 
 Copyright 2018 agora.io. All rights reserved.

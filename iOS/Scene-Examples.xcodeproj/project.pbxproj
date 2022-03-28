@@ -88,6 +88,12 @@
 		E79C264A273D003B00909CD4 /* LiveRoomInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2649273D003B00909CD4 /* LiveRoomInfo.swift */; };
 		E79C264C273D053E00909CD4 /* LiveRoomListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C264B273D053E00909CD4 /* LiveRoomListController.swift */; };
 		E79C264E273D062400909CD4 /* LiveRoomListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C264D273D062400909CD4 /* LiveRoomListCell.swift */; };
+		E7ECC56727E8155700EFA778 /* AgoraClubController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ECC56627E8155700EFA778 /* AgoraClubController.swift */; };
+		E7ECC56927E81A9E00EFA778 /* BaseNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ECC56827E81A9E00EFA778 /* BaseNavigationController.swift */; };
+		E7ECC56B27E81BAE00EFA778 /* ClubHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ECC56A27E81BAE00EFA778 /* ClubHeaderView.swift */; };
+		E7ECC56D27E81F5A00EFA778 /* UIImage+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ECC56C27E81F5A00EFA778 /* UIImage+Color.swift */; };
+		E7ECC56F27E8646600EFA778 /* SeatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ECC56E27E8646600EFA778 /* SeatView.swift */; };
+		E7ECC57127E8923200EFA778 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ECC57027E8923200EFA778 /* Array+Extension.swift */; };
 		E7EDBCAC27A0F98900E763A6 /* AgoraVoiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCAB27A0F98900E763A6 /* AgoraVoiceController.swift */; };
 		E7EDBCAE27A1281200E763A6 /* AgoraVoiceUsersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCAD27A1281200E763A6 /* AgoraVoiceUsersView.swift */; };
 		E7EDBCB027A131BC00E763A6 /* AgoraVoiceBelCantoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCAF27A131BC00E763A6 /* AgoraVoiceBelCantoView.swift */; };
@@ -122,7 +128,6 @@
 		20C581EEB5F90DA480F83A68 /* Pods-Agora-ScreenShare-Extension(Socket).release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Agora-ScreenShare-Extension(Socket).release.xcconfig"; path = "Target Support Files/Pods-Agora-ScreenShare-Extension(Socket)/Pods-Agora-ScreenShare-Extension(Socket).release.xcconfig"; sourceTree = "<group>"; };
 		4C1A8B8E636109C2F8647D68 /* Pods-Agora-ScreenShare-Extension(Socket).debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Agora-ScreenShare-Extension(Socket).debug.xcconfig"; path = "Target Support Files/Pods-Agora-ScreenShare-Extension(Socket)/Pods-Agora-ScreenShare-Extension(Socket).debug.xcconfig"; sourceTree = "<group>"; };
 		4EAC22A0ABCEA5BE7ED7FCFA /* Pods-Agora-ScreenShare-Extension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Agora-ScreenShare-Extension.release.xcconfig"; path = "Target Support Files/Pods-Agora-ScreenShare-Extension/Pods-Agora-ScreenShare-Extension.release.xcconfig"; sourceTree = "<group>"; };
-		A6A12BD14C6C12D3D9AB21A6 /* Pods_Agora_ScreenShare_Extension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Agora_ScreenShare_Extension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AED837A3EC68965AC33FE2E6 /* Pods_Scene_Examples.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Scene_Examples.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C99DD6A332A83A34EF8B5943 /* Pods-Scene-Examples.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Scene-Examples.release.xcconfig"; path = "Target Support Files/Pods-Scene-Examples/Pods-Scene-Examples.release.xcconfig"; sourceTree = "<group>"; };
 		E710AE2E27A0F23300124356 /* ChangeRoomBgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeRoomBgView.swift; sourceTree = "<group>"; };
@@ -211,6 +216,12 @@
 		E79C2649273D003B00909CD4 /* LiveRoomInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRoomInfo.swift; sourceTree = "<group>"; };
 		E79C264B273D053E00909CD4 /* LiveRoomListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRoomListController.swift; sourceTree = "<group>"; };
 		E79C264D273D062400909CD4 /* LiveRoomListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRoomListCell.swift; sourceTree = "<group>"; };
+		E7ECC56627E8155700EFA778 /* AgoraClubController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraClubController.swift; sourceTree = "<group>"; };
+		E7ECC56827E81A9E00EFA778 /* BaseNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseNavigationController.swift; sourceTree = "<group>"; };
+		E7ECC56A27E81BAE00EFA778 /* ClubHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubHeaderView.swift; sourceTree = "<group>"; };
+		E7ECC56C27E81F5A00EFA778 /* UIImage+Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Color.swift"; sourceTree = "<group>"; };
+		E7ECC56E27E8646600EFA778 /* SeatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeatView.swift; sourceTree = "<group>"; };
+		E7ECC57027E8923200EFA778 /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
 		E7EDBCAB27A0F98900E763A6 /* AgoraVoiceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraVoiceController.swift; sourceTree = "<group>"; };
 		E7EDBCAD27A1281200E763A6 /* AgoraVoiceUsersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraVoiceUsersView.swift; sourceTree = "<group>"; };
 		E7EDBCAF27A131BC00E763A6 /* AgoraVoiceBelCantoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraVoiceBelCantoView.swift; sourceTree = "<group>"; };
@@ -260,7 +271,6 @@
 			children = (
 				AED837A3EC68965AC33FE2E6 /* Pods_Scene_Examples.framework */,
 				E79BF019274B6902009FA838 /* ReplayKit.framework */,
-				A6A12BD14C6C12D3D9AB21A6 /* Pods_Agora_ScreenShare_Extension.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -489,6 +499,7 @@
 				E79C2617273B6F3700909CD4 /* Main */,
 				E79C25F2273B685100909CD4 /* BreakOutRoom */,
 				E7EDBCA727A0F94800E763A6 /* AgoraVoice */,
+				E7ECC56227E814F800EFA778 /* AgoraClub */,
 				E79C2620273B7B5C00909CD4 /* Live */,
 				E79BEF612741FCEB009FA838 /* PKLive */,
 				E79BEF8E2746729D009FA838 /* Game */,
@@ -529,6 +540,7 @@
 		E79C2605273B689B00909CD4 /* LayoutBaseViews */ = {
 			isa = PBXGroup;
 			children = (
+				E7ECC56827E81A9E00EFA778 /* BaseNavigationController.swift */,
 				E79C261B273B712000909CD4 /* BaseViewController.swift */,
 				E79C2606273B689B00909CD4 /* SegmentView.swift */,
 				E79BEF5A273E5768009FA838 /* GIFImageView.swift */,
@@ -657,8 +669,44 @@
 				E79C2631273BC17B00909CD4 /* String+Extension.swift */,
 				E79C2607273B689B00909CD4 /* UIColor+Extension.swift */,
 				E79C2601273B689A00909CD4 /* AgoraExtension.swift */,
+				E7ECC56C27E81F5A00EFA778 /* UIImage+Color.swift */,
+				E7ECC57027E8923200EFA778 /* Array+Extension.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		E7ECC56227E814F800EFA778 /* AgoraClub */ = {
+			isa = PBXGroup;
+			children = (
+				E7ECC56527E8151600EFA778 /* Models */,
+				E7ECC56427E8150E00EFA778 /* Views */,
+				E7ECC56327E8150400EFA778 /* Controllers */,
+			);
+			path = AgoraClub;
+			sourceTree = "<group>";
+		};
+		E7ECC56327E8150400EFA778 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				E7ECC56627E8155700EFA778 /* AgoraClubController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		E7ECC56427E8150E00EFA778 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E7ECC56A27E81BAE00EFA778 /* ClubHeaderView.swift */,
+				E7ECC56E27E8646600EFA778 /* SeatView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		E7ECC56527E8151600EFA778 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		E7EDBCA727A0F94800E763A6 /* AgoraVoice */ = {
@@ -841,6 +889,7 @@
 				E79BEF8A274644A9009FA838 /* BORLiveModel.swift in Sources */,
 				E79BEF45273E4D99009FA838 /* LiveGiftModel.swift in Sources */,
 				E79C264E273D062400909CD4 /* LiveRoomListCell.swift in Sources */,
+				E7ECC56927E81A9E00EFA778 /* BaseNavigationController.swift in Sources */,
 				E79C264A273D003B00909CD4 /* LiveRoomInfo.swift in Sources */,
 				E79C2610273B689B00909CD4 /* KeyCenter.swift in Sources */,
 				E79C262D273BC0CA00909CD4 /* ToastView.swift in Sources */,
@@ -855,11 +904,13 @@
 				E79C2626273B7BDA00909CD4 /* CreateLiveController.swift in Sources */,
 				E79BEF8627463FA5009FA838 /* BORRoomDetailController.swift in Sources */,
 				E7EDBCAE27A1281200E763A6 /* AgoraVoiceUsersView.swift in Sources */,
+				E7ECC56D27E81F5A00EFA778 /* UIImage+Color.swift in Sources */,
 				E79BEF7D27463F79009FA838 /* BORSubRoomModel.swift in Sources */,
 				E79BEF39273D18B4009FA838 /* LiveAvatarView.swift in Sources */,
 				E79C261C273B712000909CD4 /* BaseViewController.swift in Sources */,
 				E79BEF752744FD8B009FA838 /* GCDTimer.swift in Sources */,
 				E7EDBCB627A26E7C00E763A6 /* AgoraVoicePitchCorrectionHeaderView.swift in Sources */,
+				E7ECC56727E8155700EFA778 /* AgoraClubController.swift in Sources */,
 				E79BEF68274203ED009FA838 /* PKLiveInviteView.swift in Sources */,
 				E7EDBCB427A23EEF00E763A6 /* AgoraVoiceSoundEffectModel.swift in Sources */,
 				E79BEF33273D0F0C009FA838 /* LiveCanvasModel.swift in Sources */,
@@ -877,10 +928,12 @@
 				E7440E262772CADF00CBF4D8 /* OneToOneControlView.swift in Sources */,
 				E7EDBCC227A2B0F100E763A6 /* AgoraVoiceUsersModel.swift in Sources */,
 				E79BEF6A27420933009FA838 /* PKApplyInfoModel.swift in Sources */,
+				E7ECC57127E8923200EFA778 /* Array+Extension.swift in Sources */,
 				E79BEF35273D1304009FA838 /* LivePlayerCell.swift in Sources */,
 				E79BEF8527463FA5009FA838 /* BORHomeViewController.swift in Sources */,
 				E79C2636273BC6C400909CD4 /* LiveRandomNameView.swift in Sources */,
 				E79C2642273BE5C500909CD4 /* AlertManager.swift in Sources */,
+				E7ECC56F27E8646600EFA778 /* SeatView.swift in Sources */,
 				E7EDBCBA27A28BD300E763A6 /* AgoraVoiceMusicView.swift in Sources */,
 				E79BEFA1274796F7009FA838 /* NetworkManager.swift in Sources */,
 				E79BEF772745036E009FA838 /* PKLiveProgressView.swift in Sources */,
@@ -891,6 +944,7 @@
 				E79BEF41273E0C3A009FA838 /* LiveToolModel.swift in Sources */,
 				E79BEF31273D0EA4009FA838 /* SignleLiveController.swift in Sources */,
 				E79BEF9A274776F8009FA838 /* GameModeModel.swift in Sources */,
+				E7ECC56B27E81BAE00EFA778 /* ClubHeaderView.swift in Sources */,
 				E79C2632273BC17B00909CD4 /* String+Extension.swift in Sources */,
 				E79C262A273B7D8900909CD4 /* DeviceAssistant.swift in Sources */,
 				E7499C282770308A00E799FF /* PlayTogetherViewController.swift in Sources */,
@@ -1088,7 +1142,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
@@ -1126,7 +1180,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;

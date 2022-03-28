@@ -187,7 +187,7 @@ class SignleLiveController: BaseViewController {
         liveView.sendMessage(message: "\(UserInfo.userId)" + "Join_Live_Room".localized, messageType: .message)
     }
     
-    /// 观众加入channel
+    /// Audience joins the channel
     /// - Parameters:
     ///   - channelName: 频道名
     ///   - pkUid: pk主播的UserID

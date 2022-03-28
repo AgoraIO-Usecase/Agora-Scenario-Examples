@@ -252,6 +252,10 @@ class CreateLiveController: BaseViewController {
                                                     agoraKit: agoraKit)
             navigationController?.pushViewController(agoraVoiceVC, animated: true)
             
+        case .agoraClub:
+            let clubVC = AgoraClubController(userId: UserInfo.uid, channelName: channelName, agoraKit: agoraKit)
+            navigationController?.pushViewController(clubVC, animated: true)
+            
         default: break
         }
     }

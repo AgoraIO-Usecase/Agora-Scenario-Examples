@@ -14,6 +14,8 @@ enum SceneType: String {
     case breakoutRoom = "BreakOutRoom"
     /// 音效
     case agoraVoice = "agoraVoice"
+    /// 夜店
+    case agoraClub = "agoraClub"
     /// 游戏
     case game = "interactiveGame"
     /// PKApply
@@ -75,6 +77,13 @@ struct MainModel {
         model.desc = "sound_effect".localized
         model.imageNmae = "pic-goods"
         model.sceneType = .agoraVoice
+        dataArray.append(model)
+        
+        model = MainModel()
+        model.title = "agoraClub".localized
+        model.desc = "agoraClub".localized
+        model.imageNmae = "pic-Blind-date"
+        model.sceneType = .agoraClub
         dataArray.append(model)
 
         model = MainModel()

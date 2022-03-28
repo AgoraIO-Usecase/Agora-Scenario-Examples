@@ -32,9 +32,11 @@ class AgoraVoiceInviteView: UIView {
         return view
     }()
     private var channelName: String = ""
-    init(channelName: String) {
+    private var syncName: String = SYNC_MANAGER_AGORA_VOICE_USERS
+    init(channelName: String, syncName: String = SYNC_MANAGER_AGORA_VOICE_USERS) {
         super.init(frame: .zero)
         self.channelName = channelName
+        self.syncName = syncName
         setupUI()
         fetchAgoraVoiceUserInfoData()
     }
@@ -44,10 +46,11 @@ class AgoraVoiceInviteView: UIView {
     }
     
     private func fetchAgoraVoiceUserInfoData() {
-        SyncUtil.fetchCollection(id: channelName, className: SYNC_MANAGER_AGORA_VOICE_USERS, success: { results in
+        SyncUtil.fetchCollection(id: channelName, className: syncName, success: { results in
             let datas = results.compactMap({ $0.toJson() })
                 .compactMap({ JSONObject.toModel(AgoraVoiceUsersModel.self, value: $0 )})
                 .filter({ $0.userId != "\(UserInfo.userId)" && $0.status != .accept })
+                .filterDuplicates({ $0.userId })
             self.tableView.dataArray = datas
         })
     }
@@ -86,7 +89,8 @@ extension AgoraVoiceInviteView: AGETableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: AgoraVoiceInviteViewCell.description(), for: indexPath) as! AgoraVoiceInviteViewCell
         cell.setUserInfoData(with: self.tableView.dataArray?[indexPath.row],
-                             channelName: channelName)
+                             channelName: channelName,
+                             syncName: syncName)
         return cell
     }
 }
@@ -121,6 +125,7 @@ class AgoraVoiceInviteViewCell: UITableViewCell {
     }()
     public var currendModel: AgoraVoiceUsersModel?
     public var channelName: String = ""
+    private var syncName: String = SYNC_MANAGER_AGORA_VOICE_USERS
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -131,9 +136,12 @@ class AgoraVoiceInviteViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setUserInfoData(with item: Any?, channelName: String) {
+    func setUserInfoData(with item: Any?,
+                         channelName: String,
+                         syncName: String = SYNC_MANAGER_AGORA_VOICE_USERS) {
         guard let model = item as? AgoraVoiceUsersModel else { return }
         self.channelName = channelName
+        self.syncName = syncName
         currendModel = model
         nameLabel.text = "User-\(model.userId)"
         avatarImage.image = UIImage(named: model.avatar)
@@ -170,7 +178,7 @@ class AgoraVoiceInviteViewCell: UITableViewCell {
         model.status = .invite
         let params = JSONObject.toJson(model)
         SyncUtil.updateCollection(id: channelName,
-                                  className: SYNC_MANAGER_AGORA_VOICE_USERS,
+                                  className: syncName,
                                   objectId: model.objectId ?? "",
                                   params: params)
         

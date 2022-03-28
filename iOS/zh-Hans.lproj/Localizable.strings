@@ -278,3 +278,5 @@ you_invited_to_play_game="对方邀请您玩游戏";
 game_over="游戏已结束";
 after_closing_live_broadcast_room="关闭直播间后，其他用户将不能再和您连线。确定关闭 ？";
 close_studio="关闭直播间";
+
+agoraClub = "夜店";

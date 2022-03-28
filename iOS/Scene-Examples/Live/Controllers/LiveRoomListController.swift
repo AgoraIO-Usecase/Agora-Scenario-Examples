@@ -52,10 +52,24 @@ class LiveRoomListController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationTransparent(isTransparent: false)
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        navigationController?.view.backgroundColor = view.backgroundColor
+        if sceneType == .agoraClub {
+            navigationController?.navigationBar.setBackgroundImage(UIImage().color(view.backgroundColor, height: Screen.kNavHeight), for: .any, barMetrics: .default)
+        }
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         getLiveData()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.view.backgroundColor = .white
+        navigationController?.navigationBar.tintColor = .black
+        navigationController?.navigationBar.barTintColor = .black
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
+        navigationController?.navigationBar.setBackgroundImage(UIImage().color(.white, height: Screen.kNavHeight), for: .any, barMetrics: .default)
     }
     
     private func getLiveData() {
@@ -73,6 +87,17 @@ class LiveRoomListController: BaseViewController {
     }
     
     private func setupUI() {
+        view.backgroundColor = sceneType == .agoraClub ? UIColor(hex: "#0E141D") : .white
+        roomView.backgroundColor = view.backgroundColor
+        if sceneType == .agoraClub {
+            navigationController?.navigationBar.tintColor = .white
+            navigationController?.navigationBar.barTintColor = .white
+            navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+            backButton.setImage(UIImage(systemName: "chevron.backward")?
+                                    .withTintColor(.white, renderingMode: .alwaysOriginal),
+                                for: .normal)
+            navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        }
         view.addSubview(roomView)
         view.addSubview(createLiveButton)
         roomView.translatesAutoresizingMaskIntoConstraints = false
@@ -138,8 +163,16 @@ class LiveRoomListController: BaseViewController {
             let agoraVoiceVC = AgoraVoiceController(roomInfo: roomInfo)
             navigationController?.pushViewController(agoraVoiceVC, animated: true)
             
+        case .agoraClub:
+            let clubVC = AgoraClubController(userId: ownerId ?? "", channelName: channelName)
+            navigationController?.pushViewController(clubVC, animated: true)
+            
         default: break
         }
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        sceneType == .agoraClub ? .lightContent : .default
     }
 }
 

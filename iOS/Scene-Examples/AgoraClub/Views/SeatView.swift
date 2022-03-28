@@ -1,25 +1,16 @@
 //
-//  AgoraVoiceUsersView.swift
+//  SeatView.swift
 //  Scene-Examples
 //
-//  Created by zhaoyongqiang on 2022/1/26.
+//  Created by zhaoyongqiang on 2022/3/21.
 //
 
 import UIKit
 import AgoraUIKit_iOS
 import AgoraRtcKit
 
-class AgoraVoiceUsersView: UIView {
-    var muteAudioClosure: ((Bool) -> Void)?
-    
-    private lazy var avatarImageView: AGEImageView = {
-        let imageView = AGEImageView(imageName: "portrait01")
-        imageView.contentMode = .scaleAspectFill
-        imageView.cornerRadius = 40.fit
-        return imageView
-    }()
-    
-    public lazy var collectionView: AGECollectionView = {
+class SeatView: UIView {
+    private lazy var collectionView: AGECollectionView = {
         let view = AGECollectionView()
         let margin = (Screen.width - 4 * 80.fit - 15.fit * 2)
         view.itemSize = CGSize(width: 60.fit, height: 60.fit)
@@ -34,11 +25,20 @@ class AgoraVoiceUsersView: UIView {
     }()
     private var channelName: String = ""
     private var currentRole: AgoraClientRole = .audience
+    private var agoraKit: AgoraRtcEngineKit?
+    private var channelMediaOptions: AgoraRtcChannelMediaOptions?
+    private var connection: AgoraRtcConnection?
     
-    init(channelName: String, role: AgoraClientRole) {
+    init(channelName: String,
+         role: AgoraClientRole,
+         agoraKit: AgoraRtcEngineKit?,
+         mediaOptions: AgoraRtcChannelMediaOptions?, connection: AgoraRtcConnection) {
         super.init(frame: .zero)
         self.channelName = channelName
         self.currentRole = role
+        self.agoraKit = agoraKit
+        self.channelMediaOptions = mediaOptions
+        self.connection = connection
         setupUI()
         fetchAgoraVoiceUserInfoData()
     }
@@ -47,8 +47,12 @@ class AgoraVoiceUsersView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func reloadData() {
+        collectionView.reloadData()
+    }
+    
     private func fetchAgoraVoiceUserInfoData() {
-        SyncUtil.fetchCollection(id: channelName, className: SYNC_MANAGER_AGORA_VOICE_USERS, success: { results in
+        SyncUtil.fetchCollection(id: channelName, className: SYNC_MANAGER_AGORA_CLUB_USERS, success: { results in
             var tempArray = [Any]()
             let datas = results.compactMap({ $0.toJson() })
                 .compactMap({ JSONObject.toModel(AgoraVoiceUsersModel.self, value: $0 )})
@@ -63,23 +67,15 @@ class AgoraVoiceUsersView: UIView {
     }
     
     private func setupUI() {
-        avatarImageView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(avatarImageView)
         addSubview(collectionView)
-        
-        avatarImageView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        avatarImageView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        avatarImageView.widthAnchor.constraint(equalToConstant: 80.fit).isActive = true
-        avatarImageView.heightAnchor.constraint(equalToConstant: 80.fit).isActive = true
-        
         collectionView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        collectionView.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 70).isActive = true
+        collectionView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         collectionView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         collectionView.heightAnchor.constraint(equalToConstant: 150.fit).isActive = true
         
-        SyncUtil.subscribeCollection(id: channelName, className: SYNC_MANAGER_AGORA_VOICE_USERS, onUpdated: { object in
+        SyncUtil.subscribeCollection(id: channelName, className: SYNC_MANAGER_AGORA_CLUB_USERS, onUpdated: { object in
             guard var model = JSONObject.toModel(AgoraVoiceUsersModel.self, value: object.toJson()) else { return }
             let controller = UIApplication.topMostViewController
             if model.userId == UserInfo.uid && model.status == .invite {
@@ -87,14 +83,23 @@ class AgoraVoiceUsersView: UIView {
                 let cancel = UIAlertAction(title: "Cancel".localized, style: .cancel) { _ in
                     model.status = .refuse
                     let params = JSONObject.toJson(model)
-                    SyncUtil.updateCollection(id: self.channelName, className: SYNC_MANAGER_AGORA_VOICE_USERS, objectId: model.objectId ?? "", params: params)
+                    SyncUtil.updateCollection(id: self.channelName, className: SYNC_MANAGER_AGORA_CLUB_USERS, objectId: model.objectId ?? "", params: params)
                 }
                 let invite = UIAlertAction(title: /*上麦*/"Became_A_Host".localized, style: .default) { _ in
                     model.status = .accept
+                    
+                    guard let option = self.channelMediaOptions else { return }
+                    option.publishAudioTrack = .of(true)
+                    option.publishCameraTrack = .of(true)
+                    option.clientRoleType = .of((Int32)(AgoraClientRole.broadcaster.rawValue))
+                    self.agoraKit?.setClientRole(.broadcaster)
+                    self.agoraKit?.updateChannel(with: option)
+                    self.agoraKit?.startPreview()
+                    self.agoraKit?.setClientRole(.broadcaster)
+                    
                     let params = JSONObject.toJson(model)
-                    SyncUtil.updateCollection(id: self.channelName, className: SYNC_MANAGER_AGORA_VOICE_USERS, objectId: model.objectId ?? "", params: params)
+                    SyncUtil.updateCollection(id: self.channelName, className: SYNC_MANAGER_AGORA_CLUB_USERS, objectId: model.objectId ?? "", params: params)
                     self.fetchAgoraVoiceUserInfoData()
-                    self.muteAudioClosure?(true)
                 }
                 alert.addAction(invite)
                 alert.addAction(cancel)
@@ -109,14 +114,23 @@ class AgoraVoiceUsersView: UIView {
                 return
             }
             if model.status == .end && model.userId == UserInfo.uid {
-                self.muteAudioClosure?(false)
+                guard let option = self.channelMediaOptions else { return }
+                option.publishAudioTrack = .of(false)
+                option.publishCustomVideoTrack = .of(false)
+                option.clientRoleType = .of((Int32)(AgoraClientRole.audience.rawValue))
+                self.agoraKit?.updateChannel(with: option)
             }
             self.fetchAgoraVoiceUserInfoData()
+            
 
         }, onDeleted: { object in
             guard let model = JSONObject.toModel(AgoraVoiceUsersModel.self, value: object.toJson()) else { return }
             if model.userId == UserInfo.uid {
-                self.muteAudioClosure?(false)
+                guard let option = self.channelMediaOptions else { return }
+                option.publishAudioTrack = .of(false)
+                option.publishCustomVideoTrack = .of(false)
+                option.clientRoleType = .of((Int32)(AgoraClientRole.audience.rawValue))
+                self.agoraKit?.updateChannel(with: option)
             }
             self.fetchAgoraVoiceUserInfoData()
             
@@ -125,12 +139,27 @@ class AgoraVoiceUsersView: UIView {
         })
     }
 }
-
-extension AgoraVoiceUsersView: AGECollectionViewDelegate {
+extension SeatView: AGECollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AgoraVoiceUsersViewCell.description(), for: indexPath) as! AgoraVoiceUsersViewCell
+        cell.defaultImageName = "zuowei"
         let model = self.collectionView.dataArray?[indexPath.item]
-        cell.setupData(model: model)
+        if let userModel = model as? AgoraVoiceUsersModel {
+            let canvas = AgoraRtcVideoCanvas()
+            canvas.uid = UInt(userModel.userId) ?? 0
+            canvas.renderMode = .hidden
+            canvas.view = cell.imageView
+            if userModel.userId == UserInfo.uid {
+                agoraKit?.setupLocalVideo(canvas)
+            } else {
+                let connection = AgoraRtcConnection()
+                connection.localUid = UserInfo.userId
+                connection.channelId = channelName
+                agoraKit?.setupRemoteVideoEx(canvas, connection: connection)
+            }
+        } else {
+            cell.setupData(model: model)
+        }
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -141,71 +170,19 @@ extension AgoraVoiceUsersView: AGECollectionViewDelegate {
         let close = UIAlertAction(title: /*封麦*/"Seat_Close".localized, style: .destructive) { _ in
             var userModel = model as? AgoraVoiceUsersModel
             userModel?.status = .end
-            SyncUtil.updateCollection(id: self.channelName, className: SYNC_MANAGER_AGORA_VOICE_USERS, objectId: userModel?.objectId ?? "", params: JSONObject.toJson(userModel))
+            SyncUtil.updateCollection(id: self.channelName, className: SYNC_MANAGER_AGORA_CLUB_USERS, objectId: userModel?.objectId ?? "", params: JSONObject.toJson(userModel))
         }
         let cancel = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
         if model is String {
             let invite = UIAlertAction(title: "Invite".localized, style: .default) { _ in
-                AlertManager.show(view: AgoraVoiceInviteView(channelName: self.channelName), alertPostion: .bottom)
+                AlertManager.show(view: AgoraVoiceInviteView(channelName: self.channelName,
+                                                             syncName: SYNC_MANAGER_AGORA_CLUB_USERS),
+                                  alertPostion: .bottom)
             }
             alert.addAction(invite)
         }
         alert.addAction(close)
         alert.addAction(cancel)
         controller?.present(alert, animated: true, completion: nil)
-    }
-}
-
-class AgoraVoiceUsersViewCell: UICollectionViewCell {
-    lazy var imageView: AGEButton = {
-        let imageView = AGEButton(style: .imageName(name: "icon-invite"))
-        imageView.cornerRadius = 30.fit
-        imageView.contentMode = .scaleAspectFit
-        imageView.backgroundColor = UIColor.black.withAlphaComponent(0.6)
-        imageView.isUserInteractionEnabled = false
-        return imageView
-    }()
-    var defaultImageName: String?
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupUI()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func setupData(model: Any?) {
-        if model is AgoraVoiceUsersModel {
-            let userModel = model as! AgoraVoiceUsersModel
-            imageView.setImage(UIImage(named: userModel.avatar), for: .normal)
-        } else {
-            imageView.setImage(UIImage(named: defaultImageName ?? "icon-invite"), for: .normal)
-        }
-    }
-    
-    private func setupUI() {
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(imageView)
-        imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
-        imageView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
-        imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
-    }
-    
-    override open func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        alpha = 0.65
-    }
-
-    override open func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesEnded(touches, with: event)
-        alpha = 1
-    }
-
-    override open func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesCancelled(touches, with: event)
-        alpha = 1
     }
 }

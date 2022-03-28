@@ -6,8 +6,18 @@
 //
 
 import UIKit
+import AgoraUIKit_iOS
 
 class BaseViewController: UIViewController {
+    lazy var backButton: AGEButton = {
+        let button = AGEButton()
+        button.setImage(UIImage(systemName: "chevron.backward")?
+                            .withTintColor(.black, renderingMode: .alwaysOriginal),
+                        for: .normal)
+        button.contentHorizontalAlignment = .left
+        button.addTarget(self, action: #selector(clickBackButton), for: .touchUpInside)
+        return button
+    }()
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -20,7 +30,10 @@ class BaseViewController: UIViewController {
     private func setupNavigationBar() {
         let viewControllers = navigationController?.viewControllers.count ?? 0
         guard viewControllers > 1 else { return }
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward")?.withTintColor(.black, renderingMode: .alwaysOriginal), style: .plain, target: self, action: #selector(clickBackButton))
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        backButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        backButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
     
@@ -76,7 +89,7 @@ class BaseViewController: UIViewController {
     }
     
     @objc
-    private func clickBackButton() {
+    func clickBackButton() {
         navigationController?.popViewController(animated: true)
     }
     

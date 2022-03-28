@@ -1,40 +1,35 @@
 PODS:
   - AgoraRtcEngine_iOS_Preview (4.0.0.preview.3)
   - AgoraRtm_iOS (1.4.9)
-  - AgoraScreenShare (1.0)
   - AgoraSyncManager (1.0.3):
     - AgoraRtm_iOS (= 1.4.9)
-  - AgoraUIKit-iOS (1.0.0)
+  - AgoraUIKit-iOS (1.0.1)
   - MBProgressHUD (1.2.0)
 
 DEPENDENCIES:
   - AgoraRtcEngine_iOS_Preview (= 4.0.0.preview.3)
-  - AgoraScreenShare (from `sdk`)
   - AgoraSyncManager (from `AgoraSyncManager`)
-  - AgoraUIKit-iOS (~> 1.0.0)
+  - AgoraUIKit-iOS (~> 1.0.1)
   - MBProgressHUD (~> 1.2.0)
 
 SPEC REPOS:
-  trunk:
+  https://github.com/CocoaPods/Specs.git:
     - AgoraRtcEngine_iOS_Preview
     - AgoraRtm_iOS
     - AgoraUIKit-iOS
     - MBProgressHUD
 
 EXTERNAL SOURCES:
-  AgoraScreenShare:
-    :path: sdk
   AgoraSyncManager:
     :path: AgoraSyncManager
 
 SPEC CHECKSUMS:
   AgoraRtcEngine_iOS_Preview: 6af3e4305cf2b6828ba8f759a082be2fcb45ec87
   AgoraRtm_iOS: b4bb9a431ce36f9b44cda423e66b2f96945ca2ab
-  AgoraScreenShare: 07e82b5985340b66a574e17db0353d6e70c780cc
   AgoraSyncManager: 13db492d1e4c53a6488fbc2625fc3849132f6b48
-  AgoraUIKit-iOS: 9c5ff00c6eb6aeb1fb8a1541d3d8d93bd46fb4c3
+  AgoraUIKit-iOS: e180ec0a867b298b57cd6345412df919615065b3
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
 
-PODFILE CHECKSUM: 7dd3cc1a0f2c3028548a851125b313dce4002ddc
+PODFILE CHECKSUM: 17a631a4a732e4fbe5df7ffdfa459549af6907e7
 
 COCOAPODS: 1.11.2
