@@ -128,6 +128,7 @@ public class RoomListActivity extends BaseActivity<ClubRoomListActivityBinding> 
         EditText contentEt = contentView.findViewById(R.id.et_content);
         ImageView refreshIv = contentView.findViewById(R.id.iv_refresh);
         refreshIv.setOnClickListener(v -> contentEt.setText(RandomUtil.randomLiveRoomName(RoomListActivity.this)));
+        contentEt.setText(RandomUtil.randomLiveRoomName(RoomListActivity.this));
 
         new AlertDialog.Builder(this)
                 .setTitle(R.string.club_room_create_dialog_title)

@@ -1,30 +1,16 @@
 apply from: "${rootProject.projectDir}/modular.gradle"
 
-def safeExtGetVersion(prop, key, fallback) {
-    if (rootProject.ext.has(prop)) {
-        def map = rootProject.ext.get(prop)
-        if (map.containsKey(key)) {
-            return map.get(key)
-        }
-    }
-    return fallback
-}
-
-def safeExtGetDependence(key, fallback){
-    return "$key:${safeExtGetVersion('dependencies', key, fallback)}"
-}
-
 android {
-    compileSdkVersion safeExtGetVersion('android', 'compileSdkVersion', 31)
-    buildToolsVersion safeExtGetVersion('android', 'buildToolsVersion', '30.0.3')
+    compileSdkVersion 31
+    buildToolsVersion "30.0.3"
 
 
     defaultConfig {
         if (isRunAlone.toBoolean()) {
             applicationId "io.agora.sample.club"
         }
-        minSdkVersion safeExtGetVersion('android', 'minSdkVersion', 21)
-        targetSdkVersion safeExtGetVersion('android', 'targetSdkVersion', 31)
+        minSdkVersion 21
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0.0"
 
@@ -60,16 +46,16 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    testImplementation safeExtGetDependence('junit:junit','4.+')
-    androidTestImplementation safeExtGetDependence('androidx.test.ext:junit','1.1.2')
-    androidTestImplementation safeExtGetDependence('androidx.test.espresso:espresso-core','3.3.0')
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    implementation safeExtGetDependence('androidx.appcompat:appcompat', '1.2.0')
-    implementation safeExtGetDependence('androidx.recyclerview:recyclerview', '1.2.1')
-    implementation safeExtGetDependence('com.yanzhenjie:permission', '2.0.2')
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'com.yanzhenjie:permission:2.0.2'
 
-    implementation safeExtGetDependence('com.github.agorabuilder:agora-full-preview','4.0.0.preview.3')
-    implementation safeExtGetDependence('com.github.AgoraIO-Community:SyncManager-Android', '1.0.4')
+    implementation 'com.github.agorabuilder:agora-full-preview:4.0.0.preview.3'
+    implementation 'com.github.AgoraIO-Community:SyncManager-Android:1.0.5.2'
 
     implementation project(':libs:ui-widget')
     implementation project(':libs:base-library')

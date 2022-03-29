@@ -28,7 +28,7 @@ import io.agora.rtc2.video.VideoEncoderConfiguration;
 
 public class RtcManager {
     private static final String TAG = "RtcManager";
-    private static final int LOCAL_RTC_UID = 0;
+    private static int LOCAL_RTC_UID = 0;
 
     private static CameraCapturerConfiguration.CAMERA_DIRECTION cameraDirection = CameraCapturerConfiguration.CAMERA_DIRECTION.CAMERA_FRONT;
     public static final VideoEncoderConfiguration encoderConfiguration = new VideoEncoderConfiguration(
@@ -190,7 +190,9 @@ public class RtcManager {
         if (engine == null) {
             return;
         }
+        container.removeAllViews();
         TextureView videoView = new TextureView(container.getContext());
+        videoView.setOpaque(true);
         container.addView(videoView);
         firstVideoFramePendingRuns.put(LOCAL_RTC_UID, firstFrame);
         engine.setupLocalVideo(new VideoCanvas(videoView, RENDER_MODE_HIDDEN, LOCAL_RTC_UID));
@@ -205,6 +207,7 @@ public class RtcManager {
         if (!TextUtils.isEmpty(uid)) {
             try {
                 _uid = Integer.parseInt(uid);
+                LOCAL_RTC_UID = _uid;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -262,11 +265,21 @@ public class RtcManager {
         engine.updateChannelMediaOptions(options);
     }
 
+    public void enableLocalVideo(boolean enable){
+        engine.enableLocalVideo(enable);
+    }
+
+    public void enableLocalAudio(boolean enable){
+        engine.enableLocalAudio(enable);
+    }
+
     public void renderRemoteVideo(FrameLayout container, int uid) {
         if (engine == null) {
             return;
         }
-        SurfaceView view = new SurfaceView(container.getContext());
+        container.removeAllViews();
+        TextureView view = new TextureView(container.getContext());
+        view.setOpaque(true);
         container.addView(view);
         engine.setupRemoteVideo(new VideoCanvas(view, RENDER_MODE_HIDDEN, uid));
     }

@@ -40,6 +40,7 @@ public class RoomManager {
     private static volatile boolean isInitialized = false;
 
     private final Map<String, SceneReference> sceneMap = new HashMap<>();
+    private final Map<String, String> userIdToObjectIdMap = new HashMap<>();
 
     public static RoomManager getInstance() {
         if (INSTANCE == null) {
@@ -182,11 +183,72 @@ public class RoomManager {
         });
     }
 
+    public void inviteUser(String roomId, UserInfo userInfo){
+        updateUserStatus(roomId, userInfo, Status.INVITE);
+    }
+
+    public void acceptUser(String roomId, UserInfo userInfo){
+        updateUserStatus(roomId, userInfo, Status.ACCEPT);
+    }
+
+    public void refuseUser(String roomId, UserInfo userInfo){
+        updateUserStatus(roomId, userInfo, Status.REFUSE);
+    }
+
+    public void endUser(String roomId, UserInfo userInfo){
+        updateUserStatus(roomId, userInfo, Status.END);
+    }
+
+    private void updateUserStatus(String roomId, UserInfo userInfo, @Status int status) {
+        checkInitialized();
+        SceneReference sceneReference = sceneMap.get(roomId);
+        if (sceneReference == null) {
+            return;
+        }
+        UserInfo _userInfo = new UserInfo();
+        _userInfo.userId = userInfo.userId;
+        _userInfo.userName = userInfo.userName;
+        _userInfo.avatar = userInfo.avatar;
+        _userInfo.status = status;
+        sceneReference.collection(SYNC_MANAGER_USER_INFO_LIST)
+                .update(userIdToObjectIdMap.get(userInfo.userId), _userInfo, new Sync.Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onFail(SyncManagerException exception) {
+
+                    }
+                });
+    }
+
     public void leaveRoom(String roomId) {
         deleteLocalUser(roomId);
     }
 
-    private void getUserList(String roomId, DataListCallback<UserInfo> callback) {
+    public void destroyRoom(String roomId){
+        deleteLocalUser(roomId);
+        checkInitialized();
+        SceneReference sceneReference = sceneMap.get(roomId);
+        if (sceneReference == null) {
+            return;
+        }
+        sceneReference.delete(new Sync.Callback() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onFail(SyncManagerException exception) {
+
+            }
+        });
+    }
+
+    public void getUserList(String roomId, DataListCallback<UserInfo> callback) {
         checkInitialized();
         SceneReference sceneReference = sceneMap.get(roomId);
         if (sceneReference == null) {
@@ -199,7 +261,9 @@ public class RoomManager {
                     List<UserInfo> userInfos = new ArrayList<>();
                     if (result != null && result.size() > 0) {
                         for (IObject iObject : result) {
-                            userInfos.add(iObject.toObject(UserInfo.class));
+                            UserInfo userInfo = iObject.toObject(UserInfo.class);
+                            userIdToObjectIdMap.put(userInfo.userId, iObject.getId());
+                            userInfos.add(userInfo);
                         }
                     }
                     callback.onSuccess(userInfos);
@@ -233,6 +297,7 @@ public class RoomManager {
                     @Override
                     public void onSuccess(IObject result) {
                         if (success != null) {
+                            userIdToObjectIdMap.put(userInfo.userId, result.getId());
                             success.onSuccess(userInfo);
                         }
                     }
@@ -251,8 +316,7 @@ public class RoomManager {
             return;
         }
         sceneReference.collection(SYNC_MANAGER_USER_INFO_LIST)
-                .document(getCacheUserId())
-                .delete(new Sync.Callback() {
+                .delete(userIdToObjectIdMap.get(getCacheUserId()), new Sync.Callback() {
                     @Override
                     public void onSuccess() {
 
@@ -274,12 +338,12 @@ public class RoomManager {
             return;
         }
         sceneReference.collection(SYNC_MANAGER_USER_INFO_LIST)
-                .document("")
                 .subscribe(new Sync.EventListener() {
 
                     @Override
                     public void onCreated(IObject item) {
                         UserInfo userInfo = item.toObject(UserInfo.class);
+                        userIdToObjectIdMap.put(userInfo.userId, item.getId());
                         if (addOrUpdateCallback != null && addOrUpdateCallback.get() != null) {
                             addOrUpdateCallback.get().onSuccess(userInfo);
                         }
@@ -288,6 +352,7 @@ public class RoomManager {
                     @Override
                     public void onUpdated(IObject item) {
                         UserInfo userInfo = item.toObject(UserInfo.class);
+                        userIdToObjectIdMap.put(userInfo.userId, item.getId());
                         if (addOrUpdateCallback != null && addOrUpdateCallback.get() != null) {
                             addOrUpdateCallback.get().onSuccess(userInfo);
                         }
@@ -296,6 +361,7 @@ public class RoomManager {
                     @Override
                     public void onDeleted(IObject item) {
                         UserInfo userInfo = item.toObject(UserInfo.class);
+                        userIdToObjectIdMap.remove(userInfo.userId);
                         if (deleteCallback != null && deleteCallback.get() != null) {
                             deleteCallback.get().onSuccess(userInfo);
                         }
@@ -523,7 +589,7 @@ public class RoomManager {
         public String userName = "User-" + userId;
         public @Status
         int status = Status.END;
-        public String timestamp;
+        public String timestamp = System.currentTimeMillis() + "";
 
         public int getAvatarResId() {
             Integer ret = RoomBgResMap.get(avatar);

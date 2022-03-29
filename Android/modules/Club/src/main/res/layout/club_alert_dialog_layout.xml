@@ -93,6 +93,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     tools:text="12345"
+                    android:textColor="@android:color/white"
                     android:paddingLeft="?attr/dialogPreferredPadding"
                     android:paddingRight="?attr/dialogPreferredPadding"/>
 

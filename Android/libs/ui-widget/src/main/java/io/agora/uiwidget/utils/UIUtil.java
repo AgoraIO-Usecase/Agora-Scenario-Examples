@@ -57,7 +57,13 @@ public class UIUtil {
     }
 
     public static <T extends View> T setViewCircle(T view) {
-        return setViewRound(view, 200.0f);
+        view.post(() -> {
+            Rect rect = new Rect();
+            view.getGlobalVisibleRect(rect);
+            float radius = Math.min(rect.width(), rect.height()) * 1.0f / 2;
+            setViewRound(view, radius);
+        });
+        return view;
     }
 
     public static <T extends View> T setViewRound(T view, float radius) {

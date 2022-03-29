@@ -15,6 +15,7 @@
     <style name="club_AlertDialog.Theme" parent="ThemeOverlay.AppCompat.Dialog.Alert">
         <item name="android:windowBackground">@drawable/club_alert_dialog_bg</item>
         <item name="android:windowAnimationStyle">@style/Animation.AppCompat.DropDownUp</item>
+        <item name="textColorAlertDialogListItem">@android:color/white</item>
     </style>
 
 

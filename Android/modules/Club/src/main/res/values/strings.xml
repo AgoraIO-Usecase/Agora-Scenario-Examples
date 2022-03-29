@@ -11,4 +11,14 @@
     <string name="club_room_create_dialog_title">Create Room</string>
     <string name="club_room_create_dialog_et_hind">Please enter a room name</string>
 
+    <string name="club_room_detail_accept_invite">Accept the invitation or not?</string>
+    <string name="club_room_detail_close_seat">Close seat</string>
+    <string name="club_room_detail_invite">Invite</string>
+    <string name="club_room_detail_refuse_tip">%s refuse your invitation</string>
+
+    <array name="club_room_detail_seat_options">
+        <item>@string/club_room_detail_invite</item>
+        <item>@string/club_room_detail_close_seat</item>
+    </array>
+
 </resources>
