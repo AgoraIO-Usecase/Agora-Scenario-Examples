@@ -10,13 +10,14 @@ import static io.agora.rtc2.video.VideoEncoderConfiguration.VD_640x360;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.SurfaceView;
 import android.view.TextureView;
 import android.widget.FrameLayout;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import io.agora.mediaplayer.IMediaPlayer;
+import io.agora.mediaplayer.IMediaPlayerObserver;
 import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
 import io.agora.rtc2.IRtcEngineEventHandler;
@@ -28,6 +29,7 @@ import io.agora.rtc2.video.VideoEncoderConfiguration;
 
 public class RtcManager {
     private static final String TAG = "RtcManager";
+    private static final String SAMPLE_MOVIE_URL = "https://webdemo.agora.io/agora-web-showcase/examples/Agora-Custom-VideoSource-Web/assets/sample.mp4";
     private static int LOCAL_RTC_UID = 0;
 
     private static CameraCapturerConfiguration.CAMERA_DIRECTION cameraDirection = CameraCapturerConfiguration.CAMERA_DIRECTION.CAMERA_FRONT;
@@ -46,6 +48,7 @@ public class RtcManager {
     private String publishChannelId;
 
     private volatile static RtcManager INSTANCE = null;
+    private IMediaPlayer mMediaPlayer;
 
     private RtcManager() {
     }
@@ -284,10 +287,80 @@ public class RtcManager {
         engine.setupRemoteVideo(new VideoCanvas(view, RENDER_MODE_HIDDEN, uid));
     }
 
+    public void renderPlayerVideo(FrameLayout container){
+        container.removeAllViews();
+        TextureView view = new TextureView(container.getContext());
+        container.addView(view);
+        getOrCreateMediaPlayer().setView(view);
+    }
+
+    public void openPlayerVideo(String url){
+        if(TextUtils.isEmpty(url)){
+            url = SAMPLE_MOVIE_URL;
+        }
+        IMediaPlayer mediaPlayer = getOrCreateMediaPlayer();
+        mediaPlayer.setPlayerOption("fps_probe_size", 0);
+        mediaPlayer.open(url, 0);
+    }
+
+    public void closePlayerVideo(){
+        if(mMediaPlayer != null){
+            mMediaPlayer.stop();
+            mMediaPlayer.destroy();
+            mMediaPlayer = null;
+        }
+    }
+
+    public IMediaPlayer getOrCreateMediaPlayer(){
+        if(mMediaPlayer != null){
+            return mMediaPlayer;
+        }
+        mMediaPlayer = engine.createMediaPlayer();
+        mMediaPlayer.registerPlayerObserver(new IMediaPlayerObserver() {
+            @Override
+            public void onPlayerStateChanged(io.agora.mediaplayer.Constants.MediaPlayerState mediaPlayerState, io.agora.mediaplayer.Constants.MediaPlayerError mediaPlayerError) {
+                Log.d(TAG, "MediaPlayer onPlayerStateChanged -- url=" + mMediaPlayer.getPlaySrc() + "state=" + mediaPlayerState + ", error=" + mediaPlayerError);
+                if (mediaPlayerState == io.agora.mediaplayer.Constants.MediaPlayerState.PLAYER_STATE_OPEN_COMPLETED) {
+                    if (mMediaPlayer != null) {
+                        mMediaPlayer.play();
+                    }
+                }
+            }
+
+            @Override
+            public void onPositionChanged(long l) {
+
+            }
+
+            @Override
+            public void onPlayerEvent(io.agora.mediaplayer.Constants.MediaPlayerEvent mediaPlayerEvent) {
+
+            }
+
+            @Override
+            public void onMetaData(io.agora.mediaplayer.Constants.MediaPlayerMetadataType mediaPlayerMetadataType, byte[] bytes) {
+
+            }
+
+            @Override
+            public void onPlayBufferUpdated(long l) {
+
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+        });
+
+        return mMediaPlayer;
+    }
+
     public void release() {
         publishChannelListener = null;
         if (engine != null) {
             engine.stopPreview();
+            closePlayerVideo();
             engine = null;
             RtcEngine.destroy();
         }

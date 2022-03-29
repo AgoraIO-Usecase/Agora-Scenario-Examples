@@ -1,21 +1,20 @@
 package io.agora.sample.club;
 
 import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
-import androidx.core.widget.ContentLoadingProgressBar;
-
-import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -72,6 +71,8 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         roomInfo = (RoomManager.RoomInfo) getIntent().getSerializableExtra("roomInfo");
 
         mBinding.titleBar
@@ -79,7 +80,8 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                 .setDeliverVisible(false)
                 .setTitleName(String.format(Locale.US, "%s(%s)", roomInfo.roomName, roomInfo.roomId), getResources().getColor(R.color.club_title_bar_text_color))
                 .setBackIcon(true, R.drawable.club_ic_arrow_24, v -> finish());
-
+        mBinding.ivFullLarge.setOnClickListener(v -> setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE));
+        mBinding.ivFullBack.setOnClickListener(v -> setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT));
         // 座位列表
         initSeatLayout(mBinding.seat01, 0);
         initSeatLayout(mBinding.seat02, 1);
@@ -345,6 +347,8 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                 runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_left_suffix))));
             }
         });
+        rtcManager.renderPlayerVideo(mBinding.portraitPlayerContainer);
+        rtcManager.openPlayerVideo(roomInfo.videoUrl);
     }
 
     private void showGiftGridDialog() {
@@ -371,6 +375,20 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
 
     private boolean isLocalRoomOwner(){
         return roomInfo.userId.equals(RoomManager.getCacheUserId());
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            mBinding.portraitRootLayout.setVisibility(View.VISIBLE);
+            mBinding.landscapeLayout.setVisibility(View.GONE);
+            rtcManager.renderPlayerVideo(mBinding.portraitPlayerContainer);
+        }else{
+            mBinding.portraitRootLayout.setVisibility(View.GONE);
+            mBinding.landscapeLayout.setVisibility(View.VISIBLE);
+            rtcManager.renderPlayerVideo(mBinding.landscapePlayerContainer);
+        }
     }
 
     @Override

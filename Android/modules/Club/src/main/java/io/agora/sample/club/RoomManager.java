@@ -79,9 +79,8 @@ public class RoomManager {
         });
     }
 
-    public void createRoom(String roomName, DataCallback<RoomInfo> callback) {
+    public void createRoom(RoomInfo roomInfo, DataCallback<RoomInfo> callback) {
         checkInitialized();
-        RoomInfo roomInfo = new RoomInfo(roomName);
         roomInfo.userId = getCacheUserId();
         Scene room = new Scene();
         room.setId(roomInfo.roomId);
@@ -494,6 +493,7 @@ public class RoomManager {
         public String roomId = getRandomRoomId();
         public String userId;
         public String backgroundId = String.format(Locale.US, "portrait%02d", RandomUtil.randomId(1, 14));
+        public String videoUrl = "";
 
         public RoomInfo(String roomName) {
             this.roomName = roomName;

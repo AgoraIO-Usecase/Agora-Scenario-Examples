@@ -46,7 +46,8 @@
 
         <activity
             android:name=".RoomDetailActivity"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop"
+            android:configChanges="orientation|screenLayout|screenSize"/>
 
     </application>
 </manifest>

@@ -26,7 +26,9 @@ import io.agora.uiwidget.function.RoomListView;
 import io.agora.uiwidget.utils.RandomUtil;
 
 public class RoomListActivity extends BaseActivity<ClubRoomListActivityBinding> {
-    private final String TAG = "RoomListActivity";
+    private final static String[] VIDEO_URLS = new String[]{
+            "https://webdemo.agora.io/agora-web-showcase/examples/Agora-Custom-VideoSource-Web/assets/sample.mp4"
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -141,7 +143,9 @@ public class RoomListActivity extends BaseActivity<ClubRoomListActivityBinding> 
                     }
                     dialog.dismiss();
                     // 创建房间
-                    RoomManager.getInstance().createRoom(roomName, this::gotoRoomDetailPage);
+                    RoomInfo roomInfo = new RoomInfo(roomName);
+                    roomInfo.videoUrl = VIDEO_URLS[new Random().nextInt(VIDEO_URLS.length)];
+                    RoomManager.getInstance().createRoom(roomInfo, this::gotoRoomDetailPage);
                 })
                 .setNegativeButton(R.string.common_cancel, (dialog, which) -> dialog.dismiss())
                 .show();
