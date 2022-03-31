@@ -43,7 +43,6 @@ public class RtcManager {
     private volatile boolean isInitialized = false;
     private RtcEngine engine;
     private final Map<Integer, Runnable> firstVideoFramePendingRuns = new HashMap<>();
-    private Context mContext;
     private OnChannelListener publishChannelListener;
     private String publishChannelId;
 
@@ -53,7 +52,7 @@ public class RtcManager {
     private RtcManager() {
     }
 
-    public static final RtcManager getInstance() {
+    public static RtcManager getInstance() {
         if (INSTANCE == null) {
             synchronized (RtcManager.class) {
                 if (INSTANCE == null) {
@@ -68,10 +67,9 @@ public class RtcManager {
         if (isInitialized) {
             return;
         }
-        mContext = context;
         try {
             // 0. create engine
-            engine = RtcEngine.create(mContext.getApplicationContext(), appId, new IRtcEngineEventHandler() {
+            engine = RtcEngine.create(context.getApplicationContext(), appId, new IRtcEngineEventHandler() {
                 @Override
                 public void onWarning(int warn) {
                     super.onWarning(warn);
@@ -300,6 +298,7 @@ public class RtcManager {
         }
         IMediaPlayer mediaPlayer = getOrCreateMediaPlayer();
         mediaPlayer.setPlayerOption("fps_probe_size", 0);
+        mediaPlayer.setLoopCount(Integer.MAX_VALUE);
         mediaPlayer.open(url, 0);
     }
 

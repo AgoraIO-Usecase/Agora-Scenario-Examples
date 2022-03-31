@@ -124,7 +124,7 @@ public class RoomManager {
             @Override
             public void onFail(SyncManagerException exception) {
                 Log.e(TAG, "", exception);
-                if (exception.getMessage().equals("empty attributes")) {
+                if (exception.getMessage().contains("empty")) {
                     if (callback != null) {
                         callback.onSuccess(new ArrayList<>());
                     }
@@ -272,7 +272,7 @@ public class RoomManager {
             @Override
             public void onFail(SyncManagerException exception) {
                 Log.e(TAG, "", exception);
-                if (exception.getMessage().equals("empty attributes")) {
+                if (exception.getMessage().contains("empty")) {
                     if (callback != null) {
                         callback.onSuccess(new ArrayList<>());
                     }
@@ -517,6 +517,7 @@ public class RoomManager {
             map.put("roomId", roomId);
             map.put("userId", userId);
             map.put("backgroundId", backgroundId);
+            map.put("videoUrl", videoUrl);
             return map;
         }
     }

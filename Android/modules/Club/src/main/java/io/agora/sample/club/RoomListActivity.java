@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.runtime.Permission;
 
+import java.util.Locale;
 import java.util.Random;
 
 import io.agora.example.base.BaseActivity;
@@ -83,7 +85,7 @@ public class RoomListActivity extends BaseActivity<ClubRoomListActivityBinding> 
                     }
                 }
 
-                holder.binding.tvName.setText(item.roomName);
+                holder.binding.tvName.setText(String.format(Locale.US, "%s(%s)", item.roomName, item.roomId));
                 holder.itemView.setOnClickListener(v -> checkPermission(() -> gotoRoomDetailPage(item)));
             }
 
@@ -126,11 +128,15 @@ public class RoomListActivity extends BaseActivity<ClubRoomListActivityBinding> 
 
 
     private void showRoomCreateDialog() {
+        String roomId = RoomManager.getRandomRoomId();
+
         View contentView = LayoutInflater.from(this).inflate(R.layout.club_room_create_dialog, null);
         EditText contentEt = contentView.findViewById(R.id.et_content);
         ImageView refreshIv = contentView.findViewById(R.id.iv_refresh);
+        TextView roomIdTv = contentView.findViewById(R.id.tv_roomId);
         refreshIv.setOnClickListener(v -> contentEt.setText(RandomUtil.randomLiveRoomName(RoomListActivity.this)));
         contentEt.setText(RandomUtil.randomLiveRoomName(RoomListActivity.this));
+        roomIdTv.setText(String.format(Locale.US, "roomId: %s", roomId));
 
         new AlertDialog.Builder(this)
                 .setTitle(R.string.club_room_create_dialog_title)
@@ -144,6 +150,7 @@ public class RoomListActivity extends BaseActivity<ClubRoomListActivityBinding> 
                     dialog.dismiss();
                     // 创建房间
                     RoomInfo roomInfo = new RoomInfo(roomName);
+                    roomInfo.roomId = roomId;
                     roomInfo.videoUrl = VIDEO_URLS[new Random().nextInt(VIDEO_URLS.length)];
                     RoomManager.getInstance().createRoom(roomInfo, this::gotoRoomDetailPage);
                 })

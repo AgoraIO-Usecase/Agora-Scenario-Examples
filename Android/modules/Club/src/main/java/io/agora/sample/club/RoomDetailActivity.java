@@ -1,6 +1,5 @@
 package io.agora.sample.club;
 
-import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
@@ -174,19 +173,16 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
         // 封麦：将用户下麦掉，改成end
         Object tag = p.getRoot().getTag();
         new AlertDialog.Builder(this)
-                .setItems(R.array.club_room_detail_seat_options, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == 0) {
-                            showOnlineUserDialog();
-                        } else {
-                            // 封麦
-                            if (tag instanceof RoomManager.UserInfo) {
-                                roomManager.endUser(roomInfo.roomId, (RoomManager.UserInfo) tag);
-                            }
+                .setItems(R.array.club_room_detail_seat_options, (dialog, which) -> {
+                    if (which == 0) {
+                        showOnlineUserDialog();
+                    } else {
+                        // 封麦
+                        if (tag instanceof RoomManager.UserInfo) {
+                            roomManager.endUser(roomInfo.roomId, (RoomManager.UserInfo) tag);
                         }
-                        dialog.dismiss();
                     }
+                    dialog.dismiss();
                 })
                 .show();
     }
