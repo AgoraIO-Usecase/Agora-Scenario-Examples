@@ -238,7 +238,9 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                     if (data.userId.equals(RoomManager.getCacheUserId())) {
                         rtcManager.renderLocalVideo(userSeatLayout.videoContainer, null);
                     } else {
-                        rtcManager.renderRemoteVideo(userSeatLayout.videoContainer, Integer.parseInt(data.userId));
+                        int uid = Integer.parseInt(data.userId);
+                        rtcManager.renderRemoteVideo(userSeatLayout.videoContainer, uid);
+                        rtcManager.playRemoteAudio(uid, true);
                     }
                 }
                 break;
@@ -254,6 +256,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                 break;
             case RoomManager.Status.END:
                 removeUserSeatLayout(data.userId);
+                rtcManager.playRemoteAudio(Integer.parseInt(data.userId), false);
         }
     }
 

@@ -161,11 +161,8 @@ public class RtcManager {
                 }
             });
             engine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
-            engine.setClientRole(Constants.CLIENT_ROLE_BROADCASTER);
-
             engine.setAudioProfile(Constants.AUDIO_PROFILE_SPEECH_STANDARD, Constants.AUDIO_SCENARIO_GAME_STREAMING);
             engine.setDefaultAudioRoutetoSpeakerphone(true);
-            engine.enableDualStreamMode(false);
 
             engine.enableVideo();
             engine.enableAudio();
@@ -216,8 +213,8 @@ public class RtcManager {
         ChannelMediaOptions options = new ChannelMediaOptions();
         options.publishCameraTrack = publish;
         options.publishAudioTrack = publish;
-        options.autoSubscribeVideo = true;
-        options.autoSubscribeAudio = true;
+        options.autoSubscribeVideo = false;
+        options.autoSubscribeAudio = false;
         options.clientRoleType = publish ? Constants.CLIENT_ROLE_BROADCASTER : Constants.CLIENT_ROLE_AUDIENCE;
 
         publishChannelId = channelId;
@@ -282,7 +279,15 @@ public class RtcManager {
         TextureView view = new TextureView(container.getContext());
         view.setOpaque(true);
         container.addView(view);
+        engine.muteRemoteVideoStream(uid, false);
         engine.setupRemoteVideo(new VideoCanvas(view, RENDER_MODE_HIDDEN, uid));
+    }
+
+    public void playRemoteAudio(int uid, boolean isPlay){
+        if (engine == null) {
+            return;
+        }
+        engine.muteRemoteAudioStream(uid, !isPlay);
     }
 
     public void renderPlayerVideo(FrameLayout container){
@@ -361,7 +366,13 @@ public class RtcManager {
             engine.stopPreview();
             closePlayerVideo();
             engine = null;
-            RtcEngine.destroy();
+            new Thread(){
+                @Override
+                public void run() {
+                    super.run();
+                    RtcEngine.destroy();
+                }
+            }.start();
         }
         isInitialized = false;
     }

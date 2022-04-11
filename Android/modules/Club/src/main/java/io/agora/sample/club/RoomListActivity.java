@@ -29,7 +29,9 @@ import io.agora.uiwidget.utils.RandomUtil;
 
 public class RoomListActivity extends BaseActivity<ClubRoomListActivityBinding> {
     private final static String[] VIDEO_URLS = new String[]{
-            "https://webdemo.agora.io/agora-web-showcase/examples/Agora-Custom-VideoSource-Web/assets/sample.mp4"
+//            "https://webdemo.agora.io/agora-web-showcase/examples/Agora-Custom-VideoSource-Web/assets/sample.mp4",
+            "https://webdemo-pull-hdl.agora.io/lbhd/sample1.flv",
+            "https://webdemo-pull-hdl.agora.io/lbhd/sample2.flv",
     };
 
     @Override
