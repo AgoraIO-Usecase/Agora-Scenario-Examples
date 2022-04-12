@@ -48,6 +48,42 @@ public class RtcManager {
 
     private volatile static RtcManager INSTANCE = null;
     private IMediaPlayer mMediaPlayer;
+    private final IMediaPlayerObserver mediaPlayerObserver = new IMediaPlayerObserver() {
+        @Override
+        public void onPlayerStateChanged(io.agora.mediaplayer.Constants.MediaPlayerState mediaPlayerState, io.agora.mediaplayer.Constants.MediaPlayerError mediaPlayerError) {
+            Log.d(TAG, "MediaPlayer onPlayerStateChanged -- url=" + mMediaPlayer.getPlaySrc() + "state=" + mediaPlayerState + ", error=" + mediaPlayerError);
+            if (mediaPlayerState == io.agora.mediaplayer.Constants.MediaPlayerState.PLAYER_STATE_OPEN_COMPLETED) {
+                if (mMediaPlayer != null) {
+                    mMediaPlayer.play();
+                }
+            }
+        }
+
+        @Override
+        public void onPositionChanged(long l) {
+
+        }
+
+        @Override
+        public void onPlayerEvent(io.agora.mediaplayer.Constants.MediaPlayerEvent mediaPlayerEvent) {
+
+        }
+
+        @Override
+        public void onMetaData(io.agora.mediaplayer.Constants.MediaPlayerMetadataType mediaPlayerMetadataType, byte[] bytes) {
+
+        }
+
+        @Override
+        public void onPlayBufferUpdated(long l) {
+
+        }
+
+        @Override
+        public void onCompleted() {
+
+        }
+    };
 
     private RtcManager() {
     }
@@ -194,7 +230,6 @@ public class RtcManager {
         container.addView(videoView);
         firstVideoFramePendingRuns.put(LOCAL_RTC_UID, firstFrame);
         engine.setupLocalVideo(new VideoCanvas(videoView, RENDER_MODE_HIDDEN, LOCAL_RTC_UID));
-        engine.startPreview();
     }
 
     public void joinChannel(String channelId, String uid, String token, boolean publish, OnChannelListener listener) {
@@ -265,6 +300,11 @@ public class RtcManager {
 
     public void enableLocalVideo(boolean enable){
         engine.enableLocalVideo(enable);
+        if(enable){
+            engine.startPreview();
+        }else{
+            engine.stopPreview();
+        }
     }
 
     public void enableLocalAudio(boolean enable){
@@ -320,43 +360,7 @@ public class RtcManager {
             return mMediaPlayer;
         }
         mMediaPlayer = engine.createMediaPlayer();
-        mMediaPlayer.registerPlayerObserver(new IMediaPlayerObserver() {
-            @Override
-            public void onPlayerStateChanged(io.agora.mediaplayer.Constants.MediaPlayerState mediaPlayerState, io.agora.mediaplayer.Constants.MediaPlayerError mediaPlayerError) {
-                Log.d(TAG, "MediaPlayer onPlayerStateChanged -- url=" + mMediaPlayer.getPlaySrc() + "state=" + mediaPlayerState + ", error=" + mediaPlayerError);
-                if (mediaPlayerState == io.agora.mediaplayer.Constants.MediaPlayerState.PLAYER_STATE_OPEN_COMPLETED) {
-                    if (mMediaPlayer != null) {
-                        mMediaPlayer.play();
-                    }
-                }
-            }
-
-            @Override
-            public void onPositionChanged(long l) {
-
-            }
-
-            @Override
-            public void onPlayerEvent(io.agora.mediaplayer.Constants.MediaPlayerEvent mediaPlayerEvent) {
-
-            }
-
-            @Override
-            public void onMetaData(io.agora.mediaplayer.Constants.MediaPlayerMetadataType mediaPlayerMetadataType, byte[] bytes) {
-
-            }
-
-            @Override
-            public void onPlayBufferUpdated(long l) {
-
-            }
-
-            @Override
-            public void onCompleted() {
-
-            }
-        });
-
+        mMediaPlayer.registerPlayerObserver(mediaPlayerObserver);
         return mMediaPlayer;
     }
 

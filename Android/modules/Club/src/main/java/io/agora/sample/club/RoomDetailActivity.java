@@ -101,7 +101,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                 //.setFun1Visible(false)
                 .setFun1Visible(true)
                 .setFun1ImageResource(R.drawable.club_room_detail_ic_cam)
-                .setFun1Activated(true)
+                .setFun1Activated(false)
                 .setFun1ClickListener(v -> {
                     boolean activated = !mBinding.bottomView.isFun1Activated();
                     mBinding.bottomView.setFun1Activated(activated);
@@ -111,7 +111,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                 //.setFun2Visible(false)
                 .setFun2Visible(true)
                 .setFun2ImageResource(R.drawable.club_room_detail_ic_mic)
-                .setFun2Activated(true)
+                .setFun2Activated(false)
                 .setFun2ClickListener(v -> {
                     boolean activated = !mBinding.bottomView.isFun2Activated();
                     mBinding.bottomView.setFun2Activated(activated);
@@ -148,7 +148,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
         if (i >= 0 && i < seatLayouts.length) {
             seatLayouts[i] = p;
         }
-        if(isLocalRoomOwner()){
+        if (isLocalRoomOwner()) {
             p.getRoot().setOnClickListener(v -> showSeatOptionDialog(p));
         }
     }
@@ -172,6 +172,12 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
         // 邀请：显示在线用户列表
         // 封麦：将用户下麦掉，改成end
         Object tag = p.getRoot().getTag();
+        if (tag instanceof RoomManager.UserInfo) {
+            if (((RoomManager.UserInfo) tag).userId.equals(roomInfo.userId)) {
+                Toast.makeText(RoomDetailActivity.this, "The seat is owned by host", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
         new AlertDialog.Builder(this)
                 .setItems(R.array.club_room_detail_seat_options, (dialog, which) -> {
                     if (which == 0) {
@@ -245,7 +251,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                 }
                 break;
             case RoomManager.Status.REFUSE:
-                if(isLocalRoomOwner()){
+                if (isLocalRoomOwner()) {
                     // 显示被拒绝弹窗
                     new AlertDialog.Builder(this)
                             .setTitle(R.string.common_tip)
@@ -310,6 +316,18 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
     private void initRoomManager() {
         roomManager.joinRoom(roomInfo.roomId,
                 list -> runOnUiThread(() -> {
+                    if (isLocalRoomOwner()) {
+                        boolean containOwner = false;
+                        for (RoomManager.UserInfo userInfo : list) {
+                            if (userInfo.userId.equals(roomInfo.userId) && userInfo.status == RoomManager.Status.ACCEPT) {
+                                containOwner = true;
+                                break;
+                            }
+                        }
+                        if (!containOwner) {
+                            roomManager.acceptUser(roomInfo.roomId, new RoomManager.UserInfo());
+                        }
+                    }
                     roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, new WeakReference<>(giftInfoDataCallback));
                     roomManager.subscribeUserChangeEvent(roomInfo.roomId, new WeakReference<>(userAddOrUpdateCallback), new WeakReference<>(userDeleteCallback));
                     for (RoomManager.UserInfo userInfo : list) {
@@ -346,6 +364,8 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                 runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_left_suffix))));
             }
         });
+        rtcManager.enableLocalAudio(false);
+        rtcManager.enableLocalVideo(false);
         rtcManager.renderPlayerVideo(mBinding.portraitPlayerContainer);
         rtcManager.openPlayerVideo(roomInfo.videoUrl);
     }
@@ -372,18 +392,18 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                 .show();
     }
 
-    private boolean isLocalRoomOwner(){
+    private boolean isLocalRoomOwner() {
         return roomInfo.userId.equals(RoomManager.getCacheUserId());
     }
 
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             mBinding.portraitRootLayout.setVisibility(View.VISIBLE);
             mBinding.landscapeLayout.setVisibility(View.GONE);
             rtcManager.renderPlayerVideo(mBinding.portraitPlayerContainer);
-        }else{
+        } else {
             mBinding.portraitRootLayout.setVisibility(View.GONE);
             mBinding.landscapeLayout.setVisibility(View.VISIBLE);
             rtcManager.renderPlayerVideo(mBinding.landscapePlayerContainer);
@@ -392,9 +412,9 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
 
     @Override
     public void finish() {
-        if(isLocalRoomOwner()){
+        if (isLocalRoomOwner()) {
             roomManager.destroyRoom(roomInfo.roomId);
-        }else{
+        } else {
             roomManager.leaveRoom(roomInfo.roomId);
         }
         rtcManager.release();
