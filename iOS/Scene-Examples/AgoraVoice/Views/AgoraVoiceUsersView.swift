@@ -157,13 +157,19 @@ extension AgoraVoiceUsersView: AGECollectionViewDelegate {
 }
 
 class AgoraVoiceUsersViewCell: UICollectionViewCell {
-    lazy var imageView: AGEButton = {
+    lazy var avatariImageView: AGEButton = {
         let imageView = AGEButton(style: .imageName(name: "icon-invite"))
         imageView.cornerRadius = 30.fit
         imageView.contentMode = .scaleAspectFit
         imageView.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         imageView.isUserInteractionEnabled = false
         return imageView
+    }()
+    lazy var canvasView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 30.fit
+        view.layer.masksToBounds = true
+        return view
     }()
     var defaultImageName: String?
     
@@ -179,19 +185,26 @@ class AgoraVoiceUsersViewCell: UICollectionViewCell {
     func setupData(model: Any?) {
         if model is AgoraVoiceUsersModel {
             let userModel = model as! AgoraVoiceUsersModel
-            imageView.setImage(UIImage(named: userModel.avatar), for: .normal)
+            avatariImageView.setImage(UIImage(named: userModel.avatar), for: .normal)
         } else {
-            imageView.setImage(UIImage(named: defaultImageName ?? "icon-invite"), for: .normal)
+            avatariImageView.setImage(UIImage(named: defaultImageName ?? "icon-invite"), for: .normal)
         }
     }
     
     private func setupUI() {
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(imageView)
-        imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
-        imageView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
-        imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+        avatariImageView.translatesAutoresizingMaskIntoConstraints = false
+        canvasView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(avatariImageView)
+        contentView.addSubview(canvasView)
+        avatariImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
+        avatariImageView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
+        avatariImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
+        avatariImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+        
+        canvasView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
+        canvasView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
+        canvasView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
+        canvasView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
     }
     
     override open func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

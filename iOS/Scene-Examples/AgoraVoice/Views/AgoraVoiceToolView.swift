@@ -36,11 +36,14 @@ class AgoraVoiceToolView: UIView {
     }
     
     func updateToolType(type: [LiveToolType]) {
-        let datas = type.map({
-            LiveToolModel(imageName: $0.imageName,
-                          selectedImageName: $0.selectedImageName,
-                          title: $0.title,
-                          type: $0)
+        var datas = [LiveToolModel]()
+        type.forEach({
+            let model = LiveToolModel()
+            model.imageName = $0.imageName
+            model.selectedImageName = $0.selectedImageName
+            model.title = $0.title
+            model.type = $0
+            datas.append(model)
         })
         collectionView.dataArray = datas
     }

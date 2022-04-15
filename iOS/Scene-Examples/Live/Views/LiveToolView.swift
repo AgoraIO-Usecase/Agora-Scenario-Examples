@@ -88,13 +88,26 @@ class LiveToolView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func updateToolType(type: [LiveToolType]) {
-        let datas = type.map({
-            LiveToolModel(imageName: $0.imageName,
-                          selectedImageName: $0.selectedImageName,
-                          title: $0.title,
-                          type: $0)
+    func updateToolType(type: [LiveToolType], isSelected: Bool = false) {
+        var datas = [LiveToolModel]()
+        type.forEach({
+            let model = LiveToolModel()
+            model.imageName = $0.imageName
+            model.selectedImageName = $0.selectedImageName
+            model.title = $0.title
+            model.type = $0
+            model.isSelected = isSelected
+            datas.append(model)
         })
+        collectionViewLayout.dataArray = datas
+    }
+    
+    func updateStatus(type: LiveToolType, isSelected: Bool) {
+        let index = collectionViewLayout.dataArray?.compactMap({ $0 as? LiveToolModel }).firstIndex(where: { $0.type == type }) ?? 0
+        var datas = collectionViewLayout.dataArray
+        let model = datas?[index] as? LiveToolModel
+        model?.isSelected = isSelected
+        datas?[index] = model
         collectionViewLayout.dataArray = datas
     }
     
@@ -160,6 +173,8 @@ class LiveToolViewCell: UICollectionViewCell {
         return label
     }()
     
+    private var model: LiveToolModel?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -186,14 +201,17 @@ class LiveToolViewCell: UICollectionViewCell {
     
     func setToolData(item: Any?) {
         guard let model = item as? LiveToolModel else { return }
+        self.model = model
         iconButton.setImage(UIImage(named: model.imageName), for: .normal)
         iconButton.setImage(UIImage(named: model.selectedImageName), for: .selected)
+        iconButton.isSelected = model.isSelected
         titleLabel.text = model.title
     }
     
     @discardableResult
     func updateButtonState() -> Bool {
         iconButton.isSelected = !iconButton.isSelected
+        model?.isSelected = iconButton.isSelected
         return iconButton.isSelected
     }
 }

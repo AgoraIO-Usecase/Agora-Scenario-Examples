@@ -10,6 +10,8 @@ import AgoraUIKit_iOS
 import AgoraRtcKit
 
 class SeatView: UIView {
+    var updateBottomTypeClosure: ((Bool) -> Void)?
+    
     private lazy var collectionView: AGECollectionView = {
         let view = AGECollectionView()
         let margin = (Screen.width - 4 * 80.fit - 15.fit * 2)
@@ -29,6 +31,16 @@ class SeatView: UIView {
     private var channelMediaOptions: AgoraRtcChannelMediaOptions?
     private var connection: AgoraRtcConnection?
     
+    var isEnableVideo: Bool = false {
+        didSet {
+            let index = collectionView.dataArray?.compactMap({ $0 as? AgoraVoiceUsersModel }).firstIndex(where: { $0.userId == UserInfo.uid }) ?? 0
+            guard var userModel = collectionView.dataArray?[index] as? AgoraVoiceUsersModel else { return }
+            userModel.isEnableVideo = isEnableVideo
+            collectionView.dataArray?[index] = userModel
+            reloadData()
+        }
+    }
+    
     init(channelName: String,
          role: AgoraClientRole,
          agoraKit: AgoraRtcEngineKit?,
@@ -40,7 +52,7 @@ class SeatView: UIView {
         self.channelMediaOptions = mediaOptions
         self.connection = connection
         setupUI()
-        fetchAgoraVoiceUserInfoData()
+        eventHandler()
     }
     
     required init?(coder: NSCoder) {
@@ -51,7 +63,21 @@ class SeatView: UIView {
         collectionView.reloadData()
     }
     
-    private func fetchAgoraVoiceUserInfoData() {
+    func updateParams(channelName: String,
+                      role: AgoraClientRole,
+                      agoraKit: AgoraRtcEngineKit?,
+                      mediaOptions: AgoraRtcChannelMediaOptions?,
+                      connection: AgoraRtcConnection) {
+        self.channelName = channelName
+        self.currentRole = role
+        self.agoraKit = agoraKit
+        self.channelMediaOptions = mediaOptions
+        self.connection = connection
+        SyncUtil.unsubscribeCollection(id: channelName, className: SYNC_MANAGER_AGORA_CLUB_USERS)
+        eventHandler()
+    }
+    
+    func fetchAgoraVoiceUserInfoData() {
         SyncUtil.fetchCollection(id: channelName, className: SYNC_MANAGER_AGORA_CLUB_USERS, success: { results in
             var tempArray = [Any]()
             let datas = results.compactMap({ $0.toJson() })
@@ -59,22 +85,18 @@ class SeatView: UIView {
                 .filter({ $0.status == .accept })
                 .sorted(by: { $0.timestamp < $1.timestamp })
             tempArray += datas
-            for _ in datas.count..<8 {
-                tempArray.append("")
+            let isContainer = datas.contains(where: { $0.userId == UserInfo.uid })
+            self.updateBottomTypeClosure?(isContainer)
+            if datas.count < 8 {
+                for _ in datas.count..<8 {
+                    tempArray.append("")
+                }
             }
             self.collectionView.dataArray = tempArray
         })
     }
     
-    private func setupUI() {
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(collectionView)
-        collectionView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        collectionView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        collectionView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        collectionView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        collectionView.heightAnchor.constraint(equalToConstant: 150.fit).isActive = true
-        
+    private func eventHandler() {
         SyncUtil.subscribeCollection(id: channelName, className: SYNC_MANAGER_AGORA_CLUB_USERS, onUpdated: { object in
             guard var model = JSONObject.toModel(AgoraVoiceUsersModel.self, value: object.toJson()) else { return }
             let controller = UIApplication.topMostViewController
@@ -87,16 +109,6 @@ class SeatView: UIView {
                 }
                 let invite = UIAlertAction(title: /*上麦*/"Became_A_Host".localized, style: .default) { _ in
                     model.status = .accept
-                    
-                    guard let option = self.channelMediaOptions else { return }
-                    option.publishAudioTrack = .of(true)
-                    option.publishCameraTrack = .of(true)
-                    option.clientRoleType = .of((Int32)(AgoraClientRole.broadcaster.rawValue))
-                    self.agoraKit?.setClientRole(.broadcaster)
-                    self.agoraKit?.updateChannel(with: option)
-                    self.agoraKit?.startPreview()
-                    self.agoraKit?.setClientRole(.broadcaster)
-                    
                     let params = JSONObject.toJson(model)
                     SyncUtil.updateCollection(id: self.channelName, className: SYNC_MANAGER_AGORA_CLUB_USERS, objectId: model.objectId ?? "", params: params)
                     self.fetchAgoraVoiceUserInfoData()
@@ -114,11 +126,17 @@ class SeatView: UIView {
                 return
             }
             if model.status == .end && model.userId == UserInfo.uid {
-                guard let option = self.channelMediaOptions else { return }
+                guard let option = self.channelMediaOptions, let connection = self.connection else { return }
                 option.publishAudioTrack = .of(false)
                 option.publishCustomVideoTrack = .of(false)
-                option.clientRoleType = .of((Int32)(AgoraClientRole.audience.rawValue))
-                self.agoraKit?.updateChannel(with: option)
+                self.agoraKit?.updateChannelEx(with: option, connection: connection)
+            }
+            if model.status == .accept && model.userId != UserInfo.uid {
+                let index = self.collectionView.dataArray?.compactMap({ $0 as? AgoraVoiceUsersModel }).firstIndex(where: { $0.userId == model.userId }) ?? 0
+                var data = self.collectionView.dataArray
+                data?[index] = model
+                self.collectionView.dataArray = data
+                return
             }
             self.fetchAgoraVoiceUserInfoData()
             
@@ -126,17 +144,26 @@ class SeatView: UIView {
         }, onDeleted: { object in
             guard let model = JSONObject.toModel(AgoraVoiceUsersModel.self, value: object.toJson()) else { return }
             if model.userId == UserInfo.uid {
-                guard let option = self.channelMediaOptions else { return }
+                guard let option = self.channelMediaOptions, let connection = self.connection else { return }
                 option.publishAudioTrack = .of(false)
                 option.publishCustomVideoTrack = .of(false)
-                option.clientRoleType = .of((Int32)(AgoraClientRole.audience.rawValue))
-                self.agoraKit?.updateChannel(with: option)
+                self.agoraKit?.updateChannelEx(with: option, connection: connection)
             }
             self.fetchAgoraVoiceUserInfoData()
             
         }, onSubscribed: {
             print("订阅邀请用户")
         })
+    }
+    
+    private func setupUI() {
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(collectionView)
+        collectionView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        collectionView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        collectionView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        collectionView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        collectionView.heightAnchor.constraint(equalToConstant: 150.fit).isActive = true
     }
 }
 extension SeatView: AGECollectionViewDelegate {
@@ -148,22 +175,24 @@ extension SeatView: AGECollectionViewDelegate {
             let canvas = AgoraRtcVideoCanvas()
             canvas.uid = UInt(userModel.userId) ?? 0
             canvas.renderMode = .hidden
-            canvas.view = cell.imageView
-            if userModel.userId == UserInfo.uid {
+            canvas.view = cell.canvasView
+            cell.canvasView.isHidden = userModel.isEnableVideo == false
+            if userModel.userId == UserInfo.uid && userModel.isEnableVideo == true {
                 agoraKit?.setupLocalVideo(canvas)
-            } else {
-                let connection = AgoraRtcConnection()
-                connection.localUid = UserInfo.userId
-                connection.channelId = channelName
-                agoraKit?.setupRemoteVideoEx(canvas, connection: connection)
+                agoraKit?.startPreview()
+                
+            } else if userModel.userId != UserInfo.uid && userModel.isEnableVideo == true {
+                agoraKit?.setupRemoteVideoEx(canvas, connection: connection!)
             }
+            cell.setupData(model: model)
         } else {
             cell.setupData(model: model)
+            cell.canvasView.isHidden = true
         }
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard currentRole == .broadcaster else { return }
+        guard currentRole == .broadcaster, indexPath.item > 0 else { return }
         let model = self.collectionView.dataArray?[indexPath.item]
         let controller = UIApplication.topMostViewController
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)

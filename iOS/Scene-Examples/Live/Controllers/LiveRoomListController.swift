@@ -164,7 +164,10 @@ class LiveRoomListController: BaseViewController {
             navigationController?.pushViewController(agoraVoiceVC, animated: true)
             
         case .agoraClub:
-            let clubVC = AgoraClubController(userId: ownerId ?? "", channelName: channelName)
+            let videoUrl = result.getPropertyWith(key: "videoUrl", type: String.self) as? String
+            let clubVC = AgoraClubController(userId: ownerId ?? "",
+                                             channelName: channelName,
+                                             videoUrl: videoUrl)
             navigationController?.pushViewController(clubVC, animated: true)
             
         default: break

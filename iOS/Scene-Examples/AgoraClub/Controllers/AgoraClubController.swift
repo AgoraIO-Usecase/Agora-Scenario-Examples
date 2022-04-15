@@ -23,9 +23,9 @@ class AgoraClubController: BaseViewController {
         let option = AgoraRtcChannelMediaOptions()
         option.autoSubscribeAudio = .of(true)
         option.autoSubscribeVideo = .of(true)
-        option.publishAudioTrack = .of(false)
+        option.publishAudioTrack = .of(true)
         option.publishCameraTrack = .of(false)
-        option.clientRoleType = .of((Int32)(AgoraClientRole.audience.rawValue))
+        option.clientRoleType = .of((Int32)(AgoraClientRole.broadcaster.rawValue))
         return option
     }()
     private lazy var headerView: ClubHeaderView = {
@@ -40,18 +40,22 @@ class AgoraClubController: BaseViewController {
                             role: getRole(uid: UserInfo.uid),
                             agoraKit: agoraKit,
                             mediaOptions: channelMediaOptions,
-                            connection: connection)
+                            connection: connection!)
         return view
     }()
     /// 聊天
     private lazy var chatView = LiveChatView()
     /// 底部功能
     private lazy var bottomView: LiveBottomView = {
-        let view = LiveBottomView(type: [.gift, .tool, .close])
+        let view = LiveBottomView(type: [.gift, .close])
         return view
     }()
     /// 设置直播的工具弹窗
-    private lazy var liveToolView = LiveToolView()
+    private lazy var liveToolView: LiveToolView = {
+        let view = LiveToolView()
+        view.updateToolType(type: [.switch_camera, .camera, .mic], isSelected: true)
+        return view
+    }()
     /// 礼物
     private lazy var giftView = LiveGiftView()
     public lazy var playGifView: GIFImageView = {
@@ -61,6 +65,7 @@ class AgoraClubController: BaseViewController {
     }()
     
     private var channelName: String = ""
+    private var videoUrl: String?
     private var headerHeightCons: NSLayoutConstraint?
     private var currentUserModel: AgoraVoiceUsersModel?
     private var currentUserId: String = ""
@@ -69,16 +74,27 @@ class AgoraClubController: BaseViewController {
     public func getRole(uid: String) -> AgoraClientRole {
         uid == currentUserId ? .broadcaster : .audience
     }
-    private lazy var connection: AgoraRtcConnection = {
-        let connection = AgoraRtcConnection()
-        connection.channelId = channelName
-        connection.localUid = UserInfo.userId
-        return connection
-    }()
+    private var _connection: AgoraRtcConnection?
+    private var connection: AgoraRtcConnection? {
+        set {
+            _connection = newValue
+        }
+        get {
+            if _connection != nil {
+                return _connection
+            }
+            let connection = AgoraRtcConnection()
+            connection.channelId = channelName
+            connection.localUid = UserInfo.userId
+            _connection = connection
+            return connection
+        }
+    }
     
-    init(userId: String, channelName: String?, agoraKit: AgoraRtcEngineKit? = nil) {
+    init(userId: String, channelName: String?, videoUrl: String?, agoraKit: AgoraRtcEngineKit? = nil) {
         super.init(nibName: nil, bundle: nil)
         self.channelName = channelName ?? ""
+        self.videoUrl = videoUrl
         self.agoraKit = agoraKit
         currentUserId = userId
     }
@@ -127,10 +143,10 @@ class AgoraClubController: BaseViewController {
         agoraKit?.disableAudio()
         agoraKit?.muteAllRemoteAudioStreams(true)
         agoraKit?.destroyMediaPlayer(mediaPlayerKit)
-        leaveChannel()
         SyncUtil.deleteDocument(id: channelName,
                                 className: SYNC_MANAGER_AGORA_CLUB_USERS,
                                 objectId: currentUserModel?.objectId ?? "")
+        leaveChannel()
         SyncUtil.leaveScene(id: channelName)
         if getRole(uid: UserInfo.uid) == .broadcaster {
             SyncUtil.delete(id: channelName)
@@ -160,7 +176,10 @@ class AgoraClubController: BaseViewController {
             AGEToastView.show(text: "room_is_closed".localized, duration: 2)
             self.navigationController?.popViewController(animated: true)
         })
-        
+        // 在麦上显示工具栏
+        usersView.updateBottomTypeClosure = { isMic in
+            self.bottomView.updateButtonType(type: isMic ? [.gift, .tool, .close] : [.gift, .close])
+        }
         // gif播放完成回调
         playGifView.gifAnimationFinishedClosure = { [weak self] in
             guard let self = self else { return }
@@ -190,10 +209,24 @@ class AgoraClubController: BaseViewController {
                         self.agoraKit?.switchCamera()
                         
                     case .camera:
-                        self.agoraKit?.muteLocalVideoStream(isSelected)
+                        self.channelMediaOptions.publishCameraTrack = .of(!isSelected)
+                        self.agoraKit?.updateChannelEx(with: self.channelMediaOptions,
+                                                       connection: self.connection!)
+                        
+                        if var userModel = self.currentUserModel {
+                            userModel.isEnableVideo = !isSelected
+                            let params = JSONObject.toJson(userModel)
+                            SyncUtil.updateCollection(id: self.channelName,
+                                                      className: SYNC_MANAGER_AGORA_CLUB_USERS,
+                                                      objectId: userModel.objectId ?? "",
+                                                      params: params, success: nil, fail: nil)
+                        }
+                        self.usersView.isEnableVideo = !isSelected
                     
                     case .mic:
-                        self.agoraKit?.muteLocalAudioStream(isSelected)
+                        self.channelMediaOptions.publishAudioTrack = .of(!isSelected)
+                        self.agoraKit?.updateChannelEx(with: self.channelMediaOptions,
+                                                       connection: self.connection!)
                     
                     default: break
                     }
@@ -229,6 +262,13 @@ class AgoraClubController: BaseViewController {
                                 .withTintColor(.white, renderingMode: .alwaysOriginal),
                             for: .normal)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        let rightButton = UIButton()
+        rightButton.setImage(UIImage(systemName: "command")?
+                                .withTintColor(.white, renderingMode: .alwaysOriginal), for: .normal)
+        rightButton.addTarget(self, action: #selector(clickRightButton), for: .touchUpInside)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightButton)
+        
+        
         view.addSubview(headerView)
         headerView.translatesAutoresizingMaskIntoConstraints = false
         headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
@@ -273,9 +313,6 @@ class AgoraClubController: BaseViewController {
         }
         agoraKit = AgoraRtcEngineKit.sharedEngine(with: rtcEngineConfig, delegate: self)
         agoraKit?.setLogFile(LogUtils.sdkLogPath())
-        agoraKit?.setClientRole(.broadcaster)
-        agoraKit?.enableVideo()
-        agoraKit?.enableAudio()
         agoraKit?.setVideoEncoderConfiguration(
             AgoraVideoEncoderConfiguration(size: CGSize(width: 320, height: 240),
                                            frameRate: .fps30,
@@ -297,8 +334,10 @@ class AgoraClubController: BaseViewController {
         videoCanvas.sourceType = .mediaPlayer
         videoCanvas.sourceId = mediaPlayerKit?.getMediaPlayerId() ?? 0
         agoraKit?.setupLocalVideo(videoCanvas)
-        mediaPlayerKit?.open("https://webdemo.agora.io/agora-web-showcase/examples/Agora-Custom-VideoSource-Web/assets/sample.mp4", startPos: 0)
-        mediaPlayerKit?.play()
+        mediaPlayerKit?.open(videoUrl ?? "", startPos: 0)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            self.mediaPlayerKit?.play()            
+        }
         
         let option = channelMediaOptions
         option.publishMediaPlayerId = .of((Int32)(mediaPlayerKit?.getMediaPlayerId() ?? 0))
@@ -310,12 +349,8 @@ class AgoraClubController: BaseViewController {
 
     /// 加入channel
     private func joinChannel() {
-        channelMediaOptions.clientRoleType = .of((Int32)(getRole(uid: UserInfo.uid).rawValue))
-        channelMediaOptions.publishAudioTrack = .of(getRole(uid: UserInfo.uid) == .broadcaster)
-        channelMediaOptions.autoSubscribeAudio = .of(true)
-        
         let result = agoraKit?.joinChannelEx(byToken: KeyCenter.Token,
-                                             connection: connection,
+                                             connection: connection!,
                                              delegate: self,
                                              mediaOptions: channelMediaOptions,
                                              joinSuccess: nil)
@@ -323,41 +358,35 @@ class AgoraClubController: BaseViewController {
         if result == 0 {
             LogUtils.log(message: "加入房间成功", level: .info)
         }
-        agoraKit?.setClientRole(.audience)
         
         var messageModel = ChatMessageModel()
         messageModel.message = "\(UserInfo.uid) " + "Join_Live_Room".localized
         chatView.sendMessage(messageModel: messageModel)
-        let params = JSONObject.toJson(AgoraVoiceUsersModel())
+        var userModel = AgoraVoiceUsersModel()
+        if self.getRole(uid: UserInfo.uid) == .broadcaster {
+            userModel.status = .accept
+        }
+        let params = JSONObject.toJson(userModel)
         SyncUtil.addCollection(id: channelName, className: SYNC_MANAGER_AGORA_CLUB_USERS, params: params, success: { object in
             let model = JSONObject.toModel(AgoraVoiceUsersModel.self, value: object.toJson())
             self.currentUserModel = model
-            self.usersView.reloadData()
+            self.usersView.fetchAgoraVoiceUserInfoData()
+            self.channelMediaOptions.publishAudioTrack = .of(false)
+            self.agoraKit?.updateChannelEx(with: self.channelMediaOptions, connection: self.connection!)
         })
     }
     
     private func leaveChannel() {
-        agoraKit?.leaveChannelEx(connection, leaveChannelBlock: { state in
+        agoraKit?.leaveChannelEx(connection!, leaveChannelBlock: { state in
             LogUtils.log(message: "leave channel state == \(state)", level: .info)
         })
         SyncUtil.deleteDocument(id: channelName,
                                 className: SYNC_MANAGER_AGORA_CLUB_USERS,
                                 objectId: currentUserModel?.objectId ?? "")
+        currentUserModel = nil
+        _connection = nil
     }
     
-    private func muteAudioHandler(isVoice: Bool) {
-        let option = channelMediaOptions
-        option.publishAudioTrack = getRole(uid: UserInfo.uid) == .broadcaster ? .of(true) : .of(isVoice)
-        option.publishCameraTrack = .of(getRole(uid: UserInfo.uid) == .broadcaster)
-        if getRole(uid: UserInfo.uid) == .audience {
-            option.clientRoleType = isVoice ? .of((Int32)(AgoraClientRole.broadcaster.rawValue)) : .of((Int32)(AgoraClientRole.audience.rawValue))
-        }
-        bottomView.updateButtonType(type: isVoice ? [.belcanto, .effect, .close] : [.close])
-        agoraKit?.updateChannel(with: option)
-        if getRole(uid: UserInfo.uid) == .audience {
-            agoraKit?.enableLocalAudio(isVoice)
-        }
-    }
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
     }
@@ -387,6 +416,30 @@ class AgoraClubController: BaseViewController {
             return
         }
         super.clickBackButton()
+    }
+    
+    @objc
+    private func clickRightButton() {
+        let alertView = ClubRoomListView()
+        alertView.didClubItemClosure = { [weak self] roomInfo in
+            guard let self = self else { return }
+            self.leaveChannel()
+            self.title = roomInfo.roomId
+            self.channelName = roomInfo.roomId
+            self.currentUserId = roomInfo.userId
+            self.videoUrl = roomInfo.videoUrl
+            self.usersView.updateParams(channelName: roomInfo.roomId,
+                                        role: self.getRole(uid: UserInfo.uid),
+                                        agoraKit: self.agoraKit,
+                                        mediaOptions: self.channelMediaOptions,
+                                        connection: self.connection!)
+            self.liveToolView.updateStatus(type: .camera, isSelected: true)
+            self.liveToolView.updateStatus(type: .mic, isSelected: true)
+            
+            self.joinChannel()
+            AlertManager.hiddenView()
+        }
+        AlertManager.show(view: alertView, alertPostion: .bottom, didCoverDismiss: true)
     }
 }
 

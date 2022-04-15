@@ -13,4 +13,5 @@ struct LiveRoomInfo: Codable {
     var userId: String = "\(UserInfo.userId)"
     var backgroundId: String = String(format: "portrait%02d", arc4random_uniform(13) + 1)
     var objectId: String?
+    var videoUrl: String? = "https://webdemo-pull-hdl.agora.io/lbhd/sample1.flv"
 }

@@ -16,6 +16,7 @@
 		E7499C2A2770534400E799FF /* NoticeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C292770534400E799FF /* NoticeCell.swift */; };
 		E7499C2C2770537C00E799FF /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C2B2770537C00E799FF /* MessageCell.swift */; };
 		E7499C30277173BC00E799FF /* OneToOneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C2F277173BC00E799FF /* OneToOneViewController.swift */; };
+		E76DE01D2809241200A0434C /* ClubRoomListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E76DE01C2809241200A0434C /* ClubRoomListView.swift */; };
 		E79BEF31273D0EA4009FA838 /* SignleLiveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF30273D0EA4009FA838 /* SignleLiveController.swift */; };
 		E79BEF33273D0F0C009FA838 /* LiveCanvasModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF32273D0F0C009FA838 /* LiveCanvasModel.swift */; };
 		E79BEF35273D1304009FA838 /* LivePlayerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF34273D1304009FA838 /* LivePlayerCell.swift */; };
@@ -138,6 +139,7 @@
 		E7499C292770534400E799FF /* NoticeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeCell.swift; sourceTree = "<group>"; };
 		E7499C2B2770537C00E799FF /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		E7499C2F277173BC00E799FF /* OneToOneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneToOneViewController.swift; sourceTree = "<group>"; };
+		E76DE01C2809241200A0434C /* ClubRoomListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubRoomListView.swift; sourceTree = "<group>"; };
 		E79BEF30273D0EA4009FA838 /* SignleLiveController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignleLiveController.swift; sourceTree = "<group>"; };
 		E79BEF32273D0F0C009FA838 /* LiveCanvasModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCanvasModel.swift; sourceTree = "<group>"; };
 		E79BEF34273D1304009FA838 /* LivePlayerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivePlayerCell.swift; sourceTree = "<group>"; };
@@ -698,6 +700,7 @@
 			children = (
 				E7ECC56A27E81BAE00EFA778 /* ClubHeaderView.swift */,
 				E7ECC56E27E8646600EFA778 /* SeatView.swift */,
+				E76DE01C2809241200A0434C /* ClubRoomListView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -894,6 +897,7 @@
 				E79C2610273B689B00909CD4 /* KeyCenter.swift in Sources */,
 				E79C262D273BC0CA00909CD4 /* ToastView.swift in Sources */,
 				E7EDBCB227A1463700E763A6 /* AgoraVoiceBelCantoModel.swift in Sources */,
+				E76DE01D2809241200A0434C /* ClubRoomListView.swift in Sources */,
 				E79C2644273BE7C000909CD4 /* LiveSettingView.swift in Sources */,
 				E79BEF3B273D21FD009FA838 /* LiveChatView.swift in Sources */,
 				E79BF0302754761A009FA838 /* GameApplyInfoModel.swift in Sources */,
