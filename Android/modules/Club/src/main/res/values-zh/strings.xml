@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="club_app_name">俱乐部</string>
+    <string name="club_description">俱乐部</string>
+
+
+    <string name="club_main_title">大厅</string>
+
+    <string name="club_room_list_title">房间列表</string>
+
+    <string name="club_room_create_dialog_title">创建房间</string>
+    <string name="club_room_create_dialog_et_hind">请输入房间名</string>
+
+    <string name="club_room_detail_accept_invite">是否接受邀请？</string>
+    <string name="club_room_detail_close_seat">封麦</string>
+    <string name="club_room_detail_invite">邀请</string>
+    <string name="club_room_detail_refuse_tip">%s拒绝了您的邀请</string>
+
+</resources>

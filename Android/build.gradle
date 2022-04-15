@@ -12,7 +12,8 @@ buildscript {
                 LivePK : "pk_",
                 SingleHostLive : "single_host_live",
                 OneLive : "one_",
-                ComLive : "com_live"
+                ComLive : "com_live",
+                Club : "club_"
         ]
 //        resMap = [
 //                app : "0x7F",

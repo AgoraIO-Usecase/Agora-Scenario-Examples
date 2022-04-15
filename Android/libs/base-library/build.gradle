@@ -36,4 +36,5 @@ dependencies {
     api("com.google.android.material:material:1.4.0")
     api("androidx.activity:activity:1.4.0")
     api("androidx.fragment:fragment:1.4.0")
+    api("com.makeramen:roundedimageview:2.3.0")
 }
