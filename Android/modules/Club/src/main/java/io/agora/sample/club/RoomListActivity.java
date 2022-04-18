@@ -22,9 +22,6 @@ import java.util.Random;
 import io.agora.example.base.BaseActivity;
 import io.agora.sample.club.RoomManager.RoomInfo;
 import io.agora.sample.club.databinding.ClubRoomListActivityBinding;
-import io.agora.sample.club.databinding.ClubRoomListItemBinding;
-import io.agora.uiwidget.basic.BindingViewHolder;
-import io.agora.uiwidget.function.RoomListView;
 import io.agora.uiwidget.utils.RandomUtil;
 
 public class RoomListActivity extends BaseActivity<ClubRoomListActivityBinding> {
@@ -46,51 +43,7 @@ public class RoomListActivity extends BaseActivity<ClubRoomListActivityBinding> 
                 .setTitleName(getString(R.string.club_room_list_title), getResources().getColor(R.color.club_title_bar_text_color))
                 .setBackIcon(true, R.drawable.club_ic_arrow_24, v -> finish());
         mBinding.btnStartLive.setOnClickListener(v -> checkPermission(this::showRoomCreateDialog));
-        mBinding.roomListView.setListAdapter(new RoomListView.CustRoomListAdapter<RoomInfo, ClubRoomListItemBinding>() {
-
-            @Override
-            protected void onItemUpdate(BindingViewHolder<ClubRoomListItemBinding> holder, RoomInfo item) {
-
-                ImageView[] ivCrowns = new ImageView[]{
-                        holder.binding.ivCrown01,
-                        holder.binding.ivCrown02,
-                        holder.binding.ivCrown03,
-                        holder.binding.ivCrown04,
-                        holder.binding.ivCrown05,
-                };
-                int crownValue = new Random().nextInt(ivCrowns.length);
-                for (int i = 0; i < ivCrowns.length; i++) {
-                    if (i > crownValue) {
-                        ivCrowns[i].setVisibility(View.GONE);
-                    } else {
-                        ivCrowns[i].setVisibility(View.VISIBLE);
-                    }
-                }
-
-                ImageView[] userIcons = new ImageView[]{
-                        holder.binding.ivUser01,
-                        holder.binding.ivUser02,
-                        holder.binding.ivUser03,
-                        holder.binding.ivUser04,
-                        holder.binding.ivUser05,
-                        holder.binding.ivUser06,
-                        holder.binding.ivUser07,
-                        holder.binding.ivUser08,
-                };
-                int userCount = new Random().nextInt(userIcons.length);
-                for (int i = 0; i < userIcons.length; i++) {
-                    if (i > userCount) {
-                        userIcons[i].setVisibility(View.GONE);
-                    } else {
-                        userIcons[i].setVisibility(View.VISIBLE);
-                        userIcons[i].setImageResource(RandomUtil.randomLiveRoomIcon());
-                    }
-                }
-
-                holder.binding.tvName.setText(String.format(Locale.US, "%s(%s)", item.roomName, item.roomId));
-                holder.itemView.setOnClickListener(v -> checkPermission(() -> gotoRoomDetailPage(item)));
-            }
-
+        mBinding.roomListView.setListAdapter(new RoomListAdapter(){
             @Override
             protected void onRefresh() {
                 RoomManager.getInstance().getAllRooms(dataList -> runOnUiThread(() -> {
@@ -99,13 +52,7 @@ public class RoomListActivity extends BaseActivity<ClubRoomListActivityBinding> 
                     triggerDataListUpdateRun();
                 }));
             }
-
-            @Override
-            protected void onLoadMore() {
-
-            }
         });
-
     }
 
     private void checkPermission(Runnable granted) {

@@ -182,6 +182,11 @@ public class RoomManager {
         });
     }
 
+    public void openUserVideo(String roomId, UserInfo userInfo, boolean open){
+        userInfo.hasVideo = open;
+        updateUserStatus(roomId, userInfo, Status.ACCEPT);
+    }
+
     public void inviteUser(String roomId, UserInfo userInfo){
         updateUserStatus(roomId, userInfo, Status.INVITE);
     }
@@ -590,14 +595,15 @@ public class RoomManager {
         public String userName = "User-" + userId;
         public @Status
         int status = Status.END;
-        public String timestamp = System.currentTimeMillis() + "";
+        public boolean hasVideo = true;
 
         public int getAvatarResId() {
-            Integer ret = RoomBgResMap.get(avatar);
-            if (ret == null) {
-                ret = 0;
-            }
-            return ret;
+            //Integer ret = RoomBgResMap.get(avatar);
+            //if (ret == null) {
+            //    ret = 0;
+            //}
+            //return ret;
+            return RandomUtil.getIconById(userId);
         }
     }
 
