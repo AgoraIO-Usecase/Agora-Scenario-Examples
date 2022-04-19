@@ -8,9 +8,6 @@ import android.view.View;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IntDef;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import java.io.Serializable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -40,7 +37,6 @@ public class RoomManager {
     private static volatile boolean isInitialized = false;
 
     private final Map<String, SceneReference> sceneMap = new HashMap<>();
-    private final Map<String, String> userIdToObjectIdMap = new HashMap<>();
 
     public static RoomManager getInstance() {
         if (INSTANCE == null) {
@@ -215,7 +211,7 @@ public class RoomManager {
         _userInfo.avatar = userInfo.avatar;
         _userInfo.status = status;
         sceneReference.collection(SYNC_MANAGER_USER_INFO_LIST)
-                .update(userIdToObjectIdMap.get(userInfo.userId), _userInfo, new Sync.Callback() {
+                .update(userInfo.userId, _userInfo, new Sync.Callback() {
                     @Override
                     public void onSuccess() {
 
@@ -266,7 +262,6 @@ public class RoomManager {
                     if (result != null && result.size() > 0) {
                         for (IObject iObject : result) {
                             UserInfo userInfo = iObject.toObject(UserInfo.class);
-                            userIdToObjectIdMap.put(userInfo.userId, iObject.getId());
                             userInfos.add(userInfo);
                         }
                     }
@@ -293,15 +288,12 @@ public class RoomManager {
             return;
         }
         UserInfo userInfo = new UserInfo();
-        String json = new Gson().toJson(userInfo);
-        HashMap<String, Object> ret = new Gson().fromJson(json, new TypeToken<HashMap<String, Object>>() {
-        }.getType());
+        String objectId = userInfo.userId;
         sceneReference.collection(SYNC_MANAGER_USER_INFO_LIST)
-                .add(ret, new Sync.DataItemCallback() {
+                .update(objectId, userInfo, new Sync.Callback() {
                     @Override
-                    public void onSuccess(IObject result) {
+                    public void onSuccess() {
                         if (success != null) {
-                            userIdToObjectIdMap.put(userInfo.userId, result.getId());
                             success.onSuccess(userInfo);
                         }
                     }
@@ -320,7 +312,7 @@ public class RoomManager {
             return;
         }
         sceneReference.collection(SYNC_MANAGER_USER_INFO_LIST)
-                .delete(userIdToObjectIdMap.get(getCacheUserId()), new Sync.Callback() {
+                .delete(getCacheUserId(), new Sync.Callback() {
                     @Override
                     public void onSuccess() {
 
@@ -347,7 +339,6 @@ public class RoomManager {
                     @Override
                     public void onCreated(IObject item) {
                         UserInfo userInfo = item.toObject(UserInfo.class);
-                        userIdToObjectIdMap.put(userInfo.userId, item.getId());
                         if (addOrUpdateCallback != null && addOrUpdateCallback.get() != null) {
                             addOrUpdateCallback.get().onSuccess(userInfo);
                         }
@@ -356,7 +347,6 @@ public class RoomManager {
                     @Override
                     public void onUpdated(IObject item) {
                         UserInfo userInfo = item.toObject(UserInfo.class);
-                        userIdToObjectIdMap.put(userInfo.userId, item.getId());
                         if (addOrUpdateCallback != null && addOrUpdateCallback.get() != null) {
                             addOrUpdateCallback.get().onSuccess(userInfo);
                         }
@@ -365,7 +355,6 @@ public class RoomManager {
                     @Override
                     public void onDeleted(IObject item) {
                         UserInfo userInfo = item.toObject(UserInfo.class);
-                        userIdToObjectIdMap.remove(userInfo.userId);
                         if (deleteCallback != null && deleteCallback.get() != null) {
                             deleteCallback.get().onSuccess(userInfo);
                         }

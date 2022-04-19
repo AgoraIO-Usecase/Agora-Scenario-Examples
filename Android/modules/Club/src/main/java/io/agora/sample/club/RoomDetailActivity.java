@@ -8,6 +8,7 @@ import android.text.SpannableString;
 import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -74,7 +75,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         roomInfo = (RoomManager.RoomInfo) getIntent().getSerializableExtra("roomInfo");
 
@@ -82,13 +83,13 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                 .setBgDrawable(R.drawable.club_main_title_bar_bg)
                 .setDeliverVisible(false)
                 .setTitleName(String.format(Locale.US, "%s(%s)", roomInfo.roomName, roomInfo.roomId), getResources().getColor(R.color.club_title_bar_text_color))
-                .setBackIcon(true, R.drawable.club_ic_arrow_24, v -> finish())
+                .setBackIcon(true, R.drawable.club_ic_arrow_24, v -> onBackPressed())
                 .setUserIcon(true, R.drawable.club_room_detail_more, v -> {
                     // 显示播放同资源的房间列表
                     roomManager.getAllRooms(dataList -> {
                         List<RoomManager.RoomInfo> sameRooms = new ArrayList<>();
                         for (RoomManager.RoomInfo info : dataList) {
-                            if (info.videoUrl.equals(roomInfo.videoUrl)) {
+                            if (info.videoUrl.equals(roomInfo.videoUrl) && !info.roomId.equals(roomInfo.roomId)) {
                                 sameRooms.add(info);
                             }
                         }
@@ -125,12 +126,14 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                 .setFun1ImageResource(R.drawable.club_room_detail_ic_cam)
                 .setFun1Activated(false)
                 .setFun1ClickListener(v -> {
-                    if(isLocalInSeat()){
-                        boolean activated = !mBinding.bottomView.isFun1Activated();
-                        mBinding.bottomView.setFun1Activated(activated);
-                        roomManager.openUserVideo(roomInfo.roomId, new RoomManager.UserInfo(), activated);
-                        rtcManager.enableLocalVideo(activated);
-                    }else{
+                    if (isLocalInSeat()) {
+                        if (isCanClickOrNot(v)) {
+                            boolean activated = !mBinding.bottomView.isFun1Activated();
+                            mBinding.bottomView.setFun1Activated(activated);
+                            roomManager.openUserVideo(roomInfo.roomId, new RoomManager.UserInfo(), activated);
+                            rtcManager.enableLocalVideo(activated);
+                        }
+                    } else {
                         Toast.makeText(RoomDetailActivity.this, "Please take your seat first", Toast.LENGTH_SHORT).show();
                     }
 
@@ -141,11 +144,13 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                 .setFun2ImageResource(R.drawable.club_room_detail_ic_mic)
                 .setFun2Activated(false)
                 .setFun2ClickListener(v -> {
-                    if(isLocalInSeat()){
-                        boolean activated = !mBinding.bottomView.isFun2Activated();
-                        mBinding.bottomView.setFun2Activated(activated);
-                        rtcManager.enableLocalAudio(activated);
-                    }else{
+                    if (isLocalInSeat()) {
+                        if (isCanClickOrNot(v)) {
+                            boolean activated = !mBinding.bottomView.isFun2Activated();
+                            mBinding.bottomView.setFun2Activated(activated);
+                            rtcManager.enableLocalAudio(activated);
+                        }
+                    } else {
                         Toast.makeText(RoomDetailActivity.this, "Please take your seat first", Toast.LENGTH_SHORT).show();
                     }
                 })
@@ -203,12 +208,12 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
         showExitDialog(RoomDetailActivity.super::onBackPressed);
     }
 
-    private void showExitDialog(Runnable exit){
+    private void showExitDialog(Runnable exit) {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.club_room_detail_leave_room)
                 .setMessage(R.string.club_room_detail_leave_room_msg)
                 .setPositiveButton(R.string.common_yes, (dialog, which) -> {
-                    if(exit != null){
+                    if (exit != null) {
                         exit.run();
                     }
                 })
@@ -316,17 +321,17 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                     userSeatLayout.ivCover.setImageResource(data.getAvatarResId());
 
                     int uid = Integer.parseInt(data.userId);
-                    if(!data.userId.equals(RoomManager.getCacheUserId())){
+                    if (!data.userId.equals(RoomManager.getCacheUserId())) {
                         rtcManager.playRemoteAudio(uid, true);
                     }
 
-                    if(data.hasVideo){
+                    if (data.hasVideo) {
                         if (data.userId.equals(RoomManager.getCacheUserId())) {
                             rtcManager.renderLocalVideo(userSeatLayout.videoContainer, null);
                         } else {
                             rtcManager.renderRemoteVideo(userSeatLayout.videoContainer, uid);
                         }
-                    }else{
+                    } else {
                         userSeatLayout.videoContainer.removeAllViews();
                     }
 
@@ -478,7 +483,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
         return roomInfo.userId.equals(RoomManager.getCacheUserId());
     }
 
-    private boolean isLocalInSeat(){
+    private boolean isLocalInSeat() {
         String userId = RoomManager.getCacheUserId();
         for (ClubRoomDetailSeatItemBinding seatLayout : seatLayouts) {
             if (seatLayout == null) {
@@ -490,6 +495,19 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
             }
         }
         return false;
+    }
+
+    private boolean isCanClickOrNot(View view) {
+        Object lastClickTime = view.getTag();
+        boolean canClick = true;
+        if (lastClickTime instanceof Long) {
+            long duration = System.currentTimeMillis() - (long) lastClickTime;
+            canClick = duration > 2000;
+        }
+        if (canClick) {
+            view.setTag(System.currentTimeMillis());
+        }
+        return canClick;
     }
 
     @Override
