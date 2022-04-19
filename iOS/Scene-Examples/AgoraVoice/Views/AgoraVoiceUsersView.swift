@@ -171,6 +171,17 @@ class AgoraVoiceUsersViewCell: UICollectionViewCell {
         view.layer.masksToBounds = true
         return view
     }()
+    private lazy var muteAudioImageView: AGEImageView = {
+        let imageView = AGEImageView(systemName: "mic.slash", imageColor: .white)
+        imageView.isHidden = true
+        return imageView
+    }()
+    private lazy var muteVideoImageView: AGEImageView = {
+        let imageView = AGEImageView(systemName: "video.slash", imageColor: .white)
+        imageView.isHidden = true
+        return imageView
+    }()
+    
     var defaultImageName: String?
     
     override init(frame: CGRect) {
@@ -186,16 +197,26 @@ class AgoraVoiceUsersViewCell: UICollectionViewCell {
         if model is AgoraVoiceUsersModel {
             let userModel = model as! AgoraVoiceUsersModel
             avatariImageView.setImage(UIImage(named: userModel.avatar), for: .normal)
+            muteVideoImageView.isHidden = userModel.isEnableVideo ?? false
+            muteAudioImageView.isHidden = userModel.isEnableAudio ?? false
+            canvasView.isHidden = userModel.isEnableVideo == false
         } else {
             avatariImageView.setImage(UIImage(named: defaultImageName ?? "icon-invite"), for: .normal)
+            muteVideoImageView.isHidden = true
+            muteAudioImageView.isHidden = true
+            canvasView.isHidden = true
         }
     }
     
     private func setupUI() {
         avatariImageView.translatesAutoresizingMaskIntoConstraints = false
         canvasView.translatesAutoresizingMaskIntoConstraints = false
+        muteAudioImageView.translatesAutoresizingMaskIntoConstraints = false
+        muteVideoImageView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(avatariImageView)
         contentView.addSubview(canvasView)
+        contentView.addSubview(muteVideoImageView)
+        contentView.addSubview(muteAudioImageView)
         avatariImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         avatariImageView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
         avatariImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
@@ -205,6 +226,11 @@ class AgoraVoiceUsersViewCell: UICollectionViewCell {
         canvasView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
         canvasView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         canvasView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+        
+        muteVideoImageView.centerXAnchor.constraint(equalTo: avatariImageView.leadingAnchor, constant: 5).isActive = true
+        muteVideoImageView.centerYAnchor.constraint(equalTo: avatariImageView.bottomAnchor, constant: -5).isActive = true
+        muteAudioImageView.centerXAnchor.constraint(equalTo: avatariImageView.trailingAnchor, constant: -5).isActive = true
+        muteAudioImageView.centerYAnchor.constraint(equalTo: avatariImageView.bottomAnchor, constant: -5).isActive = true
     }
     
     override open func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

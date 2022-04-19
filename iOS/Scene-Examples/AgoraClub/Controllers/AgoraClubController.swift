@@ -180,6 +180,10 @@ class AgoraClubController: BaseViewController {
         usersView.updateBottomTypeClosure = { isMic in
             self.bottomView.updateButtonType(type: isMic ? [.gift, .tool, .close] : [.gift, .close])
         }
+        // 更新用户上麦或下麦状态
+        usersView.updateUserStatusClosure = { [weak self] userModel in
+            self?.currentUserModel = userModel
+        }
         // gif播放完成回调
         playGifView.gifAnimationFinishedClosure = { [weak self] in
             guard let self = self else { return }
@@ -220,13 +224,23 @@ class AgoraClubController: BaseViewController {
                                                       className: SYNC_MANAGER_AGORA_CLUB_USERS,
                                                       objectId: userModel.objectId ?? "",
                                                       params: params, success: nil, fail: nil)
+                            self.currentUserModel = userModel
                         }
-                        self.usersView.isEnableVideo = !isSelected
                     
                     case .mic:
                         self.channelMediaOptions.publishAudioTrack = .of(!isSelected)
                         self.agoraKit?.updateChannelEx(with: self.channelMediaOptions,
                                                        connection: self.connection!)
+                        
+                        if var userModel = self.currentUserModel {
+                            userModel.isEnableAudio = !isSelected
+                            let params = JSONObject.toJson(userModel)
+                            SyncUtil.updateCollection(id: self.channelName,
+                                                      className: SYNC_MANAGER_AGORA_CLUB_USERS,
+                                                      objectId: userModel.objectId ?? "",
+                                                      params: params, success: nil, fail: nil)
+                            self.currentUserModel = userModel
+                        }
                     
                     default: break
                     }
@@ -251,7 +265,6 @@ class AgoraClubController: BaseViewController {
             default: break
             }
         }
-        
     }
     
     private func setupUI() {
@@ -363,7 +376,7 @@ class AgoraClubController: BaseViewController {
         messageModel.message = "\(UserInfo.uid) " + "Join_Live_Room".localized
         chatView.sendMessage(messageModel: messageModel)
         var userModel = AgoraVoiceUsersModel()
-        if self.getRole(uid: UserInfo.uid) == .broadcaster {
+        if getRole(uid: UserInfo.uid) == .broadcaster {
             userModel.status = .accept
         }
         let params = JSONObject.toJson(userModel)
@@ -415,7 +428,14 @@ class AgoraClubController: BaseViewController {
             headerView.fullButton.isSelected = false
             return
         }
-        super.clickBackButton()
+        if getRole(uid: UserInfo.uid) == .broadcaster {
+            showAlert(title: "Live_End".localized, message: "Confirm_End_Live".localized) { [weak self] in
+                SyncUtil.delete(id: self?.channelName ?? "")
+                self?.navigationController?.popViewController(animated: true)
+            }
+        } else {
+            super.clickBackButton()
+        }
     }
     
     @objc

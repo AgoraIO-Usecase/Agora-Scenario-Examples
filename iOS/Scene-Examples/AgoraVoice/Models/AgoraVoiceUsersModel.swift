@@ -14,5 +14,6 @@ struct AgoraVoiceUsersModel: Codable {
     var status: PKApplyInfoStatus = .end
     var timestamp: String = "".timeStamp16
     var isEnableVideo: Bool? = false
+    var isEnableAudio: Bool? = false
     var objectId: String?
 }

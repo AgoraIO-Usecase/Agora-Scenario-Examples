@@ -11,6 +11,7 @@ import AgoraRtcKit
 
 class SeatView: UIView {
     var updateBottomTypeClosure: ((Bool) -> Void)?
+    var updateUserStatusClosure: ((AgoraVoiceUsersModel) -> Void)?
     
     private lazy var collectionView: AGECollectionView = {
         let view = AGECollectionView()
@@ -30,17 +31,7 @@ class SeatView: UIView {
     private var agoraKit: AgoraRtcEngineKit?
     private var channelMediaOptions: AgoraRtcChannelMediaOptions?
     private var connection: AgoraRtcConnection?
-    
-    var isEnableVideo: Bool = false {
-        didSet {
-            let index = collectionView.dataArray?.compactMap({ $0 as? AgoraVoiceUsersModel }).firstIndex(where: { $0.userId == UserInfo.uid }) ?? 0
-            guard var userModel = collectionView.dataArray?[index] as? AgoraVoiceUsersModel else { return }
-            userModel.isEnableVideo = isEnableVideo
-            collectionView.dataArray?[index] = userModel
-            reloadData()
-        }
-    }
-    
+        
     init(channelName: String,
          role: AgoraClientRole,
          agoraKit: AgoraRtcEngineKit?,
@@ -111,6 +102,7 @@ class SeatView: UIView {
                     model.status = .accept
                     let params = JSONObject.toJson(model)
                     SyncUtil.updateCollection(id: self.channelName, className: SYNC_MANAGER_AGORA_CLUB_USERS, objectId: model.objectId ?? "", params: params)
+                    self.updateUserStatusClosure?(model)
                     self.fetchAgoraVoiceUserInfoData()
                 }
                 alert.addAction(invite)
@@ -130,13 +122,6 @@ class SeatView: UIView {
                 option.publishAudioTrack = .of(false)
                 option.publishCustomVideoTrack = .of(false)
                 self.agoraKit?.updateChannelEx(with: option, connection: connection)
-            }
-            if model.status == .accept && model.userId != UserInfo.uid {
-                let index = self.collectionView.dataArray?.compactMap({ $0 as? AgoraVoiceUsersModel }).firstIndex(where: { $0.userId == model.userId }) ?? 0
-                var data = self.collectionView.dataArray
-                data?[index] = model
-                self.collectionView.dataArray = data
-                return
             }
             self.fetchAgoraVoiceUserInfoData()
             
@@ -176,7 +161,6 @@ extension SeatView: AGECollectionViewDelegate {
             canvas.uid = UInt(userModel.userId) ?? 0
             canvas.renderMode = .hidden
             canvas.view = cell.canvasView
-            cell.canvasView.isHidden = userModel.isEnableVideo == false
             if userModel.userId == UserInfo.uid && userModel.isEnableVideo == true {
                 agoraKit?.setupLocalVideo(canvas)
                 agoraKit?.startPreview()
@@ -197,9 +181,10 @@ extension SeatView: AGECollectionViewDelegate {
         let controller = UIApplication.topMostViewController
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let close = UIAlertAction(title: /*封麦*/"Seat_Close".localized, style: .destructive) { _ in
-            var userModel = model as? AgoraVoiceUsersModel
-            userModel?.status = .end
-            SyncUtil.updateCollection(id: self.channelName, className: SYNC_MANAGER_AGORA_CLUB_USERS, objectId: userModel?.objectId ?? "", params: JSONObject.toJson(userModel))
+            guard var userModel = model as? AgoraVoiceUsersModel else { return }
+            userModel.status = .end
+            SyncUtil.updateCollection(id: self.channelName, className: SYNC_MANAGER_AGORA_CLUB_USERS, objectId: userModel.objectId ?? "", params: JSONObject.toJson(userModel))
+            self.updateUserStatusClosure?(userModel)
         }
         let cancel = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
         if model is String {
