@@ -130,7 +130,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                         if (isCanClickOrNot(v)) {
                             boolean activated = !mBinding.bottomView.isFun1Activated();
                             mBinding.bottomView.setFun1Activated(activated);
-                            roomManager.openUserVideo(roomInfo.roomId, new RoomManager.UserInfo(), activated);
+                            roomManager.openUserVideo(roomInfo.roomId, RoomManager.getInstance().getLocalUserInfo(), activated);
                             rtcManager.enableLocalVideo(activated);
                         }
                     } else {
@@ -148,6 +148,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                         if (isCanClickOrNot(v)) {
                             boolean activated = !mBinding.bottomView.isFun2Activated();
                             mBinding.bottomView.setFun2Activated(activated);
+                            roomManager.openUserAudio(roomInfo.roomId, RoomManager.getInstance().getLocalUserInfo(), activated);
                             rtcManager.enableLocalAudio(activated);
                         }
                     } else {
@@ -309,7 +310,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
 
     private void updateUserView(RoomManager.UserInfo data) {
         switch (data.status) {
-            case RoomManager.Status.INVITE:
+            case RoomManager.Status.INVITING:
                 if (data.userId.equals(RoomManager.getCacheUserId())) {
                     // 显示是否接受邀请弹窗
                     showInviteDialog(data);
@@ -321,18 +322,27 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                     userSeatLayout.ivCover.setImageResource(data.getAvatarResId());
 
                     int uid = Integer.parseInt(data.userId);
-                    if (!data.userId.equals(RoomManager.getCacheUserId())) {
-                        rtcManager.playRemoteAudio(uid, true);
-                    }
+
 
                     if (data.hasVideo) {
-                        if (data.userId.equals(RoomManager.getCacheUserId())) {
-                            rtcManager.renderLocalVideo(userSeatLayout.videoContainer, null);
-                        } else {
-                            rtcManager.renderRemoteVideo(userSeatLayout.videoContainer, uid);
+                        if(userSeatLayout.videoContainer.getChildCount() == 0){
+                            if (data.userId.equals(RoomManager.getCacheUserId())) {
+                                rtcManager.renderLocalVideo(userSeatLayout.videoContainer, null);
+                            } else {
+                                rtcManager.renderRemoteVideo(userSeatLayout.videoContainer, uid);
+                            }
                         }
                     } else {
                         userSeatLayout.videoContainer.removeAllViews();
+                    }
+
+                    if (!data.userId.equals(RoomManager.getCacheUserId())) {
+                        rtcManager.playRemoteAudio(uid, true);
+                    }
+                    if(data.hasAudio){
+                        userSeatLayout.ivMicOff.setVisibility(View.GONE);
+                    }else{
+                        userSeatLayout.ivMicOff.setVisibility(View.VISIBLE);
                     }
 
                 }
@@ -402,19 +412,8 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
 
     private void initRoomManager() {
         roomManager.joinRoom(roomInfo.roomId,
+                isLocalRoomOwner() ? RoomManager.Status.ACCEPT : RoomManager.Status.END,
                 list -> runOnUiThread(() -> {
-                    if (isLocalRoomOwner()) {
-                        boolean containOwner = false;
-                        for (RoomManager.UserInfo userInfo : list) {
-                            if (userInfo.userId.equals(roomInfo.userId) && userInfo.status == RoomManager.Status.ACCEPT) {
-                                containOwner = true;
-                                break;
-                            }
-                        }
-                        if (!containOwner) {
-                            roomManager.acceptUser(roomInfo.roomId, new RoomManager.UserInfo());
-                        }
-                    }
                     roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, new WeakReference<>(giftInfoDataCallback));
                     roomManager.subscribeUserChangeEvent(roomInfo.roomId, new WeakReference<>(userAddOrUpdateCallback), new WeakReference<>(userDeleteCallback));
                     for (RoomManager.UserInfo userInfo : list) {

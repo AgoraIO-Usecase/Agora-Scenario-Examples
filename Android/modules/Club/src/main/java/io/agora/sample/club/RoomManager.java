@@ -7,6 +7,7 @@ import android.view.View;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
 
 import java.io.Serializable;
 import java.lang.annotation.Retention;
@@ -31,12 +32,13 @@ public class RoomManager {
     private static final String PREFERENCE_KEY_USER_ID = RoomManager.class.getName() + "_userId";
     private static final String SYNC_MANAGER_GIFT_INFO = "giftInfo";
     private static final String SYNC_MANAGER_USER_INFO_LIST = "agoraClubUsers";
-    private static final int ROOM_MAX_USER = 8;
+    private static final int ROOM_MAX_USER = 4;
 
     private static volatile RoomManager INSTANCE;
     private static volatile boolean isInitialized = false;
 
     private final Map<String, SceneReference> sceneMap = new HashMap<>();
+    private UserInfo localUserInfo;
 
     public static RoomManager getInstance() {
         if (INSTANCE == null) {
@@ -57,11 +59,12 @@ public class RoomManager {
             return;
         }
         PreferenceUtil.init(context);
+        localUserInfo = new UserInfo();
         isInitialized = true;
         HashMap<String, String> params = new HashMap<>();
         params.put("appid", appId);
         params.put("token", token);
-        params.put("defaultChannel", "agoraClub");
+        params.put("defaultChannel", "MetaLive");
         Sync.Instance().init(context, params, new Sync.Callback() {
             @Override
             public void onSuccess() {
@@ -129,12 +132,13 @@ public class RoomManager {
         });
     }
 
-    public void joinRoom(String roomId, DataListCallback<UserInfo> successRun, DataCallback<Exception> failure) {
+    public void joinRoom(String roomId, @Status int status, DataListCallback<UserInfo> successRun, DataCallback<Exception> failure) {
         checkInitialized();
         Runnable onJoinSuccess = () -> {
             getUserList(roomId, dataList -> {
                 for (UserInfo userInfo : dataList) {
                     if (userInfo.userId.equals(getCacheUserId())) {
+                        localUserInfo = userInfo;
                         if (successRun != null) {
                             successRun.onSuccess(dataList);
                         }
@@ -142,7 +146,8 @@ public class RoomManager {
                     }
                 }
                 if (dataList.size() < ROOM_MAX_USER) {
-                    addLocalUser(roomId, data -> {
+                    addLocalUser(roomId, status, data -> {
+                        localUserInfo = data;
                         dataList.add(data);
                         if (successRun != null) {
                             successRun.onSuccess(dataList);
@@ -178,13 +183,26 @@ public class RoomManager {
         });
     }
 
+    public @NonNull UserInfo getLocalUserInfo() {
+        return localUserInfo;
+    }
+
     public void openUserVideo(String roomId, UserInfo userInfo, boolean open){
         userInfo.hasVideo = open;
         updateUserStatus(roomId, userInfo, Status.ACCEPT);
     }
 
+    public void openUserAudio(String roomId, UserInfo userInfo, boolean open){
+        userInfo.hasAudio = open;
+        updateUserStatus(roomId, userInfo, Status.ACCEPT);
+    }
+
+    public void raiseHand(String roomId, UserInfo userInfo){
+        updateUserStatus(roomId, userInfo, Status.RAISING);
+    }
+
     public void inviteUser(String roomId, UserInfo userInfo){
-        updateUserStatus(roomId, userInfo, Status.INVITE);
+        updateUserStatus(roomId, userInfo, Status.INVITING);
     }
 
     public void acceptUser(String roomId, UserInfo userInfo){
@@ -206,15 +224,20 @@ public class RoomManager {
             return;
         }
         UserInfo _userInfo = new UserInfo();
+        _userInfo.objectId = userInfo.objectId;
         _userInfo.userId = userInfo.userId;
         _userInfo.userName = userInfo.userName;
         _userInfo.avatar = userInfo.avatar;
         _userInfo.status = status;
+        _userInfo.hasVideo = userInfo.hasVideo;
+        _userInfo.hasAudio = userInfo.hasAudio;
         sceneReference.collection(SYNC_MANAGER_USER_INFO_LIST)
-                .update(userInfo.userId, _userInfo, new Sync.Callback() {
+                .update(userInfo.objectId, _userInfo, new Sync.Callback() {
                     @Override
                     public void onSuccess() {
-
+                        if(_userInfo.userId.equals(getCacheUserId())){
+                            localUserInfo = _userInfo;
+                        }
                     }
 
                     @Override
@@ -262,6 +285,7 @@ public class RoomManager {
                     if (result != null && result.size() > 0) {
                         for (IObject iObject : result) {
                             UserInfo userInfo = iObject.toObject(UserInfo.class);
+                            userInfo.objectId = iObject.getId();
                             userInfos.add(userInfo);
                         }
                     }
@@ -281,20 +305,22 @@ public class RoomManager {
         });
     }
 
-    private void addLocalUser(String roomId, DataCallback<UserInfo> success) {
+    private void addLocalUser(String roomId, @Status int status, DataCallback<UserInfo> success) {
         checkInitialized();
         SceneReference sceneReference = sceneMap.get(roomId);
         if (sceneReference == null) {
             return;
         }
         UserInfo userInfo = new UserInfo();
-        String objectId = userInfo.userId;
+        userInfo.status = status;
         sceneReference.collection(SYNC_MANAGER_USER_INFO_LIST)
-                .update(objectId, userInfo, new Sync.Callback() {
+                .add(userInfo, new Sync.DataItemCallback() {
                     @Override
-                    public void onSuccess() {
-                        if (success != null) {
-                            success.onSuccess(userInfo);
+                    public void onSuccess(IObject result) {
+                        UserInfo retUserInfo = result.toObject(UserInfo.class);
+                        retUserInfo.objectId = result.getId();
+                        if(success != null){
+                            success.onSuccess(retUserInfo);
                         }
                     }
 
@@ -306,16 +332,17 @@ public class RoomManager {
     }
 
     private void deleteLocalUser(String roomId) {
+
         checkInitialized();
         SceneReference sceneReference = sceneMap.get(roomId);
         if (sceneReference == null) {
             return;
         }
         sceneReference.collection(SYNC_MANAGER_USER_INFO_LIST)
-                .delete(getCacheUserId(), new Sync.Callback() {
+                .delete(localUserInfo.objectId, new Sync.Callback() {
                     @Override
                     public void onSuccess() {
-
+                        localUserInfo = new UserInfo();
                     }
 
                     @Override
@@ -339,6 +366,7 @@ public class RoomManager {
                     @Override
                     public void onCreated(IObject item) {
                         UserInfo userInfo = item.toObject(UserInfo.class);
+                        userInfo.objectId = item.getId();
                         if (addOrUpdateCallback != null && addOrUpdateCallback.get() != null) {
                             addOrUpdateCallback.get().onSuccess(userInfo);
                         }
@@ -347,6 +375,7 @@ public class RoomManager {
                     @Override
                     public void onUpdated(IObject item) {
                         UserInfo userInfo = item.toObject(UserInfo.class);
+                        userInfo.objectId = item.getId();
                         if (addOrUpdateCallback != null && addOrUpdateCallback.get() != null) {
                             addOrUpdateCallback.get().onSuccess(userInfo);
                         }
@@ -355,6 +384,8 @@ public class RoomManager {
                     @Override
                     public void onDeleted(IObject item) {
                         UserInfo userInfo = item.toObject(UserInfo.class);
+                        userInfo.objectId = item.getId();
+                        userInfo.status = Status.END;
                         if (deleteCallback != null && deleteCallback.get() != null) {
                             deleteCallback.get().onSuccess(userInfo);
                         }
@@ -487,6 +518,7 @@ public class RoomManager {
         public String roomId = getRandomRoomId();
         public String userId;
         public String backgroundId = String.format(Locale.US, "portrait%02d", RandomUtil.randomId(1, 14));
+        public @RoomType int roomType = RoomType.SINGLE_HOST;
         public String videoUrl = "";
 
         public RoomInfo(String roomName) {
@@ -511,9 +543,17 @@ public class RoomManager {
             map.put("roomId", roomId);
             map.put("userId", userId);
             map.put("backgroundId", backgroundId);
+            map.put("roomType", roomType + "");
             map.put("videoUrl", videoUrl);
             return map;
         }
+    }
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({RoomType.SINGLE_HOST, RoomType.MULTI_HOST})
+    public @interface RoomType {
+        int SINGLE_HOST = 1;
+        int MULTI_HOST = 2;
     }
 
     public static class MessageInfo implements Serializable {
@@ -579,12 +619,14 @@ public class RoomManager {
     }
 
     public static class UserInfo {
+        private String objectId;
         public String avatar = String.format(Locale.US, "portrait%02d", RandomUtil.randomId(1, 14));
         public String userId = getCacheUserId();
         public String userName = "User-" + userId;
         public @Status
         int status = Status.END;
-        public boolean hasVideo = true;
+        public boolean hasVideo = false;
+        public boolean hasAudio = false;
 
         public int getAvatarResId() {
             //Integer ret = RoomBgResMap.get(avatar);
@@ -597,24 +639,26 @@ public class RoomManager {
     }
 
     @Retention(RetentionPolicy.SOURCE)
-    @IntDef({Status.INVITE, Status.ACCEPT, Status.REFUSE, Status.END})
+    @IntDef({Status.INVITING, Status.ACCEPT, Status.REFUSE, Status.END, Status.RAISING})
     public @interface Status {
         // 邀请中
-        int INVITE = 1;
+        int INVITING = 1;
         // 已接受
         int ACCEPT = 2;
         // 已拒绝
         int REFUSE = 3;
         // 已结束
         int END = 4;
+        // 举手中
+        int RAISING = 5;
     }
 
 
     public interface DataListCallback<T> {
-        void onSuccess(List<T> dataList);
+        void onSuccess(@NonNull List<T> dataList);
     }
 
     public interface DataCallback<T> {
-        void onSuccess(T data);
+        void onSuccess(@NonNull T data);
     }
 }
