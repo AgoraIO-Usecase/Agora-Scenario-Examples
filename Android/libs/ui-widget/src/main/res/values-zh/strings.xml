@@ -6,6 +6,7 @@
     <string name="common_create">创建</string>
     <string name="common_no">否</string>
     <string name="common_tip_close_room">是否关闭房间?</string>
+    <string name="common_tip_room_closed">房间已关闭</string>
 
     <!--================== Function ==================-->
     <!-- RoomList -->

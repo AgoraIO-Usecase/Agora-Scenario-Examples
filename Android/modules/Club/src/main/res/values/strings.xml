@@ -15,6 +15,8 @@
     <string name="club_room_detail_close_seat">Close seat</string>
     <string name="club_room_detail_invite">Invite</string>
     <string name="club_room_detail_refuse_tip">%s refuse your invitation</string>
+    <string name="club_room_detail_leave_room">Leave Room</string>
+    <string name="club_room_detail_leave_room_msg">Sure to leave the room?</string>
 
     <array name="club_room_detail_seat_options">
         <item>@string/club_room_detail_invite</item>
