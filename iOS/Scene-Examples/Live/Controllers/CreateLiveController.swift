@@ -75,6 +75,8 @@ class CreateLiveController: BaseViewController {
     private var sceneType: SceneType = .singleLive
     private var bgImageName: String = "BG01"
     
+    var clubProgramType: AgoraClubProgramType = .miracle
+    
     init(sceneType: SceneType) {
         super.init(nibName: nil, bundle: nil)
         self.sceneType = sceneType
@@ -92,15 +94,19 @@ class CreateLiveController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationTransparent(isTransparent: true)
+        navigationTransparent(isTransparent: true, isHiddenNavBar: false)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        navigationTransparent(isTransparent: false)
+        navigationTransparent(isTransparent: false, isHiddenNavBar: false)
     }
     
     private func setupUI() {
+        backButton.setImage(UIImage(systemName: "chevron.backward")?
+                                .withTintColor(.white, renderingMode: .alwaysOriginal),
+                            for: .normal)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         view.backgroundColor = .init(hex: "#404B54")
         randomNameView.translatesAutoresizingMaskIntoConstraints = false
         startLiveButton.translatesAutoresizingMaskIntoConstraints = false
@@ -112,7 +118,7 @@ class CreateLiveController: BaseViewController {
         view.addSubview(settingButton)
         
         localView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        localView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        localView.topAnchor.constraint(equalTo: view.topAnchor, constant: -Screen.kNavHeight).isActive = true
         localView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         localView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
@@ -199,6 +205,9 @@ class CreateLiveController: BaseViewController {
         var roomInfo = LiveRoomInfo(roomName: randomNameView.text)
         if sceneType == .agoraVoice {
             roomInfo.backgroundId = bgImageName            
+        }
+        if sceneType == .agoraClub {
+            roomInfo.videoUrl = clubProgramType.videoUrl
         }
         let params = JSONObject.toJson(roomInfo)
         SyncUtil.joinScene(id: roomInfo.roomId, userId: roomInfo.userId, property: params, success: { result in

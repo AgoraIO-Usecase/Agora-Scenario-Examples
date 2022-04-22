@@ -35,6 +35,8 @@ class LiveRoomListController: BaseViewController {
     private var dataArray = [LiveRoomInfo]()
     private var sceneType: SceneType = .singleLive
     
+    var clubProgramType: AgoraClubProgramType = .miracle
+    
     init(sceneType: SceneType) {
         super.init(nibName: nil, bundle: nil)
         self.sceneType = sceneType
@@ -128,6 +130,7 @@ class LiveRoomListController: BaseViewController {
             return
         }
         let createLiveVC = CreateLiveController(sceneType: sceneType)
+        createLiveVC.clubProgramType = clubProgramType
         navigationController?.pushViewController(createLiveVC, animated: true)
     }
     
@@ -164,7 +167,7 @@ class LiveRoomListController: BaseViewController {
             navigationController?.pushViewController(agoraVoiceVC, animated: true)
             
         case .agoraClub:
-            let videoUrl = result.getPropertyWith(key: "videoUrl", type: String.self) as? String
+            let videoUrl = result.getPropertyWith(key: "videoUrl", type: String.self) as? String ?? clubProgramType.videoUrl
             let clubVC = AgoraClubController(userId: ownerId ?? "",
                                              channelName: channelName,
                                              videoUrl: videoUrl)

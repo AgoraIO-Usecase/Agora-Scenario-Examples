@@ -16,13 +16,14 @@ class BaseNavigationController: UINavigationController {
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        .default
+        viewControllers.last?.preferredStatusBarStyle ?? .lightContent
     }
-    
+    override var prefersStatusBarHidden: Bool {
+        viewControllers.last?.prefersStatusBarHidden ?? false
+    }
     override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
-        .fade
+        viewControllers.last?.preferredStatusBarUpdateAnimation ?? .slide
     }
-
 }
 
 extension BaseNavigationController {

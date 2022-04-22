@@ -24,6 +24,18 @@ class MainViewController: BaseViewController {
         setupUI()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationTransparent(isTransparent: false, isHiddenNavBar: false)
+        let image = UIImage().color(.white, height: Screen.kNavHeight)
+        navigationController?.navigationBar.isTranslucent = false
+        navigationController?.navigationBar.setBackgroundImage(image, for: .any, barMetrics: .default)
+        navigationController?.navigationBar.tintColor = .black
+        navigationController?.navigationBar.barTintColor = .black
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
+        navigationController?.view.backgroundColor = view.backgroundColor
+    }
+    
     private func setupUI() {
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -49,6 +61,10 @@ extension MainViewController: AGETableViewDelegate {
             let breakoutRoomVC = BORHomeViewController()
             breakoutRoomVC.title = MainModel.mainDatas()[indexPath.row].title
             navigationController?.pushViewController(breakoutRoomVC, animated: true)
+        } else if sceneType == .agoraClub {
+            let clubProgramVC = AgoraClubProgramViewController()
+            navigationController?.pushViewController(clubProgramVC, animated: true)
+            
         } else {
             let roomListVC = LiveRoomListController(sceneType: sceneType)
             roomListVC.title = MainModel.mainDatas()[indexPath.row].title

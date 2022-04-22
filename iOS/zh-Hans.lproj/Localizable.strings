@@ -280,3 +280,4 @@ after_closing_live_broadcast_room="关闭直播间后，其他用户将不能再
 close_studio="关闭直播间";
 
 agoraClub = "夜店";
+agoraProgram = "大厅";

@@ -115,18 +115,7 @@ class AgoraClubController: BaseViewController {
         
         subscribeGift(channelName: channelName)
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationTransparent(isTransparent: false, isHiddenNavBar: false)
-        let image = UIImage().color(.black, height: Screen.kNavHeight)
-        navigationController?.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.setBackgroundImage(image, for: .any, barMetrics: .default)
-        navigationController?.navigationBar.tintColor = .white
-        navigationController?.navigationBar.barTintColor = .white
-        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-        navigationController?.view.backgroundColor = view.backgroundColor
-    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         joinChannel()
@@ -151,7 +140,6 @@ class AgoraClubController: BaseViewController {
         if getRole(uid: UserInfo.uid) == .broadcaster {
             SyncUtil.delete(id: channelName)
         }
-        navigationTransparent(isTransparent: false)
         UIApplication.shared.isIdleTimerDisabled = false
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
