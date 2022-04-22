@@ -324,7 +324,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                     int uid = Integer.parseInt(data.userId);
 
 
-                    if (data.hasVideo) {
+                    if (data.isEnableVideo) {
                         if(userSeatLayout.videoContainer.getChildCount() == 0){
                             if (data.userId.equals(RoomManager.getCacheUserId())) {
                                 rtcManager.renderLocalVideo(userSeatLayout.videoContainer, null);
@@ -339,7 +339,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                     if (!data.userId.equals(RoomManager.getCacheUserId())) {
                         rtcManager.playRemoteAudio(uid, true);
                     }
-                    if(data.hasAudio){
+                    if(data.isEnableAudio){
                         userSeatLayout.ivMicOff.setVisibility(View.GONE);
                     }else{
                         userSeatLayout.ivMicOff.setVisibility(View.VISIBLE);
@@ -393,6 +393,19 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                 seatLayout.getRoot().setTag(null);
                 break;
             }
+        }
+        if(userId.equals(roomInfo.userId)){
+            // 房主已退出
+            rtcManager.closePlayerVideo();
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.common_tip)
+                    .setMessage(R.string.common_tip_room_closed)
+                    .setCancelable(false)
+                    .setPositiveButton(R.string.common_yes, (dialog, which) -> {
+                        dialog.dismiss();
+                        finish();
+                    })
+                    .show();
         }
     }
 

@@ -64,7 +64,7 @@ public class RoomManager {
         HashMap<String, String> params = new HashMap<>();
         params.put("appid", appId);
         params.put("token", token);
-        params.put("defaultChannel", "MetaLive");
+        params.put("defaultChannel", "agoraClub");
         Sync.Instance().init(context, params, new Sync.Callback() {
             @Override
             public void onSuccess() {
@@ -188,12 +188,12 @@ public class RoomManager {
     }
 
     public void openUserVideo(String roomId, UserInfo userInfo, boolean open){
-        userInfo.hasVideo = open;
+        userInfo.isEnableVideo = open;
         updateUserStatus(roomId, userInfo, Status.ACCEPT);
     }
 
     public void openUserAudio(String roomId, UserInfo userInfo, boolean open){
-        userInfo.hasAudio = open;
+        userInfo.isEnableAudio = open;
         updateUserStatus(roomId, userInfo, Status.ACCEPT);
     }
 
@@ -229,8 +229,8 @@ public class RoomManager {
         _userInfo.userName = userInfo.userName;
         _userInfo.avatar = userInfo.avatar;
         _userInfo.status = status;
-        _userInfo.hasVideo = userInfo.hasVideo;
-        _userInfo.hasAudio = userInfo.hasAudio;
+        _userInfo.isEnableVideo = userInfo.isEnableVideo;
+        _userInfo.isEnableAudio = userInfo.isEnableAudio;
         sceneReference.collection(SYNC_MANAGER_USER_INFO_LIST)
                 .update(userInfo.objectId, _userInfo, new Sync.Callback() {
                     @Override
@@ -625,8 +625,9 @@ public class RoomManager {
         public String userName = "User-" + userId;
         public @Status
         int status = Status.END;
-        public boolean hasVideo = false;
-        public boolean hasAudio = false;
+        public boolean isEnableVideo = false;
+        public boolean isEnableAudio = false;
+        public String timestamp = System.currentTimeMillis() + "";
 
         public int getAvatarResId() {
             //Integer ret = RoomBgResMap.get(avatar);
