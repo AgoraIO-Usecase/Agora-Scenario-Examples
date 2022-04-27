@@ -35,22 +35,23 @@ class ClubRoomListView: UIView {
         return view
     }()
     private var dataArray = [LiveRoomInfo]()
+    private var videoUrl: String = ""
     
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(videoUrl: String) {
+        super.init(frame: .zero)
+        self.videoUrl = videoUrl
         setupUI()
-        getLiveData()
+        getLiveData(videoUrl: videoUrl)
     }
-    
+        
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func getLiveData() {
+    private func getLiveData(videoUrl: String) {
         SyncUtil.fetchAll { results in
             self.collectionView.endRefreshing()
-            self.dataArray = results.compactMap({ $0.toJson() }).compactMap({ JSONObject.toModel(LiveRoomInfo.self, value: $0 )})
+            self.dataArray = results.compactMap({ $0.toJson() }).compactMap({ JSONObject.toModel(LiveRoomInfo.self, value: $0 )}).filter({ $0.videoUrl == videoUrl})
             self.collectionView.dataArray = self.dataArray
         } fail: { error in
             self.collectionView.endRefreshing()
@@ -91,6 +92,6 @@ extension ClubRoomListView: AGECollectionViewDelegate {
         return cell
     }
     func pullToRefreshHandler() {
-        getLiveData()
+        getLiveData(videoUrl: videoUrl)
     }
 }

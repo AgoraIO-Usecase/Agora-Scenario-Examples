@@ -38,14 +38,14 @@ class BaseViewController: UIViewController {
     }
     
     func navigationTransparent(isTransparent: Bool, isHiddenNavBar: Bool = false) {
-        let image = isTransparent ?  UIImage() : nil
+        let image = isTransparent ? UIImage() : nil
         navigationController?.navigationBar.setBackgroundImage(image, for: .any, barMetrics: .default)
         navigationController?.navigationBar.shadowImage = image
         navigationController?.navigationBar.barTintColor = isTransparent ? .clear : view.backgroundColor
         navigationController?.navigationBar.isHidden = isHiddenNavBar
         navigationController?.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: isTransparent ? .clear : view.backgroundColor == .white ? UIColor.black : .white]
-        navigationController?.view.backgroundColor = isTransparent ? .clear : view.backgroundColor
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: view.backgroundColor == .white ? UIColor.black : .white]
+        navigationController?.view.backgroundColor = view.backgroundColor
     }
 
     func showAlert(title: String? = nil, message: String) {

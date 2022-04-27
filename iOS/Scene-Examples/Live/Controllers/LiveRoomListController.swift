@@ -35,7 +35,7 @@ class LiveRoomListController: BaseViewController {
     private var dataArray = [LiveRoomInfo]()
     private var sceneType: SceneType = .singleLive
     
-    var clubProgramType: AgoraClubProgramType = .miracle
+    var clubProgramType: AgoraClubProgramType?
     
     init(sceneType: SceneType) {
         super.init(nibName: nil, bundle: nil)
@@ -80,6 +80,9 @@ class LiveRoomListController: BaseViewController {
             self.roomView.endRefreshing()
             print("result == \(results.compactMap{ $0.toJson() })")
             self.dataArray = results.compactMap({ $0.toJson() }).compactMap({ JSONObject.toModel(LiveRoomInfo.self, value: $0 )})
+            if let clubType = self.clubProgramType {
+                self.dataArray = self.dataArray.filter({ $0.videoUrl == clubType.videoUrl})
+            }
             self.roomView.dataArray = self.dataArray
         } fail: { error in
             self.hideHUD()
@@ -130,7 +133,9 @@ class LiveRoomListController: BaseViewController {
             return
         }
         let createLiveVC = CreateLiveController(sceneType: sceneType)
-        createLiveVC.clubProgramType = clubProgramType
+        if let clubProgramType = clubProgramType {
+            createLiveVC.clubProgramType = clubProgramType
+        }
         navigationController?.pushViewController(createLiveVC, animated: true)
     }
     
@@ -167,7 +172,7 @@ class LiveRoomListController: BaseViewController {
             navigationController?.pushViewController(agoraVoiceVC, animated: true)
             
         case .agoraClub:
-            let videoUrl = result.getPropertyWith(key: "videoUrl", type: String.self) as? String ?? clubProgramType.videoUrl
+            let videoUrl = result.getPropertyWith(key: "videoUrl", type: String.self) as? String ?? clubProgramType?.videoUrl
             let clubVC = AgoraClubController(userId: ownerId ?? "",
                                              channelName: channelName,
                                              videoUrl: videoUrl)

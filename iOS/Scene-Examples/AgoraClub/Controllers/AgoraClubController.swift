@@ -112,10 +112,13 @@ class AgoraClubController: BaseViewController {
         UIApplication.shared.isIdleTimerDisabled = true
         
         setupMediaPlayKit()
-        
-        subscribeGift(channelName: channelName)
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationTransparent(isTransparent: true, isHiddenNavBar: false)
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         joinChannel()
@@ -159,6 +162,8 @@ class AgoraClubController: BaseViewController {
     }
     
     private func eventHandler() {
+        subscribeGift(channelName: channelName)
+        
         SyncUtil.subscribe(id: channelName, key: nil, onDeleted: { object in
             LogUtils.log(message: "删除房间 == \(object.toJson() ?? "")", level: .info)
             AGEToastView.show(text: "room_is_closed".localized, duration: 2)
@@ -366,6 +371,8 @@ class AgoraClubController: BaseViewController {
         var userModel = AgoraVoiceUsersModel()
         if getRole(uid: UserInfo.uid) == .broadcaster {
             userModel.status = .accept
+        } else {
+            userModel.status = .end
         }
         let params = JSONObject.toJson(userModel)
         SyncUtil.addCollection(id: channelName, className: SYNC_MANAGER_AGORA_CLUB_USERS, params: params, success: { object in
@@ -428,24 +435,32 @@ class AgoraClubController: BaseViewController {
     
     @objc
     private func clickRightButton() {
-        let alertView = ClubRoomListView()
+        let alertView = ClubRoomListView(videoUrl: videoUrl ?? "")
         alertView.didClubItemClosure = { [weak self] roomInfo in
-            guard let self = self else { return }
+            guard let self = self, roomInfo.roomId != self.channelName else { return }
             self.leaveChannel()
+            if self.getRole(uid: UserInfo.uid) == .broadcaster {
+                SyncUtil.delete(id: self.channelName)
+            }
             self.title = roomInfo.roomId
             self.channelName = roomInfo.roomId
             self.currentUserId = roomInfo.userId
             self.videoUrl = roomInfo.videoUrl
-            self.usersView.updateParams(channelName: roomInfo.roomId,
-                                        role: self.getRole(uid: UserInfo.uid),
-                                        agoraKit: self.agoraKit,
-                                        mediaOptions: self.channelMediaOptions,
-                                        connection: self.connection!)
             self.liveToolView.updateStatus(type: .camera, isSelected: true)
             self.liveToolView.updateStatus(type: .mic, isSelected: true)
-            
-            self.joinChannel()
-            AlertManager.hiddenView()
+            self.bottomView.updateButtonType(type: [.gift, .close])
+            let params = JSONObject.toJson(roomInfo)
+            ToastView.show(text: "切换房间中...")
+            SyncUtil.joinScene(id: roomInfo.roomId, userId: roomInfo.userId, property: params, success: { result in
+                self.joinChannel()
+                self.usersView.updateParams(channelName: roomInfo.roomId,
+                                            role: self.getRole(uid: UserInfo.uid),
+                                            agoraKit: self.agoraKit,
+                                            mediaOptions: self.channelMediaOptions,
+                                            connection: self.connection!)
+                self.eventHandler()
+                AlertManager.hiddenView()
+            })
         }
         AlertManager.show(view: alertView, alertPostion: .bottom, didCoverDismiss: true)
     }

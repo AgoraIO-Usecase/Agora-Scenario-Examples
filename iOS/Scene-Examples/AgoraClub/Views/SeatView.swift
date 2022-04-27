@@ -59,12 +59,13 @@ class SeatView: UIView {
                       agoraKit: AgoraRtcEngineKit?,
                       mediaOptions: AgoraRtcChannelMediaOptions?,
                       connection: AgoraRtcConnection) {
+        SyncUtil.unsubscribeCollection(id: self.channelName,
+                                       className: SYNC_MANAGER_AGORA_CLUB_USERS)
         self.channelName = channelName
         self.currentRole = role
         self.agoraKit = agoraKit
         self.channelMediaOptions = mediaOptions
         self.connection = connection
-        SyncUtil.unsubscribeCollection(id: channelName, className: SYNC_MANAGER_AGORA_CLUB_USERS)
         eventHandler()
     }
     
