@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <style name="CommonAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@android:color/black</item>
+        <item name="colorPrimaryDark">@android:color/black</item>
+        <item name="colorAccent">#4da1ff</item>
+        <item name="preferenceTheme">@style/CommonPreferenceTheme</item>
+        <item name="alertDialogTheme">@style/CommonAlertDialog.Theme.IOS</item>
+        <item name="alertDialogStyle">@style/CommonAlertDialog.IOS</item>
+        <item name="android:ratingBarStyle">@style/CommonCuteRatingBar</item>
+    </style>
+
+    <style name="CommonPreferenceTheme" parent="PreferenceThemeOverlay">
+        <item name="android:layout">@layout/common_preference_layout</item>
+    </style>
+
+    <style name="CommonAlertDialog.IOS" parent="AlertDialog.AppCompat">
+        <item name="android:layout">@layout/common_alert_layout_ios</item>
+    </style>
+
+    <style name="CommonAlertDialog.Theme.IOS" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/common_alert_bg_ios</item>
+        <item name="android:windowAnimationStyle">@style/Animation.AppCompat.DropDownUp</item>
+    </style>
+
+    <style name="CommonCuteRatingBar" parent="Widget.AppCompat.RatingBar">
+        <item name="android:progressDrawable">@drawable/common_ratingbar_indicator</item>
+        <item name="android:indeterminateDrawable">@drawable/common_ratingbar_indicator</item>
+    </style>
+
+
+    <!-- Bottom Dialog-->
+    <style name="BottomSheetDialog" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:backgroundDimAmount">0</item>
+    </style>
+
+    <style name="GiftAnimPlayDialog">
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+</resources>

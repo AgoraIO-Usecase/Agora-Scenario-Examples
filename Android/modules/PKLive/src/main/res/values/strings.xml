@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pk_live_app_name">PK Live</string>
+    <string name="pk_live_description">Two anchors with different live broadcasts linked the microphone PK across channels, detonating the live broadcast room</string>
+
+</resources>

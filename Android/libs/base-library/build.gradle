@@ -1,0 +1,52 @@
+plugins {
+    id 'com.android.library'
+}
+def safeExtGetVersion(prop, key, fallback) {
+    if (rootProject.ext.has(prop)) {
+        def map = rootProject.ext.get(prop)
+        if (map.containsKey(key)) {
+            return map.get(key)
+        }
+    }
+    return fallback
+}
+
+def safeExtGetDependence(key, fallback){
+    return "$key:${safeExtGetVersion('dependencies', key, fallback)}"
+}
+
+android {
+    compileSdkVersion safeExtGetVersion('android', 'compileSdkVersion', 30)
+
+    defaultConfig {
+        minSdkVersion safeExtGetVersion('android', 'minSdkVersion', 21)
+        targetSdkVersion safeExtGetVersion('android', 'targetSdkVersion', 30)
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "proguard-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildFeatures{
+        viewBinding true
+    }
+}
+
+dependencies {
+    implementation safeExtGetDependence('androidx.core:core', '1.7.0')
+    implementation safeExtGetDependence('com.google.android.material:material', '1.4.0')
+    implementation safeExtGetDependence('androidx.activity:activity', '1.4.0')
+    implementation safeExtGetDependence('androidx.fragment:fragment', '1.4.0')
+}

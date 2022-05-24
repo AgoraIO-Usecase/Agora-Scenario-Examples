@@ -1,0 +1,10 @@
+rootProject.name = "SceneExample"
+if (!isModule.toBoolean()) {
+    include ':app'
+}
+
+include ':libs:base-library'
+include ':libs:ui-widget'
+
+include ':modules:PKLive'
+include ':modules:SingleHostLive'
