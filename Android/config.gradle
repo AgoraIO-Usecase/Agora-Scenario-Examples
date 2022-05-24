@@ -1,0 +1,45 @@
+ext {
+    android = [
+            'compileSdkVersion': 30,
+            'buildToolsVersion': "30.0.3",
+            'minSdkVersion'    : 21,
+            'targetSdkVersion' : 30,
+    ]
+    dependencies = [
+            // 最新版查询：https://mvnrepository.com/
+
+            // Test Framework
+            'junit:junit'                                   : '4.13.1',
+            'androidx.test.ext:junit'                       : '1.1.1',
+            'androidx.test.espresso:espresso-core'          : '3.2.0',
+
+            // androidx/google dependencies
+            'androidx.core:core'                            : '1.6.0',
+            'androidx.multidex:multidex'                    : '2.0.1',
+            'androidx.annotation:annotation'                : '1.3.0',
+            'androidx.preference:preference'                : '1.1.1',
+            'androidx.appcompat:appcompat'                  : '1.3.1',
+            'androidx.constraintlayout:constraintlayout'    : '2.1.2',
+            'androidx.navigation:navigation-fragment'       : '2.3.5',
+            'androidx.recyclerview:recyclerview'            : '1.2.1',
+            'androidx.swiperefreshlayout:swiperefreshlayout': '1.1.0',
+            'androidx.cardview:cardview'                    : '1.0.0',
+            'androidx.work:work-runtime'                    : '2.7.1',
+            'androidx.activity:activity'                    : '1.3.1',
+            'androidx.fragment:fragment'                    : '1.3.6',
+            'com.google.android.material:material'          : '1.3.0',
+            'com.google.code.gson:gson'                     : '2.8.9',
+
+            // third part components
+            'com.yanzhenjie:permission'                     : '2.0.3',
+            'com.github.bumptech.glide:glide'               : '4.12.0',
+            'com.github.bumptech.glide:compiler'            : '4.12.0',
+            'pl.droidsonroids.gif:android-gif-drawable'     : '1.2.23',
+
+            // agora sdk
+            'io.agora.rtc:full-sdk'                         : '3.6.0',
+            'io.agora:player'                               : '1.3.0',
+            'com.github.agorabuilder:rtm-sdk'               : '1.4.6',
+            'com.github.AgoraIO-Community:SyncManager-Android' : '1.0.1',
+    ]
+}

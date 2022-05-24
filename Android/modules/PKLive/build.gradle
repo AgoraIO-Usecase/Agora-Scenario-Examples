@@ -1,0 +1,91 @@
+if (isModule.toBoolean()) {
+    apply plugin: 'com.android.application'
+} else {
+    apply plugin: 'com.android.library'
+}
+
+def safeExtGetVersion(prop, key, fallback) {
+    if (rootProject.ext.has(prop)) {
+        def map = rootProject.ext.get(prop)
+        if (map.containsKey(key)) {
+            return map.get(key)
+        }
+    }
+    return fallback
+}
+
+def safeExtGetDependence(key, fallback){
+    return "$key:${safeExtGetVersion('dependencies', key, fallback)}"
+}
+
+android {
+    compileSdkVersion safeExtGetVersion('android', 'compileSdkVersion', 30)
+    buildToolsVersion safeExtGetVersion('android', 'buildToolsVersion', '30.0.3')
+    resourcePrefix "pk_live_"
+
+
+    defaultConfig {
+        if (isModule.toBoolean()) {
+            applicationId "io.agora.sample.pklive"
+        }
+        minSdkVersion safeExtGetVersion('android', 'minSdkVersion', 21)
+        targetSdkVersion safeExtGetVersion('android', 'targetSdkVersion', 30)
+        versionCode 1
+        versionName "1.0.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+        multiDexEnabled true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildFeatures {
+        viewBinding = true
+    }
+
+    if (isModule.toBoolean()) {
+        applicationVariants.all { variant ->
+            variant.outputs.all {
+                outputFileName = "PKLive-${versionName}-${variant.buildType.name}.apk"
+            }
+        }
+    }
+
+    sourceSets {
+        main {
+            if (isModule.toBoolean()) {
+                manifest.srcFile 'src/main/AndroidManifest_Module.xml'
+            } else {
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation safeExtGetDependence('junit:junit','4.+')
+    androidTestImplementation safeExtGetDependence('androidx.test.ext:junit','1.1.2')
+    androidTestImplementation safeExtGetDependence('androidx.test.espresso:espresso-core','3.3.0')
+
+    implementation safeExtGetDependence('androidx.appcompat:appcompat', '1.2.0')
+    implementation safeExtGetDependence('androidx.recyclerview:recyclerview', '1.2.1')
+    implementation safeExtGetDependence('com.yanzhenjie:permission', '2.0.3')
+
+    implementation safeExtGetDependence('io.agora.rtc:full-sdk','3.5.0')
+    implementation safeExtGetDependence('com.github.AgoraIO-Community:SyncManager-Android', '1.0.0')
+
+    implementation project(':libs:ui-widget')
+    implementation project(':libs:base-library')
+}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Home -->
+    <dimen name="home_item_height">150dp</dimen>
+    <dimen name="home_item_text_width">130dp</dimen>
+    <dimen name="home_item_text_margin_top">50dp</dimen>
+    <dimen name="home_item_text_margin_end">20dp</dimen>
+    <dimen name="home_item_text_line_space">10dp</dimen>
+    <dimen name="home_item_padding_horizontal">20dp</dimen>
+    <dimen name="home_item_margin_vertical">8dp</dimen>
+    <dimen name="home_item_text_size">16sp</dimen>
+    <dimen name="home_item_text_sub_size">12sp</dimen>
+
+
+
+</resources>

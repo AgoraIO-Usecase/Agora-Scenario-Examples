@@ -1,0 +1,71 @@
+plugins {
+    id 'com.android.application'
+}
+def safeExtGetVersion(prop, key, fallback) {
+    if (rootProject.ext.has(prop)) {
+        def map = rootProject.ext.get(prop)
+        if (map.containsKey(key)) {
+            return map.get(key)
+        }
+    }
+    return fallback
+}
+
+def safeExtGetDependence(key, fallback){
+    return "$key:${safeExtGetVersion('dependencies', key, fallback)}"
+}
+
+android {
+    compileSdkVersion safeExtGetVersion('android', 'compileSdkVersion', 30)
+    buildToolsVersion safeExtGetVersion('android', 'buildToolsVersion', '30.0.3')
+
+    defaultConfig {
+        applicationId "io.agora.scene"
+        minSdkVersion safeExtGetVersion('android', 'minSdkVersion', 21)
+        targetSdkVersion safeExtGetVersion('android', 'targetSdkVersion', 30)
+        versionCode 1
+        versionName "1.0.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled false
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildFeatures {
+        viewBinding = true
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "Demo-${versionName}-${variant.buildType.name}.apk"
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation safeExtGetDependence('junit:junit','4.+')
+    androidTestImplementation safeExtGetDependence('androidx.test.ext:junit','1.1.2')
+    androidTestImplementation safeExtGetDependence('androidx.test.espresso:espresso-core','3.3.0')
+
+    implementation safeExtGetDependence('androidx.appcompat:appcompat', '1.2.0')
+    implementation safeExtGetDependence('androidx.multidex:multidex', '2.0.1')
+    implementation safeExtGetDependence('androidx.constraintlayout:constraintlayout', '2.0.4')
+    implementation safeExtGetDependence('androidx.recyclerview:recyclerview', '1.2.1')
+
+    implementation project(':libs:base-library')
+    implementation project(':libs:ui-widget')
+
+    implementation project(':modules:PKLive')
+    implementation project(':modules:SingleHostLive')
+}

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginBottom="@dimen/gift_grid_item_margin_bottom"
+    android:paddingVertical="@dimen/gift_grid_item_padding_v"
+    android:background="@drawable/gift_grid_item_bg">
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/live_room_action_sheet_gift_item_icon"
+        android:layout_width="@dimen/gift_grid_item_icon_size"
+        android:layout_height="@dimen/gift_grid_item_icon_size"
+        android:layout_gravity="center_horizontal"/>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/live_room_action_sheet_gift_item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@android:color/black"/>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/live_room_action_sheet_gift_item_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textSize="@dimen/gift_grid_item_text_size"/>
+</LinearLayout>

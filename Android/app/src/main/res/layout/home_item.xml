@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:paddingHorizontal="@dimen/home_item_padding_horizontal"
+        android:layout_height="@dimen/home_item_height"
+        android:layout_marginVertical="@dimen/home_item_margin_vertical"
+        android:layout_gravity="center_horizontal">
+
+        <ImageView
+            android:id="@+id/home_item_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"/>
+
+        <TextView
+            android:id="@+id/home_item_name"
+            android:layout_width="@dimen/home_item_text_width"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/home_item_text_margin_top"
+            android:layout_marginEnd="@dimen/home_item_text_margin_end"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/home_item_text_size"/>
+
+        <TextView
+            android:id="@+id/home_item_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/home_item_name"
+            android:layout_alignStart="@id/home_item_name"
+            android:layout_alignEnd="@id/home_item_name"
+            android:layout_marginTop="@dimen/home_item_text_line_space"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/home_item_text_sub_size"/>
+
+    </RelativeLayout>
+
+</FrameLayout>
