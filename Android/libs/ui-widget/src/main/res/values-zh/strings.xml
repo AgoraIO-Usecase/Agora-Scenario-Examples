@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="common_tip">提示</string>
+    <string name="common_yes">是</string>
+    <string name="common_cancel">取消</string>
+    <string name="common_create">创建</string>
+    <string name="common_no">否</string>
+    <string name="common_tip_close_room">是否关闭房间?</string>
+    <string name="common_tip_room_closed">房间已关闭</string>
+
+    <!--================== Function ==================-->
+    <!-- RoomList -->
+    <string name="room_list_no_data_hint">请创建一个房间</string>
+    <string name="room_list_network_error_title">网络异常</string>
+    <string name="room_list_network_error_message">当前网络连接异常，请稍候再试</string>
+
+    <!-- Preview Control -->
+    <string name="preview_control_name_hint">直播间名字</string>
+    <string name="preview_control_go_live_text">开始直播</string>
+    <string name="preview_control_room_restriction">本应用为测试产品，请勿商用。单次直播最长10分钟，每个频道最多10人。</string>
+
+    <!-- Video Setting -->
+    <string name="video_setting_dialog_title">设置</string>
+    <string name="video_setting_dialog_title_resolution">分辨率</string>
+    <string name="video_setting_dialog_title_framerate">帧率</string>
+    <string name="video_setting_dialog_title_bitrate">码率</string>
+    <string name="video_setting_dialog_bitrate_value_default">默认</string>
+
+    <!-- Live Bottom View -->
+    <string name="live_bottom_edit_hint">说点什么 &#8230;</string>
+
+    <!-- LiveRoomMessageListView -->
+    <string name="live_room_message_user_join_suffix">进入房间</string>
+    <string name="live_room_message_user_left_suffix">离开房间</string>
+    <string name="live_room_message_gift_prefix">向主播赠送了一个</string>
+
+    <!-- LiveToolDialog -->
+    <string name="live_tool_layout_title">工具</string>
+    <string name="live_tool_name_data">实时数据</string>
+    <string name="live_tool_name_speaker">麦克风</string>
+    <string name="live_tool_name_ear_monitor">耳返</string>
+    <string name="live_tool_name_setting">设置</string>
+    <string name="live_tool_name_rotate">翻转</string>
+    <string name="live_tool_name_camera">摄像头</string>
+
+    <!-- GiftGridDialog -->
+    <string name="gift_grid_title">礼物</string>
+    <string name="gift_grid_send">赠送</string>
+    <string name="gift_grid_coin_value_format">(%d金币)</string>
+    <string name="gift_grid_default_gift_item_bell">铃铛</string>
+    <string name="gift_grid_default_gift_item_ice_cream">冰激凌</string>
+    <string name="gift_grid_default_gift_item_wine">红酒</string>
+    <string name="gift_grid_default_gift_item_cake">蛋糕</string>
+    <string name="gift_grid_default_gift_item_ring">戒指</string>
+    <string name="gift_grid_default_gift_item_watch">手表</string>
+    <string name="gift_grid_default_gift_item_diamond">钻石</string>
+    <string name="gift_grid_default_gift_item_rocket">火箭</string>
+
+    <!-- OnlineUserListDialog -->
+    <string name="online_user_list_dialog_title">在线用户</string>
+    <string name="online_user_list_dialog_invite">邀请</string>
+
+
+    <!--=================== Utils ======================-->
+
+    <!-- RandomUtil -->
+    <string-array name="random_channel_names">
+        <item>陌上花开等你来</item>
+        <item>天天爱你</item>
+        <item>我爱你们</item>
+        <item>有人可以</item>
+        <item>风情万种</item>
+        <item>强势归来</item>
+        <item>哈哈哈</item>
+        <item>聊聊</item>
+        <item>美人舞江山</item>
+        <item>最美的回忆</item>
+        <item>遇见你</item>
+        <item>最长情的告白</item>
+        <item>全力以赴</item>
+        <item>简单点</item>
+        <item>早上好</item>
+        <item>春风十里不如你</item>
+    </string-array>
+
+    <string-array name="random_surnames">
+        <item>赵</item>
+        <item>钱</item>
+        <item>孙</item>
+        <item>李</item>
+        <item>周</item>
+        <item>吴</item>
+        <item>郑</item>
+        <item>王</item>
+    </string-array>
+
+    <string-array name="random_names">
+        <item>富贵</item>
+        <item>国强</item>
+        <item>建国</item>
+        <item>林</item>
+        <item>麒麟</item>
+        <item>宝强</item>
+        <item>强</item>
+        <item>相如</item>
+        <item>欢喜</item>
+    </string-array>
+
+</resources>

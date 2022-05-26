@@ -1,0 +1,7 @@
+<resources>
+    <string name="superapp_app_name">SuperApp</string>
+    <string name="superapp_mode_direct_cdn" >Client\nDirect Mode</string>
+    <string name="superapp_mode_rtc" >Server\nSide Mode</string>
+
+
+</resources>

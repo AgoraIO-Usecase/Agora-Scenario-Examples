@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="superapp_app_name">SuperApp</string>
+    <string name="superapp_mode_direct_cdn" >客户端\n直推模式</string>
+    <string name="superapp_mode_rtc" >服务端\n旁推模式</string>
+
+</resources>

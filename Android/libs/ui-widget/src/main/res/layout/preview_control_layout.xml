@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:background="@android:color/darker_gray">
+
+
+    <FrameLayout
+        android:id="@+id/video_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/preview_control_shadow_height"
+        android:background="@drawable/preview_control_shadow_bg"/>
+
+    <RelativeLayout
+        android:id="@+id/preview_control_top_btn_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/preview_control_btn_height"
+        android:paddingStart="@dimen/preview_control_content_padding"
+        android:paddingEnd="@dimen/preview_control_content_padding">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/preview_control_close"
+            android:layout_width="@dimen/preview_control_btn_height"
+            android:layout_height="@dimen/preview_control_btn_height"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/preview_control_close_button" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/preview_control_switch_camera"
+            android:layout_width="@dimen/preview_control_btn_height"
+            android:layout_height="@dimen/preview_control_btn_height"
+            android:src="@drawable/preview_control_switch_camera"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/prepare_name_edit_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/preview_control_btn_height"
+        android:layout_below="@id/preview_control_top_btn_layout"
+        android:layout_marginStart="@dimen/preview_control_content_padding"
+        android:layout_marginEnd="@dimen/preview_control_content_padding"
+        android:background="@drawable/preview_control_name_bg">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/room_name_edit_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/preview_control_text_content_padding"
+            android:text="@string/preview_control_name_hint"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/preview_control_hint_text_size" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/random_btn"
+            android:layout_width="@dimen/preview_control_btn_height"
+            android:layout_height="@dimen/preview_control_btn_height"
+            android:layout_alignParentEnd="true"
+            android:padding="@dimen/preview_control_text_content_padding"
+            android:scaleType="fitCenter"
+            android:src="@drawable/preview_control_random_button" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/room_name_edit"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/preview_control_btn_height"
+            android:layout_toStartOf="@id/random_btn"
+            android:layout_toEndOf="@id/room_name_edit_hint"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:lines="1"
+            android:paddingStart="@dimen/preview_control_text_content_padding"
+            android:paddingEnd="@dimen/preview_control_text_content_padding"
+            android:textAlignment="gravity"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/preview_control_content_text_size"
+            tools:text="Test" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/preview_control_bottom_button_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/preview_control_btn_height"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/preview_control_bottom_margin"
+        android:paddingStart="@dimen/preview_control_content_padding"
+        android:paddingEnd="@dimen/preview_control_content_padding">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/preview_control_beauty_btn"
+            android:layout_width="@dimen/preview_control_button_size"
+            android:layout_height="@dimen/preview_control_button_size"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/preview_control_button_bg"
+            android:scaleType="fitXY"
+            android:src="@drawable/preview_control_beauty_button" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/preview_control_go_live_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/preview_control_btn_height"
+            android:layout_marginStart="@dimen/preview_control_bottom_padding"
+            android:layout_toEndOf="@id/preview_control_beauty_btn"
+            android:background="@drawable/preview_control_go_live_btn_bg"
+            android:gravity="center"
+            android:paddingStart="@dimen/preview_control_bottom_padding"
+            android:paddingEnd="@dimen/preview_control_bottom_padding"
+            android:text="@string/preview_control_go_live_text"
+            android:textAlignment="gravity"
+            android:textColor="@color/preview_control_go_live_btn_text_color"
+            android:textSize="@dimen/preview_control_content_text_size" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/preview_control_setting_btn"
+            android:layout_width="@dimen/preview_control_button_size"
+            android:layout_height="@dimen/preview_control_button_size"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/preview_control_bottom_padding"
+            android:layout_toEndOf="@id/preview_control_go_live_btn"
+            android:background="@drawable/preview_control_button_bg"
+            android:scaleType="fitXY"
+            android:src="@drawable/preview_control_setting_button" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/preview_control_policy_caution_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/preview_control_bottom_button_layout"
+        android:layout_marginStart="@dimen/preview_control_content_padding"
+        android:layout_marginEnd="@dimen/preview_control_content_padding"
+        android:layout_marginBottom="@dimen/preview_control_bottom_padding"
+        android:background="@drawable/preview_control_policy_bg">
+
+        <ImageView
+            android:id="@+id/preview_control_policy_close"
+            android:layout_width="@dimen/preview_control_policy_sign_size"
+            android:layout_height="@dimen/preview_control_policy_sign_size"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/preview_control_policy_padding"
+            android:layout_marginEnd="@dimen/preview_control_policy_padding"
+            android:scaleType="fitXY"
+            android:src="@drawable/preview_control_policy_close_icon" />
+
+        <ImageView
+            android:id="@+id/preview_control_policy_caution"
+            android:layout_width="@dimen/preview_control_policy_caution_size"
+            android:layout_height="@dimen/preview_control_policy_caution_size"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="@dimen/preview_control_policy_padding"
+            android:layout_marginTop="@dimen/preview_control_policy_padding"
+            android:padding="@dimen/preview_control_policy_padding"
+            android:scaleType="fitXY"
+            android:src="@drawable/preview_control_policy_caution_icon" />
+
+        <TextView
+            android:id="@+id/preview_control_policy_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/preview_control_policy_padding"
+            android:layout_marginTop="@dimen/preview_control_policy_padding"
+            android:layout_marginEnd="@dimen/preview_control_policy_padding"
+            android:layout_marginBottom="@dimen/preview_control_policy_padding"
+            android:layout_toStartOf="@id/preview_control_policy_close"
+            android:layout_toEndOf="@id/preview_control_policy_caution"
+            android:text="@string/preview_control_room_restriction"
+            android:textColor="@android:color/white" />
+    </RelativeLayout>
+</RelativeLayout>

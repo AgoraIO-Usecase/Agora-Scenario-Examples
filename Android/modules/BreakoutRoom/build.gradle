@@ -1,0 +1,35 @@
+apply from: "../modular.gradle"
+
+android {
+    resourcePrefix "room_"
+    defaultConfig {
+        if (extIsModular()) {
+            applicationId "io.agora.scene.breakoutroom"
+        }
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+}
+
+dependencies {
+    // Project
+    extSafeImplementation project(path: ':libs:base-library')
+    extSafeImplementation project(path: ':libs:ui-widget')
+
+    // Third part
+    extSafeImplementation 'com.google.code.gson:gson:2.8.9'
+
+    // Agora
+    extSafeImplementation 'com.github.AgoraIO-Community:SyncManager-Android:1.0.4'
+    extSafeImplementation 'io.agora.rtc:agora-full-beta:4.0.0-beta.1'
+
+    // Google
+    extSafeImplementation 'androidx.navigation:navigation-fragment:2.3.5'
+    extSafeImplementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
+    // Test
+    extSafeImplementation 'junit:junit:4.13.2'
+    extSafeAndroidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    extSafeAndroidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+}

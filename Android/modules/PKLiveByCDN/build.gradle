@@ -1,0 +1,39 @@
+apply from: "../modular.gradle"
+
+android {
+    resourcePrefix "superapp_"
+    defaultConfig {
+        if (extIsModular()) {
+            applicationId "io.agora.scene.pklivebycdn"
+        }
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+}
+
+dependencies {
+    extSafeImplementation fileTree(dir: 'libs', include: ['*.jar'])
+    extSafeTestImplementation 'junit:junit:4.+'
+    extSafeAndroidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    extSafeAndroidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    extSafeImplementation 'androidx.appcompat:appcompat:1.2.0'
+    extSafeImplementation 'androidx.recyclerview:recyclerview:1.2.1'
+    extSafeImplementation 'com.yanzhenjie:permission:2.0.3'
+    extSafeImplementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    extSafeImplementation 'com.google.android.material:material:1.4.0'
+    extSafeImplementation 'androidx.preference:preference:1.1.1'
+
+    //glide
+    extSafeImplementation 'com.github.bumptech.glide:glide:4.11.0'
+    extSafeAnnotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+
+    extSafeImplementation project(':libs:base-library')
+    extSafeImplementation project(':libs:ui-widget')
+
+    extSafeImplementation 'io.agora.rtc:agora-full-beta:4.0.0-beta.1'
+    extSafeImplementation 'com.github.AgoraIO-Community:SyncManager-Android:1.0.0'
+}

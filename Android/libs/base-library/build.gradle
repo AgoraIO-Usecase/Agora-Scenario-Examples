@@ -1,0 +1,41 @@
+apply from: "${rootProject.projectDir}/config_plugin.gradle"
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion extSafeGetVersion('android', 'compileSdkVersion', 30)
+    buildToolsVersion extSafeGetVersion('android', 'buildToolsVersion', 30)
+
+
+    defaultConfig {
+        minSdkVersion extSafeGetVersion('android', 'minSdkVersion', 21)
+        targetSdkVersion extSafeGetVersion('android', 'targetSdkVersion', 30)
+
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "proguard-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildFeatures{
+        viewBinding true
+    }
+}
+
+dependencies {
+    extSafeApi "androidx.core:core:1.7.0"
+    extSafeApi "com.google.android.material:material:1.4.0"
+    extSafeApi "androidx.activity:activity:1.4.0"
+    extSafeApi "androidx.fragment:fragment:1.4.0"
+}

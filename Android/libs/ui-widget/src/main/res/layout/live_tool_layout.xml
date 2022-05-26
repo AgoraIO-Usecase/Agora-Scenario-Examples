@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/live_tool_layout_bg">
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/live_tool_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/live_tool_title_text_height"
+        android:textAlignment="gravity"
+        android:gravity="center"
+        android:text="@string/live_tool_layout_title"
+        android:textSize="@dimen/live_tool_title_text_size"
+        android:textColor="@color/live_tool_title_text_color"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/live_tool_divider_height"
+        android:layout_marginHorizontal="@dimen/live_tool_divider_margin_h"
+        android:background="@color/live_tool_divider_color"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/live_tool_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/live_tool_divider_margin_h"
+        android:layout_marginVertical="@dimen/live_tool_divider_margin_h"/>
+</LinearLayout>

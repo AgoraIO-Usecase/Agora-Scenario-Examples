@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="io.agora.scene.pklivebycdn">
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/superapp_ic_launcher"
+        android:label="@string/superapp_app_name"
+        android:roundIcon="@drawable/superapp_ic_launcher"
+        android:supportsRtl="true"
+        android:theme="@style/CommonAppTheme">
+
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.4" />
+
+        <activity android:name=".RoomListActivity">
+            <intent-filter tools:node="remove">
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".PreviewActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".HostDetailActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".AudienceDetailActivity"
+            android:launchMode="singleTop"/>
+
+    </application>
+
+</manifest>

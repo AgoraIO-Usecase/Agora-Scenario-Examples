@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+        android:id="@+id/surface_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+    <io.agora.uiwidget.function.PreviewControlView
+        android:id="@+id/preview_control_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <RadioGroup
+        android:id="@+id/live_prepare_mode_choice"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_marginTop="120dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="24dp">
+
+        <RadioButton
+            android:id="@+id/rb_mode_direct_cdn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="25dp"
+            android:layout_weight="1"
+            android:background="@drawable/superapp_radio_button_live_mode"
+            android:button="@null"
+            android:checked="true"
+            android:gravity="center_horizontal"
+            android:paddingTop="40dp"
+            android:paddingBottom="28dp"
+            android:text="@string/superapp_mode_direct_cdn"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            tools:drawableBottom="@drawable/superapp_check_icon" />
+
+        <RadioButton
+            android:id="@+id/rb_mode_rtc"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="25dp"
+            android:layout_weight="1"
+            android:background="@drawable/superapp_radio_button_live_mode"
+            android:button="@null"
+            android:checked="true"
+            android:gravity="center_horizontal"
+            android:paddingTop="40dp"
+            android:paddingBottom="28dp"
+            android:text="@string/superapp_mode_rtc"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+
+    </RadioGroup>
+
+</FrameLayout>

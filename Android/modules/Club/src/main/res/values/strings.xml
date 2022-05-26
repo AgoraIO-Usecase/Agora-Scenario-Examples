@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="club_app_name">Club</string>
+    <string name="club_description">Club</string>
+
+
+    <string name="club_main_title">Hall</string>
+
+    <string name="club_room_list_title">Room List</string>
+
+    <string name="club_room_create_dialog_title">Create Room</string>
+    <string name="club_room_create_dialog_et_hind">Please enter a room name</string>
+
+    <string name="club_room_detail_accept_invite">Accept the invitation or not?</string>
+    <string name="club_room_detail_close_seat">Close seat</string>
+    <string name="club_room_detail_invite">Invite</string>
+    <string name="club_room_detail_refuse_tip">%s refuse your invitation</string>
+    <string name="club_room_detail_leave_room">Leave Room</string>
+    <string name="club_room_detail_leave_room_msg">Sure to leave the room?</string>
+
+    <array name="club_room_detail_seat_options">
+        <item>@string/club_room_detail_invite</item>
+        <item>@string/club_room_detail_close_seat</item>
+    </array>
+
+</resources>

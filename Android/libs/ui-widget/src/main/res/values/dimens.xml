@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Title Bar -->
+    <dimen name="title_bar_height">60dp</dimen>
+    <dimen name="title_bar_text_size">20sp</dimen>
+    <dimen name="title_bar_text_max_width">160dp</dimen>
+    <dimen name="title_bar_icon_padding">5dp</dimen>
+
+
+    <!--================== Function ==================-->
+    <!-- RoomList -->
+    <dimen name="room_list_exception_icon_size">164dp</dimen>
+    <dimen name="room_list_icon_text_margin">16dp</dimen>
+    <dimen name="room_list_icon_text_size">16sp</dimen>
+    <dimen name="room_list_item_margin">16sp</dimen>
+    <dimen name="room_list_item_corner">12dp</dimen>
+    <dimen name="room_list_item_padding">8dp</dimen>
+    <dimen name="room_list_item_name_width">72dp</dimen>
+    <dimen name="room_list_item_name_height">42dp</dimen>
+    <dimen name="room_list_item_text_padding_big">6dp</dimen>
+    <dimen name="room_list_item_text_padding_small">2dp</dimen>
+    <dimen name="room_list_item_participant_icon_size">22dp</dimen>
+    <dimen name="room_list_item_participant_text_size">12sp</dimen>
+
+
+    <!-- Preview Control -->
+    <dimen name="preview_control_shadow_height">120dp</dimen>
+    <dimen name="preview_control_btn_height">48dp</dimen>
+    <dimen name="preview_control_content_padding">24dp</dimen>
+    <dimen name="preview_control_text_content_padding">10dp</dimen>
+    <dimen name="preview_control_hint_text_size">12sp</dimen>
+    <dimen name="preview_control_content_text_size">14sp</dimen>
+    <dimen name="preview_control_bottom_margin">48dp</dimen>
+    <dimen name="preview_control_bottom_padding">24dp</dimen>
+    <dimen name="preview_control_button_size">44dp</dimen>
+    <dimen name="preview_control_policy_padding">6dp</dimen>
+    <dimen name="preview_control_policy_sign_size">32dp</dimen>
+    <dimen name="preview_control_policy_caution_size">22dp</dimen>
+
+    <!-- Video Setting -->
+    <dimen name="video_setting_dialog_height">243dp</dimen>
+    <dimen name="video_setting_dialog_text_item_height">48dp</dimen>
+    <dimen name="video_setting_dialog_margin">24dp</dimen>
+    <dimen name="video_setting_dialog_arrow_size">30dp</dimen>
+    <dimen name="video_setting_dialog_text_size">16sp</dimen>
+    <dimen name="video_setting_dialog_item_divider_height">1dp</dimen>
+    <dimen name="video_setting_dialog_content_height">243dp</dimen>
+    <dimen name="video_setting_dialog_progress_height">20dp</dimen>
+
+    <!-- LiveBottomView -->
+    <dimen name="live_bottom_layout_height">42dp</dimen>
+    <dimen name="live_bottom_btn_margin">14dp</dimen>
+    <dimen name="live_bottom_edit_padding">12dp</dimen>
+    <dimen name="live_bottom_text_size">14sp</dimen>
+
+    <!-- LiveHostNameView -->
+    <dimen name="live_host_name_max_width">128dp</dimen>
+    <dimen name="live_host_name_height">40dp</dimen>
+    <dimen name="live_host_name_icon_padding">2dp</dimen>
+    <dimen name="live_host_name_text_size">12dp</dimen>
+
+
+    <!-- LiveRoomUserView -->
+    <dimen name="live_room_user_height">40dp</dimen>
+    <dimen name="live_room_user_content_height">32dp</dimen>
+    <dimen name="live_room_user_notification_point_size">6dp</dimen>
+    <dimen name="live_room_user_notification_point_margin">4dp</dimen>
+    <dimen name="live_room_user_count_icon_size">32dp</dimen>
+    <dimen name="live_room_user_count_text_size">14sp</dimen>
+    <dimen name="live_room_user_count_text_margin_end">12dp</dimen>
+    <dimen name="live_room_user_count_icon_margin_start">8dp</dimen>
+    <dimen name="live_room_user_count_icon_margin_end">4dp</dimen>
+    <dimen name="live_room_user_icon_size">32dp</dimen>
+    <dimen name="live_room_user_icon_margin">4dp</dimen>
+
+    <!-- LiveRoomMessageListView -->
+    <dimen name="live_room_message_item_height">40dp</dimen>
+    <dimen name="live_room_message_item_gift_size">20dp</dimen>
+    <dimen name="live_room_message_item_text_padding_horizontal">16dp</dimen>
+    <dimen name="live_room_message_item_text_padding_vertical">12dp</dimen>
+    <dimen name="live_room_message_item_text_margin">8dp</dimen>
+    <dimen name="live_room_message_item_text_size">14sp</dimen>
+
+    <!-- LiveToolDialog -->
+    <dimen name="live_tool_title_text_height">48dp</dimen>
+    <dimen name="live_tool_title_text_size">16sp</dimen>
+    <dimen name="live_tool_divider_height">1dp</dimen>
+    <dimen name="live_tool_divider_margin_h">24dp</dimen>
+    <dimen name="live_tool_divider_margin_v">16dp</dimen>
+    <dimen name="live_tool_item_icon_size">54dp</dimen>
+    <dimen name="live_tool_item_text_margin">6dp</dimen>
+    <dimen name="live_tool_item_padding">16dp</dimen>
+
+    <!-- GiftGridDialog -->
+    <dimen name="gift_grid_layout_height">418dp</dimen>
+    <dimen name="gift_grid_layout_action_btn_height">48dp</dimen>
+    <dimen name="gift_grid_layout_action_btn_width">86dp</dimen>
+    <dimen name="gift_grid_layout_title_height">48dp</dimen>
+    <dimen name="gift_grid_layout_text_size">16sp</dimen>
+    <dimen name="gift_grid_item_text_size">12sp</dimen>
+    <dimen name="gift_grid_item_icon_size">64dp</dimen>
+    <dimen name="gift_grid_item_margin_bottom">16dp</dimen>
+    <dimen name="gift_grid_item_padding_v">8dp</dimen>
+    <dimen name="gift_grid_divider_height">1dp</dimen>
+    <dimen name="gift_grid_content_margin_h">24dp</dimen>
+    <dimen name="gift_grid_content_margin_v">16dp</dimen>
+
+    <!-- TextInputDialog -->
+    <dimen name="text_input_dialog_content_height">48dp</dimen>
+    <dimen name="text_input_dialog_content_padding_h">12dp</dimen>
+    <dimen name="text_input_dialog_content_padding_v">6dp</dimen>
+    <dimen name="text_input_dialog_content_text_size">16sp</dimen>
+
+    <!-- OnlineUserListDialog -->
+    <dimen name="online_user_list_dialog_height">540dp</dimen>
+    <dimen name="online_user_list_dialog_text_height">48dp</dimen>
+    <dimen name="online_user_list_dialog_text_size">16sp</dimen>
+    <dimen name="online_user_list_dialog_divider_height">1dp</dimen>
+    <dimen name="online_user_list_dialog_content_margin_h">24dp</dimen>
+    <dimen name="online_user_list_dialog_item_height">52dp</dimen>
+    <dimen name="online_user_list_dialog_item_icon_size">28dp</dimen>
+    <dimen name="online_user_list_dialog_item_text_margin_h">16dp</dimen>
+    <dimen name="online_user_list_dialog_item_text_size">14sp</dimen>
+    <dimen name="online_user_list_dialog_content_margin_v">8dp</dimen>
+
+    <!-- RemoteSmallControlView -->
+    <dimen name="remote_small_control_layout_width">130dp</dimen>
+    <dimen name="remote_small_control_layout_height">170dp</dimen>
+    <dimen name="remote_small_control_video_width">120dp</dimen>
+    <dimen name="remote_small_control_video_height">160dp</dimen>
+    <dimen name="remote_small_control_close_icon_size">20dp</dimen>
+    <dimen name="remote_small_control_text_padding_v">12dp</dimen>
+
+
+
+</resources>

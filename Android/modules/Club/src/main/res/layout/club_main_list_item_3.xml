@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:ignore="MissingDefaultResource"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Popular Parties"
+        android:textColor="@android:color/white"
+        android:textSize="21sp"/>
+
+    <LinearLayout
+        android:id="@+id/tv_card_layout"
+        android:layout_width="match_parent"
+        android:layout_height="86dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <include
+            android:id="@+id/tv_card_01"
+            layout="@layout/club_main_list_item_card"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <include
+            android:id="@+id/tv_card_02"
+            layout="@layout/club_main_list_item_card"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="17dp"
+            android:layout_weight="1"/>
+
+        <include
+            android:id="@+id/tv_card_03"
+            layout="@layout/club_main_list_item_card"
+            android:layout_width="0dp"
+            android:layout_marginStart="17dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

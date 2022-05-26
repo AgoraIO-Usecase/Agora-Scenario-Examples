@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/portrait_root_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <io.agora.uiwidget.basic.TitleBar
+            android:id="@+id/title_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:background="#272727">
+
+            <FrameLayout
+                android:id="@+id/portrait_player_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <ImageView
+                android:id="@+id/iv_full_large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:layout_margin="12dp"
+                android:src="@drawable/club_room_detail_full_large" />
+
+        </FrameLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:paddingVertical="20dp">
+
+            <include
+                android:id="@+id/seat_01"
+                layout="@layout/club_room_detail_seat_item"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@id/seat_05"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toStartOf="@id/seat_02"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <include
+                android:id="@+id/seat_02"
+                layout="@layout/club_room_detail_seat_item"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="@id/seat_01"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toStartOf="@id/seat_03"
+                app:layout_constraintStart_toEndOf="@id/seat_01"
+                app:layout_constraintTop_toTopOf="@id/seat_01" />
+
+            <include
+                android:id="@+id/seat_03"
+                layout="@layout/club_room_detail_seat_item"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="@id/seat_01"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toStartOf="@id/seat_04"
+                app:layout_constraintStart_toEndOf="@id/seat_02"
+                app:layout_constraintTop_toTopOf="@id/seat_01" />
+
+            <include
+                android:id="@+id/seat_04"
+                layout="@layout/club_room_detail_seat_item"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="@id/seat_01"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/seat_03"
+                app:layout_constraintTop_toTopOf="@id/seat_01" />
+
+            <include
+                android:id="@+id/seat_05"
+                layout="@layout/club_room_detail_seat_item"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toStartOf="@id/seat_06"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/seat_01" />
+
+            <include
+                android:id="@+id/seat_06"
+                layout="@layout/club_room_detail_seat_item"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="@id/seat_05"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toStartOf="@id/seat_07"
+                app:layout_constraintStart_toEndOf="@id/seat_05"
+                app:layout_constraintTop_toTopOf="@id/seat_05" />
+
+            <include
+                android:id="@+id/seat_07"
+                layout="@layout/club_room_detail_seat_item"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="@id/seat_05"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toStartOf="@id/seat_08"
+                app:layout_constraintStart_toEndOf="@id/seat_06"
+                app:layout_constraintTop_toTopOf="@id/seat_05" />
+
+            <include
+                android:id="@+id/seat_08"
+                layout="@layout/club_room_detail_seat_item"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="@id/seat_05"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/seat_07"
+                app:layout_constraintTop_toTopOf="@id/seat_05" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#2B2B2B"
+            android:layout_marginHorizontal="15dp"/>
+
+        <io.agora.uiwidget.function.LiveRoomMessageListView
+            android:id="@+id/message_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingHorizontal="15dp"
+            android:layout_weight="1"/>
+
+        <io.agora.uiwidget.function.LiveBottomView
+            android:id="@+id/bottom_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginVertical="10dp"/>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/landscape_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <FrameLayout
+            android:id="@+id/landscape_player_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <ImageView
+            android:id="@+id/iv_full_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="12dp"
+            android:src="@drawable/club_room_detail_full_back" />
+    </FrameLayout>
+</FrameLayout>

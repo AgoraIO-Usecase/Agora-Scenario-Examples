@@ -1,0 +1,13 @@
+rootProject.name = "SE"
+if (!isModular.toBoolean()) {
+    include ':app'
+}
+
+include ':libs:base-library'
+include ':libs:ui-widget'
+
+include ':modules:BreakoutRoom'
+include ':modules:PKLive'
+include ':modules:SingleHostLive'
+include ':modules:Club'
+include ':modules:PKLiveByCDN'

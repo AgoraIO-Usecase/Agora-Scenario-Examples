@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Title Bar -->
+    <color name="title_bar_bg_default_color">#FFFFFF</color>
+    <color name="title_bar_deliver_color">#33000000</color>
+    <color name="title_bar_text_color">#FFFFFF</color>
+
+    <!--================== Function ==================-->
+    <!-- RoomList -->
+    <color name="room_list_icon_text_color">#878787</color>
+    <color name="room_list_icon_text_sub_color">#cccccc</color>
+    <color name="room_list_item_bg">#cccccc</color>
+
+    <!-- Video Setting -->
+    <color name="video_setting_dialog_text_color">#656565</color>
+    <color name="video_setting_dialog_diliver_color">#efefef</color>
+
+    <!-- Live Bottom View -->
+    <color name="live_bottom_text_color">#c4c4c4</color>
+    <color name="live_bottom_text_color_light">#656565</color>
+
+    <!-- LiveToolDialog -->
+    <color name="live_tool_title_text_color">#656565</color>
+    <color name="live_tool_divider_color">#efefef</color>
+
+    <!-- LiveToolDialog -->
+    <color name="gift_grid_title_text_color">#656565</color>
+    <color name="gift_grid_divider_color">#efefef</color>
+
+    <!-- OnlineUserListDialog -->
+    <color name="online_user_list_dialog_text_color">#656565</color>
+    <color name="online_user_list_dialog_divider_color">#efefef</color>
+
+</resources>

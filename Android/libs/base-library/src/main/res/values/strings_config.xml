@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rtm_app_id" translatable="false"><=Agora RTM APP Id=></string>
+    <string name="rtm_app_token" translatable="false"/>
+
+    <string name="rtc_app_id" translatable="false"><=Agora RTC APP ID=></string>
+    <string name="rtc_app_token" translatable="false"/>
+
+    <string name="x_lc_Id" translatable="false"/>
+    <string name="x_lc_Key" translatable="false"/>
+    <string name="x_lc_Session" translatable="false"/>
+</resources>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/darker_gray">
+
+    <FrameLayout
+        android:id="@+id/full_video_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/iv_loading_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"
+        android:orientation="horizontal">
+
+        <io.agora.uiwidget.function.LiveHostNameView
+            android:id="@+id/host_name_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <io.agora.uiwidget.function.LiveRoomUserView
+            android:id="@+id/user_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"
+        android:orientation="vertical">
+
+
+        <io.agora.uiwidget.function.LiveBottomView
+            android:id="@+id/bottom_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+
+    <io.agora.uiwidget.function.RemoteSmallControlView
+        android:id="@+id/remote_video_control"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="80dp"
+        android:layout_marginEnd="20dp"
+        android:visibility="gone"
+        android:layout_gravity="end|bottom"/>
+
+</FrameLayout>
