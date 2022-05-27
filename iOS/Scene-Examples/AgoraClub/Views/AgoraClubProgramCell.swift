@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import AgoraUIKit_iOS
+import Agora_Scene_Utils
 
 class AgoraClubProgramCell: UITableViewCell {
     private lazy var bgImageView: AGEImageView = {

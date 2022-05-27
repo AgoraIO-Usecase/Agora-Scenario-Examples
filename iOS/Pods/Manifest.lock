@@ -1,35 +1,57 @@
 PODS:
+  - Agora-Scene-Utils (1.0.2)
   - AgoraRtcEngine_iOS_Preview (4.0.0.preview.3)
-  - AgoraRtm_iOS (1.4.9)
-  - AgoraSyncManager (1.0.3):
-    - AgoraRtm_iOS (= 1.4.9)
-  - AgoraUIKit-iOS (1.0.1)
+  - AgoraRtm_iOS (1.4.10)
+  - AgoraSyncKit (1.0.0)
+  - Alamofire (5.6.1)
+  - GRDB.swift (5.23.0):
+    - GRDB.swift/standard (= 5.23.0)
+  - GRDB.swift/standard (5.23.0)
+  - LeanCloud (17.10.1):
+    - LeanCloud/RTM (= 17.10.1)
+  - LeanCloud/Foundation (17.10.1):
+    - Alamofire (~> 5.4)
+  - LeanCloud/RTM (17.10.1):
+    - GRDB.swift (~> 5.12)
+    - LeanCloud/Foundation (= 17.10.1)
+    - SwiftProtobuf (~> 1.18)
   - MBProgressHUD (1.2.0)
+  - SwiftProtobuf (1.19.0)
 
 DEPENDENCIES:
+  - Agora-Scene-Utils (~> 1.0.2)
   - AgoraRtcEngine_iOS_Preview (= 4.0.0.preview.3)
-  - AgoraSyncManager (from `AgoraSyncManager`)
-  - AgoraUIKit-iOS (~> 1.0.1)
+  - AgoraRtm_iOS (~> 1.4.9)
+  - AgoraSyncKit (from `~/Desktop/SyncKit/AgoraSyncKit.podspec`)
+  - LeanCloud
   - MBProgressHUD (~> 1.2.0)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
+    - Agora-Scene-Utils
     - AgoraRtcEngine_iOS_Preview
     - AgoraRtm_iOS
-    - AgoraUIKit-iOS
+    - Alamofire
+    - GRDB.swift
+    - LeanCloud
     - MBProgressHUD
+    - SwiftProtobuf
 
 EXTERNAL SOURCES:
-  AgoraSyncManager:
-    :path: AgoraSyncManager
+  AgoraSyncKit:
+    :path: "~/Desktop/SyncKit/AgoraSyncKit.podspec"
 
 SPEC CHECKSUMS:
+  Agora-Scene-Utils: 2a2cab06ef02607a160a0d4c3f6db337bd8150cd
   AgoraRtcEngine_iOS_Preview: 6af3e4305cf2b6828ba8f759a082be2fcb45ec87
-  AgoraRtm_iOS: b4bb9a431ce36f9b44cda423e66b2f96945ca2ab
-  AgoraSyncManager: 13db492d1e4c53a6488fbc2625fc3849132f6b48
-  AgoraUIKit-iOS: e180ec0a867b298b57cd6345412df919615065b3
+  AgoraRtm_iOS: 95e7070466f42a6494435a7f39fd2b13fc143cbf
+  AgoraSyncKit: cf300cae7b52da1dc29d5d6a5b0736be822dfb2b
+  Alamofire: 87bd8c952f9a4454320fce00d9cc3de57bcadaf5
+  GRDB.swift: e4a950fe99d113ea5d24571d49eaae0062303c14
+  LeanCloud: e6de4b8129ab68be7f70a9b77c4304f71c5a1a2c
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
+  SwiftProtobuf: 6ef3f0e422ef90d6605ca20b21a94f6c1324d6b3
 
-PODFILE CHECKSUM: 17a631a4a732e4fbe5df7ffdfa459549af6907e7
+PODFILE CHECKSUM: 69fc761102acbbbe17b62a0708f95cda7f24306a
 
 COCOAPODS: 1.11.2

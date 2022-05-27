@@ -12,6 +12,7 @@ public typealias SuccessBlock = ([IObject]) -> ()
 public typealias SuccessBlockVoid = () -> ()
 public typealias SuccessBlockObj = (IObject) -> ()
 public typealias SuccessBlockObjOptional = (IObject?) -> ()
+public typealias SuccessBlockObjSceneRef = (SceneReference) -> ()
 public typealias FailBlock = (SyncError) -> ()
 
 public typealias OnSubscribeBlock = SuccessBlockObj

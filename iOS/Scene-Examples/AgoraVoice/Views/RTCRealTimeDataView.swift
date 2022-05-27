@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import AgoraUIKit_iOS
+import Agora_Scene_Utils
 import AgoraRtcKit
 
 class RTCRealTimeDataView: UIView {

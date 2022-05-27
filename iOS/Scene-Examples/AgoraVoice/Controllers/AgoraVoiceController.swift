@@ -7,7 +7,7 @@
 
 import UIKit
 import AgoraRtcKit
-import AgoraSyncManager
+//import AgoraSyncManager
 
 class AgoraVoiceController: BaseViewController {
     /// 顶部头像昵称

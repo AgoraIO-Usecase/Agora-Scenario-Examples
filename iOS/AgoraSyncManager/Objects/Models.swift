@@ -12,7 +12,9 @@ public class Scene: Codable {
     let userId: String
     let property: [String : String]?
     
-    public init(id: String, userId: String, property: [String : String]?) {
+    public init(id: String,
+                userId: String,
+                property: [String : String]?) {
         self.id = id
         self.userId = userId
         self.property = property
@@ -65,7 +67,29 @@ class Attribute: IObject, Equatable {
         }
         return nil
     }
+}
+
+struct CollectionItem: Codable {
+    let objectId: String
     
+    static func decodeWithString(jsonString: String, decoder: JSONDecoder) -> CollectionItem? {
+        guard let data = jsonString.data(using: .utf8) else {
+            Log.errorText(text: "json string can not be trans a data", tag: "CollectionItem.decodeWithString")
+            return nil
+        }
+        do {
+            let obj = try decoder.decode(CollectionItem.self, from: data)
+            return obj
+        } catch let error {
+            Log.error(error: error as CustomStringConvertible, tag:  "CollectionItem.decodeWithString")
+            return nil
+        }
+    }
+    
+    static func getObjId(jsonString: String, decoder: JSONDecoder) -> String? {
+        let obj = CollectionItem.decodeWithString(jsonString: jsonString, decoder: decoder)
+        return obj?.objectId
+    }
 }
 
 

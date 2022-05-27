@@ -7,7 +7,7 @@
 
 import UIKit
 import AgoraRtcKit
-import AgoraSyncManager
+//import AgoraSyncManager
 
 class CreateLiveController: BaseViewController {
     private lazy var randomNameView: LiveRandomNameView = {

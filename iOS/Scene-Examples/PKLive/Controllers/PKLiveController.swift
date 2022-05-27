@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import AgoraSyncManager
+//import AgoraSyncManager
 
 class PKLiveController: SignleLiveController {
     public lazy var stopBroadcastButton: UIButton = {

@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import AgoraUIKit_iOS
+import Agora_Scene_Utils
 
 class ClubHeaderView: UIView {
     var clickVideoViewClosure: ((Bool) -> Void)?

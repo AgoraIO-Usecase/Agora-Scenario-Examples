@@ -6,9 +6,14 @@
 //
 
 import Foundation
+import AgoraSyncKit
 
 public class AgoraSyncManager: NSObject {
     private var proxy: ISyncManager
+    
+    deinit {
+        Log.info(text: "AgoraSyncManager deinit", tag: "AgoraSyncManager")
+    }
     
     /// init
     /// - Parameters:
@@ -22,14 +27,45 @@ public class AgoraSyncManager: NSObject {
                                complete: complete)
     }
     
-    /// 加入房间
+    /// init
     /// - Parameters:
-    ///   - scene: 房间实体
-    /// - Returns: `SceneReference`
-    public func joinScene(scene: Scene,
-                          success: SuccessBlockObj?,
-                          fail: FailBlock? = nil) -> SceneReference {
-        proxy.joinScene(scene: scene,
+    ///   - config: config of ask
+    ///   - complete: `code = 0` is success, else error
+    public init(askConfig: AskConfig,
+                complete: @escaping SuccessBlockInt) {
+        let tempConfig = AskSyncManager.Config(appId: askConfig.appId,
+                                           channelName: askConfig.channelName)
+        proxy = AskSyncManager(config: tempConfig,
+                           complete: complete)
+    }
+    
+    /// init
+    /// - Parameters:
+    ///   - config: config of ask
+    ///   - complete: `code = 0` is success, else error
+    public init(leancloudConfig: LeancloudConfig,
+                complete: @escaping SuccessBlockInt) {
+        let tempConfig = LeancloudManager.Config(appId: leancloudConfig.appId,
+                                                 appKey: leancloudConfig.appKey,
+                                           channelName: leancloudConfig.channelName)
+        proxy = LeancloudManager(config: tempConfig,
+                                 complete: complete)
+    }
+    
+    
+    public func createScene(scene: Scene,
+                     success: SuccessBlockVoid?,
+                     fail: FailBlock?) {
+        proxy.createScene(scene: scene,
+                          success: success,
+                          fail: fail)
+    }
+    
+    /// 加入房间
+    public func joinScene(sceneId: String,
+                   success: SuccessBlockObjSceneRef?,
+                   fail: FailBlock?) {
+        proxy.joinScene(sceneId: sceneId,
                         manager: self,
                         success: success,
                         fail: fail)
@@ -58,7 +94,7 @@ public class AgoraSyncManager: NSObject {
     ///   - documentRef: `Document`类型实体
     ///   - key: 键值
     func get(documentRef: DocumentReference,
-             key: String? = nil,
+             key: String,
              success: SuccessBlockObjOptional?,
              fail: FailBlock?) {
         proxy.get(documentRef: documentRef,
@@ -120,7 +156,7 @@ public class AgoraSyncManager: NSObject {
     ///   - key: 键值
     ///   - data: 数据
     func update(reference: DocumentReference,
-                key: String? = nil,
+                key: String,
                 data: [String: Any?],
                 success: SuccessBlock?,
                 fail: FailBlock?) {
@@ -158,12 +194,13 @@ public class AgoraSyncManager: NSObject {
     ///   - reference: `Document`类型
     ///   - key: 键值
     func subscribe(reference: DocumentReference,
-                   key: String? = nil,
+                   key: String?,
                    onCreated: OnSubscribeBlock?,
                    onUpdated: OnSubscribeBlock?,
                    onDeleted: OnSubscribeBlock?,
                    onSubscribed: OnSubscribeBlockVoid?,
                    fail: FailBlock?) {
+        let key = key ?? "scene"
         return proxy.subscribe(reference: reference,
                                key: key,
                                onCreated: onCreated,
@@ -178,7 +215,23 @@ public class AgoraSyncManager: NSObject {
     ///   - reference: `Document`类型
     ///   - key: 键值
     func unsubscribe(reference: DocumentReference,
-                     key: String? = nil) {
+                     key: String) {
         proxy.unsubscribe(reference: reference, key: key)
+    }
+    
+    func createCollection(reference: SceneReference, internalClassName: String) -> AgoraSyncCollection? {
+        return proxy.createCollection(reference: reference, internalClassName: internalClassName)
+    }
+    
+    func subscribeScene(reference: SceneReference,
+                        onDeleted: OnSubscribeBlockVoid? = nil,
+                        fail: FailBlock? = nil) {
+        proxy.subscribeScene(reference: reference,
+                             onDeleted: onDeleted,
+                             fail: fail)
+    }
+    
+    func unsubscribeScene(reference: SceneReference, fail: FailBlock? = nil) {
+        proxy.unsubscribeScene(reference: reference, fail: fail)
     }
 }

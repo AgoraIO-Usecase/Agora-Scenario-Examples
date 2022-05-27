@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import AgoraUIKit_iOS
+import Agora_Scene_Utils
 
 class GameModeView: UIView {
     var didGameModeItemClosure: ((GameModeModel) -> Void)?

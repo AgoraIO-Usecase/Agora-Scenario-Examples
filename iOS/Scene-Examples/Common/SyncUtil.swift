@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import AgoraSyncManager
+//import AgoraSyncManager
 
 class SyncUtil: NSObject {
     private static var manager: AgoraSyncManager?
@@ -14,7 +14,8 @@ class SyncUtil: NSObject {
     private static var sceneRefs: [String: SceneReference] = [String: SceneReference]()
     
     static func initSyncManager(sceneId: String) {
-        let config = AgoraSyncManager.RtmConfig(appId: KeyCenter.AppId, channelName: sceneId)
+        let config = AgoraSyncManager.RtmConfig(appId: KeyCenter.AppId,
+                                                channelName: sceneId)
         manager = AgoraSyncManager(config: config, complete: { code in
             if code == 0 {
                 print("SyncManager init success")
@@ -22,6 +23,16 @@ class SyncUtil: NSObject {
                 print("SyncManager init error")
             }
         })
+//        let config = AgoraSyncManager.LeancloudConfig(appId: KeyCenter.LeanCloudAppId,
+//                                                appKey: KeyCenter.LeanCloudAppKey,
+//                                                channelName: sceneId)
+//        manager = AgoraSyncManager(leancloudConfig: config, complete: { code in
+//            if code == 0 {
+//                print("SyncManager init success")
+//            } else {
+//                print("SyncManager init error")
+//            }
+//        })
     }
     
     class func joinScene(id: String,
@@ -33,8 +44,20 @@ class SyncUtil: NSObject {
         let jsonString = JSONObject.toJsonString(dict: property) ?? ""
         let params = JSONObject.toDictionary(jsonStr: jsonString)
         let scene = Scene(id: id, userId: userId, property: params)
-        let sceneRef = manager.joinScene(scene: scene, success: success, fail: fail)
-        sceneRefs[id] = sceneRef
+        manager.createScene(scene: scene, success: {
+            manager.joinScene(sceneId: id) { sceneRef in
+                sceneRefs[id] = sceneRef
+                let attr = Attribute(key: id, value: jsonString)
+                success?(attr)
+            } fail: { error in
+                fail?(error)
+            }
+        }) { error in
+            fail?(error)
+        }
+        
+//        let sceneRef = manager.joinScene(sceneId: scene, success: success)
+//        sceneRefs[id] = sceneRef
     }
     
     class func fetchAll(success: SuccessBlock? = nil, fail: FailBlock? = nil) {
@@ -43,7 +66,7 @@ class SyncUtil: NSObject {
     
     class func fetch(id: String, key: String?, success: SuccessBlockObjOptional? = nil, fail: FailBlock? = nil) {
         let sceneRef = sceneRefs[id]
-        sceneRef?.get(key: key, success: success, fail: fail)
+        sceneRef?.get(key: key ?? "", success: success, fail: fail)
     }
     
     class func update(id: String,
@@ -52,7 +75,7 @@ class SyncUtil: NSObject {
                       success: SuccessBlock? = nil,
                       fail: FailBlock? = nil) {
         let sceneRef = sceneRefs[id]
-        sceneRef?.update(key: key, data: params, success: success, fail: fail)
+        sceneRef?.update(key: key ?? "", data: params, success: success, fail: fail)
     }
     
     class func subscribe(id: String,
@@ -63,7 +86,7 @@ class SyncUtil: NSObject {
                          onSubscribed: OnSubscribeBlockVoid? = nil,
                          fail: FailBlock? = nil) {
         let sceneRef = sceneRefs[id]
-        sceneRef?.subscribe(key: key,
+        sceneRef?.subscribe(key: key ?? "",
                             onCreated: onCreated,
                             onUpdated: onUpdated,
                             onDeleted: onDeleted,
@@ -73,7 +96,7 @@ class SyncUtil: NSObject {
     
     class func unsubscribe(id: String, key: String?) {
         let sceneRef = sceneRefs[id]
-        sceneRef?.unsubscribe(key: key)
+        sceneRef?.unsubscribe(key: key ?? "")
     }
     
     class func delete(id: String, success: SuccessBlock? = nil, fail: FailBlock? = nil) {
@@ -120,7 +143,7 @@ class SyncUtil: NSObject {
         if documentId == nil {
             sceneRef?.collection(className: className)
                 .document()
-                .subscribe(key: nil,
+                .subscribe(key: "",
                            onCreated: onCreated,
                            onUpdated: onUpdated,
                            onDeleted: onDeleted,
@@ -129,7 +152,7 @@ class SyncUtil: NSObject {
         } else {
             sceneRef?.collection(className: className)
                 .document(id: documentId ?? "")
-                .subscribe(key: nil,
+                .subscribe(key: "",
                            onCreated: onCreated,
                            onUpdated: onUpdated,
                            onDeleted: onDeleted,
@@ -140,7 +163,7 @@ class SyncUtil: NSObject {
     
     class func unsubscribeCollection(id: String, className: String) {
         let sceneRef = sceneRefs[id]
-        sceneRef?.collection(className: className).document().unsubscribe(key: nil)
+        sceneRef?.collection(className: className).document().unsubscribe(key: "")
     }
     
     class func leaveScene(id: String) {

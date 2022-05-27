@@ -8,7 +8,7 @@
 import UIKit
 import AgoraRtcKit
 import ReplayKit
-import AgoraSyncManager
+//import AgoraSyncManager
 
 class GameLiveController: PKLiveController {
     private lazy var webView: GameWebView = {

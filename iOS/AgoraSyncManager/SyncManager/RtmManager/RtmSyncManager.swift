@@ -17,6 +17,8 @@ public class RtmSyncManager: NSObject {
     var channels = [String : AgoraRtmChannel]()
     var channelName: String!
     var sceneName: String!
+    var defaultChannel: AgoraRtmChannel?
+    var createdRoomItems = [AgoraRtmChannelAttribute]()
     
     /// init
     /// - Parameters:

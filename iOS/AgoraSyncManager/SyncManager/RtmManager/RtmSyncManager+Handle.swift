@@ -13,8 +13,6 @@ import AgoraRtmKit
 /// 3. sceneRef.update(key) subscribe(key: key) 更新房间信息 只有update事件
 /// 4. syncRef.collection(className: "member").add(data: ["userName" : "UserName"])
 /// 监听syncRef.collection(className: "member").document().subscribe(key: nil) 有齐全的事件
-///
-/// 
 
 extension RtmSyncManager {
     func notifyObserver(channel: AgoraRtmChannel, attributes: [AgoraRtmChannelAttribute]) {
@@ -169,6 +167,3 @@ extension RtmSyncManager {
         }
     }
 }
-
-
-
