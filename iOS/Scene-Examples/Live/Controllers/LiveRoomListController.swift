@@ -154,18 +154,6 @@ class LiveRoomListController: BaseViewController {
             let breakoutRoomVC = BORRoomDetailController(channelName: channelName ?? "", ownerId: ownerId ?? "")
             navigationController?.pushViewController(breakoutRoomVC, animated: true)
             
-        case .game:
-            let dgLiveVC = GameLiveController(channelName: channelName ?? "", sceneType: sceneType, userId: ownerId ?? "")
-            navigationController?.pushViewController(dgLiveVC, animated: true)
-            
-        case .playTogether:
-            let dgLiveVC = PlayTogetherViewController(channelName: channelName ?? "", sceneType: sceneType, userId: ownerId ?? "")
-            navigationController?.pushViewController(dgLiveVC, animated: true)
-            
-        case .oneToOne:
-            let oneToOneVC = OneToOneViewController(channelName: channelName ?? "", sceneType: sceneType, userId: ownerId ?? "")
-            navigationController?.pushViewController(oneToOneVC, animated: true)
-            
         case .agoraVoice:
             let roomInfo = JSONObject.toModel(LiveRoomInfo.self, value: result.toJson())
             let agoraVoiceVC = AgoraVoiceController(roomInfo: roomInfo)

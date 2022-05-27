@@ -9,13 +9,10 @@
 /* Begin PBXBuildFile section */
 		B5DF969B7ED11BACA57C6864 /* Pods_Scene_Examples.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AED837A3EC68965AC33FE2E6 /* Pods_Scene_Examples.framework */; };
 		E710AE2F27A0F23300124356 /* ChangeRoomBgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E710AE2E27A0F23300124356 /* ChangeRoomBgView.swift */; };
-		E7440E262772CADF00CBF4D8 /* OneToOneControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7440E252772CADF00CBF4D8 /* OneToOneControlView.swift */; };
 		E7440E2C277420F200CBF4D8 /* LiveBaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7440E2B277420F200CBF4D8 /* LiveBaseView.swift */; };
 		E7499C1B276A078500E799FF /* LiveOnlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C1A276A078500E799FF /* LiveOnlineView.swift */; };
-		E7499C282770308A00E799FF /* PlayTogetherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C272770308A00E799FF /* PlayTogetherViewController.swift */; };
 		E7499C2A2770534400E799FF /* NoticeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C292770534400E799FF /* NoticeCell.swift */; };
 		E7499C2C2770537C00E799FF /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C2B2770537C00E799FF /* MessageCell.swift */; };
-		E7499C30277173BC00E799FF /* OneToOneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C2F277173BC00E799FF /* OneToOneViewController.swift */; };
 		E757E65028126D630017D5B9 /* AgoraClubProgramViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E64F28126D630017D5B9 /* AgoraClubProgramViewController.swift */; };
 		E757E65228126EA40017D5B9 /* AgoraClubProgramCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E65128126EA40017D5B9 /* AgoraClubProgramCell.swift */; };
 		E757E65428126F400017D5B9 /* AgoraClubProgramModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E65328126F400017D5B9 /* AgoraClubProgramModel.swift */; };
@@ -81,16 +78,7 @@
 		E79BEF8627463FA5009FA838 /* BORRoomDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF8327463FA4009FA838 /* BORRoomDetailController.swift */; };
 		E79BEF88274640A6009FA838 /* BORVideoRoomDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF87274640A6009FA838 /* BORVideoRoomDetailCell.swift */; };
 		E79BEF8A274644A9009FA838 /* BORLiveModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF89274644A9009FA838 /* BORLiveModel.swift */; };
-		E79BEF9427474C36009FA838 /* GameLiveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF9327474C36009FA838 /* GameLiveController.swift */; };
-		E79BEF9627475239009FA838 /* GameWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF9527475239009FA838 /* GameWebView.swift */; };
-		E79BEF9827475677009FA838 /* GameModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF9727475677009FA838 /* GameModeView.swift */; };
-		E79BEF9A274776F8009FA838 /* GameModeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF99274776F8009FA838 /* GameModeModel.swift */; };
-		E79BEF9C27477E16009FA838 /* GameCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF9B27477E16009FA838 /* GameCenterView.swift */; };
-		E79BEF9E27477F66009FA838 /* GameCenterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF9D27477F66009FA838 /* GameCenterModel.swift */; };
 		E79BEFA1274796F7009FA838 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEFA0274796F7009FA838 /* NetworkManager.swift */; };
-		E79BF029274B77C7009FA838 /* GameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BF028274B77C7009FA838 /* GameViewModel.swift */; };
-		E79BF02B274B81A0009FA838 /* GameInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BF02A274B819F009FA838 /* GameInfoModel.swift */; };
-		E79BF0302754761A009FA838 /* GameApplyInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BF02F2754761A009FA838 /* GameApplyInfoModel.swift */; };
 		E79C25DF273B67DB00909CD4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C25DE273B67DB00909CD4 /* AppDelegate.swift */; };
 		E79C25E1273B67DB00909CD4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C25E0273B67DB00909CD4 /* SceneDelegate.swift */; };
 		E79C25E3273B67DB00909CD4 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C25E2273B67DB00909CD4 /* MainViewController.swift */; };
@@ -141,7 +129,6 @@
 		E7EDBCC227A2B0F100E763A6 /* AgoraVoiceUsersModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCC127A2B0F100E763A6 /* AgoraVoiceUsersModel.swift */; };
 		E7EDBCC427A3927B00E763A6 /* AgoraVoiceInviteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCC327A3927B00E763A6 /* AgoraVoiceInviteView.swift */; };
 		E7EDBCC627A3BDCD00E763A6 /* AgoraVoiceChangeBGModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCC527A3BDCD00E763A6 /* AgoraVoiceChangeBGModel.swift */; };
-		E7F9493D277B0C17005C57F1 /* OnoToOneGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F9493C277B0C17005C57F1 /* OnoToOneGameView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -164,13 +151,10 @@
 		AED837A3EC68965AC33FE2E6 /* Pods_Scene_Examples.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Scene_Examples.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C99DD6A332A83A34EF8B5943 /* Pods-Scene-Examples.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Scene-Examples.release.xcconfig"; path = "Target Support Files/Pods-Scene-Examples/Pods-Scene-Examples.release.xcconfig"; sourceTree = "<group>"; };
 		E710AE2E27A0F23300124356 /* ChangeRoomBgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeRoomBgView.swift; sourceTree = "<group>"; };
-		E7440E252772CADF00CBF4D8 /* OneToOneControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneToOneControlView.swift; sourceTree = "<group>"; };
 		E7440E2B277420F200CBF4D8 /* LiveBaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveBaseView.swift; sourceTree = "<group>"; };
 		E7499C1A276A078500E799FF /* LiveOnlineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveOnlineView.swift; sourceTree = "<group>"; };
-		E7499C272770308A00E799FF /* PlayTogetherViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayTogetherViewController.swift; sourceTree = "<group>"; };
 		E7499C292770534400E799FF /* NoticeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeCell.swift; sourceTree = "<group>"; };
 		E7499C2B2770537C00E799FF /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
-		E7499C2F277173BC00E799FF /* OneToOneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneToOneViewController.swift; sourceTree = "<group>"; };
 		E757E64F28126D630017D5B9 /* AgoraClubProgramViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraClubProgramViewController.swift; sourceTree = "<group>"; };
 		E757E65128126EA40017D5B9 /* AgoraClubProgramCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraClubProgramCell.swift; sourceTree = "<group>"; };
 		E757E65328126F400017D5B9 /* AgoraClubProgramModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraClubProgramModel.swift; sourceTree = "<group>"; };
@@ -236,17 +220,8 @@
 		E79BEF8327463FA4009FA838 /* BORRoomDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BORRoomDetailController.swift; sourceTree = "<group>"; };
 		E79BEF87274640A6009FA838 /* BORVideoRoomDetailCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BORVideoRoomDetailCell.swift; sourceTree = "<group>"; };
 		E79BEF89274644A9009FA838 /* BORLiveModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BORLiveModel.swift; sourceTree = "<group>"; };
-		E79BEF9327474C36009FA838 /* GameLiveController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameLiveController.swift; sourceTree = "<group>"; };
-		E79BEF9527475239009FA838 /* GameWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameWebView.swift; sourceTree = "<group>"; };
-		E79BEF9727475677009FA838 /* GameModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameModeView.swift; sourceTree = "<group>"; };
-		E79BEF99274776F8009FA838 /* GameModeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameModeModel.swift; sourceTree = "<group>"; };
-		E79BEF9B27477E16009FA838 /* GameCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterView.swift; sourceTree = "<group>"; };
-		E79BEF9D27477F66009FA838 /* GameCenterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterModel.swift; sourceTree = "<group>"; };
 		E79BEFA0274796F7009FA838 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		E79BF019274B6902009FA838 /* ReplayKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReplayKit.framework; path = System/Library/Frameworks/ReplayKit.framework; sourceTree = SDKROOT; };
-		E79BF028274B77C7009FA838 /* GameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewModel.swift; sourceTree = "<group>"; };
-		E79BF02A274B819F009FA838 /* GameInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameInfoModel.swift; sourceTree = "<group>"; };
-		E79BF02F2754761A009FA838 /* GameApplyInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameApplyInfoModel.swift; sourceTree = "<group>"; };
 		E79C25DB273B67DB00909CD4 /* Scene-Examples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Scene-Examples.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E79C25DE273B67DB00909CD4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E79C25E0273B67DB00909CD4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -302,7 +277,6 @@
 		E7EDBCC127A2B0F100E763A6 /* AgoraVoiceUsersModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraVoiceUsersModel.swift; sourceTree = "<group>"; };
 		E7EDBCC327A3927B00E763A6 /* AgoraVoiceInviteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraVoiceInviteView.swift; sourceTree = "<group>"; };
 		E7EDBCC527A3BDCD00E763A6 /* AgoraVoiceChangeBGModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraVoiceChangeBGModel.swift; sourceTree = "<group>"; };
-		E7F9493C277B0C17005C57F1 /* OnoToOneGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnoToOneGameView.swift; sourceTree = "<group>"; };
 		EA2989DBAC3CC73E3574369E /* Pods-Agora-ScreenShare-Extension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Agora-ScreenShare-Extension.debug.xcconfig"; path = "Target Support Files/Pods-Agora-ScreenShare-Extension/Pods-Agora-ScreenShare-Extension.debug.xcconfig"; sourceTree = "<group>"; };
 		F13F3E8380132BD39CD228E0 /* Pods-Scene-Examples.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Scene-Examples.debug.xcconfig"; path = "Target Support Files/Pods-Scene-Examples/Pods-Scene-Examples.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -339,48 +313,6 @@
 				E79BF019274B6902009FA838 /* ReplayKit.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		E7499C31277174BB00E799FF /* OneToOne */ = {
-			isa = PBXGroup;
-			children = (
-				E7499C35277174E300E799FF /* Models */,
-				E7499C34277174DC00E799FF /* Cells */,
-				E7499C33277174D800E799FF /* Views */,
-				E7499C32277174CF00E799FF /* Controllers */,
-			);
-			path = OneToOne;
-			sourceTree = "<group>";
-		};
-		E7499C32277174CF00E799FF /* Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				E7499C2F277173BC00E799FF /* OneToOneViewController.swift */,
-			);
-			path = Controllers;
-			sourceTree = "<group>";
-		};
-		E7499C33277174D800E799FF /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				E7440E252772CADF00CBF4D8 /* OneToOneControlView.swift */,
-				E7F9493C277B0C17005C57F1 /* OnoToOneGameView.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		E7499C34277174DC00E799FF /* Cells */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Cells;
-			sourceTree = "<group>";
-		};
-		E7499C35277174E300E799FF /* Models */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 		E757E675281AAE6B0017D5B9 /* AgoraSyncManager */ = {
@@ -553,69 +485,12 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
-		E79BEF8E2746729D009FA838 /* Game */ = {
-			isa = PBXGroup;
-			children = (
-				E79BF027274B77B3009FA838 /* ViewModels */,
-				E79BEF9227474C0E009FA838 /* Models */,
-				E79BEF9127474C07009FA838 /* Views */,
-				E79BEF9027474C01009FA838 /* Cells */,
-				E79BEF8F27474BF5009FA838 /* Controllers */,
-			);
-			path = Game;
-			sourceTree = "<group>";
-		};
-		E79BEF8F27474BF5009FA838 /* Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				E79BEF9327474C36009FA838 /* GameLiveController.swift */,
-				E7499C272770308A00E799FF /* PlayTogetherViewController.swift */,
-			);
-			path = Controllers;
-			sourceTree = "<group>";
-		};
-		E79BEF9027474C01009FA838 /* Cells */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Cells;
-			sourceTree = "<group>";
-		};
-		E79BEF9127474C07009FA838 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				E79BEF9527475239009FA838 /* GameWebView.swift */,
-				E79BEF9727475677009FA838 /* GameModeView.swift */,
-				E79BEF9B27477E16009FA838 /* GameCenterView.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		E79BEF9227474C0E009FA838 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				E79BEF99274776F8009FA838 /* GameModeModel.swift */,
-				E79BEF9D27477F66009FA838 /* GameCenterModel.swift */,
-				E79BF02F2754761A009FA838 /* GameApplyInfoModel.swift */,
-				E79BF02A274B819F009FA838 /* GameInfoModel.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
 		E79BEF9F274796E1009FA838 /* NetworkManager */ = {
 			isa = PBXGroup;
 			children = (
 				E79BEFA0274796F7009FA838 /* NetworkManager.swift */,
 			);
 			path = NetworkManager;
-			sourceTree = "<group>";
-		};
-		E79BF027274B77B3009FA838 /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-				E79BF028274B77C7009FA838 /* GameViewModel.swift */,
-			);
-			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		E79C25D2273B67DB00909CD4 = {
@@ -653,8 +528,6 @@
 				E7ECC56227E814F800EFA778 /* AgoraClub */,
 				E79C2620273B7B5C00909CD4 /* Live */,
 				E79BEF612741FCEB009FA838 /* PKLive */,
-				E79BEF8E2746729D009FA838 /* Game */,
-				E7499C31277174BB00E799FF /* OneToOne */,
 				E79C25E4273B67DB00909CD4 /* Main.storyboard */,
 				E79C25E7273B67DD00909CD4 /* Assets.xcassets */,
 				E79C25E9273B67DD00909CD4 /* LaunchScreen.storyboard */,
@@ -1061,10 +934,8 @@
 				E76DE01D2809241200A0434C /* ClubRoomListView.swift in Sources */,
 				E79C2644273BE7C000909CD4 /* LiveSettingView.swift in Sources */,
 				E79BEF3B273D21FD009FA838 /* LiveChatView.swift in Sources */,
-				E79BF0302754761A009FA838 /* GameApplyInfoModel.swift in Sources */,
 				E7499C2C2770537C00E799FF /* MessageCell.swift in Sources */,
 				E79BEF3F273D3EF0009FA838 /* LiveToolView.swift in Sources */,
-				E79BF02B274B81A0009FA838 /* GameInfoModel.swift in Sources */,
 				E757E6B6281AAE6B0017D5B9 /* SyncError.swift in Sources */,
 				E7EDBCB027A131BC00E763A6 /* AgoraVoiceBelCantoView.swift in Sources */,
 				E79C2626273B7BDA00909CD4 /* CreateLiveController.swift in Sources */,
@@ -1095,10 +966,8 @@
 				E79C2638273BC8DF00909CD4 /* MainModel.swift in Sources */,
 				E79C2613273B689B00909CD4 /* UIColor+Extension.swift in Sources */,
 				E757E6A9281AAE6B0017D5B9 /* CollectionReference.swift in Sources */,
-				E79BF029274B77C7009FA838 /* GameViewModel.swift in Sources */,
 				E757E6B5281AAE6B0017D5B9 /* Models.swift in Sources */,
 				E757E6AA281AAE6B0017D5B9 /* AskSyncManager+ISyncManager.swift in Sources */,
-				E7440E262772CADF00CBF4D8 /* OneToOneControlView.swift in Sources */,
 				E757E65428126F400017D5B9 /* AgoraClubProgramModel.swift in Sources */,
 				E7EDBCC227A2B0F100E763A6 /* AgoraVoiceUsersModel.swift in Sources */,
 				E79BEF6A27420933009FA838 /* PKApplyInfoModel.swift in Sources */,
@@ -1112,7 +981,6 @@
 				E7EDBCBA27A28BD300E763A6 /* AgoraVoiceMusicView.swift in Sources */,
 				E79BEFA1274796F7009FA838 /* NetworkManager.swift in Sources */,
 				E79BEF772745036E009FA838 /* PKLiveProgressView.swift in Sources */,
-				E79BEF9427474C36009FA838 /* GameLiveController.swift in Sources */,
 				E79BEF8427463FA5009FA838 /* BORCreateRoomController.swift in Sources */,
 				E757E6A2281AAE6B0017D5B9 /* LeancloudManager+Internal.swift in Sources */,
 				E7440E2C277420F200CBF4D8 /* LiveBaseView.swift in Sources */,
@@ -1120,13 +988,11 @@
 				E79C2628273B7D3700909CD4 /* LiveRandomName.swift in Sources */,
 				E79BEF41273E0C3A009FA838 /* LiveToolModel.swift in Sources */,
 				E79BEF31273D0EA4009FA838 /* SignleLiveController.swift in Sources */,
-				E79BEF9A274776F8009FA838 /* GameModeModel.swift in Sources */,
 				E757E6AE281AAE6B0017D5B9 /* AskSyncManager+Sync.swift in Sources */,
 				E7ECC56B27E81BAE00EFA778 /* ClubHeaderView.swift in Sources */,
 				E757E6A6281AAE6B0017D5B9 /* RtmSyncManager.swift in Sources */,
 				E79C2632273BC17B00909CD4 /* String+Extension.swift in Sources */,
 				E79C262A273B7D8900909CD4 /* DeviceAssistant.swift in Sources */,
-				E7499C282770308A00E799FF /* PlayTogetherViewController.swift in Sources */,
 				E7EDBCB827A284AB00E763A6 /* AgoraVoiceToolView.swift in Sources */,
 				E79BEF43273E3709009FA838 /* LiveGiftView.swift in Sources */,
 				E757E69D281AAE6B0017D5B9 /* SyncManager+Info.swift in Sources */,
@@ -1134,18 +1000,13 @@
 				E7499C1B276A078500E799FF /* LiveOnlineView.swift in Sources */,
 				E757E6AC281AAE6B0017D5B9 /* AskSyncManager.swift in Sources */,
 				E7EDBCC027A2A4CA00E763A6 /* RTCRealTimeDataView.swift in Sources */,
-				E79BEF9827475677009FA838 /* GameModeView.swift in Sources */,
 				E79C260F273B689B00909CD4 /* JSONObject.swift in Sources */,
 				E79C25DF273B67DB00909CD4 /* AppDelegate.swift in Sources */,
 				E79C260E273B689B00909CD4 /* AgoraExtension.swift in Sources */,
 				E79C2646273CBA2700909CD4 /* LiveSettingModel.swift in Sources */,
 				E757E6AD281AAE6B0017D5B9 /* AskSyncManager+Info.swift in Sources */,
 				E757E65028126D630017D5B9 /* AgoraClubProgramViewController.swift in Sources */,
-				E79BEF9C27477E16009FA838 /* GameCenterView.swift in Sources */,
-				E79BEF9627475239009FA838 /* GameWebView.swift in Sources */,
-				E7499C30277173BC00E799FF /* OneToOneViewController.swift in Sources */,
 				E79C260D273B689B00909CD4 /* Config.swift in Sources */,
-				E79BEF9E27477F66009FA838 /* GameCenterModel.swift in Sources */,
 				E7EDBCBC27A2918D00E763A6 /* AgoraVoiceMusicModel.swift in Sources */,
 				E757E6AF281AAE6B0017D5B9 /* AskSyncManager+Internal.swift in Sources */,
 				E79C25E1273B67DB00909CD4 /* SceneDelegate.swift in Sources */,
@@ -1155,7 +1016,6 @@
 				E7EDBCAC27A0F98900E763A6 /* AgoraVoiceController.swift in Sources */,
 				E79C260C273B689B00909CD4 /* MBHUD.swift in Sources */,
 				E757E6B3281AAE6B0017D5B9 /* Blocks.swift in Sources */,
-				E7F9493D277B0C17005C57F1 /* OnoToOneGameView.swift in Sources */,
 				E757E6A1281AAE6B0017D5B9 /* LeancloudManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

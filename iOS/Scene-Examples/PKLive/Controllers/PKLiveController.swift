@@ -178,8 +178,7 @@ class PKLiveController: SignleLiveController {
             })
             
         } else if model.status == .invite && "\(UserInfo.userId)" != model.userId {
-            let message = sceneType == .game ? String(format: "your_friends_invite_you_join_game".localized, model.userName, model.gameId.title) : ""
-            showAlert(title: sceneType.alertTitle, message: message) { [weak self] in
+            showAlert(title: sceneType.alertTitle, message: "") { [weak self] in
                 guard let self = self else { return }
                 model.status = .refuse
                 SyncUtil.update(id: model.targetRoomId ?? "", key: self.sceneType.rawValue, params: JSONObject.toJson(model))

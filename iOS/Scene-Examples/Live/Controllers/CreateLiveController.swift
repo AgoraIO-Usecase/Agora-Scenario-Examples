@@ -235,27 +235,7 @@ class CreateLiveController: BaseViewController {
                                             agoraKit: agoraKit)
             navigationController?.pushViewController(pkLiveVC, animated: true)
             
-        case .game:
-            let dgLiveVC = GameLiveController(channelName: channelName ?? "",
-                                            sceneType: sceneType,
-                                            userId: "\(UserInfo.userId)",
-                                            agoraKit: agoraKit)
-            navigationController?.pushViewController(dgLiveVC, animated: true)
-            
-        case .playTogether:
-            let playTogetherVC = PlayTogetherViewController(channelName: channelName ?? "",
-                                                            sceneType: sceneType,
-                                                            userId: "\(UserInfo.userId)",
-                                                            agoraKit: agoraKit)
-            navigationController?.pushViewController(playTogetherVC, animated: true)
-            
-        case .oneToOne:
-            let oneToOneVC = OneToOneViewController(channelName: channelName ?? "",
-                                                    sceneType: sceneType,
-                                                    userId: UserInfo.uid,
-                                                    agoraKit: agoraKit)
-            navigationController?.pushViewController(oneToOneVC, animated: true)
-            
+        
         case .agoraVoice:
             let agoraVoiceVC = AgoraVoiceController(roomInfo: roomInfo,
                                                     agoraKit: agoraKit)

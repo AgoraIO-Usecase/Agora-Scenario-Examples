@@ -28,8 +28,6 @@ struct PKApplyInfoModel: Codable {
     var userName: String = "User-\(UserInfo.userId)"
     /// pk邀请状态
     var status: PKApplyInfoStatus = .invite
-    /// 游戏ID
-    var gameId: GameCenterType = .guess
     /// 自己的房间ID
     var roomId: String = ""
     /// 对方直播间的roomId
