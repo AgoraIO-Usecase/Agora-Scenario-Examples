@@ -7,7 +7,6 @@
 
 import Foundation
 import AgoraSyncKit
-import LeanCloud
 
 public class SceneReference: DocumentReference {
     override public var className: String {

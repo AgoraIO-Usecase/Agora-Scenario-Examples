@@ -39,20 +39,6 @@ public class AgoraSyncManager: NSObject {
                            complete: complete)
     }
     
-    /// init
-    /// - Parameters:
-    ///   - config: config of ask
-    ///   - complete: `code = 0` is success, else error
-    public init(leancloudConfig: LeancloudConfig,
-                complete: @escaping SuccessBlockInt) {
-        let tempConfig = LeancloudManager.Config(appId: leancloudConfig.appId,
-                                                 appKey: leancloudConfig.appKey,
-                                           channelName: leancloudConfig.channelName)
-        proxy = LeancloudManager(config: tempConfig,
-                                 complete: complete)
-    }
-    
-    
     public func createScene(scene: Scene,
                      success: SuccessBlockVoid?,
                      fail: FailBlock?) {

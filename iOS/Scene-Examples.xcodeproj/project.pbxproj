@@ -20,10 +20,6 @@
 		E757E69C281AAE6B0017D5B9 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E678281AAE6B0017D5B9 /* Utils.swift */; };
 		E757E69D281AAE6B0017D5B9 /* SyncManager+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E67A281AAE6B0017D5B9 /* SyncManager+Info.swift */; };
 		E757E69E281AAE6B0017D5B9 /* AgoraSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E67B281AAE6B0017D5B9 /* AgoraSyncManager.swift */; };
-		E757E69F281AAE6B0017D5B9 /* LeancloudManager+Sync.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E67D281AAE6B0017D5B9 /* LeancloudManager+Sync.swift */; };
-		E757E6A0281AAE6B0017D5B9 /* LeancloudManager+ISyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E67E281AAE6B0017D5B9 /* LeancloudManager+ISyncManager.swift */; };
-		E757E6A1281AAE6B0017D5B9 /* LeancloudManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E67F281AAE6B0017D5B9 /* LeancloudManager.swift */; };
-		E757E6A2281AAE6B0017D5B9 /* LeancloudManager+Internal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E680281AAE6B0017D5B9 /* LeancloudManager+Internal.swift */; };
 		E757E6A3281AAE6B0017D5B9 /* RtmSyncManager+Handle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E682281AAE6B0017D5B9 /* RtmSyncManager+Handle.swift */; };
 		E757E6A4281AAE6B0017D5B9 /* RtmSyncManager+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E683281AAE6B0017D5B9 /* RtmSyncManager+Info.swift */; };
 		E757E6A5281AAE6B0017D5B9 /* RtmSyncManager+ISyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E684281AAE6B0017D5B9 /* RtmSyncManager+ISyncManager.swift */; };
@@ -109,6 +105,30 @@
 		E79C264A273D003B00909CD4 /* LiveRoomInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2649273D003B00909CD4 /* LiveRoomInfo.swift */; };
 		E79C264C273D053E00909CD4 /* LiveRoomListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C264B273D053E00909CD4 /* LiveRoomListController.swift */; };
 		E79C264E273D062400909CD4 /* LiveRoomListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C264D273D062400909CD4 /* LiveRoomListCell.swift */; };
+		E7D30F062845DC4A0062CFE3 /* SuperAppInvitationSheetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EEB2845DC4A0062CFE3 /* SuperAppInvitationSheetManager.swift */; };
+		E7D30F072845DC4A0062CFE3 /* SupperAppStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EEC2845DC4A0062CFE3 /* SupperAppStorageManager.swift */; };
+		E7D30F082845DC4A0062CFE3 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EED2845DC4A0062CFE3 /* UIViewController+Extension.swift */; };
+		E7D30F092845DC4A0062CFE3 /* String+Extension+SuperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EEE2845DC4A0062CFE3 /* String+Extension+SuperApp.swift */; };
+		E7D30F0A2845DC4A0062CFE3 /* SuperAppSyncUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EEF2845DC4A0062CFE3 /* SuperAppSyncUtil.swift */; };
+		E7D30F0B2845DC4A0062CFE3 /* SuperAppUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EF12845DC4A0062CFE3 /* SuperAppUserInfo.swift */; };
+		E7D30F0C2845DC4A0062CFE3 /* SuperAppRoomInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EF22845DC4A0062CFE3 /* SuperAppRoomInfo.swift */; };
+		E7D30F0D2845DC4A0062CFE3 /* SuperAppPKInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EF32845DC4A0062CFE3 /* SuperAppPKInfo.swift */; };
+		E7D30F0E2845DC4A0062CFE3 /* SuperAppRoomListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EF52845DC4A0062CFE3 /* SuperAppRoomListViewCell.swift */; };
+		E7D30F0F2845DC4A0062CFE3 /* SuperAppInvitationViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EF62845DC4A0062CFE3 /* SuperAppInvitationViewCell.swift */; };
+		E7D30F102845DC4A0062CFE3 /* SuperAppToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EF72845DC4A0062CFE3 /* SuperAppToolView.swift */; };
+		E7D30F112845DC4A0062CFE3 /* SuperAppCreateLiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EF82845DC4A0062CFE3 /* SuperAppCreateLiveView.swift */; };
+		E7D30F122845DC4A0062CFE3 /* SuperAppCreateLiveView+CenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EF92845DC4A0062CFE3 /* SuperAppCreateLiveView+CenterView.swift */; };
+		E7D30F132845DC4A0062CFE3 /* SuperAppMainView+LeftView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EFA2845DC4A0062CFE3 /* SuperAppMainView+LeftView.swift */; };
+		E7D30F142845DC4A0062CFE3 /* SuperAppInvitationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EFB2845DC4A0062CFE3 /* SuperAppInvitationView.swift */; };
+		E7D30F152845DC4A0062CFE3 /* SuperAppRoomListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EFC2845DC4A0062CFE3 /* SuperAppRoomListView.swift */; };
+		E7D30F162845DC4A0062CFE3 /* SuperAppMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EFD2845DC4A0062CFE3 /* SuperAppMainView.swift */; };
+		E7D30F172845DC4A0062CFE3 /* SuperAppMainView+RemoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EFE2845DC4A0062CFE3 /* SuperAppMainView+RemoteView.swift */; };
+		E7D30F182845DC4A0062CFE3 /* SuperAppRoomListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30F002845DC4A0062CFE3 /* SuperAppRoomListViewController.swift */; };
+		E7D30F192845DC4A0062CFE3 /* SuperAppPlayerViewControllerHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30F012845DC4A0062CFE3 /* SuperAppPlayerViewControllerHost.swift */; };
+		E7D30F1A2845DC4A0062CFE3 /* SuperAppPlayerViewControllerAudience.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30F022845DC4A0062CFE3 /* SuperAppPlayerViewControllerAudience.swift */; };
+		E7D30F1B2845DC4A0062CFE3 /* SuperAppPlayerViewControllerHost+RTC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30F032845DC4A0062CFE3 /* SuperAppPlayerViewControllerHost+RTC.swift */; };
+		E7D30F1C2845DC4A0062CFE3 /* SuperAppPlayerViewControllerAudience+RTC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30F042845DC4A0062CFE3 /* SuperAppPlayerViewControllerAudience+RTC.swift */; };
+		E7D30F1D2845DC4A0062CFE3 /* SuperAppCreateLiveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30F052845DC4A0062CFE3 /* SuperAppCreateLiveViewController.swift */; };
 		E7ECC56727E8155700EFA778 /* AgoraClubController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ECC56627E8155700EFA778 /* AgoraClubController.swift */; };
 		E7ECC56927E81A9E00EFA778 /* BaseNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ECC56827E81A9E00EFA778 /* BaseNavigationController.swift */; };
 		E7ECC56B27E81BAE00EFA778 /* ClubHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ECC56A27E81BAE00EFA778 /* ClubHeaderView.swift */; };
@@ -162,10 +182,6 @@
 		E757E678281AAE6B0017D5B9 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		E757E67A281AAE6B0017D5B9 /* SyncManager+Info.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SyncManager+Info.swift"; sourceTree = "<group>"; };
 		E757E67B281AAE6B0017D5B9 /* AgoraSyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraSyncManager.swift; sourceTree = "<group>"; };
-		E757E67D281AAE6B0017D5B9 /* LeancloudManager+Sync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LeancloudManager+Sync.swift"; sourceTree = "<group>"; };
-		E757E67E281AAE6B0017D5B9 /* LeancloudManager+ISyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LeancloudManager+ISyncManager.swift"; sourceTree = "<group>"; };
-		E757E67F281AAE6B0017D5B9 /* LeancloudManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeancloudManager.swift; sourceTree = "<group>"; };
-		E757E680281AAE6B0017D5B9 /* LeancloudManager+Internal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LeancloudManager+Internal.swift"; sourceTree = "<group>"; };
 		E757E682281AAE6B0017D5B9 /* RtmSyncManager+Handle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RtmSyncManager+Handle.swift"; sourceTree = "<group>"; };
 		E757E683281AAE6B0017D5B9 /* RtmSyncManager+Info.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RtmSyncManager+Info.swift"; sourceTree = "<group>"; };
 		E757E684281AAE6B0017D5B9 /* RtmSyncManager+ISyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RtmSyncManager+ISyncManager.swift"; sourceTree = "<group>"; };
@@ -257,6 +273,30 @@
 		E79C2649273D003B00909CD4 /* LiveRoomInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRoomInfo.swift; sourceTree = "<group>"; };
 		E79C264B273D053E00909CD4 /* LiveRoomListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRoomListController.swift; sourceTree = "<group>"; };
 		E79C264D273D062400909CD4 /* LiveRoomListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRoomListCell.swift; sourceTree = "<group>"; };
+		E7D30EEB2845DC4A0062CFE3 /* SuperAppInvitationSheetManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAppInvitationSheetManager.swift; sourceTree = "<group>"; };
+		E7D30EEC2845DC4A0062CFE3 /* SupperAppStorageManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SupperAppStorageManager.swift; sourceTree = "<group>"; };
+		E7D30EED2845DC4A0062CFE3 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
+		E7D30EEE2845DC4A0062CFE3 /* String+Extension+SuperApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extension+SuperApp.swift"; sourceTree = "<group>"; };
+		E7D30EEF2845DC4A0062CFE3 /* SuperAppSyncUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAppSyncUtil.swift; sourceTree = "<group>"; };
+		E7D30EF12845DC4A0062CFE3 /* SuperAppUserInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAppUserInfo.swift; sourceTree = "<group>"; };
+		E7D30EF22845DC4A0062CFE3 /* SuperAppRoomInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAppRoomInfo.swift; sourceTree = "<group>"; };
+		E7D30EF32845DC4A0062CFE3 /* SuperAppPKInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAppPKInfo.swift; sourceTree = "<group>"; };
+		E7D30EF52845DC4A0062CFE3 /* SuperAppRoomListViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAppRoomListViewCell.swift; sourceTree = "<group>"; };
+		E7D30EF62845DC4A0062CFE3 /* SuperAppInvitationViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAppInvitationViewCell.swift; sourceTree = "<group>"; };
+		E7D30EF72845DC4A0062CFE3 /* SuperAppToolView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAppToolView.swift; sourceTree = "<group>"; };
+		E7D30EF82845DC4A0062CFE3 /* SuperAppCreateLiveView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAppCreateLiveView.swift; sourceTree = "<group>"; };
+		E7D30EF92845DC4A0062CFE3 /* SuperAppCreateLiveView+CenterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SuperAppCreateLiveView+CenterView.swift"; sourceTree = "<group>"; };
+		E7D30EFA2845DC4A0062CFE3 /* SuperAppMainView+LeftView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SuperAppMainView+LeftView.swift"; sourceTree = "<group>"; };
+		E7D30EFB2845DC4A0062CFE3 /* SuperAppInvitationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAppInvitationView.swift; sourceTree = "<group>"; };
+		E7D30EFC2845DC4A0062CFE3 /* SuperAppRoomListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAppRoomListView.swift; sourceTree = "<group>"; };
+		E7D30EFD2845DC4A0062CFE3 /* SuperAppMainView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAppMainView.swift; sourceTree = "<group>"; };
+		E7D30EFE2845DC4A0062CFE3 /* SuperAppMainView+RemoteView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SuperAppMainView+RemoteView.swift"; sourceTree = "<group>"; };
+		E7D30F002845DC4A0062CFE3 /* SuperAppRoomListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAppRoomListViewController.swift; sourceTree = "<group>"; };
+		E7D30F012845DC4A0062CFE3 /* SuperAppPlayerViewControllerHost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAppPlayerViewControllerHost.swift; sourceTree = "<group>"; };
+		E7D30F022845DC4A0062CFE3 /* SuperAppPlayerViewControllerAudience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAppPlayerViewControllerAudience.swift; sourceTree = "<group>"; };
+		E7D30F032845DC4A0062CFE3 /* SuperAppPlayerViewControllerHost+RTC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SuperAppPlayerViewControllerHost+RTC.swift"; sourceTree = "<group>"; };
+		E7D30F042845DC4A0062CFE3 /* SuperAppPlayerViewControllerAudience+RTC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SuperAppPlayerViewControllerAudience+RTC.swift"; sourceTree = "<group>"; };
+		E7D30F052845DC4A0062CFE3 /* SuperAppCreateLiveViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAppCreateLiveViewController.swift; sourceTree = "<group>"; };
 		E7ECC56627E8155700EFA778 /* AgoraClubController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraClubController.swift; sourceTree = "<group>"; };
 		E7ECC56827E81A9E00EFA778 /* BaseNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseNavigationController.swift; sourceTree = "<group>"; };
 		E7ECC56A27E81BAE00EFA778 /* ClubHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubHeaderView.swift; sourceTree = "<group>"; };
@@ -341,7 +381,6 @@
 			children = (
 				E757E67A281AAE6B0017D5B9 /* SyncManager+Info.swift */,
 				E757E67B281AAE6B0017D5B9 /* AgoraSyncManager.swift */,
-				E757E67C281AAE6B0017D5B9 /* LeancloudManager */,
 				E757E681281AAE6B0017D5B9 /* RtmManager */,
 				E757E686281AAE6B0017D5B9 /* SyncManager.swift~HEAD */,
 				E757E687281AAE6B0017D5B9 /* Protocols.swift */,
@@ -351,17 +390,6 @@
 				E757E691281AAE6B0017D5B9 /* DocumentReference.swift */,
 			);
 			path = SyncManager;
-			sourceTree = "<group>";
-		};
-		E757E67C281AAE6B0017D5B9 /* LeancloudManager */ = {
-			isa = PBXGroup;
-			children = (
-				E757E67D281AAE6B0017D5B9 /* LeancloudManager+Sync.swift */,
-				E757E67E281AAE6B0017D5B9 /* LeancloudManager+ISyncManager.swift */,
-				E757E67F281AAE6B0017D5B9 /* LeancloudManager.swift */,
-				E757E680281AAE6B0017D5B9 /* LeancloudManager+Internal.swift */,
-			);
-			path = LeancloudManager;
 			sourceTree = "<group>";
 		};
 		E757E681281AAE6B0017D5B9 /* RtmManager */ = {
@@ -523,6 +551,7 @@
 				E79C25FE273B689A00909CD4 /* Common */,
 				E79C2619273B6F4800909CD4 /* AppDelegate */,
 				E79C2617273B6F3700909CD4 /* Main */,
+				E7D30EE92845DC4A0062CFE3 /* SuperApp */,
 				E79C25F2273B685100909CD4 /* BreakOutRoom */,
 				E7EDBCA727A0F94800E763A6 /* AgoraVoice */,
 				E7ECC56227E814F800EFA778 /* AgoraClub */,
@@ -697,6 +726,69 @@
 				E7ECC57027E8923200EFA778 /* Array+Extension.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		E7D30EE92845DC4A0062CFE3 /* SuperApp */ = {
+			isa = PBXGroup;
+			children = (
+				E7D30EEA2845DC4A0062CFE3 /* Other */,
+				E7D30EF02845DC4A0062CFE3 /* Model */,
+				E7D30EF42845DC4A0062CFE3 /* View */,
+				E7D30EFF2845DC4A0062CFE3 /* ViewController */,
+			);
+			path = SuperApp;
+			sourceTree = "<group>";
+		};
+		E7D30EEA2845DC4A0062CFE3 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				E7D30EEB2845DC4A0062CFE3 /* SuperAppInvitationSheetManager.swift */,
+				E7D30EEC2845DC4A0062CFE3 /* SupperAppStorageManager.swift */,
+				E7D30EED2845DC4A0062CFE3 /* UIViewController+Extension.swift */,
+				E7D30EEE2845DC4A0062CFE3 /* String+Extension+SuperApp.swift */,
+				E7D30EEF2845DC4A0062CFE3 /* SuperAppSyncUtil.swift */,
+			);
+			path = Other;
+			sourceTree = "<group>";
+		};
+		E7D30EF02845DC4A0062CFE3 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E7D30EF12845DC4A0062CFE3 /* SuperAppUserInfo.swift */,
+				E7D30EF22845DC4A0062CFE3 /* SuperAppRoomInfo.swift */,
+				E7D30EF32845DC4A0062CFE3 /* SuperAppPKInfo.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		E7D30EF42845DC4A0062CFE3 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E7D30EF52845DC4A0062CFE3 /* SuperAppRoomListViewCell.swift */,
+				E7D30EF62845DC4A0062CFE3 /* SuperAppInvitationViewCell.swift */,
+				E7D30EF72845DC4A0062CFE3 /* SuperAppToolView.swift */,
+				E7D30EF82845DC4A0062CFE3 /* SuperAppCreateLiveView.swift */,
+				E7D30EF92845DC4A0062CFE3 /* SuperAppCreateLiveView+CenterView.swift */,
+				E7D30EFA2845DC4A0062CFE3 /* SuperAppMainView+LeftView.swift */,
+				E7D30EFB2845DC4A0062CFE3 /* SuperAppInvitationView.swift */,
+				E7D30EFC2845DC4A0062CFE3 /* SuperAppRoomListView.swift */,
+				E7D30EFD2845DC4A0062CFE3 /* SuperAppMainView.swift */,
+				E7D30EFE2845DC4A0062CFE3 /* SuperAppMainView+RemoteView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E7D30EFF2845DC4A0062CFE3 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				E7D30F002845DC4A0062CFE3 /* SuperAppRoomListViewController.swift */,
+				E7D30F012845DC4A0062CFE3 /* SuperAppPlayerViewControllerHost.swift */,
+				E7D30F022845DC4A0062CFE3 /* SuperAppPlayerViewControllerAudience.swift */,
+				E7D30F032845DC4A0062CFE3 /* SuperAppPlayerViewControllerHost+RTC.swift */,
+				E7D30F042845DC4A0062CFE3 /* SuperAppPlayerViewControllerAudience+RTC.swift */,
+				E7D30F052845DC4A0062CFE3 /* SuperAppCreateLiveViewController.swift */,
+			);
+			path = ViewController;
 			sourceTree = "<group>";
 		};
 		E7ECC56227E814F800EFA778 /* AgoraClub */ = {
@@ -913,35 +1005,47 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E7D30F122845DC4A0062CFE3 /* SuperAppCreateLiveView+CenterView.swift in Sources */,
 				E757E6B4281AAE6B0017D5B9 /* Extensions.swift in Sources */,
 				E79BEF37273D15D6009FA838 /* Screen.swift in Sources */,
+				E7D30F1B2845DC4A0062CFE3 /* SuperAppPlayerViewControllerHost+RTC.swift in Sources */,
 				E79C2611273B689B00909CD4 /* SyncUtil.swift in Sources */,
 				E7EDBCC627A3BDCD00E763A6 /* AgoraVoiceChangeBGModel.swift in Sources */,
+				E7D30F072845DC4A0062CFE3 /* SupperAppStorageManager.swift in Sources */,
 				E7EDBCBE27A2A41900E763A6 /* RTEStatistics.swift in Sources */,
+				E7D30F0F2845DC4A0062CFE3 /* SuperAppInvitationViewCell.swift in Sources */,
 				E757E65228126EA40017D5B9 /* AgoraClubProgramCell.swift in Sources */,
+				E7D30F0E2845DC4A0062CFE3 /* SuperAppRoomListViewCell.swift in Sources */,
 				E79BEF5B273E5768009FA838 /* GIFImageView.swift in Sources */,
+				E7D30F102845DC4A0062CFE3 /* SuperAppToolView.swift in Sources */,
+				E7D30F0C2845DC4A0062CFE3 /* SuperAppRoomInfo.swift in Sources */,
 				E757E6A4281AAE6B0017D5B9 /* RtmSyncManager+Info.swift in Sources */,
 				E757E6A3281AAE6B0017D5B9 /* RtmSyncManager+Handle.swift in Sources */,
 				E79BEF8A274644A9009FA838 /* BORLiveModel.swift in Sources */,
 				E79BEF45273E4D99009FA838 /* LiveGiftModel.swift in Sources */,
-				E757E6A0281AAE6B0017D5B9 /* LeancloudManager+ISyncManager.swift in Sources */,
 				E79C264E273D062400909CD4 /* LiveRoomListCell.swift in Sources */,
 				E7ECC56927E81A9E00EFA778 /* BaseNavigationController.swift in Sources */,
 				E79C264A273D003B00909CD4 /* LiveRoomInfo.swift in Sources */,
 				E79C2610273B689B00909CD4 /* KeyCenter.swift in Sources */,
 				E79C262D273BC0CA00909CD4 /* ToastView.swift in Sources */,
 				E7EDBCB227A1463700E763A6 /* AgoraVoiceBelCantoModel.swift in Sources */,
+				E7D30F1C2845DC4A0062CFE3 /* SuperAppPlayerViewControllerAudience+RTC.swift in Sources */,
+				E7D30F182845DC4A0062CFE3 /* SuperAppRoomListViewController.swift in Sources */,
 				E76DE01D2809241200A0434C /* ClubRoomListView.swift in Sources */,
+				E7D30F152845DC4A0062CFE3 /* SuperAppRoomListView.swift in Sources */,
+				E7D30F0B2845DC4A0062CFE3 /* SuperAppUserInfo.swift in Sources */,
 				E79C2644273BE7C000909CD4 /* LiveSettingView.swift in Sources */,
 				E79BEF3B273D21FD009FA838 /* LiveChatView.swift in Sources */,
 				E7499C2C2770537C00E799FF /* MessageCell.swift in Sources */,
 				E79BEF3F273D3EF0009FA838 /* LiveToolView.swift in Sources */,
 				E757E6B6281AAE6B0017D5B9 /* SyncError.swift in Sources */,
+				E7D30F162845DC4A0062CFE3 /* SuperAppMainView.swift in Sources */,
 				E7EDBCB027A131BC00E763A6 /* AgoraVoiceBelCantoView.swift in Sources */,
 				E79C2626273B7BDA00909CD4 /* CreateLiveController.swift in Sources */,
 				E79BEF8627463FA5009FA838 /* BORRoomDetailController.swift in Sources */,
 				E7EDBCAE27A1281200E763A6 /* AgoraVoiceUsersView.swift in Sources */,
 				E7ECC56D27E81F5A00EFA778 /* UIImage+Color.swift in Sources */,
+				E7D30F1A2845DC4A0062CFE3 /* SuperAppPlayerViewControllerAudience.swift in Sources */,
 				E79BEF7D27463F79009FA838 /* BORSubRoomModel.swift in Sources */,
 				E757E6A8281AAE6B0017D5B9 /* Protocols.swift in Sources */,
 				E79BEF39273D18B4009FA838 /* LiveAvatarView.swift in Sources */,
@@ -954,12 +1058,14 @@
 				E79BEF33273D0F0C009FA838 /* LiveCanvasModel.swift in Sources */,
 				E7499C2A2770534400E799FF /* NoticeCell.swift in Sources */,
 				E757E6B1281AAE6B0017D5B9 /* DocumentReference.swift in Sources */,
+				E7D30F0A2845DC4A0062CFE3 /* SuperAppSyncUtil.swift in Sources */,
 				E79C25E3273B67DB00909CD4 /* MainViewController.swift in Sources */,
 				E79C2612273B689B00909CD4 /* SegmentView.swift in Sources */,
+				E7D30F132845DC4A0062CFE3 /* SuperAppMainView+LeftView.swift in Sources */,
 				E757E6A5281AAE6B0017D5B9 /* RtmSyncManager+ISyncManager.swift in Sources */,
 				E79BEF662741FD43009FA838 /* PKLiveController.swift in Sources */,
-				E757E69F281AAE6B0017D5B9 /* LeancloudManager+Sync.swift in Sources */,
 				E79C264C273D053E00909CD4 /* LiveRoomListController.swift in Sources */,
+				E7D30F062845DC4A0062CFE3 /* SuperAppInvitationSheetManager.swift in Sources */,
 				E79C261F273B737100909CD4 /* MainTableViewCell.swift in Sources */,
 				E79BEF3D273D327F009FA838 /* LiveBottomView.swift in Sources */,
 				E7EDBCC427A3927B00E763A6 /* AgoraVoiceInviteView.swift in Sources */,
@@ -970,6 +1076,8 @@
 				E757E6AA281AAE6B0017D5B9 /* AskSyncManager+ISyncManager.swift in Sources */,
 				E757E65428126F400017D5B9 /* AgoraClubProgramModel.swift in Sources */,
 				E7EDBCC227A2B0F100E763A6 /* AgoraVoiceUsersModel.swift in Sources */,
+				E7D30F082845DC4A0062CFE3 /* UIViewController+Extension.swift in Sources */,
+				E7D30F112845DC4A0062CFE3 /* SuperAppCreateLiveView.swift in Sources */,
 				E79BEF6A27420933009FA838 /* PKApplyInfoModel.swift in Sources */,
 				E7ECC57127E8923200EFA778 /* Array+Extension.swift in Sources */,
 				E757E69E281AAE6B0017D5B9 /* AgoraSyncManager.swift in Sources */,
@@ -977,12 +1085,14 @@
 				E79BEF8527463FA5009FA838 /* BORHomeViewController.swift in Sources */,
 				E79C2636273BC6C400909CD4 /* LiveRandomNameView.swift in Sources */,
 				E79C2642273BE5C500909CD4 /* AlertManager.swift in Sources */,
+				E7D30F0D2845DC4A0062CFE3 /* SuperAppPKInfo.swift in Sources */,
 				E7ECC56F27E8646600EFA778 /* SeatView.swift in Sources */,
+				E7D30F1D2845DC4A0062CFE3 /* SuperAppCreateLiveViewController.swift in Sources */,
 				E7EDBCBA27A28BD300E763A6 /* AgoraVoiceMusicView.swift in Sources */,
 				E79BEFA1274796F7009FA838 /* NetworkManager.swift in Sources */,
 				E79BEF772745036E009FA838 /* PKLiveProgressView.swift in Sources */,
 				E79BEF8427463FA5009FA838 /* BORCreateRoomController.swift in Sources */,
-				E757E6A2281AAE6B0017D5B9 /* LeancloudManager+Internal.swift in Sources */,
+				E7D30F092845DC4A0062CFE3 /* String+Extension+SuperApp.swift in Sources */,
 				E7440E2C277420F200CBF4D8 /* LiveBaseView.swift in Sources */,
 				E757E6AB281AAE6B0017D5B9 /* AgoraJson+Extension.swift in Sources */,
 				E79C2628273B7D3700909CD4 /* LiveRandomName.swift in Sources */,
@@ -1000,6 +1110,7 @@
 				E7499C1B276A078500E799FF /* LiveOnlineView.swift in Sources */,
 				E757E6AC281AAE6B0017D5B9 /* AskSyncManager.swift in Sources */,
 				E7EDBCC027A2A4CA00E763A6 /* RTCRealTimeDataView.swift in Sources */,
+				E7D30F142845DC4A0062CFE3 /* SuperAppInvitationView.swift in Sources */,
 				E79C260F273B689B00909CD4 /* JSONObject.swift in Sources */,
 				E79C25DF273B67DB00909CD4 /* AppDelegate.swift in Sources */,
 				E79C260E273B689B00909CD4 /* AgoraExtension.swift in Sources */,
@@ -1010,13 +1121,14 @@
 				E7EDBCBC27A2918D00E763A6 /* AgoraVoiceMusicModel.swift in Sources */,
 				E757E6AF281AAE6B0017D5B9 /* AskSyncManager+Internal.swift in Sources */,
 				E79C25E1273B67DB00909CD4 /* SceneDelegate.swift in Sources */,
+				E7D30F192845DC4A0062CFE3 /* SuperAppPlayerViewControllerHost.swift in Sources */,
 				E79BEF88274640A6009FA838 /* BORVideoRoomDetailCell.swift in Sources */,
 				E757E69C281AAE6B0017D5B9 /* Utils.swift in Sources */,
+				E7D30F172845DC4A0062CFE3 /* SuperAppMainView+RemoteView.swift in Sources */,
 				E757E69B281AAE6B0017D5B9 /* Log.swift in Sources */,
 				E7EDBCAC27A0F98900E763A6 /* AgoraVoiceController.swift in Sources */,
 				E79C260C273B689B00909CD4 /* MBHUD.swift in Sources */,
 				E757E6B3281AAE6B0017D5B9 /* Blocks.swift in Sources */,
-				E757E6A1281AAE6B0017D5B9 /* LeancloudManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1184,7 +1296,7 @@
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Scene-Examples/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Scene-Examples";
+				INFOPLIST_KEY_CFBundleDisplayName = Scenarios_Examples;
 				INFOPLIST_KEY_NSCameraUsageDescription = "App needs your permission to access camera for video interaction";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "App needs your permission to access microphone for audio interaction";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -1222,7 +1334,7 @@
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Scene-Examples/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Scene-Examples";
+				INFOPLIST_KEY_CFBundleDisplayName = Scenarios_Examples;
 				INFOPLIST_KEY_NSCameraUsageDescription = "App needs your permission to access camera for video interaction";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "App needs your permission to access microphone for audio interaction";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

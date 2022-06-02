@@ -7,16 +7,8 @@
 //
 
 struct KeyCenter {
-    static let AppId: String = "aab8b8f5a8cd4469a63042fcfafe7063"
+    static let AppId: String = <# Entry You AppId#>
 
     // assign token to nil if you have not enabled app certificate
     static var Token: String? = nil
-    
-    public static let LeanCloudAppId = "fkUjxadPMmvYF3F3BI4uvmjo-gzGzoHsz"
-    public static let LeanCloudAppKey = "QAvFS62IOR28GfSFQO5ze45s"
-    
-    /// 游戏
-    static let gameAppSecrets = "rXYVXqcj28uG3AiPL3t4zfbe8TZ20muf"
-    static let gameToken = "aa"
-    static let gameAppId = "10020"
 }

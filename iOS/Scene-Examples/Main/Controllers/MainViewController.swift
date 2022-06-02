@@ -65,6 +65,11 @@ extension MainViewController: AGETableViewDelegate {
             let clubProgramVC = AgoraClubProgramViewController()
             navigationController?.pushViewController(clubProgramVC, animated: true)
             
+        } else if sceneType == .superApp {
+            let vc = SuperAppRoomListViewController(appId: KeyCenter.AppId)
+            vc.title = MainModel.mainDatas()[indexPath.row].title
+            navigationController?.pushViewController(vc, animated: true)
+            
         } else {
             let roomListVC = LiveRoomListController(sceneType: sceneType)
             roomListVC.title = MainModel.mainDatas()[indexPath.row].title

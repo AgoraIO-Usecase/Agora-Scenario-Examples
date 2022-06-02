@@ -1,14 +1,12 @@
 ${PODS_ROOT}/Target Support Files/Pods-Scene-Examples/Pods-Scene-Examples-frameworks.sh
 ${BUILT_PRODUCTS_DIR}/Agora-Scene-Utils/Agora_Scene_Utils.framework
-${PODS_ROOT}/AgoraRtcEngine_iOS_Preview/AgoraRTE.framework
+${PODS_ROOT}/AgoraRtcEngine_iOS_Preview/AgoraPvcExtension.framework
 ${PODS_ROOT}/AgoraRtcEngine_iOS_Preview/AgoraRtcCryptoLoader.framework
 ${PODS_ROOT}/AgoraRtcEngine_iOS_Preview/AgoraRtcKit.framework
-${PODS_ROOT}/AgoraRtcEngine_iOS_Preview/AgoraVideoProcess.framework
+${PODS_ROOT}/AgoraRtcEngine_iOS_Preview/AgoraVideoProcessExtension.framework
+${PODS_ROOT}/AgoraRtcEngine_iOS_Preview/AgoraVideoSegmentationExtension.framework
 ${PODS_ROOT}/AgoraRtcEngine_iOS_Preview/Agoraffmpeg.framework
+${PODS_ROOT}/AgoraRtcEngine_iOS_Preview/BeQuic.framework
 ${PODS_ROOT}/AgoraRtm_iOS/AgoraRtmKit.framework
-${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework
-${BUILT_PRODUCTS_DIR}/GRDB.swift/GRDB.framework
-${BUILT_PRODUCTS_DIR}/LeanCloud/LeanCloud.framework
 ${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework
-${BUILT_PRODUCTS_DIR}/SwiftProtobuf/SwiftProtobuf.framework
 ${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraSyncKit/AgoraSyncKit.framework/AgoraSyncKit

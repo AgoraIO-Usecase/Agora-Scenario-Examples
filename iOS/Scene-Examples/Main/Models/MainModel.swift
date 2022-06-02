@@ -18,6 +18,8 @@ enum SceneType: String {
     case agoraClub = "agoraClub"
     /// PKApply
     case pkApply = "pkApplyInfo"
+    /// 融合cdn
+    case superApp = "superApp"
     
     var alertTitle: String {
         switch self {
@@ -40,6 +42,13 @@ struct MainModel {
         model.desc = "Single_Broadcaster".localized
         model.imageNmae = "pic-single"
         model.sceneType = .singleLive
+        dataArray.append(model)
+        
+        model = MainModel()
+        model.title = "Super App"
+        model.desc = "融合CDN"
+        model.imageNmae = "pic-multiple"
+        model.sceneType = .superApp
         dataArray.append(model)
 
         model = MainModel()
