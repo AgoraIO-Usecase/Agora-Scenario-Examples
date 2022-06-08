@@ -25,7 +25,7 @@ public class ModulesConfig {
                 R.string.app_live_pk_name,
                 R.string.app_live_pk_description,
                 R.drawable.app_banner_livepk,
-                "io.agora.scene.pklive.activity.LivePKListActivity"
+                "io.agora.scene.pklive.RoomListActivity"
         ));
         // Live PK by CDN
         this.moduleInfo.add(new ModuleInfo(

@@ -15,7 +15,7 @@
 
     <!--PKByCDN-->
     <string name="app_live_pk_cdn_name">LivePKByCDN</string>
-    <string name="app_live_pk_cdn_description">Two anchors with different live broadcasts linked the microphone PK across channels, detonating the live broadcast room</string>
+    <string name="app_live_pk_cdn_description">PK by CDN</string>
 
     <!--Club-->
     <string name="app_club_name">Club</string>
