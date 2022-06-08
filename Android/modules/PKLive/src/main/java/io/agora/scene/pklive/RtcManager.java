@@ -31,8 +31,7 @@ import static io.agora.rtc2.video.VideoEncoderConfiguration.VD_960x720;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.SurfaceView;
-import android.view.View;
+import android.view.TextureView;
 import android.widget.FrameLayout;
 
 import java.util.Arrays;
@@ -230,7 +229,7 @@ public class RtcManager {
         if (engine == null) {
             return;
         }
-        View videoView = new SurfaceView(container.getContext());
+        TextureView videoView = new TextureView(container.getContext());
         container.addView(videoView);
         firstVideoFramePendingRuns.put(LOCAL_RTC_UID, firstFrame);
         engine.setupLocalVideo(new VideoCanvas(videoView, RENDER_MODE_HIDDEN, LOCAL_RTC_UID));
@@ -365,14 +364,14 @@ public class RtcManager {
             return;
         }
         if(channelId.equals(publishChannelId)){
-            SurfaceView view = new SurfaceView(container.getContext());
+            TextureView view = new TextureView(container.getContext());
             container.removeAllViews();
             container.addView(view);
             engine.setupRemoteVideo(new VideoCanvas(view, RENDER_MODE_HIDDEN, uid));
         }else{
             RtcConnection rtcConnection = connectionMap.get(channelId);
             if(rtcConnection != null){
-                SurfaceView view = new SurfaceView(container.getContext());
+                TextureView view = new TextureView(container.getContext());
                 container.removeAllViews();
                 container.addView(view);
                 engine.setupRemoteVideoEx(new VideoCanvas(view, RENDER_MODE_HIDDEN, uid), rtcConnection);

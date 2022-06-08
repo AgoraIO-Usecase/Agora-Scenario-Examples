@@ -112,18 +112,22 @@ public class HostDetailActivity extends AppCompatActivity {
         mBinding.messageList.setAdapter(mMessageAdapter);
 
         mBinding.btnStopPk.setOnClickListener(v -> {
-            if(pkApplyInfoModel != null){
-                roomManager.applyPKEnd(pkApplyInfoModel);
-                pkApplyInfoModel = null;
-            }
-            if(exPkApplyInfoModel != null){
-                roomManager.applyPKEnd(exPkApplyInfoModel);
-                exPkApplyInfoModel = null;
-            }
+            endPK();
         });
 
         initRoomManager();
         initRtcManager();
+    }
+
+    private void endPK() {
+        if(pkApplyInfoModel != null){
+            roomManager.applyPKEnd(pkApplyInfoModel);
+            pkApplyInfoModel = null;
+        }
+        if(exPkApplyInfoModel != null){
+            roomManager.applyPKEnd(exPkApplyInfoModel);
+            exPkApplyInfoModel = null;
+        }
     }
 
     private void showHostListDialog() {
@@ -243,7 +247,13 @@ public class HostDetailActivity extends AppCompatActivity {
 
                 @Override
                 public void onUserOffline(String channelId, int uid) {
-
+                    runOnUiThread(() -> {
+                        mBinding.pkVideoContainer.setVisibility(View.GONE);
+                        mBinding.pkVideoContainer.removeAllViews();
+                        mBinding.ivPkIcon.setVisibility(View.GONE);
+                        mBinding.btnStopPk.setVisibility(View.GONE);
+                        endPK();
+                    });
                 }
             });
         }else{

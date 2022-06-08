@@ -36,7 +36,9 @@ public class RoomListActivity extends AppCompatActivity {
             protected void onRefresh() {
                 RoomManager.getInstance().getAllRooms(dataList -> runOnUiThread(() -> {
                     mDataList.clear();
-                    mDataList.addAll(dataList);
+                    if(dataList != null){
+                        mDataList.addAll(dataList);
+                    }
                     notifyDataSetChanged();
                     triggerDataListUpdateRun();
                 }));

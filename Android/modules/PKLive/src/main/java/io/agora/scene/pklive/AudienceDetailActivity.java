@@ -1,10 +1,12 @@
 package io.agora.scene.pklive;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.lang.ref.WeakReference;
@@ -24,6 +26,14 @@ public class AudienceDetailActivity extends AppCompatActivity {
     private PkLiveAudienceDetailActivityBinding mBinding;
     private RoomManager.RoomInfo roomInfo;
     private LiveRoomMessageListView.LiveRoomMessageAdapter<RoomManager.MessageInfo> mMessageAdapter;
+    private final RoomManager.DataCallback<String> roomDeleteCallback = new RoomManager.DataCallback<String>() {
+        @Override
+        public void onObtained(String data) {
+            if(data.equals(roomInfo.roomId)){
+                runOnUiThread(() -> showRoomEndDialog());
+            }
+        }
+    };
     private final RoomManager.DataCallback<RoomManager.GiftInfo> giftInfoDataCallback = new RoomManager.DataCallback<RoomManager.GiftInfo>() {
         @Override
         public void onObtained(RoomManager.GiftInfo data) {
@@ -41,6 +51,9 @@ public class AudienceDetailActivity extends AppCompatActivity {
         }
     };
     private final RoomManager.DataCallback<RoomManager.PKInfoModel> pkInfoModelDataCallback = data -> runOnUiThread(() -> {
+        if(data == null){
+            return;
+        }
         if (data.status == RoomManager.PKApplyInfoStatus.accept) {
             // 开始PK
             rtcManager.joinChannel(data.roomId, "", getString(R.string.rtc_app_token), false, new RtcManager.OnChannelListener() {
@@ -76,6 +89,7 @@ public class AudienceDetailActivity extends AppCompatActivity {
             mBinding.ivPkIcon.setVisibility(View.GONE);
         }
     });
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -114,6 +128,8 @@ public class AudienceDetailActivity extends AppCompatActivity {
         roomManager.joinRoom(roomInfo.roomId, () -> {
             roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, new WeakReference<>(giftInfoDataCallback));
             roomManager.subscribePKInfoEvent(roomInfo.roomId, new WeakReference<>(pkInfoModelDataCallback));
+            roomManager.subscriptRoomEvent(roomInfo.roomId, null, new WeakReference<>(roomDeleteCallback));
+            roomManager.getPkInfo(roomInfo.roomId, pkInfoModelDataCallback);
         });
     }
 
@@ -143,6 +159,20 @@ public class AudienceDetailActivity extends AppCompatActivity {
                 runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_left_suffix))));
             }
         });
+    }
+
+    private void showRoomEndDialog(){
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.common_tip)
+                .setMessage(R.string.common_tip_room_closed)
+                .setCancelable(false)
+                .setPositiveButton(R.string.common_yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .show();
     }
 
     private void showGiftGridDialog() {

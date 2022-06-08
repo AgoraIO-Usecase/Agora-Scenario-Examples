@@ -17,16 +17,20 @@
 
         <activity
             android:name=".RoomListActivity"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".PreviewActivity" />
-        <activity android:name=".HostDetailActivity" />
-        <activity android:name=".AudienceDetailActivity" />
+        <activity android:name=".PreviewActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".HostDetailActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".AudienceDetailActivity"
+            android:launchMode="singleTop"/>
 
     </application>
 

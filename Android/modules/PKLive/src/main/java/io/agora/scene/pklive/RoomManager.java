@@ -156,13 +156,45 @@ public class RoomManager {
         });
     }
 
-    public void getPkApplyInfo(String roomId, DataCallback<PKApplyInfoModel> success) {
+    public void getPkInfo(String roomId, DataCallback<PKInfoModel> success) {
         checkInitialized();
         SceneReference sceneReference = sceneMap.get(roomId);
         if (sceneReference == null) {
             return;
         }
         sceneReference.get(SYNC_MANAGER_PK_INFO, new Sync.DataItemCallback() {
+            @Override
+            public void onSuccess(IObject result) {
+                if (success != null) {
+                    PKInfoModel data = null;
+                    try {
+                        data = result.toObject(PKInfoModel.class);
+                        data.objectId = result.getId();
+                    } catch (Exception e) {
+                        // do nothing
+                    }
+                    success.onObtained(data);
+                }
+            }
+
+            @Override
+            public void onFail(SyncManagerException exception) {
+                if (exception.getMessage().contains("empty")) {
+                    if (success != null) {
+                        success.onObtained(null);
+                    }
+                }
+            }
+        });
+    }
+
+    public void getPkApplyInfo(String roomId, DataCallback<PKApplyInfoModel> success) {
+        checkInitialized();
+        SceneReference sceneReference = sceneMap.get(roomId);
+        if (sceneReference == null) {
+            return;
+        }
+        sceneReference.get(SYNC_MANAGER_PK_APPLY_INFO, new Sync.DataItemCallback() {
             @Override
             public void onSuccess(IObject result) {
                 if (success != null) {
@@ -227,7 +259,7 @@ public class RoomManager {
         PKInfoModel pkInfoModel = new PKInfoModel();
         pkInfoModel.status = applyInfo.status;
         pkInfoModel.roomId = applyInfo.targetUserId.equals(getCacheUserId()) ? roomId : applyInfo.targetRoomId;
-        pkInfoModel.userId = !TextUtils.isEmpty(applyInfo.targetUserId) ? applyInfo.targetUserId : getCacheUserId();
+        pkInfoModel.userId = applyInfo.targetUserId;
         sceneReference.update(SYNC_MANAGER_PK_INFO, pkInfoModel, new Sync.DataItemCallback() {
             @Override
             public void onSuccess(IObject result) {
@@ -355,7 +387,7 @@ public class RoomManager {
         PKApplyInfoModel infoModel = new PKApplyInfoModel();
         infoModel.roomId = pkApplyInfoModel.roomId;
         infoModel.targetRoomId = roomId;
-        infoModel.targetUserId = getCacheUserId();
+        infoModel.targetUserId = pkApplyInfoModel.targetUserId;
         infoModel.status = PKApplyInfoStatus.end;
         sceneReference.update(SYNC_MANAGER_PK_APPLY_INFO, infoModel, new Sync.DataItemCallback() {
             @Override
@@ -569,7 +601,7 @@ public class RoomManager {
         });
     }
 
-    public void subscriptRoomEvent(String roomId, WeakReference<DataCallback<RoomInfo>> addOrUpdate, WeakReference<DataCallback<RoomInfo>> delete) {
+    public void subscriptRoomEvent(String roomId, WeakReference<DataCallback<RoomInfo>> addOrUpdate, WeakReference<DataCallback<String>> delete) {
         checkInitialized();
         SceneReference sceneReference = sceneMap.get(roomId);
         if (sceneReference == null) {
@@ -600,11 +632,10 @@ public class RoomManager {
 
             @Override
             public void onDeleted(IObject item) {
-                RoomInfo roomInfo = item.toObject(RoomInfo.class);
                 if (delete != null) {
-                    DataCallback<RoomInfo> callback = delete.get();
+                    DataCallback<String> callback = delete.get();
                     if (callback != null) {
-                        callback.onObtained(roomInfo);
+                        callback.onObtained(item.getId());
                     }
                 }
             }
