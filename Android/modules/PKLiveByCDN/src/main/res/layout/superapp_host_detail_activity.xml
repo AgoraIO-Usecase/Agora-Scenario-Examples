@@ -21,8 +21,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="8dp"
+        android:layout_marginHorizontal="16dp"
+        android:fitsSystemWindows="true"
+        android:layout_marginVertical="8dp"
         android:orientation="horizontal">
 
         <io.agora.uiwidget.function.LiveHostNameView

@@ -22,6 +22,7 @@ import io.agora.uiwidget.function.LiveToolsDialog;
 import io.agora.uiwidget.function.OnlineUserListDialog;
 import io.agora.uiwidget.function.TextInputDialog;
 import io.agora.uiwidget.utils.RandomUtil;
+import io.agora.uiwidget.utils.StatusBarUtil;
 
 public class HostDetailActivity extends AppCompatActivity {
     private final RtcManager rtcManager = new RtcManager();
@@ -82,6 +83,7 @@ public class HostDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = PkLiveHostDetailActivityBinding.inflate(LayoutInflater.from(this));
         setContentView(mBinding.getRoot());
+        StatusBarUtil.hideStatusBar(getWindow(), false);
         roomInfo = (RoomManager.RoomInfo) getIntent().getSerializableExtra("roomInfo");
 
         // 房间信息

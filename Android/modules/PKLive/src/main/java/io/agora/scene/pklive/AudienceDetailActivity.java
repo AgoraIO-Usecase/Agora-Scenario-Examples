@@ -17,6 +17,7 @@ import io.agora.uiwidget.function.GiftGridDialog;
 import io.agora.uiwidget.function.LiveRoomMessageListView;
 import io.agora.uiwidget.function.TextInputDialog;
 import io.agora.uiwidget.utils.RandomUtil;
+import io.agora.uiwidget.utils.StatusBarUtil;
 
 public class AudienceDetailActivity extends AppCompatActivity {
 
@@ -96,6 +97,7 @@ public class AudienceDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = PkLiveAudienceDetailActivityBinding.inflate(LayoutInflater.from(this));
         setContentView(mBinding.getRoot());
+        StatusBarUtil.hideStatusBar(getWindow(), false);
         roomInfo = (RoomManager.RoomInfo) getIntent().getSerializableExtra("roomInfo");
 
         // 房间信息
@@ -162,6 +164,9 @@ public class AudienceDetailActivity extends AppCompatActivity {
     }
 
     private void showRoomEndDialog(){
+        if(isDestroyed()){
+            return;
+        }
         new AlertDialog.Builder(this)
                 .setTitle(R.string.common_tip)
                 .setMessage(R.string.common_tip_room_closed)

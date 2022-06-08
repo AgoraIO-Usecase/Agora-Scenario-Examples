@@ -17,6 +17,7 @@ import java.util.List;
 import io.agora.rtc2.video.VideoEncoderConfiguration;
 import io.agora.uiwidget.function.PreviewControlView;
 import io.agora.uiwidget.function.VideoSettingDialog;
+import io.agora.uiwidget.utils.StatusBarUtil;
 
 public class PreviewActivity extends AppCompatActivity {
     private static final String TAG = "PreviewActivity";
@@ -26,6 +27,7 @@ public class PreviewActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pk_live_preview_activity);
+        StatusBarUtil.hideStatusBar(getWindow(), false);
         AndPermission.with(this)
                 .runtime()
                 .permission(Permission.Group.CAMERA, Permission.Group.MICROPHONE)

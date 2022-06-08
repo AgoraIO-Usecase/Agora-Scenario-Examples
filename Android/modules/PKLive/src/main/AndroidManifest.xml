@@ -11,18 +11,22 @@
         <activity
             android:name=".RoomListActivity"
             android:theme="@style/pkLiveTheme"
+            android:screenOrientation="behind"
             android:launchMode="singleTop"/>
         <activity
             android:name=".PreviewActivity"
             android:theme="@style/pkLiveTheme"
+            android:screenOrientation="behind"
             android:launchMode="singleTop"/>
         <activity
             android:name=".HostDetailActivity"
             android:theme="@style/pkLiveTheme"
+            android:screenOrientation="behind"
             android:launchMode="singleTop"/>
         <activity
             android:name=".AudienceDetailActivity"
             android:theme="@style/pkLiveTheme"
+            android:screenOrientation="behind"
             android:launchMode="singleTop"/>
 
     </application>
