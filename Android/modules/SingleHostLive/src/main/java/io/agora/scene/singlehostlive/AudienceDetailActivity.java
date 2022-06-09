@@ -4,9 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.lang.ref.WeakReference;
 
 import io.agora.scene.singlehostlive.databinding.SingleHostLiveAudienceDetailActivityBinding;
 import io.agora.uiwidget.function.GiftAnimPlayDialog;
@@ -39,6 +38,24 @@ public class AudienceDetailActivity extends AppCompatActivity {
                         .show();
             });
 
+        }
+
+        @Override
+        public void onFailed(Exception e) {
+
+        }
+    };
+
+    private final RoomManager.DataCallback<String> roomDeleteCallback = new RoomManager.DataCallback<String>() {
+        @Override
+        public void onSuccess(String data) {
+            runOnUiThread(() -> {
+                new AlertDialog.Builder(AudienceDetailActivity.this)
+                        .setTitle(R.string.common_tip)
+                        .setMessage(R.string.common_tip_room_closed)
+                        .setPositiveButton(R.string.common_confirm, (dialog, which) -> finish())
+                        .show();
+            });
         }
 
         @Override
@@ -82,7 +99,10 @@ public class AudienceDetailActivity extends AppCompatActivity {
     }
 
     private void initRoomManager() {
-        roomManager.joinRoom(roomInfo.roomId, () -> roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, new WeakReference<>(giftInfoDataCallback)));
+        roomManager.joinRoom(roomInfo.roomId, () -> {
+            roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, giftInfoDataCallback);
+            roomManager.subscribeRoomDeleteEvent(roomInfo.roomId, roomDeleteCallback);
+        });
     }
 
     private void initRtcManager() {
@@ -136,6 +156,7 @@ public class AudienceDetailActivity extends AppCompatActivity {
 
     @Override
     public void finish() {
+        roomManager.leaveRoom(roomInfo.roomId, false);
         rtcManager.release();
         super.finish();
     }

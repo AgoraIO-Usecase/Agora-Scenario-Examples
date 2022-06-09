@@ -8,8 +8,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.lang.ref.WeakReference;
-
 import io.agora.scene.singlehostlive.databinding.SingleHostLiveHostDetailActivityBinding;
 import io.agora.uiwidget.function.GiftAnimPlayDialog;
 import io.agora.uiwidget.function.LiveRoomMessageListView;
@@ -88,7 +86,7 @@ public class HostDetailActivity extends AppCompatActivity {
     }
 
     private void initRoomManager(){
-        roomManager.joinRoom(roomInfo.roomId, () -> roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, new WeakReference<>(giftInfoDataCallback)));
+        roomManager.joinRoom(roomInfo.roomId, () -> roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, giftInfoDataCallback));
     }
 
     private void initRtcManager() {
@@ -143,7 +141,7 @@ public class HostDetailActivity extends AppCompatActivity {
 
     @Override
     public void finish() {
-        roomManager.destroyRoom(roomInfo.roomId);
+        roomManager.leaveRoom(roomInfo.roomId, true);
         rtcManager.release();
         super.finish();
     }

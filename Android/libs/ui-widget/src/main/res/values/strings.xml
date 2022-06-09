@@ -2,6 +2,7 @@
 <resources>
     <string name="common_tip">Tip</string>
     <string name="common_yes">Yes</string>
+    <string name="common_confirm">Confirm</string>
     <string name="common_cancel">Cancel</string>
     <string name="common_create">Create</string>
     <string name="common_no">No</string>
