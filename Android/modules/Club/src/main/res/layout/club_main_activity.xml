@@ -7,7 +7,6 @@
     <io.agora.uiwidget.basic.TitleBar
         android:id="@+id/title_bar"
         android:layout_width="match_parent"
-        android:fitsSystemWindows="true"
         android:layout_height="wrap_content"/>
 
     <ScrollView

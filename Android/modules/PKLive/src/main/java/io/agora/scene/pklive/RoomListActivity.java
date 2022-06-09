@@ -70,4 +70,10 @@ public class RoomListActivity extends AppCompatActivity {
         intent.putExtra("roomInfo", roomInfo);
         startActivity(intent);
     }
+
+    @Override
+    protected void onDestroy() {
+        RoomManager.getInstance().destroy();
+        super.onDestroy();
+    }
 }

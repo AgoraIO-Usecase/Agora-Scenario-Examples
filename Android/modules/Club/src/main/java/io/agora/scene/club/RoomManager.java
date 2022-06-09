@@ -271,6 +271,13 @@ public class RoomManager {
         });
     }
 
+    public void destroy(){
+        if(isInitialized){
+            Sync.Instance().destroy();
+            isInitialized = false;
+        }
+    }
+
     public void getUserList(String roomId, DataListCallback<UserInfo> callback) {
         checkInitialized();
         SceneReference sceneReference = sceneMap.get(roomId);

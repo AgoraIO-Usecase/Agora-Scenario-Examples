@@ -88,4 +88,10 @@ public class RoomListActivity extends BaseActivity<SuperappRoomListActivityBindi
         intent.putExtra("roomInfo", roomInfo);
         startActivity(intent);
     }
+
+    @Override
+    protected void onDestroy() {
+        RoomManager.getInstance().destroy();
+        super.onDestroy();
+    }
 }

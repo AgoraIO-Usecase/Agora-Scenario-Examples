@@ -679,6 +679,13 @@ public class RoomManager {
         }
     }
 
+    public void destroy(){
+        if(isInitialized){
+            Sync.Instance().destroy();
+            isInitialized = false;
+        }
+    }
+
     private void checkInitialized() {
         if (!isInitialized) {
             throw new RuntimeException("The roomManager must be initialized firstly.");

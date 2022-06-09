@@ -10,6 +10,7 @@
     <application>
         <activity
             android:name=".RoomListActivity"
+            android:process="io.agora.scene.pklive"
             android:theme="@style/pkLiveTheme"
             android:screenOrientation="behind"
             android:launchMode="singleTop"/>
@@ -17,15 +18,18 @@
             android:name=".PreviewActivity"
             android:theme="@style/pkLiveTheme"
             android:screenOrientation="behind"
+            android:process="io.agora.scene.pklive"
             android:launchMode="singleTop"/>
         <activity
             android:name=".HostDetailActivity"
             android:theme="@style/pkLiveTheme"
+            android:process="io.agora.scene.pklive"
             android:screenOrientation="behind"
             android:launchMode="singleTop"/>
         <activity
             android:name=".AudienceDetailActivity"
             android:theme="@style/pkLiveTheme"
+            android:process="io.agora.scene.pklive"
             android:screenOrientation="behind"
             android:launchMode="singleTop"/>
 

@@ -18,19 +18,27 @@
 
         <activity
             android:name="io.agora.scene.pklivebycdn.RoomListActivity"
+            android:process="io.agora.scene.pklivebycdn"
+            android:theme="@style/CommonAppTheme"
             android:screenOrientation="behind" />
 
         <activity
             android:name="io.agora.scene.pklivebycdn.PreviewActivity"
             android:launchMode="singleTop"
+            android:process="io.agora.scene.pklivebycdn"
+            android:theme="@style/CommonAppTheme"
             android:screenOrientation="behind" />
         <activity
             android:name="io.agora.scene.pklivebycdn.HostDetailActivity"
             android:launchMode="singleTop"
+            android:process="io.agora.scene.pklivebycdn"
+            android:theme="@style/CommonAppTheme"
             android:screenOrientation="behind" />
         <activity
             android:name="io.agora.scene.pklivebycdn.AudienceDetailActivity"
             android:launchMode="singleTop"
+            android:process="io.agora.scene.pklivebycdn"
+            android:theme="@style/CommonAppTheme"
             android:screenOrientation="behind" />
 
     </application>

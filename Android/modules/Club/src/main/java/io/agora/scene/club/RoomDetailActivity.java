@@ -37,6 +37,7 @@ import io.agora.uiwidget.function.LiveRoomMessageListView;
 import io.agora.uiwidget.function.OnlineUserListDialog;
 import io.agora.uiwidget.function.TextInputDialog;
 import io.agora.uiwidget.utils.RandomUtil;
+import io.agora.uiwidget.utils.StatusBarUtil;
 import io.agora.uiwidget.utils.UIUtil;
 
 public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBinding> {
@@ -77,6 +78,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        StatusBarUtil.hideStatusBar(getWindow(), false);
         roomInfo = (RoomManager.RoomInfo) getIntent().getSerializableExtra("roomInfo");
 
         mBinding.titleBar
@@ -182,6 +184,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
     }
 
     private void showSameRoomsDialog(List<RoomManager.RoomInfo> sameRooms) {
+        BottomSheetDialog dialog = new BottomSheetDialog(this, R.style.BottomSheetDialog);
         ClubRoomDetailRoomListDialogBinding dialogBinding = ClubRoomDetailRoomListDialogBinding.inflate(LayoutInflater.from(this));
         dialogBinding.listview.setListAdapter(new RoomListAdapter() {
             @Override
@@ -194,12 +197,12 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
             @Override
             protected void onItemClicked(View v, RoomManager.RoomInfo item) {
                 showExitDialog(() -> {
+                    dialog.dismiss();
                     finish();
                     gotoNextPageSafe(v, item);
                 });
             }
         });
-        BottomSheetDialog dialog = new BottomSheetDialog(this, R.style.BottomSheetDialog);
         dialog.setContentView(dialogBinding.getRoot());
         dialog.show();
     }
@@ -214,6 +217,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                 .setTitle(R.string.club_room_detail_leave_room)
                 .setMessage(R.string.club_room_detail_leave_room_msg)
                 .setPositiveButton(R.string.common_yes, (dialog, which) -> {
+                    dialog.dismiss();
                     if (exit != null) {
                         exit.run();
                     }
@@ -382,6 +386,9 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
     }
 
     private void removeUserSeatLayout(String userId) {
+        if(isDestroyed()){
+            return;
+        }
         for (ClubRoomDetailSeatItemBinding seatLayout : seatLayouts) {
             if (seatLayout == null) {
                 continue;
