@@ -18,8 +18,10 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import java.io.IOException;
 import java.util.Locale;
+import java.util.Random;
 
 import io.agora.uiwidget.R;
+import io.agora.uiwidget.utils.RandomUtil;
 
 
 public class LiveRoomUserView extends RelativeLayout {
@@ -78,6 +80,14 @@ public class LiveRoomUserView extends RelativeLayout {
         setMeasuredDimension(width, mHeight);
         int heightSpec = MeasureSpec.makeMeasureSpec(mHeight, MeasureSpec.EXACTLY);
         super.onMeasure(widthMeasureSpec, heightSpec);
+    }
+
+    public void randomUser(int maxUser, int maxIcon){
+        int random = new Random(System.currentTimeMillis()).nextInt(maxUser);
+        setUserCount(random);
+        for (int i = 0; i < Math.min(maxIcon, random); i++) {
+            addUserIcon(RandomUtil.randomLiveRoomIcon(), i);
+        }
     }
 
     public void setUserCount(int total) {

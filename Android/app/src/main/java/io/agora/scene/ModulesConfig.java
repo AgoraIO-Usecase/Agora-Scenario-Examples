@@ -48,6 +48,13 @@ public class ModulesConfig {
                 R.drawable.app_banner_breakout_room,
                 "io.agora.scene.club.MainActivity"
         ));
+        // Voice
+        this.moduleInfo.add(new ModuleInfo(
+                R.string.app_voice_name,
+                R.string.app_voice_description,
+                R.drawable.app_banner_breakout_room,
+                "io.agora.scene.voice.RoomListActivity"
+        ));
     }
 
 

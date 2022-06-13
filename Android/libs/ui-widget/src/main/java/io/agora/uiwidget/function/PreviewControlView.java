@@ -53,8 +53,15 @@ public class PreviewControlView extends FrameLayout {
         mBinding.previewControlSettingBtn.setOnClickListener(onClickListener);
     }
 
-    public void setCameraIcon(boolean visible, OnClickListener onClickListener){
-        mBinding.previewControlSwitchCamera.setVisibility(visible ? View.VISIBLE: View.INVISIBLE);
+    public void setCameraIcon(boolean visible, OnClickListener onClickListener) {
+        setCameraIcon(visible, 0, onClickListener);
+    }
+
+    public void setCameraIcon(boolean visible, int drawableRes, OnClickListener onClickListener) {
+        if (drawableRes > 0) {
+            mBinding.previewControlSwitchCamera.setImageResource(drawableRes);
+        }
+        mBinding.previewControlSwitchCamera.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
         mBinding.previewControlSwitchCamera.setOnClickListener(onClickListener);
     }
 

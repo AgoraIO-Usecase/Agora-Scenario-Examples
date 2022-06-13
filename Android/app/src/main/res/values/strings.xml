@@ -21,4 +21,8 @@
     <string name="app_club_name">Club</string>
     <string name="app_club_description">Watch a movie with everyone</string>
 
+    <!--Voice-->
+    <string name="app_voice_name">Voice</string>
+    <string name="app_voice_description">voice with otherone</string>
+
 </resources>

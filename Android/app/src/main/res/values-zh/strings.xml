@@ -20,4 +20,9 @@
     <string name="app_club_name">超级夜店</string>
     <string name="app_club_description">同一直播间观看同一部电影</string>
 
+    <!--Voice-->
+    <string name="app_voice_name">语聊房</string>
+    <string name="app_voice_description">和其他人一起语音聊天</string>
+
+
 </resources>

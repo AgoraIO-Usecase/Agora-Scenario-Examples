@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:background="@drawable/voice_room_detail_seat_item_bg">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/seat_state_open"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/voice_room_detail_ic_invite" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/seat_state_lock"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:src="@drawable/voice_room_detail_ic_lock" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/seat_user_avatar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/seat_user_mute"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        android:src="@drawable/voice_room_detail_ic_mute" />
+</RelativeLayout>
