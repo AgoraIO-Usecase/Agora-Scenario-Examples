@@ -27,18 +27,6 @@ public class AgoraSyncManager: NSObject {
                                complete: complete)
     }
     
-    /// init
-    /// - Parameters:
-    ///   - config: config of ask
-    ///   - complete: `code = 0` is success, else error
-    public init(askConfig: AskConfig,
-                complete: @escaping SuccessBlockInt) {
-        let tempConfig = AskSyncManager.Config(appId: askConfig.appId,
-                                           channelName: askConfig.channelName)
-        proxy = AskSyncManager(config: tempConfig,
-                           complete: complete)
-    }
-    
     public func createScene(scene: Scene,
                      success: SuccessBlockVoid?,
                      fail: FailBlock?) {
