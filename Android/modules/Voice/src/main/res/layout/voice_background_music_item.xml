@@ -1,0 +1,42 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:background="@drawable/voice_dialog_bg"
+    android:paddingHorizontal="16dp">
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_music"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_centerVertical="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/voice_background_music_icon" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/iv_music"
+        android:layout_centerVertical="true">
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:textAlignment="gravity"
+            android:gravity="center_vertical"
+            android:textSize="12sp"
+            android:textColor="@android:color/white"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_below="@id/tv_title"
+            android:layout_marginTop="6dp"
+            android:textAlignment="gravity"
+            android:gravity="center_vertical"
+            android:textSize="10sp"
+            android:textColor="#FF9BA2AB"/>
+    </RelativeLayout>
+</RelativeLayout>

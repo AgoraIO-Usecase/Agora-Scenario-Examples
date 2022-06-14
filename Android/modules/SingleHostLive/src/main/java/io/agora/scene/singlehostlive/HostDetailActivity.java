@@ -8,13 +8,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.lang.ref.WeakReference;
-
 import io.agora.scene.singlehostlive.databinding.SingleHostLiveHostDetailActivityBinding;
 import io.agora.uiwidget.function.GiftAnimPlayDialog;
 import io.agora.uiwidget.function.LiveRoomMessageListView;
 import io.agora.uiwidget.function.LiveToolsDialog;
 import io.agora.uiwidget.function.TextInputDialog;
+import io.agora.uiwidget.utils.StatusBarUtil;
 
 public class HostDetailActivity extends AppCompatActivity {
     private final RtcManager rtcManager = new RtcManager();
@@ -50,6 +49,7 @@ public class HostDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = SingleHostLiveHostDetailActivityBinding.inflate(LayoutInflater.from(this));
         setContentView(mBinding.getRoot());
+        StatusBarUtil.hideStatusBar(getWindow(), false);
         roomInfo = (RoomManager.RoomInfo) getIntent().getSerializableExtra("roomInfo");
 
         // 房间信息
@@ -86,7 +86,7 @@ public class HostDetailActivity extends AppCompatActivity {
     }
 
     private void initRoomManager(){
-        roomManager.joinRoom(roomInfo.roomId, () -> roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, new WeakReference<>(giftInfoDataCallback)));
+        roomManager.joinRoom(roomInfo.roomId, () -> roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, giftInfoDataCallback));
     }
 
     private void initRtcManager() {
@@ -141,7 +141,7 @@ public class HostDetailActivity extends AppCompatActivity {
 
     @Override
     public void finish() {
-        roomManager.destroyRoom(roomInfo.roomId);
+        roomManager.leaveRoom(roomInfo.roomId, true);
         rtcManager.release();
         super.finish();
     }

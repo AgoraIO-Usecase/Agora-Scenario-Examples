@@ -9,25 +9,28 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
-        android:icon="@mipmap/pk_ic_launcher"
-        android:label="@string/pk_app_name"
-        android:roundIcon="@mipmap/pk_ic_launcher_round"
+        android:icon="@drawable/pk_live_icon_launcher"
+        android:label="@string/pk_live_app_name"
         android:supportsRtl="true"
-        android:theme="@style/pk_Theme.AgoraSceneAndroid"
+        android:theme="@style/pkLiveTheme"
         tools:ignore="AllowBackup">
 
         <activity
-            android:name="io.agora.scene.pklive.activity.SplashActivity"
-            android:exported="true">
+            android:name=".RoomListActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name="io.agora.scene.pklive.activity.LivePKListActivity" />
-        <activity android:name="io.agora.scene.pklive.activity.HostPKActivity" />
-        <activity android:name="io.agora.scene.pklive.activity.AudienceActivity" />
+        <activity android:name=".PreviewActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".HostDetailActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".AudienceDetailActivity"
+            android:launchMode="singleTop"/>
 
     </application>
 

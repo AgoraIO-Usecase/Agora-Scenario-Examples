@@ -23,6 +23,7 @@ import io.agora.example.base.BaseActivity;
 import io.agora.scene.club.RoomManager.RoomInfo;
 import io.agora.scene.club.databinding.ClubRoomListActivityBinding;
 import io.agora.uiwidget.utils.RandomUtil;
+import io.agora.uiwidget.utils.StatusBarUtil;
 
 public class RoomListActivity extends BaseActivity<ClubRoomListActivityBinding> {
     private final static String[] VIDEO_URLS = new String[]{
@@ -34,7 +35,7 @@ public class RoomListActivity extends BaseActivity<ClubRoomListActivityBinding> 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        StatusBarUtil.hideStatusBar(getWindow(), false);
         RoomManager.getInstance().init(this, getString(R.string.rtm_app_id), getString(R.string.rtm_app_token));
 
         mBinding.titleBar
@@ -114,4 +115,9 @@ public class RoomListActivity extends BaseActivity<ClubRoomListActivityBinding> 
         startActivity(intent);
     }
 
+    @Override
+    protected void onDestroy() {
+        RoomManager.getInstance().destroy();
+        super.onDestroy();
+    }
 }

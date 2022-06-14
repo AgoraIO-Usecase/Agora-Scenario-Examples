@@ -145,16 +145,13 @@ public class RoomManager {
             @Override
             public void onSuccess(SceneReference sceneReference) {
                 sceneMap.put(roomId, sceneReference);
-                Runnable successRun = new Runnable() {
-                    @Override
-                    public void run() {
-                        List<Runnable> runnables = roomJoinedRuns.get(roomId);
-                        if (runnables != null) {
-                            for (Runnable runnable : runnables) {
-                                mainHandler.post(runnable);
-                            }
-                            runnables.clear();
+                Runnable successRun = () -> {
+                    List<Runnable> runnables = roomJoinedRuns.get(roomId);
+                    if (runnables != null) {
+                        for (Runnable runnable : runnables) {
+                            mainHandler.post(runnable);
                         }
+                        runnables.clear();
                     }
                 };
                 if(isHost){
@@ -173,29 +170,26 @@ public class RoomManager {
 
     private void updatePKInfo(String roomId, String userIdPK, Runnable successRun) {
         checkInitialized();
-        doOnRoomJoined(roomId, new Runnable() {
-            @Override
-            public void run() {
-                SceneReference sceneReference = sceneMap.get(roomId);
-                if(sceneReference == null){
-                    return;
-                }
-                PKInfo pkInfo = new PKInfo();
-                pkInfo.userIdPK = userIdPK;
-                sceneReference.update(pkInfo.toObjectMap(), new Sync.DataItemCallback() {
-                    @Override
-                    public void onSuccess(IObject result) {
-                        if(successRun != null){
-                            successRun.run();
-                        }
-                    }
-
-                    @Override
-                    public void onFail(SyncManagerException exception) {
-
-                    }
-                });
+        doOnRoomJoined(roomId, () -> {
+            SceneReference sceneReference = sceneMap.get(roomId);
+            if(sceneReference == null){
+                return;
             }
+            PKInfo pkInfo = new PKInfo();
+            pkInfo.userIdPK = userIdPK;
+            sceneReference.update(pkInfo.toObjectMap(), new Sync.DataItemCallback() {
+                @Override
+                public void onSuccess(IObject result) {
+                    if(successRun != null){
+                        successRun.run();
+                    }
+                }
+
+                @Override
+                public void onFail(SyncManagerException exception) {
+
+                }
+            });
         });
     }
 
@@ -230,7 +224,7 @@ public class RoomManager {
     }
 
 
-    public void localUserEnterRoom(Context context, String roomId) {
+    public void localUserEnterRoom(Context context, String roomId, DataCallback<UserInfo> callback) {
         checkInitialized();
         doOnRoomJoined(roomId, new Runnable() {
             @Override
@@ -248,11 +242,16 @@ public class RoomManager {
                             @Override
                             public void onSuccess(IObject result) {
                                 localUserSyncId = result.getId();
+                                if(callback != null){
+                                    mainHandler.post(() -> callback.onSuccess(userInfo));
+                                }
                             }
 
                             @Override
                             public void onFail(SyncManagerException exception) {
-
+                                if(callback != null){
+                                    mainHandler.post(() -> callback.onFailed(exception));
+                                }
                             }
                         });
             }
@@ -267,8 +266,7 @@ public class RoomManager {
             return;
         }
         sceneReference.collection(COLLECTION_MEMBER)
-                .document(localUserSyncId)
-                .delete(new Sync.Callback() {
+                .delete(localUserSyncId, new Sync.Callback() {
                     @Override
                     public void onSuccess() {
 
@@ -456,27 +454,16 @@ public class RoomManager {
 
                 @Override
                 public void onDeleted(IObject item) {
-                    RoomInfo roomInfo = item.toObject(RoomInfo.class);
-                    if (roomInfo.roomId.equals(roomId) && callback != null) {
-                        mainHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                callback.onSuccess(true);
-                            }
-                        });
+                    String _roomId = item.getId();
+                    if (roomId.equals(_roomId) && callback != null) {
+                        mainHandler.post(() -> callback.onSuccess(true));
                     }
                 }
 
                 @Override
                 public void onSubscribeError(SyncManagerException ex) {
                     if (callback != null) {
-                        mainHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                callback.onFailed(ex);
-                            }
-                        });
-
+                        mainHandler.post(() -> callback.onFailed(ex));
                     }
                 }
             };
@@ -504,6 +491,13 @@ public class RoomManager {
             runnables.add(runnable);
         } else {
             mainHandler.post(runnable);
+        }
+    }
+
+    public void destroy(){
+        if(isInitialized){
+            Sync.Instance().destroy();
+            isInitialized = false;
         }
     }
 

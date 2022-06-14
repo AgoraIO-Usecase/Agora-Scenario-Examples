@@ -1,10 +1,13 @@
 package io.agora.scene.pklivebycdn;
 
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import java.util.List;
 
@@ -14,6 +17,7 @@ import io.agora.uiwidget.basic.BindingViewHolder;
 import io.agora.uiwidget.databinding.OnlineUserListDialogItemBinding;
 import io.agora.uiwidget.function.LiveToolsDialog;
 import io.agora.uiwidget.function.OnlineUserListDialog;
+import io.agora.uiwidget.utils.StatusBarUtil;
 
 public class HostDetailActivity extends BaseActivity<SuperappHostDetailActivityBinding> {
     private RoomManager.RoomInfo mRoomInfo;
@@ -23,6 +27,7 @@ public class HostDetailActivity extends BaseActivity<SuperappHostDetailActivityB
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StatusBarUtil.hideStatusBar(getWindow(), false);
         mRoomInfo = ((RoomManager.RoomInfo) getIntent().getSerializableExtra("roomInfo"));
 
         mBinding.hostNameView.setName(mRoomInfo.roomName + "(" + mRoomInfo.roomId + ")");
@@ -66,7 +71,10 @@ public class HostDetailActivity extends BaseActivity<SuperappHostDetailActivityB
                 new OnlineUserListDialog.AbsListItemAdapter<RoomManager.UserInfo>() {
                     @Override
                     protected void onItemUpdate(BindingViewHolder<OnlineUserListDialogItemBinding> holder, int position, RoomManager.UserInfo item) {
-                        holder.binding.ivIcon.setImageResource(item.getUserIcon());
+                        RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(),
+                                BitmapFactory.decodeResource(getResources(), item.getUserIcon()));
+                        drawable.setCircular(true);
+                        holder.binding.ivIcon.setImageDrawable(drawable);
                         holder.binding.tvName.setText(item.userName);
                         holder.binding.tvStatus.setOnClickListener(v1 -> {
                             // 开始连麦
@@ -95,7 +103,7 @@ public class HostDetailActivity extends BaseActivity<SuperappHostDetailActivityB
                     // 开始连麦
                     if (mRoomInfo.liveMode == RoomManager.PUSH_MODE_DIRECT_CDN) {
                         rtcManager.stopDirectCDNStreaming(() -> {
-                            rtcManager.startRtcStreaming(mRoomInfo.roomId, RoomManager.getCacheUserId(), true);
+                            rtcManager.startRtcStreaming(mRoomInfo.roomId, getString(R.string.rtc_app_token), RoomManager.getCacheUserId(), true);
                         });
                     }
                     // 显示远程视图
@@ -125,7 +133,7 @@ public class HostDetailActivity extends BaseActivity<SuperappHostDetailActivityB
 
             @Override
             public void onUserJoined(int uid) {
-                rtcManager.renderRemoteVideo(mBinding.remoteVideoControl.getVideoContainer(), uid, null);
+                rtcManager.renderRemoteVideo(mBinding.remoteVideoControl.getVideoContainer(), uid);
             }
 
             @Override
@@ -133,14 +141,13 @@ public class HostDetailActivity extends BaseActivity<SuperappHostDetailActivityB
 
             }
         });
-        rtcManager.renderLocalVideo(mBinding.fullVideoContainer, null);
+        rtcManager.renderLocalVideo(mBinding.fullVideoContainer);
 
         if (mRoomInfo.liveMode == RoomManager.PUSH_MODE_RTC) {
-            rtcManager.startRtcStreaming(mRoomInfo.roomId, RoomManager.getCacheUserId(), true);
+            rtcManager.startRtcStreaming(mRoomInfo.roomId, getString(R.string.rtc_app_token), RoomManager.getCacheUserId(), true);
         } else {
             rtcManager.startDirectCDNStreaming(mRoomInfo.roomId);
         }
-
     }
 
 

@@ -16,6 +16,7 @@ import java.util.List;
 import io.agora.example.base.BaseActivity;
 import io.agora.scene.pklivebycdn.databinding.SuperappRoomListActivityBinding;
 import io.agora.uiwidget.function.RoomListView;
+import io.agora.uiwidget.utils.StatusBarUtil;
 
 public class RoomListActivity extends BaseActivity<SuperappRoomListActivityBinding> {
     private final String TAG = "RoomListActivity";
@@ -24,6 +25,7 @@ public class RoomListActivity extends BaseActivity<SuperappRoomListActivityBindi
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         RoomManager.getInstance().init(this, getString(R.string.superapp_agora_app_id), getString(R.string.superapp_agora_token));
+        StatusBarUtil.hideStatusBar(getWindow(), false);
 
         AndPermission.with(this)
                 .runtime()
@@ -85,5 +87,11 @@ public class RoomListActivity extends BaseActivity<SuperappRoomListActivityBindi
         Intent intent = new Intent(RoomListActivity.this, AudienceDetailActivity.class);
         intent.putExtra("roomInfo", roomInfo);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        RoomManager.getInstance().destroy();
+        super.onDestroy();
     }
 }

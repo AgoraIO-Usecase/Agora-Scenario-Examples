@@ -19,6 +19,7 @@ import io.agora.example.base.BaseActivity;
 import io.agora.rtc2.video.VideoEncoderConfiguration;
 import io.agora.scene.pklivebycdn.databinding.SuperappPreviewActivityBinding;
 import io.agora.uiwidget.function.VideoSettingDialog;
+import io.agora.uiwidget.utils.StatusBarUtil;
 
 public class PreviewActivity extends BaseActivity<SuperappPreviewActivityBinding> {
     private static final String TAG = "PreviewActivity";
@@ -27,6 +28,7 @@ public class PreviewActivity extends BaseActivity<SuperappPreviewActivityBinding
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StatusBarUtil.hideStatusBar(getWindow(), false);
         AndPermission.with(this)
                 .runtime()
                 .permission(Permission.Group.CAMERA, Permission.Group.MICROPHONE)
@@ -110,7 +112,7 @@ public class PreviewActivity extends BaseActivity<SuperappPreviewActivityBinding
         rtcManager.init(this, getString(R.string.superapp_agora_app_id), null);
 
         FrameLayout surfaceViewContainer = findViewById(R.id.surface_view_container);
-        rtcManager.renderLocalVideo(surfaceViewContainer, null);
+        rtcManager.renderLocalVideo(surfaceViewContainer);
     }
 
     @Override

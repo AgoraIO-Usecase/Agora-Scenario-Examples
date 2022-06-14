@@ -6,11 +6,12 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 
 import java.io.Serializable;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -32,6 +33,7 @@ public class RoomManager {
     private static volatile boolean isInitialized = false;
 
     private final Map<String, SceneReference> sceneMap = new HashMap<>();
+    private final List<WrapEventListener<?>> eventListeners = new ArrayList<>();
 
     public static RoomManager getInstance() {
         if (INSTANCE == null) {
@@ -130,7 +132,7 @@ public class RoomManager {
         SceneReference sceneReference = sceneMap.get(roomId);
         if (sceneReference != null) {
             Log.d(TAG, "The room of " + roomId + " has joined.");
-            if(successRun != null){
+            if (successRun != null) {
                 successRun.run();
             }
             return;
@@ -139,7 +141,7 @@ public class RoomManager {
             @Override
             public void onSuccess(SceneReference sceneReference) {
                 sceneMap.put(roomId, sceneReference);
-                if(successRun != null){
+                if (successRun != null) {
                     successRun.run();
                 }
             }
@@ -158,58 +160,69 @@ public class RoomManager {
             return;
         }
         sceneReference.update(SYNC_MANAGER_GIFT_INFO, giftInfo, new Sync.DataItemCallback() {
-                    @Override
-                    public void onSuccess(IObject result) {
+            @Override
+            public void onSuccess(IObject result) {
 
-                    }
+            }
 
-                    @Override
-                    public void onFail(SyncManagerException exception) {
+            @Override
+            public void onFail(SyncManagerException exception) {
 
-                    }
-                });
+            }
+        });
     }
 
-    public void subscribeGiftReceiveEvent(String roomId, WeakReference<DataCallback<GiftInfo>> callback){
+    public void subscribeGiftReceiveEvent(String roomId, DataCallback<GiftInfo> callback) {
         checkInitialized();
         SceneReference sceneReference = sceneMap.get(roomId);
         if (sceneReference == null) {
             return;
         }
-        sceneReference.subscribe(SYNC_MANAGER_GIFT_INFO, new Sync.EventListener() {
-            @Override
-            public void onCreated(IObject item) {
-
-            }
-
-            @Override
-            public void onUpdated(IObject item) {
-                GiftInfo giftInfo = item.toObject(GiftInfo.class);
-                if(callback != null){
-                    DataCallback<GiftInfo> cb = callback.get();
-                    if(cb != null){
-                        cb.onSuccess(giftInfo);
-                    }
+        WrapEventListener<DataCallback<GiftInfo>> listener = null;
+        if(callback != null){
+            listener = new WrapEventListener<DataCallback<GiftInfo>>(roomId, callback) {
+                @Override
+                public void onUpdated(IObject item) {
+                    GiftInfo giftInfo = item.toObject(GiftInfo.class);
+                    object.onSuccess(giftInfo);
                 }
-            }
 
-            @Override
-            public void onDeleted(IObject item) {
-
-            }
-
-            @Override
-            public void onSubscribeError(SyncManagerException ex) {
-                if(callback != null){
-                    DataCallback<GiftInfo> cb = callback.get();
-                    if(cb != null){
-                        cb.onFailed(ex);
-                    }
+                @Override
+                public void onSubscribeError(SyncManagerException ex) {
+                    object.onFailed(ex);
                 }
-            }
-        });
+            };
+            eventListeners.add(listener);
+        }
+        sceneReference.subscribe(SYNC_MANAGER_GIFT_INFO, listener);
     }
 
+    public void subscribeRoomDeleteEvent(String roomId, DataCallback<String> callback) {
+        checkInitialized();
+        SceneReference sceneReference = sceneMap.get(roomId);
+        if (sceneReference == null) {
+            return;
+        }
+        WrapEventListener<DataCallback<String>> listener = null;
+        if(callback != null){
+            listener = new WrapEventListener<DataCallback<String>>(roomId, callback) {
+                @Override
+                public void onDeleted(IObject item) {
+                    super.onDeleted(item);
+                    if(roomId.equals(item.getId())){
+                        object.onSuccess(item.getId());
+                    }
+                }
+
+                @Override
+                public void onSubscribeError(SyncManagerException ex) {
+                    object.onFailed(ex);
+                }
+            };
+            eventListeners.add(listener);
+        }
+        sceneReference.subscribe(listener);
+    }
 
     public static String getCacheUserId() {
         String userId = PreferenceUtil.get(PREFERENCE_KEY_USER_ID, "");
@@ -224,21 +237,40 @@ public class RoomManager {
         return RandomUtil.randomId() + 10000 + "";
     }
 
-    public void destroyRoom(String roomId) {
+    public void leaveRoom(String roomId, boolean delete) {
         checkInitialized();
         SceneReference sceneReference = sceneMap.get(roomId);
         if (sceneReference != null) {
-            sceneReference.delete(new Sync.Callback() {
-                @Override
-                public void onSuccess() {
-                    sceneMap.remove(roomId);
+            Iterator<WrapEventListener<?>> iterator = eventListeners.iterator();
+            while (iterator.hasNext()){
+                WrapEventListener<?> next = iterator.next();
+                if(next.roomId.equals(roomId)){
+                    sceneReference.unsubscribe(next);
                 }
+            }
+            if(delete){
+                sceneReference.delete(new Sync.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        sceneMap.remove(roomId);
+                    }
 
-                @Override
-                public void onFail(SyncManagerException exception) {
+                    @Override
+                    public void onFail(SyncManagerException exception) {
 
-                }
-            });
+                    }
+                });
+            }else{
+                sceneReference.unsubscribe(null);
+                sceneMap.remove(roomId);
+            }
+        }
+    }
+
+    public void destroy() {
+        if (isInitialized) {
+            Sync.Instance().destroy();
+            isInitialized = false;
         }
     }
 
@@ -306,7 +338,7 @@ public class RoomManager {
             }
             int bgResId = R.drawable.user_profile_image_1;
             Integer id = RoomBgResMap.get(backgroundId);
-            if(id != null){
+            if (id != null) {
                 bgResId = id;
             }
             return bgResId;
@@ -366,17 +398,17 @@ public class RoomManager {
             }
         }
 
-        public int getIconId(){
+        public int getIconId() {
             Integer ret = IconNameResMap.get(iconName);
-            if(ret == null){
+            if (ret == null) {
                 ret = 0;
             }
             return ret;
         }
 
-        public int getGifId(){
+        public int getGifId() {
             Integer ret = GifNameResMap.get(gifName);
-            if(ret == null){
+            if (ret == null) {
                 ret = 0;
             }
             return ret;
@@ -395,5 +427,37 @@ public class RoomManager {
         void onSuccess(T data);
 
         void onFailed(Exception e);
+    }
+
+    private static class WrapEventListener<T> implements Sync.EventListener {
+
+        protected final String roomId;
+        protected final T object;
+
+        public WrapEventListener(String roomId, @NonNull T object) {
+            this.roomId = roomId;
+
+            this.object = object;
+        }
+
+        @Override
+        public void onCreated(IObject item) {
+
+        }
+
+        @Override
+        public void onUpdated(IObject item) {
+
+        }
+
+        @Override
+        public void onDeleted(IObject item) {
+
+        }
+
+        @Override
+        public void onSubscribeError(SyncManagerException ex) {
+
+        }
     }
 }

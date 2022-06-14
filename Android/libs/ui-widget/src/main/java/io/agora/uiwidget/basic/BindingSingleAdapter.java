@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import io.agora.uiwidget.utils.UIUtil;
@@ -47,6 +48,15 @@ public abstract class BindingSingleAdapter<Data, Binding extends ViewBinding> ex
         int itemCount = getItemCount();
         mDataList.addAll(list);
         notifyItemRangeInserted(itemCount, list.size());
+    }
+
+    public void insertAll(Data[] list) {
+        if (list == null) {
+            return;
+        }
+        int itemCount = getItemCount();
+        Collections.addAll(mDataList, list);
+        notifyItemRangeInserted(itemCount, list.length);
     }
 
     public void remove(int index) {

@@ -115,6 +115,16 @@ class SuperAppSyncUtil {
         }
         semp.wait()
         
+        manager?.joinScene(sceneId: sceneId, success: { SceneReference in
+            self.sceneRef = SceneReference
+            semp.signal()
+        }, fail: { e in
+            error = e
+            semp.signal()
+        })
+        
+        semp.wait()
+        
         if let e = error {
             throw e
         }

@@ -15,7 +15,7 @@ extension SuperAppPlayerViewControllerHost {
         let channelId = self.config.sceneId
         
         let config = AgoraRtcEngineConfig()
-        config.appId = config.appId
+        config.appId = self.config.appId
         
         agoraKit = AgoraRtcEngineKit.sharedEngine(with: config,
                                                   delegate: self)

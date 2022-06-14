@@ -20,6 +20,8 @@
         <activity
             android:name=".HomeActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
+            android:process="io.agora.scene.main"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

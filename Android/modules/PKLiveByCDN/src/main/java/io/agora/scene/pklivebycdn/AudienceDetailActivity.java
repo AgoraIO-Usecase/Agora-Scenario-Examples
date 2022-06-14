@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 
 import io.agora.example.base.BaseActivity;
 import io.agora.scene.pklivebycdn.databinding.SuperappAudienceDetailActivityBinding;
+import io.agora.uiwidget.utils.StatusBarUtil;
 
 public class AudienceDetailActivity extends BaseActivity<SuperappAudienceDetailActivityBinding> {
     private RoomManager.RoomInfo mRoomInfo;
@@ -18,10 +19,8 @@ public class AudienceDetailActivity extends BaseActivity<SuperappAudienceDetailA
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StatusBarUtil.hideStatusBar(getWindow(), false);
         mRoomInfo = ((RoomManager.RoomInfo) getIntent().getSerializableExtra("roomInfo"));
-
-        mBinding.hostNameView.setName(mRoomInfo.roomName + "(" + mRoomInfo.roomId + ")");
-        mBinding.hostNameView.setIcon(mRoomInfo.getBgResId());
 
         mBinding.bottomView.setFun1Visible(false)
                 .setFun2Visible(false)
@@ -42,7 +41,18 @@ public class AudienceDetailActivity extends BaseActivity<SuperappAudienceDetailA
 
     private void initRoomManager(){
         roomManager.joinRoom(mRoomInfo.roomId, false);
-        roomManager.localUserEnterRoom(AudienceDetailActivity.this, mRoomInfo.roomId);
+        roomManager.localUserEnterRoom(AudienceDetailActivity.this, mRoomInfo.roomId, new RoomManager.DataCallback<RoomManager.UserInfo>() {
+            @Override
+            public void onSuccess(RoomManager.UserInfo data) {
+                mBinding.hostNameView.setName(data.userName);
+                mBinding.hostNameView.setIcon(data.getUserIcon());
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                Toast.makeText(AudienceDetailActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
         roomManager.subscriptRoomDestroyEvent(mRoomInfo.roomId, new RoomManager.DataCallback<Boolean>() {
             @Override
             public void onSuccess(Boolean data) {
@@ -73,9 +83,9 @@ public class AudienceDetailActivity extends BaseActivity<SuperappAudienceDetailA
                     if (RoomManager.getCacheUserId().equals(pkInfo.userIdPK)) {
                         rtcManager.stopPlayer();
                         // 连麦对象是自己
-                        rtcManager.startRtcStreaming(mRoomInfo.roomId, RoomManager.getCacheUserId(), false);
+                        rtcManager.startRtcStreaming(mRoomInfo.roomId, getString(R.string.rtc_app_token), RoomManager.getCacheUserId(), false);
                         // 渲染本地和远端视图
-                        rtcManager.renderLocalVideo(mBinding.fullVideoContainer, null);
+                        rtcManager.renderLocalVideo(mBinding.fullVideoContainer);
                         mBinding.remoteVideoControl.setVisibility(View.VISIBLE);
                         isLinking = true;
                     } else if (mRoomInfo.liveMode == RoomManager.PUSH_MODE_DIRECT_CDN) {
@@ -87,9 +97,10 @@ public class AudienceDetailActivity extends BaseActivity<SuperappAudienceDetailA
                     if(isLinking){
                         isLinking = false;
                         mBinding.remoteVideoControl.setVisibility(View.GONE);
-                        rtcManager.stopRtcStreaming(mRoomInfo.roomId, null);
-                        rtcManager.renderPlayerView(mBinding.fullVideoContainer, null);
-                        rtcManager.openPlayerSrc(mRoomInfo.roomId, mRoomInfo.liveMode == RoomManager.PUSH_MODE_DIRECT_CDN);
+                        rtcManager.stopRtcStreaming(mRoomInfo.roomId, () -> {
+                            rtcManager.renderPlayerView(mBinding.fullVideoContainer, null);
+                            rtcManager.openPlayerSrc(mRoomInfo.roomId, mRoomInfo.liveMode == RoomManager.PUSH_MODE_DIRECT_CDN);
+                        });
                     }else if (mRoomInfo.liveMode == RoomManager.PUSH_MODE_DIRECT_CDN){
                         rtcManager.openPlayerSrc(mRoomInfo.roomId, true);
                     }
@@ -117,7 +128,7 @@ public class AudienceDetailActivity extends BaseActivity<SuperappAudienceDetailA
 
             @Override
             public void onUserJoined(int uid) {
-                rtcManager.renderRemoteVideo(mBinding.remoteVideoControl.getVideoContainer(), uid, null);
+                rtcManager.renderRemoteVideo(mBinding.remoteVideoControl.getVideoContainer(), uid);
             }
 
             @Override

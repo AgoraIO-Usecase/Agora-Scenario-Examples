@@ -5,6 +5,8 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
@@ -27,10 +29,24 @@ public abstract class BaseActivity<B extends ViewBinding> extends AppCompatActiv
         if (mBinding == null) {
             BaseUtil.toast(this, "Inflate Error");
             finish();
-        } else
+        } else{
             super.setContentView(mBinding.getRoot());
+        }
+    }
 
-//        WindowCompat.setDecorFitsSystemWindows(getWindow(), true)
+    @Override
+    public void setContentView(int layoutResID) {
+        throw new RuntimeException("The content view has been filled by mBinding root view!");
+    }
+
+    @Override
+    public void setContentView(View view) {
+        throw new RuntimeException("The content view has been filled by mBinding root view!");
+    }
+
+    @Override
+    public void setContentView(View view, ViewGroup.LayoutParams params) {
+        throw new RuntimeException("The content view has been filled by mBinding root view!");
     }
 
     public void showLoading() {

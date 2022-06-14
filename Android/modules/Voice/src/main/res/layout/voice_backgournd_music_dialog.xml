@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/voice_dialog_bg">
+
+    <RelativeLayout
+        android:id="@+id/rl_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/title_bar_back_white" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="@string/voice_background_music_title"
+            android:textAlignment="gravity"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_volume_control_layout"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:layout_below="@id/rl_title_layout">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_volume_icon"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/voice_background_music_ic_volume" />
+
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/sb_volume"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_marginEnd="16dp"
+            android:layout_toEndOf="@id/iv_volume_icon"
+            android:max="100"
+            android:maxHeight="4dp"
+            android:minHeight="4dp"
+            android:progressDrawable="@drawable/voice_background_music_volume_progress"
+            android:thumb="@drawable/voice_background_music_volume_thumb"
+            tools:progress="50" />
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_music"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_volume_control_layout"
+        android:layout_marginVertical="16dp"
+        android:orientation="vertical"
+        android:overScrollMode="never"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:reverseLayout="false" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_credit"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@id/rv_music"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/voice_background_music_credit_bg"
+        android:gravity="center"
+        android:textAlignment="gravity" />
+</RelativeLayout>

@@ -16,19 +16,18 @@
         android:layout_height="@dimen/preview_control_shadow_height"
         android:background="@drawable/preview_control_shadow_bg"/>
 
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/preview_control_top_btn_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/preview_control_btn_height"
-        android:paddingStart="@dimen/preview_control_content_padding"
-        android:paddingEnd="@dimen/preview_control_content_padding">
+        android:fitsSystemWindows="true"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/preview_control_content_padding">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/preview_control_close"
             android:layout_width="@dimen/preview_control_btn_height"
             android:layout_height="@dimen/preview_control_btn_height"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
+            android:layout_gravity="start|bottom"
             android:src="@drawable/preview_control_close_button" />
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -36,9 +35,8 @@
             android:layout_width="@dimen/preview_control_btn_height"
             android:layout_height="@dimen/preview_control_btn_height"
             android:src="@drawable/preview_control_switch_camera"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true" />
-    </RelativeLayout>
+            android:layout_gravity="end|bottom" />
+    </FrameLayout>
 
     <RelativeLayout
         android:id="@+id/prepare_name_edit_layout"

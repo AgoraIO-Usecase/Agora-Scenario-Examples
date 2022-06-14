@@ -10,6 +10,8 @@
     <application>
         <activity
             android:name=".ui.MainActivity"
+            android:screenOrientation="behind"
+            android:process="io.agora.scene.breakoutroom"
             android:theme="@style/room_BreakoutRoomAppTheme" />
     </application>
 </manifest>

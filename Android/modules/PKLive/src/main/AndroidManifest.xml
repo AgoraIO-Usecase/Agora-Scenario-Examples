@@ -9,17 +9,29 @@
 
     <application>
         <activity
-            android:name="io.agora.scene.pklive.activity.SplashActivity"
-            android:theme="@style/pk_Theme.AgoraSceneAndroid" />
+            android:name=".RoomListActivity"
+            android:process="io.agora.scene.pklive"
+            android:theme="@style/pkLiveTheme"
+            android:screenOrientation="behind"
+            android:launchMode="singleTop"/>
         <activity
-            android:name="io.agora.scene.pklive.activity.LivePKListActivity"
-            android:theme="@style/pk_Theme.AgoraSceneAndroid" />
+            android:name=".PreviewActivity"
+            android:theme="@style/pkLiveTheme"
+            android:screenOrientation="behind"
+            android:process="io.agora.scene.pklive"
+            android:launchMode="singleTop"/>
         <activity
-            android:name="io.agora.scene.pklive.activity.HostPKActivity"
-            android:theme="@style/pk_Theme.AgoraSceneAndroid" />
+            android:name=".HostDetailActivity"
+            android:theme="@style/pkLiveTheme"
+            android:process="io.agora.scene.pklive"
+            android:screenOrientation="behind"
+            android:launchMode="singleTop"/>
         <activity
-            android:name="io.agora.scene.pklive.activity.AudienceActivity"
-            android:theme="@style/pk_Theme.AgoraSceneAndroid" />
+            android:name=".AudienceDetailActivity"
+            android:theme="@style/pkLiveTheme"
+            android:process="io.agora.scene.pklive"
+            android:screenOrientation="behind"
+            android:launchMode="singleTop"/>
 
     </application>
 

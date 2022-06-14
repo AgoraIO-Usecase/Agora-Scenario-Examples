@@ -19,21 +19,29 @@
         <activity
             android:theme="@style/single_host_live_AppTheme"
             android:name=".RoomListActivity"
+            android:process="io.agora.scene.singlehostlive"
+            android:screenOrientation="behind"
             android:launchMode="singleTop"/>
 
         <activity
             android:theme="@style/single_host_live_AppTheme"
             android:name=".PreviewActivity"
+            android:process="io.agora.scene.singlehostlive"
+            android:screenOrientation="behind"
             android:launchMode="singleTop"/>
 
         <activity
             android:theme="@style/single_host_live_AppTheme"
             android:name=".HostDetailActivity"
+            android:process="io.agora.scene.singlehostlive"
+            android:screenOrientation="behind"
             android:launchMode="singleTop"/>
 
         <activity
             android:theme="@style/single_host_live_AppTheme"
             android:name=".AudienceDetailActivity"
+            android:process="io.agora.scene.singlehostlive"
+            android:screenOrientation="behind"
             android:launchMode="singleTop"/>
 
 

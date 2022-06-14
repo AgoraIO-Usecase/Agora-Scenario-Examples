@@ -4,9 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.lang.ref.WeakReference;
 
 import io.agora.scene.singlehostlive.databinding.SingleHostLiveAudienceDetailActivityBinding;
 import io.agora.uiwidget.function.GiftAnimPlayDialog;
@@ -14,6 +13,7 @@ import io.agora.uiwidget.function.GiftGridDialog;
 import io.agora.uiwidget.function.LiveRoomMessageListView;
 import io.agora.uiwidget.function.TextInputDialog;
 import io.agora.uiwidget.utils.RandomUtil;
+import io.agora.uiwidget.utils.StatusBarUtil;
 
 public class AudienceDetailActivity extends AppCompatActivity {
 
@@ -46,11 +46,30 @@ public class AudienceDetailActivity extends AppCompatActivity {
         }
     };
 
+    private final RoomManager.DataCallback<String> roomDeleteCallback = new RoomManager.DataCallback<String>() {
+        @Override
+        public void onSuccess(String data) {
+            runOnUiThread(() -> {
+                new AlertDialog.Builder(AudienceDetailActivity.this)
+                        .setTitle(R.string.common_tip)
+                        .setMessage(R.string.common_tip_room_closed)
+                        .setPositiveButton(R.string.common_confirm, (dialog, which) -> finish())
+                        .show();
+            });
+        }
+
+        @Override
+        public void onFailed(Exception e) {
+
+        }
+    };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = SingleHostLiveAudienceDetailActivityBinding.inflate(LayoutInflater.from(this));
         setContentView(mBinding.getRoot());
+        StatusBarUtil.hideStatusBar(getWindow(), false);
         roomInfo = (RoomManager.RoomInfo) getIntent().getSerializableExtra("roomInfo");
 
         // 房间信息
@@ -80,7 +99,10 @@ public class AudienceDetailActivity extends AppCompatActivity {
     }
 
     private void initRoomManager() {
-        roomManager.joinRoom(roomInfo.roomId, () -> roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, new WeakReference<>(giftInfoDataCallback)));
+        roomManager.joinRoom(roomInfo.roomId, () -> {
+            roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, giftInfoDataCallback);
+            roomManager.subscribeRoomDeleteEvent(roomInfo.roomId, roomDeleteCallback);
+        });
     }
 
     private void initRtcManager() {
@@ -134,6 +156,7 @@ public class AudienceDetailActivity extends AppCompatActivity {
 
     @Override
     public void finish() {
+        roomManager.leaveRoom(roomInfo.roomId, false);
         rtcManager.release();
         super.finish();
     }

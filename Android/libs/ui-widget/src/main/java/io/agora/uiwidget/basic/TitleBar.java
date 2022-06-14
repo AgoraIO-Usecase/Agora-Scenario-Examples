@@ -19,7 +19,6 @@ public class TitleBar extends FrameLayout {
     private View mDeliverView;
     private ImageView mBackIv;
     private ImageView mUserIv;
-    private ImageView mBgIv;
 
     public TitleBar(@NonNull Context context) {
         this(context, null);
@@ -40,7 +39,6 @@ public class TitleBar extends FrameLayout {
         mDeliverView = findViewById(R.id.title_bar_deliver);
         mBackIv = findViewById(R.id.title_bar_back);
         mUserIv = findViewById(R.id.title_bar_icon_user);
-        mBgIv = findViewById(R.id.title_bar_bg);
     }
 
     public TitleBar setDeliverVisible(boolean visible) {
@@ -57,7 +55,7 @@ public class TitleBar extends FrameLayout {
     }
 
     public TitleBar setBgDrawable(@DrawableRes int drawableRes) {
-        mBgIv.setImageResource(drawableRes);
+        setBackgroundResource(drawableRes);
         return this;
     }
 

@@ -13,6 +13,7 @@ import java.util.List;
 
 import io.agora.uiwidget.basic.TitleBar;
 import io.agora.uiwidget.function.RoomListView;
+import io.agora.uiwidget.utils.StatusBarUtil;
 
 public class RoomListActivity extends AppCompatActivity {
     private final String TAG = "RoomListActivity";
@@ -21,6 +22,7 @@ public class RoomListActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_host_live_room_list_activity);
+        StatusBarUtil.hideStatusBar(getWindow(), false);
 
         RoomManager.getInstance().init(this, getString(R.string.rtm_app_id), getString(R.string.rtm_app_token));
 
@@ -83,5 +85,11 @@ public class RoomListActivity extends AppCompatActivity {
         Intent intent = new Intent(RoomListActivity.this, AudienceDetailActivity.class);
         intent.putExtra("roomInfo", roomInfo);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        RoomManager.getInstance().destroy();
+        super.onDestroy();
     }
 }

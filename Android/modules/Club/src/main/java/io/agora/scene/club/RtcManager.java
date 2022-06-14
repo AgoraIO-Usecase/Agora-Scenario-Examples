@@ -53,6 +53,9 @@ public class RtcManager {
     private final IMediaPlayerObserver mediaPlayerObserver = new IMediaPlayerObserver() {
         @Override
         public void onPlayerStateChanged(io.agora.mediaplayer.Constants.MediaPlayerState mediaPlayerState, io.agora.mediaplayer.Constants.MediaPlayerError mediaPlayerError) {
+            if (mMediaPlayer == null) {
+                return;
+            }
             Log.d(TAG, "MediaPlayer onPlayerStateChanged -- url=" + mMediaPlayer.getPlaySrc() + "state=" + mediaPlayerState + ", error=" + mediaPlayerError);
             if (mediaPlayerState == io.agora.mediaplayer.Constants.MediaPlayerState.PLAYER_STATE_OPEN_COMPLETED) {
                 if (mMediaPlayer != null) {
@@ -325,16 +328,16 @@ public class RtcManager {
         engine.updateChannelMediaOptions(options);
     }
 
-    public void enableLocalVideo(boolean enable){
+    public void enableLocalVideo(boolean enable) {
         engine.enableLocalVideo(enable);
-        if(enable){
+        if (enable) {
             engine.startPreview();
-        }else{
+        } else {
             engine.stopPreview();
         }
     }
 
-    public void enableLocalAudio(boolean enable){
+    public void enableLocalAudio(boolean enable) {
         engine.enableLocalAudio(enable);
     }
 
@@ -350,22 +353,22 @@ public class RtcManager {
         engine.setupRemoteVideo(new VideoCanvas(view, RENDER_MODE_HIDDEN, uid));
     }
 
-    public void playRemoteAudio(int uid, boolean isPlay){
+    public void playRemoteAudio(int uid, boolean isPlay) {
         if (engine == null) {
             return;
         }
         engine.muteRemoteAudioStream(uid, !isPlay);
     }
 
-    public void renderPlayerVideo(FrameLayout container){
+    public void renderPlayerVideo(FrameLayout container) {
         container.removeAllViews();
         TextureView view = new TextureView(container.getContext());
         container.addView(view);
         getOrCreateMediaPlayer().setView(view);
     }
 
-    public void openPlayerVideo(String url){
-        if(TextUtils.isEmpty(url)){
+    public void openPlayerVideo(String url) {
+        if (TextUtils.isEmpty(url)) {
             url = SAMPLE_MOVIE_URL;
         }
         IMediaPlayer mediaPlayer = getOrCreateMediaPlayer();
@@ -374,16 +377,19 @@ public class RtcManager {
         mediaPlayer.open(url, 0);
     }
 
-    public void closePlayerVideo(){
-        if(mMediaPlayer != null){
+    public void closePlayerVideo() {
+        if (mMediaPlayer != null) {
             mMediaPlayer.stop();
-            mMediaPlayer.destroy();
+            mMediaPlayer.setView(null);
             mMediaPlayer = null;
+        }
+        if (engine != null) {
+            engine.stopPreview();
         }
     }
 
-    public IMediaPlayer getOrCreateMediaPlayer(){
-        if(mMediaPlayer != null){
+    public IMediaPlayer getOrCreateMediaPlayer() {
+        if (mMediaPlayer != null) {
             return mMediaPlayer;
         }
         mMediaPlayer = engine.createMediaPlayer();
@@ -397,7 +403,7 @@ public class RtcManager {
             engine.stopPreview();
             closePlayerVideo();
             engine = null;
-            new Thread(){
+            new Thread() {
                 @Override
                 public void run() {
                     super.run();

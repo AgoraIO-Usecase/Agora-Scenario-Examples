@@ -14,10 +14,15 @@
 
     <!--PKByCDN-->
     <string name="app_live_pk_cdn_name">CDN PK直播</string>
-    <string name="app_live_pk_cdn_description">两个不同直播间的主播跨频道连麦PK，引爆直播间</string>
+    <string name="app_live_pk_cdn_description">融合CDN</string>
 
     <!--Club-->
     <string name="app_club_name">超级夜店</string>
     <string name="app_club_description">同一直播间观看同一部电影</string>
+
+    <!--Voice-->
+    <string name="app_voice_name">语聊房</string>
+    <string name="app_voice_description">和其他人一起语音聊天</string>
+
 
 </resources>
