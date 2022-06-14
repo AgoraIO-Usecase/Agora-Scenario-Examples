@@ -19,6 +19,5 @@ target 'Scene-Examples' do
   # pod 'AgoraSyncManager', :path => 'AgoraSyncManager'
   # Pods for Scene-Examples
   pod 'AgoraRtm_iOS', '~> 1.4.9'
-  pod 'AgoraSyncKit', :path => '~/Desktop/SyncKit/AgoraSyncKit.podspec'
 
 end

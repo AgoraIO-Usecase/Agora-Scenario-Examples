@@ -6,13 +6,11 @@
 //
 
 import Foundation
-import AgoraSyncKit
 
 public class CollectionReference {
     private let manager: AgoraSyncManager
     public let className: String
     public let parent: SceneReference
-    let internalCollection: AgoraSyncCollection
     let inertnalClassName: String
     
     public init(manager: AgoraSyncManager,
@@ -21,19 +19,7 @@ public class CollectionReference {
         self.manager = manager
         self.className = parent.id + className
         self.parent = parent
-        self.internalCollection = AgoraSyncCollection()
         self.inertnalClassName = parent.id + className
-    }
-    
-    init(manager: AgoraSyncManager,
-         parent: SceneReference,
-         collection: AgoraSyncCollection,
-         className: String) {
-        self.manager = manager
-        self.className = className
-        self.inertnalClassName = parent.id + className
-        self.parent = parent
-        self.internalCollection = collection
     }
     
     public func document(id: String = "") -> DocumentReference {
