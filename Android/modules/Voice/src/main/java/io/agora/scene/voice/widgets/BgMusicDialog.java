@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.agora.scene.voice.R;
+import io.agora.scene.voice.RtcManager;
 import io.agora.scene.voice.databinding.VoiceBackgourndMusicDialogBinding;
 import io.agora.scene.voice.databinding.VoiceBackgroundMusicItemBinding;
 import io.agora.uiwidget.basic.BindingSingleAdapter;
@@ -28,15 +29,28 @@ public class BgMusicDialog extends BottomSheetDialog {
     private Listener mListener;
     private BindingSingleAdapter<MusicInfo, VoiceBackgroundMusicItemBinding> mMusicAdapter;
 
-    public static void showDialog(Context context, Listener listener){
-        new BgMusicDialog(context)
+    public static BgMusicDialog createDialog(Context context, RtcManager rtcManager){
+        return new BgMusicDialog(context)
                 .addMusics(Arrays.asList(
                         new MusicInfo("1", "happyrock", "Bensound", "https://agora-adc-artifacts.oss-cn-beijing.aliyuncs.com/albgm/bensound-happyrock.mp3"),
                         new MusicInfo("2", "jazzyfrenchy", "Bensound", "https://agora-adc-artifacts.oss-cn-beijing.aliyuncs.com/albgm/bensound-jazzyfrenchy.mp3"),
                         new MusicInfo("3", "ukulele", "Bensound", "https://agora-adc-artifacts.oss-cn-beijing.aliyuncs.com/albgm/bensound-ukulele.mp3")
                 ))
-                .setListener(listener)
-                .show();
+                .setListener(new Listener() {
+                    @Override
+                    public void onVolumeChanged(int max, int volume) {
+                        rtcManager.setAudioMixingVolume(volume);
+                    }
+
+                    @Override
+                    public void onMusicSelected(MusicInfo musicInfo, boolean isSelected) {
+                        if(isSelected){
+                            rtcManager.startAudioMixing(musicInfo.url);
+                        }else{
+                            rtcManager.stopAudioMixing();
+                        }
+                    }
+                });
     }
 
 
@@ -71,6 +85,7 @@ public class BgMusicDialog extends BottomSheetDialog {
 
             }
         });
+        mBinding.sbVolume.setProgress(50);
 
         mMusicAdapter = new BindingSingleAdapter<MusicInfo, VoiceBackgroundMusicItemBinding>() {
             private int _selectedPosition = -1;

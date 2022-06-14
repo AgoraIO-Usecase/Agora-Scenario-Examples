@@ -13,6 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:gravity="center"
         android:layout_marginTop="@dimen/live_tool_item_text_margin"
         android:textColor="@android:color/black"/>
 </LinearLayout>

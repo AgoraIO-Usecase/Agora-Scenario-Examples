@@ -43,8 +43,6 @@
     <string-array name="voice_sound_effect_style_names">
         <item>R&#38;B</item>
         <item>流行</item>
-        <item>摇滚</item>
-        <item>嘻哈</item>
     </string-array>
 
     <!-- VoiceBeautyDialog -->
@@ -91,5 +89,14 @@
     <string name="voice_background_music_title">音乐</string>
     <string name="voice_background_music_credit_hint">音乐:&#160;&#160;</string>
 
+    <!-- UserOptionsDialog -->
+    <string name="voice_user_options_invite">邀请</string>
+    <string name="voice_user_options_mute">封麦</string>
+
+    <!-- RoomDetailActivity -->
+    <string name="voice_room_detail_invite_tip">主播邀请您上麦</string>
+    <string name="voice_room_detail_invite_accept">接受</string>
+    <string name="voice_room_detail_invite_refuse">拒绝</string>
+    <string name="voice_room_detail_invite_refused">%s拒绝了您的邀请</string>
 
 </resources>
