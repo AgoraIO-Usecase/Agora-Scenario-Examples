@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import AgoraSyncKit
 
 protocol ISyncManager {
     func createScene(scene: Scene,
@@ -66,7 +65,6 @@ protocol ISyncManager {
                         fail: FailBlock?)
     func unsubscribeScene(reference: SceneReference,
                           fail: FailBlock?)
-    func createCollection(reference: SceneReference, internalClassName: String) -> AgoraSyncCollection?
 }
 
 public protocol IObject {

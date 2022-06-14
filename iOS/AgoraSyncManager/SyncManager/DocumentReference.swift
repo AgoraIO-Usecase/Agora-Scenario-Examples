@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import AgoraSyncKit
 
 public class SceneReference: DocumentReference {
     override public var className: String {
@@ -17,32 +16,14 @@ public class SceneReference: DocumentReference {
         super.init(manager: manager, parent: nil, type: type, id: id)
     }
     
-    init(manager: AgoraSyncManager,
-         document: AgoraSyncDocument,
-         id: String) {
-        super.init(manager: manager,
-                   parent: nil,
-                   document: document,
-                   id: id)
-    }
-    
     /// 创建一个CollectionReference实体
     /// - Parameter className: CollectionReference 的 id
     public func collection(className: String) -> CollectionReference {
         switch providerType {
-        case .rtm, .leancloud:
+        case .rtm:
             return CollectionReference(manager: manager,
                                        parent: self,
                                        className: className)
-        case .ask:
-            guard let collection = manager.createCollection(reference: self, internalClassName: id + className) else {
-                fatalError("never call this")
-            }
-            return CollectionReference(manager: manager,
-                                       parent: self,
-                                       collection: collection,
-                                       className: className)
-            
         }
     }
     
@@ -74,7 +55,6 @@ public class DocumentReference {
     public let id: String
     public let parent: CollectionReference?
     let manager: AgoraSyncManager
-    let internalDocument: AgoraSyncDocument
     let providerType: ProviderType
     
     public var className: String {
@@ -89,18 +69,6 @@ public class DocumentReference {
         self.parent = parent
         self.id = id
         providerType = type
-        self.internalDocument = AgoraSyncDocument()
-    }
-    
-    init(manager: AgoraSyncManager,
-         parent: CollectionReference?,
-         document: AgoraSyncDocument,
-         id: String) {
-        self.manager = manager
-        self.parent = parent
-        self.id = id
-        self.internalDocument = document
-        providerType = .ask
     }
     
     /// 获取指定属性值
@@ -165,6 +133,4 @@ public class DocumentReference {
 
 enum ProviderType {
     case rtm
-    case ask
-    case leancloud
 }

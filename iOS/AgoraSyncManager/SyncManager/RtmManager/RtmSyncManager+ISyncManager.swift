@@ -7,7 +7,6 @@
 
 import Foundation
 import AgoraRtmKit
-import AgoraSyncKit // 如何做到这个文件不引用这里？
 
 extension RtmSyncManager: ISyncManager {
     public func createScene(scene: Scene,
@@ -375,10 +374,6 @@ extension RtmSyncManager: ISyncManager {
             onUpdatedBlocks.removeValue(forKey: rtmChannel)
             onDeletedBlocks.removeValue(forKey: rtmChannel)
         }
-    }
-    
-    public func createCollection(reference: SceneReference, internalClassName: String) -> AgoraSyncCollection? {
-        return nil
     }
     
     func subscribeScene(reference: SceneReference,
