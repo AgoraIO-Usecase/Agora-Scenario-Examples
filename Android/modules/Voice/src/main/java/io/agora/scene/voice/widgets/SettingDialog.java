@@ -16,7 +16,6 @@ public class SettingDialog extends LiveToolsDialog {
 
     public static LiveToolsDialog createDialog(Context context, RtcManager rtcManager, Runnable showBackgroundDialog, Runnable showBGMusicDialog){
         return new SettingDialog(context)
-                .addToolItem(TOOL_ITEM_SPEAKER, false, (view, item) -> rtcManager.enableLocalAudio(item.activated))
                 .addToolItem(ITEM_MONITOR, false, (view, item) -> rtcManager.enableEarMonitoring(item.activated))
                 .addToolItem(ITEM_BACKGROUND, false, (view, item) -> {
                     if(showBackgroundDialog != null){
@@ -27,9 +26,7 @@ public class SettingDialog extends LiveToolsDialog {
                     if(showBGMusicDialog != null){
                         showBGMusicDialog.run();
                     }
-                })
-                //.addToolItem(ITEM_STATISTICS, false, listener)
-                ;
+                });
     }
 
     private SettingDialog(@NonNull Context context) {

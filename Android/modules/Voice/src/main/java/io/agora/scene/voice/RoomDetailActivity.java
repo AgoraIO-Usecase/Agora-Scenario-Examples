@@ -83,6 +83,15 @@ public class RoomDetailActivity extends AppCompatActivity {
                     // 美声
                     voiceBeautyDialog.show();
                 });
+        mBinding.bottomView.setFun3Visible(isRoomOwner)
+                .setFun3ImageResource(R.drawable.voice_room_detail_mic_icon)
+                .setFun3Activated(true)
+                .setFun3ClickListener(v -> {
+                    // 麦克风
+                    boolean isActivated = mBinding.bottomView.isFun3Activated();
+                    mBinding.bottomView.setFun3Activated(!isActivated);
+                    rtcManager.enableLocalAudio(!isActivated);
+                });
         mBinding.bottomView.setupInputText(true, v -> {
             // 弹出文本输入框
             showTextInputDialog();
@@ -104,6 +113,16 @@ public class RoomDetailActivity extends AppCompatActivity {
         mBinding.tvOwnerName.setText("User-" + roomInfo.userId);
 
         // 座位列表
+        initSeats(isRoomOwner);
+
+        // 显示背景
+        mBinding.ivBackground.setImageResource(roomInfo.getAndroidBgId());
+
+        initRoomManager();
+        initRtcManager(isRoomOwner);
+    }
+
+    private void initSeats(boolean isRoomOwner) {
         seatItemBindings[0] = mBinding.seat01;
         seatItemBindings[1] = mBinding.seat02;
         seatItemBindings[2] = mBinding.seat03;
@@ -142,12 +161,6 @@ public class RoomDetailActivity extends AppCompatActivity {
                 });
             }
         }
-
-        // 显示背景
-        mBinding.ivBackground.setImageResource(roomInfo.getAndroidBgId());
-
-        initRoomManager();
-        initRtcManager(isRoomOwner);
     }
 
     private void initDialogs() {
@@ -229,7 +242,7 @@ public class RoomDetailActivity extends AppCompatActivity {
 
     private void initRtcManager(boolean isRoomOwner) {
         rtcManager.init(this, getString(R.string.rtc_app_id), null);
-        rtcManager.joinChannel(roomInfo.roomId, roomInfo.userId, getString(R.string.rtc_app_token), isRoomOwner, new RtcManager.OnChannelListener() {
+        rtcManager.joinChannel(roomInfo.roomId, RoomManager.getCacheUserId(), getString(R.string.rtc_app_token), isRoomOwner, new RtcManager.OnChannelListener() {
             @Override
             public void onError(int code, String message) {
                 runOnUiThread(() -> {
@@ -292,11 +305,11 @@ public class RoomDetailActivity extends AppCompatActivity {
                 } else if (userInfo.status == RoomManager.UserStatus.accept) {
                     upSeat(userInfo);
                     rtcManager.setPublishAudio(true);
-                    mBinding.bottomView.setFun1Visible(true).setFun2Visible(true);
+                    mBinding.bottomView.setFun1Visible(true).setFun2Visible(true).setFun3Visible(true);
                 } else if (userInfo.status == RoomManager.UserStatus.end) {
                     downSeat(userInfo);
                     rtcManager.setPublishAudio(false);
-                    mBinding.bottomView.setFun1Visible(false).setFun2Visible(false);
+                    mBinding.bottomView.setFun1Visible(false).setFun2Visible(false).setFun3Visible(false);
                 }
             } else {
                 // 其他人
@@ -306,7 +319,6 @@ public class RoomDetailActivity extends AppCompatActivity {
                     downSeat(userInfo);
                 }
             }
-
         }
     }
 

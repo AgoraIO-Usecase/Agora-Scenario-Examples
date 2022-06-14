@@ -35,6 +35,7 @@ public class RoomManager {
 
     private final Map<String, SceneReference> sceneMap = new HashMap<>();
     private final List<WrapEventListener> eventListeners = new ArrayList<>();
+    private UserInfo localUserInfo;
 
     public static RoomManager getInstance() {
         if (INSTANCE == null) {
@@ -167,26 +168,26 @@ public class RoomManager {
             public void onSuccess(SceneReference sceneReference) {
                 sceneMap.put(roomId, sceneReference);
                 getUserInfoList(roomId, dataList -> {
-                    UserInfo myUserInfo = null;
                     for (UserInfo userInfo : dataList) {
                         if (userInfo.userId.equals(getCacheUserId())) {
-                            myUserInfo = userInfo;
+                            localUserInfo = userInfo;
                             break;
                         }
                     }
-                    if (myUserInfo != null) {
+                    if (localUserInfo != null) {
                         if (successRun != null) {
                             successRun.onObtained(dataList);
                         }
                         return;
                     }
 
-                    myUserInfo = new UserInfo();
-                    dataList.add(myUserInfo);
+                    localUserInfo = new UserInfo();
+                    dataList.add(localUserInfo);
                     sceneReference.collection(SYNC_MANAGER_USER_INFO).add(
-                            myUserInfo, new Sync.DataItemCallback() {
+                            localUserInfo, new Sync.DataItemCallback() {
                                 @Override
                                 public void onSuccess(IObject result) {
+                                    localUserInfo.objectId = result.getId();
                                     if (successRun != null) {
                                         successRun.onObtained(dataList);
                                     }
@@ -250,6 +251,7 @@ public class RoomManager {
             return;
         }
         userInfo.status = UserStatus.invite;
+        userInfo.timestamp = System.currentTimeMillis() + "";
         sceneReference.collection(SYNC_MANAGER_USER_INFO)
                 .update(userInfo.objectId, userInfo, new Sync.Callback() {
                     @Override
@@ -450,6 +452,20 @@ public class RoomManager {
                     }
                 });
             } else {
+                if(localUserInfo != null){
+                    sceneReference.collection(SYNC_MANAGER_USER_INFO).delete(localUserInfo.objectId, new Sync.Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onFail(SyncManagerException exception) {
+
+                        }
+                    });
+                    localUserInfo = null;
+                }
                 sceneReference.unsubscribe(null);
                 sceneMap.remove(roomId);
             }

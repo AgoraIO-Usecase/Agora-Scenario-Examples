@@ -9,6 +9,7 @@ import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
 import io.agora.rtc2.IRtcEngineEventHandler;
 import io.agora.rtc2.RtcEngine;
+import io.agora.rtc2.RtcEngineConfig;
 
 
 public class RtcManager {
@@ -95,7 +96,11 @@ public class RtcManager {
         mContext = context;
         try {
             // 0. create engine
-            engine = RtcEngine.create(mContext.getApplicationContext(), appId, new IRtcEngineEventHandler() {
+            RtcEngineConfig config = new RtcEngineConfig();
+            config.mContext = mContext.getApplicationContext();
+            config.mAppId = appId;
+            config.mChannelProfile = Constants.CHANNEL_PROFILE_LIVE_BROADCASTING;
+            config.mEventHandler = new IRtcEngineEventHandler() {
 
                 @Override
                 public void onError(int err) {
@@ -140,8 +145,9 @@ public class RtcManager {
                         publishChannelListener.onUserOffline(publishChannelId, uid);
                     }
                 }
-            });
-            engine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
+            };
+            config.mAudioScenario = Constants.AUDIO_SCENARIO_GAME_STREAMING;
+            engine = RtcEngine.create(config);
             engine.enableAudio();
             engine.setDefaultAudioRoutetoSpeakerphone(true);
 
@@ -165,11 +171,11 @@ public class RtcManager {
                 e.printStackTrace();
             }
         }
+        engine.setClientRole(publish? Constants.CLIENT_ROLE_BROADCASTER: Constants.CLIENT_ROLE_AUDIENCE);
 
         ChannelMediaOptions options = new ChannelMediaOptions();
-        options.clientRoleType = publish ? Constants.CLIENT_ROLE_BROADCASTER : Constants.CLIENT_ROLE_AUDIENCE;
-        options.publishAudioTrack= publish;
         options.autoSubscribeAudio = true;
+        options.autoSubscribeVideo = true;
 
         publishChannelId = channelId;
         publishChannelListener = new OnChannelListener() {
@@ -208,12 +214,7 @@ public class RtcManager {
     }
 
     public void setPublishAudio(boolean publish) {
-        ChannelMediaOptions options = new ChannelMediaOptions();
-        options.clientRoleType = publish ? Constants.CLIENT_ROLE_BROADCASTER : Constants.CLIENT_ROLE_AUDIENCE;
-        options.publishAudioTrack = publish;
-        options.autoSubscribeAudio = true;
-        engine.updateChannelMediaOptions(options);
-        engine.enableLocalAudio(publish);
+        engine.setClientRole(publish? Constants.CLIENT_ROLE_BROADCASTER: Constants.CLIENT_ROLE_AUDIENCE);
     }
 
     public void setAudioVoiceEffect(int preset, int index, int pitchCorrectionValue) {
@@ -246,7 +247,7 @@ public class RtcManager {
         if (engine == null) {
             return;
         }
-        engine.startAudioMixing(url, true, true, 1);
+        engine.startAudioMixing(url, false, false, 1);
     }
 
     public void stopAudioMixing() {
