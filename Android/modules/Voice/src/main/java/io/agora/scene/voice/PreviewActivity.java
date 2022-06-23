@@ -29,7 +29,6 @@ public class PreviewActivity extends AppCompatActivity {
         previewControlView.setCameraIcon(true, R.drawable.voice_preview_ic_bg, v -> {
             showBgSelectDialog();
         });
-        previewControlView.setBeautyIcon(false, null);
         previewControlView.setSettingIcon(false, null);
         previewControlView.setGoLiveBtn((view, randomName) -> {
             RoomManager.getInstance().createRoom(randomName, backgroundImaRes, data -> {

@@ -1,6 +1,7 @@
 package io.agora.uiwidget.function;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
@@ -20,7 +21,7 @@ import io.agora.uiwidget.basic.BindingViewHolder;
 import io.agora.uiwidget.databinding.RoomListItemBinding;
 
 public class RoomListView extends FrameLayout {
-    private static final int SPAN_COUNT = 2;
+    private static final int SPAN_COUNT = 1;
     private static final int REFRESH_DELAY = 1000 * 60;
 
     private RecyclerView mRecyclerView;
@@ -39,6 +40,8 @@ public class RoomListView extends FrameLayout {
         }
     };
 
+    private int mSpanCount;
+
     public RoomListView(@NonNull Context context) {
         this(context, null);
     }
@@ -49,6 +52,11 @@ public class RoomListView extends FrameLayout {
 
     public RoomListView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+        final TypedArray a = context.obtainStyledAttributes(
+                attrs, R.styleable.RecyclerView, defStyleAttr, defStyleAttr);
+        mSpanCount = a.getInt(R.styleable.RecyclerView_spanCount, SPAN_COUNT);
+        a.recycle();
         init();
     }
 
@@ -64,7 +72,7 @@ public class RoomListView extends FrameLayout {
 
         mRecyclerView = findViewById(R.id.room_list_recycler);
         mRecyclerView.setVisibility(View.VISIBLE);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), SPAN_COUNT));
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), mSpanCount));
         mRecyclerView.addItemDecoration(new RoomListItemDecoration());
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -163,17 +171,17 @@ public class RoomListView extends FrameLayout {
             outRect.top = half;
             outRect.bottom = half;
 
-            if (position < SPAN_COUNT) {
+            if (position < mSpanCount) {
                 outRect.top = mItemSpacing;
             } else {
-                int remain = total % SPAN_COUNT;
-                if (remain == 0) remain = SPAN_COUNT;
+                int remain = total % mSpanCount;
+                if (remain == 0) remain = mSpanCount;
                 if (position + remain >= total) {
                     outRect.bottom = mItemSpacing;
                 }
             }
 
-            if (position % SPAN_COUNT == 0) {
+            if (position % mSpanCount == 0) {
                 outRect.left = mItemSpacing;
                 outRect.right = mItemSpacing / 2;
             } else {
@@ -188,13 +196,15 @@ public class RoomListView extends FrameLayout {
         public final View participantsLayout;
         public final TextView participantsCount;
         public final TextView roomName;
+        public final TextView roomInfo;
 
         public RoomListItemViewHolder(@NonNull RoomListItemBinding itemView) {
             super(itemView);
-            bgView = itemView.roomListItemBackground;
-            participantsLayout = itemView.roomListParticipantsLayout;
-            participantsCount = itemView.roomListItemParticipantCount;
+            bgView = itemView.roomListItemImage;
+            participantsLayout = itemView.roomListItemUserCount;
+            participantsCount = itemView.roomListItemUserCount;
             roomName = itemView.roomListItemRoomName;
+            roomInfo = itemView.roomListItemRoomInfo;
         }
 
     }

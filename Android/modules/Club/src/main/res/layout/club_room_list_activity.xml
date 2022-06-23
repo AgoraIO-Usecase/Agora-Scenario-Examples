@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <io.agora.uiwidget.basic.TitleBar
@@ -17,7 +18,8 @@
         <io.agora.uiwidget.function.RoomListView
             android:id="@+id/room_list_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            app:spanCount="2"/>
 
         <ImageView
             android:id="@+id/btn_start_live"
