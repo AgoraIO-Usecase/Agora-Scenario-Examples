@@ -2,6 +2,7 @@ package io.agora.scene.singlehostlive;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -34,6 +35,7 @@ public class RoomListActivity extends AppCompatActivity {
                 holder.bgView.setBackgroundResource(item.getAndroidBgId());
                 holder.participantsLayout.setVisibility(View.GONE);
                 holder.roomName.setText(item.roomName);
+                holder.roomInfo.setText(item.roomId);
                 holder.itemView.setOnClickListener(v -> gotoAudiencePage(item));
             }
 
@@ -69,8 +71,14 @@ public class RoomListActivity extends AppCompatActivity {
 
         TitleBar titleBar = findViewById(R.id.title_bar);
         titleBar.setTitleName(getResources().getString(R.string.single_host_live_app_name), 0);
-        titleBar.setBgDrawable(io.agora.uiwidget.R.drawable.title_bar_bg_colorful);
         titleBar.setUserIcon(false, 0, null);
+        titleBar.setDeliverVisible(false);
+        titleBar.setBackIcon(!TextUtils.isEmpty(getIntent().getStringExtra("from")), R.drawable.title_bar_back_white, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         ImageView startLiveIv = findViewById(R.id.btn_start_live);
         startLiveIv.setOnClickListener(v -> gotoPreviewPage());

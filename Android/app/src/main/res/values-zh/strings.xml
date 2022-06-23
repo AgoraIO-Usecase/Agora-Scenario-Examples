@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">SceneExample</string>
+
+    <string name="app_type_social_entertainment">社交娱乐</string>
+    <string name="app_type_education">教育</string>
+
     <string name="app_desc_banner">点击跳转对应场景</string>
 
     <string name="app_live_single_host_name">单主播直播</string>

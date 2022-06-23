@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">SceneExample</string>
+    
+    <string name="app_type_social_entertainment">Social Entertainment</string>
+    <string name="app_type_education">Education</string>
 
     <string name="app_desc_banner">Click to jump to this scene</string>
+    
     <!--单主播-->
     <string name="app_live_single_host_name">Single Host Live</string>
     <string name="app_live_single_host_description">Single Host Live</string>

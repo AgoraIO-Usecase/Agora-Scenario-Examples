@@ -1,4 +1,4 @@
-rootProject.name = "SE"
+rootProject.name = "Agora-Scenarios"
 if (!isModular.toBoolean()) {
     include ':app'
 }

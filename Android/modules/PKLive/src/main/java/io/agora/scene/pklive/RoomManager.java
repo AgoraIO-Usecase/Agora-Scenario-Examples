@@ -718,20 +718,20 @@ public class RoomManager {
         GifNameResMap.put("SuperRocket", R.drawable.gift_anim_rocket);
 
         RoomBgResMap = new HashMap<>();
-        RoomBgResMap.put("portrait01", R.drawable.user_profile_image_1);
-        RoomBgResMap.put("portrait02", R.drawable.user_profile_image_2);
-        RoomBgResMap.put("portrait03", R.drawable.user_profile_image_3);
-        RoomBgResMap.put("portrait04", R.drawable.user_profile_image_4);
-        RoomBgResMap.put("portrait05", R.drawable.user_profile_image_5);
-        RoomBgResMap.put("portrait06", R.drawable.user_profile_image_6);
-        RoomBgResMap.put("portrait07", R.drawable.user_profile_image_7);
-        RoomBgResMap.put("portrait08", R.drawable.user_profile_image_8);
-        RoomBgResMap.put("portrait09", R.drawable.user_profile_image_9);
-        RoomBgResMap.put("portrait10", R.drawable.user_profile_image_10);
-        RoomBgResMap.put("portrait11", R.drawable.user_profile_image_11);
-        RoomBgResMap.put("portrait12", R.drawable.user_profile_image_12);
-        RoomBgResMap.put("portrait13", R.drawable.user_profile_image_13);
-        RoomBgResMap.put("portrait14", R.drawable.user_profile_image_14);
+        RoomBgResMap.put("portrait01", R.drawable.random_icon2_01);
+        RoomBgResMap.put("portrait02", R.drawable.random_icon2_02);
+        RoomBgResMap.put("portrait03", R.drawable.random_icon2_01);
+        RoomBgResMap.put("portrait04", R.drawable.random_icon2_02);
+        RoomBgResMap.put("portrait05", R.drawable.random_icon2_01);
+        RoomBgResMap.put("portrait06", R.drawable.random_icon2_02);
+        RoomBgResMap.put("portrait07", R.drawable.random_icon2_01);
+        RoomBgResMap.put("portrait08", R.drawable.random_icon2_02);
+        RoomBgResMap.put("portrait09", R.drawable.random_icon2_01);
+        RoomBgResMap.put("portrait10", R.drawable.random_icon2_02);
+        RoomBgResMap.put("portrait11", R.drawable.random_icon2_01);
+        RoomBgResMap.put("portrait12", R.drawable.random_icon2_02);
+        RoomBgResMap.put("portrait13", R.drawable.random_icon2_01);
+        RoomBgResMap.put("portrait14", R.drawable.random_icon2_02);
     }
 
     public static class RoomInfo implements Serializable {

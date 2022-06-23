@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    android:background="@drawable/title_bar_bg_colorful"
+    tools:background="@drawable/title_bar_bg_colorful"
     android:layout_height="wrap_content">
 
     <FrameLayout
@@ -31,7 +31,6 @@
             android:layout_gravity="center_vertical"
             android:padding="@dimen/title_bar_icon_padding"
             android:src="@drawable/title_bar_back_white"
-
             tools:visibility="visible"
             android:visibility="gone"/>
 

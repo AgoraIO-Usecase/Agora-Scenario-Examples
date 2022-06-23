@@ -522,20 +522,20 @@ public class RoomManager {
 
 
     private static final List<Integer> ImageResIds = Arrays.asList(
-            R.drawable.user_profile_image_1,
-            R.drawable.user_profile_image_2,
-            R.drawable.user_profile_image_3,
-            R.drawable.user_profile_image_4,
-            R.drawable.user_profile_image_5,
-            R.drawable.user_profile_image_6,
-            R.drawable.user_profile_image_7,
-            R.drawable.user_profile_image_8,
-            R.drawable.user_profile_image_9,
-            R.drawable.user_profile_image_10,
-            R.drawable.user_profile_image_11,
-            R.drawable.user_profile_image_12,
-            R.drawable.user_profile_image_13,
-            R.drawable.user_profile_image_14
+            R.drawable.random_icon2_01,
+            R.drawable.random_icon2_02,
+            R.drawable.random_icon2_01,
+            R.drawable.random_icon2_02,
+            R.drawable.random_icon2_01,
+            R.drawable.random_icon2_02,
+            R.drawable.random_icon2_01,
+            R.drawable.random_icon2_02,
+            R.drawable.random_icon2_01,
+            R.drawable.random_icon2_02,
+            R.drawable.random_icon2_01,
+            R.drawable.random_icon2_02,
+            R.drawable.random_icon2_01,
+            R.drawable.random_icon2_02
     );
 
     public static class RoomInfo implements Serializable {
