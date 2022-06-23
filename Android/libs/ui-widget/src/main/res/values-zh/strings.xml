@@ -18,6 +18,7 @@
     <!-- Preview Control -->
     <string name="preview_control_name_hint">直播间名字</string>
     <string name="preview_control_go_live_text">开始直播</string>
+    <string name="preview_control_name_enter_hint">请输入房间名</string>
     <string name="preview_control_room_restriction">本应用为测试产品，请勿商用。单次直播最长10分钟，每个频道最多10人。</string>
 
     <!-- Video Setting -->

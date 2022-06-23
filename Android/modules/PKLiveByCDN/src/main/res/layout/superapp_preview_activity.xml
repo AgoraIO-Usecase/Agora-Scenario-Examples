@@ -19,7 +19,7 @@
         android:id="@+id/live_prepare_mode_choice"
         android:layout_width="match_parent"
         android:layout_height="160dp"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="250dp"
         android:orientation="horizontal"
         android:paddingHorizontal="24dp">
 

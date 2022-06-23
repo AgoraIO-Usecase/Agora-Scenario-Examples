@@ -72,6 +72,7 @@ public class LiveHostNameView extends RelativeLayout {
         params.addRule(RelativeLayout.ALIGN_PARENT_START, RelativeLayout.TRUE);
         params.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
         mIconImageView.setLayoutParams(params);
+        mIconImageView.setImageResource(R.drawable.live_host_name_account_icon);
 
         mNameTextView = new AppCompatTextView(getContext());
         addView(mNameTextView);
@@ -118,7 +119,7 @@ public class LiveHostNameView extends RelativeLayout {
         RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(),
                 BitmapFactory.decodeResource(getResources(), drawableId));
         drawable.setCircular(true);
-        mIconImageView.setImageDrawable(drawable);
+        // mIconImageView.setImageDrawable(drawable);
     }
 
     /**
@@ -134,6 +135,6 @@ public class LiveHostNameView extends RelativeLayout {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        mIconImageView.setImageDrawable(drawable);
+        // mIconImageView.setImageDrawable(drawable);
     }
 }

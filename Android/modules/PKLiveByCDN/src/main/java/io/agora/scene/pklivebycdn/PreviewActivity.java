@@ -39,7 +39,6 @@ public class PreviewActivity extends BaseActivity<SuperappPreviewActivityBinding
         mBinding.previewControlView.setCameraIcon(true, v -> {
             rtcManager.switchCamera();
         });
-        mBinding.previewControlView.setBeautyIcon(false, null);
         mBinding.previewControlView.setSettingIcon(true, v -> {
             // 视频参数设置弹窗
             List<Size> resolutions = new ArrayList<>();

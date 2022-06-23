@@ -40,7 +40,6 @@ public class PreviewActivity extends AppCompatActivity {
         previewControlView.setCameraIcon(true, v -> {
             rtcManager.switchCamera();
         });
-        previewControlView.setBeautyIcon(false, null);
         previewControlView.setSettingIcon(true, v -> {
             // 视频参数设置弹窗
             List<Size> resolutions = new ArrayList<>();

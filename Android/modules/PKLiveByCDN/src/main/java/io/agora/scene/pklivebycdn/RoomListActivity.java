@@ -2,6 +2,7 @@ package io.agora.scene.pklivebycdn;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -36,6 +37,7 @@ public class RoomListActivity extends BaseActivity<SuperappRoomListActivityBindi
             @Override
             protected void onItemUpdate(RoomListView.RoomListItemViewHolder holder, RoomManager.RoomInfo item) {
                 holder.roomName.setText(item.roomName);
+                holder.roomInfo.setText(item.roomId);
                 holder.bgView.setBackgroundResource(item.getBgResId());
                 holder.participantsLayout.setVisibility(View.GONE);
                 holder.itemView.setOnClickListener(v -> {
@@ -71,8 +73,14 @@ public class RoomListActivity extends BaseActivity<SuperappRoomListActivityBindi
         });
 
         mBinding.titleBar.setTitleName(getResources().getString(R.string.superapp_app_name), 0);
-        mBinding.titleBar.setBgDrawable(io.agora.uiwidget.R.drawable.title_bar_bg_colorful);
         mBinding.titleBar.setUserIcon(false, 0, null);
+        mBinding.titleBar.setDeliverVisible(false);
+        mBinding.titleBar.setBackIcon(!TextUtils.isEmpty(getIntent().getStringExtra("from")), R.drawable.title_bar_back_white, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         ImageView startLiveIv = findViewById(R.id.btn_start_live);
         startLiveIv.setOnClickListener(v -> gotoPreviewPage());
