@@ -3,7 +3,6 @@ package io.agora.scene.pklivebycdn;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -11,8 +10,6 @@ import androidx.annotation.Nullable;
 
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.runtime.Permission;
-
-import java.util.List;
 
 import io.agora.example.base.BaseActivity;
 import io.agora.scene.pklivebycdn.databinding.SuperappRoomListActivityBinding;
@@ -25,7 +22,7 @@ public class RoomListActivity extends BaseActivity<SuperappRoomListActivityBindi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        RoomManager.getInstance().init(this, getString(R.string.superapp_agora_app_id), getString(R.string.superapp_agora_token));
+        RoomManager.getInstance().init(this, getString(R.string.rtm_app_id), getString(R.string.rtm_app_token));
         StatusBarUtil.hideStatusBar(getWindow(), false);
 
         AndPermission.with(this)
@@ -47,22 +44,11 @@ public class RoomListActivity extends BaseActivity<SuperappRoomListActivityBindi
 
             @Override
             protected void onRefresh() {
-                RoomManager.getInstance().getAllRooms(new RoomManager.DataListCallback<RoomManager.RoomInfo>() {
-                    @Override
-                    public void onSuccess(List<RoomManager.RoomInfo> dataList) {
-                        mDataList.clear();
-                        mDataList.addAll(dataList);
-                        notifyDataSetChanged();
-                        triggerDataListUpdateRun();
-                    }
-
-                    @Override
-                    public void onFailed(Exception e) {
-                        Log.e(TAG, "", e);
-                        mDataList.clear();
-                        notifyDataSetChanged();
-                        triggerDataListUpdateRun();
-                    }
+                RoomManager.getInstance().getAllRooms(dataList -> {
+                    mDataList.clear();
+                    mDataList.addAll(dataList);
+                    notifyDataSetChanged();
+                    triggerDataListUpdateRun();
                 });
             }
 
@@ -92,7 +78,7 @@ public class RoomListActivity extends BaseActivity<SuperappRoomListActivityBindi
     }
 
     private void gotoAudiencePage(RoomManager.RoomInfo roomInfo) {
-        Intent intent = new Intent(RoomListActivity.this, AudienceDetailActivity.class);
+        Intent intent = new Intent(RoomListActivity.this, roomInfo.liveMode == RoomManager.PUSH_MODE_DIRECT_CDN ? RskAudienceActivity.class: RtcAudienceActivity.class);
         intent.putExtra("roomInfo", roomInfo);
         startActivity(intent);
     }

@@ -2,11 +2,17 @@ package io.agora.scene.singlehostlive;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.SurfaceView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import io.agora.rtc2.ChannelMediaOptions;
+import io.agora.rtc2.Constants;
+import io.agora.rtc2.IRtcEngineEventHandler;
+import io.agora.rtc2.RtcEngine;
+import io.agora.rtc2.video.VideoCanvas;
 import io.agora.scene.singlehostlive.databinding.SingleHostLiveAudienceDetailActivityBinding;
 import io.agora.uiwidget.function.GiftAnimPlayDialog;
 import io.agora.uiwidget.function.GiftGridDialog;
@@ -17,7 +23,7 @@ import io.agora.uiwidget.utils.StatusBarUtil;
 
 public class AudienceDetailActivity extends AppCompatActivity {
 
-    private final RtcManager rtcManager = new RtcManager();
+    private RtcEngine rtcEngine;
     private final RoomManager roomManager = RoomManager.getInstance();
 
     private SingleHostLiveAudienceDetailActivityBinding mBinding;
@@ -94,8 +100,10 @@ public class AudienceDetailActivity extends AppCompatActivity {
         };
         mBinding.messageList.setAdapter(mMessageAdapter);
 
-        initRtcManager();
+        initRtcEngine();
         initRoomManager();
+
+        joinChannel();
     }
 
     private void initRoomManager() {
@@ -105,32 +113,48 @@ public class AudienceDetailActivity extends AppCompatActivity {
         });
     }
 
-    private void initRtcManager() {
-        rtcManager.init(this, getString(R.string.rtc_app_id), null);
-        rtcManager.joinChannel(roomInfo.roomId, RoomManager.getCacheUserId(), getString(R.string.rtc_app_token), false, new RtcManager.OnChannelListener() {
-            @Override
-            public void onError(int code, String message) {
+    private void initRtcEngine() {
+        try {
+            rtcEngine = RtcEngine.create(this, getString(R.string.rtc_app_id), new IRtcEngineEventHandler() {
+                @Override
+                public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
+                    super.onJoinChannelSuccess(channel, uid, elapsed);
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
+                }
 
-            }
+                @Override
+                public void onUserJoined(int uid, int elapsed) {
+                    super.onUserJoined(uid, elapsed);
+                    runOnUiThread(() -> {
+                        renderRemoteVideo(uid);
+                        mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix)));
+                    });
+                }
 
-            @Override
-            public void onJoinSuccess(int uid) {
-                runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
-            }
+                @Override
+                public void onUserOffline(int uid, int reason) {
+                    super.onUserOffline(uid, reason);
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_left_suffix))));
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-            @Override
-            public void onUserJoined(String channelId, int uid) {
-                runOnUiThread(() -> {
-                    rtcManager.renderRemoteVideo(mBinding.fullVideoContainer, uid);
-                    mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix)));
-                });
-            }
+    private void renderRemoteVideo(int uid) {
+        SurfaceView videoView = new SurfaceView(this);
+        mBinding.fullVideoContainer.removeAllViews();
+        mBinding.fullVideoContainer.addView(videoView);
+        rtcEngine.setupRemoteVideo(new VideoCanvas(videoView, Constants.RENDER_MODE_HIDDEN, uid));
+    }
 
-            @Override
-            public void onUserOffline(String channelId, int uid) {
-                runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_left_suffix))));
-            }
-        });
+    private void joinChannel(){
+        ChannelMediaOptions options = new ChannelMediaOptions();
+        options.clientRoleType = Constants.CLIENT_ROLE_AUDIENCE;
+        options.autoSubscribeVideo = true;
+        options.autoSubscribeAudio = true;
+        rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, 0, options);
     }
 
     private void showGiftGridDialog() {
@@ -157,7 +181,8 @@ public class AudienceDetailActivity extends AppCompatActivity {
     @Override
     public void finish() {
         roomManager.leaveRoom(roomInfo.roomId, false);
-        rtcManager.release();
+        rtcEngine.leaveChannel();
+        RtcEngine.destroy();
         super.finish();
     }
 }
