@@ -2,6 +2,7 @@ package io.agora.scene.pklive;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Toast;
 
@@ -12,7 +13,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.lang.ref.WeakReference;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
+import io.agora.rtc2.ChannelMediaOptions;
+import io.agora.rtc2.Constants;
+import io.agora.rtc2.IRtcEngineEventHandler;
+import io.agora.rtc2.RtcConnection;
+import io.agora.rtc2.RtcEngine;
+import io.agora.rtc2.RtcEngineEx;
+import io.agora.rtc2.video.CameraCapturerConfiguration;
+import io.agora.rtc2.video.VideoCanvas;
 import io.agora.scene.pklive.databinding.PkLiveHostDetailActivityBinding;
 import io.agora.uiwidget.basic.BindingViewHolder;
 import io.agora.uiwidget.databinding.OnlineUserListDialogItemBinding;
@@ -25,7 +35,7 @@ import io.agora.uiwidget.utils.RandomUtil;
 import io.agora.uiwidget.utils.StatusBarUtil;
 
 public class HostDetailActivity extends AppCompatActivity {
-    private final RtcManager rtcManager = new RtcManager();
+    private RtcEngineEx rtcEngine;
     private final RoomManager roomManager = RoomManager.getInstance();
 
     private PkLiveHostDetailActivityBinding mBinding;
@@ -77,6 +87,8 @@ public class HostDetailActivity extends AppCompatActivity {
             resetExChannel(data, false);
         }
     });
+    private RtcConnection exChannelConnection;
+    private ChannelMediaOptions options;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -118,7 +130,7 @@ public class HostDetailActivity extends AppCompatActivity {
         });
 
         initRoomManager();
-        initRtcManager();
+        initRtcEngine();
     }
 
     private void endPK() {
@@ -192,63 +204,89 @@ public class HostDetailActivity extends AppCompatActivity {
         });
     }
 
-    private void initRtcManager() {
-        rtcManager.init(this, getString(R.string.rtc_app_id), null);
-        rtcManager.renderLocalVideo(mBinding.localVideoContainer, null);
-        rtcManager.joinChannel(roomInfo.roomId, roomInfo.userId, getString(R.string.rtc_app_token), true, new RtcManager.OnChannelListener() {
-            @Override
-            public void onError(int code, String message) {
-                runOnUiThread(() -> {
-                    Toast.makeText(HostDetailActivity.this, "code=" + code + ",message=" + message, Toast.LENGTH_LONG).show();
-                    finish();
-                });
+    private void initRtcEngine() {
+        try {
+            rtcEngine = (RtcEngineEx) RtcEngine.create(this, getString(R.string.rtc_app_id), new IRtcEngineEventHandler() {
+                @Override
+                public void onError(int err) {
+                    super.onError(err);
+                    runOnUiThread(() -> {
+                        Toast.makeText(HostDetailActivity.this, "code=" + err + ",message=" + RtcEngine.getErrorDescription(err), Toast.LENGTH_LONG).show();
+                        finish();
+                    });
+                }
 
-            }
+                @Override
+                public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
+                    super.onJoinChannelSuccess(channel, uid, elapsed);
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
+                }
 
-            @Override
-            public void onJoinSuccess(int uid) {
-                runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
+                @Override
+                public void onUserJoined(int uid, int elapsed) {
+                    super.onUserJoined(uid, elapsed);
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
+                }
 
-            }
+                @Override
+                public void onUserOffline(int uid, int reason) {
+                    super.onUserOffline(uid, reason);
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_left_suffix))));
+                }
+            });
+            rtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
+            rtcEngine.setCameraCapturerConfiguration(new CameraCapturerConfiguration(io.agora.scene.pklive.Constants.cameraDirection));
+            rtcEngine.setVideoEncoderConfiguration(io.agora.scene.pklive.Constants.encoderConfiguration);
 
-            @Override
-            public void onUserJoined(String channelId, int uid) {
-                runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
-            }
+            SurfaceView videoView = new SurfaceView(this);
+            mBinding.localVideoContainer.removeAllViews();
+            mBinding.localVideoContainer.addView(videoView);
+            rtcEngine.setupLocalVideo(new VideoCanvas(videoView, Constants.RENDER_MODE_HIDDEN));
 
-            @Override
-            public void onUserOffline(String channelId, int uid) {
-                runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_left_suffix))));
-            }
-        });
+            ChannelMediaOptions options = new ChannelMediaOptions();
+            options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
+            options.publishAudioTrack = true;
+            options.publishCameraTrack = true;
+            options.autoSubscribeVideo = true;
+            options.autoSubscribeAudio = true;
+            rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, 0, options);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void resetExChannel(RoomManager.PKApplyInfoModel data, boolean join) {
         String exChannelId = roomInfo.roomId.equals(data.roomId) ? data.targetRoomId : data.roomId;
         if(join){
-            rtcManager.joinChannel(exChannelId, "", getString(R.string.rtc_app_token), false, new RtcManager.OnChannelListener() {
+            exChannelConnection = new RtcConnection();
+            exChannelConnection.localUid = new Random(System.currentTimeMillis()).nextInt(1000) + 10000;
+            exChannelConnection.channelId = exChannelId;
+
+            rtcEngine.setVideoEncoderConfigurationEx(io.agora.scene.pklive.Constants.encoderConfiguration, exChannelConnection);
+            options = new ChannelMediaOptions();
+            options.clientRoleType = Constants.CLIENT_ROLE_AUDIENCE;
+            options.autoSubscribeAudio = true;
+            options.autoSubscribeVideo = true;
+            rtcEngine.joinChannelEx(getString(R.string.rtc_app_token), exChannelConnection, options, new IRtcEngineEventHandler() {
+
                 @Override
-                public void onError(int code, String message) {
-
-                }
-
-                @Override
-                public void onJoinSuccess(int uid) {
-
-                }
-
-                @Override
-                public void onUserJoined(String channelId, int uid) {
+                public void onUserJoined(int uid, int elapsed) {
+                    super.onUserJoined(uid, elapsed);
                     runOnUiThread(() -> {
                         mBinding.pkVideoContainer.setVisibility(View.VISIBLE);
                         mBinding.ivPkIcon.setVisibility(View.VISIBLE);
                         mBinding.btnStopPk.setVisibility(View.VISIBLE);
-                        rtcManager.renderRemoteVideo(mBinding.pkVideoContainer, channelId, uid);
+                        SurfaceView videoView = new SurfaceView(HostDetailActivity.this);
+                        mBinding.pkVideoContainer.removeAllViews();
+                        mBinding.pkVideoContainer.addView(videoView);
+                        rtcEngine.setupRemoteVideoEx(new VideoCanvas(videoView, Constants.RENDER_MODE_HIDDEN, uid), exChannelConnection);
                     });
                 }
 
                 @Override
-                public void onUserOffline(String channelId, int uid) {
+                public void onUserOffline(int uid, int reason) {
+                    super.onUserOffline(uid, reason);
                     runOnUiThread(() -> {
                         mBinding.pkVideoContainer.setVisibility(View.GONE);
                         mBinding.pkVideoContainer.removeAllViews();
@@ -263,7 +301,8 @@ public class HostDetailActivity extends AppCompatActivity {
             mBinding.pkVideoContainer.removeAllViews();
             mBinding.ivPkIcon.setVisibility(View.GONE);
             mBinding.btnStopPk.setVisibility(View.GONE);
-            rtcManager.leaveChannel(exChannelId);
+            rtcEngine.leaveChannelEx(exChannelConnection);
+            exChannelConnection = null;
             roomManager.unSubscribePKApplyInfoEvent(data.targetRoomId, exPkApplyInfoModelDataCallback);
         }
 
@@ -271,7 +310,11 @@ public class HostDetailActivity extends AppCompatActivity {
 
     private void showSettingDialog() {
         new LiveToolsDialog(HostDetailActivity.this)
-                .addToolItem(LiveToolsDialog.TOOL_ITEM_ROTATE, false, (view, item) -> rtcManager.switchCamera())
+                .addToolItem(LiveToolsDialog.TOOL_ITEM_ROTATE, false, (view, item) -> {
+                    if(rtcEngine != null){
+                        rtcEngine.switchCamera();
+                    }
+                })
                 .show();
     }
 
@@ -291,7 +334,12 @@ public class HostDetailActivity extends AppCompatActivity {
     @Override
     public void finish() {
         roomManager.destroyRoom(roomInfo.roomId);
-        rtcManager.release();
+        if(exChannelConnection != null){
+            rtcEngine.leaveChannelEx(exChannelConnection);
+            exChannelConnection = null;
+        }
+        rtcEngine.leaveChannel();
+        RtcEngine.destroy();
         super.finish();
     }
 
