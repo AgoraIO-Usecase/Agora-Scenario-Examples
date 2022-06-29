@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.agora.scene.voice.R;
-import io.agora.scene.voice.RtcManager;
 import io.agora.scene.voice.databinding.VoiceSoundEffectTabCommingSoonBinding;
 import io.agora.scene.voice.databinding.VoiceSoundEffectTabElectronicLayoutBinding;
 import io.agora.scene.voice.databinding.VoiceSoundEffectTabGridviewBinding;
@@ -54,7 +53,13 @@ public class SoundEffectDialog extends TabScrollDialog {
     private static int electronicKeyIndex = 0;
     private static int electronicValueIndex = 0;
 
-    public static TabScrollDialog createDialog(Context context, RtcManager rtcManager) {
+    public static TabScrollDialog createDialog(Context context,
+                                               OnItemClickListener<Pair<String, Integer>> spaceItemClick,
+                                               OnItemClickListener<Pair<String, Integer>> effectChangeItemClick,
+                                               OnItemClickListener<Pair<String, Integer>> effectStyleItemClick,
+                                               CompoundButton.OnCheckedChangeListener electronCheck,
+                                               OnItemClickListener<String> electronicKeyItemClick,
+                                               OnItemClickListener<String> electronicValueItemClick) {
         Resources resources = context.getResources();
         String[] soundEffectTypeNames = resources.getStringArray(R.array.voice_sound_effect_types);
 
@@ -66,46 +71,40 @@ public class SoundEffectDialog extends TabScrollDialog {
                         resources.getStringArray(R.array.voice_sound_effect_space_names),
                         SPACE_EFFECT_IMAGE_RES,
                         0,
-                        (item, position) -> {
-                            rtcManager.setAudioVoiceEffect(RtcManager.VOICE_EFFECT_ROOM_ACOUSTICS[position], -1, -1);
-                        }
+                        spaceItemClick
                 ))
                 // 变声音效
                 .addTab(soundEffectTypeNames[1], createImageTextGridView(
                         resources.getStringArray(R.array.voice_sound_effect_change_names),
                         CHANGE_EFFECT_IMAGE_RES,
                         0,
-                        (item, position) -> {
-                            rtcManager.setAudioVoiceEffect(RtcManager.VOICE_EFFECT_VOICE_CHANGER[position], -1, -1);
-                        }
+                        effectChangeItemClick
                 ))
                 // 曲风音效
                 .addTab(soundEffectTypeNames[2], createImageTextGridView(
                         resources.getStringArray(R.array.voice_sound_effect_style_names),
                         FLAVOUR_EFFECT_IMAGE_RES,
                         0,
-                        (item, position) -> {
-                            rtcManager.setAudioVoiceEffect(RtcManager.VOICE_EFFECT_STYLE_TRANSFORMATION[position], -1, -1);
-                        }
+                        effectStyleItemClick
                 ))
                 // 电音音效
                 .addTab(soundEffectTypeNames[3], createElectronicLayout(
-                        (buttonView, isChecked) -> {
-                            rtcManager.setPitchCorrection(isChecked);
-                        },
+                        electronCheck,
                         resources.getStringArray(R.array.voice_sound_effect_electronic_keys),
                         electronicKeyIndex,
                         (item, position) -> {
                             electronicKeyIndex = position;
-                            rtcManager.setAudioVoiceEffect(RtcManager.VOICE_EFFECT_PITCH_CORRECTION, electronicKeyIndex,
-                                    RtcManager.VOICE_EFFECT_PITCH_CORRECTION_VALUES[electronicValueIndex]);
+                            if(electronicKeyItemClick != null){
+                                electronicKeyItemClick.onItemClick(item, position);
+                            }
                         },
                         resources.getStringArray(R.array.voice_sound_effect_electronic_tones),
                         0,
                         (item, position) -> {
                             electronicValueIndex = position;
-                            rtcManager.setAudioVoiceEffect(RtcManager.VOICE_EFFECT_PITCH_CORRECTION, electronicKeyIndex,
-                                    RtcManager.VOICE_EFFECT_PITCH_CORRECTION_VALUES[electronicValueIndex]);
+                            if(electronicValueItemClick != null){
+                                electronicValueItemClick.onItemClick(item, position);
+                            }
                         }
                 ))
                 // 魔力音阶

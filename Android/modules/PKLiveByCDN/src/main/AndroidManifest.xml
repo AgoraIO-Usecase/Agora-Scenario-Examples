@@ -29,13 +29,28 @@
             android:theme="@style/CommonAppTheme"
             android:screenOrientation="behind" />
         <activity
-            android:name="io.agora.scene.pklivebycdn.HostDetailActivity"
+            android:name="io.agora.scene.pklivebycdn.RskHostActivity"
             android:launchMode="singleTop"
             android:process="io.agora.scene.pklivebycdn"
             android:theme="@style/CommonAppTheme"
             android:screenOrientation="behind" />
+
         <activity
-            android:name="io.agora.scene.pklivebycdn.AudienceDetailActivity"
+            android:name="io.agora.scene.pklivebycdn.RtcHostActivity"
+            android:launchMode="singleTop"
+            android:process="io.agora.scene.pklivebycdn"
+            android:theme="@style/CommonAppTheme"
+            android:screenOrientation="behind" />
+
+        <activity
+            android:name="io.agora.scene.pklivebycdn.RtcAudienceActivity"
+            android:launchMode="singleTop"
+            android:process="io.agora.scene.pklivebycdn"
+            android:theme="@style/CommonAppTheme"
+            android:screenOrientation="behind" />
+
+        <activity
+            android:name="io.agora.scene.pklivebycdn.RskAudienceActivity"
             android:launchMode="singleTop"
             android:process="io.agora.scene.pklivebycdn"
             android:theme="@style/CommonAppTheme"

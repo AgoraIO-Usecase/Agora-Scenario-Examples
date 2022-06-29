@@ -92,18 +92,20 @@ public class RoomManager {
                             }
                             ret.add(item);
                         }
-                        mainHandler.post(() -> callback.onSuccess(ret));
+                        mainHandler.post(() -> callback.onObtained(ret));
                     } catch (Exception exception) {
-                        mainHandler.post(() -> callback.onFailed(exception));
+                        exception.printStackTrace();
                     }
-
                 }
             }
 
             @Override
             public void onFail(SyncManagerException exception) {
-                if (callback != null) {
-                    mainHandler.post(() -> callback.onFailed(exception));
+                if(exception.getMessage().contains("empty")){
+                    if (callback != null) {
+                        List<RoomInfo> ret = new ArrayList<>();
+                        mainHandler.post(() -> callback.onObtained(ret));
+                    }
                 }
             }
         });
@@ -120,16 +122,13 @@ public class RoomManager {
             @Override
             public void onSuccess() {
                 if (callback != null) {
-                    mainHandler.post(() -> callback.onSuccess(roomInfo));
+                    mainHandler.post(() -> callback.onObtained(roomInfo));
                 }
             }
 
             @Override
             public void onFail(SyncManagerException exception) {
-                if (callback != null) {
-                    mainHandler.post(() -> callback.onFailed(exception));
 
-                }
             }
         });
     }
@@ -243,15 +242,13 @@ public class RoomManager {
                             public void onSuccess(IObject result) {
                                 localUserSyncId = result.getId();
                                 if(callback != null){
-                                    mainHandler.post(() -> callback.onSuccess(userInfo));
+                                    mainHandler.post(() -> callback.onObtained(userInfo));
                                 }
                             }
 
                             @Override
                             public void onFail(SyncManagerException exception) {
-                                if(callback != null){
-                                    mainHandler.post(() -> callback.onFailed(exception));
-                                }
+
                             }
                         });
             }
@@ -302,7 +299,7 @@ public class RoomManager {
                                     mainHandler.post(new Runnable() {
                                         @Override
                                         public void run() {
-                                            callback.onSuccess(list);
+                                            callback.onObtained(list);
                                         }
                                     });
 
@@ -311,14 +308,7 @@ public class RoomManager {
 
                             @Override
                             public void onFail(SyncManagerException exception) {
-                                if (callback != null) {
-                                    mainHandler.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            callback.onFailed(exception);
-                                        }
-                                    });
-                                }
+
                             }
                         });
             }
@@ -352,7 +342,7 @@ public class RoomManager {
                             mainHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    callback.onSuccess(pkInfo);
+                                    callback.onObtained(pkInfo);
                                 }
                             });
                         }
@@ -360,22 +350,14 @@ public class RoomManager {
 
                     @Override
                     public void onFail(SyncManagerException exception) {
-                        if (callback != null) {
-                            mainHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    callback.onFailed(exception);
-                                }
-                            });
 
-                        }
                     }
                 });
             }
         });
     }
 
-    public void subscriptPKInfoEvent(String roomId, DataCallback<PKInfo> callback) {
+    public void subscriptRoomInfoEvent(String roomId, DataCallback<PKInfo> addOrUpdate, DataCallback<Boolean> destroy) {
         checkInitialized();
         doOnRoomJoined(roomId, new Runnable() {
             @Override
@@ -394,11 +376,11 @@ public class RoomManager {
                     @Override
                     public void onUpdated(IObject item) {
                         PKInfo roomInfo = item.toObject(PKInfo.class);
-                        if (callback != null) {
+                        if (addOrUpdate != null) {
                             mainHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    callback.onSuccess(roomInfo);
+                                    addOrUpdate.onObtained(roomInfo);
                                 }
                             });
                         }
@@ -406,20 +388,15 @@ public class RoomManager {
 
                     @Override
                     public void onDeleted(IObject item) {
-
+                        String _roomId = item.getId();
+                        if (roomId.equals(_roomId) && destroy != null) {
+                            mainHandler.post(() -> destroy.onObtained(true));
+                        }
                     }
 
                     @Override
                     public void onSubscribeError(SyncManagerException ex) {
-                        if (callback != null) {
-                            mainHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    callback.onFailed(ex);
-                                }
-                            });
 
-                        }
                     }
                 };
                 List<Sync.EventListener> eventListeners = roomEventListeners.get(roomId);
@@ -430,50 +407,6 @@ public class RoomManager {
                 eventListeners.add(listener);
                 sceneReference.subscribe(listener);
             }
-        });
-    }
-
-    public void subscriptRoomDestroyEvent(String roomId, DataCallback<Boolean> callback) {
-        checkInitialized();
-        doOnRoomJoined(roomId, () -> {
-            SceneReference sceneReference = sceneMap.get(roomId);
-            if (sceneReference == null) {
-                Log.e(TAG, "The room has not joined. roomId=" + roomId);
-                return;
-            }
-            Sync.EventListener listener = new Sync.EventListener() {
-                @Override
-                public void onCreated(IObject item) {
-
-                }
-
-                @Override
-                public void onUpdated(IObject item) {
-
-                }
-
-                @Override
-                public void onDeleted(IObject item) {
-                    String _roomId = item.getId();
-                    if (roomId.equals(_roomId) && callback != null) {
-                        mainHandler.post(() -> callback.onSuccess(true));
-                    }
-                }
-
-                @Override
-                public void onSubscribeError(SyncManagerException ex) {
-                    if (callback != null) {
-                        mainHandler.post(() -> callback.onFailed(ex));
-                    }
-                }
-            };
-            List<Sync.EventListener> eventListeners = roomEventListeners.get(roomId);
-            if (eventListeners == null) {
-                eventListeners = new ArrayList<>();
-                roomEventListeners.put(roomId, eventListeners);
-            }
-            eventListeners.add(listener);
-            sceneReference.subscribe(listener);
         });
     }
 
@@ -616,15 +549,11 @@ public class RoomManager {
     }
 
     public interface DataListCallback<T> {
-        void onSuccess(List<T> dataList);
-
-        void onFailed(Exception e);
+        void onObtained(List<T> dataList);
     }
 
     public interface DataCallback<T> {
-        void onSuccess(T data);
-
-        void onFailed(Exception e);
+        void onObtained(T data);
     }
 
 }

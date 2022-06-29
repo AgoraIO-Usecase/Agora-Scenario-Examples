@@ -14,6 +14,10 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import java.util.Iterator;
 
+import io.agora.rtc2.ChannelMediaOptions;
+import io.agora.rtc2.Constants;
+import io.agora.rtc2.IRtcEngineEventHandler;
+import io.agora.rtc2.RtcEngine;
 import io.agora.scene.voice.databinding.VoiceRoomDetailActivityBinding;
 import io.agora.scene.voice.databinding.VoiceRoomDetailSeatItemBinding;
 import io.agora.scene.voice.widgets.BackgroundDialog;
@@ -33,7 +37,7 @@ import io.agora.uiwidget.utils.RandomUtil;
 import io.agora.uiwidget.utils.StatusBarUtil;
 
 public class RoomDetailActivity extends AppCompatActivity {
-    private final RtcManager rtcManager = new RtcManager();
+    private RtcEngine rtcEngine;
     private final RoomManager roomManager = RoomManager.getInstance();
 
     private RoomManager.RoomInfo roomInfo;
@@ -90,7 +94,9 @@ public class RoomDetailActivity extends AppCompatActivity {
                     // 麦克风
                     boolean isActivated = mBinding.bottomView.isFun3Activated();
                     mBinding.bottomView.setFun3Activated(!isActivated);
-                    rtcManager.enableLocalAudio(!isActivated);
+                    if(rtcEngine != null){
+                        rtcEngine.enableLocalAudio(!isActivated);
+                    }
                 });
         mBinding.bottomView.setupInputText(true, v -> {
             // 弹出文本输入框
@@ -164,16 +170,73 @@ public class RoomDetailActivity extends AppCompatActivity {
     }
 
     private void initDialogs() {
-        soundEffectDialog = SoundEffectDialog.createDialog(this, rtcManager);
-        voiceBeautyDialog = VoiceBeautyDialog.createDialog(this, rtcManager);
-        bgMusicDialog = BgMusicDialog.createDialog(this, rtcManager);
+        soundEffectDialog = SoundEffectDialog.createDialog(this,
+                (item, position) -> {
+                    rtcEngine.setAudioEffectPreset(io.agora.scene.voice.Constants.VOICE_EFFECT_ROOM_ACOUSTICS[position]);
+                },
+                (item, position) -> {
+                    rtcEngine.setAudioEffectPreset(io.agora.scene.voice.Constants.VOICE_EFFECT_VOICE_CHANGER[position]);
+                },
+                (item, position) -> {
+                    rtcEngine.setAudioEffectPreset(io.agora.scene.voice.Constants.VOICE_EFFECT_STYLE_TRANSFORMATION[position]);
+                },
+                (buttonView, isChecked) -> {
+                    rtcEngine.setAudioEffectPreset(isChecked ? Constants.PITCH_CORRECTION: Constants.AUDIO_EFFECT_OFF);
+                },
+                (item, position) -> {
+                    rtcEngine.setAudioEffectParameters(io.agora.scene.voice.Constants.VOICE_EFFECT_PITCH_CORRECTION, position,
+                            io.agora.scene.voice.Constants.VOICE_EFFECT_PITCH_CORRECTION_VALUES[position]);
+                },
+                (item, position) -> {
+                    rtcEngine.setAudioEffectParameters(io.agora.scene.voice.Constants.VOICE_EFFECT_PITCH_CORRECTION, position,
+                            io.agora.scene.voice.Constants.VOICE_EFFECT_PITCH_CORRECTION_VALUES[position]);
+                });
+
+        voiceBeautyDialog = VoiceBeautyDialog.createDialog(this,
+                (item, position) -> {
+                    rtcEngine.setVoiceBeautifierPreset(io.agora.scene.voice.Constants.VOICE_BEAUTIFIER_CHAT[position]);
+                },
+                (item, position) -> {
+                    boolean isWoman = position == 1;
+                    if (isWoman) {
+                        rtcEngine.setVoiceBeautifierParameters(io.agora.scene.voice.Constants.VOICE_BEAUTIFIER_SINGING, 2, 3);
+                    } else {
+                        rtcEngine.setVoiceBeautifierPreset(io.agora.scene.voice.Constants.VOICE_BEAUTIFIER_SINGING);
+                    }
+                },
+                (item, position) -> {
+                    rtcEngine.setVoiceBeautifierPreset(io.agora.scene.voice.Constants.VOICE_BEAUTIFIER_TRANASFORMATION[position]);
+                });
+
+        bgMusicDialog = BgMusicDialog.createDialog(this, new BgMusicDialog.Listener() {
+            @Override
+            public void onVolumeChanged(int max, int volume) {
+                rtcEngine.adjustAudioMixingVolume(volume);
+            }
+
+            @Override
+            public void onMusicSelected(BgMusicDialog.MusicInfo musicInfo, boolean isSelected) {
+                if(isSelected){
+                    rtcEngine.startAudioMixing(musicInfo.url, false, false, 1);
+                }else{
+                    rtcEngine.stopAudioMixing();
+                }
+            }
+        });
+
         backgroundDialog = new BackgroundDialog(this);
         backgroundDialog.setOnBackgroundActionListener((index, res) -> {
             roomInfo.setBackgroundId(res);
             mBinding.ivBackground.setImageResource(res);
             roomManager.updateRoom(roomInfo);
         });
-        settingDialog = SettingDialog.createDialog(this, rtcManager, () -> backgroundDialog.show(), () -> bgMusicDialog.show());
+
+        settingDialog = SettingDialog.createDialog(this,
+                (view, item) -> {
+                    rtcEngine.enableInEarMonitoring(item.activated);
+                },
+                () -> backgroundDialog.show(),
+                () -> bgMusicDialog.show());
     }
 
 
@@ -241,33 +304,49 @@ public class RoomDetailActivity extends AppCompatActivity {
     }
 
     private void initRtcManager(boolean isRoomOwner) {
-        rtcManager.init(this, getString(R.string.rtc_app_id), null);
-        rtcManager.joinChannel(roomInfo.roomId, RoomManager.getCacheUserId(), getString(R.string.rtc_app_token), isRoomOwner, new RtcManager.OnChannelListener() {
-            @Override
-            public void onError(int code, String message) {
-                runOnUiThread(() -> {
-                    Toast.makeText(RoomDetailActivity.this, "code=" + code + ",message=" + message, Toast.LENGTH_LONG).show();
-                    finish();
-                });
 
-            }
+        try {
+            rtcEngine = RtcEngine.create(this, getString(R.string.rtc_app_id), new IRtcEngineEventHandler() {
+                @Override
+                public void onError(int err) {
+                    super.onError(err);
+                    runOnUiThread(() -> {
+                        Toast.makeText(RoomDetailActivity.this, "code=" + err + ",message=" + RtcEngine.getErrorDescription(err), Toast.LENGTH_LONG).show();
+                        finish();
+                    });
+                }
 
-            @Override
-            public void onJoinSuccess(int uid) {
-                runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
+                @Override
+                public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
+                    super.onJoinChannelSuccess(channel, uid, elapsed);
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
+                }
 
-            }
+                @Override
+                public void onUserJoined(int uid, int elapsed) {
+                    super.onUserJoined(uid, elapsed);
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
+                }
 
-            @Override
-            public void onUserJoined(String channelId, int uid) {
-                runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
-            }
+                @Override
+                public void onUserOffline(int uid, int reason) {
+                    super.onUserOffline(uid, reason);
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_left_suffix))));
+                }
 
-            @Override
-            public void onUserOffline(String channelId, int uid) {
-                runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_left_suffix))));
-            }
-        });
+            });
+
+            rtcEngine.setDefaultAudioRoutetoSpeakerphone(true);
+
+            ChannelMediaOptions options = new ChannelMediaOptions();
+            options.clientRoleType = isRoomOwner ? Constants.CLIENT_ROLE_BROADCASTER: Constants.CLIENT_ROLE_AUDIENCE;
+            options.publishAudioTrack = isRoomOwner;
+            options.autoSubscribeAudio = true;
+            rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, 0, options);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void updateUserView(RoomManager.UserInfo userInfo) {
@@ -304,11 +383,23 @@ public class RoomDetailActivity extends AppCompatActivity {
                             .show();
                 } else if (userInfo.status == RoomManager.UserStatus.accept) {
                     upSeat(userInfo);
-                    rtcManager.setPublishAudio(true);
+
+                    ChannelMediaOptions options = new ChannelMediaOptions();
+                    options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
+                    options.publishAudioTrack = true;
+                    options.autoSubscribeAudio = true;
+                    rtcEngine.updateChannelMediaOptions(options);
+
                     mBinding.bottomView.setFun1Visible(true).setFun2Visible(true).setFun3Visible(true);
                 } else if (userInfo.status == RoomManager.UserStatus.end) {
                     downSeat(userInfo);
-                    rtcManager.setPublishAudio(false);
+
+                    ChannelMediaOptions options = new ChannelMediaOptions();
+                    options.clientRoleType = Constants.CLIENT_ROLE_AUDIENCE;
+                    options.publishAudioTrack = false;
+                    options.autoSubscribeAudio = true;
+                    rtcEngine.updateChannelMediaOptions(options);
+
                     mBinding.bottomView.setFun1Visible(false).setFun2Visible(false).setFun3Visible(false);
                 }
             } else {
@@ -411,7 +502,8 @@ public class RoomDetailActivity extends AppCompatActivity {
     @Override
     public void finish() {
         roomManager.leaveRoom(roomInfo.roomId, RoomManager.getCacheUserId().equals(roomInfo.userId));
-        rtcManager.release();
+        rtcEngine.leaveChannel();
+        RtcEngine.destroy();
         super.finish();
     }
 

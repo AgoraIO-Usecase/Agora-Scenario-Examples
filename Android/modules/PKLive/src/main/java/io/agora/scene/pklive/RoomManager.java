@@ -258,7 +258,7 @@ public class RoomManager {
         }
         PKInfoModel pkInfoModel = new PKInfoModel();
         pkInfoModel.status = applyInfo.status;
-        pkInfoModel.roomId = applyInfo.targetUserId.equals(getCacheUserId()) ? roomId : applyInfo.targetRoomId;
+        pkInfoModel.roomId = roomId.equals(applyInfo.roomId) ? applyInfo.targetRoomId : applyInfo.roomId;
         pkInfoModel.userId = applyInfo.targetUserId;
         sceneReference.update(SYNC_MANAGER_PK_INFO, pkInfoModel, new Sync.DataItemCallback() {
             @Override

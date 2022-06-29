@@ -3,6 +3,7 @@ package io.agora.scene.pklive;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.SurfaceView;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -10,7 +11,15 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.lang.ref.WeakReference;
+import java.util.Random;
 
+import io.agora.rtc2.ChannelMediaOptions;
+import io.agora.rtc2.Constants;
+import io.agora.rtc2.IRtcEngineEventHandler;
+import io.agora.rtc2.RtcConnection;
+import io.agora.rtc2.RtcEngine;
+import io.agora.rtc2.RtcEngineEx;
+import io.agora.rtc2.video.VideoCanvas;
 import io.agora.scene.pklive.databinding.PkLiveAudienceDetailActivityBinding;
 import io.agora.uiwidget.function.GiftAnimPlayDialog;
 import io.agora.uiwidget.function.GiftGridDialog;
@@ -21,7 +30,7 @@ import io.agora.uiwidget.utils.StatusBarUtil;
 
 public class AudienceDetailActivity extends AppCompatActivity {
 
-    private final RtcManager rtcManager = new RtcManager();
+    private RtcEngineEx rtcEngine;
     private final RoomManager roomManager = RoomManager.getInstance();
 
     private PkLiveAudienceDetailActivityBinding mBinding;
@@ -51,40 +60,41 @@ public class AudienceDetailActivity extends AppCompatActivity {
             });
         }
     };
+    private RtcConnection pkConnection;
     private final RoomManager.DataCallback<RoomManager.PKInfoModel> pkInfoModelDataCallback = data -> runOnUiThread(() -> {
         if(data == null){
             return;
         }
         if (data.status == RoomManager.PKApplyInfoStatus.accept) {
             // 开始PK
-            rtcManager.joinChannel(data.roomId, "", getString(R.string.rtc_app_token), false, new RtcManager.OnChannelListener() {
+            pkConnection = new RtcConnection();
+            pkConnection.localUid = new Random(System.currentTimeMillis()).nextInt(10000) + 200000;
+            pkConnection.channelId = data.roomId;
+
+            ChannelMediaOptions options = new ChannelMediaOptions();
+            options.clientRoleType = Constants.CLIENT_ROLE_AUDIENCE;
+            options.autoSubscribeAudio = true;
+            options.autoSubscribeVideo = true;
+            rtcEngine.joinChannelEx(getString(R.string.rtc_app_token), pkConnection, options, new IRtcEngineEventHandler() {
                 @Override
-                public void onError(int code, String message) {
-
-                }
-
-                @Override
-                public void onJoinSuccess(int uid) {
-
-                }
-
-                @Override
-                public void onUserJoined(String channelId, int uid) {
+                public void onUserJoined(int uid, int elapsed) {
+                    super.onUserJoined(uid, elapsed);
                     runOnUiThread(() -> {
                         mBinding.pkVideoContainer.setVisibility(View.VISIBLE);
                         mBinding.ivPkIcon.setVisibility(View.VISIBLE);
-                        rtcManager.renderRemoteVideo(mBinding.pkVideoContainer, channelId, uid);
+
+                        SurfaceView videoView = new SurfaceView(AudienceDetailActivity.this);
+                        mBinding.pkVideoContainer.removeAllViews();
+                        mBinding.pkVideoContainer.addView(videoView);
+                        rtcEngine.setupRemoteVideoEx(new VideoCanvas(videoView, Constants.RENDER_MODE_HIDDEN, uid), pkConnection);
                     });
                 }
 
-                @Override
-                public void onUserOffline(String channelId, int uid) {
-
-                }
             });
         } else if (data.status == RoomManager.PKApplyInfoStatus.end) {
             // 结束PK
-            rtcManager.leaveChannel(data.roomId);
+            rtcEngine.leaveChannelEx(pkConnection);
+            pkConnection = null;
             mBinding.pkVideoContainer.setVisibility(View.GONE);
             mBinding.pkVideoContainer.removeAllViews();
             mBinding.ivPkIcon.setVisibility(View.GONE);
@@ -122,7 +132,7 @@ public class AudienceDetailActivity extends AppCompatActivity {
         };
         mBinding.messageList.setAdapter(mMessageAdapter);
 
-        initRtcManager();
+        initRtcEngine();
         initRoomManager();
     }
 
@@ -135,32 +145,45 @@ public class AudienceDetailActivity extends AppCompatActivity {
         });
     }
 
-    private void initRtcManager() {
-        rtcManager.init(this, getString(R.string.rtc_app_id), null);
-        rtcManager.joinChannel(roomInfo.roomId, RoomManager.getCacheUserId(), getString(R.string.rtc_app_token), false, new RtcManager.OnChannelListener() {
-            @Override
-            public void onError(int code, String message) {
+    private void initRtcEngine() {
+        try {
+            rtcEngine = (RtcEngineEx) RtcEngineEx.create(this, getString(R.string.rtc_app_id), new IRtcEngineEventHandler() {
+                @Override
+                public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
+                    super.onJoinChannelSuccess(channel, uid, elapsed);
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
+                }
 
-            }
+                @Override
+                public void onUserJoined(int uid, int elapsed) {
+                    super.onUserJoined(uid, elapsed);
+                    runOnUiThread(() -> {
+                        SurfaceView videoView = new SurfaceView(AudienceDetailActivity.this);
+                        mBinding.localVideoContainer.removeAllViews();
+                        mBinding.localVideoContainer.addView(videoView);
+                        rtcEngine.setupRemoteVideo(new VideoCanvas(videoView, Constants.RENDER_MODE_HIDDEN, uid));
 
-            @Override
-            public void onJoinSuccess(int uid) {
-                runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
-            }
+                        mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix)));
+                    });
+                }
 
-            @Override
-            public void onUserJoined(String channelId, int uid) {
-                runOnUiThread(() -> {
-                    rtcManager.renderRemoteVideo(mBinding.localVideoContainer, channelId, uid);
-                    mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix)));
-                });
-            }
+                @Override
+                public void onUserOffline(int uid, int reason) {
+                    super.onUserOffline(uid, reason);
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_left_suffix))));
+                }
+            });
 
-            @Override
-            public void onUserOffline(String channelId, int uid) {
-                runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_left_suffix))));
-            }
-        });
+
+            ChannelMediaOptions options = new ChannelMediaOptions();
+            options.clientRoleType = Constants.CLIENT_ROLE_AUDIENCE;
+            options.autoSubscribeVideo = true;
+            options.autoSubscribeAudio = true;
+            rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, 0, options);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void showRoomEndDialog(){
@@ -203,7 +226,12 @@ public class AudienceDetailActivity extends AppCompatActivity {
 
     @Override
     public void finish() {
-        rtcManager.release();
+        if(pkConnection != null){
+            rtcEngine.leaveChannelEx(pkConnection);
+            pkConnection = null;
+        }
+        rtcEngine.leaveChannel();
+        RtcEngine.destroy();
         super.finish();
     }
 }
