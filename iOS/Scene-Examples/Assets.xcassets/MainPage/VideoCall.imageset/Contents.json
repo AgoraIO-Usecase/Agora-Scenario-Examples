@@ -5,12 +5,12 @@
       "scale" : "1x"
     },
     {
-      "filename" : "create@2x.png",
+      "filename" : "VideoCall@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "create@3x.png",
+      "filename" : "VideoCall@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

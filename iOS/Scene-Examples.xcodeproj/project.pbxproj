@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		B5DF969B7ED11BACA57C6864 /* Pods_Scene_Examples.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AED837A3EC68965AC33FE2E6 /* Pods_Scene_Examples.framework */; };
 		E710AE2F27A0F23300124356 /* ChangeRoomBgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E710AE2E27A0F23300124356 /* ChangeRoomBgView.swift */; };
+		E7377D91286EE7C0008F6C62 /* LivePKCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7377D8F286EE7C0008F6C62 /* LivePKCreateController.swift */; };
+		E7377D94286EEA38008F6C62 /* VoiceChatRoomCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7377D93286EEA38008F6C62 /* VoiceChatRoomCreateController.swift */; };
+		E7377D962872CB94008F6C62 /* ClubCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7377D952872CB94008F6C62 /* ClubCreateController.swift */; };
 		E7440E2C277420F200CBF4D8 /* LiveBaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7440E2B277420F200CBF4D8 /* LiveBaseView.swift */; };
 		E7499C1B276A078500E799FF /* LiveOnlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C1A276A078500E799FF /* LiveOnlineView.swift */; };
 		E7499C2A2770534400E799FF /* NoticeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C292770534400E799FF /* NoticeCell.swift */; };
@@ -27,12 +30,6 @@
 		E757E6A7281AAE6B0017D5B9 /* SyncManager.swift~HEAD in Resources */ = {isa = PBXBuildFile; fileRef = E757E686281AAE6B0017D5B9 /* SyncManager.swift~HEAD */; };
 		E757E6A8281AAE6B0017D5B9 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E687281AAE6B0017D5B9 /* Protocols.swift */; };
 		E757E6A9281AAE6B0017D5B9 /* CollectionReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E688281AAE6B0017D5B9 /* CollectionReference.swift */; };
-		E757E6AA281AAE6B0017D5B9 /* AskSyncManager+ISyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E68A281AAE6B0017D5B9 /* AskSyncManager+ISyncManager.swift */; };
-		E757E6AB281AAE6B0017D5B9 /* AgoraJson+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E68B281AAE6B0017D5B9 /* AgoraJson+Extension.swift */; };
-		E757E6AC281AAE6B0017D5B9 /* AskSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E68C281AAE6B0017D5B9 /* AskSyncManager.swift */; };
-		E757E6AD281AAE6B0017D5B9 /* AskSyncManager+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E68D281AAE6B0017D5B9 /* AskSyncManager+Info.swift */; };
-		E757E6AE281AAE6B0017D5B9 /* AskSyncManager+Sync.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E68E281AAE6B0017D5B9 /* AskSyncManager+Sync.swift */; };
-		E757E6AF281AAE6B0017D5B9 /* AskSyncManager+Internal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E68F281AAE6B0017D5B9 /* AskSyncManager+Internal.swift */; };
 		E757E6B0281AAE6B0017D5B9 /* SyncManager.swift~zyq in Resources */ = {isa = PBXBuildFile; fileRef = E757E690281AAE6B0017D5B9 /* SyncManager.swift~zyq */; };
 		E757E6B1281AAE6B0017D5B9 /* DocumentReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E691281AAE6B0017D5B9 /* DocumentReference.swift */; };
 		E757E6B2281AAE6B0017D5B9 /* publish.sh in Resources */ = {isa = PBXBuildFile; fileRef = E757E692281AAE6B0017D5B9 /* publish.sh */; };
@@ -42,7 +39,8 @@
 		E757E6B6281AAE6B0017D5B9 /* SyncError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E697281AAE6B0017D5B9 /* SyncError.swift */; };
 		E757E6B8281AAE6B0017D5B9 /* AgoraSyncManager.podspec in Resources */ = {isa = PBXBuildFile; fileRef = E757E699281AAE6B0017D5B9 /* AgoraSyncManager.podspec */; };
 		E76DE01D2809241200A0434C /* ClubRoomListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E76DE01C2809241200A0434C /* ClubRoomListView.swift */; };
-		E79BEF31273D0EA4009FA838 /* SignleLiveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF30273D0EA4009FA838 /* SignleLiveController.swift */; };
+		E777B3F5286C341100C8A0E7 /* SuperAppRoomListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E777B3F4286C341100C8A0E7 /* SuperAppRoomListViewCell.swift */; };
+		E79BEF31273D0EA4009FA838 /* LiveBroadcastingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF30273D0EA4009FA838 /* LiveBroadcastingController.swift */; };
 		E79BEF33273D0F0C009FA838 /* LiveCanvasModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF32273D0F0C009FA838 /* LiveCanvasModel.swift */; };
 		E79BEF35273D1304009FA838 /* LivePlayerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF34273D1304009FA838 /* LivePlayerCell.swift */; };
 		E79BEF37273D15D6009FA838 /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF36273D15D6009FA838 /* Screen.swift */; };
@@ -63,7 +61,7 @@
 		E79BEF58273E50ED009FA838 /* SuperDiamond.gif in Resources */ = {isa = PBXBuildFile; fileRef = E79BEF4F273E50ED009FA838 /* SuperDiamond.gif */; };
 		E79BEF59273E50ED009FA838 /* sound.gif in Resources */ = {isa = PBXBuildFile; fileRef = E79BEF50273E50ED009FA838 /* sound.gif */; };
 		E79BEF5B273E5768009FA838 /* GIFImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF5A273E5768009FA838 /* GIFImageView.swift */; };
-		E79BEF662741FD43009FA838 /* PKLiveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF652741FD43009FA838 /* PKLiveController.swift */; };
+		E79BEF662741FD43009FA838 /* LivePKController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF652741FD43009FA838 /* LivePKController.swift */; };
 		E79BEF68274203ED009FA838 /* PKLiveInviteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF67274203ED009FA838 /* PKLiveInviteView.swift */; };
 		E79BEF6A27420933009FA838 /* PKApplyInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF6927420933009FA838 /* PKApplyInfoModel.swift */; };
 		E79BEF752744FD8B009FA838 /* GCDTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF742744FD8B009FA838 /* GCDTimer.swift */; };
@@ -90,14 +88,13 @@
 		E79C2612273B689B00909CD4 /* SegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2606273B689B00909CD4 /* SegmentView.swift */; };
 		E79C2613273B689B00909CD4 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2607273B689B00909CD4 /* UIColor+Extension.swift */; };
 		E79C261C273B712000909CD4 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C261B273B712000909CD4 /* BaseViewController.swift */; };
-		E79C261F273B737100909CD4 /* MainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C261E273B737100909CD4 /* MainTableViewCell.swift */; };
-		E79C2626273B7BDA00909CD4 /* CreateLiveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2625273B7BDA00909CD4 /* CreateLiveController.swift */; };
+		E79C261F273B737100909CD4 /* MainCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C261E273B737100909CD4 /* MainCollectionViewCell.swift */; };
+		E79C2626273B7BDA00909CD4 /* LiveBroadcastingCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2625273B7BDA00909CD4 /* LiveBroadcastingCreateController.swift */; };
 		E79C2628273B7D3700909CD4 /* LiveRandomName.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2627273B7D3700909CD4 /* LiveRandomName.swift */; };
 		E79C262A273B7D8900909CD4 /* DeviceAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2629273B7D8900909CD4 /* DeviceAssistant.swift */; };
 		E79C262D273BC0CA00909CD4 /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C262C273BC0CA00909CD4 /* ToastView.swift */; };
 		E79C2632273BC17B00909CD4 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2631273BC17B00909CD4 /* String+Extension.swift */; };
 		E79C2636273BC6C400909CD4 /* LiveRandomNameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2635273BC6C400909CD4 /* LiveRandomNameView.swift */; };
-		E79C2638273BC8DF00909CD4 /* MainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2637273BC8DF00909CD4 /* MainModel.swift */; };
 		E79C263B273BCC0A00909CD4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E79C263D273BCC0A00909CD4 /* Localizable.strings */; };
 		E79C2642273BE5C500909CD4 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2641273BE5C500909CD4 /* AlertManager.swift */; };
 		E79C2644273BE7C000909CD4 /* LiveSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2643273BE7C000909CD4 /* LiveSettingView.swift */; };
@@ -113,7 +110,6 @@
 		E7D30F0B2845DC4A0062CFE3 /* SuperAppUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EF12845DC4A0062CFE3 /* SuperAppUserInfo.swift */; };
 		E7D30F0C2845DC4A0062CFE3 /* SuperAppRoomInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EF22845DC4A0062CFE3 /* SuperAppRoomInfo.swift */; };
 		E7D30F0D2845DC4A0062CFE3 /* SuperAppPKInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EF32845DC4A0062CFE3 /* SuperAppPKInfo.swift */; };
-		E7D30F0E2845DC4A0062CFE3 /* SuperAppRoomListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EF52845DC4A0062CFE3 /* SuperAppRoomListViewCell.swift */; };
 		E7D30F0F2845DC4A0062CFE3 /* SuperAppInvitationViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EF62845DC4A0062CFE3 /* SuperAppInvitationViewCell.swift */; };
 		E7D30F102845DC4A0062CFE3 /* SuperAppToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EF72845DC4A0062CFE3 /* SuperAppToolView.swift */; };
 		E7D30F112845DC4A0062CFE3 /* SuperAppCreateLiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EF82845DC4A0062CFE3 /* SuperAppCreateLiveView.swift */; };
@@ -129,13 +125,16 @@
 		E7D30F1B2845DC4A0062CFE3 /* SuperAppPlayerViewControllerHost+RTC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30F032845DC4A0062CFE3 /* SuperAppPlayerViewControllerHost+RTC.swift */; };
 		E7D30F1C2845DC4A0062CFE3 /* SuperAppPlayerViewControllerAudience+RTC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30F042845DC4A0062CFE3 /* SuperAppPlayerViewControllerAudience+RTC.swift */; };
 		E7D30F1D2845DC4A0062CFE3 /* SuperAppCreateLiveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30F052845DC4A0062CFE3 /* SuperAppCreateLiveViewController.swift */; };
+		E7D46061285C7A00004F3C82 /* MainHeaderViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D46060285C7A00004F3C82 /* MainHeaderViewCell.swift */; };
+		E7D46063285C8244004F3C82 /* VideoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D46062285C8244004F3C82 /* VideoCollectionViewCell.swift */; };
+		E7D46065285C825D004F3C82 /* BaseCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D46064285C825D004F3C82 /* BaseCollectionViewCell.swift */; };
 		E7ECC56727E8155700EFA778 /* AgoraClubController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ECC56627E8155700EFA778 /* AgoraClubController.swift */; };
 		E7ECC56927E81A9E00EFA778 /* BaseNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ECC56827E81A9E00EFA778 /* BaseNavigationController.swift */; };
 		E7ECC56B27E81BAE00EFA778 /* ClubHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ECC56A27E81BAE00EFA778 /* ClubHeaderView.swift */; };
 		E7ECC56D27E81F5A00EFA778 /* UIImage+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ECC56C27E81F5A00EFA778 /* UIImage+Color.swift */; };
 		E7ECC56F27E8646600EFA778 /* SeatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ECC56E27E8646600EFA778 /* SeatView.swift */; };
 		E7ECC57127E8923200EFA778 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ECC57027E8923200EFA778 /* Array+Extension.swift */; };
-		E7EDBCAC27A0F98900E763A6 /* AgoraVoiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCAB27A0F98900E763A6 /* AgoraVoiceController.swift */; };
+		E7EDBCAC27A0F98900E763A6 /* VoiceChatRoomController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCAB27A0F98900E763A6 /* VoiceChatRoomController.swift */; };
 		E7EDBCAE27A1281200E763A6 /* AgoraVoiceUsersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCAD27A1281200E763A6 /* AgoraVoiceUsersView.swift */; };
 		E7EDBCB027A131BC00E763A6 /* AgoraVoiceBelCantoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCAF27A131BC00E763A6 /* AgoraVoiceBelCantoView.swift */; };
 		E7EDBCB227A1463700E763A6 /* AgoraVoiceBelCantoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCB127A1463700E763A6 /* AgoraVoiceBelCantoModel.swift */; };
@@ -171,6 +170,9 @@
 		AED837A3EC68965AC33FE2E6 /* Pods_Scene_Examples.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Scene_Examples.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C99DD6A332A83A34EF8B5943 /* Pods-Scene-Examples.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Scene-Examples.release.xcconfig"; path = "Target Support Files/Pods-Scene-Examples/Pods-Scene-Examples.release.xcconfig"; sourceTree = "<group>"; };
 		E710AE2E27A0F23300124356 /* ChangeRoomBgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeRoomBgView.swift; sourceTree = "<group>"; };
+		E7377D8F286EE7C0008F6C62 /* LivePKCreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LivePKCreateController.swift; sourceTree = "<group>"; };
+		E7377D93286EEA38008F6C62 /* VoiceChatRoomCreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoiceChatRoomCreateController.swift; sourceTree = "<group>"; };
+		E7377D952872CB94008F6C62 /* ClubCreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClubCreateController.swift; sourceTree = "<group>"; };
 		E7440E2B277420F200CBF4D8 /* LiveBaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveBaseView.swift; sourceTree = "<group>"; };
 		E7499C1A276A078500E799FF /* LiveOnlineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveOnlineView.swift; sourceTree = "<group>"; };
 		E7499C292770534400E799FF /* NoticeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeCell.swift; sourceTree = "<group>"; };
@@ -189,12 +191,6 @@
 		E757E686281AAE6B0017D5B9 /* SyncManager.swift~HEAD */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "SyncManager.swift~HEAD"; sourceTree = "<group>"; };
 		E757E687281AAE6B0017D5B9 /* Protocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		E757E688281AAE6B0017D5B9 /* CollectionReference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionReference.swift; sourceTree = "<group>"; };
-		E757E68A281AAE6B0017D5B9 /* AskSyncManager+ISyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AskSyncManager+ISyncManager.swift"; sourceTree = "<group>"; };
-		E757E68B281AAE6B0017D5B9 /* AgoraJson+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraJson+Extension.swift"; sourceTree = "<group>"; };
-		E757E68C281AAE6B0017D5B9 /* AskSyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AskSyncManager.swift; sourceTree = "<group>"; };
-		E757E68D281AAE6B0017D5B9 /* AskSyncManager+Info.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AskSyncManager+Info.swift"; sourceTree = "<group>"; };
-		E757E68E281AAE6B0017D5B9 /* AskSyncManager+Sync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AskSyncManager+Sync.swift"; sourceTree = "<group>"; };
-		E757E68F281AAE6B0017D5B9 /* AskSyncManager+Internal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AskSyncManager+Internal.swift"; sourceTree = "<group>"; };
 		E757E690281AAE6B0017D5B9 /* SyncManager.swift~zyq */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "SyncManager.swift~zyq"; sourceTree = "<group>"; };
 		E757E691281AAE6B0017D5B9 /* DocumentReference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentReference.swift; sourceTree = "<group>"; };
 		E757E692281AAE6B0017D5B9 /* publish.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = publish.sh; sourceTree = "<group>"; };
@@ -204,7 +200,8 @@
 		E757E697281AAE6B0017D5B9 /* SyncError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncError.swift; sourceTree = "<group>"; };
 		E757E699281AAE6B0017D5B9 /* AgoraSyncManager.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AgoraSyncManager.podspec; sourceTree = "<group>"; };
 		E76DE01C2809241200A0434C /* ClubRoomListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubRoomListView.swift; sourceTree = "<group>"; };
-		E79BEF30273D0EA4009FA838 /* SignleLiveController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignleLiveController.swift; sourceTree = "<group>"; };
+		E777B3F4286C341100C8A0E7 /* SuperAppRoomListViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAppRoomListViewCell.swift; sourceTree = "<group>"; };
+		E79BEF30273D0EA4009FA838 /* LiveBroadcastingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveBroadcastingController.swift; sourceTree = "<group>"; };
 		E79BEF32273D0F0C009FA838 /* LiveCanvasModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCanvasModel.swift; sourceTree = "<group>"; };
 		E79BEF34273D1304009FA838 /* LivePlayerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivePlayerCell.swift; sourceTree = "<group>"; };
 		E79BEF36273D15D6009FA838 /* Screen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Screen.swift; sourceTree = "<group>"; };
@@ -225,7 +222,7 @@
 		E79BEF4F273E50ED009FA838 /* SuperDiamond.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = SuperDiamond.gif; sourceTree = "<group>"; };
 		E79BEF50273E50ED009FA838 /* sound.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = sound.gif; sourceTree = "<group>"; };
 		E79BEF5A273E5768009FA838 /* GIFImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIFImageView.swift; sourceTree = "<group>"; };
-		E79BEF652741FD43009FA838 /* PKLiveController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PKLiveController.swift; sourceTree = "<group>"; };
+		E79BEF652741FD43009FA838 /* LivePKController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivePKController.swift; sourceTree = "<group>"; };
 		E79BEF67274203ED009FA838 /* PKLiveInviteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PKLiveInviteView.swift; sourceTree = "<group>"; };
 		E79BEF6927420933009FA838 /* PKApplyInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PKApplyInfoModel.swift; sourceTree = "<group>"; };
 		E79BEF742744FD8B009FA838 /* GCDTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDTimer.swift; sourceTree = "<group>"; };
@@ -255,14 +252,13 @@
 		E79C2606273B689B00909CD4 /* SegmentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentView.swift; sourceTree = "<group>"; };
 		E79C2607273B689B00909CD4 /* UIColor+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		E79C261B273B712000909CD4 /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
-		E79C261E273B737100909CD4 /* MainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTableViewCell.swift; sourceTree = "<group>"; };
-		E79C2625273B7BDA00909CD4 /* CreateLiveController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateLiveController.swift; sourceTree = "<group>"; };
+		E79C261E273B737100909CD4 /* MainCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCollectionViewCell.swift; sourceTree = "<group>"; };
+		E79C2625273B7BDA00909CD4 /* LiveBroadcastingCreateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveBroadcastingCreateController.swift; sourceTree = "<group>"; };
 		E79C2627273B7D3700909CD4 /* LiveRandomName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRandomName.swift; sourceTree = "<group>"; };
 		E79C2629273B7D8900909CD4 /* DeviceAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceAssistant.swift; sourceTree = "<group>"; };
 		E79C262C273BC0CA00909CD4 /* ToastView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		E79C2631273BC17B00909CD4 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		E79C2635273BC6C400909CD4 /* LiveRandomNameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRandomNameView.swift; sourceTree = "<group>"; };
-		E79C2637273BC8DF00909CD4 /* MainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainModel.swift; sourceTree = "<group>"; };
 		E79C263C273BCC0A00909CD4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E79C263E273BCC2300909CD4 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		E79C263F273BCC2300909CD4 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
@@ -281,7 +277,6 @@
 		E7D30EF12845DC4A0062CFE3 /* SuperAppUserInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAppUserInfo.swift; sourceTree = "<group>"; };
 		E7D30EF22845DC4A0062CFE3 /* SuperAppRoomInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAppRoomInfo.swift; sourceTree = "<group>"; };
 		E7D30EF32845DC4A0062CFE3 /* SuperAppPKInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAppPKInfo.swift; sourceTree = "<group>"; };
-		E7D30EF52845DC4A0062CFE3 /* SuperAppRoomListViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAppRoomListViewCell.swift; sourceTree = "<group>"; };
 		E7D30EF62845DC4A0062CFE3 /* SuperAppInvitationViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAppInvitationViewCell.swift; sourceTree = "<group>"; };
 		E7D30EF72845DC4A0062CFE3 /* SuperAppToolView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAppToolView.swift; sourceTree = "<group>"; };
 		E7D30EF82845DC4A0062CFE3 /* SuperAppCreateLiveView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAppCreateLiveView.swift; sourceTree = "<group>"; };
@@ -297,13 +292,16 @@
 		E7D30F032845DC4A0062CFE3 /* SuperAppPlayerViewControllerHost+RTC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SuperAppPlayerViewControllerHost+RTC.swift"; sourceTree = "<group>"; };
 		E7D30F042845DC4A0062CFE3 /* SuperAppPlayerViewControllerAudience+RTC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SuperAppPlayerViewControllerAudience+RTC.swift"; sourceTree = "<group>"; };
 		E7D30F052845DC4A0062CFE3 /* SuperAppCreateLiveViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperAppCreateLiveViewController.swift; sourceTree = "<group>"; };
+		E7D46060285C7A00004F3C82 /* MainHeaderViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHeaderViewCell.swift; sourceTree = "<group>"; };
+		E7D46062285C8244004F3C82 /* VideoCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoCollectionViewCell.swift; sourceTree = "<group>"; };
+		E7D46064285C825D004F3C82 /* BaseCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseCollectionViewCell.swift; sourceTree = "<group>"; };
 		E7ECC56627E8155700EFA778 /* AgoraClubController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraClubController.swift; sourceTree = "<group>"; };
 		E7ECC56827E81A9E00EFA778 /* BaseNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseNavigationController.swift; sourceTree = "<group>"; };
 		E7ECC56A27E81BAE00EFA778 /* ClubHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubHeaderView.swift; sourceTree = "<group>"; };
 		E7ECC56C27E81F5A00EFA778 /* UIImage+Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Color.swift"; sourceTree = "<group>"; };
 		E7ECC56E27E8646600EFA778 /* SeatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeatView.swift; sourceTree = "<group>"; };
 		E7ECC57027E8923200EFA778 /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
-		E7EDBCAB27A0F98900E763A6 /* AgoraVoiceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraVoiceController.swift; sourceTree = "<group>"; };
+		E7EDBCAB27A0F98900E763A6 /* VoiceChatRoomController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceChatRoomController.swift; sourceTree = "<group>"; };
 		E7EDBCAD27A1281200E763A6 /* AgoraVoiceUsersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraVoiceUsersView.swift; sourceTree = "<group>"; };
 		E7EDBCAF27A131BC00E763A6 /* AgoraVoiceBelCantoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraVoiceBelCantoView.swift; sourceTree = "<group>"; };
 		E7EDBCB127A1463700E763A6 /* AgoraVoiceBelCantoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraVoiceBelCantoModel.swift; sourceTree = "<group>"; };
@@ -355,6 +353,61 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		E7377D8A286ECB06008F6C62 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				E7377D8D286ED873008F6C62 /* CommonViews */,
+				E757E675281AAE6B0017D5B9 /* AgoraSyncManager */,
+				E79BEF9F274796E1009FA838 /* NetworkManager */,
+				E79C2630273BC16700909CD4 /* Extension */,
+				E79C262B273BC0B500909CD4 /* ToastView */,
+				E79C2605273B689B00909CD4 /* LayoutBaseViews */,
+				E79C25FE273B689A00909CD4 /* Common */,
+			);
+			path = Util;
+			sourceTree = "<group>";
+		};
+		E7377D8B286ECB15008F6C62 /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				E7377D8E286EE27B008F6C62 /* RoomList */,
+				E7D30EE92845DC4A0062CFE3 /* CDN */,
+				E79C25F2273B685100909CD4 /* BreakOutRoom */,
+				E7EDBCA727A0F94800E763A6 /* VoiceChatRoom */,
+				E7ECC56227E814F800EFA778 /* Club */,
+				E79C2620273B7B5C00909CD4 /* LiveBroadcasting */,
+				E79BEF612741FCEB009FA838 /* LivePK */,
+			);
+			path = Scenes;
+			sourceTree = "<group>";
+		};
+		E7377D8D286ED873008F6C62 /* CommonViews */ = {
+			isa = PBXGroup;
+			children = (
+				E7440E2B277420F200CBF4D8 /* LiveBaseView.swift */,
+				E79C2635273BC6C400909CD4 /* LiveRandomNameView.swift */,
+				E79C2643273BE7C000909CD4 /* LiveSettingView.swift */,
+				E79BEF38273D18B4009FA838 /* LiveAvatarView.swift */,
+				E7499C1A276A078500E799FF /* LiveOnlineView.swift */,
+				E79BEF3A273D21FD009FA838 /* LiveChatView.swift */,
+				E79BEF3C273D327F009FA838 /* LiveBottomView.swift */,
+				E79BEF3E273D3EF0009FA838 /* LiveToolView.swift */,
+				E79BEF42273E3709009FA838 /* LiveGiftView.swift */,
+				E710AE2E27A0F23300124356 /* ChangeRoomBgView.swift */,
+			);
+			path = CommonViews;
+			sourceTree = "<group>";
+		};
+		E7377D8E286EE27B008F6C62 /* RoomList */ = {
+			isa = PBXGroup;
+			children = (
+				E79C2649273D003B00909CD4 /* LiveRoomInfo.swift */,
+				E79C264D273D062400909CD4 /* LiveRoomListCell.swift */,
+				E79C264B273D053E00909CD4 /* LiveRoomListController.swift */,
+			);
+			path = RoomList;
+			sourceTree = "<group>";
+		};
 		E757E675281AAE6B0017D5B9 /* AgoraSyncManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -364,7 +417,8 @@
 				E757E693281AAE6B0017D5B9 /* Objects */,
 				E757E699281AAE6B0017D5B9 /* AgoraSyncManager.podspec */,
 			);
-			path = AgoraSyncManager;
+			name = AgoraSyncManager;
+			path = "Scene-Examples/Util/AgoraSyncManager";
 			sourceTree = SOURCE_ROOT;
 		};
 		E757E676281AAE6B0017D5B9 /* Other */ = {
@@ -385,7 +439,6 @@
 				E757E686281AAE6B0017D5B9 /* SyncManager.swift~HEAD */,
 				E757E687281AAE6B0017D5B9 /* Protocols.swift */,
 				E757E688281AAE6B0017D5B9 /* CollectionReference.swift */,
-				E757E689281AAE6B0017D5B9 /* AskManager */,
 				E757E690281AAE6B0017D5B9 /* SyncManager.swift~zyq */,
 				E757E691281AAE6B0017D5B9 /* DocumentReference.swift */,
 			);
@@ -401,19 +454,6 @@
 				E757E685281AAE6B0017D5B9 /* RtmSyncManager.swift */,
 			);
 			path = RtmManager;
-			sourceTree = "<group>";
-		};
-		E757E689281AAE6B0017D5B9 /* AskManager */ = {
-			isa = PBXGroup;
-			children = (
-				E757E68A281AAE6B0017D5B9 /* AskSyncManager+ISyncManager.swift */,
-				E757E68B281AAE6B0017D5B9 /* AgoraJson+Extension.swift */,
-				E757E68C281AAE6B0017D5B9 /* AskSyncManager.swift */,
-				E757E68D281AAE6B0017D5B9 /* AskSyncManager+Info.swift */,
-				E757E68E281AAE6B0017D5B9 /* AskSyncManager+Sync.swift */,
-				E757E68F281AAE6B0017D5B9 /* AskSyncManager+Internal.swift */,
-			);
-			path = AskManager;
 			sourceTree = "<group>";
 		};
 		E757E693281AAE6B0017D5B9 /* Objects */ = {
@@ -451,22 +491,15 @@
 			path = Gif;
 			sourceTree = "<group>";
 		};
-		E79BEF612741FCEB009FA838 /* PKLive */ = {
+		E79BEF612741FCEB009FA838 /* LivePK */ = {
 			isa = PBXGroup;
 			children = (
+				E7377D8F286EE7C0008F6C62 /* LivePKCreateController.swift */,
+				E79BEF652741FD43009FA838 /* LivePKController.swift */,
 				E79BEF642741FD0F009FA838 /* Views */,
 				E79BEF632741FD09009FA838 /* Models */,
-				E79BEF622741FD01009FA838 /* Controllers */,
 			);
-			path = PKLive;
-			sourceTree = "<group>";
-		};
-		E79BEF622741FD01009FA838 /* Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				E79BEF652741FD43009FA838 /* PKLiveController.swift */,
-			);
-			path = Controllers;
+			path = LivePK;
 			sourceTree = "<group>";
 		};
 		E79BEF632741FD09009FA838 /* Models */ = {
@@ -498,19 +531,11 @@
 		E79BEF7F27463F84009FA838 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				E7D46064285C825D004F3C82 /* BaseCollectionViewCell.swift */,
+				E7D46062285C8244004F3C82 /* VideoCollectionViewCell.swift */,
 				E79BEF87274640A6009FA838 /* BORVideoRoomDetailCell.swift */,
 			);
 			path = Cells;
-			sourceTree = "<group>";
-		};
-		E79BEF8027463F93009FA838 /* Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				E79BEF8127463FA4009FA838 /* BORCreateRoomController.swift */,
-				E79BEF8327463FA4009FA838 /* BORRoomDetailController.swift */,
-				E79BEF8227463FA4009FA838 /* BORHomeViewController.swift */,
-			);
-			path = Controllers;
 			sourceTree = "<group>";
 		};
 		E79BEF9F274796E1009FA838 /* NetworkManager */ = {
@@ -543,20 +568,11 @@
 		E79C25DD273B67DB00909CD4 /* Scene-Examples */ = {
 			isa = PBXGroup;
 			children = (
-				E757E675281AAE6B0017D5B9 /* AgoraSyncManager */,
-				E79BEF9F274796E1009FA838 /* NetworkManager */,
-				E79C2630273BC16700909CD4 /* Extension */,
-				E79C262B273BC0B500909CD4 /* ToastView */,
-				E79C2605273B689B00909CD4 /* LayoutBaseViews */,
-				E79C25FE273B689A00909CD4 /* Common */,
+				E79C2603273B689A00909CD4 /* KeyCenter.swift */,
 				E79C2619273B6F4800909CD4 /* AppDelegate */,
-				E79C2617273B6F3700909CD4 /* Main */,
-				E7D30EE92845DC4A0062CFE3 /* SuperApp */,
-				E79C25F2273B685100909CD4 /* BreakOutRoom */,
-				E7EDBCA727A0F94800E763A6 /* AgoraVoice */,
-				E7ECC56227E814F800EFA778 /* AgoraClub */,
-				E79C2620273B7B5C00909CD4 /* Live */,
-				E79BEF612741FCEB009FA838 /* PKLive */,
+				E7377D8A286ECB06008F6C62 /* Util */,
+				E79C2617273B6F3700909CD4 /* Menu */,
+				E7377D8B286ECB15008F6C62 /* Scenes */,
 				E79C25E4273B67DB00909CD4 /* Main.storyboard */,
 				E79C25E7273B67DD00909CD4 /* Assets.xcassets */,
 				E79C25E9273B67DD00909CD4 /* LaunchScreen.storyboard */,
@@ -569,7 +585,9 @@
 		E79C25F2273B685100909CD4 /* BreakOutRoom */ = {
 			isa = PBXGroup;
 			children = (
-				E79BEF8027463F93009FA838 /* Controllers */,
+				E79BEF8127463FA4009FA838 /* BORCreateRoomController.swift */,
+				E79BEF8327463FA4009FA838 /* BORRoomDetailController.swift */,
+				E79BEF8227463FA4009FA838 /* BORHomeViewController.swift */,
 				E79BEF7827463F79009FA838 /* Models */,
 				E79BEF7F27463F84009FA838 /* Cells */,
 			);
@@ -583,7 +601,6 @@
 				E79C2629273B7D8900909CD4 /* DeviceAssistant.swift */,
 				E79C2600273B689A00909CD4 /* Config.swift */,
 				E79C2602273B689A00909CD4 /* JSONObject.swift */,
-				E79C2603273B689A00909CD4 /* KeyCenter.swift */,
 				E79C2604273B689A00909CD4 /* SyncUtil.swift */,
 				E79BEF742744FD8B009FA838 /* GCDTimer.swift */,
 			);
@@ -601,22 +618,13 @@
 			path = LayoutBaseViews;
 			sourceTree = "<group>";
 		};
-		E79C2617273B6F3700909CD4 /* Main */ = {
-			isa = PBXGroup;
-			children = (
-				E79C261D273B719700909CD4 /* Models */,
-				E79C261A273B6F5200909CD4 /* Cells */,
-				E79C2618273B6F3E00909CD4 /* Controllers */,
-			);
-			path = Main;
-			sourceTree = "<group>";
-		};
-		E79C2618273B6F3E00909CD4 /* Controllers */ = {
+		E79C2617273B6F3700909CD4 /* Menu */ = {
 			isa = PBXGroup;
 			children = (
 				E79C25E2273B67DB00909CD4 /* MainViewController.swift */,
+				E79C261A273B6F5200909CD4 /* Cells */,
 			);
-			path = Controllers;
+			path = Menu;
 			sourceTree = "<group>";
 		};
 		E79C2619273B6F4800909CD4 /* AppDelegate */ = {
@@ -631,38 +639,21 @@
 		E79C261A273B6F5200909CD4 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				E79C261E273B737100909CD4 /* MainTableViewCell.swift */,
+				E79C261E273B737100909CD4 /* MainCollectionViewCell.swift */,
+				E7D46060285C7A00004F3C82 /* MainHeaderViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
 		};
-		E79C261D273B719700909CD4 /* Models */ = {
+		E79C2620273B7B5C00909CD4 /* LiveBroadcasting */ = {
 			isa = PBXGroup;
 			children = (
-				E79C2637273BC8DF00909CD4 /* MainModel.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		E79C2620273B7B5C00909CD4 /* Live */ = {
-			isa = PBXGroup;
-			children = (
-				E79C2624273B7B9100909CD4 /* Cells */,
+				E79C2625273B7BDA00909CD4 /* LiveBroadcastingCreateController.swift */,
+				E79BEF30273D0EA4009FA838 /* LiveBroadcastingController.swift */,
 				E79C2622273B7B7F00909CD4 /* Models */,
 				E79C2623273B7B8600909CD4 /* Views */,
-				E79C2621273B7B7000909CD4 /* Controllers */,
 			);
-			path = Live;
-			sourceTree = "<group>";
-		};
-		E79C2621273B7B7000909CD4 /* Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				E79C2625273B7BDA00909CD4 /* CreateLiveController.swift */,
-				E79C264B273D053E00909CD4 /* LiveRoomListController.swift */,
-				E79BEF30273D0EA4009FA838 /* SignleLiveController.swift */,
-			);
-			path = Controllers;
+			path = LiveBroadcasting;
 			sourceTree = "<group>";
 		};
 		E79C2622273B7B7F00909CD4 /* Models */ = {
@@ -670,7 +661,6 @@
 			children = (
 				E79C2627273B7D3700909CD4 /* LiveRandomName.swift */,
 				E79C2645273CBA2700909CD4 /* LiveSettingModel.swift */,
-				E79C2649273D003B00909CD4 /* LiveRoomInfo.swift */,
 				E79BEF32273D0F0C009FA838 /* LiveCanvasModel.swift */,
 				E79BEF40273E0C3A009FA838 /* LiveToolModel.swift */,
 				E79BEF44273E4D99009FA838 /* LiveGiftModel.swift */,
@@ -681,16 +671,7 @@
 		E79C2623273B7B8600909CD4 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				E79C2635273BC6C400909CD4 /* LiveRandomNameView.swift */,
-				E79C2643273BE7C000909CD4 /* LiveSettingView.swift */,
-				E79BEF38273D18B4009FA838 /* LiveAvatarView.swift */,
-				E7499C1A276A078500E799FF /* LiveOnlineView.swift */,
-				E79BEF3A273D21FD009FA838 /* LiveChatView.swift */,
-				E79BEF3C273D327F009FA838 /* LiveBottomView.swift */,
-				E79BEF3E273D3EF0009FA838 /* LiveToolView.swift */,
-				E79BEF42273E3709009FA838 /* LiveGiftView.swift */,
-				E7440E2B277420F200CBF4D8 /* LiveBaseView.swift */,
-				E710AE2E27A0F23300124356 /* ChangeRoomBgView.swift */,
+				E79C2624273B7B9100909CD4 /* Cells */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -698,7 +679,6 @@
 		E79C2624273B7B9100909CD4 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				E79C264D273D062400909CD4 /* LiveRoomListCell.swift */,
 				E79BEF34273D1304009FA838 /* LivePlayerCell.swift */,
 				E7499C2B2770537C00E799FF /* MessageCell.swift */,
 				E7499C292770534400E799FF /* NoticeCell.swift */,
@@ -728,15 +708,20 @@
 			path = Extension;
 			sourceTree = "<group>";
 		};
-		E7D30EE92845DC4A0062CFE3 /* SuperApp */ = {
+		E7D30EE92845DC4A0062CFE3 /* CDN */ = {
 			isa = PBXGroup;
 			children = (
+				E7D30F002845DC4A0062CFE3 /* SuperAppRoomListViewController.swift */,
+				E7D30F012845DC4A0062CFE3 /* SuperAppPlayerViewControllerHost.swift */,
+				E7D30F022845DC4A0062CFE3 /* SuperAppPlayerViewControllerAudience.swift */,
+				E7D30F032845DC4A0062CFE3 /* SuperAppPlayerViewControllerHost+RTC.swift */,
+				E7D30F042845DC4A0062CFE3 /* SuperAppPlayerViewControllerAudience+RTC.swift */,
+				E7D30F052845DC4A0062CFE3 /* SuperAppCreateLiveViewController.swift */,
 				E7D30EEA2845DC4A0062CFE3 /* Other */,
 				E7D30EF02845DC4A0062CFE3 /* Model */,
 				E7D30EF42845DC4A0062CFE3 /* View */,
-				E7D30EFF2845DC4A0062CFE3 /* ViewController */,
 			);
-			path = SuperApp;
+			path = CDN;
 			sourceTree = "<group>";
 		};
 		E7D30EEA2845DC4A0062CFE3 /* Other */ = {
@@ -764,7 +749,7 @@
 		E7D30EF42845DC4A0062CFE3 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				E7D30EF52845DC4A0062CFE3 /* SuperAppRoomListViewCell.swift */,
+				E777B3F4286C341100C8A0E7 /* SuperAppRoomListViewCell.swift */,
 				E7D30EF62845DC4A0062CFE3 /* SuperAppInvitationViewCell.swift */,
 				E7D30EF72845DC4A0062CFE3 /* SuperAppToolView.swift */,
 				E7D30EF82845DC4A0062CFE3 /* SuperAppCreateLiveView.swift */,
@@ -778,36 +763,16 @@
 			path = View;
 			sourceTree = "<group>";
 		};
-		E7D30EFF2845DC4A0062CFE3 /* ViewController */ = {
+		E7ECC56227E814F800EFA778 /* Club */ = {
 			isa = PBXGroup;
 			children = (
-				E7D30F002845DC4A0062CFE3 /* SuperAppRoomListViewController.swift */,
-				E7D30F012845DC4A0062CFE3 /* SuperAppPlayerViewControllerHost.swift */,
-				E7D30F022845DC4A0062CFE3 /* SuperAppPlayerViewControllerAudience.swift */,
-				E7D30F032845DC4A0062CFE3 /* SuperAppPlayerViewControllerHost+RTC.swift */,
-				E7D30F042845DC4A0062CFE3 /* SuperAppPlayerViewControllerAudience+RTC.swift */,
-				E7D30F052845DC4A0062CFE3 /* SuperAppCreateLiveViewController.swift */,
-			);
-			path = ViewController;
-			sourceTree = "<group>";
-		};
-		E7ECC56227E814F800EFA778 /* AgoraClub */ = {
-			isa = PBXGroup;
-			children = (
-				E7ECC56527E8151600EFA778 /* Models */,
-				E7ECC56427E8150E00EFA778 /* Views */,
-				E7ECC56327E8150400EFA778 /* Controllers */,
-			);
-			path = AgoraClub;
-			sourceTree = "<group>";
-		};
-		E7ECC56327E8150400EFA778 /* Controllers */ = {
-			isa = PBXGroup;
-			children = (
+				E7377D952872CB94008F6C62 /* ClubCreateController.swift */,
 				E7ECC56627E8155700EFA778 /* AgoraClubController.swift */,
 				E757E64F28126D630017D5B9 /* AgoraClubProgramViewController.swift */,
+				E7ECC56527E8151600EFA778 /* Models */,
+				E7ECC56427E8150E00EFA778 /* Views */,
 			);
-			path = Controllers;
+			path = Club;
 			sourceTree = "<group>";
 		};
 		E7ECC56427E8150E00EFA778 /* Views */ = {
@@ -829,27 +794,21 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		E7EDBCA727A0F94800E763A6 /* AgoraVoice */ = {
+		E7EDBCA727A0F94800E763A6 /* VoiceChatRoom */ = {
 			isa = PBXGroup;
 			children = (
+				E7377D93286EEA38008F6C62 /* VoiceChatRoomCreateController.swift */,
+				E7EDBCAB27A0F98900E763A6 /* VoiceChatRoomController.swift */,
 				E7EDBCAA27A0F97500E763A6 /* Models */,
 				E7EDBCA927A0F96E00E763A6 /* Views */,
-				E7EDBCA827A0F96600E763A6 /* Controllers */,
 			);
-			path = AgoraVoice;
-			sourceTree = "<group>";
-		};
-		E7EDBCA827A0F96600E763A6 /* Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				E7EDBCAB27A0F98900E763A6 /* AgoraVoiceController.swift */,
-			);
-			path = Controllers;
+			path = VoiceChatRoom;
 			sourceTree = "<group>";
 		};
 		E7EDBCA927A0F96E00E763A6 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				E7EDBCB527A26E7C00E763A6 /* AgoraVoicePitchCorrectionHeaderView.swift */,
 				E7EDBCAD27A1281200E763A6 /* AgoraVoiceUsersView.swift */,
 				E7EDBCAF27A131BC00E763A6 /* AgoraVoiceBelCantoView.swift */,
 				E7EDBCC327A3927B00E763A6 /* AgoraVoiceInviteView.swift */,
@@ -864,7 +823,6 @@
 			isa = PBXGroup;
 			children = (
 				E7EDBCBD27A2A41900E763A6 /* RTEStatistics.swift */,
-				E7EDBCB527A26E7C00E763A6 /* AgoraVoicePitchCorrectionHeaderView.swift */,
 				E7EDBCB127A1463700E763A6 /* AgoraVoiceBelCantoModel.swift */,
 				E7EDBCB327A23EEF00E763A6 /* AgoraVoiceSoundEffectModel.swift */,
 				E7EDBCBB27A2918D00E763A6 /* AgoraVoiceMusicModel.swift */,
@@ -1009,13 +967,13 @@
 				E757E6B4281AAE6B0017D5B9 /* Extensions.swift in Sources */,
 				E79BEF37273D15D6009FA838 /* Screen.swift in Sources */,
 				E7D30F1B2845DC4A0062CFE3 /* SuperAppPlayerViewControllerHost+RTC.swift in Sources */,
+				E7D46065285C825D004F3C82 /* BaseCollectionViewCell.swift in Sources */,
 				E79C2611273B689B00909CD4 /* SyncUtil.swift in Sources */,
 				E7EDBCC627A3BDCD00E763A6 /* AgoraVoiceChangeBGModel.swift in Sources */,
 				E7D30F072845DC4A0062CFE3 /* SupperAppStorageManager.swift in Sources */,
 				E7EDBCBE27A2A41900E763A6 /* RTEStatistics.swift in Sources */,
 				E7D30F0F2845DC4A0062CFE3 /* SuperAppInvitationViewCell.swift in Sources */,
 				E757E65228126EA40017D5B9 /* AgoraClubProgramCell.swift in Sources */,
-				E7D30F0E2845DC4A0062CFE3 /* SuperAppRoomListViewCell.swift in Sources */,
 				E79BEF5B273E5768009FA838 /* GIFImageView.swift in Sources */,
 				E7D30F102845DC4A0062CFE3 /* SuperAppToolView.swift in Sources */,
 				E7D30F0C2845DC4A0062CFE3 /* SuperAppRoomInfo.swift in Sources */,
@@ -1034,18 +992,22 @@
 				E76DE01D2809241200A0434C /* ClubRoomListView.swift in Sources */,
 				E7D30F152845DC4A0062CFE3 /* SuperAppRoomListView.swift in Sources */,
 				E7D30F0B2845DC4A0062CFE3 /* SuperAppUserInfo.swift in Sources */,
+				E7377D962872CB94008F6C62 /* ClubCreateController.swift in Sources */,
+				E7377D91286EE7C0008F6C62 /* LivePKCreateController.swift in Sources */,
 				E79C2644273BE7C000909CD4 /* LiveSettingView.swift in Sources */,
 				E79BEF3B273D21FD009FA838 /* LiveChatView.swift in Sources */,
 				E7499C2C2770537C00E799FF /* MessageCell.swift in Sources */,
 				E79BEF3F273D3EF0009FA838 /* LiveToolView.swift in Sources */,
 				E757E6B6281AAE6B0017D5B9 /* SyncError.swift in Sources */,
+				E777B3F5286C341100C8A0E7 /* SuperAppRoomListViewCell.swift in Sources */,
 				E7D30F162845DC4A0062CFE3 /* SuperAppMainView.swift in Sources */,
 				E7EDBCB027A131BC00E763A6 /* AgoraVoiceBelCantoView.swift in Sources */,
-				E79C2626273B7BDA00909CD4 /* CreateLiveController.swift in Sources */,
+				E79C2626273B7BDA00909CD4 /* LiveBroadcastingCreateController.swift in Sources */,
 				E79BEF8627463FA5009FA838 /* BORRoomDetailController.swift in Sources */,
 				E7EDBCAE27A1281200E763A6 /* AgoraVoiceUsersView.swift in Sources */,
 				E7ECC56D27E81F5A00EFA778 /* UIImage+Color.swift in Sources */,
 				E7D30F1A2845DC4A0062CFE3 /* SuperAppPlayerViewControllerAudience.swift in Sources */,
+				E7D46061285C7A00004F3C82 /* MainHeaderViewCell.swift in Sources */,
 				E79BEF7D27463F79009FA838 /* BORSubRoomModel.swift in Sources */,
 				E757E6A8281AAE6B0017D5B9 /* Protocols.swift in Sources */,
 				E79BEF39273D18B4009FA838 /* LiveAvatarView.swift in Sources */,
@@ -1063,17 +1025,16 @@
 				E79C2612273B689B00909CD4 /* SegmentView.swift in Sources */,
 				E7D30F132845DC4A0062CFE3 /* SuperAppMainView+LeftView.swift in Sources */,
 				E757E6A5281AAE6B0017D5B9 /* RtmSyncManager+ISyncManager.swift in Sources */,
-				E79BEF662741FD43009FA838 /* PKLiveController.swift in Sources */,
+				E7377D94286EEA38008F6C62 /* VoiceChatRoomCreateController.swift in Sources */,
+				E79BEF662741FD43009FA838 /* LivePKController.swift in Sources */,
 				E79C264C273D053E00909CD4 /* LiveRoomListController.swift in Sources */,
 				E7D30F062845DC4A0062CFE3 /* SuperAppInvitationSheetManager.swift in Sources */,
-				E79C261F273B737100909CD4 /* MainTableViewCell.swift in Sources */,
+				E79C261F273B737100909CD4 /* MainCollectionViewCell.swift in Sources */,
 				E79BEF3D273D327F009FA838 /* LiveBottomView.swift in Sources */,
 				E7EDBCC427A3927B00E763A6 /* AgoraVoiceInviteView.swift in Sources */,
-				E79C2638273BC8DF00909CD4 /* MainModel.swift in Sources */,
 				E79C2613273B689B00909CD4 /* UIColor+Extension.swift in Sources */,
 				E757E6A9281AAE6B0017D5B9 /* CollectionReference.swift in Sources */,
 				E757E6B5281AAE6B0017D5B9 /* Models.swift in Sources */,
-				E757E6AA281AAE6B0017D5B9 /* AskSyncManager+ISyncManager.swift in Sources */,
 				E757E65428126F400017D5B9 /* AgoraClubProgramModel.swift in Sources */,
 				E7EDBCC227A2B0F100E763A6 /* AgoraVoiceUsersModel.swift in Sources */,
 				E7D30F082845DC4A0062CFE3 /* UIViewController+Extension.swift in Sources */,
@@ -1083,6 +1044,7 @@
 				E757E69E281AAE6B0017D5B9 /* AgoraSyncManager.swift in Sources */,
 				E79BEF35273D1304009FA838 /* LivePlayerCell.swift in Sources */,
 				E79BEF8527463FA5009FA838 /* BORHomeViewController.swift in Sources */,
+				E7D46063285C8244004F3C82 /* VideoCollectionViewCell.swift in Sources */,
 				E79C2636273BC6C400909CD4 /* LiveRandomNameView.swift in Sources */,
 				E79C2642273BE5C500909CD4 /* AlertManager.swift in Sources */,
 				E7D30F0D2845DC4A0062CFE3 /* SuperAppPKInfo.swift in Sources */,
@@ -1094,11 +1056,9 @@
 				E79BEF8427463FA5009FA838 /* BORCreateRoomController.swift in Sources */,
 				E7D30F092845DC4A0062CFE3 /* String+Extension+SuperApp.swift in Sources */,
 				E7440E2C277420F200CBF4D8 /* LiveBaseView.swift in Sources */,
-				E757E6AB281AAE6B0017D5B9 /* AgoraJson+Extension.swift in Sources */,
 				E79C2628273B7D3700909CD4 /* LiveRandomName.swift in Sources */,
 				E79BEF41273E0C3A009FA838 /* LiveToolModel.swift in Sources */,
-				E79BEF31273D0EA4009FA838 /* SignleLiveController.swift in Sources */,
-				E757E6AE281AAE6B0017D5B9 /* AskSyncManager+Sync.swift in Sources */,
+				E79BEF31273D0EA4009FA838 /* LiveBroadcastingController.swift in Sources */,
 				E7ECC56B27E81BAE00EFA778 /* ClubHeaderView.swift in Sources */,
 				E757E6A6281AAE6B0017D5B9 /* RtmSyncManager.swift in Sources */,
 				E79C2632273BC17B00909CD4 /* String+Extension.swift in Sources */,
@@ -1108,25 +1068,22 @@
 				E757E69D281AAE6B0017D5B9 /* SyncManager+Info.swift in Sources */,
 				E710AE2F27A0F23300124356 /* ChangeRoomBgView.swift in Sources */,
 				E7499C1B276A078500E799FF /* LiveOnlineView.swift in Sources */,
-				E757E6AC281AAE6B0017D5B9 /* AskSyncManager.swift in Sources */,
 				E7EDBCC027A2A4CA00E763A6 /* RTCRealTimeDataView.swift in Sources */,
 				E7D30F142845DC4A0062CFE3 /* SuperAppInvitationView.swift in Sources */,
 				E79C260F273B689B00909CD4 /* JSONObject.swift in Sources */,
 				E79C25DF273B67DB00909CD4 /* AppDelegate.swift in Sources */,
 				E79C260E273B689B00909CD4 /* AgoraExtension.swift in Sources */,
 				E79C2646273CBA2700909CD4 /* LiveSettingModel.swift in Sources */,
-				E757E6AD281AAE6B0017D5B9 /* AskSyncManager+Info.swift in Sources */,
 				E757E65028126D630017D5B9 /* AgoraClubProgramViewController.swift in Sources */,
 				E79C260D273B689B00909CD4 /* Config.swift in Sources */,
 				E7EDBCBC27A2918D00E763A6 /* AgoraVoiceMusicModel.swift in Sources */,
-				E757E6AF281AAE6B0017D5B9 /* AskSyncManager+Internal.swift in Sources */,
 				E79C25E1273B67DB00909CD4 /* SceneDelegate.swift in Sources */,
 				E7D30F192845DC4A0062CFE3 /* SuperAppPlayerViewControllerHost.swift in Sources */,
 				E79BEF88274640A6009FA838 /* BORVideoRoomDetailCell.swift in Sources */,
 				E757E69C281AAE6B0017D5B9 /* Utils.swift in Sources */,
 				E7D30F172845DC4A0062CFE3 /* SuperAppMainView+RemoteView.swift in Sources */,
 				E757E69B281AAE6B0017D5B9 /* Log.swift in Sources */,
-				E7EDBCAC27A0F98900E763A6 /* AgoraVoiceController.swift in Sources */,
+				E7EDBCAC27A0F98900E763A6 /* VoiceChatRoomController.swift in Sources */,
 				E79C260C273B689B00909CD4 /* MBHUD.swift in Sources */,
 				E757E6B3281AAE6B0017D5B9 /* Blocks.swift in Sources */,
 			);
@@ -1291,7 +1248,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1241;
+				CURRENT_PROJECT_VERSION = 1243;
 				DEVELOPMENT_TEAM = YS397FG5PA;
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1329,7 +1286,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1241;
+				CURRENT_PROJECT_VERSION = 1243;
 				DEVELOPMENT_TEAM = YS397FG5PA;
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;

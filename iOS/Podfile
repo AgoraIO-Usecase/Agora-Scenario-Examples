@@ -1,7 +1,7 @@
 # Uncomment the next line to define a global platform for your project
 # platform :ios, '9.0'
 
-source 'https://github.com/CocoaPods/Specs.git'
+#source 'https://github.com/CocoaPods/Specs.git'
 #source 'https://cdn.cocoapods.org/'
 
 #source 'https://mirrors.tuna.tsinghua.edu.cn/git/CocoaPods/Specs.git'
@@ -12,12 +12,12 @@ target 'Scene-Examples' do
   inhibit_all_warnings!
   
   pod 'MBProgressHUD', '~> 1.2.0'
-  pod 'AgoraRtcEngine_iOS_Preview', '4.0.0.preview.5'
+  pod 'AgoraRtcEngine_iOS_Preview', '4.0.0.preview.6'
 #  pod 'AgoraScreenShare', :path => 'sdk'
-  pod 'Agora-Scene-Utils', '~> 1.0.2'
+  pod 'Agora-Scene-Utils', '~> 1.0.3'
 #  pod 'AgoraSyncManager', '1.0.2'
   # pod 'AgoraSyncManager', :path => 'AgoraSyncManager'
   # Pods for Scene-Examples
-  pod 'AgoraRtm_iOS', '~> 1.4.9'
+  pod 'AgoraRtm_iOS', '1.4.9'
 
 end

@@ -1,16 +1,15 @@
 {
   "images" : [
     {
+      "filename" : "default_bg.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "create@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "create@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

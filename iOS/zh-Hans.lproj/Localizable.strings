@@ -25,14 +25,15 @@ Upload_Log="上传日志";
 // Main Page
 Multi_Broadcasters="多人连麦直播";
 Multi_Broadcasters_Description="观众与主播连麦互动直播";
-Single_Broadcaster="单主播直播";
-Single_Broadcaster_Description="单主播直播";
-PK_Live="PK直播";
-PK_Live_Description="两个不同直播间的主播跨频道连麦PK，引爆直播间";
+Single_Broadcaster="实时直播";
+PK_Live="直播PK";
 Virtual_Live="虚拟主播";
 Virtual_Live_Description="用卡通形象模拟真人进行对话或直播";
 Live_Shopping="电商直播";
 Live_Shopping_Description="通过观众连麦和主播PK的方式带货";
+VoiceChatRoom = "高音质语聊房";
+social_entertainment = "社交娱乐";
+education = "教育";
 
 // Create Room Page
 Create_A_Live_Room="请创建一个房间";
@@ -207,12 +208,12 @@ loading = "加载中...";
 anchors_of_two_different_live_broadcast_rooms="两个不同直播间的主播跨频道连麦PK, 引爆直播间";
 breakoutroom="超级小班课";
 multi-person_meetings_small_conference_rooms="多人会议, 可建立小会议室讨论";
-sound_effect="音效";
+sound_effect="语音通话";
 game_PK_live_broadcast="游戏PK直播";
 draw_guess="你画我猜";
 play_live_with_the_game="游戏同玩直播";
 game_live_on_V1="游戏1V1直播";
-home="首页";
+home="Agora Scenarios";
 start_electric="启动电音";
 select_initial_scale="选择起始音阶";
 major="大调";
@@ -281,3 +282,5 @@ close_studio="关闭直播间";
 
 agoraClub = "夜店";
 agoraProgram = "大厅";
+
+pleaseInputRoomName = "请输入房间名";
