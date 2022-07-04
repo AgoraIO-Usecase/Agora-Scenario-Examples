@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.lang.ref.WeakReference;
 import java.util.Random;
 
 import io.agora.rtc2.ChannelMediaOptions;
@@ -25,7 +24,6 @@ import io.agora.uiwidget.function.GiftAnimPlayDialog;
 import io.agora.uiwidget.function.GiftGridDialog;
 import io.agora.uiwidget.function.LiveRoomMessageListView;
 import io.agora.uiwidget.function.TextInputDialog;
-import io.agora.uiwidget.utils.RandomUtil;
 import io.agora.uiwidget.utils.StatusBarUtil;
 
 public class AudienceDetailActivity extends AppCompatActivity {
@@ -49,7 +47,7 @@ public class AudienceDetailActivity extends AppCompatActivity {
         public void onObtained(RoomManager.GiftInfo data) {
             runOnUiThread(() -> {
                 mMessageAdapter.addMessage(new RoomManager.MessageInfo(
-                        data.userId,
+                        "User-" + data.userId,
                         getString(R.string.live_room_message_gift_prefix),
                         data.getIconId()
                 ));
@@ -60,6 +58,20 @@ public class AudienceDetailActivity extends AppCompatActivity {
             });
         }
     };
+    private final RoomManager.DataCallback<RoomManager.MessageInfo> messageInfoDataCallback = msg -> runOnUiThread(()->{
+        mMessageAdapter.addMessage(msg);
+    });
+    private final RoomManager.DataListCallback<RoomManager.UserInfo> userInfoDataListCallback = dataList -> runOnUiThread(()->{
+        mBinding.hostUserView.setUserCount(dataList.size());
+        mBinding.hostUserView.removeAllUserIcon();
+        for (int i = 1; i <= 3; i++) {
+            int index = dataList.size() - i;
+            if(index >= 0){
+                RoomManager.UserInfo userInfo = dataList.get(index);
+                mBinding.hostUserView.addUserIcon(userInfo.getAvatarResId(), userInfo.userName);
+            }
+        }
+    });
     private RtcConnection pkConnection;
     private final RoomManager.DataCallback<RoomManager.PKInfoModel> pkInfoModelDataCallback = data -> runOnUiThread(() -> {
         if(data == null){
@@ -111,7 +123,7 @@ public class AudienceDetailActivity extends AppCompatActivity {
         roomInfo = (RoomManager.RoomInfo) getIntent().getSerializableExtra("roomInfo");
 
         // 房间信息
-        mBinding.hostNameView.setName(RandomUtil.randomUserName(this));
+        mBinding.hostNameView.setName(roomInfo.roomName + "(" + roomInfo.roomId + ")");
         mBinding.hostNameView.setIcon(roomInfo.getAndroidBgId());
 
         // 底部按钮栏
@@ -138,9 +150,12 @@ public class AudienceDetailActivity extends AppCompatActivity {
 
     private void initRoomManager() {
         roomManager.joinRoom(roomInfo.roomId, () -> {
-            roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, new WeakReference<>(giftInfoDataCallback));
-            roomManager.subscribePKInfoEvent(roomInfo.roomId, new WeakReference<>(pkInfoModelDataCallback));
-            roomManager.subscriptRoomEvent(roomInfo.roomId, null, new WeakReference<>(roomDeleteCallback));
+            roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, giftInfoDataCallback);
+            roomManager.subscribePKInfoEvent(roomInfo.roomId, pkInfoModelDataCallback);
+            roomManager.subscriptRoomEvent(roomInfo.roomId, null, roomDeleteCallback);
+            roomManager.subscribeMessageReceiveEvent(roomInfo.roomId, messageInfoDataCallback);
+            roomManager.subscribeUserListChangeEvent(roomInfo.roomId, userInfoDataListCallback);
+            roomManager.getRoomUserList(roomInfo.roomId, userInfoDataListCallback);
             roomManager.getPkInfo(roomInfo.roomId, pkInfoModelDataCallback);
         });
     }
@@ -151,7 +166,7 @@ public class AudienceDetailActivity extends AppCompatActivity {
                 @Override
                 public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
                     super.onJoinChannelSuccess(channel, uid, elapsed);
-                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo("User-" + uid + "", getString(R.string.live_room_message_user_join_suffix))));
                 }
 
                 @Override
@@ -163,14 +178,14 @@ public class AudienceDetailActivity extends AppCompatActivity {
                         mBinding.localVideoContainer.addView(videoView);
                         rtcEngine.setupRemoteVideo(new VideoCanvas(videoView, Constants.RENDER_MODE_HIDDEN, uid));
 
-                        mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix)));
+                        mMessageAdapter.addMessage(new RoomManager.MessageInfo("User-" + uid + "", getString(R.string.live_room_message_user_join_suffix)));
                     });
                 }
 
                 @Override
                 public void onUserOffline(int uid, int reason) {
                     super.onUserOffline(uid, reason);
-                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_left_suffix))));
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo("User-" + uid + "", getString(R.string.live_room_message_user_left_suffix))));
                 }
             });
 
@@ -179,7 +194,7 @@ public class AudienceDetailActivity extends AppCompatActivity {
             options.clientRoleType = Constants.CLIENT_ROLE_AUDIENCE;
             options.autoSubscribeVideo = true;
             options.autoSubscribeAudio = true;
-            rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, 0, options);
+            rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, Integer.parseInt(RoomManager.getCacheUserId()), options);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -220,12 +235,16 @@ public class AudienceDetailActivity extends AppCompatActivity {
 
     private void showTextInputDialog() {
         new TextInputDialog(this)
-                .setOnSendClickListener((v, text) -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(RoomManager.getCacheUserId(), text)))
+                .setOnSendClickListener((v, text) -> {
+                    RoomManager.MessageInfo message = new RoomManager.MessageInfo(roomManager.getLocalUserInfo().userName, text);
+                    roomManager.sendMessage(roomInfo.roomId, message);
+                })
                 .show();
     }
 
     @Override
     public void finish() {
+        roomManager.leaveRoom(roomInfo);
         if(pkConnection != null){
             rtcEngine.leaveChannelEx(pkConnection);
             pkConnection = null;

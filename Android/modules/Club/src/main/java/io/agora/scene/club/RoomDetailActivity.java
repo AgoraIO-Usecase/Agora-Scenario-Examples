@@ -8,7 +8,7 @@ import android.text.SpannableString;
 import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.SurfaceView;
+import android.view.TextureView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -33,6 +33,7 @@ import io.agora.mediaplayer.IMediaPlayer;
 import io.agora.mediaplayer.IMediaPlayerObserver;
 import io.agora.mediaplayer.data.PlayerUpdatedInfo;
 import io.agora.mediaplayer.data.SrcInfo;
+import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.IRtcEngineEventHandler;
 import io.agora.rtc2.RtcEngine;
 import io.agora.rtc2.video.VideoCanvas;
@@ -141,6 +142,9 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
     };
     private final RoomManager.DataCallback<RoomManager.UserInfo> userAddOrUpdateCallback = data -> runOnUiThread(() -> {
         updateUserView(data);
+    });
+    private final RoomManager.DataCallback<RoomManager.MessageInfo> messageInfoDataCallback = data -> runOnUiThread(()->{
+        mMessageAdapter.addMessage(data);
     });
 
     private final RoomManager.DataCallback<RoomManager.UserInfo> userDeleteCallback = data -> runOnUiThread(() -> {
@@ -410,12 +414,12 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                         if(userSeatLayout.videoContainer.getChildCount() == 0){
                             if (data.userId.equals(RoomManager.getCacheUserId())) {
 
-                                SurfaceView view = new SurfaceView(this);
+                                TextureView view = new TextureView(this);
                                 userSeatLayout.videoContainer.removeAllViews();
                                 userSeatLayout.videoContainer.addView(view);
                                 rtcEngine.setupLocalVideo(new VideoCanvas(view, io.agora.rtc2.Constants.RENDER_MODE_HIDDEN));
                             } else {
-                                SurfaceView view = new SurfaceView(this);
+                                TextureView view = new TextureView(this);
                                 userSeatLayout.videoContainer.removeAllViews();
                                 userSeatLayout.videoContainer.addView(view);
                                 rtcEngine.setupRemoteVideo(new VideoCanvas(view, io.agora.rtc2.Constants.RENDER_MODE_HIDDEN, uid));
@@ -482,6 +486,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
             if (tag instanceof RoomManager.UserInfo && ((RoomManager.UserInfo) tag).userId.equals(userId)) {
                 seatLayout.videoContainer.removeAllViews();
                 seatLayout.ivCover.setImageDrawable(null);
+                seatLayout.ivCamOff.setVisibility(View.GONE);
                 seatLayout.getRoot().setTag(null);
                 break;
             }
@@ -521,6 +526,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                 list -> runOnUiThread(() -> {
                     roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, new WeakReference<>(giftInfoDataCallback));
                     roomManager.subscribeUserChangeEvent(roomInfo.roomId, new WeakReference<>(userAddOrUpdateCallback), new WeakReference<>(userDeleteCallback));
+                    roomManager.subscribeMessageReceiveEvent(roomInfo.roomId, new WeakReference<>(messageInfoDataCallback));
                     for (RoomManager.UserInfo userInfo : list) {
                         updateUserView(userInfo);
                     }
@@ -554,6 +560,14 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                 }
             });
 
+            ChannelMediaOptions options = new ChannelMediaOptions();
+            options.clientRoleType = io.agora.rtc2.Constants.CLIENT_ROLE_BROADCASTER;
+            options.publishAudioTrack = true;
+            options.publishCameraTrack = true;
+            options.autoSubscribeAudio = true;
+            options.autoSubscribeVideo = true;
+            rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, Integer.parseInt(RoomManager.getCacheUserId()), options);
+
             rtcEngine.enableLocalAudio(false);
             rtcEngine.enableLocalVideo(false);
 
@@ -569,7 +583,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
     }
 
     private void renderPlayerView(FrameLayout container) {
-        SurfaceView view = new SurfaceView(this);
+        TextureView view = new TextureView(this);
         container.removeAllViews();
         container.addView(view);
         rtcEngine.setupLocalVideo(new VideoCanvas(
@@ -600,7 +614,10 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
     private void showTextInputDialog() {
         new TextInputDialog(this)
                 .setOnSendClickListener((v, text) ->
-                        mMessageAdapter.addMessage(new RoomManager.MessageInfo(RoomManager.getCacheUserId(), text)))
+                {
+                    RoomManager.MessageInfo messageInfo = new RoomManager.MessageInfo("User-" + RoomManager.getCacheUserId(), text);
+                    roomManager.sendMessage(roomInfo.roomId, messageInfo);
+                })
                 .show();
     }
 

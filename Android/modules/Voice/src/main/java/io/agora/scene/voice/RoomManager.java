@@ -27,8 +27,8 @@ import io.agora.uiwidget.utils.RandomUtil;
 public class RoomManager {
     private static final String TAG = "RoomManager";
     private static final String PREFERENCE_KEY_USER_ID = RoomManager.class.getName() + "_userId";
-    private static final String SYNC_MANAGER_GIFT_INFO = "giftInfo";
     private static final String SYNC_MANAGER_USER_INFO = "agoraVoiceUsers";
+    private static final String SYNC_MANAGER_MESSAGE_INFO = "agoraVoiceMessages";
 
     private static volatile RoomManager INSTANCE;
     private static volatile boolean isInitialized = false;
@@ -49,6 +49,10 @@ public class RoomManager {
     }
 
     private RoomManager() {
+    }
+
+    public UserInfo getLocalUserInfo() {
+        return localUserInfo;
     }
 
     public void init(Context context, String appId, String token) {
@@ -250,8 +254,13 @@ public class RoomManager {
         if (sceneReference == null) {
             return;
         }
-        userInfo.status = UserStatus.invite;
-        userInfo.timestamp = System.currentTimeMillis() + "";
+        if(localUserInfo != null && localUserInfo.userId.equals(userInfo.userId)){
+            localUserInfo.status = UserStatus.invite;
+            localUserInfo.timestamp = System.currentTimeMillis() + "";
+            userInfo = localUserInfo;
+        }else{
+            userInfo.status = UserStatus.invite;
+        }
         sceneReference.collection(SYNC_MANAGER_USER_INFO)
                 .update(userInfo.objectId, userInfo, new Sync.Callback() {
                     @Override
@@ -272,7 +281,12 @@ public class RoomManager {
         if (sceneReference == null) {
             return;
         }
-        userInfo.status = UserStatus.accept;
+        if(localUserInfo != null && localUserInfo.userId.equals(userInfo.userId)){
+            localUserInfo.status = UserStatus.accept;
+            userInfo = localUserInfo;
+        }else{
+            userInfo.status = UserStatus.accept;
+        }
         sceneReference.collection(SYNC_MANAGER_USER_INFO)
                 .update(userInfo.objectId, userInfo, new Sync.Callback() {
                     @Override
@@ -293,7 +307,12 @@ public class RoomManager {
         if (sceneReference == null) {
             return;
         }
-        userInfo.status = UserStatus.refuse;
+        if(localUserInfo != null && localUserInfo.userId.equals(userInfo.userId)){
+            localUserInfo.status = UserStatus.refuse;
+            userInfo = localUserInfo;
+        }else{
+            userInfo.status = UserStatus.refuse;
+        }
         sceneReference.collection(SYNC_MANAGER_USER_INFO)
                 .update(userInfo.objectId, userInfo, new Sync.Callback() {
                     @Override
@@ -314,7 +333,12 @@ public class RoomManager {
         if (sceneReference == null) {
             return;
         }
-        userInfo.status = UserStatus.end;
+        if(localUserInfo != null && localUserInfo.userId.equals(userInfo.userId)){
+            localUserInfo.status = UserStatus.end;
+            userInfo = localUserInfo;
+        }else{
+            userInfo.status = UserStatus.end;
+        }
         sceneReference.collection(SYNC_MANAGER_USER_INFO)
                 .update(userInfo.objectId, userInfo, new Sync.Callback() {
                     @Override
@@ -327,6 +351,72 @@ public class RoomManager {
 
                     }
                 });
+    }
+
+    public void enableLocalAudio(String roomId, boolean enable){
+        checkInitialized();
+        SceneReference sceneReference = sceneMap.get(roomId);
+        if (sceneReference == null) {
+            return;
+        }
+        localUserInfo.isEnableAudio = enable;
+        sceneReference.collection(SYNC_MANAGER_USER_INFO).update(localUserInfo.objectId, localUserInfo, new Sync.Callback() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onFail(SyncManagerException exception) {
+
+            }
+        });
+    }
+
+    public void sendMessage(String roomId, MessageInfo messageInfo){
+        checkInitialized();
+        SceneReference sceneReference = sceneMap.get(roomId);
+        if (sceneReference == null) {
+            return;
+        }
+        sceneReference.update(SYNC_MANAGER_MESSAGE_INFO, messageInfo, new Sync.DataItemCallback() {
+            @Override
+            public void onSuccess(IObject result) {
+
+            }
+
+            @Override
+            public void onFail(SyncManagerException exception) {
+
+            }
+        });
+    }
+
+    public void subscribeMessageEvent(String roomId, DataCallback<MessageInfo> addOrUpdate){
+        checkInitialized();
+        SceneReference sceneReference = sceneMap.get(roomId);
+        if (sceneReference == null) {
+            return;
+        }
+        WrapEventListener listener = new WrapEventListener(roomId){
+            @Override
+            public void onCreated(IObject item) {
+                super.onCreated(item);
+                if(addOrUpdate != null){
+                    addOrUpdate.onObtained(item.toObject(MessageInfo.class));
+                }
+            }
+
+            @Override
+            public void onUpdated(IObject item) {
+                super.onUpdated(item);
+                if(addOrUpdate != null){
+                    addOrUpdate.onObtained(item.toObject(MessageInfo.class));
+                }
+            }
+        };
+        eventListeners.add(listener);
+        sceneReference.collection(SYNC_MANAGER_MESSAGE_INFO).subscribe(listener);
     }
 
     public void subscribeUserInfoEvent(String roomId, DataCallback<UserInfo> addOrUpdate, DataCallback<UserInfo> delete) {
@@ -588,7 +678,7 @@ public class RoomManager {
         int status = UserStatus.end;
         public String timestamp = System.currentTimeMillis() + "";
         public boolean isEnableVideo = false;
-        public boolean isEnableAudio = false;
+        public boolean isEnableAudio = true;
         public String objectId = "";
 
         public int getAvatarImgResId() {

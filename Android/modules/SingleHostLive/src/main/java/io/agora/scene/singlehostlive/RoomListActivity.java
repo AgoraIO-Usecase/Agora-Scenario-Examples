@@ -3,14 +3,12 @@ package io.agora.scene.singlehostlive;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.util.List;
 
 import io.agora.uiwidget.basic.TitleBar;
 import io.agora.uiwidget.function.RoomListView;
@@ -25,7 +23,9 @@ public class RoomListActivity extends AppCompatActivity {
         setContentView(R.layout.single_host_live_room_list_activity);
         StatusBarUtil.hideStatusBar(getWindow(), false);
 
-        RoomManager.getInstance().init(this, getString(R.string.rtm_app_id), getString(R.string.rtm_app_token));
+        RoomManager.getInstance().init(this, getString(R.string.rtm_app_id), getString(R.string.rtm_app_token), data -> {
+            runOnUiThread(() -> Toast.makeText(RoomListActivity.this, data.getMessage(), Toast.LENGTH_SHORT).show());
+        });
 
         RoomListView roomListView = findViewById(R.id.room_list_view);
         roomListView.setListAdapter(new RoomListView.AbsRoomListAdapter<RoomManager.RoomInfo>() {
@@ -41,26 +41,12 @@ public class RoomListActivity extends AppCompatActivity {
 
             @Override
             protected void onRefresh() {
-                RoomManager.getInstance().getAllRooms(new RoomManager.DataListCallback<RoomManager.RoomInfo>() {
-                    @Override
-                    public void onSuccess(List<RoomManager.RoomInfo> dataList) {
-                        runOnUiThread(() -> {
-                            mDataList.clear();
-                            mDataList.addAll(dataList);
-                            notifyDataSetChanged();
-                            triggerDataListUpdateRun();
-                        });
-
-                    }
-
-                    @Override
-                    public void onFailed(Exception e) {
-                        Log.e(TAG, "", e);
-                        runOnUiThread(() -> {
-                            triggerDataListUpdateRun();
-                        });
-                    }
-                });
+                RoomManager.getInstance().getAllRooms(dataList -> runOnUiThread(() -> {
+                    mDataList.clear();
+                    mDataList.addAll(dataList);
+                    notifyDataSetChanged();
+                    triggerDataListUpdateRun();
+                }));
             }
 
             @Override

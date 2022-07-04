@@ -2,7 +2,6 @@ package io.agora.scene.singlehostlive;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Size;
 import android.view.SurfaceView;
 import android.widget.FrameLayout;
@@ -52,19 +51,11 @@ public class PreviewActivity extends AppCompatActivity {
     }
 
     private void createRoom(String randomName) {
-        RoomManager.getInstance().createRoom(randomName, new RoomManager.DataCallback<RoomManager.RoomInfo>() {
-            @Override
-            public void onSuccess(RoomManager.RoomInfo data) {
-                Intent intent = new Intent(PreviewActivity.this, HostDetailActivity.class);
-                intent.putExtra("roomInfo", data);
-                startActivity(intent);
-                finish();
-            }
-
-            @Override
-            public void onFailed(Exception e) {
-                Log.e(TAG, "", e);
-            }
+        RoomManager.getInstance().createRoom(randomName, data -> {
+            Intent intent = new Intent(PreviewActivity.this, HostDetailActivity.class);
+            intent.putExtra("roomInfo", data);
+            startActivity(intent);
+            finish();
         });
     }
 
