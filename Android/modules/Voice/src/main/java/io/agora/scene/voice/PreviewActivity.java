@@ -7,14 +7,13 @@ import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import io.agora.scene.voice.utils.RoomBgUtil;
 import io.agora.scene.voice.widgets.BackgroundDialog;
 import io.agora.uiwidget.function.PreviewControlView;
 import io.agora.uiwidget.utils.StatusBarUtil;
 
 public class PreviewActivity extends AppCompatActivity {
-    private int roomBgIndex = 0;
     private ImageView bgIv;
+    private int backgroundImaRes = BackgroundDialog.BG_PIC_RES[0];
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -23,7 +22,7 @@ public class PreviewActivity extends AppCompatActivity {
         StatusBarUtil.hideStatusBar(getWindow(), false);
 
         bgIv = findViewById(R.id.iv_background);
-        bgIv.setImageResource(RoomBgUtil.getRoomBgPicRes(roomBgIndex));
+        bgIv.setImageResource(backgroundImaRes);
 
         PreviewControlView previewControlView = findViewById(R.id.preview_control_view);
         previewControlView.setBackIcon(true, v -> finish());
@@ -33,7 +32,7 @@ public class PreviewActivity extends AppCompatActivity {
         previewControlView.setBeautyIcon(false, null);
         previewControlView.setSettingIcon(false, null);
         previewControlView.setGoLiveBtn((view, randomName) -> {
-            RoomManager.getInstance().createRoom(randomName, data -> {
+            RoomManager.getInstance().createRoom(randomName, backgroundImaRes, data -> {
                 Intent intent = new Intent(PreviewActivity.this, RoomDetailActivity.class);
                 intent.putExtra("roomInfo", data);
                 startActivity(intent);
@@ -45,10 +44,9 @@ public class PreviewActivity extends AppCompatActivity {
     private void showBgSelectDialog(){
         BackgroundDialog dialog = new BackgroundDialog(this);
         dialog.setOnBackgroundActionListener((index, res) -> {
-            roomBgIndex = index;
-            bgIv.setImageResource(RoomBgUtil.getRoomBgPicRes(roomBgIndex));
+            backgroundImaRes = res;
+            bgIv.setImageResource(backgroundImaRes);
         });
-        dialog.setSelected(roomBgIndex);
         dialog.show();
     }
 

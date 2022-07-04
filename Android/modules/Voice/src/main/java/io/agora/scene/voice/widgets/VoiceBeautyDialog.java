@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.agora.scene.voice.R;
+import io.agora.scene.voice.RtcManager;
 import io.agora.scene.voice.databinding.VoiceVoiceBeautyTabGridviewBinding;
 import io.agora.scene.voice.databinding.VoiceVoiceBeautyTabItemImageTextBinding;
 import io.agora.scene.voice.databinding.VoiceVoiceBeautyTabItemTextBinding;
@@ -29,17 +30,17 @@ public class VoiceBeautyDialog extends TabScrollDialog {
             R.drawable.voice_voice_beauty_chat_female_vatality
     };
 
-    public static void showDialog(Context context){
+    public static TabScrollDialog createDialog(Context context, RtcManager rtcManager){
         Resources resources = context.getResources();
 
-        new VoiceBeautyDialog(context)
+        return new VoiceBeautyDialog(context)
                 .setTabsTitle(resources.getString(R.string.voice_voice_beauty_title))
                 .addTab(resources.getString(R.string.voice_voice_beauty_type_title_1), createImageTextGridView(
                         resources.getStringArray(R.array.voice_voice_beauty_chat_names),
                         VOICE_BEAUTY_CHAT_RES,
                         0,
                         (item, position) -> {
-
+                            rtcManager.setVoiceBeautifier(RtcManager.VOICE_BEAUTIFIER_CHAT[position], false);
                         }
                 ))
                 .addTab(resources.getString(R.string.voice_voice_beauty_type_title_2), createTextGridView(
@@ -47,19 +48,18 @@ public class VoiceBeautyDialog extends TabScrollDialog {
                         resources.getStringArray(R.array.voice_voice_beauty_sing_names_simple),
                         0,
                         (item, position) -> {
-
+                            rtcManager.setVoiceBeautifier(RtcManager.VOICE_BEAUTIFIER_SINGING, position == 1);
                         }
                 ))
-                .addTab(resources.getString(R.string.voice_voice_beauty_type_title_2), createTextGridView(
+                .addTab(resources.getString(R.string.voice_voice_beauty_type_title_3), createTextGridView(
                         4,
                         resources.getStringArray(R.array.voice_voice_beauty_timbre),
                         0,
                         (item, position) -> {
-
+                            rtcManager.setVoiceBeautifier(RtcManager.VOICE_BEAUTIFIER_TRANASFORMATION[position], false);
                         }
                 ))
-                .refresh()
-                .show();
+                .refresh();
     }
 
     private VoiceBeautyDialog(@NonNull Context context) {

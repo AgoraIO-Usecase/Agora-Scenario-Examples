@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.agora.scene.voice.R;
+import io.agora.scene.voice.RtcManager;
 import io.agora.scene.voice.databinding.VoiceSoundEffectTabCommingSoonBinding;
 import io.agora.scene.voice.databinding.VoiceSoundEffectTabElectronicLayoutBinding;
 import io.agora.scene.voice.databinding.VoiceSoundEffectTabGridviewBinding;
@@ -47,15 +48,18 @@ public class SoundEffectDialog extends TabScrollDialog {
 
     public static final int[] FLAVOUR_EFFECT_IMAGE_RES = {
             R.drawable.voice_sound_effect_flavour_r_n_b,
-            R.drawable.voice_sound_effect_flavour_pop,
-            R.drawable.voice_sound_effect_flavour_rock,
-            R.drawable.voice_sound_effect_flavour_hipop,
+            R.drawable.voice_sound_effect_flavour_pop
     };
 
-    public static void showDialog(Context context) {
+    private static int electronicKeyIndex = 0;
+    private static int electronicValueIndex = 0;
+
+    public static TabScrollDialog createDialog(Context context, RtcManager rtcManager) {
         Resources resources = context.getResources();
         String[] soundEffectTypeNames = resources.getStringArray(R.array.voice_sound_effect_types);
-        new SoundEffectDialog(context)
+
+        electronicKeyIndex = electronicValueIndex = 0;
+        return new SoundEffectDialog(context)
                 .setTabsTitle(resources.getString(R.string.voice_sound_effect_dialog_title))
                 // 空间塑造
                 .addTab(soundEffectTypeNames[0], createImageTextGridView(
@@ -63,7 +67,7 @@ public class SoundEffectDialog extends TabScrollDialog {
                         SPACE_EFFECT_IMAGE_RES,
                         0,
                         (item, position) -> {
-
+                            rtcManager.setAudioVoiceEffect(RtcManager.VOICE_EFFECT_ROOM_ACOUSTICS[position], -1, -1);
                         }
                 ))
                 // 变声音效
@@ -72,7 +76,7 @@ public class SoundEffectDialog extends TabScrollDialog {
                         CHANGE_EFFECT_IMAGE_RES,
                         0,
                         (item, position) -> {
-
+                            rtcManager.setAudioVoiceEffect(RtcManager.VOICE_EFFECT_VOICE_CHANGER[position], -1, -1);
                         }
                 ))
                 // 曲风音效
@@ -81,29 +85,32 @@ public class SoundEffectDialog extends TabScrollDialog {
                         FLAVOUR_EFFECT_IMAGE_RES,
                         0,
                         (item, position) -> {
-
+                            rtcManager.setAudioVoiceEffect(RtcManager.VOICE_EFFECT_STYLE_TRANSFORMATION[position], -1, -1);
                         }
                 ))
                 // 电音音效
                 .addTab(soundEffectTypeNames[3], createElectronicLayout(
                         (buttonView, isChecked) -> {
-
+                            rtcManager.setPitchCorrection(isChecked);
                         },
                         resources.getStringArray(R.array.voice_sound_effect_electronic_keys),
-                        0,
+                        electronicKeyIndex,
                         (item, position) -> {
-
+                            electronicKeyIndex = position;
+                            rtcManager.setAudioVoiceEffect(RtcManager.VOICE_EFFECT_PITCH_CORRECTION, electronicKeyIndex,
+                                    RtcManager.VOICE_EFFECT_PITCH_CORRECTION_VALUES[electronicValueIndex]);
                         },
                         resources.getStringArray(R.array.voice_sound_effect_electronic_tones),
                         0,
                         (item, position) -> {
-
+                            electronicValueIndex = position;
+                            rtcManager.setAudioVoiceEffect(RtcManager.VOICE_EFFECT_PITCH_CORRECTION, electronicKeyIndex,
+                                    RtcManager.VOICE_EFFECT_PITCH_CORRECTION_VALUES[electronicValueIndex]);
                         }
                 ))
                 // 魔力音阶
                 .addTab(soundEffectTypeNames[4], createCommingSoon())
-                .refresh()
-                .show();
+                .refresh();
     }
 
     private SoundEffectDialog(@NonNull Context context) {

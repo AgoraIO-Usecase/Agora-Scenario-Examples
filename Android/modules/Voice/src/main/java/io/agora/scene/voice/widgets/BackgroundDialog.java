@@ -8,32 +8,53 @@ import android.graphics.Outline;
 import android.graphics.Rect;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import io.agora.scene.voice.R;
-import io.agora.scene.voice.utils.RoomBgUtil;
+import io.agora.scene.voice.databinding.VoiceBackgroundDialogBinding;
+import io.agora.scene.voice.databinding.VoiceBackgroundListItemBinding;
+import io.agora.uiwidget.basic.BindingSingleAdapter;
+import io.agora.uiwidget.basic.BindingViewHolder;
 import io.agora.uiwidget.utils.StatusBarUtil;
 
 public class BackgroundDialog extends BottomSheetDialog {
+
+    private static final Integer[] PREVIEW_ICON_RES = {
+            R.drawable.voice_room_bg_prev_1,
+            R.drawable.voice_room_bg_prev_2,
+            R.drawable.voice_room_bg_prev_3,
+            R.drawable.voice_room_bg_prev_4,
+            R.drawable.voice_room_bg_prev_5,
+            R.drawable.voice_room_bg_prev_6,
+            R.drawable.voice_room_bg_prev_7,
+            R.drawable.voice_room_bg_prev_8,
+            R.drawable.voice_room_bg_prev_9,
+    };
+
+    public static final Integer[] BG_PIC_RES = {
+            R.drawable.voice_room_bg_big_1,
+            R.drawable.voice_room_bg_big_2,
+            R.drawable.voice_room_bg_big_3,
+            R.drawable.voice_room_bg_big_4,
+            R.drawable.voice_room_bg_big_5,
+            R.drawable.voice_room_bg_big_6,
+            R.drawable.voice_room_bg_big_7,
+            R.drawable.voice_room_bg_big_8,
+            R.drawable.voice_room_bg_big_9,
+    };
+
     public interface BackgroundActionSheetListener {
         void onBackgroundPicSelected(int index, int res);
     }
 
-    private static final int GRID_SPAN = 3;
-
-    private int mSelected;
-    private BackgroundAdapter mAdapter;
+    private VoiceBackgroundDialogBinding mBinding;
+    private BindingSingleAdapter<Integer, VoiceBackgroundListItemBinding> mAdapter;
     private BackgroundActionSheetListener mListener;
-    private AppCompatImageView mBackBtn;
 
     public BackgroundDialog(Context context) {
         super(context, io.agora.uiwidget.R.style.BottomSheetDialog);
@@ -43,85 +64,47 @@ public class BackgroundDialog extends BottomSheetDialog {
 
     private void init() {
         setCanceledOnTouchOutside(true);
+        mBinding = VoiceBackgroundDialogBinding.inflate(LayoutInflater.from(getContext()));
+        setContentView(mBinding.getRoot());
+        StatusBarUtil.hideStatusBar(getWindow(), false);
 
-        View rootView = LayoutInflater.from(getContext()).inflate(R.layout.voice_background_dialog, null);
-        RecyclerView recyclerView = rootView.findViewById(R.id.action_sheet_background_recycler);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), GRID_SPAN);
-        recyclerView.setLayoutManager(gridLayoutManager);
-        mAdapter = new BackgroundAdapter();
-        recyclerView.setAdapter(mAdapter);
-        recyclerView.addItemDecoration(new BackgroundViewDecoration());
+        mAdapter = new BindingSingleAdapter<Integer, VoiceBackgroundListItemBinding>(){
+            private int _selectedPosition = -1;
 
-        mBackBtn = rootView.findViewById(R.id.iv_back);
-        mBackBtn.setOnClickListener(view -> {
+            @Override
+            public void onBindViewHolder(@NonNull BindingViewHolder<VoiceBackgroundListItemBinding> holder, int position) {
+                final int pos = position;
+                int maskVisibility = pos == _selectedPosition ? VISIBLE : GONE;
+                holder.binding.actionSheetBackgroundItemSelectedMask.setVisibility(maskVisibility);
+
+                holder.binding.actionSheetBackgroundItemImage.setClipToOutline(true);
+                holder.binding.actionSheetBackgroundItemImage.setOutlineProvider(new ItemOutlineProvider());
+                holder.binding.actionSheetBackgroundItemImage.setImageResource(getItem(pos));
+
+                holder.itemView.setOnClickListener(view -> {
+                    int oPosition = _selectedPosition;
+                    _selectedPosition = pos;
+                    notifyItemChanged(oPosition);
+                    notifyItemChanged(pos);
+                    if (mListener != null) {
+                        mListener.onBackgroundPicSelected(
+                                pos,
+                                BG_PIC_RES[pos]);
+                    }
+                });
+            }
+        };
+        mBinding.rvBackground.setAdapter(mAdapter);
+        mBinding.rvBackground.addItemDecoration(new BackgroundViewDecoration());
+        mAdapter.insertAll(PREVIEW_ICON_RES);
+
+        mBinding.ivBack.setOnClickListener(view -> {
             dismiss();
         });
-        super.setContentView(rootView);
-
-        StatusBarUtil.hideStatusBar(getWindow(), false);
     }
 
     public void setOnBackgroundActionListener(BackgroundActionSheetListener listener) {
         mListener = listener;
-    }
-
-    public void setSelected(int selected) {
-        if (0 <= selected && selected < RoomBgUtil.totalCount()) {
-            mSelected = selected;
-            mAdapter.notifyDataSetChanged();
-        }
-    }
-
-    public int getSelected() {
-        return mSelected;
-    }
-
-    public void setShowBackButton(boolean show) {
-        mBackBtn.setVisibility(show ? VISIBLE : GONE);
-    }
-
-    private class BackgroundAdapter extends RecyclerView.Adapter<BackgroundViewHolder> {
-        @NonNull
-        @Override
-        public BackgroundViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new BackgroundViewHolder(LayoutInflater.from(getContext()).inflate(
-                    R.layout.voice_background_list_item, parent, false));
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull BackgroundViewHolder holder, int position) {
-            int pos = holder.getAdapterPosition();
-            int maskVisibility = pos == mSelected ? VISIBLE : GONE;
-            holder.mask.setVisibility(maskVisibility);
-
-            holder.image.setClipToOutline(true);
-            holder.image.setOutlineProvider(new ItemOutlineProvider());
-            holder.image.setImageResource(RoomBgUtil.getRoomBgPreviewRes(pos));
-
-            holder.itemView.setOnClickListener(view -> {
-                mSelected = pos;
-                notifyDataSetChanged();
-                if (mListener != null) mListener.onBackgroundPicSelected(pos,
-                        RoomBgUtil.getRoomBgPicRes(pos));
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return RoomBgUtil.totalCount();
-        }
-    }
-
-    private static class BackgroundViewHolder extends RecyclerView.ViewHolder {
-        RelativeLayout mask;
-        AppCompatImageView image;
-
-        public BackgroundViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            mask = itemView.findViewById(R.id.action_sheet_background_item_selected_mask);
-            image = itemView.findViewById(R.id.action_sheet_background_item_image);
-        }
     }
 
     private class ItemOutlineProvider extends ViewOutlineProvider {

@@ -58,7 +58,7 @@ public class RoomListActivity extends BaseActivity<VoiceRoomListActivityBinding>
 
     @SuppressLint("WrongConstant")
     private void checkPermission(Runnable granted) {
-        String[] permissions = {Permission.CAMERA, Permission.RECORD_AUDIO};
+        String[] permissions = {Permission.RECORD_AUDIO};
         if (AndPermission.hasPermissions(this, permissions)) {
             if (granted != null) {
                 granted.run();

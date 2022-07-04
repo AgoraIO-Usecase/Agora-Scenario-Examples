@@ -43,8 +43,6 @@
     <string-array name="voice_sound_effect_style_names">
         <item>R&#38;B</item>
         <item>Popular</item>
-        <item>Rock</item>
-        <item>HipHop</item>
     </string-array>
     <string-array name="voice_sound_effect_electronic_keys">
         <item>Major</item>
@@ -110,7 +108,15 @@
     <string name="voice_background_music_credit_hint">Music:&#160;&#160;</string>
     <string name="voice_background_music_credit_link" translatable="false">https://www.bensound.com</string>
 
+    <!-- UserOptionsDialog -->
+    <string name="voice_user_options_invite">Invite</string>
+    <string name="voice_user_options_mute">Mute</string>
 
+    <!-- RoomDetailActivity -->
+    <string name="voice_room_detail_invite_tip">Host invite you</string>
+    <string name="voice_room_detail_invite_accept">Accept</string>
+    <string name="voice_room_detail_invite_refuse">Refuse</string>
+    <string name="voice_room_detail_invite_refused">%s refuse your invitation</string>
 
 
 </resources>

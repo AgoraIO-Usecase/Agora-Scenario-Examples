@@ -90,7 +90,7 @@ public class LiveToolsDialog extends BottomSheetDialog {
     public static class ToolItem {
         private final int iconRes;
         private final int nameRes;
-        private boolean activated;
+        public boolean activated;
         private final OnItemClickListener click;
 
         public ToolItem(int nameRes, int iconRes) {

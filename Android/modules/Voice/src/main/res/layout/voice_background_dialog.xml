@@ -2,9 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/voice_dialog_bg">
     <RelativeLayout
-        android:id="@+id/action_sheet_background_title"
+        android:id="@+id/rl_background_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <androidx.appcompat.widget.AppCompatTextView
@@ -26,12 +27,14 @@
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/action_sheet_background_recycler"
+        android:id="@+id/rv_background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/action_sheet_background_title"
+        android:layout_below="@id/rl_background_title"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="3"
         android:layout_marginBottom="16dp"
-        android:overScrollMode="never"/>
+        android:overScrollMode="never" />
 </RelativeLayout>

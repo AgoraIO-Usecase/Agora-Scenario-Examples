@@ -2,6 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_centerHorizontal="true"
     android:background="@drawable/voice_room_detail_seat_item_bg">
 
@@ -18,7 +20,8 @@
         android:visibility="gone"
         android:src="@drawable/voice_room_detail_ic_lock" />
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <com.makeramen.roundedimageview.RoundedImageView
+        app:riv_corner_radius="99dp"
         android:id="@+id/seat_user_avatar"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -30,5 +33,6 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:visibility="gone"
+        tools:visibility="visible"
         android:src="@drawable/voice_room_detail_ic_mute" />
 </RelativeLayout>

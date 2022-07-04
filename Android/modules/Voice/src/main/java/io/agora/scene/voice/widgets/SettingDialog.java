@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import io.agora.scene.voice.R;
+import io.agora.scene.voice.RtcManager;
 import io.agora.uiwidget.function.LiveToolsDialog;
 
 public class SettingDialog extends LiveToolsDialog {
@@ -13,13 +14,19 @@ public class SettingDialog extends LiveToolsDialog {
     public static final ToolItem ITEM_BACKGROUND_MUSIC = new ToolItem(R.string.voice_setting_background_music, R.drawable.voice_setting_ic_music);
     public static final ToolItem ITEM_STATISTICS = new ToolItem(R.string.voice_setting_statistics, R.drawable.voice_setting_ic_data);
 
-    public static void showDialog(Context context, OnItemClickListener listener){
-        new SettingDialog(context)
-                .addToolItem(ITEM_MONITOR, false, listener)
-                .addToolItem(ITEM_BACKGROUND, false, listener)
-                .addToolItem(ITEM_BACKGROUND_MUSIC, false, listener)
-                .addToolItem(ITEM_STATISTICS, false, listener)
-                .show();
+    public static LiveToolsDialog createDialog(Context context, RtcManager rtcManager, Runnable showBackgroundDialog, Runnable showBGMusicDialog){
+        return new SettingDialog(context)
+                .addToolItem(ITEM_MONITOR, false, (view, item) -> rtcManager.enableEarMonitoring(item.activated))
+                .addToolItem(ITEM_BACKGROUND, false, (view, item) -> {
+                    if(showBackgroundDialog != null){
+                        showBackgroundDialog.run();
+                    }
+                })
+                .addToolItem(ITEM_BACKGROUND_MUSIC, false, (view, item) -> {
+                    if(showBGMusicDialog != null){
+                        showBGMusicDialog.run();
+                    }
+                });
     }
 
     private SettingDialog(@NonNull Context context) {
