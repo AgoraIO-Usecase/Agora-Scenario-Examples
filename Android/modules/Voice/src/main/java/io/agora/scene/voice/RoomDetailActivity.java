@@ -46,10 +46,30 @@ public class RoomDetailActivity extends AppCompatActivity {
     private final VoiceRoomDetailSeatItemBinding[] seatItemBindings = new VoiceRoomDetailSeatItemBinding[8];
     private LiveRoomMessageListView.LiveRoomMessageAdapter<RoomManager.MessageInfo> mMessageAdapter;
 
-    private final RoomManager.DataCallback<RoomManager.UserInfo> userAddOrUpdateCallback = data -> runOnUiThread(() -> updateUserView(data));
-    private final RoomManager.DataCallback<RoomManager.UserInfo> userDeleteCallback = data -> runOnUiThread(() -> downSeat(data));
+    private final RoomManager.DataListCallback<RoomManager.UserInfo> userInfoDataListCallback = dataList -> runOnUiThread(() -> {
+        mBinding.userView.setUserCount(dataList.size());
+        mBinding.userView.removeAllUserIcon();
+        for (int i = 1; i <= 3; i++) {
+            int index = dataList.size() - i;
+            if(index >= 0){
+                RoomManager.UserInfo userInfo = dataList.get(index);
+                mBinding.userView.addUserIcon(userInfo.getAvatarImgResId(), null);
+            }
+        }
+    });
+    private final RoomManager.DataCallback<RoomManager.UserInfo> userAddOrUpdateCallback = data -> runOnUiThread(() -> {
+        updateUserView(data);
+        roomManager.getUserInfoList(roomInfo.roomId, userInfoDataListCallback);
+    });
+    private final RoomManager.DataCallback<RoomManager.UserInfo> userDeleteCallback = data -> runOnUiThread(() -> {
+        downSeat(data);
+        roomManager.getUserInfoList(roomInfo.roomId, userInfoDataListCallback);
+    });
     private final RoomManager.DataCallback<RoomManager.RoomInfo> roomUpdateCallback = data -> runOnUiThread(() -> mBinding.ivBackground.setImageResource(data.getAndroidBgId()));
     private final RoomManager.DataCallback<String> roomDeleteCallback = data -> runOnUiThread(this::showRoomClosedDialog);
+    private final RoomManager.DataCallback<RoomManager.MessageInfo> messageInfoDataCallback = data -> runOnUiThread(() -> {
+        mMessageAdapter.addMessage(data);
+    });
 
     private TabScrollDialog soundEffectDialog;
     private TabScrollDialog voiceBeautyDialog;
@@ -67,8 +87,6 @@ public class RoomDetailActivity extends AppCompatActivity {
         boolean isRoomOwner = RoomManager.getCacheUserId().equals(roomInfo.userId);
 
         initDialogs();
-
-        mBinding.userView.randomUser(8, 3);
 
         // 房间信息
         mBinding.hostNameView.setName(roomInfo.roomName + "(" + roomInfo.roomId + ")");
@@ -94,6 +112,7 @@ public class RoomDetailActivity extends AppCompatActivity {
                     // 麦克风
                     boolean isActivated = mBinding.bottomView.isFun3Activated();
                     mBinding.bottomView.setFun3Activated(!isActivated);
+                    roomManager.enableLocalAudio(roomInfo.roomId, !isActivated);
                     if(rtcEngine != null){
                         rtcEngine.enableLocalAudio(!isActivated);
                     }
@@ -285,7 +304,8 @@ public class RoomDetailActivity extends AppCompatActivity {
     private void showTextInputDialog() {
         new TextInputDialog(this)
                 .setOnSendClickListener((v, text) -> {
-                    mMessageAdapter.addMessage(new RoomManager.MessageInfo(RoomManager.getCacheUserId(), text));
+                    RoomManager.MessageInfo item = new RoomManager.MessageInfo(roomManager.getLocalUserInfo().userName, text);
+                    roomManager.sendMessage(roomInfo.roomId, item);
                 })
                 .show();
     }
@@ -300,6 +320,8 @@ public class RoomDetailActivity extends AppCompatActivity {
 
             roomManager.subscribeUserInfoEvent(roomInfo.roomId, userAddOrUpdateCallback, userDeleteCallback);
             roomManager.subscribeRoomEvent(roomInfo.roomId, roomUpdateCallback, roomDeleteCallback);
+            roomManager.subscribeMessageEvent(roomInfo.roomId, messageInfoDataCallback);
+            roomManager.getUserInfoList(roomInfo.roomId, userInfoDataListCallback);
         });
     }
 
@@ -334,6 +356,13 @@ public class RoomDetailActivity extends AppCompatActivity {
                     runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_left_suffix))));
                 }
 
+                @Override
+                public void onClientRoleChanged(int oldRole, int newRole) {
+                    super.onClientRoleChanged(oldRole, newRole);
+                    if (newRole == Constants.CLIENT_ROLE_BROADCASTER) {
+                        rtcEngine.enableLocalAudio(mBinding.bottomView.isFun3Activated());
+                    }
+                }
             });
 
             rtcEngine.setDefaultAudioRoutetoSpeakerphone(true);
@@ -342,7 +371,7 @@ public class RoomDetailActivity extends AppCompatActivity {
             options.clientRoleType = isRoomOwner ? Constants.CLIENT_ROLE_BROADCASTER: Constants.CLIENT_ROLE_AUDIENCE;
             options.publishAudioTrack = isRoomOwner;
             options.autoSubscribeAudio = true;
-            rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, 0, options);
+            rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, Integer.parseInt(RoomManager.getCacheUserId()), options);
 
         } catch (Exception e) {
             e.printStackTrace();

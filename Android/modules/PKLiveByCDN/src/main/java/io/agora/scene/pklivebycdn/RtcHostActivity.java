@@ -32,6 +32,17 @@ public class RtcHostActivity extends BaseActivity<SuperappHostDetailActivityBind
     private final RoomManager roomManager = RoomManager.getInstance();
     private RtcEngine rtcEngine;
     private LiveTranscoding rtmpTranscoding;
+    private RoomManager.DataListCallback<RoomManager.UserInfo> userInfoDataListCallback = dataList -> runOnUiThread(()->{
+        mBinding.userView.setUserCount(dataList.size());
+        mBinding.userView.removeAllUserIcon();
+        for (int i = 1; i <= 3; i++) {
+            int index = dataList.size() - i;
+            if(index >= 0){
+                mBinding.userView.addUserIcon(dataList.get(index).getUserIcon(), null);
+            }
+
+        }
+    });
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -96,22 +107,20 @@ public class RtcHostActivity extends BaseActivity<SuperappHostDetailActivityBind
 
     private void initRoomManager() {
         roomManager.joinRoom(mRoomInfo.roomId, true);
-        roomManager.subscriptRoomInfoEvent(mRoomInfo.roomId, new RoomManager.DataCallback<RoomManager.PKInfo>() {
-            @Override
-            public void onObtained(RoomManager.PKInfo pkInfo) {
-                if (!pkInfo.isPKing()) {
-                    // 结束连麦
-                    // 隐藏远程视图
-                    mBinding.remoteVideoControl.setVisibility(View.GONE);
+        roomManager.subscriptRoomInfoEvent(mRoomInfo.roomId, pkInfo -> {
+            if (!pkInfo.isPKing()) {
+                // 结束连麦
+                // 隐藏远程视图
+                mBinding.remoteVideoControl.setVisibility(View.GONE);
 
-                } else {
-                    // 开始连麦
-                    // 显示远程视图
-                    mBinding.remoteVideoControl.setVisibility(View.VISIBLE);
-                }
-
+            } else {
+                // 开始连麦
+                // 显示远程视图
+                mBinding.remoteVideoControl.setVisibility(View.VISIBLE);
             }
         }, null);
+        roomManager.subscriptUserChangeEvent(mRoomInfo.roomId, userInfoDataListCallback);
+        roomManager.getRoomUserList(mRoomInfo.roomId, userInfoDataListCallback);
     }
 
     private void initRtcManager() {

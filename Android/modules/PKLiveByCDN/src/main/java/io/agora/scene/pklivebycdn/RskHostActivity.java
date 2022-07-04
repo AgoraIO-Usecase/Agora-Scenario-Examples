@@ -28,6 +28,17 @@ public class RskHostActivity extends BaseActivity<SuperappHostDetailActivityBind
     private RoomManager.RoomInfo mRoomInfo;
     private final RoomManager roomManager = RoomManager.getInstance();
     private RtcEngine rtcEngine;
+    private RoomManager.DataListCallback<RoomManager.UserInfo> userInfoDataListCallback = dataList -> runOnUiThread(()->{
+        mBinding.userView.setUserCount(dataList.size());
+        mBinding.userView.removeAllUserIcon();
+        for (int i = 1; i <= 3; i++) {
+            int index = dataList.size() - i;
+            if(index >= 0){
+                mBinding.userView.addUserIcon(dataList.get(index).getUserIcon(), null);
+            }
+
+        }
+    });
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,6 +72,8 @@ public class RskHostActivity extends BaseActivity<SuperappHostDetailActivityBind
 
     private void initRoomManager() {
         roomManager.joinRoom(mRoomInfo.roomId, true);
+        roomManager.subscriptUserChangeEvent(mRoomInfo.roomId, userInfoDataListCallback);
+        roomManager.getRoomUserList(mRoomInfo.roomId, userInfoDataListCallback);
     }
 
     private void initRtcManager() {

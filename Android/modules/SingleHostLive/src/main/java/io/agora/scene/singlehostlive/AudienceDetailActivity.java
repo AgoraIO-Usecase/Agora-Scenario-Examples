@@ -8,6 +8,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.List;
+
 import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
 import io.agora.rtc2.IRtcEngineEventHandler;
@@ -18,7 +20,6 @@ import io.agora.uiwidget.function.GiftAnimPlayDialog;
 import io.agora.uiwidget.function.GiftGridDialog;
 import io.agora.uiwidget.function.LiveRoomMessageListView;
 import io.agora.uiwidget.function.TextInputDialog;
-import io.agora.uiwidget.utils.RandomUtil;
 import io.agora.uiwidget.utils.StatusBarUtil;
 
 public class AudienceDetailActivity extends AppCompatActivity {
@@ -31,10 +32,10 @@ public class AudienceDetailActivity extends AppCompatActivity {
     private LiveRoomMessageListView.LiveRoomMessageAdapter<RoomManager.MessageInfo> mMessageAdapter;
     private final RoomManager.DataCallback<RoomManager.GiftInfo> giftInfoDataCallback = new RoomManager.DataCallback<RoomManager.GiftInfo>() {
         @Override
-        public void onSuccess(RoomManager.GiftInfo data) {
+        public void onObtained(RoomManager.GiftInfo data) {
             runOnUiThread(() -> {
                 mMessageAdapter.addMessage(new RoomManager.MessageInfo(
-                        data.userId,
+                        "User-" + data.userId,
                         getString(R.string.live_room_message_gift_prefix),
                         data.getIconId()
                 ));
@@ -43,18 +44,20 @@ public class AudienceDetailActivity extends AppCompatActivity {
                         .setAnimRes(data.getGifId())
                         .show();
             });
-
         }
-
+    };
+    private final RoomManager.DataCallback<RoomManager.MessageInfo> messageDataCallback = new RoomManager.DataCallback<RoomManager.MessageInfo>() {
         @Override
-        public void onFailed(Exception e) {
-
+        public void onObtained(RoomManager.MessageInfo data) {
+            runOnUiThread(() -> {
+                mMessageAdapter.addMessage(data);
+            });
         }
     };
 
     private final RoomManager.DataCallback<String> roomDeleteCallback = new RoomManager.DataCallback<String>() {
         @Override
-        public void onSuccess(String data) {
+        public void onObtained(String data) {
             runOnUiThread(() -> {
                 new AlertDialog.Builder(AudienceDetailActivity.this)
                         .setTitle(R.string.common_tip)
@@ -63,10 +66,22 @@ public class AudienceDetailActivity extends AppCompatActivity {
                         .show();
             });
         }
+    };
 
+    private final RoomManager.DataListCallback<RoomManager.UserInfo> userListChange = new RoomManager.DataListCallback<RoomManager.UserInfo>() {
         @Override
-        public void onFailed(Exception e) {
-
+        public void onObtained(List<RoomManager.UserInfo> dataList) {
+            runOnUiThread(() -> {
+                mBinding.hostUserView.setUserCount(dataList.size());
+                mBinding.hostUserView.removeAllUserIcon();
+                for (int i = 1; i <= 3; i++) {
+                    int index = dataList.size() - i;
+                    if(index >= 0){
+                        RoomManager.UserInfo userInfo = dataList.get(index);
+                        mBinding.hostUserView.addUserIcon(userInfo.getAvatarResId(), userInfo.userName);
+                    }
+                }
+            });
         }
     };
 
@@ -79,8 +94,7 @@ public class AudienceDetailActivity extends AppCompatActivity {
         roomInfo = (RoomManager.RoomInfo) getIntent().getSerializableExtra("roomInfo");
 
         // 房间信息
-        mBinding.hostNameView.setName(RandomUtil.randomUserName(this));
-        mBinding.hostNameView.setIcon(roomInfo.getAndroidBgId());
+        mBinding.hostNameView.setName(roomInfo.roomName + "(" + roomInfo.roomId + ")");
 
         // 底部按钮栏
         mBinding.bottomView.setFun1Visible(true)
@@ -110,6 +124,9 @@ public class AudienceDetailActivity extends AppCompatActivity {
         roomManager.joinRoom(roomInfo.roomId, () -> {
             roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, giftInfoDataCallback);
             roomManager.subscribeRoomDeleteEvent(roomInfo.roomId, roomDeleteCallback);
+            roomManager.subscribeMessageReceiveEvent(roomInfo.roomId, messageDataCallback);
+            roomManager.subscribeUserChangeEvent(roomInfo.roomId, userListChange);
+            roomManager.getRoomUserList(roomInfo.roomId, userListChange);
         });
     }
 
@@ -119,7 +136,7 @@ public class AudienceDetailActivity extends AppCompatActivity {
                 @Override
                 public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
                     super.onJoinChannelSuccess(channel, uid, elapsed);
-                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo("User-" + uid + "", getString(R.string.live_room_message_user_join_suffix))));
                 }
 
                 @Override
@@ -127,14 +144,14 @@ public class AudienceDetailActivity extends AppCompatActivity {
                     super.onUserJoined(uid, elapsed);
                     runOnUiThread(() -> {
                         renderRemoteVideo(uid);
-                        mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix)));
+                        mMessageAdapter.addMessage(new RoomManager.MessageInfo("User-" + uid + "", getString(R.string.live_room_message_user_join_suffix)));
                     });
                 }
 
                 @Override
                 public void onUserOffline(int uid, int reason) {
                     super.onUserOffline(uid, reason);
-                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_left_suffix))));
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo("User-" + uid + "", getString(R.string.live_room_message_user_left_suffix))));
                 }
             });
         } catch (Exception e) {
@@ -154,7 +171,7 @@ public class AudienceDetailActivity extends AppCompatActivity {
         options.clientRoleType = Constants.CLIENT_ROLE_AUDIENCE;
         options.autoSubscribeVideo = true;
         options.autoSubscribeAudio = true;
-        rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, 0, options);
+        rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, Integer.parseInt(RoomManager.getCacheUserId()), options);
     }
 
     private void showGiftGridDialog() {
@@ -174,7 +191,10 @@ public class AudienceDetailActivity extends AppCompatActivity {
 
     private void showTextInputDialog() {
         new TextInputDialog(this)
-                .setOnSendClickListener((v, text) -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(RoomManager.getCacheUserId(), text)))
+                .setOnSendClickListener((v, text) -> {
+                    RoomManager.MessageInfo item = new RoomManager.MessageInfo(roomManager.getLocalUserInfo().userName, text);
+                    roomManager.sendMessage(roomInfo.roomId, item);
+                })
                 .show();
     }
 

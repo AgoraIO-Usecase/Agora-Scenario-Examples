@@ -11,7 +11,6 @@ import androidx.annotation.IntDef;
 import java.io.Serializable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +28,9 @@ import io.agora.uiwidget.utils.RandomUtil;
 public class RoomManager {
     private static final String TAG = "RoomManager";
     private static final String PREFERENCE_KEY_USER_ID = RoomManager.class.getName() + "_userId";
+    private static final String SYNC_MANAGER_USER_COLLECTION = "userCollection";
     private static final String SYNC_MANAGER_GIFT_INFO = "giftInfo";
+    private static final String SYNC_MANAGER_MESSAGE_INFO = "messageInfo";
     private static final String SYNC_MANAGER_PK_INFO = "pkInfo";
     private static final String SYNC_MANAGER_PK_APPLY_INFO = "pkApplyInfo";
 
@@ -37,6 +38,9 @@ public class RoomManager {
     private static volatile boolean isInitialized = false;
 
     private final Map<String, SceneReference> sceneMap = new HashMap<>();
+    private final List<WrapSyncEventListener> eventListeners = new ArrayList<>();
+    private DataCallback<Exception> errorHandler;
+    private UserInfo localUserInfo;
 
     public static RoomManager getInstance() {
         if (INSTANCE == null) {
@@ -52,12 +56,24 @@ public class RoomManager {
     private RoomManager() {
     }
 
-    public void init(Context context, String appId, String token) {
+    private void notifyErrorHandler(Exception error){
+        Log.e(TAG, error.toString());
+        if(errorHandler != null){
+            errorHandler.onObtained(error);
+        }
+    }
+
+    public UserInfo getLocalUserInfo() {
+        return localUserInfo;
+    }
+
+    public void init(Context context, String appId, String token, DataCallback<Exception> error) {
         if (isInitialized) {
             return;
         }
         PreferenceUtil.init(context);
         isInitialized = true;
+        errorHandler = error;
         HashMap<String, String> params = new HashMap<>();
         params.put("appid", appId);
         params.put("token", token);
@@ -93,7 +109,7 @@ public class RoomManager {
 
             @Override
             public void onFail(SyncManagerException exception) {
-
+                notifyErrorHandler(exception);
             }
         });
     }
@@ -113,19 +129,17 @@ public class RoomManager {
                         }
                         callback.onObtained(ret);
                     } catch (Exception exception) {
-                        exception.printStackTrace();
+                        notifyErrorHandler(exception);
                     }
-
                 }
             }
 
             @Override
             public void onFail(SyncManagerException exception) {
-                if (exception.getMessage().contains("empty")) {
-                    if (callback != null) {
-                        callback.onObtained(null);
-                    }
+                if (callback != null) {
+                    callback.onObtained(null);
                 }
+                notifyErrorHandler(exception);
             }
         });
     }
@@ -144,6 +158,7 @@ public class RoomManager {
             @Override
             public void onSuccess(SceneReference sceneReference) {
                 sceneMap.put(roomId, sceneReference);
+                login(roomId);
                 if (successRun != null) {
                     successRun.run();
                 }
@@ -152,8 +167,82 @@ public class RoomManager {
             @Override
             public void onFail(SyncManagerException exception) {
                 sceneMap.remove(roomId);
+                notifyErrorHandler(exception);
             }
         });
+    }
+
+    private void login(String roomId){
+        checkInitialized();
+        SceneReference sceneReference = sceneMap.get(roomId);
+        if (sceneReference == null) {
+            return;
+        }
+        localUserInfo = new UserInfo();
+        sceneReference.collection(SYNC_MANAGER_USER_COLLECTION)
+                .add(localUserInfo, new Sync.DataItemCallback() {
+                    @Override
+                    public void onSuccess(IObject result) {
+                        localUserInfo.objectId = result.getId();
+                    }
+
+                    @Override
+                    public void onFail(SyncManagerException exception) {
+                        notifyErrorHandler(exception);
+                    }
+                });
+    }
+
+    private void logout(String roomId){
+        if(localUserInfo == null){
+            return;
+        }
+        checkInitialized();
+        SceneReference sceneReference = sceneMap.get(roomId);
+        if (sceneReference == null) {
+            return;
+        }
+        sceneReference.collection(SYNC_MANAGER_USER_COLLECTION)
+                .delete(localUserInfo.objectId, new Sync.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        localUserInfo = null;
+                    }
+
+                    @Override
+                    public void onFail(SyncManagerException exception) {
+                        notifyErrorHandler(exception);
+                    }
+                });
+    }
+
+    public void getRoomUserList(String roomId, DataListCallback<UserInfo> success){
+        checkInitialized();
+        SceneReference sceneReference = sceneMap.get(roomId);
+        if (sceneReference == null) {
+            return;
+        }
+        sceneReference.collection(SYNC_MANAGER_USER_COLLECTION)
+                .get(new Sync.DataListCallback() {
+                    @Override
+                    public void onSuccess(List<IObject> result) {
+                        if(success != null){
+                            List<UserInfo> ret = new ArrayList<>();
+                            for (IObject iObject : result) {
+                                ret.add(iObject.toObject(UserInfo.class));
+                            }
+                            success.onObtained(ret);
+                        }
+                    }
+
+                    @Override
+                    public void onFail(SyncManagerException exception) {
+                        if(success != null){
+                            success.onObtained(new ArrayList<>());
+                        }
+                        notifyErrorHandler(exception);
+                    }
+                });
     }
 
     public void getPkInfo(String roomId, DataCallback<PKInfoModel> success) {
@@ -179,11 +268,10 @@ public class RoomManager {
 
             @Override
             public void onFail(SyncManagerException exception) {
-                if (exception.getMessage().contains("empty")) {
-                    if (success != null) {
-                        success.onObtained(null);
-                    }
+                if (success != null) {
+                    success.onObtained(null);
                 }
+                notifyErrorHandler(exception);
             }
         });
     }
@@ -211,11 +299,10 @@ public class RoomManager {
 
             @Override
             public void onFail(SyncManagerException exception) {
-                if (exception.getMessage().contains("empty")) {
-                    if (success != null) {
-                        success.onObtained(null);
-                    }
+                if (success != null) {
+                    success.onObtained(null);
                 }
+                notifyErrorHandler(exception);
             }
         });
     }
@@ -268,7 +355,7 @@ public class RoomManager {
 
             @Override
             public void onFail(SyncManagerException exception) {
-
+                notifyErrorHandler(exception);
             }
         });
     }
@@ -295,7 +382,7 @@ public class RoomManager {
 
             @Override
             public void onFail(SyncManagerException exception) {
-
+                notifyErrorHandler(exception);
             }
         });
     }
@@ -320,7 +407,7 @@ public class RoomManager {
 
             @Override
             public void onFail(SyncManagerException exception) {
-
+                notifyErrorHandler(exception);
             }
         });
     }
@@ -346,7 +433,7 @@ public class RoomManager {
 
             @Override
             public void onFail(SyncManagerException exception) {
-
+                notifyErrorHandler(exception);
             }
         });
     }
@@ -372,7 +459,7 @@ public class RoomManager {
 
             @Override
             public void onFail(SyncManagerException exception) {
-
+                notifyErrorHandler(exception);
             }
         });
     }
@@ -397,7 +484,7 @@ public class RoomManager {
 
             @Override
             public void onFail(SyncManagerException exception) {
-
+                notifyErrorHandler(exception);
             }
         });
     }
@@ -416,55 +503,86 @@ public class RoomManager {
 
             @Override
             public void onFail(SyncManagerException exception) {
-
+                notifyErrorHandler(exception);
             }
         });
     }
 
-    public void subscribePKApplyInfoEvent(String roomId, WeakReference<DataCallback<PKApplyInfoModel>> addOrUpdate) {
+    public void sendMessage(String roomId, MessageInfo messageInfo){
         checkInitialized();
         SceneReference sceneReference = sceneMap.get(roomId);
         if (sceneReference == null) {
             return;
         }
-        sceneReference.subscribe(SYNC_MANAGER_PK_APPLY_INFO, new Sync.EventListener() {
+        sceneReference.update(SYNC_MANAGER_MESSAGE_INFO, messageInfo, new Sync.DataItemCallback() {
+            @Override
+            public void onSuccess(IObject result) {
+
+            }
+
+            @Override
+            public void onFail(SyncManagerException exception) {
+                notifyErrorHandler(exception);
+            }
+        });
+    }
+
+    public void subscribeUserListChangeEvent(String roomId, DataListCallback<UserInfo> change){
+        checkInitialized();
+        SceneReference sceneReference = sceneMap.get(roomId);
+        if (sceneReference == null) {
+            return;
+        }
+        WrapSyncEventListener listener = new WrapSyncEventListener(roomId){
             @Override
             public void onCreated(IObject item) {
-                PKApplyInfoModel info = item.toObject(PKApplyInfoModel.class);
-                info.objectId = item.getId();
-                if (addOrUpdate != null) {
-                    DataCallback<PKApplyInfoModel> cb = addOrUpdate.get();
-                    if (cb != null) {
-                        cb.onObtained(info);
-                    }
+                super.onCreated(item);
+                getRoomUserList(roomId, change);
+            }
+
+            @Override
+            public void onUpdated(IObject item) {
+                super.onUpdated(item);
+                getRoomUserList(roomId, change);
+            }
+
+            @Override
+            public void onDeleted(IObject item) {
+                super.onDeleted(item);
+                getRoomUserList(roomId, change);
+            }
+        };
+        sceneReference.collection(SYNC_MANAGER_USER_COLLECTION)
+                .subscribe(listener);
+        eventListeners.add(listener);
+    }
+
+    public void subscribeMessageReceiveEvent(String roomId, DataCallback<MessageInfo> addOrUpdate){
+        checkInitialized();
+        SceneReference sceneReference = sceneMap.get(roomId);
+        if (sceneReference == null) {
+            return;
+        }
+        WrapSyncEventListener listener = new WrapSyncEventListener(roomId){
+            @Override
+            public void onCreated(IObject item) {
+                super.onCreated(item);
+                if(addOrUpdate != null){
+                    addOrUpdate.onObtained(item.toObject(MessageInfo.class));
                 }
             }
 
             @Override
             public void onUpdated(IObject item) {
-                PKApplyInfoModel info = item.toObject(PKApplyInfoModel.class);
-                info.objectId = item.getId();
-                if (addOrUpdate != null) {
-                    DataCallback<PKApplyInfoModel> cb = addOrUpdate.get();
-                    if (cb != null) {
-                        cb.onObtained(info);
-                    }
+                super.onUpdated(item);
+                if(addOrUpdate != null){
+                    addOrUpdate.onObtained(item.toObject(MessageInfo.class));
                 }
             }
-
-            @Override
-            public void onDeleted(IObject item) {
-
-            }
-
-            @Override
-            public void onSubscribeError(SyncManagerException ex) {
-
-            }
-        });
+        };
+        sceneReference.subscribe(SYNC_MANAGER_MESSAGE_INFO, listener);
+        eventListeners.add(listener);
     }
-
-    private final Map<DataCallback<PKApplyInfoModel>, Sync.EventListener> pkApplyInfoEvent = new HashMap<>();
 
     public void subscribePKApplyInfoEvent(String roomId, DataCallback<PKApplyInfoModel> addOrUpdate) {
         checkInitialized();
@@ -472,36 +590,25 @@ public class RoomManager {
         if (sceneReference == null) {
             return;
         }
-        Sync.EventListener listener = new Sync.EventListener() {
+        WrapSyncEventListener listener = new WrapSyncEventListener(roomId, addOrUpdate){
             @Override
             public void onCreated(IObject item) {
-                PKApplyInfoModel info = item.toObject(PKApplyInfoModel.class);
-                info.objectId = item.getId();
-                if (addOrUpdate != null) {
-                    addOrUpdate.onObtained(info);
+                super.onCreated(item);
+                if(addOrUpdate != null){
+                    addOrUpdate.onObtained(item.toObject(PKApplyInfoModel.class));
                 }
             }
 
             @Override
             public void onUpdated(IObject item) {
-                PKApplyInfoModel info = item.toObject(PKApplyInfoModel.class);
-                info.objectId = item.getId();
-                if (addOrUpdate != null) {
-                    addOrUpdate.onObtained(info);
+                super.onUpdated(item);
+                if(addOrUpdate != null){
+                    addOrUpdate.onObtained(item.toObject(PKApplyInfoModel.class));
                 }
-            }
-
-            @Override
-            public void onDeleted(IObject item) {
-
-            }
-
-            @Override
-            public void onSubscribeError(SyncManagerException ex) {
-
             }
         };
         sceneReference.subscribe(SYNC_MANAGER_PK_APPLY_INFO, listener);
+        eventListeners.add(listener);
     }
 
     public void unSubscribePKApplyInfoEvent(String roomId, DataCallback<PKApplyInfoModel> addOrUpdate) {
@@ -510,141 +617,107 @@ public class RoomManager {
         if (sceneReference == null) {
             return;
         }
-        Sync.EventListener eventListener = pkApplyInfoEvent.get(addOrUpdate);
-        if (eventListener != null) {
-            sceneReference.unsubscribe(eventListener);
-            pkApplyInfoEvent.remove(addOrUpdate);
+        WrapSyncEventListener listener = null;
+        for (WrapSyncEventListener eventListener : eventListeners) {
+            if(roomId.equals(eventListener.roomId) && addOrUpdate == eventListener.tag){
+                listener = eventListener;
+                break;
+            }
+        }
+        if (listener != null) {
+            sceneReference.unsubscribe(listener);
+            eventListeners.remove(listener);
         }
     }
 
-    public void subscribePKInfoEvent(String roomId, WeakReference<DataCallback<PKInfoModel>> addOrUpdate) {
+    public void subscribePKInfoEvent(String roomId, DataCallback<PKInfoModel> addOrUpdate) {
         checkInitialized();
         SceneReference sceneReference = sceneMap.get(roomId);
         if (sceneReference == null) {
             return;
         }
-        sceneReference.subscribe(SYNC_MANAGER_PK_INFO, new Sync.EventListener() {
+        WrapSyncEventListener listener = new WrapSyncEventListener(roomId){
             @Override
             public void onCreated(IObject item) {
-                PKInfoModel info = item.toObject(PKInfoModel.class);
-                info.objectId = item.getId();
-                if (addOrUpdate != null) {
-                    DataCallback<PKInfoModel> cb = addOrUpdate.get();
-                    if (cb != null) {
-                        cb.onObtained(info);
-                    }
+                super.onCreated(item);
+                if(addOrUpdate != null){
+                    addOrUpdate.onObtained(item.toObject(PKInfoModel.class));
                 }
             }
 
             @Override
             public void onUpdated(IObject item) {
-                PKInfoModel info = item.toObject(PKInfoModel.class);
-                info.objectId = item.getId();
-                if (addOrUpdate != null) {
-                    DataCallback<PKInfoModel> cb = addOrUpdate.get();
-                    if (cb != null) {
-                        cb.onObtained(info);
-                    }
+                super.onUpdated(item);
+                if(addOrUpdate != null){
+                    addOrUpdate.onObtained(item.toObject(PKInfoModel.class));
                 }
             }
-
-            @Override
-            public void onDeleted(IObject item) {
-
-            }
-
-            @Override
-            public void onSubscribeError(SyncManagerException ex) {
-
-            }
-        });
+        };
+        sceneReference.subscribe(SYNC_MANAGER_PK_INFO, listener);
+        eventListeners.add(listener);
     }
 
-    public void subscribeGiftReceiveEvent(String roomId, WeakReference<DataCallback<GiftInfo>> addOrUpdate) {
+    public void subscribeGiftReceiveEvent(String roomId, DataCallback<GiftInfo> addOrUpdate) {
         checkInitialized();
         SceneReference sceneReference = sceneMap.get(roomId);
         if (sceneReference == null) {
             return;
         }
-        sceneReference.subscribe(SYNC_MANAGER_GIFT_INFO, new Sync.EventListener() {
-            @Override
-            public void onCreated(IObject item) {
-                GiftInfo giftInfo = item.toObject(GiftInfo.class);
-                if (addOrUpdate != null) {
-                    DataCallback<GiftInfo> cb = addOrUpdate.get();
-                    if (cb != null) {
-                        cb.onObtained(giftInfo);
-                    }
-                }
-            }
-
+        WrapSyncEventListener listener = new WrapSyncEventListener(roomId){
             @Override
             public void onUpdated(IObject item) {
-                GiftInfo giftInfo = item.toObject(GiftInfo.class);
-                if (addOrUpdate != null) {
-                    DataCallback<GiftInfo> cb = addOrUpdate.get();
-                    if (cb != null) {
-                        cb.onObtained(giftInfo);
-                    }
+                super.onUpdated(item);
+                if(addOrUpdate != null){
+                    addOrUpdate.onObtained(item.toObject(GiftInfo.class));
                 }
             }
 
             @Override
-            public void onDeleted(IObject item) {
-
+            public void onCreated(IObject item) {
+                super.onCreated(item);
+                if(addOrUpdate != null){
+                    addOrUpdate.onObtained(item.toObject(GiftInfo.class));
+                }
             }
-
-            @Override
-            public void onSubscribeError(SyncManagerException ex) {
-
-            }
-        });
+        };
+        sceneReference.subscribe(SYNC_MANAGER_GIFT_INFO, listener);
+        eventListeners.add(listener);
     }
 
-    public void subscriptRoomEvent(String roomId, WeakReference<DataCallback<RoomInfo>> addOrUpdate, WeakReference<DataCallback<String>> delete) {
+    public void subscriptRoomEvent(String roomId, DataCallback<RoomInfo> addOrUpdate, DataCallback<String> delete) {
         checkInitialized();
         SceneReference sceneReference = sceneMap.get(roomId);
         if (sceneReference == null) {
             return;
         }
-        sceneReference.subscribe(new Sync.EventListener() {
+        WrapSyncEventListener listener = new WrapSyncEventListener(roomId){
             @Override
             public void onCreated(IObject item) {
-                RoomInfo roomInfo = item.toObject(RoomInfo.class);
-                if (addOrUpdate != null) {
-                    DataCallback<RoomInfo> callback = addOrUpdate.get();
-                    if (callback != null) {
-                        callback.onObtained(roomInfo);
-                    }
+                super.onCreated(item);
+                if(addOrUpdate != null){
+                    addOrUpdate.onObtained(item.toObject(RoomInfo.class));
                 }
             }
 
             @Override
             public void onUpdated(IObject item) {
-                RoomInfo roomInfo = item.toObject(RoomInfo.class);
-                if (addOrUpdate != null) {
-                    DataCallback<RoomInfo> callback = addOrUpdate.get();
-                    if (callback != null) {
-                        callback.onObtained(roomInfo);
-                    }
+                super.onUpdated(item);
+                if(addOrUpdate != null){
+                    addOrUpdate.onObtained(item.toObject(RoomInfo.class));
                 }
             }
 
             @Override
             public void onDeleted(IObject item) {
-                if (delete != null) {
-                    DataCallback<String> callback = delete.get();
-                    if (callback != null) {
-                        callback.onObtained(item.getId());
-                    }
+                super.onDeleted(item);
+                if(delete != null){
+                    delete.onObtained(item.getId());
                 }
             }
+        };
 
-            @Override
-            public void onSubscribeError(SyncManagerException ex) {
-
-            }
-        });
+        sceneReference.subscribe(listener);
+        eventListeners.add(listener);
     }
 
 
@@ -661,19 +734,43 @@ public class RoomManager {
         return RandomUtil.randomId() + 10000 + "";
     }
 
-    public void destroyRoom(String roomId) {
+    public void leaveRoom(RoomInfo roomInfo) {
         checkInitialized();
-        SceneReference sceneReference = sceneMap.get(roomId);
-        if (sceneReference != null) {
-            sceneReference.delete(new Sync.Callback() {
+        SceneReference sceneReference = sceneMap.get(roomInfo.roomId);
+        if (sceneReference == null) {
+            return;
+        }
+        logout(roomInfo.roomId);
+
+        for (WrapSyncEventListener eventListener : eventListeners) {
+            if(roomInfo.roomId.equals(eventListener.roomId)){
+                sceneReference.unsubscribe(eventListener);
+            }
+        }
+        eventListeners.clear();
+        sceneMap.remove(roomInfo.roomId);
+
+        if(roomInfo.userId.equals(getCacheUserId())){
+            sceneReference.collection(SYNC_MANAGER_USER_COLLECTION).delete(new Sync.Callback() {
                 @Override
                 public void onSuccess() {
-                    sceneMap.remove(roomId);
+
                 }
 
                 @Override
                 public void onFail(SyncManagerException exception) {
+                    notifyErrorHandler(exception);
+                }
+            });
+            sceneReference.delete(new Sync.Callback() {
+                @Override
+                public void onSuccess() {
 
+                }
+
+                @Override
+                public void onFail(SyncManagerException exception) {
+                    notifyErrorHandler(exception);
                 }
             });
         }
@@ -682,6 +779,9 @@ public class RoomManager {
     public void destroy(){
         if(isInitialized){
             Sync.Instance().destroy();
+            eventListeners.clear();
+            localUserInfo = null;
+            sceneMap.clear();
             isInitialized = false;
         }
     }
@@ -862,6 +962,18 @@ public class RoomManager {
         public String timestamp = System.currentTimeMillis() + "";
     }
 
+    public static class UserInfo {
+        private String objectId;
+        public String avatar = String.format(Locale.US, "portrait%02d", RandomUtil.randomId(1, 14));
+        public String userId = getCacheUserId();
+        public String userName = "User-" + userId;
+        public String timestamp = System.currentTimeMillis() + "";
+
+        public int getAvatarResId() {
+            return RandomUtil.getIconById(userId);
+        }
+    }
+
 
     public interface DataListCallback<T> {
         void onObtained(List<T> dataList);
@@ -869,5 +981,39 @@ public class RoomManager {
 
     public interface DataCallback<T> {
         void onObtained(T data);
+    }
+
+    private class WrapSyncEventListener implements Sync.EventListener{
+        private final String roomId;
+        private final Object tag;
+
+        private WrapSyncEventListener(String roomId){
+            this(roomId, null);
+        }
+
+        private WrapSyncEventListener(String roomId, Object tag){
+            this.roomId = roomId;
+            this.tag = tag;
+        }
+
+        @Override
+        public void onCreated(IObject item) {
+
+        }
+
+        @Override
+        public void onUpdated(IObject item) {
+
+        }
+
+        @Override
+        public void onDeleted(IObject item) {
+
+        }
+
+        @Override
+        public void onSubscribeError(SyncManagerException ex) {
+            notifyErrorHandler(ex);
+        }
     }
 }

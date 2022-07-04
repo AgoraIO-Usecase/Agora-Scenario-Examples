@@ -32,6 +32,7 @@ public class RoomManager {
     private static final String PREFERENCE_KEY_USER_ID = RoomManager.class.getName() + "_userId";
     private static final String SYNC_MANAGER_GIFT_INFO = "giftInfo";
     private static final String SYNC_MANAGER_USER_INFO_LIST = "agoraClubUsers";
+    private static final String SYNC_MANAGER_MESSAGE_INFO = "messageInfo";
     private static final int ROOM_MAX_USER = 4;
 
     private static volatile RoomManager INSTANCE;
@@ -420,6 +421,60 @@ public class RoomManager {
             @Override
             public void onFail(SyncManagerException exception) {
 
+            }
+        });
+    }
+
+    public void sendMessage(String roomId, MessageInfo messageInfo){
+        checkInitialized();
+        SceneReference sceneReference = sceneMap.get(roomId);
+        if (sceneReference == null) {
+            return;
+        }
+        sceneReference.update(SYNC_MANAGER_MESSAGE_INFO, messageInfo, new Sync.DataItemCallback() {
+            @Override
+            public void onSuccess(IObject result) {
+
+            }
+
+            @Override
+            public void onFail(SyncManagerException exception) {
+
+            }
+        });
+    }
+
+    public void subscribeMessageReceiveEvent(String roomId, WeakReference<DataCallback<MessageInfo>> callback) {
+        checkInitialized();
+        SceneReference sceneReference = sceneMap.get(roomId);
+        if (sceneReference == null) {
+            return;
+        }
+        sceneReference.subscribe(SYNC_MANAGER_MESSAGE_INFO, new Sync.EventListener() {
+            @Override
+            public void onCreated(IObject item) {
+
+            }
+
+            @Override
+            public void onUpdated(IObject item) {
+                MessageInfo messageInfo = item.toObject(MessageInfo.class);
+                if (callback != null) {
+                    DataCallback<MessageInfo> cb = callback.get();
+                    if (cb != null) {
+                        cb.onSuccess(messageInfo);
+                    }
+                }
+            }
+
+            @Override
+            public void onDeleted(IObject item) {
+
+            }
+
+            @Override
+            public void onSubscribeError(SyncManagerException ex) {
+                Log.e(TAG, "", ex);
             }
         });
     }

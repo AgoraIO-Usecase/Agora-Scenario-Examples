@@ -26,6 +26,14 @@
             android:layout_height="wrap_content"/>
 
 
+        <io.agora.uiwidget.function.LiveRoomUserView
+            android:id="@+id/host_user_view"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:layout_height="wrap_content"
+            />
+
     </LinearLayout>
 
 
