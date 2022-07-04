@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.lang.ref.WeakReference;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -48,7 +47,7 @@ public class HostDetailActivity extends AppCompatActivity {
         public void onObtained(RoomManager.GiftInfo data) {
             runOnUiThread(() -> {
                 mMessageAdapter.addMessage(new RoomManager.MessageInfo(
-                        data.userId,
+                        "User-" + data.userId,
                         getString(R.string.live_room_message_gift_prefix),
                         data.getIconId()
                 ));
@@ -87,6 +86,20 @@ public class HostDetailActivity extends AppCompatActivity {
             resetExChannel(data, false);
         }
     });
+    private final RoomManager.DataCallback<RoomManager.MessageInfo> messageInfoDataCallback = msg -> runOnUiThread(()->{
+        mMessageAdapter.addMessage(msg);
+    });
+    private final RoomManager.DataListCallback<RoomManager.UserInfo> userInfoDataListCallback = dataList -> runOnUiThread(()->{
+        mBinding.hostUserView.setUserCount(dataList.size());
+        mBinding.hostUserView.removeAllUserIcon();
+        for (int i = 1; i <= 3; i++) {
+            int index = dataList.size() - i;
+            if(index >= 0){
+                RoomManager.UserInfo userInfo = dataList.get(index);
+                mBinding.hostUserView.addUserIcon(userInfo.getAvatarResId(), userInfo.userName);
+            }
+        }
+    });
     private RtcConnection exChannelConnection;
     private ChannelMediaOptions options;
 
@@ -99,8 +112,7 @@ public class HostDetailActivity extends AppCompatActivity {
         roomInfo = (RoomManager.RoomInfo) getIntent().getSerializableExtra("roomInfo");
 
         // 房间信息
-        mBinding.hostNameView.setName(roomInfo.roomName);
-        mBinding.hostNameView.setIcon(roomInfo.getAndroidBgId());
+        mBinding.hostNameView.setName(roomInfo.roomName + "(" + roomInfo.roomId + ")");
 
         // 底部按钮栏
         mBinding.bottomView.setFun1Visible(false);
@@ -193,14 +205,20 @@ public class HostDetailActivity extends AppCompatActivity {
 
     private void showTextInputDialog() {
         new TextInputDialog(this)
-                .setOnSendClickListener((v, text) -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(RoomManager.getCacheUserId(), text)))
+                .setOnSendClickListener((v, text) -> {
+                    RoomManager.MessageInfo message = new RoomManager.MessageInfo(roomManager.getLocalUserInfo().userName, text);
+                    roomManager.sendMessage(roomInfo.roomId, message);
+                })
                 .show();
     }
 
     private void initRoomManager() {
         roomManager.joinRoom(roomInfo.roomId, () -> {
-            roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, new WeakReference<>(giftInfoDataCallback));
-            roomManager.subscribePKApplyInfoEvent(roomInfo.roomId, new WeakReference<>(pkApplyInfoModelDataCallback));
+            roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, giftInfoDataCallback);
+            roomManager.subscribePKApplyInfoEvent(roomInfo.roomId, pkApplyInfoModelDataCallback);
+            roomManager.subscribeMessageReceiveEvent(roomInfo.roomId, messageInfoDataCallback);
+            roomManager.subscribeUserListChangeEvent(roomInfo.roomId, userInfoDataListCallback);
+            roomManager.getRoomUserList(roomInfo.roomId, userInfoDataListCallback);
         });
     }
 
@@ -219,19 +237,19 @@ public class HostDetailActivity extends AppCompatActivity {
                 @Override
                 public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
                     super.onJoinChannelSuccess(channel, uid, elapsed);
-                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo("User-" + uid + "", getString(R.string.live_room_message_user_join_suffix))));
                 }
 
                 @Override
                 public void onUserJoined(int uid, int elapsed) {
                     super.onUserJoined(uid, elapsed);
-                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo("User-" + uid + "", getString(R.string.live_room_message_user_join_suffix))));
                 }
 
                 @Override
                 public void onUserOffline(int uid, int reason) {
                     super.onUserOffline(uid, reason);
-                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_left_suffix))));
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo("User-" + uid + "", getString(R.string.live_room_message_user_left_suffix))));
                 }
             });
             rtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
@@ -249,7 +267,7 @@ public class HostDetailActivity extends AppCompatActivity {
             options.publishCameraTrack = true;
             options.autoSubscribeVideo = true;
             options.autoSubscribeAudio = true;
-            rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, 0, options);
+            rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, Integer.parseInt(RoomManager.getCacheUserId()), options);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -333,7 +351,7 @@ public class HostDetailActivity extends AppCompatActivity {
 
     @Override
     public void finish() {
-        roomManager.destroyRoom(roomInfo.roomId);
+        roomManager.leaveRoom(roomInfo);
         if(exChannelConnection != null){
             rtcEngine.leaveChannelEx(exChannelConnection);
             exChannelConnection = null;

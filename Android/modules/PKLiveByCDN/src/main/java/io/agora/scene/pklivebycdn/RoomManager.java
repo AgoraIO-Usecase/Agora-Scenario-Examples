@@ -308,7 +308,9 @@ public class RoomManager {
 
                             @Override
                             public void onFail(SyncManagerException exception) {
-
+                                if (callback != null) {
+                                    mainHandler.post(() -> callback.onObtained(new ArrayList<>()));
+                                }
                             }
                         });
             }
@@ -354,6 +356,45 @@ public class RoomManager {
                     }
                 });
             }
+        });
+    }
+
+    public void subscriptUserChangeEvent(String roomId, DataListCallback<UserInfo> change){
+        checkInitialized();
+        doOnRoomJoined(roomId, () -> {
+            SceneReference sceneReference = sceneMap.get(roomId);
+            if (sceneReference == null) {
+                Log.e(TAG, "The room has not joined. roomId=" + roomId);
+                return;
+            }
+            Sync.EventListener listener = new Sync.EventListener() {
+                @Override
+                public void onCreated(IObject item) {
+                    getRoomUserList(roomId, change);
+                }
+
+                @Override
+                public void onUpdated(IObject item) {
+                    getRoomUserList(roomId, change);
+                }
+
+                @Override
+                public void onDeleted(IObject item) {
+                    getRoomUserList(roomId, change);
+                }
+
+                @Override
+                public void onSubscribeError(SyncManagerException ex) {
+
+                }
+            };
+            List<Sync.EventListener> eventListeners = roomEventListeners.get(roomId);
+            if (eventListeners == null) {
+                eventListeners = new ArrayList<>();
+                roomEventListeners.put(roomId, eventListeners);
+            }
+            eventListeners.add(listener);
+            sceneReference.collection(COLLECTION_MEMBER).subscribe(listener);
         });
     }
 
