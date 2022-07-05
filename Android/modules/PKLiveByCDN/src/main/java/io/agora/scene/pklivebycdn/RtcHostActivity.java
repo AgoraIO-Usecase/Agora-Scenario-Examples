@@ -32,16 +32,8 @@ public class RtcHostActivity extends BaseActivity<SuperappHostDetailActivityBind
     private final RoomManager roomManager = RoomManager.getInstance();
     private RtcEngine rtcEngine;
     private LiveTranscoding rtmpTranscoding;
-    private RoomManager.DataListCallback<RoomManager.UserInfo> userInfoDataListCallback = dataList -> runOnUiThread(()->{
+    private final RoomManager.DataListCallback<RoomManager.UserInfo> userInfoDataListCallback = dataList -> runOnUiThread(() -> {
         mBinding.userView.setUserCount(dataList.size());
-        mBinding.userView.removeAllUserIcon();
-        for (int i = 1; i <= 3; i++) {
-            int index = dataList.size() - i;
-            if(index >= 0){
-                mBinding.userView.addUserIcon(dataList.get(index).getUserIcon(), null);
-            }
-
-        }
     });
 
     @Override
@@ -55,12 +47,7 @@ public class RtcHostActivity extends BaseActivity<SuperappHostDetailActivityBind
 
         mBinding.userView.setTotalLayoutClickListener(v -> {
             // 显示在线用户列表弹窗
-            roomManager.getRoomUserList(mRoomInfo.roomId, new RoomManager.DataListCallback<RoomManager.UserInfo>() {
-                @Override
-                public void onObtained(List<RoomManager.UserInfo> dataList) {
-                    showOnlineUserListDialog(dataList);
-                }
-            });
+            roomManager.getRoomUserList(mRoomInfo.roomId, dataList -> runOnUiThread(() -> showOnlineUserListDialog(dataList)));
         });
 
         mBinding.bottomView.setFun1Visible(false)
@@ -106,21 +93,23 @@ public class RtcHostActivity extends BaseActivity<SuperappHostDetailActivityBind
     }
 
     private void initRoomManager() {
-        roomManager.joinRoom(mRoomInfo.roomId, true);
-        roomManager.subscriptRoomInfoEvent(mRoomInfo.roomId, pkInfo -> {
-            if (!pkInfo.isPKing()) {
-                // 结束连麦
-                // 隐藏远程视图
-                mBinding.remoteVideoControl.setVisibility(View.GONE);
+        roomManager.joinRoom(mRoomInfo.roomId, true, () -> {
+            roomManager.subscriptRoomInfoEvent(mRoomInfo.roomId, pkInfo -> runOnUiThread(() -> {
+                if (!pkInfo.isPKing()) {
+                    // 结束连麦
+                    // 隐藏远程视图
+                    mBinding.remoteVideoControl.setVisibility(View.GONE);
 
-            } else {
-                // 开始连麦
-                // 显示远程视图
-                mBinding.remoteVideoControl.setVisibility(View.VISIBLE);
-            }
-        }, null);
-        roomManager.subscriptUserChangeEvent(mRoomInfo.roomId, userInfoDataListCallback);
-        roomManager.getRoomUserList(mRoomInfo.roomId, userInfoDataListCallback);
+                } else {
+                    // 开始连麦
+                    // 显示远程视图
+                    mBinding.remoteVideoControl.setVisibility(View.VISIBLE);
+                }
+            }), null);
+            roomManager.subscriptUserChangeEvent(mRoomInfo.roomId, userInfoDataListCallback);
+            roomManager.getRoomUserList(mRoomInfo.roomId, userInfoDataListCallback);
+        });
+
     }
 
     private void initRtcManager() {
