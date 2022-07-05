@@ -36,7 +36,6 @@ public class RskHostActivity extends BaseActivity<SuperappHostDetailActivityBind
             if(index >= 0){
                 mBinding.userView.addUserIcon(dataList.get(index).getUserIcon(), null);
             }
-
         }
     });
 
@@ -71,9 +70,10 @@ public class RskHostActivity extends BaseActivity<SuperappHostDetailActivityBind
     }
 
     private void initRoomManager() {
-        roomManager.joinRoom(mRoomInfo.roomId, true);
-        roomManager.subscriptUserChangeEvent(mRoomInfo.roomId, userInfoDataListCallback);
-        roomManager.getRoomUserList(mRoomInfo.roomId, userInfoDataListCallback);
+        roomManager.joinRoom(mRoomInfo.roomId, true, ()-> {
+            roomManager.subscriptUserChangeEvent(mRoomInfo.roomId, userInfoDataListCallback);
+            roomManager.getRoomUserList(mRoomInfo.roomId, userInfoDataListCallback);
+        });
     }
 
     private void initRtcManager() {

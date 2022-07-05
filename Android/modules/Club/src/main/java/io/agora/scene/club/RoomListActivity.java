@@ -1,5 +1,6 @@
 package io.agora.scene.club;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -36,7 +37,8 @@ public class RoomListActivity extends BaseActivity<ClubRoomListActivityBinding> 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StatusBarUtil.hideStatusBar(getWindow(), false);
-        RoomManager.getInstance().init(this, getString(R.string.rtm_app_id), getString(R.string.rtm_app_token));
+        RoomManager.getInstance().init(this, getString(R.string.rtm_app_id), getString(R.string.rtm_app_token),
+                ex -> runOnUiThread(()->Toast.makeText(RoomListActivity.this, ex.getMessage(), Toast.LENGTH_SHORT).show()));
 
         mBinding.titleBar
                 .setBgDrawable(R.drawable.club_main_title_bar_bg)
@@ -56,6 +58,7 @@ public class RoomListActivity extends BaseActivity<ClubRoomListActivityBinding> 
         });
     }
 
+    @SuppressLint("WrongConstant")
     private void checkPermission(Runnable granted) {
         String[] permissions = {Permission.CAMERA, Permission.RECORD_AUDIO};
         if (AndPermission.hasPermissions(this, permissions)) {

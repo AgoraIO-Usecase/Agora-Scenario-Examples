@@ -6,6 +6,7 @@ import android.view.SurfaceView;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
 import java.util.Locale;
 
@@ -108,20 +109,25 @@ public class RskAudienceActivity extends BaseActivity<SuperappAudienceDetailActi
     }
 
     private void initRoomManager(){
-        roomManager.joinRoom(mRoomInfo.roomId, false);
-        roomManager.localUserEnterRoom(RskAudienceActivity.this, mRoomInfo.roomId, new RoomManager.DataCallback<RoomManager.UserInfo>() {
-            @Override
-            public void onObtained(RoomManager.UserInfo data) {
+        roomManager.joinRoom(mRoomInfo.roomId, false, () -> {
+            roomManager.login(RskAudienceActivity.this, mRoomInfo.roomId, data -> runOnUiThread(()->{
                 mBinding.hostNameView.setName(data.userName);
                 mBinding.hostNameView.setIcon(data.getUserIcon());
-            }
+            }));
+            roomManager.subscriptRoomInfoEvent(mRoomInfo.roomId, null, data -> runOnUiThread(this::showRoomExitDialog));
         });
-        roomManager.subscriptRoomInfoEvent(mRoomInfo.roomId, null, new RoomManager.DataCallback<Boolean>() {
-            @Override
-            public void onObtained(Boolean data) {
-                onBackPressed();
-            }
-        });
+    }
+
+    private void showRoomExitDialog(){
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.common_tip)
+                .setMessage(R.string.common_tip_room_closed)
+                .setCancelable(false)
+                .setPositiveButton(R.string.common_confirm, (dialog, which) -> {
+                    dialog.dismiss();
+                    onBackPressed();
+                })
+                .show();
     }
 
     private void initRtcManager(){
@@ -155,7 +161,7 @@ public class RskAudienceActivity extends BaseActivity<SuperappAudienceDetailActi
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        roomManager.localUserExitRoom(mRoomInfo.roomId);
+        roomManager.logout(mRoomInfo.roomId);
         roomManager.leaveRoom(mRoomInfo.roomId, false);
 
         rtcEngine.stopPreview();

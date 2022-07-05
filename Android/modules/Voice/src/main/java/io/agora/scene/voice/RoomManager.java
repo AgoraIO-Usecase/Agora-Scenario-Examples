@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class RoomManager {
 
     private final Map<String, SceneReference> sceneMap = new HashMap<>();
     private final List<WrapEventListener> eventListeners = new ArrayList<>();
+    private DataCallback<Exception> errorHandler;
     private UserInfo localUserInfo;
 
     public static RoomManager getInstance() {
@@ -51,16 +53,24 @@ public class RoomManager {
     private RoomManager() {
     }
 
+    private void notifyErrorHandler(@NonNull Exception e) {
+        Log.e(TAG, e.toString());
+        if (errorHandler != null) {
+            errorHandler.onObtained(e);
+        }
+    }
+
     public UserInfo getLocalUserInfo() {
         return localUserInfo;
     }
 
-    public void init(Context context, String appId, String token) {
+    public void init(Context context, String appId, String token, DataCallback<Exception> errorHandler) {
         if (isInitialized) {
             return;
         }
         PreferenceUtil.init(context);
         isInitialized = true;
+        this.errorHandler = errorHandler;
         HashMap<String, String> params = new HashMap<>();
         params.put("appid", appId);
         params.put("token", token);
@@ -74,6 +84,7 @@ public class RoomManager {
             @Override
             public void onFail(SyncManagerException exception) {
                 isInitialized = false;
+                notifyErrorHandler(exception);
             }
         });
     }
@@ -97,12 +108,12 @@ public class RoomManager {
 
             @Override
             public void onFail(SyncManagerException exception) {
-                Log.d(TAG, "createRoom onFail error=" + exception.toString());
+                notifyErrorHandler(exception);
             }
         });
     }
 
-    public void updateRoom(RoomInfo roomInfo){
+    public void updateRoom(RoomInfo roomInfo) {
         checkInitialized();
         String roomId = roomInfo.roomId;
         SceneReference sceneReference = sceneMap.get(roomId);
@@ -122,7 +133,7 @@ public class RoomManager {
 
             @Override
             public void onFail(SyncManagerException exception) {
-
+                notifyErrorHandler(exception);
             }
         });
     }
@@ -142,7 +153,7 @@ public class RoomManager {
                         }
                         callback.onObtained(ret);
                     } catch (Exception exception) {
-                        Log.d(TAG, "getAllRooms onFail error=" + exception.toString());
+                        notifyErrorHandler(exception);
                     }
 
                 }
@@ -150,12 +161,10 @@ public class RoomManager {
 
             @Override
             public void onFail(SyncManagerException exception) {
-                if (exception.getMessage().contains("empty")) {
-                    if (callback != null) {
-                        callback.onObtained(new ArrayList<>());
-                    }
+                if (callback != null) {
+                    callback.onObtained(new ArrayList<>());
                 }
-                Log.d(TAG, "getAllRooms onFail error=" + exception.toString());
+                notifyErrorHandler(exception);
             }
         });
     }
@@ -199,7 +208,7 @@ public class RoomManager {
 
                                 @Override
                                 public void onFail(SyncManagerException exception) {
-
+                                    notifyErrorHandler(exception);
                                 }
                             }
                     );
@@ -210,6 +219,7 @@ public class RoomManager {
             @Override
             public void onFail(SyncManagerException exception) {
                 sceneMap.remove(roomId);
+                notifyErrorHandler(exception);
             }
         });
     }
@@ -223,9 +233,6 @@ public class RoomManager {
         sceneReference.collection(SYNC_MANAGER_USER_INFO).get(new Sync.DataListCallback() {
             @Override
             public void onSuccess(List<IObject> result) {
-                if (result == null || result.size() == 0) {
-                    return;
-                }
                 if (callback != null) {
                     List<UserInfo> list = new ArrayList<>();
                     for (IObject iObject : result) {
@@ -239,11 +246,10 @@ public class RoomManager {
 
             @Override
             public void onFail(SyncManagerException exception) {
-                if (exception.getMessage().contains("empty")) {
-                    if (callback != null) {
-                        callback.onObtained(new ArrayList<>());
-                    }
+                if (callback != null) {
+                    callback.onObtained(new ArrayList<>());
                 }
+                notifyErrorHandler(exception);
             }
         });
     }
@@ -254,11 +260,11 @@ public class RoomManager {
         if (sceneReference == null) {
             return;
         }
-        if(localUserInfo != null && localUserInfo.userId.equals(userInfo.userId)){
+        if (localUserInfo != null && localUserInfo.userId.equals(userInfo.userId)) {
             localUserInfo.status = UserStatus.invite;
             localUserInfo.timestamp = System.currentTimeMillis() + "";
             userInfo = localUserInfo;
-        }else{
+        } else {
             userInfo.status = UserStatus.invite;
         }
         sceneReference.collection(SYNC_MANAGER_USER_INFO)
@@ -270,7 +276,7 @@ public class RoomManager {
 
                     @Override
                     public void onFail(SyncManagerException exception) {
-
+                        notifyErrorHandler(exception);
                     }
                 });
     }
@@ -281,10 +287,10 @@ public class RoomManager {
         if (sceneReference == null) {
             return;
         }
-        if(localUserInfo != null && localUserInfo.userId.equals(userInfo.userId)){
+        if (localUserInfo != null && localUserInfo.userId.equals(userInfo.userId)) {
             localUserInfo.status = UserStatus.accept;
             userInfo = localUserInfo;
-        }else{
+        } else {
             userInfo.status = UserStatus.accept;
         }
         sceneReference.collection(SYNC_MANAGER_USER_INFO)
@@ -296,7 +302,7 @@ public class RoomManager {
 
                     @Override
                     public void onFail(SyncManagerException exception) {
-
+                        notifyErrorHandler(exception);
                     }
                 });
     }
@@ -307,10 +313,10 @@ public class RoomManager {
         if (sceneReference == null) {
             return;
         }
-        if(localUserInfo != null && localUserInfo.userId.equals(userInfo.userId)){
+        if (localUserInfo != null && localUserInfo.userId.equals(userInfo.userId)) {
             localUserInfo.status = UserStatus.refuse;
             userInfo = localUserInfo;
-        }else{
+        } else {
             userInfo.status = UserStatus.refuse;
         }
         sceneReference.collection(SYNC_MANAGER_USER_INFO)
@@ -322,7 +328,7 @@ public class RoomManager {
 
                     @Override
                     public void onFail(SyncManagerException exception) {
-
+                        notifyErrorHandler(exception);
                     }
                 });
     }
@@ -333,10 +339,10 @@ public class RoomManager {
         if (sceneReference == null) {
             return;
         }
-        if(localUserInfo != null && localUserInfo.userId.equals(userInfo.userId)){
+        if (localUserInfo != null && localUserInfo.userId.equals(userInfo.userId)) {
             localUserInfo.status = UserStatus.end;
             userInfo = localUserInfo;
-        }else{
+        } else {
             userInfo.status = UserStatus.end;
         }
         sceneReference.collection(SYNC_MANAGER_USER_INFO)
@@ -348,12 +354,12 @@ public class RoomManager {
 
                     @Override
                     public void onFail(SyncManagerException exception) {
-
+                        notifyErrorHandler(exception);
                     }
                 });
     }
 
-    public void enableLocalAudio(String roomId, boolean enable){
+    public void enableLocalAudio(String roomId, boolean enable) {
         checkInitialized();
         SceneReference sceneReference = sceneMap.get(roomId);
         if (sceneReference == null) {
@@ -368,12 +374,12 @@ public class RoomManager {
 
             @Override
             public void onFail(SyncManagerException exception) {
-
+                notifyErrorHandler(exception);
             }
         });
     }
 
-    public void sendMessage(String roomId, MessageInfo messageInfo){
+    public void sendMessage(String roomId, MessageInfo messageInfo) {
         checkInitialized();
         SceneReference sceneReference = sceneMap.get(roomId);
         if (sceneReference == null) {
@@ -387,22 +393,22 @@ public class RoomManager {
 
             @Override
             public void onFail(SyncManagerException exception) {
-
+                notifyErrorHandler(exception);
             }
         });
     }
 
-    public void subscribeMessageEvent(String roomId, DataCallback<MessageInfo> addOrUpdate){
+    public void subscribeMessageEvent(String roomId, DataCallback<MessageInfo> addOrUpdate) {
         checkInitialized();
         SceneReference sceneReference = sceneMap.get(roomId);
         if (sceneReference == null) {
             return;
         }
-        WrapEventListener listener = new WrapEventListener(roomId){
+        WrapEventListener listener = new WrapEventListener(roomId) {
             @Override
             public void onCreated(IObject item) {
                 super.onCreated(item);
-                if(addOrUpdate != null){
+                if (addOrUpdate != null) {
                     addOrUpdate.onObtained(item.toObject(MessageInfo.class));
                 }
             }
@@ -410,7 +416,7 @@ public class RoomManager {
             @Override
             public void onUpdated(IObject item) {
                 super.onUpdated(item);
-                if(addOrUpdate != null){
+                if (addOrUpdate != null) {
                     addOrUpdate.onObtained(item.toObject(MessageInfo.class));
                 }
             }
@@ -458,7 +464,7 @@ public class RoomManager {
         sceneReference.collection(SYNC_MANAGER_USER_INFO).subscribe(listener);
     }
 
-    public void subscribeRoomEvent(String roomId,  DataCallback<RoomInfo> update, DataCallback<String> delete) {
+    public void subscribeRoomEvent(String roomId, DataCallback<RoomInfo> update, DataCallback<String> delete) {
         checkInitialized();
         SceneReference sceneReference = sceneMap.get(roomId);
         if (sceneReference == null) {
@@ -471,7 +477,7 @@ public class RoomManager {
                 public void onUpdated(IObject item) {
                     super.onUpdated(item);
                     RoomInfo roomInfo = item.toObject(RoomInfo.class);
-                    if(update != null){
+                    if (update != null) {
                         update.onObtained(roomInfo);
                     }
                 }
@@ -527,7 +533,7 @@ public class RoomManager {
 
                     @Override
                     public void onFail(SyncManagerException exception) {
-
+                        notifyErrorHandler(exception);
                     }
                 });
                 sceneReference.delete(new Sync.Callback() {
@@ -538,11 +544,11 @@ public class RoomManager {
 
                     @Override
                     public void onFail(SyncManagerException exception) {
-
+                        notifyErrorHandler(exception);
                     }
                 });
             } else {
-                if(localUserInfo != null){
+                if (localUserInfo != null) {
                     sceneReference.collection(SYNC_MANAGER_USER_INFO).delete(localUserInfo.objectId, new Sync.Callback() {
                         @Override
                         public void onSuccess() {
@@ -551,7 +557,7 @@ public class RoomManager {
 
                         @Override
                         public void onFail(SyncManagerException exception) {
-
+                            notifyErrorHandler(exception);
                         }
                     });
                     localUserInfo = null;
@@ -710,7 +716,7 @@ public class RoomManager {
         void onObtained(T data);
     }
 
-    private static class WrapEventListener implements Sync.EventListener {
+    private class WrapEventListener implements Sync.EventListener {
 
         protected final String roomId;
 
@@ -735,7 +741,7 @@ public class RoomManager {
 
         @Override
         public void onSubscribeError(SyncManagerException ex) {
-
+            notifyErrorHandler(ex);
         }
     }
 }
