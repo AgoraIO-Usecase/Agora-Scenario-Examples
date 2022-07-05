@@ -51,15 +51,12 @@ public class PreviewActivity extends BaseActivity<SuperappPreviewActivityBinding
         mBinding.previewControlView.setGoLiveBtn((view, randomName) -> {
             int pushMode = mBinding.livePrepareModeChoice.getCheckedRadioButtonId() == R.id.rb_mode_direct_cdn ? RoomManager.PUSH_MODE_DIRECT_CDN : RoomManager.PUSH_MODE_RTC;
 
-            RoomManager.getInstance().createRoom(randomName, pushMode, new RoomManager.DataCallback<RoomManager.RoomInfo>() {
-                @Override
-                public void onObtained(RoomManager.RoomInfo data) {
-                    Intent intent = new Intent(PreviewActivity.this, pushMode == RoomManager.PUSH_MODE_DIRECT_CDN ? RskHostActivity.class : RtcHostActivity.class);
-                    intent.putExtra("roomInfo", data);
-                    startActivity(intent);
-                    finish();
-                }
-            });
+            RoomManager.getInstance().createRoom(randomName, pushMode, data -> runOnUiThread(() -> {
+                Intent intent = new Intent(PreviewActivity.this, pushMode == RoomManager.PUSH_MODE_DIRECT_CDN ? RskHostActivity.class : RtcHostActivity.class);
+                intent.putExtra("roomInfo", data);
+                startActivity(intent);
+                finish();
+            }));
 
         });
 

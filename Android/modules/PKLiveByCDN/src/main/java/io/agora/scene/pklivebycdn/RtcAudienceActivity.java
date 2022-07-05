@@ -6,6 +6,7 @@ import android.view.SurfaceView;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
 import java.util.Locale;
 
@@ -116,35 +117,42 @@ public class RtcAudienceActivity extends BaseActivity<SuperappAudienceDetailActi
     }
 
     private void initRoomManager(){
-        roomManager.joinRoom(mRoomInfo.roomId, false);
-        roomManager.localUserEnterRoom(RtcAudienceActivity.this, mRoomInfo.roomId, new RoomManager.DataCallback<RoomManager.UserInfo>() {
-            @Override
-            public void onObtained(RoomManager.UserInfo data) {
+        roomManager.joinRoom(mRoomInfo.roomId, false, ()->{
+            roomManager.login(RtcAudienceActivity.this, mRoomInfo.roomId, data -> runOnUiThread(()->{
                 mBinding.hostNameView.setName(data.userName);
                 mBinding.hostNameView.setIcon(data.getUserIcon());
-            }
-        });
-        roomManager.getRoomPKInfo(mRoomInfo.roomId, new RoomManager.DataCallback<RoomManager.PKInfo>() {
-            @Override
-            public void onObtained(RoomManager.PKInfo pkInfo) {
+            }));
+            roomManager.getRoomPKInfo(mRoomInfo.roomId, pkInfo -> runOnUiThread(()->{
                 if (pkInfo.isPKing() && pkInfo.userIdPK.equals(RoomManager.getCacheUserId())) {
                     startLinking();
                 } else {
                     openMediaPlayer();
                 }
-            }
-        });
-        roomManager.subscriptRoomInfoEvent(mRoomInfo.roomId, pkInfo -> {
-            if (pkInfo.isPKing()) {
-                // 开始连麦
-                if (RoomManager.getCacheUserId().equals(pkInfo.userIdPK)) {
-                    startLinking();
+            }));
+            roomManager.subscriptRoomInfoEvent(mRoomInfo.roomId, pkInfo -> runOnUiThread(()->{
+                if (pkInfo.isPKing()) {
+                    // 开始连麦
+                    if (RoomManager.getCacheUserId().equals(pkInfo.userIdPK)) {
+                        startLinking();
+                    }
+                } else {
+                    // 结束连麦
+                    stopLinking();
                 }
-            } else {
-                // 结束连麦
-                stopLinking();
-            }
-        }, data -> onBackPressed());
+            }), data -> runOnUiThread(this::showRoomExitDialog));
+        });
+    }
+
+    private void showRoomExitDialog(){
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.common_tip)
+                .setMessage(R.string.common_tip_room_closed)
+                .setCancelable(false)
+                .setPositiveButton(R.string.common_confirm, (dialog, which) -> {
+                    dialog.dismiss();
+                    onBackPressed();
+                })
+                .show();
     }
 
     private void startLinking() {
@@ -230,7 +238,7 @@ public class RtcAudienceActivity extends BaseActivity<SuperappAudienceDetailActi
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        roomManager.localUserExitRoom(mRoomInfo.roomId);
+        roomManager.logout(mRoomInfo.roomId);
         roomManager.leaveRoom(mRoomInfo.roomId, false);
 
         rtcEngine.stopPreview();

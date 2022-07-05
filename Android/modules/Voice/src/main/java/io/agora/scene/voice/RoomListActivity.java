@@ -24,7 +24,8 @@ public class RoomListActivity extends BaseActivity<VoiceRoomListActivityBinding>
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StatusBarUtil.hideStatusBar(getWindow(), false);
-        RoomManager.getInstance().init(this, getString(R.string.rtm_app_id), getString(R.string.rtm_app_token));
+        RoomManager.getInstance().init(this, getString(R.string.rtm_app_id), getString(R.string.rtm_app_token),
+                ex -> runOnUiThread(() -> Toast.makeText(RoomListActivity.this, ex.getMessage(), Toast.LENGTH_SHORT).show()));
 
         mBinding.titleBar
                 .setTitleName(getString(R.string.voice_room_list_title), Color.WHITE)

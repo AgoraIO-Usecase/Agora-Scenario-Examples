@@ -22,7 +22,6 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -126,7 +125,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
     private LiveRoomMessageListView.AbsMessageAdapter<RoomManager.MessageInfo, ClubRoomDetailMsgItemBinding> mMessageAdapter;
     private final RoomManager.DataCallback<RoomManager.GiftInfo> giftInfoDataCallback = new RoomManager.DataCallback<RoomManager.GiftInfo>() {
         @Override
-        public void onSuccess(RoomManager.GiftInfo data) {
+        public void onObtained(RoomManager.GiftInfo data) {
             runOnUiThread(() -> {
                 mMessageAdapter.addMessage(new RoomManager.MessageInfo(
                         data.userId,
@@ -524,9 +523,9 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
         roomManager.joinRoom(roomInfo.roomId,
                 isLocalRoomOwner() ? RoomManager.Status.ACCEPT : RoomManager.Status.END,
                 list -> runOnUiThread(() -> {
-                    roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, new WeakReference<>(giftInfoDataCallback));
-                    roomManager.subscribeUserChangeEvent(roomInfo.roomId, new WeakReference<>(userAddOrUpdateCallback), new WeakReference<>(userDeleteCallback));
-                    roomManager.subscribeMessageReceiveEvent(roomInfo.roomId, new WeakReference<>(messageInfoDataCallback));
+                    roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, giftInfoDataCallback);
+                    roomManager.subscribeUserChangeEvent(roomInfo.roomId, userAddOrUpdateCallback, userDeleteCallback);
+                    roomManager.subscribeMessageReceiveEvent(roomInfo.roomId, messageInfoDataCallback);
                     for (RoomManager.UserInfo userInfo : list) {
                         updateUserView(userInfo);
                     }

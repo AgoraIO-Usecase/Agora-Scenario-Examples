@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -22,7 +23,8 @@ public class RoomListActivity extends BaseActivity<SuperappRoomListActivityBindi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        RoomManager.getInstance().init(this, getString(R.string.rtm_app_id), getString(R.string.rtm_app_token));
+        RoomManager.getInstance().init(this, getString(R.string.rtm_app_id), getString(R.string.rtm_app_token),
+                ex -> runOnUiThread(()-> Toast.makeText(RoomListActivity.this, ex.getMessage(), Toast.LENGTH_SHORT).show()));
         StatusBarUtil.hideStatusBar(getWindow(), false);
 
         AndPermission.with(this)
@@ -44,12 +46,12 @@ public class RoomListActivity extends BaseActivity<SuperappRoomListActivityBindi
 
             @Override
             protected void onRefresh() {
-                RoomManager.getInstance().getAllRooms(dataList -> {
+                RoomManager.getInstance().getAllRooms(dataList -> runOnUiThread(()->{
                     mDataList.clear();
                     mDataList.addAll(dataList);
                     notifyDataSetChanged();
                     triggerDataListUpdateRun();
-                });
+                }));
             }
 
             @Override
