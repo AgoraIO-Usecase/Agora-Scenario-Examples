@@ -1,37 +1,38 @@
 package io.agora.scene;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ModulesConfig {
 
-    private static volatile ModulesConfig INSTANCE = null;
+    @NonNull
+    public static volatile ModulesConfig instance = new ModulesConfig();
 
-    public static ModulesConfig getInstance() {
-        if (INSTANCE == null) {
-            synchronized (ModulesConfig.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new ModulesConfig();
-                }
-            }
-        }
-        return INSTANCE;
-    }
-
-    public final List<ModuleInfo> moduleInfos = new ArrayList<>();
+    public final List<ModuleInfo> moduleInfo = new ArrayList<>();
 
     private ModulesConfig() {
-        moduleInfos.add(new ModuleInfo(
-                io.agora.sample.singlehostlive.R.string.single_host_live_app_name,
-                io.agora.sample.singlehostlive.R.string.single_host_live_description,
-                io.agora.sample.singlehostlive.R.drawable.single_host_live_poster,
-                io.agora.sample.singlehostlive.RoomListActivity.class
+        moduleInfo.add(new ModuleInfo(R.string.app_type_social_entertainment));
+        // Single Live Host
+        moduleInfo.add(new ModuleInfo(
+                R.string.app_live_single_host_name,
+                R.drawable.app_banner_video_call,
+                "io.agora.scene.singlehostlive.RoomListActivity"
         ));
-        moduleInfos.add(new ModuleInfo(
-                io.agora.sample.pklive.R.string.pk_live_app_name,
-                io.agora.sample.pklive.R.string.pk_live_description,
-                io.agora.sample.pklive.R.drawable.pk_live_home_poster,
-                io.agora.sample.pklive.RoomListActivity.class
+        // Live PK
+        this.moduleInfo.add(new ModuleInfo(
+                R.string.app_live_pk_name,
+                R.drawable.app_banner_livepk,
+                "io.agora.scene.pklive.RoomListActivity"
+        ));
+
+        moduleInfo.add(new ModuleInfo(R.string.app_type_education));
+        // BreakoutRoom
+        this.moduleInfo.add(new ModuleInfo(
+                R.string.app_breakout_room_name,
+                R.drawable.app_banner_breakout_room,
+                "io.agora.scene.breakoutroom.ui.MainActivity"
         ));
     }
 

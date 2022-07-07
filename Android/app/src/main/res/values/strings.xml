@@ -1,7 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SenceDemo</string>
+    <string name="app_name">SceneExample</string>
+    
+    <string name="app_type_social_entertainment">Social Entertainment</string>
+    <string name="app_type_education">Education</string>
 
-    <!-- 首页 -->
-    <string name="home_title">Home</string>
+    <string name="app_desc_banner">Click to jump to this scene</string>
+    
+    <!--单主播-->
+    <string name="app_live_single_host_name">Single Host Live</string>
+    <string name="app_live_single_host_description">Single Host Live</string>
+    <!--PK-->
+    <string name="app_live_pk_name">LivePK</string>
+    <string name="app_live_pk_description">Two anchors with different live broadcasts linked the microphone PK across channels, detonating the live broadcast room</string>
+    <!--小班课-->
+    <string name="app_breakout_room_name">BreakoutRoom</string>
+    <string name="app_breakout_room_description">Multi-person meeting, small meeting room can be established for discussion</string>
+
+    <!--PKByCDN-->
+    <string name="app_live_pk_cdn_name">LivePKByCDN</string>
+    <string name="app_live_pk_cdn_description">PK by CDN</string>
+
+    <!--Club-->
+    <string name="app_club_name">Club</string>
+    <string name="app_club_description">Watch a movie with everyone</string>
+
+    <!--Voice-->
+    <string name="app_voice_name">Voice</string>
+    <string name="app_voice_description">voice with otherone</string>
+
 </resources>

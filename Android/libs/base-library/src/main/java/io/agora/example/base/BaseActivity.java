@@ -18,13 +18,6 @@ import androidx.viewbinding.ViewBinding;
 
 import java.lang.reflect.Type;
 
-
-/**
- * 基础
- *
- * @author chenhengfei@agora.io
- */
-
 public abstract class BaseActivity<B extends ViewBinding> extends AppCompatActivity {
     public B mBinding;
     private AlertDialog mLoadingDialog = null;
@@ -33,35 +26,34 @@ public abstract class BaseActivity<B extends ViewBinding> extends AppCompatActiv
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = getViewBindingByReflect(getLayoutInflater());
-        if(mBinding == null) {
+        if (mBinding == null) {
             BaseUtil.toast(this, "Inflate Error");
             finish();
-        }else
+        } else{
             super.setContentView(mBinding.getRoot());
-
-//        WindowCompat.setDecorFitsSystemWindows(getWindow(), true)
+        }
     }
 
     @Override
-    public final void setContentView(int layoutResID) {
-        throw new RuntimeException("The activity extent BaseActivity of ViewBinding do not need to call setContentView");
+    public void setContentView(int layoutResID) {
+        throw new RuntimeException("The content view has been filled by mBinding root view!");
     }
 
     @Override
     public void setContentView(View view) {
-        throw new RuntimeException("The activity extent BaseActivity of ViewBinding do not need to call setContentView");
+        throw new RuntimeException("The content view has been filled by mBinding root view!");
     }
 
     @Override
     public void setContentView(View view, ViewGroup.LayoutParams params) {
-        throw new RuntimeException("The activity extent BaseActivity of ViewBinding do not need to call setContentView");
+        throw new RuntimeException("The content view has been filled by mBinding root view!");
     }
 
     public void showLoading() {
         showLoading(true);
     }
 
-    public void showLoading(Boolean cancelable) {
+    public void showLoading(boolean cancelable) {
         if (mLoadingDialog == null) {
             mLoadingDialog = new AlertDialog.Builder(this).create();
             mLoadingDialog.getWindow().getDecorView().setBackgroundColor(Color.TRANSPARENT);
@@ -75,7 +67,7 @@ public abstract class BaseActivity<B extends ViewBinding> extends AppCompatActiv
     }
 
     public void dismissLoading() {
-        if(mLoadingDialog != null)
+        if (mLoadingDialog != null)
             mLoadingDialog.dismiss();
     }
 
@@ -83,12 +75,13 @@ public abstract class BaseActivity<B extends ViewBinding> extends AppCompatActiv
     private B getViewBindingByReflect(@NonNull LayoutInflater inflater) {
         try {
             Type type = getClass().getGenericSuperclass();
-            if(type == null) return null;
-            Class<B> c = BaseUtil.getGenericClass(getClass(),0);
-            return (B) BaseUtil.getViewBinding(c, inflater);
+            if (type == null) return null;
+            Class<B> c = BaseUtil.getGenericClass(getClass(), 0);
+            if (c != null)
+                return (B) BaseUtil.getViewBinding(c, inflater);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
+        return null;
     }
 }

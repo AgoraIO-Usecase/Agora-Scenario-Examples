@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="io.agora.sample.singlehostlive">
+    package="io.agora.scene.singlehostlive">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -13,39 +12,36 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.CAMERA" />
 
-    <application
-        android:allowBackup="false"
-        android:icon="@drawable/single_host_live_icon_launcher"
-        android:label="@string/single_host_live_app_name"
-        android:requestLegacyExternalStorage="true"
-        android:screenOrientation="portrait"
-        android:supportsRtl="true"
-        android:theme="@style/SingleHostLiveAppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
-        <meta-data
-            android:name="android.max_aspect"
-            android:value="2.4" />
+    <permission-group android:name="io.agora.scene.andpermission"/>
+
+    <application>
 
         <activity
-            android:name="io.agora.sample.singlehostlive.RoomListActivity"
-            android:launchMode="singleTop">
-            <intent-filter tools:node="remove">
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name="io.agora.sample.singlehostlive.PreviewActivity"
+            android:theme="@style/single_host_live_AppTheme"
+            android:name=".RoomListActivity"
+            android:process="io.agora.scene.singlehostlive"
+            android:screenOrientation="behind"
             android:launchMode="singleTop"/>
 
         <activity
-            android:name="io.agora.sample.singlehostlive.HostDetailActivity"
+            android:theme="@style/single_host_live_AppTheme"
+            android:name=".PreviewActivity"
+            android:process="io.agora.scene.singlehostlive"
+            android:screenOrientation="behind"
             android:launchMode="singleTop"/>
 
         <activity
-            android:name="io.agora.sample.singlehostlive.AudienceDetailActivity"
+            android:theme="@style/single_host_live_AppTheme"
+            android:name=".HostDetailActivity"
+            android:process="io.agora.scene.singlehostlive"
+            android:screenOrientation="behind"
+            android:launchMode="singleTop"/>
+
+        <activity
+            android:theme="@style/single_host_live_AppTheme"
+            android:name=".AudienceDetailActivity"
+            android:process="io.agora.scene.singlehostlive"
+            android:screenOrientation="behind"
             android:launchMode="singleTop"/>
 
 

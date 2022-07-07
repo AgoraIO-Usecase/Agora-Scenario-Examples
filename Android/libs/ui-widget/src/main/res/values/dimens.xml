@@ -12,9 +12,10 @@
     <!-- RoomList -->
     <dimen name="room_list_exception_icon_size">164dp</dimen>
     <dimen name="room_list_icon_text_margin">16dp</dimen>
-    <dimen name="room_list_icon_text_size">16sp</dimen>
-    <dimen name="room_list_item_margin">16sp</dimen>
-    <dimen name="room_list_item_corner">12dp</dimen>
+    <dimen name="room_list_icon_text_size">14sp</dimen>
+    <dimen name="room_list_icon_text_sub_size">13sp</dimen>
+    <dimen name="room_list_item_margin">16dp</dimen>
+    <dimen name="room_list_item_corner">8dp</dimen>
     <dimen name="room_list_item_padding">8dp</dimen>
     <dimen name="room_list_item_name_width">72dp</dimen>
     <dimen name="room_list_item_name_height">42dp</dimen>
@@ -57,8 +58,8 @@
     <!-- LiveHostNameView -->
     <dimen name="live_host_name_max_width">128dp</dimen>
     <dimen name="live_host_name_height">40dp</dimen>
-    <dimen name="live_host_name_icon_padding">2dp</dimen>
-    <dimen name="live_host_name_text_size">12dp</dimen>
+    <dimen name="live_host_name_icon_padding">6dp</dimen>
+    <dimen name="live_host_name_text_size">14sp</dimen>
 
 
     <!-- LiveRoomUserView -->
@@ -111,6 +112,27 @@
     <dimen name="text_input_dialog_content_padding_h">12dp</dimen>
     <dimen name="text_input_dialog_content_padding_v">6dp</dimen>
     <dimen name="text_input_dialog_content_text_size">16sp</dimen>
+
+    <!-- OnlineUserListDialog -->
+    <dimen name="online_user_list_dialog_height">540dp</dimen>
+    <dimen name="online_user_list_dialog_text_height">48dp</dimen>
+    <dimen name="online_user_list_dialog_text_size">16sp</dimen>
+    <dimen name="online_user_list_dialog_divider_height">1dp</dimen>
+    <dimen name="online_user_list_dialog_content_margin_h">24dp</dimen>
+    <dimen name="online_user_list_dialog_item_height">52dp</dimen>
+    <dimen name="online_user_list_dialog_item_icon_size">28dp</dimen>
+    <dimen name="online_user_list_dialog_item_text_margin_h">16dp</dimen>
+    <dimen name="online_user_list_dialog_item_text_size">14sp</dimen>
+    <dimen name="online_user_list_dialog_content_margin_v">8dp</dimen>
+
+    <!-- RemoteSmallControlView -->
+    <dimen name="remote_small_control_layout_width">130dp</dimen>
+    <dimen name="remote_small_control_layout_height">170dp</dimen>
+    <dimen name="remote_small_control_video_width">120dp</dimen>
+    <dimen name="remote_small_control_video_height">160dp</dimen>
+    <dimen name="remote_small_control_close_icon_size">20dp</dimen>
+    <dimen name="remote_small_control_text_padding_v">12dp</dimen>
+
 
 
 </resources>

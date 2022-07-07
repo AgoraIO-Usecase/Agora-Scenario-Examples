@@ -19,7 +19,6 @@ public class TitleBar extends FrameLayout {
     private View mDeliverView;
     private ImageView mBackIv;
     private ImageView mUserIv;
-    private ImageView mBgIv;
 
     public TitleBar(@NonNull Context context) {
         this(context, null);
@@ -40,34 +39,42 @@ public class TitleBar extends FrameLayout {
         mDeliverView = findViewById(R.id.title_bar_deliver);
         mBackIv = findViewById(R.id.title_bar_back);
         mUserIv = findViewById(R.id.title_bar_icon_user);
-        mBgIv = findViewById(R.id.title_bar_bg);
     }
 
-    public void setTitleName(CharSequence name, int color){
+    public TitleBar setDeliverVisible(boolean visible) {
+        mDeliverView.setVisibility(visible ? View.VISIBLE : View.GONE);
+        return this;
+    }
+
+    public TitleBar setTitleName(CharSequence name, int color) {
         mTitleTv.setText(name);
-        if(color != 0){
+        if (color != 0) {
             mTitleTv.setTextColor(color);
         }
+        return this;
     }
 
-    public void setBgDrawable(@DrawableRes int drawableRes){
-        mBgIv.setImageResource(drawableRes);
+    public TitleBar setBgDrawable(@DrawableRes int drawableRes) {
+        setBackgroundResource(drawableRes);
+        return this;
     }
 
-    public void setUserIcon(boolean visible, @DrawableRes int drawableRes, View.OnClickListener onClickListener){
+    public TitleBar setUserIcon(boolean visible, @DrawableRes int drawableRes, OnClickListener onClickListener) {
         mUserIv.setOnClickListener(onClickListener);
         mUserIv.setVisibility(visible ? View.VISIBLE : View.GONE);
-        if(drawableRes != View.NO_ID){
+        if (drawableRes != View.NO_ID) {
             mUserIv.setImageResource(drawableRes);
         }
+        return this;
     }
 
-    public void setBackIcon(boolean visible, @DrawableRes int drawableRes, View.OnClickListener onClickListener){
+    public TitleBar setBackIcon(boolean visible, @DrawableRes int drawableRes, OnClickListener onClickListener) {
         mBackIv.setOnClickListener(onClickListener);
         mBackIv.setVisibility(visible ? View.VISIBLE : View.GONE);
-        if(drawableRes != View.NO_ID){
+        if (drawableRes != View.NO_ID) {
             mBackIv.setImageResource(drawableRes);
         }
+        return this;
     }
 
 

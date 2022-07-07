@@ -21,7 +21,7 @@ public abstract class BaseFragment<B extends ViewBinding> extends Fragment {
 
     @Nullable
     @Override
-    public final View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = getViewBindingByReflect(inflater, container);
         if (mBinding == null)
             return null;
@@ -47,6 +47,7 @@ public abstract class BaseFragment<B extends ViewBinding> extends Fragment {
         getParentActivity().dismissLoading();
     }
 
+    @NonNull
     public BaseActivity<?> getParentActivity() {
         return (BaseActivity<?>) requireActivity();
     }

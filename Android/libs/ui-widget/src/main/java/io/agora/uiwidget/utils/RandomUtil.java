@@ -31,6 +31,16 @@ public class RandomUtil {
             R.drawable.random_icon_12
     };
 
+    public static @DrawableRes int getIconById(String id){
+        int iconIndex = 0;
+        try {
+            iconIndex = Integer.parseInt(id) % ICONS.length;
+        } catch (NumberFormatException e) {
+            // do nothing
+        }
+        return ICONS[iconIndex];
+    }
+
     public static @DrawableRes int randomLiveRoomIcon() {
         int length = ICONS.length;
         int thisIndex = sLastIndex;

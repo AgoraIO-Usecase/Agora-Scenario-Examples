@@ -1,34 +1,20 @@
-plugins {
-    id 'com.android.library'
-}
-def safeExtGetVersion(prop, key, fallback) {
-    if (rootProject.ext.has(prop)) {
-        def map = rootProject.ext.get(prop)
-        if (map.containsKey(key)) {
-            return map.get(key)
-        }
-    }
-    return fallback
-}
-
-def safeExtGetDependence(key, fallback){
-    return "$key:${safeExtGetVersion('dependencies', key, fallback)}"
-}
+apply from: "${rootProject.projectDir}/config_plugin.gradle"
+apply plugin: 'com.android.library'
 
 
 android {
-    compileSdkVersion safeExtGetVersion('android', 'compileSdkVersion', 30)
-    buildToolsVersion safeExtGetVersion('android', 'buildToolsVersion', '30.0.3')
+    compileSdkVersion extSafeGetVersion('android', 'compileSdkVersion', 30)
+    buildToolsVersion extSafeGetVersion('android', 'buildToolsVersion', 30)
 
     defaultConfig {
-        minSdkVersion safeExtGetVersion('android', 'minSdkVersion', 21)
-        targetSdkVersion safeExtGetVersion('android', 'targetSdkVersion', 30)
+        minSdkVersion extSafeGetVersion('android', 'minSdkVersion', 21)
+        targetSdkVersion extSafeGetVersion('android', 'targetSdkVersion', 30)
+
         versionCode 1
         versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
-        multiDexEnabled true
     }
 
     buildTypes {
@@ -43,27 +29,26 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    buildFeatures {
-        viewBinding = true
+    buildFeatures{
+        viewBinding true
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    testImplementation safeExtGetDependence('junit:junit','4.+')
-    androidTestImplementation safeExtGetDependence('androidx.test.ext:junit','1.1.2')
-    androidTestImplementation safeExtGetDependence('androidx.test.espresso:espresso-core','3.3.0')
-    implementation safeExtGetDependence('androidx.multidex:multidex','2.0.1')
+    extSafeImplementation fileTree(dir: 'libs', include: ['*.jar'])
+    extSafeTestImplementation 'junit:junit:4.+'
+    extSafeAndroidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    extSafeAndroidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     //androidX
-    implementation safeExtGetDependence('androidx.constraintlayout:constraintlayout','2.0.4')
-    implementation safeExtGetDependence('androidx.swiperefreshlayout:swiperefreshlayout','1.1.0')
-    implementation safeExtGetDependence('androidx.annotation:annotation','1.1.0')
-    api safeExtGetDependence('androidx.appcompat:appcompat','1.2.0')
-    implementation safeExtGetDependence('androidx.preference:preference','1.1.1')
-    api safeExtGetDependence('com.google.android.material:material','1.3.0')
-    implementation safeExtGetDependence('androidx.cardview:cardview','1.0.0')
-    implementation safeExtGetDependence('androidx.work:work-runtime','2.5.0')
+    extSafeImplementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    extSafeImplementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    extSafeImplementation 'androidx.annotation:annotation:1.1.0'
+    extSafeApi 'androidx.appcompat:appcompat:1.2.0'
+    extSafeImplementation 'androidx.preference:preference:1.1.1'
+    extSafeApi 'com.google.android.material:material:1.3.0'
+    extSafeImplementation 'androidx.cardview:cardview:1.0.0'
+    extSafeImplementation 'androidx.work:work-runtime:2.7.0'
 
-    implementation safeExtGetDependence('pl.droidsonroids.gif:android-gif-drawable','1.2.23')
+    extSafeImplementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.23'
 }

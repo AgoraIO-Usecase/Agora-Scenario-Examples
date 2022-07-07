@@ -30,7 +30,7 @@ public class LiveToolsDialog extends BottomSheetDialog {
     public final static ToolItem TOOL_ITEM_VIDEO = new ToolItem(R.string.live_tool_name_camera, R.drawable.live_tool_icon_video);
 
 
-    private LiveToolLayoutBinding mBinding;
+    protected LiveToolLayoutBinding mBinding;
     private final List<ToolItem> showToolItems = new ArrayList<>();
 
 
@@ -43,7 +43,7 @@ public class LiveToolsDialog extends BottomSheetDialog {
         init();
     }
 
-    private void init() {
+    protected void init() {
         setCanceledOnTouchOutside(true);
         mBinding = LiveToolLayoutBinding.inflate(LayoutInflater.from(getContext()));
         setContentView(mBinding.getRoot());
@@ -90,7 +90,7 @@ public class LiveToolsDialog extends BottomSheetDialog {
     public static class ToolItem {
         private final int iconRes;
         private final int nameRes;
-        private boolean activated;
+        public boolean activated;
         private final OnItemClickListener click;
 
         public ToolItem(int nameRes, int iconRes) {
@@ -105,6 +105,24 @@ public class LiveToolsDialog extends BottomSheetDialog {
             this.nameRes = nameRes;
             this.activated = activated;
             this.click = click;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            ToolItem toolItem = (ToolItem) o;
+
+            if (iconRes != toolItem.iconRes) return false;
+            return nameRes == toolItem.nameRes;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = iconRes;
+            result = 31 * result + nameRes;
+            return result;
         }
     }
 

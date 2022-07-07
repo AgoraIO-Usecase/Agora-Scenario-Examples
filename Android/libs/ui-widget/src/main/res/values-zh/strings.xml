@@ -2,9 +2,12 @@
 <resources>
     <string name="common_tip">提示</string>
     <string name="common_yes">是</string>
+    <string name="common_confirm">确认</string>
     <string name="common_cancel">取消</string>
+    <string name="common_create">创建</string>
     <string name="common_no">否</string>
     <string name="common_tip_close_room">是否关闭房间?</string>
+    <string name="common_tip_room_closed">房间已关闭</string>
 
     <!--================== Function ==================-->
     <!-- RoomList -->
@@ -15,6 +18,7 @@
     <!-- Preview Control -->
     <string name="preview_control_name_hint">直播间名字</string>
     <string name="preview_control_go_live_text">开始直播</string>
+    <string name="preview_control_name_enter_hint">请输入房间名</string>
     <string name="preview_control_room_restriction">本应用为测试产品，请勿商用。单次直播最长10分钟，每个频道最多10人。</string>
 
     <!-- Video Setting -->
@@ -53,6 +57,10 @@
     <string name="gift_grid_default_gift_item_watch">手表</string>
     <string name="gift_grid_default_gift_item_diamond">钻石</string>
     <string name="gift_grid_default_gift_item_rocket">火箭</string>
+
+    <!-- OnlineUserListDialog -->
+    <string name="online_user_list_dialog_title">在线用户</string>
+    <string name="online_user_list_dialog_invite">邀请</string>
 
 
     <!--=================== Utils ======================-->

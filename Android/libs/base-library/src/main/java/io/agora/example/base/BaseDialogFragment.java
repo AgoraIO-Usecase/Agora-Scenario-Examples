@@ -18,7 +18,8 @@ public class BaseDialogFragment<B extends ViewBinding> extends DialogFragment {
     @Override
     public final View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         onBeforeCreateView();
-        mBinding = getViewBindingByReflect(inflater, container);
+        if (container != null)
+            mBinding = getViewBindingByReflect(inflater, container);
         if (mBinding == null)
             return null;
         return mBinding.getRoot();
@@ -34,13 +35,14 @@ public class BaseDialogFragment<B extends ViewBinding> extends DialogFragment {
         mBinding = null;
     }
 
-    private B getViewBindingByReflect(@NonNull LayoutInflater inflater, @Nullable ViewGroup container) {
+    private B getViewBindingByReflect(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         try {
             Class<B> c = BaseUtil.getGenericClass(getClass(), 0);
-            return (B) BaseUtil.getViewBinding(c, inflater, container);
+            if (c != null)
+                return (B) BaseUtil.getViewBinding(c, inflater, container);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
+        return null;
     }
 }
