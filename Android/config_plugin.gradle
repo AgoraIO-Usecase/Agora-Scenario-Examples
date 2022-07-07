@@ -1,0 +1,96 @@
+def safeExtGetVersion = {
+    prop, key, fallback ->
+        if (rootProject.ext.has(prop)) {
+            Map<String, String> map = rootProject.ext.get(prop)
+            def keySet = map.keySet();
+            for(int i=0; i < keySet.size(); i++){
+                def item = keySet[i]
+                if(item.contains(key)){
+                    //println("safeExtGetVersion key=$key value=${map[item]}")
+                    return map[item]
+                }
+            }
+            //println("safeExtGetVersion key=$key novalue")
+        }
+        return fallback
+}
+
+def safeExtGetDependence = {
+    key, fallback ->
+        return "$key:${safeExtGetVersion('dependencies', key, fallback)}"
+}
+
+def safeImplementation = {
+    dependence ->
+        if (dependence instanceof String) {
+            String dep = dependence
+            def split = dep.split(":")
+            def _dep = safeExtGetDependence("${split[0]}:${split[1]}", split[2])
+            dependencies.implementation _dep
+            //println("safeImplementation $_dep")
+        } else {
+            dependencies.implementation dependence
+        }
+}
+
+def safeAndroidTestImplementation = {
+    dependence ->
+        if (dependence instanceof String) {
+            String dep = dependence
+            def split = dep.split(":")
+            def _dep = safeExtGetDependence("${split[0]}:${split[1]}", split[2])
+            dependencies.androidTestImplementation _dep
+            //println("safeAndroidTestImplementation $_dep")
+        } else {
+            dependencies.androidTestImplementation dependence
+        }
+}
+
+def safeAnnotationProcessor = {
+    dependence ->
+        if (dependence instanceof String) {
+            String dep = dependence
+            def split = dep.split(":")
+            def _dep = safeExtGetDependence("${split[0]}:${split[1]}", split[2])
+            dependencies.annotationProcessor _dep
+            //println("safeAnnotationProcessor $_dep")
+        } else {
+            dependencies.annotationProcessor dependence
+        }
+}
+
+def safeTestImplementation = {
+    dependence ->
+        if (dependence instanceof String) {
+            String dep = dependence
+            def split = dep.split(":")
+            def _dep = safeExtGetDependence("${split[0]}:${split[1]}", split[2])
+            dependencies.testImplementation _dep
+            //println("safeTestImplementation $_dep")
+        } else {
+            dependencies.testImplementation dependence
+        }
+
+}
+
+def safeApi = {
+    dependence ->
+        if (dependence instanceof String) {
+            String dep = dependence
+            def split = dep.split(":")
+            def _dep = safeExtGetDependence("${split[0]}:${split[1]}", split[2])
+            dependencies.api _dep
+            //println("safeApi ${split[0]}:${split[1]} ${split[2]} $_dep")
+        } else {
+            dependencies.api dependence
+        }
+}
+
+ext {
+    extSafeGetVersion = safeExtGetVersion
+    extSafeImplementation = safeImplementation
+    extSafeAndroidTestImplementation = safeAndroidTestImplementation
+    extSafeAnnotationProcessor = safeAnnotationProcessor
+    extSafeTestImplementation = safeTestImplementation
+    extSafeApi = safeApi
+}

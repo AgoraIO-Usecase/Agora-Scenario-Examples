@@ -1,5 +1,5 @@
-rootProject.name = "SceneExample"
-if (!isModule.toBoolean()) {
+rootProject.name = "Agora-Scenarios-main"
+if (!isModular.toBoolean()) {
     include ':app'
 }
 
@@ -8,3 +8,4 @@ include ':libs:ui-widget'
 
 include ':modules:PKLive'
 include ':modules:SingleHostLive'
+include ':modules:BreakoutRoom'

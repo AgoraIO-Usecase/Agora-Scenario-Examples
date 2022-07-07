@@ -15,8 +15,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="8dp"
+        android:layout_marginHorizontal="16dp"
+        android:fitsSystemWindows="true"
+        android:layout_marginVertical="8dp"
         android:orientation="horizontal">
 
         <io.agora.uiwidget.function.LiveHostNameView
@@ -24,6 +25,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
+
+        <io.agora.uiwidget.function.LiveRoomUserView
+            android:id="@+id/host_user_view"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:layout_height="wrap_content"
+            />
 
     </LinearLayout>
 

@@ -18,8 +18,10 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import java.io.IOException;
 import java.util.Locale;
+import java.util.Random;
 
 import io.agora.uiwidget.R;
+import io.agora.uiwidget.utils.RandomUtil;
 
 
 public class LiveRoomUserView extends RelativeLayout {
@@ -33,7 +35,7 @@ public class LiveRoomUserView extends RelativeLayout {
     private View mTotalLayout;
 
     private int leftestUserIconId;
-    private int userIconMaxCount = 4;
+    private int userIconMaxCount = 3;
 
     public LiveRoomUserView(Context context) {
         this(context, null);
@@ -78,6 +80,14 @@ public class LiveRoomUserView extends RelativeLayout {
         setMeasuredDimension(width, mHeight);
         int heightSpec = MeasureSpec.makeMeasureSpec(mHeight, MeasureSpec.EXACTLY);
         super.onMeasure(widthMeasureSpec, heightSpec);
+    }
+
+    public void randomUser(int maxUser, int maxIcon){
+        int random = new Random(System.currentTimeMillis()).nextInt(maxUser);
+        setUserCount(random);
+        for (int i = 0; i < Math.min(maxIcon, random); i++) {
+            addUserIcon(RandomUtil.randomLiveRoomIcon(), i);
+        }
     }
 
     public void setUserCount(int total) {
@@ -146,6 +156,11 @@ public class LiveRoomUserView extends RelativeLayout {
         addUserIconInner(drawable, tag);
     }
 
+    public void removeAllUserIcon(){
+        mIconLayout.removeAllViews();
+        leftestUserIconId = View.NO_ID;
+    }
+
     public void addUserIcon(@DrawableRes int drawableId, Object tag){
         RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(),
                 BitmapFactory.decodeResource(getResources(), drawableId));
@@ -187,7 +202,7 @@ public class LiveRoomUserView extends RelativeLayout {
         mIconLayout.addView(imageView, params);
     }
 
-    public void setTotalLayoutClickListener(View.OnClickListener listener){
+    public void setTotalLayoutClickListener(OnClickListener listener){
         mTotalLayout.setOnClickListener(listener);
     }
 

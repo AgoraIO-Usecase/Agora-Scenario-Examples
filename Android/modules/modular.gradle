@@ -1,0 +1,107 @@
+apply from: "${rootProject.projectDir}/config_plugin.gradle"
+
+def isModularInner = {
+    return isModular.toBoolean()
+}
+
+if (isModularInner()) {
+    apply plugin: 'com.android.application'
+} else {
+    apply plugin: 'com.android.library'
+}
+
+def changeTuoFen2XiaHuaXian = {
+    name ->
+        def ret = ""
+        def chars = name.getChars()
+        for (int i = 0; i < chars.length; i++) {
+            def c = chars[i]
+            if (c.isUpperCase()) {
+                if (i != 0 && !('K' == c && 'P' == chars[i -1])) {
+                    ret += "_"
+                }
+                ret += c.toLowerCase()
+            } else {
+                ret += c
+            }
+        }
+        return ret;
+}
+
+ext {
+    extIsModular = isModularInner
+}
+
+
+android {
+    compileSdkVersion extSafeGetVersion('android', 'compileSdkVersion', 30)
+    buildToolsVersion extSafeGetVersion('android', 'buildToolsVersion', 30)
+
+    defaultConfig {
+        minSdkVersion extSafeGetVersion('android', 'minSdkVersion', 21)
+        targetSdkVersion extSafeGetVersion('android', 'targetSdkVersion', 30)
+
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    signingConfigs {
+        release {
+            storeFile new File(rootProject.rootDir.absolutePath + "/scenarios.jks")
+            storePassword '123456'
+            keyAlias 'scenarios'
+            keyPassword '123456'
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        release {
+            minifyEnabled false
+            shrinkResources false
+            zipAlignEnabled true
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        main {
+            if (isModularInner()) {
+                manifest.srcFile 'src/main/AndroidManifest_Modular.xml'
+            } else {
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+            }
+        }
+    }
+
+    resourcePrefix changeTuoFen2XiaHuaXian(project.name)
+
+    buildFeatures {
+        viewBinding true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    if (isModularInner()) {
+        applicationVariants.all {
+            variant ->
+                variant.outputs.all { output ->
+                    outputFileName = new File(project.name + "_" +
+                            defaultConfig.versionName + "_" +
+                            new Date().format("yyyy-MM-dd") + "_" +
+                            buildType.name + ".apk")
+                }
+        }
+    }
+}
+
+
+

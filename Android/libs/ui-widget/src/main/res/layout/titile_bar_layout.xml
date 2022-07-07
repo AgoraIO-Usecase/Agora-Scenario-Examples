@@ -3,19 +3,14 @@
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:background="@color/title_bar_bg_default_color"
+    android:fitsSystemWindows="true"
+    tools:background="@drawable/title_bar_bg_colorful"
     android:layout_height="wrap_content">
 
     <FrameLayout
         android:id="@+id/title_bar_content"
         android:layout_width="match_parent"
         android:layout_height="@dimen/title_bar_height">
-
-        <ImageView
-            android:id="@+id/title_bar_bg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:src="@drawable/title_bar_bg_colorful"/>
 
         <TextView
             android:id="@+id/title_bar_name"
@@ -36,7 +31,6 @@
             android:layout_gravity="center_vertical"
             android:padding="@dimen/title_bar_icon_padding"
             android:src="@drawable/title_bar_back_white"
-
             tools:visibility="visible"
             android:visibility="gone"/>
 

@@ -43,18 +43,20 @@ public class PreviewControlView extends FrameLayout {
         mBinding.previewControlClose.setOnClickListener(onClickListener);
     }
 
-    public void setBeautyIcon(boolean visible, OnClickListener onClickListener){
-        mBinding.previewControlBeautyBtn.setVisibility(visible ? View.VISIBLE: View.INVISIBLE);
-        mBinding.previewControlBeautyBtn.setOnClickListener(onClickListener);
-    }
-
     public void setSettingIcon(boolean visible, OnClickListener onClickListener){
         mBinding.previewControlSettingBtn.setVisibility(visible ? View.VISIBLE: View.INVISIBLE);
         mBinding.previewControlSettingBtn.setOnClickListener(onClickListener);
     }
 
-    public void setCameraIcon(boolean visible, OnClickListener onClickListener){
-        mBinding.previewControlSwitchCamera.setVisibility(visible ? View.VISIBLE: View.INVISIBLE);
+    public void setCameraIcon(boolean visible, OnClickListener onClickListener) {
+        setCameraIcon(visible, 0, onClickListener);
+    }
+
+    public void setCameraIcon(boolean visible, int drawableRes, OnClickListener onClickListener) {
+        if (drawableRes > 0) {
+            mBinding.previewControlSwitchCamera.setImageResource(drawableRes);
+        }
+        mBinding.previewControlSwitchCamera.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
         mBinding.previewControlSwitchCamera.setOnClickListener(onClickListener);
     }
 
@@ -64,6 +66,10 @@ public class PreviewControlView extends FrameLayout {
                 liveBtn.onClick(v, mBinding.roomNameEdit.getText().toString());
             }
         });
+    }
+
+    public FrameLayout getVideoContainer(){
+        return mBinding.videoContainer;
     }
 
     public interface GoLiveListener {
