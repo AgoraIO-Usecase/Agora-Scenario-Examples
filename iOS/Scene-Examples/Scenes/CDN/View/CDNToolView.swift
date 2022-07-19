@@ -7,16 +7,16 @@
 
 import UIKit
 
-protocol SuperAppToolViewDelegate: NSObjectProtocol {
-    func toolView(_ view: SuperAppToolView, didTap action: SuperAppToolView.Action)
+protocol CDNToolViewDelegate: NSObjectProtocol {
+    func toolView(_ view: CDNToolView, didTap action: CDNToolView.Action)
 }
 
-class SuperAppToolView: UIView {
+class CDNToolView: UIView {
     private let titleLabel = UILabel()
     private let cameraButton = UIButton()
     private let micButton = UIButton()
     var micOpen = true
-    weak var delegate: SuperAppToolViewDelegate?
+    weak var delegate: CDNToolViewDelegate?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -83,7 +83,7 @@ class SuperAppToolView: UIView {
     }
 }
 
-extension SuperAppToolView {
+extension CDNToolView {
     enum Action {
         case camera
         case mic

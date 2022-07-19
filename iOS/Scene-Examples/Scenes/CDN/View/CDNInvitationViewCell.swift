@@ -7,15 +7,15 @@
 
 import UIKit
 
-protocol SuperAppInvitationCellDelegate: NSObjectProtocol {
-    func cell(_ cell: SuperAppInvitationViewCell, on index: Int)
+protocol CDNInvitationCellDelegate: NSObjectProtocol {
+    func cell(_ cell: CDNInvitationViewCell, on index: Int)
 }
 
-class SuperAppInvitationViewCell: UITableViewCell {
+class CDNInvitationViewCell: UITableViewCell {
     private let headImageView = UIImageView()
     private let nameLabel = UILabel()
     private let inviteButton = UIButton()
-    weak var delegate: SuperAppInvitationCellDelegate?
+    weak var delegate: CDNInvitationCellDelegate?
     private var info = Info.empty
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -77,7 +77,7 @@ class SuperAppInvitationViewCell: UITableViewCell {
     }
 }
 
-extension SuperAppInvitationViewCell {
+extension CDNInvitationViewCell {
     enum InviteButtonState {
         case none, inviting, availableInvite
     }

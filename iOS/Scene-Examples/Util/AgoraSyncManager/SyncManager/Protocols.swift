@@ -61,7 +61,8 @@ protocol ISyncManager {
     func unsubscribe(reference: DocumentReference, key: String) -> Void
     
     func subscribeScene(reference: SceneReference,
-                        onDeleted: OnSubscribeBlockVoid?,
+                        onUpdated: OnSubscribeBlock?,
+                        onDeleted: OnSubscribeBlock?,
                         fail: FailBlock?)
     func unsubscribeScene(reference: SceneReference,
                           fail: FailBlock?)

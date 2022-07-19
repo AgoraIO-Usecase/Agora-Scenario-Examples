@@ -33,6 +33,9 @@ public class SceneReference: DocumentReference {
         manager.delete(documentRef: self,
                        success: success,
                        fail: fail)
+    }
+    
+    public func deleteScenes() {
         manager.deleteScenes(sceneIds: [id], success: {
             Log.info(text: "deleteScenes success", tag: "SceneReference")
         }, fail: { error in
@@ -40,9 +43,11 @@ public class SceneReference: DocumentReference {
         })
     }
     
-    public func subscribeScene(onDeleted: OnSubscribeBlockVoid? = nil,
+    public func subscribeScene(onUpdated: OnSubscribeBlock? = nil,
+                               onDeleted: OnSubscribeBlock? = nil,
                                fail: FailBlock? = nil) {
         manager.subscribeScene(reference: self,
+                               onUpdated: onUpdated,
                                onDeleted: onDeleted,
                                fail: fail)
     }

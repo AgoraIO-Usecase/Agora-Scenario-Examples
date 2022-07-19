@@ -9,14 +9,14 @@ import UIKit
 import Agora_Scene_Utils
 
 protocol SuperAppRoomListViewDelegate: NSObjectProtocol {
-    func entryViewDidTapCreateButton(_ view: SuperAppRoomListView)
-    func entryView(_ view: SuperAppRoomListView,
+    func entryViewDidTapCreateButton(_ view: CDNRoomListView)
+    func entryView(_ view: CDNRoomListView,
                    didSelected info: LiveRoomInfo,
                    at index: Int)
-    func entryViewdidPull(_ view: SuperAppRoomListView)
+    func entryViewdidPull(_ view: CDNRoomListView)
 }
 
-class SuperAppRoomListView: UIView {
+class CDNRoomListView: UIView {
     private lazy var tableView: AGETableView = {
         let view = AGETableView()
         view.rowHeight = 58
@@ -85,7 +85,7 @@ class SuperAppRoomListView: UIView {
     }
 }
 
-extension SuperAppRoomListView: AGETableViewDelegate {
+extension CDNRoomListView: AGETableViewDelegate {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         infos.count
     }

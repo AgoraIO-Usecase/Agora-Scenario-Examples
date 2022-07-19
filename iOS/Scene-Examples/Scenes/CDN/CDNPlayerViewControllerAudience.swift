@@ -8,9 +8,9 @@
 import UIKit
 import AgoraRtcKit
 
-class SuperAppPlayerViewControllerAudience: BaseViewController {
-    let mainView = SuperAppMainView()
-    var syncUtil: SuperAppSyncUtil!
+class CDNPlayerViewControllerAudience: BaseViewController {
+    let mainView = CDNMainView()
+    var syncUtil: CDNSyncUtil!
     var pushUrlString: String!
     var pullUrlString: String!
     var agoraKit: AgoraRtcEngineKit!
@@ -24,9 +24,9 @@ class SuperAppPlayerViewControllerAudience: BaseViewController {
         self.pushUrlString = "rtmp://examplepush.agoramde.agoraio.cn/live/" + config.sceneId
         self.pullUrlString = "http://examplepull.agoramde.agoraio.cn/live/\(config.sceneId).flv"
         
-        let userId = SupperAppStorageManager.uuid
-        let userName = SupperAppStorageManager.userName
-        self.syncUtil = SuperAppSyncUtil(appId: config.appId,
+        let userId = CDNStorageManager.uuid
+        let userName = CDNStorageManager.userName
+        self.syncUtil = CDNSyncUtil(appId: config.appId,
                                          sceneId: config.sceneId,
                                          sceneName: config.sceneName,
                                          userId: userId,
@@ -69,13 +69,13 @@ class SuperAppPlayerViewControllerAudience: BaseViewController {
                     return
                 }
                 
-                if userPkId != SupperAppStorageManager.uuid { /** pk no me **/
+                if userPkId != CDNStorageManager.uuid { /** pk no me **/
                     self?.initMediaPlayer(useAgoraCDN: false)
                     self?.syncUtil.subscribePKInfo()
                     return
                 }
                 
-                if userPkId == SupperAppStorageManager.uuid { /** pk me **/
+                if userPkId == CDNStorageManager.uuid { /** pk me **/
                     self?.mode = .rtc
                     self?.joinRtc()
                     self?.syncUtil.subscribePKInfo()
@@ -93,8 +93,8 @@ class SuperAppPlayerViewControllerAudience: BaseViewController {
         view.addSubview(mainView)
         mainView.frame = view.bounds
         mainView.delegate = self
-        let imageName = SupperAppStorageManager.uuid.headImageName
-        let info = SuperAppMainView.Info(title: config.sceneName + "(\(config.sceneId))",
+        let imageName = CDNStorageManager.uuid.headImageName
+        let info = CDNMainView.Info(title: config.sceneName + "(\(config.sceneId))",
                                  imageName: imageName,
                                  userCount: 0)
         mainView.update(info: info)
@@ -149,37 +149,37 @@ class SuperAppPlayerViewControllerAudience: BaseViewController {
 }
 
 // MRK: - SuperAppSyncUtilDelegate
-extension SuperAppPlayerViewControllerAudience: SuperAppSyncUtilDelegate {
-    func superAppSyncUtilDidPkAcceptForMe(util: SuperAppSyncUtil, userIdPK: String) {
+extension CDNPlayerViewControllerAudience: CDNSyncUtilDelegate {
+    func CDNSyncUtilDidPkAcceptForMe(util: CDNSyncUtil, userIdPK: String) {
         LogUtils.log(message: "收到上麦申请", level: .info)
         changeToRtc()
     }
     
-    func superAppSyncUtilDidPkCancleForMe(util: SuperAppSyncUtil) {
+    func CDNSyncUtilDidPkCancleForMe(util: CDNSyncUtil) {
         LogUtils.log(message: "下麦", level: .info)
         changeToPull()
     }
     
-    func superAppSyncUtilDidPkAcceptForOther(util: SuperAppSyncUtil) {
+    func CDNSyncUtilDidPkAcceptForOther(util: CDNSyncUtil) {
         if config.roomInfo.liveMode == .push {
             initMediaPlayer(useAgoraCDN: false)
         }
     }
     
-    func superAppSyncUtilDidPkCancleForOther(util: SuperAppSyncUtil) {
+    func CDNSyncUtilDidPkCancleForOther(util: CDNSyncUtil) {
         if config.roomInfo.liveMode == .push {
             initMediaPlayer(useAgoraCDN: true)
         }
     }
     
-    func superAppSyncUtilDidSceneClose(util: SuperAppSyncUtil) { /** scene was delete **/
+    func CDNSyncUtilDidSceneClose(util: CDNSyncUtil) { /** scene was delete **/
         showCloseAlert()
     }
 }
 
 // MARK: - UI Event MainViewDelegate
-extension SuperAppPlayerViewControllerAudience: SuperAppMainViewDelegate {
-    func mainView(_ view: SuperAppMainView, didTap action: SuperAppMainView.Action) {
+extension CDNPlayerViewControllerAudience: SuperAppMainViewDelegate {
+    func mainView(_ view: CDNMainView, didTap action: CDNMainView.Action) {
         switch action {
         case .close:
             destroy()
@@ -195,10 +195,10 @@ extension SuperAppPlayerViewControllerAudience: SuperAppMainViewDelegate {
 }
 
 // MARK: - Data Struct
-extension SuperAppPlayerViewControllerAudience {
+extension CDNPlayerViewControllerAudience {
     struct Config {
         let appId: String
-        let roomInfo: SuperAppRoomInfo
+        let roomInfo: CDNRoomInfo
         
         var sceneName: String {
             return roomInfo.roomName

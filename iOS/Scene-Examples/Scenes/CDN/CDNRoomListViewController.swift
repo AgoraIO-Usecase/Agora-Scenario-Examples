@@ -7,13 +7,10 @@
 
 import UIKit
 
-class SuperAppRoomListViewController: BaseViewController {
-    private let entryView = SuperAppRoomListView()
-    private var syncManager: AgoraSyncManager!
-    private var sceneRef: SceneReference?
-    private var rooms = [SuperAppRoomInfo]()
+class CDNRoomListViewController: BaseViewController {
+    private let entryView = CDNRoomListView()
+    private var rooms = [CDNRoomInfo]()
     private let appId: String
-    private let defaultChannelName = "PKByCDN"
     
     public init(appId: String) {
         self.appId = appId
@@ -27,7 +24,7 @@ class SuperAppRoomListViewController: BaseViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-        commonInit()
+        fetchRooms()
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -38,36 +35,25 @@ class SuperAppRoomListViewController: BaseViewController {
     
     private func setup() {
         view.addSubview(entryView)
+        entryView.delegate = self
         entryView.translatesAutoresizingMaskIntoConstraints = false
         entryView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         entryView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         entryView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         entryView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
-    
-    private func commonInit() {
-        entryView.delegate = self
-        let config = AgoraSyncManager.RtmConfig(appId: appId,
-                                                channelName: defaultChannelName)
-        self.syncManager = AgoraSyncManager(config: config,
-                                            complete: { [weak self](code) in
-            self?.fetchRooms()
-        })
-    }
-    
+        
     func fetchRooms() {
-        syncManager.getScenes { [weak self](objs) in
-            let decoder = JSONDecoder()
-            let rooms = objs.compactMap({ $0.toJson()?.data(using: .utf8) })
-                .compactMap({ try? decoder.decode(SuperAppRoomInfo.self, from: $0) })
+        SyncUtil.fetchAll { [weak self] objs in
+            let rooms = objs.compactMap({ JSONObject.toModel(CDNRoomInfo.self, value: $0.toJson()) })
             self?.udpateRooms(rooms: rooms)
             self?.entryView.endRefreshing()
-        } fail: { [weak self](error) in
+        } fail: { [weak self] error in
             self?.entryView.endRefreshing()
         }
     }
     
-    func udpateRooms(rooms: [SuperAppRoomInfo]) {
+    func udpateRooms(rooms: [CDNRoomInfo]) {
         let infos = rooms.map({ item -> LiveRoomInfo in
             var roomInfo = LiveRoomInfo()
             roomInfo.roomName = item.roomName
@@ -78,51 +64,51 @@ class SuperAppRoomListViewController: BaseViewController {
         entryView.update(infos: infos)
     }
     
-    func getRoomInfo(index: Int) -> SuperAppRoomInfo? {
+    func getRoomInfo(index: Int) -> CDNRoomInfo? {
         rooms[index]
     }
 }
 
-extension SuperAppRoomListViewController: SuperAppRoomListViewDelegate {
-    func entryViewdidPull(_ view: SuperAppRoomListView) {
+extension CDNRoomListViewController: SuperAppRoomListViewDelegate {
+    func entryViewdidPull(_ view: CDNRoomListView) {
         fetchRooms()
     }
     
-    func entryViewDidTapCreateButton(_ view: SuperAppRoomListView) {
-        let vc = SuperAppCreateLiveViewController(appId: appId)
+    func entryViewDidTapCreateButton(_ view: CDNRoomListView) {
+        let vc = CDNCreateLiveViewController(appId: appId)
         vc.delegate = self
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true, completion: nil)
     }
     
-    func entryView(_ view: SuperAppRoomListView,
+    func entryView(_ view: CDNRoomListView,
                    didSelected info: LiveRoomInfo,
                    at index: Int) {
         guard let roomInfo = getRoomInfo(index: index) else {
             return
         }
         /// 作为观众进入
-        let config = SuperAppPlayerViewControllerAudience.Config(appId: appId,
+        let config = CDNPlayerViewControllerAudience.Config(appId: appId,
                                                            roomInfo: roomInfo)
-        let vc = SuperAppPlayerViewControllerAudience(config: config)
+        let vc = CDNPlayerViewControllerAudience(config: config)
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true, completion: nil)
     }
 }
 
-extension SuperAppRoomListViewController: SuperAppCreateLiveDelegate {
-    func createLiveVC(_ vc: SuperAppCreateLiveViewController,
+extension CDNRoomListViewController: CDNCreateLiveDelegate {
+    func createLiveVC(_ vc: CDNCreateLiveViewController,
                       didSart roomName: String,
-                      sellectedType: SuperAppCreateLiveViewController.SelectedType) {
+                      sellectedType: CDNCreateLiveViewController.SelectedType) {
         /// 作为主播进入
         let createTime = Double(Int(Date().timeIntervalSince1970 * 1000) )
         let roomId = "\(Int(createTime))"
         let liveMode: LiveMode = sellectedType == .value1 ? .push : .byPassPush
-        let roomItem = SuperAppRoomInfo(roomId: roomId, roomName: roomName, liveMode: liveMode)
+        let roomItem = CDNRoomInfo(roomId: roomId, roomName: roomName, liveMode: liveMode)
         
-        let config = SuperAppPlayerViewControllerHost.Config(appId: appId,
+        let config = CDNPlayerViewControllerHost.Config(appId: appId,
                                                        roomItem: roomItem)
-        let vc = SuperAppPlayerViewControllerHost(config: config)
+        let vc = CDNPlayerViewControllerHost(config: config)
         
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true, completion: nil)

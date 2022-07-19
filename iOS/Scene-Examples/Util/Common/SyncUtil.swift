@@ -13,26 +13,29 @@ class SyncUtil: NSObject {
     private override init() { }
     private static var sceneRefs: [String: SceneReference] = [String: SceneReference]()
     
-    static func initSyncManager(sceneId: String) {
-        let config = AgoraSyncManager.RtmConfig(appId: KeyCenter.AppId,
-                                                channelName: sceneId)
-        manager = AgoraSyncManager(config: config, complete: { code in
-            if code == 0 {
-                print("SyncManager init success")
-            } else {
-                print("SyncManager init error")
-            }
-        })
-//        let config = AgoraSyncManager.LeancloudConfig(appId: KeyCenter.LeanCloudAppId,
-//                                                appKey: KeyCenter.LeanCloudAppKey,
+    static func initSyncManager(sceneId: String, complete: @escaping SuccessBlockVoid) {
+//        let config = AgoraSyncManager.RtmConfig(appId: KeyCenter.AppId,
 //                                                channelName: sceneId)
-//        manager = AgoraSyncManager(leancloudConfig: config, complete: { code in
+//        manager = AgoraSyncManager(config: config, complete: { code in
 //            if code == 0 {
 //                print("SyncManager init success")
 //            } else {
 //                print("SyncManager init error")
 //            }
 //        })
+        let config = AgoraSyncManager.RethinkConfig(appId: KeyCenter.AppId,
+                                                    channelName: sceneId)
+        ToastView.showWait(text: "join Scene...", view: nil)
+        manager = AgoraSyncManager(config: config, complete: { code in
+            ToastView.hidden()
+            if code == 0 {
+                print("SyncManager init success")
+                complete()
+            } else {
+                print("SyncManager init error")
+                ToastView.show(text: "SyncManager 连接失败")
+            }
+        })
     }
     
     class func joinScene(id: String,

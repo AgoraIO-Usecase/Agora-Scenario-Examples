@@ -7,19 +7,19 @@
 
 import Foundation
 
-struct SuperAppRoomInfo: Codable {
+struct CDNRoomInfo: Codable {
     let roomId: String
     let roomName: String
     let liveMode: LiveMode
     
-    static func create(jsonString: String) -> SuperAppRoomInfo? {
+    static func create(jsonString: String) -> CDNRoomInfo? {
         let decoder = JSONDecoder()
         guard let data = jsonString.data(using: .utf8) else {
             return nil
         }
         
         do {
-            let item = try decoder.decode(SuperAppRoomInfo.self, from: data)
+            let item = try decoder.decode(CDNRoomInfo.self, from: data)
             return item
         } catch let error {
             LogUtils.log(message: error.localizedDescription, level: .error)

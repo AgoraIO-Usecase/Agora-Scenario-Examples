@@ -147,7 +147,7 @@ class VoiceChatRoomCreateController: BaseViewController {
     @objc
     private func onTapStartLiveButton() {
         var roomInfo = LiveRoomInfo(roomName: randomNameView.text)
-        roomInfo.backgroundId = "BG0\(Int.random(in: 1...9))"
+        roomInfo.backgroundId = bgImageName
         let params = JSONObject.toJson(roomInfo)
         SyncUtil.joinScene(id: roomInfo.roomId, userId: roomInfo.userId, property: params, success: { result in
             self.startLiveHandler(result: result)

@@ -53,10 +53,10 @@ class MessageCell: UITableViewCell {
     }
     
     func setChatMessage(message: ChatMessageModel?) {
-        guard let message = message?.message else {
+        guard let message = message else {
             return
         }
-        messageLabel.text = message
+        messageLabel.text = "\(message.userName): \(message.content)"
     }
     override func layoutSubviews() {
         super.layoutSubviews()

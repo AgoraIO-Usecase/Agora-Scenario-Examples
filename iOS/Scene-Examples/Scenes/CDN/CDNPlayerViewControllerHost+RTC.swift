@@ -7,7 +7,7 @@
 
 import AgoraRtcKit
 
-extension SuperAppPlayerViewControllerHost {
+extension CDNPlayerViewControllerHost {
     var videoSize: CGSize { .init(width: 640, height: 360) }
     
     func joinRtcByPassPush() { /** 旁推方式加入 **/
@@ -159,7 +159,7 @@ extension SuperAppPlayerViewControllerHost {
     }
 }
 
-extension SuperAppPlayerViewControllerHost: AgoraRtcEngineDelegate {
+extension CDNPlayerViewControllerHost: AgoraRtcEngineDelegate {
     func rtcEngine(_ engine: AgoraRtcEngineKit,
                    didJoinChannel channel: String,
                    withUid uid: UInt,
@@ -195,7 +195,7 @@ extension SuperAppPlayerViewControllerHost: AgoraRtcEngineDelegate {
     }
 }
 
-extension SuperAppPlayerViewControllerHost: AgoraDirectCdnStreamingEventDelegate {
+extension CDNPlayerViewControllerHost: AgoraDirectCdnStreamingEventDelegate {
     func onDirectCdnStreamingStateChanged(_ state: AgoraDirectCdnStreamingState,
                                           error: AgoraDirectCdnStreamingError,
                                           message: String?) {

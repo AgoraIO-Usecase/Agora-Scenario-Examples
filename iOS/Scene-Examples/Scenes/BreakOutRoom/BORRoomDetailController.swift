@@ -229,11 +229,11 @@ class BORRoomDetailController: BaseViewController {
     private func onTapAddButton() {
         showTextFieldAlert(title: "Please_enter_a_subroom_name".localized, message: "") { [weak self] text in
             guard text.count < 11 else {
-                self?.showHUDError(error: "Over_length_limit".localized)
+                ToastView.show(text: "Over_length_limit".localized)
                 return
             }
             guard !text.isChinese(str: text) else {
-                self?.showHUDError(error: "Chinese_not_supported".localized)
+                ToastView.show(text: "Chinese_not_supported".localized)
                 return
             }
             let roomModel = BORSubRoomModel(subRoom: text)

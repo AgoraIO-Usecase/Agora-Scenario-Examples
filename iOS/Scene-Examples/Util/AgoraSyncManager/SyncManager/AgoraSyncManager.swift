@@ -26,6 +26,18 @@ public class AgoraSyncManager: NSObject {
                                complete: complete)
     }
     
+    /// init
+    /// - Parameters:
+    ///   - config: config of rtm
+    ///   - complete: `code = 0` is success, else error
+    public init(config: RethinkConfig,
+                complete: @escaping SuccessBlockInt) {
+        let tempConfig = RethinkSyncManager.Config(appId: config.appId,
+                                               channelName: config.channelName)
+        proxy = RethinkSyncManager(config: tempConfig,
+                                   complete: complete)
+    }
+    
     public func createScene(scene: Scene,
                      success: SuccessBlockVoid?,
                      fail: FailBlock?) {
@@ -193,9 +205,11 @@ public class AgoraSyncManager: NSObject {
     }
     
     func subscribeScene(reference: SceneReference,
-                        onDeleted: OnSubscribeBlockVoid? = nil,
+                        onUpdated: OnSubscribeBlock?,
+                        onDeleted: OnSubscribeBlock? = nil,
                         fail: FailBlock? = nil) {
         proxy.subscribeScene(reference: reference,
+                             onUpdated: onUpdated,
                              onDeleted: onDeleted,
                              fail: fail)
     }

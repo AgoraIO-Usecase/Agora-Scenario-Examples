@@ -7,17 +7,17 @@
 
 import AgoraRtcKit
 
-protocol SuperAppCreateLiveDelegate: NSObjectProtocol {
-    func createLiveVC(_ vc: SuperAppCreateLiveViewController,
+protocol CDNCreateLiveDelegate: NSObjectProtocol {
+    func createLiveVC(_ vc: CDNCreateLiveViewController,
                       didSart roomName: String,
-                      sellectedType: SuperAppCreateLiveViewController.SelectedType)
+                      sellectedType: CDNCreateLiveViewController.SelectedType)
 }
 
-class SuperAppCreateLiveViewController: BaseViewController {
-    let createLiveView = SuperAppCreateLiveView(frame: .zero)
+class CDNCreateLiveViewController: BaseViewController {
+    let createLiveView = CDNCreateLiveView(frame: .zero)
     private var appId: String!
     private var rtcKit: AgoraRtcEngineKit!
-    weak var delegate: SuperAppCreateLiveDelegate?
+    weak var delegate: CDNCreateLiveDelegate?
     
     public init(appId: String) {
         self.appId = appId
@@ -70,16 +70,16 @@ class SuperAppCreateLiveViewController: BaseViewController {
     }
 }
 
-extension SuperAppCreateLiveViewController: CreateLiveViewDelegate {
-    func createLiveViewDidTapCloseButton(_ view: SuperAppCreateLiveView) {
+extension CDNCreateLiveViewController: CreateLiveViewDelegate {
+    func createLiveViewDidTapCloseButton(_ view: CDNCreateLiveView) {
         dismiss(animated: true, completion: nil)
     }
     
-    func createLiveViewDidTapCameraButton(_ view: SuperAppCreateLiveView) {
+    func createLiveViewDidTapCameraButton(_ view: CDNCreateLiveView) {
         switchCamera()
     }
     
-    func createLiveViewDidTapStartButton(_ view: SuperAppCreateLiveView) {
+    func createLiveViewDidTapStartButton(_ view: CDNCreateLiveView) {
         let text = createLiveView.text
         let sellectedType: SelectedType = createLiveView.currentSelectedType == .value1 ? .value1 : .value2
         dismiss(animated: true) { [weak self] in
@@ -90,12 +90,12 @@ extension SuperAppCreateLiveViewController: CreateLiveViewDelegate {
         }
     }
     
-    func createLiveViewDidTapRandomButton(_ view: SuperAppCreateLiveView) {
+    func createLiveViewDidTapRandomButton(_ view: CDNCreateLiveView) {
         genRandomName()
     }
 }
 
-extension SuperAppCreateLiveViewController {
+extension CDNCreateLiveViewController {
     enum SelectedType {
         case value1
         case value2

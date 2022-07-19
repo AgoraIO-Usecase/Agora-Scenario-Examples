@@ -123,8 +123,8 @@ class LivePKController: BaseViewController {
         agoraKit?.destroyMediaPlayer(nil)
         
         leaveChannel(uid: UserInfo.userId, channelName: channleName, isExit: true)
+        liveView.leave(channelName: channleName)
         SyncUtil.scene(id: channleName)?.unsubscribe(key: SceneType.pkApply.rawValue)
-        SyncUtil.scene(id: channleName)?.unsubscribe(key: SYNC_MANAGER_GIFT_INFO)
         SyncUtil.leaveScene(id: channleName)
         navigationTransparent(isTransparent: false)
         UIApplication.shared.isIdleTimerDisabled = false
@@ -256,16 +256,10 @@ class LivePKController: BaseViewController {
         }
         
         guard getRole(uid: UserInfo.uid) == .audience else { return }
-        SyncUtil.scene(id: channleName)?.subscribe(key: "", onCreated: { object in
-            
-        }, onUpdated: { object in
-            
-        }, onDeleted: { object in
+        SyncUtil.scene(id: channleName)?.subscribeScene(onDeleted: { _ in
             self.showAlert(title: "live_broadcast_over".localized, message: "") {
                 self.navigationController?.popViewController(animated: true)
             }
-        }, onSubscribed: {
-            
         }, fail: { error in
             ToastView.show(text: error.message)
         })
@@ -275,11 +269,7 @@ class LivePKController: BaseViewController {
         if getRole(uid: UserInfo.uid) == .broadcaster {
             showAlert(title: "Live_End".localized, message: "Confirm_End_Live".localized) { [weak self] in
                 self?.closeLiveHandler()
-                SyncUtil.scene(id: self?.channleName ?? "")?.delete(success: { _ in
-                    
-                }, fail: { error in
-                    ToastView.show(text: error.message)
-                })
+                SyncUtil.scene(id: self?.channleName ?? "")?.deleteScenes()
                 self?.navigationController?.popViewController(animated: true)
             }
 
@@ -527,7 +517,7 @@ class LivePKController: BaseViewController {
         if result == 0 {
             LogUtils.log(message: "主播进入房间", level: .info)
         }
-        liveView.sendMessage(message: "\(UserInfo.userId)" + "Join_Live_Room".localized, messageType: .message)
+        liveView.sendMessage(message: "Join_Live_Room".localized, messageType: .message)
     }
     
     /// Audience joins the channel
@@ -556,7 +546,7 @@ class LivePKController: BaseViewController {
         if joinResult == 0 {
             LogUtils.log(message: "join audience success uid == \(pkUid) channelName == \(channelName)", level: .info)
             let userId = pkUid == (UInt(currentUserId) ?? 0) ? UserInfo.userId : pkUid
-            liveView.sendMessage(message: "\(userId)" + "Join_Live_Room".localized,
+            liveView.sendMessage(message: "Join_Live_Room".localized,
                                  messageType: .message)
             return
         }
@@ -589,7 +579,7 @@ class LivePKController: BaseViewController {
             liveView.removeData(index: index)
         }
         guard "\(uid)" != currentUserId else { return }
-        liveView.sendMessage(message: "\(uid)" + "Leave_Live_Room".localized,
+        liveView.sendMessage(message: "Leave_Live_Room".localized,
                              messageType: .message)
     }
     

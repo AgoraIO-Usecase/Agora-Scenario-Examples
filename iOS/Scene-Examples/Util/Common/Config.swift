@@ -24,6 +24,10 @@ let SYNC_MANAGER_PK_INFO = "pkInfo"
 let SYNC_MANAGER_AGORA_VOICE_USERS = "agoraVoiceUsers"
 /// 夜店用户信息
 let SYNC_MANAGER_AGORA_CLUB_USERS = "agoraClubUsers"
+/// 消息信息
+let SYNC_SCENE_ROOM_MESSAGE_INFO = "messageInfo"
+/// 房间内用户列表
+let SYNC_SCENE_ROOM_USER_COLLECTION = "userCollection"
 
 struct UserInfo {
     static var userId: UInt {

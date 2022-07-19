@@ -137,8 +137,8 @@ class SeatView: UIView {
             }
             self.fetchAgoraVoiceUserInfoData()
         }, onDeleted: { object in
-            guard let model = JSONObject.toModel(AgoraVoiceUsersModel.self, value: object.toJson()) else { return }
-            if model.userId == UserInfo.uid {
+            let dataArray = self.collectionView.dataArray as? [AgoraVoiceUsersModel]
+            if let model = dataArray?.filter({ $0.userId == UserInfo.uid }).first, model.objectId == object.getId() {
                 guard let option = self.channelMediaOptions, let connection = self.connection else { return }
                 option.publishAudioTrack = .of(false)
                 option.publishCustomVideoTrack = .of(false)

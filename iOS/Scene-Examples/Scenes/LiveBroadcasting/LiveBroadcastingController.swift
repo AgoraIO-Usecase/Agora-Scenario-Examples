@@ -80,8 +80,8 @@ class LiveBroadcastingController: BaseViewController {
         agoraKit?.destroyMediaPlayer(nil)
         
         leaveChannel(uid: UserInfo.userId, channelName: channleName, isExit: true)
+        liveView.leave(channelName: channleName)
         SyncUtil.scene(id: channleName)?.unsubscribe(key: SceneType.singleLive.rawValue)
-        SyncUtil.scene(id: channleName)?.unsubscribe(key: SYNC_MANAGER_GIFT_INFO)
         SyncUtil.leaveScene(id: channleName)
         navigationTransparent(isTransparent: false)
         UIApplication.shared.isIdleTimerDisabled = false
@@ -137,11 +137,7 @@ class LiveBroadcastingController: BaseViewController {
     private func onTapCloseLive() {
         if getRole(uid: UserInfo.uid) == .broadcaster {
             showAlert(title: "Live_End".localized, message: "Confirm_End_Live".localized) { [weak self] in
-                SyncUtil.scene(id: self?.channleName ?? "")?.delete(success: { objects in
-                    
-                }, fail: { error in
-                    
-                })
+                SyncUtil.scene(id: self?.channleName ?? "")?.deleteScenes()
                 self?.navigationController?.popViewController(animated: true)
             }
 
@@ -182,7 +178,7 @@ class LiveBroadcastingController: BaseViewController {
             agoraKit?.setupRemoteVideo(canvas)
         }
         agoraKit?.startPreview()
-        liveView.sendMessage(message: "\(UserInfo.userId)" + "Join_Live_Room".localized, messageType: .message)
+        liveView.sendMessage(message: "Join_Live_Room".localized, messageType: .message)
     }
     
     public func leaveChannel(uid: UInt, channelName: String, isExit: Bool = false) {
@@ -193,7 +189,7 @@ class LiveBroadcastingController: BaseViewController {
     
     public func didOfflineOfUid(uid: UInt) {
         guard "\(uid)" != currentUserId else { return }
-        liveView.sendMessage(message: "\(uid)" + "Leave_Live_Room".localized,
+        liveView.sendMessage(message: "Leave_Live_Room".localized,
                              messageType: .message)
     }
     

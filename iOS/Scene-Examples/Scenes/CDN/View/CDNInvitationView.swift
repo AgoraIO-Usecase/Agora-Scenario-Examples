@@ -7,18 +7,18 @@
 
 import UIKit
 
-protocol SuperAppInvitationViewDelegate: NSObjectProtocol {
-    func invitationView(_ view: SuperAppInvitationView, didSelected info: SuperAppInvitationView.Info)
+protocol CDNInvitationViewDelegate: NSObjectProtocol {
+    func invitationView(_ view: CDNInvitationView, didSelected info: CDNInvitationView.Info)
 }
 
-class SuperAppInvitationView: UIView {
-    typealias Info = SuperAppInvitationViewCell.Info
+class CDNInvitationView: UIView {
+    typealias Info = CDNInvitationViewCell.Info
     let tableView = UITableView(frame: .zero,
                                 style: .plain)
     let titleLabel = UILabel()
-    private var infos = [SuperAppInvitationViewCell.Info]()
-    weak var delegate: SuperAppInvitationViewDelegate?
-    var manager: SuperAppInvitationSheetManager?
+    private var infos = [CDNInvitationViewCell.Info]()
+    weak var delegate: CDNInvitationViewDelegate?
+    var manager: CDNInvitationSheetManager?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -52,31 +52,31 @@ class SuperAppInvitationView: UIView {
     }
     
     private func commomInit() {
-        tableView.register(SuperAppInvitationViewCell.self,
+        tableView.register(CDNInvitationViewCell.self,
                            forCellReuseIdentifier: "InvitationCell")
         tableView.delegate = self
         tableView.dataSource = self
     }
     
-    private func update(infos: [SuperAppInvitationViewCell.Info]) {
+    private func update(infos: [CDNInvitationViewCell.Info]) {
         self.infos = infos
         tableView.reloadData()
     }
     
-    func startFetch(manager: SuperAppInvitationSheetManager) {
+    func startFetch(manager: CDNInvitationSheetManager) {
         self.manager = manager
         manager.delegate = self
         manager.fetchInfos()
     }
 }
 
-extension SuperAppInvitationView: UITableViewDataSource, UITableViewDelegate {
+extension CDNInvitationView: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return infos.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "InvitationCell", for: indexPath) as! SuperAppInvitationViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "InvitationCell", for: indexPath) as! CDNInvitationViewCell
         cell.selectionStyle = .none
         cell.delegate = self
         let info = infos[indexPath.row]
@@ -89,14 +89,14 @@ extension SuperAppInvitationView: UITableViewDataSource, UITableViewDelegate {
     }
 }
 
-extension SuperAppInvitationView: SuperAppInvitationSheetManagerDelegate {
-    func superAppInvitationSheetManagerDidFetch(infos: [SuperAppInvitationSheetManager.Info]) {
+extension CDNInvitationView: CDNInvitationSheetManagerDelegate {
+    func CDNInvitationSheetManagerDidFetch(infos: [CDNInvitationSheetManager.Info]) {
         update(infos: infos)
     }
 }
 
-extension SuperAppInvitationView: SuperAppInvitationCellDelegate {
-    func cell(_ cell: SuperAppInvitationViewCell, on index: Int) {
+extension CDNInvitationView: CDNInvitationCellDelegate {
+    func cell(_ cell: CDNInvitationViewCell, on index: Int) {
         let info = infos[index]
         delegate?.invitationView(self, didSelected: info)
     }

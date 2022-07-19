@@ -14,13 +14,13 @@ enum SceneType: String {
     /// 超级小班课
     case breakoutRoom = "BreakOutRoom"
     /// 音效
-    case agoraVoice = "agoraVoice"
+    case voiceChatRoom = "voiceChatRoom"
     /// 夜店
     case agoraClub = "agoraClub"
     /// PKApply
     case pkApply = "pkApplyInfo"
     /// 融合cdn
-    case voiceChatRoom = "superApp"
+    case cdn = "PKByCDN"
     
     var alertTitle: String {
         switch self {
@@ -50,7 +50,7 @@ struct MainModel {
         model.title = "sound_effect".localized
         model.desc = "sound_effect".localized
         model.imageNmae = "VideoCall"
-        model.sceneType = .agoraVoice
+        model.sceneType = .voiceChatRoom
         tempArray.append(model)
         
         model = MainModel()
@@ -64,7 +64,7 @@ struct MainModel {
         model.title = "VoiceChatRoom".localized
         model.desc = "融合CDN"
         model.imageNmae = "Chatroom"
-        model.sceneType = .voiceChatRoom
+        model.sceneType = .cdn
         tempArray.append(model)
         dataArray.append(tempArray)
         
@@ -136,25 +136,26 @@ extension MainViewController: AGECollectionViewDelegate {
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let sceneType = MainModel.mainDatas()[indexPath.section][indexPath.item].sceneType
-        SyncUtil.initSyncManager(sceneId: sceneType.rawValue)
-        let model = MainModel.mainDatas()[indexPath.section][indexPath.item]
-        if sceneType == .breakoutRoom {
-            let breakoutRoomVC = BORHomeViewController()
-            breakoutRoomVC.title = model.title
-            navigationController?.pushViewController(breakoutRoomVC, animated: true)
-        } else if sceneType == .agoraClub {
-            let clubProgramVC = AgoraClubProgramViewController()
-            navigationController?.pushViewController(clubProgramVC, animated: true)
-            
-        } else if sceneType == .voiceChatRoom {
-            let vc = SuperAppRoomListViewController(appId: KeyCenter.AppId)
-            vc.title = model.title
-            navigationController?.pushViewController(vc, animated: true)
-            
-        } else {
-            let roomListVC = LiveRoomListController(sceneType: sceneType)
-            roomListVC.title = model.title
-            navigationController?.pushViewController(roomListVC, animated: true)
+        SyncUtil.initSyncManager(sceneId: sceneType.rawValue) {
+            let model = MainModel.mainDatas()[indexPath.section][indexPath.item]
+            if sceneType == .breakoutRoom {
+                let breakoutRoomVC = BORHomeViewController()
+                breakoutRoomVC.title = model.title
+                self.navigationController?.pushViewController(breakoutRoomVC, animated: true)
+            } else if sceneType == .agoraClub {
+                let clubProgramVC = AgoraClubProgramViewController()
+                self.navigationController?.pushViewController(clubProgramVC, animated: true)
+                
+            } else if sceneType == .cdn {
+                let vc = CDNRoomListViewController(appId: KeyCenter.AppId)
+                vc.title = model.title
+                self.navigationController?.pushViewController(vc, animated: true)
+                
+            } else {
+                let roomListVC = LiveRoomListController(sceneType: sceneType)
+                roomListVC.title = model.title
+                self.navigationController?.pushViewController(roomListVC, animated: true)
+            }
         }
     }
     

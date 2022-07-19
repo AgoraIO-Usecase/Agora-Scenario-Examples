@@ -8,11 +8,11 @@
 import UIKit
 
 protocol SuperAppMainViewDelegate: NSObjectProtocol {
-    func mainView(_ view: SuperAppMainView, didTap action: SuperAppMainView.Action)
+    func mainView(_ view: CDNMainView, didTap action: CDNMainView.Action)
 }
 
-class SuperAppMainView: UIView {
-    private let personCountView = SuperAppRoomListViewCell.IconTextView()
+class CDNMainView: UIView {
+    private let personCountView = CDNRoomListViewCell.IconTextView()
     private let leftView = LeftView()
     private let moreButton = UIButton()
     private let closeButton = UIButton()
@@ -154,7 +154,7 @@ class SuperAppMainView: UIView {
     }
 }
 
-extension SuperAppMainView {
+extension CDNMainView {
     enum Action {
         case close
         case more

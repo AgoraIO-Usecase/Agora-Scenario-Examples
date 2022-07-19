@@ -43,7 +43,6 @@ class LiveRoomListController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        showWaitHUD()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -59,8 +58,9 @@ class LiveRoomListController: BaseViewController {
     }
     
     private func getLiveData() {
+        ToastView.showWait(text: "loading".localized, view: view)
         SyncUtil.fetchAll { results in
-            self.hideHUD()
+            ToastView.hidden()
             self.tableView.endRefreshing()
             print("result == \(results.compactMap{ $0.toJson() })")
             self.dataArray = results.compactMap({ $0.toJson() }).compactMap({ JSONObject.toModel(LiveRoomInfo.self, value: $0 )})
@@ -69,7 +69,7 @@ class LiveRoomListController: BaseViewController {
             }
             self.tableView.dataArray = self.dataArray
         } fail: { error in
-            self.hideHUD()
+            ToastView.hidden()
             self.tableView.endRefreshing()
             LogUtils.log(message: "get live data error == \(error.localizedDescription)", level: .info)
         }
@@ -118,7 +118,7 @@ class LiveRoomListController: BaseViewController {
             
         case .breakoutRoom:
             break
-        case .agoraVoice:
+        case .voiceChatRoom:
             let createLiveVC = VoiceChatRoomCreateController()
             navigationController?.pushViewController(createLiveVC, animated: true)
             
@@ -130,7 +130,7 @@ class LiveRoomListController: BaseViewController {
             let createLiveVC = LivePKCreateController()
             navigationController?.pushViewController(createLiveVC, animated: true)
             
-        case .voiceChatRoom:
+        case .cdn:
             break
         }
         
@@ -151,7 +151,7 @@ class LiveRoomListController: BaseViewController {
             let breakoutRoomVC = BORRoomDetailController(channelName: channelName ?? "", ownerId: ownerId ?? "")
             navigationController?.pushViewController(breakoutRoomVC, animated: true)
             
-        case .agoraVoice:
+        case .voiceChatRoom:
             let roomInfo = JSONObject.toModel(LiveRoomInfo.self, value: result.toJson())
             let agoraVoiceVC = VoiceChatRoomController(roomInfo: roomInfo)
             navigationController?.pushViewController(agoraVoiceVC, animated: true)

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class SupperAppStorageManager {
+class CDNStorageManager {
     
     fileprivate static let userNameKey = "superApp-userName"
     fileprivate static let roomNameKey = "superApp-roomName"

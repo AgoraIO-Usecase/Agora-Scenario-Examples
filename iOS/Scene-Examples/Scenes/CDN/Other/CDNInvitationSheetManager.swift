@@ -7,16 +7,16 @@
 
 import Foundation
 
-protocol SuperAppInvitationSheetManagerDelegate: NSObjectProtocol {
-    func superAppInvitationSheetManagerDidFetch(infos: [SuperAppInvitationSheetManager.Info])
+protocol CDNInvitationSheetManagerDelegate: NSObjectProtocol {
+    func CDNInvitationSheetManagerDidFetch(infos: [CDNInvitationSheetManager.Info])
 }
 
-class SuperAppInvitationSheetManager: NSObject {
-    typealias Info = SuperAppInvitationViewCell.Info
-    private var syncUtil: SuperAppSyncUtil!
-    weak var delegate: SuperAppInvitationSheetManagerDelegate?
+class CDNInvitationSheetManager: NSObject {
+    typealias Info = CDNInvitationViewCell.Info
+    private var syncUtil: CDNSyncUtil!
+    weak var delegate: CDNInvitationSheetManagerDelegate?
     
-    init(syncUtil: SuperAppSyncUtil) {
+    init(syncUtil: CDNSyncUtil) {
         self.syncUtil = syncUtil
         super.init()
     }
@@ -25,14 +25,14 @@ class SuperAppInvitationSheetManager: NSObject {
         syncUtil.getMembers { [weak self](strings) in
             guard let `self` = self else { return }
             
-            let localUserId = SupperAppStorageManager.uuid
+            let localUserId = CDNStorageManager.uuid
             let decoder = JSONDecoder()
             var userInfos = strings.compactMap({ $0.data(using: .utf8) })
-                .compactMap({ try? decoder.decode(SuperAppUserInfo.self, from: $0) })
+                .compactMap({ try? decoder.decode(CDNUserInfo.self, from: $0) })
                 .filter({ $0.userId != localUserId })
             
             /// 查重
-            var dict = [String : SuperAppUserInfo]()
+            var dict = [String : CDNUserInfo]()
             for userInfo in userInfos {
                 dict[userInfo.userId] = userInfo
             }
@@ -54,6 +54,6 @@ class SuperAppInvitationSheetManager: NSObject {
     }
     
     private func update(infos: [Info]) {
-        delegate?.superAppInvitationSheetManagerDidFetch(infos: infos)
+        delegate?.CDNInvitationSheetManagerDidFetch(infos: infos)
     }
 }

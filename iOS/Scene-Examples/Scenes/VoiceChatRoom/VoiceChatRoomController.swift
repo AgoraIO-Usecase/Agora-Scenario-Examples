@@ -22,7 +22,7 @@ class VoiceChatRoomController: BaseViewController {
         return view
     }()
     private lazy var usersView: AgoraVoiceUsersView = {
-        let view = AgoraVoiceUsersView(channelName: channelName, role: getRole(uid: UserInfo.uid))
+        let view = AgoraVoiceUsersView(channelName: channelName, role: getRole(uid: UserInfo.uid), type: .voiceChat)
         return view
     }()
     private lazy var belCantoView: AgoraVoiceBelCantoView = {
@@ -124,13 +124,6 @@ class VoiceChatRoomController: BaseViewController {
         agoraKit?.disableAudio()
         agoraKit?.muteAllRemoteAudioStreams(true)
         agoraKit?.destroyMediaPlayer(nil)
-        if getRole(uid: UserInfo.uid) == .broadcaster {
-            SyncUtil.scene(id: channelName)?.delete(success: { objects in
-                
-            }, fail: { error in
-                ToastView.show(text: error.message)
-            })
-        }
         leaveChannel()
         SyncUtil.scene(id: channelName)?.collection(className: SYNC_MANAGER_AGORA_VOICE_USERS).delete(id: currentUserModel?.objectId ?? "", success: {
             ToastView.show(text: "delete successful")
@@ -160,7 +153,8 @@ class VoiceChatRoomController: BaseViewController {
         agoraKit?.setClientRole(getRole(uid: UserInfo.uid))
         
         var messageModel = ChatMessageModel()
-        messageModel.message = "\(UserInfo.uid) " + "Join_Live_Room".localized
+        messageModel.content = "Join_Live_Room".localized
+        messageModel.userName = UserInfo.uid
         chatView.sendMessage(messageModel: messageModel)
         let params = JSONObject.toJson(AgoraVoiceUsersModel())
         SyncUtil.scene(id: channelName)?.collection(className: SYNC_MANAGER_AGORA_VOICE_USERS).add(data: params, success: { object in
@@ -189,7 +183,11 @@ class VoiceChatRoomController: BaseViewController {
         if getRole(uid: UserInfo.uid) == .audience {
             option.clientRoleType = isVoice ? .of((Int32)(AgoraClientRole.broadcaster.rawValue)) : .of((Int32)(AgoraClientRole.audience.rawValue))
         }
-        bottomView.updateButtonType(type: isVoice ? [.belcanto, .effect, .close] : [.close])
+        if getRole(uid: UserInfo.uid) == .broadcaster {
+            bottomView.updateButtonType(type: [.belcanto, .effect, .effect_tool, .close])
+        } else {
+            bottomView.updateButtonType(type: isVoice ? [.belcanto, .effect, .close] : [.close])
+        }
         agoraKit?.updateChannel(with: option)
         if getRole(uid: UserInfo.uid) == .audience {
             agoraKit?.enableLocalAudio(isVoice)
@@ -209,6 +207,9 @@ class VoiceChatRoomController: BaseViewController {
     }
     
     private func eventHandler() {
+        onlineView.getUserInfo(channelName: channelName)
+        chatView.subscribeMessage(channelName: channelName)
+        
         bottomView.onTapBottomButtonTypeClosure = { [weak self] type in
             guard let self = self else { return }
             switch type {
@@ -226,6 +227,14 @@ class VoiceChatRoomController: BaseViewController {
                 
             default: break
             }
+        }
+        bottomView.onTapChatButtonClosure = { [weak self] message in
+            guard let self = self else { return }
+            var model = ChatMessageModel(content: message, messageType: .message)
+            model.userName = UserInfo.uid
+            SyncUtil.scene(id: self.channelName)?
+                .collection(className: SYNC_SCENE_ROOM_MESSAGE_INFO)
+                .add(data: JSONObject.toJson(model), success: nil, fail: nil)
         }
         belCantoView.didAgoraVoiceBelCantoItemClosure = { [weak self] model in
             guard let self = self, let model = model else { return }
@@ -288,7 +297,7 @@ class VoiceChatRoomController: BaseViewController {
         
         guard getRole(uid: UserInfo.uid) == .audience else { return }
         SyncUtil.scene(id: channelName)?.subscribe(key: "", onCreated: { object in
-            
+
         }, onUpdated: { object in
             self.updateBGImage(object: object)
         }, onDeleted: { object in
@@ -296,7 +305,7 @@ class VoiceChatRoomController: BaseViewController {
                 self.navigationController?.popViewController(animated: true)
             }
         }, onSubscribed: {
-            
+
         }, fail: { error in
             ToastView.show(text: error.message)
         })
@@ -358,16 +367,13 @@ class VoiceChatRoomController: BaseViewController {
     private func onTapCloseLive() {
         if getRole(uid: UserInfo.uid) == .broadcaster {
             showAlert(title: "Live_End".localized, message: "Confirm_End_Live".localized) { [weak self] in
-                SyncUtil.scene(id: self?.channelName ?? "")?.delete(success: { objects in
-                    
-                }, fail: { error in
-                    ToastView.show(text: error.message)
-                })
+                SyncUtil.scene(id: self?.channelName ?? "")?.delete(success: nil, fail: nil)
                 self?.navigationController?.popViewController(animated: true)
             }
 
         } else {
             navigationController?.popViewController(animated: true)
+            onlineView.delete(channelName: channelName)
         }
     }
 }
@@ -388,14 +394,16 @@ extension VoiceChatRoomController: AgoraRtcEngineDelegate {
     func rtcEngine(_ engine: AgoraRtcEngineKit, didJoinedOfUid uid: UInt, elapsed: Int) {
         LogUtils.log(message: "remote user join: \(uid) \(elapsed)ms", level: .info)
         var messageModel = ChatMessageModel()
-        messageModel.message = "\(uid) " + "Join_Live_Room".localized
+        messageModel.content = "Join_Live_Room".localized
+        messageModel.userName = "\(uid)"
         chatView.sendMessage(messageModel: messageModel)
     }
 
     func rtcEngine(_ engine: AgoraRtcEngineKit, didOfflineOfUid uid: UInt, reason: AgoraUserOfflineReason) {
         LogUtils.log(message: "remote user leval: \(uid) reason \(reason)", level: .info)
         var messageModel = ChatMessageModel()
-        messageModel.message = "\(uid) " + "Leave_Live_Room".localized
+        messageModel.content = "Leave_Live_Room".localized
+        messageModel.userName = "\(uid)"
         chatView.sendMessage(messageModel: messageModel)
     }
 

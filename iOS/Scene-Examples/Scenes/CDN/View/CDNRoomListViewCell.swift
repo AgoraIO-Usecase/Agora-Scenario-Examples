@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SuperAppRoomListViewCell: UICollectionViewCell {
+class CDNRoomListViewCell: UICollectionViewCell {
     let personCountView = IconTextView(frame: .zero)
     let briefView = LabelShadowView(frame: .zero)
     
@@ -50,7 +50,7 @@ class SuperAppRoomListViewCell: UICollectionViewCell {
     func commonInit() {}
 }
 
-extension SuperAppRoomListViewCell {
+extension CDNRoomListViewCell {
     class IconTextView: UIControl {
         private(set) var label = UILabel(frame: CGRect.zero)
         private(set) var imageView = UIImageView(frame: CGRect.zero)

@@ -8,13 +8,14 @@
 import UIKit
 import Agora_Scene_Utils
 
-enum ChatMessageType {
+enum ChatMessageType: Codable {
     case message
     case notice
 }
 
-struct ChatMessageModel {
-    var message: String = ""
+struct ChatMessageModel: Codable {
+    var content: String = ""
+    var userName: String = ""
     var messageType: ChatMessageType = .message
 }
 
@@ -45,6 +46,23 @@ class LiveChatView: UIView {
     
     func sendMessage(messageModel: ChatMessageModel) {
         tableLayoutView.insertBottomRow(item: messageModel)
+    }
+    
+    func subscribeMessage(channelName: String) {
+        SyncUtil.scene(id: channelName)?.subscribe(key: SYNC_SCENE_ROOM_MESSAGE_INFO, onCreated: { object in
+            
+        }, onUpdated: { object in
+            guard var model = JSONObject.toModel(ChatMessageModel.self,
+                                                 value: object.toJson()) else { return }
+            model.messageType = .message
+            self.sendMessage(messageModel: model)
+        }, onDeleted: { _ in
+            
+        }, onSubscribed: {
+            LogUtils.log(message: "subscribe message", level: .info)
+        }, fail: { error in
+            ToastView.show(text: error.message)
+        })
     }
     
     private func setupUI() {
@@ -125,10 +143,10 @@ class LiveChatMessageView: UIView {
 
 extension LiveChatMessageView: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        AlertManager.hiddenView {
-            textField.resignFirstResponder()            
-        }
         onTapKeyboardSendClosure?(textField.text ?? "")
+        AlertManager.hiddenView {
+            textField.resignFirstResponder()
+        }
         return true
     }
 }

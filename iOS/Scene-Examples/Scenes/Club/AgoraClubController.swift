@@ -162,7 +162,7 @@ class AgoraClubController: BaseViewController {
             guard let model = JSONObject.toModel(LiveGiftModel.self, value: object.toJson()) else { return }
             self.playGifView.isHidden = false
             self.playGifView.loadGIFName(gifName: model.gifName)
-            let messageModel = ChatMessageModel(message: model.userId + "i_gave_one_away".localized + model.title, messageType: .message)
+            let messageModel = ChatMessageModel(content: model.userId + "i_gave_one_away".localized + model.title, messageType: .message)
             self.chatView.sendMessage(messageModel: messageModel)
         }, onDeleted: { object in
             
@@ -180,7 +180,7 @@ class AgoraClubController: BaseViewController {
         }, onUpdated: { object in
             
         }, onDeleted: { object in
-            LogUtils.log(message: "删除房间 == \(object.toJson() ?? "")", level: .info)
+            LogUtils.log(message: "删除房间 == \(object.getId())", level: .info)
             AGEToastView.show(text: "room_is_closed".localized, duration: 2)
             self.navigationController?.popViewController(animated: true)
         }, onSubscribed: {
@@ -204,7 +204,7 @@ class AgoraClubController: BaseViewController {
         // 聊天发送
         bottomView.onTapChatButtonClosure = { [weak self] message in
             guard let self = self else { return }
-            let model = ChatMessageModel(message: message, messageType: .message)
+            let model = ChatMessageModel(content: message, messageType: .message)
             self.chatView.sendMessage(messageModel: model)
         }
         // 点击聊天消息
@@ -391,7 +391,7 @@ class AgoraClubController: BaseViewController {
         }
         
         var messageModel = ChatMessageModel()
-        messageModel.message = "\(UserInfo.uid) " + "Join_Live_Room".localized
+        messageModel.content = "\(UserInfo.uid) " + "Join_Live_Room".localized
         chatView.sendMessage(messageModel: messageModel)
         var userModel = AgoraVoiceUsersModel()
         if getRole(uid: UserInfo.uid) == .broadcaster {
@@ -454,11 +454,7 @@ class AgoraClubController: BaseViewController {
         }
         if getRole(uid: UserInfo.uid) == .broadcaster {
             showAlert(title: "Live_End".localized, message: "Confirm_End_Live".localized) { [weak self] in
-                SyncUtil.scene(id: self?.channelName ?? "")?.delete(success: { object in
-                    
-                }, fail: { error in
-                    ToastView.show(text: error.message)
-                })
+                SyncUtil.scene(id: self?.channelName ?? "")?.deleteScenes()
                 self?.navigationController?.popViewController(animated: true)
             }
         } else {

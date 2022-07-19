@@ -68,18 +68,18 @@ class BORCreateRoomController: BaseViewController {
     private func onTapCreateRoomButton(_ sender: UIButton) {
         let text = textField.text ?? ""
         guard !text.isEmpty else {
-            showHUDError(error: "Cant_be_empty".localized)
+            ToastView.show(text: "Cant_be_empty".localized)
             return
         }
         guard text.count < 11 else {
-            showHUDError(error: "Over_length_limit".localized)
+            ToastView.show(text: "Over_length_limit".localized)
             return
         }
         guard !text.isChinese(str: text) else {
-            showHUDError(error: "Chinese_not_supported".localized)
+            ToastView.show(text: "Chinese_not_supported".localized)
             return
         }
-        showWaitHUD(title: "")
+        ToastView.showWait(text: "loading".localized, view: view)
         var itemModel = BORLiveModel()
         itemModel.id = text.trimmingCharacters(in: .whitespacesAndNewlines)
         itemModel.backgroundId = String(format: "portrait%02d", Int.random(in: 1...2))
@@ -89,9 +89,9 @@ class BORCreateRoomController: BaseViewController {
             let roomDetailVC = BORRoomDetailController(channelName: self.textField.text ?? "",
                                                        ownerId: UserInfo.uid)
             self.navigationController?.pushViewController(roomDetailVC, animated: true)
-            self.hideHUD()
+            ToastView.hidden()
         } fail: { error in
-            self.hideHUD()
+            ToastView.hidden()
             LogUtils.log(message: "join scene error == \(error.localizedDescription)", level: .error)
         }
 

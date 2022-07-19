@@ -122,7 +122,8 @@ class LiveBaseView: UIView {
     }
     
     func sendMessage(message: String, messageType: ChatMessageType) {
-        let model = ChatMessageModel(message: message, messageType: messageType)
+        var model = ChatMessageModel(content: message, messageType: messageType)
+        model.userName = UserInfo.uid
         chatView.sendMessage(messageModel: model)
     }
     
@@ -135,22 +136,30 @@ class LiveBaseView: UIView {
         liveCanvasView.dataArray = canvasDataArray
     }
     
+    func leave(channelName: String) {
+        onlineView.delete(channelName: channelName)
+        SyncUtil.scene(id: channelName)?.unsubscribe(key: SYNC_MANAGER_GIFT_INFO)
+        SyncUtil.scene(id: channelName)?.unsubscribe(key: SYNC_SCENE_ROOM_MESSAGE_INFO)
+        SyncUtil.scene(id: channelName)?.unsubscribe(key: SYNC_SCENE_ROOM_USER_COLLECTION)
+    }
+    
     /// 监听礼物
     func subscribeGift(channelName: String, type: RecelivedType) {
         SyncUtil.scene(id: channelName)?.subscribe(key: SYNC_MANAGER_GIFT_INFO, onCreated: { object in
-            
+
         }, onUpdated: { object in
             LogUtils.log(message: "onUpdated gift == \(String(describing: object.toJson()))", level: .info)
-            guard let model = JSONObject.toModel(LiveGiftModel.self, value: object.toJson()) else { return }
+            guard let userModel = JSONObject.toModel(LiveGiftModel.self, value: object.toJson()) else { return }
             if type == .me {
                 self.playGifView.isHidden = false
-                self.playGifView.loadGIFName(gifName: model.gifName)
-                let model = ChatMessageModel(message: model.userId + "i_gave_one_away".localized + model.title, messageType: .message)
+                self.playGifView.loadGIFName(gifName: userModel.gifName)
+                var model = ChatMessageModel(content: "i_gave_one_away".localized + userModel.title, messageType: .message)
+                model.userName = userModel.userId
                 self.chatView.sendMessage(messageModel: model)
             }
-            self.onReceivedGiftClosure?(model, type)
+            self.onReceivedGiftClosure?(userModel, type)
         }, onDeleted: { object in
-            
+
         }, onSubscribed: {
             LogUtils.log(message: "subscribe gift type == \(type)", level: .info)
         }, fail: { error in
@@ -226,9 +235,12 @@ class LiveBaseView: UIView {
         // 聊天发送
         bottomView.onTapChatButtonClosure = { [weak self] message in
             guard let self = self else { return }
-            let model = ChatMessageModel(message: message, messageType: .message)
-            self.chatView.sendMessage(messageModel: model)
+            var model = ChatMessageModel(content: message, messageType: .message)
+            model.userName = UserInfo.uid
             self.onTapSendMessageClosure?(model)
+            SyncUtil.scene(id: self.channelName)?
+                .collection(className: SYNC_SCENE_ROOM_MESSAGE_INFO)
+                .add(data: JSONObject.toJson(model), success: nil, fail: nil)
         }
         // 点击聊天消息
         chatView.didSelectRowAt = { [weak self] messageModel in
@@ -285,6 +297,10 @@ class LiveBaseView: UIView {
             }
         }
         subscribeGift(channelName: channelName, type: .me)
+        
+        chatView.subscribeMessage(channelName: channelName)
+        
+        onlineView.getUserInfo(channelName: channelName)
     }
     
     private func setupUI() {

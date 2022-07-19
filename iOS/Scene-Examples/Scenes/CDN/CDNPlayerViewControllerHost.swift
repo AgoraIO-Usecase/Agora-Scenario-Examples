@@ -8,9 +8,9 @@
 import UIKit
 import AgoraRtcKit
 
-class SuperAppPlayerViewControllerHost: BaseViewController {
-    let mainView = SuperAppMainView()
-    var syncUtil: SuperAppSyncUtil!
+class CDNPlayerViewControllerHost: BaseViewController {
+    let mainView = CDNMainView()
+    var syncUtil: CDNSyncUtil!
     var pushUrlString: String!
     var agoraKit: AgoraRtcEngineKit!
     var config: Config!
@@ -26,9 +26,9 @@ class SuperAppPlayerViewControllerHost: BaseViewController {
         self.mode = config.mode
         self.pushUrlString = "rtmp://examplepush.agoramde.agoraio.cn/live/" + config.sceneId
         self.allowChangeToPushMode = mode == .push
-        let userId = SupperAppStorageManager.uuid
-        let userName = SupperAppStorageManager.userName
-        self.syncUtil = SuperAppSyncUtil(appId: config.appId,
+        let userId = CDNStorageManager.uuid
+        let userName = CDNStorageManager.userName
+        self.syncUtil = CDNSyncUtil(appId: config.appId,
                                          sceneId: config.sceneId,
                                          sceneName: config.sceneName,
                                          userId: userId,
@@ -56,8 +56,8 @@ class SuperAppPlayerViewControllerHost: BaseViewController {
         mainView.frame = view.bounds
         mainView.delegate = self
         mainView.setPersonViewHidden(hidden: false)
-        let imageName = SupperAppStorageManager.uuid.headImageName
-        let info = SuperAppMainView.Info(title: config.sceneName + "(\(config.sceneId))",
+        let imageName = CDNStorageManager.uuid.headImageName
+        let info = CDNMainView.Info(title: config.sceneName + "(\(config.sceneId))",
                                  imageName: imageName,
                                  userCount: 0)
         mainView.update(info: info)
@@ -103,31 +103,31 @@ class SuperAppPlayerViewControllerHost: BaseViewController {
 }
 
 // MRK: - SuperAppSyncUtilDelegate
-extension SuperAppPlayerViewControllerHost: SuperAppSyncUtilDelegate {
-    func superAppSyncUtilDidPkCancleForOther(util: SuperAppSyncUtil) {
+extension CDNPlayerViewControllerHost: CDNSyncUtilDelegate {
+    func CDNSyncUtilDidPkCancleForOther(util: CDNSyncUtil) {
         LogUtils.log(message: "下麦", level: .info)
         if allowChangeToPushMode { changeToPush() }
         else { mainView.setRemoteViewHidden(hidden: true) }
     }
     
-    func superAppSyncUtilDidPkAcceptForMe(util: SuperAppSyncUtil, userIdPK: String) {}
-    func superAppSyncUtilDidPkCancleForMe(util: SuperAppSyncUtil) {}
-    func superAppSyncUtilDidPkAcceptForOther(util: SuperAppSyncUtil) {}
-    func superAppSyncUtilDidSceneClose(util: SuperAppSyncUtil) {}
+    func CDNSyncUtilDidPkAcceptForMe(util: CDNSyncUtil, userIdPK: String) {}
+    func CDNSyncUtilDidPkCancleForMe(util: CDNSyncUtil) {}
+    func CDNSyncUtilDidPkAcceptForOther(util: CDNSyncUtil) {}
+    func CDNSyncUtilDidSceneClose(util: CDNSyncUtil) {}
 }
 
 // MARK: - UI Event MainViewDelegate
-extension SuperAppPlayerViewControllerHost: SuperAppMainViewDelegate {
-    func mainView(_ view: SuperAppMainView, didTap action: SuperAppMainView.Action) {
+extension CDNPlayerViewControllerHost: SuperAppMainViewDelegate {
+    func mainView(_ view: CDNMainView, didTap action: CDNMainView.Action) {
         switch action {
         case .member:
-            let inviteView = SuperAppInvitationView()
+            let inviteView = CDNInvitationView()
             inviteView.delegate = self
             inviteView.startFetch(manager: .init(syncUtil: syncUtil))
             AlertManager.show(view: inviteView, alertPostion: .bottom)
             return
         case .more:
-            let toolView = SuperAppToolView()
+            let toolView = CDNToolView()
             let open = getLocalAudioMuteState()
             toolView.setMicState(open: open)
             toolView.delegate = self
@@ -146,13 +146,13 @@ extension SuperAppPlayerViewControllerHost: SuperAppMainViewDelegate {
     }
 }
 
-extension SuperAppPlayerViewControllerHost: SuperAppToolViewDelegate, SuperAppInvitationViewDelegate {
-    func invitationView(_ view: SuperAppInvitationView, didSelected info: SuperAppInvitationView.Info) {
+extension CDNPlayerViewControllerHost: CDNToolViewDelegate, CDNInvitationViewDelegate {
+    func invitationView(_ view: CDNInvitationView, didSelected info: CDNInvitationView.Info) {
         changeToByPassPush()
         syncUtil.updatePKInfo(userIdPK: info.userId)
     }
     
-    func toolView(_ view: SuperAppToolView, didTap action: SuperAppToolView.Action) {
+    func toolView(_ view: CDNToolView, didTap action: CDNToolView.Action) {
         switch action {
         case .camera:
             switchCamera()
@@ -164,7 +164,7 @@ extension SuperAppPlayerViewControllerHost: SuperAppToolViewDelegate, SuperAppIn
 }
 
 // MARK: - Data Struct
-extension SuperAppPlayerViewControllerHost {
+extension CDNPlayerViewControllerHost {
     enum Mode: Int {
         /// 直推模式
         case push = 1
@@ -174,7 +174,7 @@ extension SuperAppPlayerViewControllerHost {
     
     struct Config {
         let appId: String
-        let roomItem: SuperAppRoomInfo
+        let roomItem: CDNRoomInfo
         
         var sceneId: String {
             return roomItem.roomId

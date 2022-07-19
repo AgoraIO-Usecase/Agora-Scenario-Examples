@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension SuperAppMainView {
+extension CDNMainView {
     class RemoteView: UIView {
         let renderView = UIView()
         let button = UIButton()

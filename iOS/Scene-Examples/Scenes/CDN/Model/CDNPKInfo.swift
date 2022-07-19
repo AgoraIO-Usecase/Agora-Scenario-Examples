@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SuperAppPKInfo: Codable {
+struct CDNPKInfo: Codable {
     /// 当前房间正在pk的用户id
     let userIdPK: String
     

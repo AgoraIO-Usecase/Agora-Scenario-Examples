@@ -9,6 +9,11 @@ import UIKit
 import Agora_Scene_Utils
 import AgoraRtcKit
 
+enum AgoraVoiceUserType {
+    case voiceChat
+    case club
+}
+
 class AgoraVoiceUsersView: UIView {
     var muteAudioClosure: ((Bool) -> Void)?
     
@@ -34,11 +39,13 @@ class AgoraVoiceUsersView: UIView {
     }()
     private var channelName: String = ""
     private var currentRole: AgoraClientRole = .audience
+    private var type: AgoraVoiceUserType = .club
     
-    init(channelName: String, role: AgoraClientRole) {
+    init(channelName: String, role: AgoraClientRole, type: AgoraVoiceUserType = .club) {
         super.init(frame: .zero)
         self.channelName = channelName
         self.currentRole = role
+        self.type = type
         setupUI()
         fetchAgoraVoiceUserInfoData()
     }
@@ -50,10 +57,16 @@ class AgoraVoiceUsersView: UIView {
     private func fetchAgoraVoiceUserInfoData() {
         SyncUtil.scene(id: channelName)?.collection(className: SYNC_MANAGER_AGORA_VOICE_USERS).get(success: { results in
             var tempArray = [Any]()
-            let datas = results.compactMap({ $0.toJson() })
+            var datas = results.compactMap({ $0.toJson() })
                 .compactMap({ JSONObject.toModel(AgoraVoiceUsersModel.self, value: $0 )})
                 .filter({ $0.status == .accept })
                 .sorted(by: { $0.timestamp < $1.timestamp })
+            datas = datas.map { item in
+                var model = item
+                model.isEnableVideo = self.type == .voiceChat
+                model.isEnableAudio = self.type == .voiceChat
+                return model
+            }
             tempArray += datas
             for _ in datas.count..<8 {
                 tempArray.append("")
@@ -126,8 +139,8 @@ class AgoraVoiceUsersView: UIView {
             self.fetchAgoraVoiceUserInfoData()
 
         }, onDeleted: { object in
-            guard let model = JSONObject.toModel(AgoraVoiceUsersModel.self, value: object.toJson()) else { return }
-            if model.userId == UserInfo.uid {
+            let dataArray = self.collectionView.dataArray as? [AgoraVoiceUsersModel]
+            if let model = dataArray?.filter({ $0.userId == UserInfo.uid }).first, model.objectId == object.getId() {
                 self.muteAudioClosure?(false)
             }
             self.fetchAgoraVoiceUserInfoData()

@@ -63,10 +63,10 @@ class AlertManager: NSObject {
             showAlertPostion(alertPostion: alertPostion, view: view)
         }
         //注册键盘出现通知
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name:  UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name:  UIApplication.keyboardWillShowNotification, object: nil)
         
         //注册键盘隐藏通知
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name:  UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name:  UIApplication.keyboardWillHideNotification, object: nil)
     }
 
     private static func showAlertPostion(alertPostion: AlertPosition, view: UIView) {
@@ -154,9 +154,11 @@ class AlertManager: NSObject {
     private static var originFrame:CGRect = .zero
     // 键盘显示
     @objc private static func keyboardWillShow(notification: Notification) {
-        originFrame = containerView!.frame
         let keyboardHeight = (notification.userInfo?["UIKeyboardBoundsUserInfoKey"] as? CGRect)?.height
         let y = cl_screenHeight - (keyboardHeight ?? 304) - containerView!.frame.height
+        if originFrame.origin.y != y {
+            originFrame = containerView!.frame
+        }
         UIView.animate(withDuration: 0.25) {
             containerView?.frame.origin.y = y
         }
@@ -165,6 +167,10 @@ class AlertManager: NSObject {
     @objc private static func keyboardWillHide(notification: Notification) {
         UIView.animate(withDuration: 0.25) {
             containerView?.frame = originFrame
+        } completion: { _ in
+            if currentPosition == .bottom {
+                hiddenView()
+            }
         }
     }
 }

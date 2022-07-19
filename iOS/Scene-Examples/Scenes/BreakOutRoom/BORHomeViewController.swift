@@ -31,7 +31,7 @@ class BORHomeViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        showWaitHUD()
+        ToastView.showWait(text: "loading".localized, view: view)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -41,14 +41,14 @@ class BORHomeViewController: BaseViewController {
     
     private func getData() {
         SyncUtil.fetchAll { objects in
-            self.hideHUD()
+            ToastView.hidden()
             self.tableView.endRefreshing()
             print("result == \(objects.compactMap{ $0.toJson() })")
             self.dataArray = objects.compactMap({ $0.toJson() }).compactMap({ JSONObject.toModel(BORLiveModel.self, value: $0 )})
             self.tableView.dataArray = self.dataArray
         } fail: { error in
             LogUtils.log(message: "get all data error == \(error.localizedDescription)", level: .error)
-            self.hideHUD()
+            ToastView.hidden()
             self.tableView.endRefreshing()
         }
     }

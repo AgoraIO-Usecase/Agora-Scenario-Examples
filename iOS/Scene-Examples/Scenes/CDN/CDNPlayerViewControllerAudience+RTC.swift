@@ -8,7 +8,7 @@
 import UIKit
 import AgoraRtcKit
 
-extension SuperAppPlayerViewControllerAudience {
+extension CDNPlayerViewControllerAudience {
     var videoSize: CGSize { .init(width: 640, height: 360) }
     
     func initMediaPlayer(useAgoraCDN: Bool) {
@@ -99,7 +99,7 @@ extension SuperAppPlayerViewControllerAudience {
 }
 
 // MARK: - AgoraRtcEngineDelegate
-extension SuperAppPlayerViewControllerAudience: AgoraRtcEngineDelegate {
+extension CDNPlayerViewControllerAudience: AgoraRtcEngineDelegate {
     
     func rtcEngine(_ engine: AgoraRtcEngineKit,
                    didJoinChannel channel: String,
@@ -119,7 +119,7 @@ extension SuperAppPlayerViewControllerAudience: AgoraRtcEngineDelegate {
 }
 
 // MARK: - AgoraRtcMediaPlayerDelegate
-extension SuperAppPlayerViewControllerAudience: AgoraRtcMediaPlayerDelegate {
+extension CDNPlayerViewControllerAudience: AgoraRtcMediaPlayerDelegate {
     func agoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol,
                              didChangedTo state: AgoraMediaPlayerState,
                              error: AgoraMediaPlayerError) {

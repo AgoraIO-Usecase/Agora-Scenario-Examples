@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SuperAppUserInfo: Codable {
+struct CDNUserInfo: Codable {
     let userId: String
     let userName: String
     

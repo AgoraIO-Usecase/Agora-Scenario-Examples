@@ -154,7 +154,9 @@ class LiveBottomView: UIView {
     private func onTapChatButton() {
 //        ToastView.show(text: "没实现")
         let chatMessageView = LiveChatMessageView()
-        chatMessageView.onTapKeyboardSendClosure = onTapChatButtonClosure
+        chatMessageView.onTapKeyboardSendClosure = { [weak self] text in
+            self?.onTapChatButtonClosure?(text)
+        }
         AlertManager.show(view: chatMessageView, alertPostion: .bottom)
     }
     
