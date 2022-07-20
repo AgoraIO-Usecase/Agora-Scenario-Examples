@@ -425,7 +425,7 @@ public class RoomManager {
         sceneReference.collection(SYNC_MANAGER_MESSAGE_INFO).subscribe(listener);
     }
 
-    public void subscribeUserInfoEvent(String roomId, DataCallback<UserInfo> addOrUpdate, DataCallback<UserInfo> delete) {
+    public void subscribeUserInfoEvent(String roomId, DataCallback<UserInfo> addOrUpdate, DataCallback<String> delete) {
         checkInitialized();
         SceneReference sceneReference = sceneMap.get(roomId);
         if (sceneReference == null) {
@@ -452,10 +452,8 @@ public class RoomManager {
                 @Override
                 public void onDeleted(IObject item) {
                     super.onDeleted(item);
-                    UserInfo userInfo = item.toObject(UserInfo.class);
-                    userInfo.objectId = item.getId();
                     if (delete != null) {
-                        delete.onObtained(userInfo);
+                        delete.onObtained(item.getId());
                     }
                 }
             };

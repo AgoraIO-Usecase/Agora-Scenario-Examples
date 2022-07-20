@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
@@ -168,6 +169,7 @@ public class RoomViewModel extends ViewModel implements RoomApi {
             currentSceneRef.collection(RoomConstant.globalSubRoom).add(map, new Sync.DataItemCallback() {
                 @Override
                 public void onSuccess(IObject result) {
+                    pendingSubRoom.setId(result.getId());
                 }
 
                 @Override
@@ -234,13 +236,18 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
                 @Override
                 public void onUpdated(IObject item) {
-
+                    try {
+                        SubRoomInfo subRoomInfo = item.toObject(SubRoomInfo.class);
+                        onSubRoomAdded(subRoomInfo);
+                        _viewStatus.postValue(new ViewStatus.Done());
+                    } catch (Exception ignored) {
+                    }
                 }
 
                 @Override
                 public void onDeleted(IObject item) {
                     try {
-                        onSubRoomDeleted(item.toObject(SubRoomInfo.class));
+                        onSubRoomDeleted(item.getId());
                     } catch (Exception ignored) {
                     }
                 }
@@ -262,9 +269,17 @@ public class RoomViewModel extends ViewModel implements RoomApi {
         }
     }
 
-    private void onSubRoomDeleted(@NonNull SubRoomInfo subRoomInfo) {
+    private void onSubRoomDeleted(String id) {
         List<SubRoomInfo> res = _subRoomList.getValue();
-        if (res != null && res.remove(subRoomInfo)) {
+        if(res != null){
+            Iterator<SubRoomInfo> iterator = res.iterator();
+            while (iterator.hasNext()){
+                SubRoomInfo next = iterator.next();
+                if(id.equals(next.getId())){
+                    iterator.remove();
+                    break;
+                }
+            }
             Collections.sort(res);
             _subRoomList.postValue(res);
         }

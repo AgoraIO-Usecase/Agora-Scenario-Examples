@@ -61,7 +61,7 @@ public class RoomDetailActivity extends AppCompatActivity {
         updateUserView(data);
         roomManager.getUserInfoList(roomInfo.roomId, userInfoDataListCallback);
     });
-    private final RoomManager.DataCallback<RoomManager.UserInfo> userDeleteCallback = data -> runOnUiThread(() -> {
+    private final RoomManager.DataCallback<String> userDeleteCallback = data -> runOnUiThread(() -> {
         downSeat(data);
         roomManager.getUserInfoList(roomInfo.roomId, userInfoDataListCallback);
     });
@@ -392,7 +392,7 @@ public class RoomDetailActivity extends AppCompatActivity {
                         .setPositiveButton(R.string.common_confirm, (dialog, which) -> dialog.dismiss())
                         .show();
             } else if (userInfo.status == RoomManager.UserStatus.end) {
-                downSeat(userInfo);
+                downSeat(userInfo.objectId);
             }
         } else {
             // 房客
@@ -421,7 +421,7 @@ public class RoomDetailActivity extends AppCompatActivity {
 
                     mBinding.bottomView.setFun1Visible(true).setFun2Visible(true).setFun3Visible(true);
                 } else if (userInfo.status == RoomManager.UserStatus.end) {
-                    downSeat(userInfo);
+                    downSeat(userInfo.objectId);
 
                     ChannelMediaOptions options = new ChannelMediaOptions();
                     options.clientRoleType = Constants.CLIENT_ROLE_AUDIENCE;
@@ -436,7 +436,7 @@ public class RoomDetailActivity extends AppCompatActivity {
                 if (userInfo.status == RoomManager.UserStatus.accept) {
                     upSeat(userInfo);
                 } else if (userInfo.status == RoomManager.UserStatus.end) {
-                    downSeat(userInfo);
+                    downSeat(userInfo.objectId);
                 }
             }
         }
@@ -465,9 +465,9 @@ public class RoomDetailActivity extends AppCompatActivity {
         userSeatBinding.seatUserMute.setVisibility(userInfo.isEnableAudio ? View.GONE : View.VISIBLE);
     }
 
-    private void downSeat(RoomManager.UserInfo userInfo) {
+    private void downSeat(String objectId) {
         // the user has seat or not?
-        VoiceRoomDetailSeatItemBinding userSeatBinding = getUserSeat(userInfo);
+        VoiceRoomDetailSeatItemBinding userSeatBinding = getUserSeatByObjectId(objectId);
 
         // not found sead
         if (userSeatBinding == null) {
@@ -485,6 +485,20 @@ public class RoomDetailActivity extends AppCompatActivity {
             Object tag = seatItemBinding.getRoot().getTag();
             if (tag instanceof RoomManager.UserInfo) {
                 if (((RoomManager.UserInfo) tag).userId.equals(userInfo.userId)) {
+                    userSeatBinding = seatItemBinding;
+                    break;
+                }
+            }
+        }
+        return userSeatBinding;
+    }
+
+    private VoiceRoomDetailSeatItemBinding getUserSeatByObjectId(String objectId) {
+        VoiceRoomDetailSeatItemBinding userSeatBinding = null;
+        for (VoiceRoomDetailSeatItemBinding seatItemBinding : seatItemBindings) {
+            Object tag = seatItemBinding.getRoot().getTag();
+            if (tag instanceof RoomManager.UserInfo) {
+                if (((RoomManager.UserInfo) tag).objectId.equals(objectId)){
                     userSeatBinding = seatItemBinding;
                     break;
                 }

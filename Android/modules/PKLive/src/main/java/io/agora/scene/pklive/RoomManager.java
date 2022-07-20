@@ -86,6 +86,9 @@ public class RoomManager {
 
             @Override
             public void onFail(SyncManagerException exception) {
+                if(error != null){
+                    error.onObtained(exception);
+                }
                 isInitialized = false;
             }
         });
