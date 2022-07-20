@@ -146,8 +146,8 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
         mMessageAdapter.addMessage(data);
     });
 
-    private final RoomManager.DataCallback<RoomManager.UserInfo> userDeleteCallback = data -> runOnUiThread(() -> {
-        removeUserSeatLayout(data.userId);
+    private final RoomManager.DataCallback<String> userDeleteCallback = data -> runOnUiThread(() -> {
+        removeUserSeatLayout(data);
     });
 
     @Override
@@ -450,7 +450,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                 }
                 break;
             case RoomManager.Status.END:
-                removeUserSeatLayout(data.userId);
+                removeUserSeatLayout(data.objectId);
                 rtcEngine.muteRemoteAudioStream(Integer.parseInt(data.userId), true);
         }
     }
@@ -473,16 +473,18 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
         return idleSeatLayout;
     }
 
-    private void removeUserSeatLayout(String userId) {
+    private void removeUserSeatLayout(String objectId) {
         if(isDestroyed()){
             return;
         }
+        String userId = "";
         for (ClubRoomDetailSeatItemBinding seatLayout : seatLayouts) {
             if (seatLayout == null) {
                 continue;
             }
             Object tag = seatLayout.getRoot().getTag();
-            if (tag instanceof RoomManager.UserInfo && ((RoomManager.UserInfo) tag).userId.equals(userId)) {
+            if (tag instanceof RoomManager.UserInfo && ((RoomManager.UserInfo) tag).objectId.equals(objectId)) {
+                userId = ((RoomManager.UserInfo) tag).userId;
                 seatLayout.videoContainer.removeAllViews();
                 seatLayout.ivCover.setImageDrawable(null);
                 seatLayout.ivCamOff.setVisibility(View.GONE);
@@ -490,7 +492,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                 break;
             }
         }
-        if(userId.equals(roomInfo.userId)){
+        if (userId.equals(roomInfo.userId)) {
             // 房主已退出
             mediaPlayer.stop();
             new AlertDialog.Builder(this)

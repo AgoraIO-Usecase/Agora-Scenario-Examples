@@ -406,7 +406,7 @@ public class RoomManager {
 
     public void subscribeUserChangeEvent(String roomId,
                                          DataCallback<UserInfo> addOrUpdateCallback,
-                                         DataCallback<UserInfo> deleteCallback) {
+                                         DataCallback<String> deleteCallback) {
         checkInitialized();
         SceneReference sceneReference = sceneMap.get(roomId);
         if (sceneReference == null) {
@@ -436,11 +436,8 @@ public class RoomManager {
             @Override
             public void onDeleted(IObject item) {
                 super.onDeleted(item);
-                UserInfo userInfo = item.toObject(UserInfo.class);
-                userInfo.objectId = item.getId();
-                userInfo.status = Status.END;
                 if (deleteCallback != null) {
-                    deleteCallback.onObtained(userInfo);
+                    deleteCallback.onObtained(item.getId());
                 }
             }
         };
@@ -694,7 +691,7 @@ public class RoomManager {
     }
 
     public static class UserInfo {
-        private String objectId;
+        public String objectId;
         public String avatar = String.format(Locale.US, "portrait%02d", RandomUtil.randomId(1, 14));
         public String userId = getCacheUserId();
         public String userName = "User-" + userId;

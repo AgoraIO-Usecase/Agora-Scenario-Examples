@@ -7,19 +7,28 @@ import java.util.Objects;
 import io.agora.example.base.BaseUtil;
 
 public class SubRoomInfo implements Comparable<SubRoomInfo> {
+    private String id;
     // 子房间名
     private @NonNull final String subRoom;
     // 13位时间戳
     private @NonNull final String createTime;
 
-    public SubRoomInfo(@NonNull String subRoom) {
+    public SubRoomInfo( @NonNull String subRoom) {
         this.subRoom = subRoom;
         this.createTime = String.valueOf(System.currentTimeMillis());
     }
 
-    public SubRoomInfo(@NonNull String userId, @NonNull String createTime) {
+    public SubRoomInfo( @NonNull String userId, @NonNull String createTime) {
         this.subRoom = userId;
         this.createTime = createTime;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
     }
 
     @NonNull

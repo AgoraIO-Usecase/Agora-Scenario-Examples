@@ -178,7 +178,7 @@ public class HostDetailActivity extends AppCompatActivity {
                     OnlineUserListDialog.AbsListItemAdapter<RoomManager.RoomInfo> adapter = new OnlineUserListDialog.AbsListItemAdapter<RoomManager.RoomInfo>() {
                         @Override
                         protected void onItemUpdate(BindingViewHolder<OnlineUserListDialogItemBinding> holder, int position, RoomManager.RoomInfo item) {
-                            holder.binding.tvName.setText("User-" + item.userId);
+                            holder.binding.tvName.setText(item.roomName + "-" + item.roomId);
                             holder.binding.ivIcon.setImageResource(RandomUtil.getIconById(item.roomId));
                             holder.binding.tvStatus.setText(R.string.online_user_list_dialog_invite);
                             holder.binding.tvStatus.setEnabled(true);
@@ -319,8 +319,10 @@ public class HostDetailActivity extends AppCompatActivity {
             mBinding.pkVideoContainer.removeAllViews();
             mBinding.ivPkIcon.setVisibility(View.GONE);
             mBinding.btnStopPk.setVisibility(View.GONE);
-            rtcEngine.leaveChannelEx(exChannelConnection);
-            exChannelConnection = null;
+            if(exChannelConnection != null){
+                rtcEngine.leaveChannelEx(exChannelConnection);
+                exChannelConnection = null;
+            }
             roomManager.unSubscribePKApplyInfoEvent(data.targetRoomId, exPkApplyInfoModelDataCallback);
         }
 
