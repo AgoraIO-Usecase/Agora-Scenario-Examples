@@ -99,18 +99,18 @@ class LiveRoomListController: BaseViewController {
     
     @objc
     private func onTapCreateLiveButton() {
-        let model = dataArray.filter({ $0.userId == UserInfo.uid }).first
-        if model != nil {
-            showAlert(title: "you_have_created_the_room_will_jump_into_you".localized, message: "") {
-                let params = JSONObject.toJson(model)
-                SyncUtil.joinScene(id: model?.roomId ?? "",
-                                   userId: model?.userId ?? "",
-                                   property: params, success: { result in
-                    self.joinSceneHandler(result: result)
-                })
-            }
-            return
-        }
+//        let model = dataArray.filter({ $0.userId == UserInfo.uid }).first
+//        if model != nil {
+//            showAlert(title: "you_have_created_the_room_will_jump_into_you".localized, message: "") {
+//                let params = JSONObject.toJson(model)
+//                SyncUtil.joinScene(id: model?.roomId ?? "",
+//                                   userId: model?.userId ?? "",
+//                                   property: params, success: { result in
+//                    self.joinSceneHandler(result: result)
+//                })
+//            }
+//            return
+//        }
         switch sceneType {
         case .singleLive:
             let createLiveVC = LiveBroadcastingCreateController()

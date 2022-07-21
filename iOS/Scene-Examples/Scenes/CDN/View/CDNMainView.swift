@@ -13,7 +13,7 @@ protocol SuperAppMainViewDelegate: NSObjectProtocol {
 
 class CDNMainView: UIView {
     private let personCountView = CDNRoomListViewCell.IconTextView()
-    private let leftView = LeftView()
+    private let leftView = LiveAvatarView()
     private let moreButton = UIButton()
     private let closeButton = UIButton()
     private let localView = UIView()
@@ -48,8 +48,6 @@ class CDNMainView: UIView {
         closeButton.setImage(.init(named: "icon-round-close"), for: .normal)
         personCountView.imageView.image = UIImage(named: "icon-audience")
         personCountView.label.textColor = .white
-        leftView.imageView.layer.cornerRadius = 8
-        leftView.imageView.layer.masksToBounds = true
         
         addSubview(localView)
         addSubview(remoteView)
@@ -138,8 +136,7 @@ class CDNMainView: UIView {
     
     func update(info: Info) {
         self.info = info
-        leftView.imageView.image = UIImage(named: info.imageName)
-        leftView.titleLabel.text = info.title
+        leftView.setName(with: info.title)
         personCountView.label.text = ""
     }
     

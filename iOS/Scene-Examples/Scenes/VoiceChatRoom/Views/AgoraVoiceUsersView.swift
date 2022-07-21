@@ -140,7 +140,7 @@ class AgoraVoiceUsersView: UIView {
 
         }, onDeleted: { object in
             let dataArray = self.collectionView.dataArray as? [AgoraVoiceUsersModel]
-            if let model = dataArray?.filter({ $0.userId == UserInfo.uid }).first, model.objectId == object.getId() {
+            if let models = dataArray?.filter({ $0.userId == UserInfo.uid && $0.objectId == object.getId() }), models.isEmpty == false {
                 self.muteAudioClosure?(false)
             }
             self.fetchAgoraVoiceUserInfoData()

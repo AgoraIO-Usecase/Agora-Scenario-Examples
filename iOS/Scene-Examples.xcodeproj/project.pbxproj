@@ -84,7 +84,6 @@
 		E79C260D273B689B00909CD4 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2600273B689A00909CD4 /* Config.swift */; };
 		E79C260E273B689B00909CD4 /* AgoraExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2601273B689A00909CD4 /* AgoraExtension.swift */; };
 		E79C260F273B689B00909CD4 /* JSONObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2602273B689A00909CD4 /* JSONObject.swift */; };
-		E79C2610273B689B00909CD4 /* KeyCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2603273B689A00909CD4 /* KeyCenter.swift */; };
 		E79C2611273B689B00909CD4 /* SyncUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2604273B689A00909CD4 /* SyncUtil.swift */; };
 		E79C2612273B689B00909CD4 /* SegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2606273B689B00909CD4 /* SegmentView.swift */; };
 		E79C2613273B689B00909CD4 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2607273B689B00909CD4 /* UIColor+Extension.swift */; };
@@ -115,7 +114,6 @@
 		E7D30F102845DC4A0062CFE3 /* CDNToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EF72845DC4A0062CFE3 /* CDNToolView.swift */; };
 		E7D30F112845DC4A0062CFE3 /* CDNCreateLiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EF82845DC4A0062CFE3 /* CDNCreateLiveView.swift */; };
 		E7D30F122845DC4A0062CFE3 /* CDNCreateLiveView+CenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EF92845DC4A0062CFE3 /* CDNCreateLiveView+CenterView.swift */; };
-		E7D30F132845DC4A0062CFE3 /* CDNMainView+LeftView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EFA2845DC4A0062CFE3 /* CDNMainView+LeftView.swift */; };
 		E7D30F142845DC4A0062CFE3 /* CDNInvitationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EFB2845DC4A0062CFE3 /* CDNInvitationView.swift */; };
 		E7D30F152845DC4A0062CFE3 /* CDNRoomListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EFC2845DC4A0062CFE3 /* CDNRoomListView.swift */; };
 		E7D30F162845DC4A0062CFE3 /* CDNMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D30EFD2845DC4A0062CFE3 /* CDNMainView.swift */; };
@@ -149,6 +147,7 @@
 		E7EDBCC227A2B0F100E763A6 /* AgoraVoiceUsersModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCC127A2B0F100E763A6 /* AgoraVoiceUsersModel.swift */; };
 		E7EDBCC427A3927B00E763A6 /* AgoraVoiceInviteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCC327A3927B00E763A6 /* AgoraVoiceInviteView.swift */; };
 		E7EDBCC627A3BDCD00E763A6 /* AgoraVoiceChangeBGModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EDBCC527A3BDCD00E763A6 /* AgoraVoiceChangeBGModel.swift */; };
+		E7EEF1BF2887A02D00D9D2AE /* KeyCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2603273B689A00909CD4 /* KeyCenter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -283,7 +282,6 @@
 		E7D30EF72845DC4A0062CFE3 /* CDNToolView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDNToolView.swift; sourceTree = "<group>"; };
 		E7D30EF82845DC4A0062CFE3 /* CDNCreateLiveView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDNCreateLiveView.swift; sourceTree = "<group>"; };
 		E7D30EF92845DC4A0062CFE3 /* CDNCreateLiveView+CenterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDNCreateLiveView+CenterView.swift"; sourceTree = "<group>"; };
-		E7D30EFA2845DC4A0062CFE3 /* CDNMainView+LeftView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDNMainView+LeftView.swift"; sourceTree = "<group>"; };
 		E7D30EFB2845DC4A0062CFE3 /* CDNInvitationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDNInvitationView.swift; sourceTree = "<group>"; };
 		E7D30EFC2845DC4A0062CFE3 /* CDNRoomListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDNRoomListView.swift; sourceTree = "<group>"; };
 		E7D30EFD2845DC4A0062CFE3 /* CDNMainView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDNMainView.swift; sourceTree = "<group>"; };
@@ -381,7 +379,6 @@
 		E7377D8B286ECB15008F6C62 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
-				E7377D8E286EE27B008F6C62 /* RoomList */,
 				E7D30EE92845DC4A0062CFE3 /* CDN */,
 				E79C25F2273B685100909CD4 /* BreakOutRoom */,
 				E7EDBCA727A0F94800E763A6 /* VoiceChatRoom */,
@@ -405,6 +402,7 @@
 				E79BEF3E273D3EF0009FA838 /* LiveToolView.swift */,
 				E79BEF42273E3709009FA838 /* LiveGiftView.swift */,
 				E710AE2E27A0F23300124356 /* ChangeRoomBgView.swift */,
+				E7377D8E286EE27B008F6C62 /* RoomList */,
 			);
 			path = CommonViews;
 			sourceTree = "<group>";
@@ -765,7 +763,6 @@
 				E7D30EF72845DC4A0062CFE3 /* CDNToolView.swift */,
 				E7D30EF82845DC4A0062CFE3 /* CDNCreateLiveView.swift */,
 				E7D30EF92845DC4A0062CFE3 /* CDNCreateLiveView+CenterView.swift */,
-				E7D30EFA2845DC4A0062CFE3 /* CDNMainView+LeftView.swift */,
 				E7D30EFB2845DC4A0062CFE3 /* CDNInvitationView.swift */,
 				E7D30EFC2845DC4A0062CFE3 /* CDNRoomListView.swift */,
 				E7D30EFD2845DC4A0062CFE3 /* CDNMainView.swift */,
@@ -997,7 +994,6 @@
 				E79C264E273D062400909CD4 /* LiveRoomListCell.swift in Sources */,
 				E7ECC56927E81A9E00EFA778 /* BaseNavigationController.swift in Sources */,
 				E79C264A273D003B00909CD4 /* LiveRoomInfo.swift in Sources */,
-				E79C2610273B689B00909CD4 /* KeyCenter.swift in Sources */,
 				E79C262D273BC0CA00909CD4 /* ToastView.swift in Sources */,
 				E7EDBCB227A1463700E763A6 /* AgoraVoiceBelCantoModel.swift in Sources */,
 				E7D30F1C2845DC4A0062CFE3 /* CDNPlayerViewControllerAudience+RTC.swift in Sources */,
@@ -1036,7 +1032,6 @@
 				E7D30F0A2845DC4A0062CFE3 /* CDNSyncUtil.swift in Sources */,
 				E79C25E3273B67DB00909CD4 /* MainViewController.swift in Sources */,
 				E79C2612273B689B00909CD4 /* SegmentView.swift in Sources */,
-				E7D30F132845DC4A0062CFE3 /* CDNMainView+LeftView.swift in Sources */,
 				E757E6A5281AAE6B0017D5B9 /* RtmSyncManager+ISyncManager.swift in Sources */,
 				E7377D94286EEA38008F6C62 /* VoiceChatRoomCreateController.swift in Sources */,
 				E79BEF662741FD43009FA838 /* LivePKController.swift in Sources */,
@@ -1055,6 +1050,7 @@
 				E79BEF6A27420933009FA838 /* PKApplyInfoModel.swift in Sources */,
 				E7ECC57127E8923200EFA778 /* Array+Extension.swift in Sources */,
 				E757E69E281AAE6B0017D5B9 /* AgoraSyncManager.swift in Sources */,
+				E7EEF1BF2887A02D00D9D2AE /* KeyCenter.swift in Sources */,
 				E79BEF35273D1304009FA838 /* LivePlayerCell.swift in Sources */,
 				E79BEF8527463FA5009FA838 /* BORHomeViewController.swift in Sources */,
 				E7D46063285C8244004F3C82 /* VideoCollectionViewCell.swift in Sources */,

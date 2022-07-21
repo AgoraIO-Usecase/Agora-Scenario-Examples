@@ -32,7 +32,6 @@ enum SceneType: String {
 
 struct MainModel {
     var title: String = ""
-    var desc: String = ""
     var imageNmae: String = ""
     var sceneType: SceneType = .singleLive
     
@@ -41,29 +40,31 @@ struct MainModel {
         var tempArray = [MainModel]()
         var model = MainModel()
         model.title = "Single_Broadcaster".localized
-        model.desc = "Single_Broadcaster".localized
         model.imageNmae = "LiveSingle"
         model.sceneType = .singleLive
         tempArray.append(model)
         
         model = MainModel()
         model.title = "sound_effect".localized
-        model.desc = "sound_effect".localized
         model.imageNmae = "VideoCall"
+        model.sceneType = .voiceChatRoom
+        tempArray.append(model)
+
+        model = MainModel()
+        model.title = "VoiceChatRoom".localized
+        model.imageNmae = "Chatroom"
         model.sceneType = .voiceChatRoom
         tempArray.append(model)
         
         model = MainModel()
         model.title = "PK_Live".localized
-        model.desc = "anchors_of_two_different_live_broadcast_rooms".localized
         model.imageNmae = "LivePK"
         model.sceneType = .pkApply
         tempArray.append(model)
 
         model = MainModel()
-        model.title = "VoiceChatRoom".localized
-        model.desc = "融合CDN"
-        model.imageNmae = "Chatroom"
+        model.title = "CDN".localized
+        model.imageNmae = "VideoCall"
         model.sceneType = .cdn
         tempArray.append(model)
         dataArray.append(tempArray)
@@ -71,7 +72,6 @@ struct MainModel {
         tempArray = [MainModel]()
         model = MainModel()
         model.title = "breakoutroom".localized
-        model.desc = "person_meetings_small_conference_rooms".localized
         model.imageNmae = "BreakoutRoom"
         model.sceneType = .breakoutRoom
         tempArray.append(model)
