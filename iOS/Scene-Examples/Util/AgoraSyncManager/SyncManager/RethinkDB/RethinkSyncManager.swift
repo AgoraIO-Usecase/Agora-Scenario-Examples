@@ -31,7 +31,8 @@ enum SocketType: String {
 }
 
 public class RethinkSyncManager: NSObject {
-    private let SOCKET_URL: String = "wss://test-rethinkdb-msg.bj2.agoralab.co"
+//    private let SOCKET_URL: String = "wss://test-rethinkdb-msg.bj2.agoralab.co"
+    private let SOCKET_URL: String = "wss://rethinkdb-msg.bj2.agoralab.co"
     private var timer: Timer?
     var socket: SRWebSocket?
     var connectBlock: SuccessBlockInt?
