@@ -35,7 +35,7 @@ public class LiveRoomUserView extends RelativeLayout {
     private View mTotalLayout;
 
     private int leftestUserIconId;
-    private int userIconMaxCount = 4;
+    private int userIconMaxCount = 3;
 
     public LiveRoomUserView(Context context) {
         this(context, null);
@@ -154,6 +154,11 @@ public class LiveRoomUserView extends RelativeLayout {
             e.printStackTrace();
         }
         addUserIconInner(drawable, tag);
+    }
+
+    public void removeAllUserIcon(){
+        mIconLayout.removeAllViews();
+        leftestUserIconId = View.NO_ID;
     }
 
     public void addUserIcon(@DrawableRes int drawableId, Object tag){

@@ -2,12 +2,20 @@ package io.agora.scene.singlehostlive;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.SurfaceView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.List;
+
+import io.agora.rtc2.ChannelMediaOptions;
+import io.agora.rtc2.IRtcEngineEventHandler;
+import io.agora.rtc2.RtcEngine;
+import io.agora.rtc2.video.CameraCapturerConfiguration;
+import io.agora.rtc2.video.VideoCanvas;
 import io.agora.scene.singlehostlive.databinding.SingleHostLiveHostDetailActivityBinding;
 import io.agora.uiwidget.function.GiftAnimPlayDialog;
 import io.agora.uiwidget.function.LiveRoomMessageListView;
@@ -16,18 +24,18 @@ import io.agora.uiwidget.function.TextInputDialog;
 import io.agora.uiwidget.utils.StatusBarUtil;
 
 public class HostDetailActivity extends AppCompatActivity {
-    private final RtcManager rtcManager = new RtcManager();
     private final RoomManager roomManager = RoomManager.getInstance();
+    private RtcEngine rtcEngine;
 
     private SingleHostLiveHostDetailActivityBinding mBinding;
     private RoomManager.RoomInfo roomInfo;
     private LiveRoomMessageListView.LiveRoomMessageAdapter<RoomManager.MessageInfo> mMessageAdapter;
     private final RoomManager.DataCallback<RoomManager.GiftInfo> giftInfoDataCallback = new RoomManager.DataCallback<RoomManager.GiftInfo>() {
         @Override
-        public void onSuccess(RoomManager.GiftInfo data) {
+        public void onObtained(RoomManager.GiftInfo data) {
             runOnUiThread(() -> {
                 mMessageAdapter.addMessage(new RoomManager.MessageInfo(
-                        data.userId,
+                        "User-" + data.userId,
                         getString(R.string.live_room_message_gift_prefix),
                         data.getIconId()
                 ));
@@ -37,10 +45,30 @@ public class HostDetailActivity extends AppCompatActivity {
                         .show();
             });
         }
-
+    };
+    private final RoomManager.DataCallback<RoomManager.MessageInfo> messageDataCallback = new RoomManager.DataCallback<RoomManager.MessageInfo>() {
         @Override
-        public void onFailed(Exception e) {
+        public void onObtained(RoomManager.MessageInfo data) {
+            runOnUiThread(() -> {
+                mMessageAdapter.addMessage(data);
+            });
+        }
+    };
 
+    private final RoomManager.DataListCallback<RoomManager.UserInfo> userListChange = new RoomManager.DataListCallback<RoomManager.UserInfo>() {
+        @Override
+        public void onObtained(List<RoomManager.UserInfo> dataList) {
+            runOnUiThread(() -> {
+                mBinding.hostUserView.setUserCount(dataList.size());
+                mBinding.hostUserView.removeAllUserIcon();
+                for (int i = 1; i <= 3; i++) {
+                    int index = dataList.size() - i;
+                    if(index >= 0){
+                        RoomManager.UserInfo userInfo = dataList.get(index);
+                        mBinding.hostUserView.addUserIcon(userInfo.getAvatarResId(), userInfo.userName);
+                    }
+                }
+            });
         }
     };
 
@@ -53,8 +81,7 @@ public class HostDetailActivity extends AppCompatActivity {
         roomInfo = (RoomManager.RoomInfo) getIntent().getSerializableExtra("roomInfo");
 
         // 房间信息
-        mBinding.hostNameView.setName(roomInfo.roomName);
-        mBinding.hostNameView.setIcon(roomInfo.getAndroidBgId());
+        mBinding.hostNameView.setName(roomInfo.roomName + "(" + roomInfo.roomId + ")");
 
         // 底部按钮栏
         mBinding.bottomView.setFun1Visible(false);
@@ -76,53 +103,91 @@ public class HostDetailActivity extends AppCompatActivity {
         mBinding.messageList.setAdapter(mMessageAdapter);
 
         initRoomManager();
-        initRtcManager();
+        initRtcEngine();
+
+        renderLocalPreview();
+        joinChannel();
     }
 
     private void showTextInputDialog() {
         new TextInputDialog(this)
-                .setOnSendClickListener((v, text) -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(RoomManager.getCacheUserId(), text)))
+                .setOnSendClickListener((v, text) -> {
+                    RoomManager.MessageInfo item = new RoomManager.MessageInfo(roomManager.getLocalUserInfo().userName, text);
+                    roomManager.sendMessage(roomInfo.roomId, item);
+                })
                 .show();
     }
 
     private void initRoomManager(){
-        roomManager.joinRoom(roomInfo.roomId, () -> roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, giftInfoDataCallback));
+        roomManager.joinRoom(roomInfo.roomId, () -> {
+            roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, giftInfoDataCallback);
+            roomManager.subscribeMessageReceiveEvent(roomInfo.roomId, messageDataCallback);
+            roomManager.subscribeUserChangeEvent(roomInfo.roomId, userListChange);
+            roomManager.getRoomUserList(roomInfo.roomId, userListChange);
+        });
     }
 
-    private void initRtcManager() {
-        rtcManager.init(this, getString(R.string.rtc_app_id), null);
-        rtcManager.renderLocalVideo(mBinding.fullVideoContainer, null);
-        rtcManager.joinChannel(roomInfo.roomId, roomInfo.userId, getString(R.string.rtc_app_token), true, new RtcManager.OnChannelListener() {
-            @Override
-            public void onError(int code, String message) {
-                runOnUiThread(() -> {
-                    Toast.makeText(HostDetailActivity.this, "code=" + code + ",message=" + message, Toast.LENGTH_LONG).show();
-                    finish();
-                });
+    private void initRtcEngine() {
+        try {
+            rtcEngine = RtcEngine.create(this,  getString(R.string.rtc_app_id), new IRtcEngineEventHandler(){
 
-            }
+                @Override
+                public void onError(int err) {
+                    super.onError(err);
+                    runOnUiThread(() -> {
+                        Toast.makeText(HostDetailActivity.this, "code=" + err + ",message=" + RtcEngine.getErrorDescription(err), Toast.LENGTH_LONG).show();
+                        finish();
+                    });
+                }
 
-            @Override
-            public void onJoinSuccess(int uid) {
-                runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
+                @Override
+                public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
+                    super.onJoinChannelSuccess(channel, uid, elapsed);
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo("User-" +  uid, getString(R.string.live_room_message_user_join_suffix))));
+                }
 
-            }
+                @Override
+                public void onUserJoined(int uid, int elapsed) {
+                    super.onUserJoined(uid, elapsed);
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo("User-" + uid, getString(R.string.live_room_message_user_join_suffix))));
+                }
 
-            @Override
-            public void onUserJoined(String channelId, int uid) {
-                runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
-            }
+                @Override
+                public void onUserOffline(int uid, int reason) {
+                    super.onUserOffline(uid, reason);
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo("User-" +  uid, getString(R.string.live_room_message_user_left_suffix))));
+                }
+            });
+            rtcEngine.setCameraCapturerConfiguration(new CameraCapturerConfiguration(Constants.cameraDirection));
+            rtcEngine.setVideoEncoderConfiguration(Constants.encoderConfiguration);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-            @Override
-            public void onUserOffline(String channelId, int uid) {
-                runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_left_suffix))));
-            }
-        });
+    private void joinChannel() {
+        ChannelMediaOptions options = new ChannelMediaOptions();
+        options.clientRoleType = io.agora.rtc2.Constants.CLIENT_ROLE_BROADCASTER;
+        options.publishCameraTrack = true;
+        options.publishAudioTrack = true;
+        rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, Integer.parseInt(RoomManager.getCacheUserId()), options);
+    }
+
+    private void renderLocalPreview() {
+        SurfaceView videoView = new SurfaceView(this);
+        mBinding.fullVideoContainer.removeAllViews();
+        mBinding.fullVideoContainer.addView(videoView);
+        rtcEngine.setupLocalVideo(new VideoCanvas(videoView, io.agora.rtc2.Constants.RENDER_MODE_HIDDEN));
+        rtcEngine.startPreview();
     }
 
     private void showSettingDialog() {
         new LiveToolsDialog(HostDetailActivity.this)
-                .addToolItem(LiveToolsDialog.TOOL_ITEM_ROTATE, false, (view, item) -> rtcManager.switchCamera())
+                .addToolItem(LiveToolsDialog.TOOL_ITEM_ROTATE, false, (view, item) -> {
+                    if(rtcEngine != null){
+                        rtcEngine.switchCamera();
+                    }
+                })
                 .show();
     }
 
@@ -142,7 +207,8 @@ public class HostDetailActivity extends AppCompatActivity {
     @Override
     public void finish() {
         roomManager.leaveRoom(roomInfo.roomId, true);
-        rtcManager.release();
+        rtcEngine.leaveChannel();
+        RtcEngine.destroy();
         super.finish();
     }
 

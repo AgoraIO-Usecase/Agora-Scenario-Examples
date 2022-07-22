@@ -2,8 +2,10 @@ package io.agora.scene.pklive;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,7 +22,7 @@ public class RoomListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pk_live_room_list_activity);
         StatusBarUtil.hideStatusBar(getWindow(), false);
-        RoomManager.getInstance().init(this, getString(R.string.rtm_app_id), getString(R.string.rtm_app_token));
+        RoomManager.getInstance().init(this, getString(R.string.rtm_app_id), getString(R.string.rtm_app_token), error -> runOnUiThread(() -> Toast.makeText(RoomListActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show()));
 
         RoomListView roomListView = findViewById(R.id.room_list_view);
         roomListView.setListAdapter(new RoomListView.AbsRoomListAdapter<RoomManager.RoomInfo>() {
@@ -30,6 +32,7 @@ public class RoomListActivity extends AppCompatActivity {
                 holder.bgView.setBackgroundResource(item.getAndroidBgId());
                 holder.participantsLayout.setVisibility(View.GONE);
                 holder.roomName.setText(item.roomName);
+                holder.roomInfo.setText(item.roomId);
                 holder.itemView.setOnClickListener(v -> gotoAudiencePage(item));
             }
 
@@ -53,8 +56,14 @@ public class RoomListActivity extends AppCompatActivity {
 
         TitleBar titleBar = findViewById(R.id.title_bar);
         titleBar.setTitleName(getResources().getString(R.string.pk_live_app_name), 0);
-        titleBar.setBgDrawable(io.agora.uiwidget.R.drawable.title_bar_bg_colorful);
+        titleBar.setDeliverVisible(false);
         titleBar.setUserIcon(false, 0, null);
+        titleBar.setBackIcon(!TextUtils.isEmpty(getIntent().getStringExtra("from")), R.drawable.title_bar_back_white, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         ImageView startLiveIv = findViewById(R.id.btn_start_live);
         startLiveIv.setOnClickListener(v -> gotoPreviewPage());

@@ -19,6 +19,7 @@
 
     <!-- Preview Control -->
     <string name="preview_control_name_hint">Channel Name</string>
+    <string name="preview_control_name_enter_hint">Please fill in a room name</string>
     <string name="preview_control_go_live_text">Go Live</string>
     <string name="preview_control_room_restriction">This is a testing product. Please refrain from using it commercially. The max duration per session is 10 minutes, and the max number of participants per channel is 10. </string>
 

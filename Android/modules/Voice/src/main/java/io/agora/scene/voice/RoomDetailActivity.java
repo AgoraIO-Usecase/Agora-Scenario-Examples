@@ -14,6 +14,10 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import java.util.Iterator;
 
+import io.agora.rtc2.ChannelMediaOptions;
+import io.agora.rtc2.Constants;
+import io.agora.rtc2.IRtcEngineEventHandler;
+import io.agora.rtc2.RtcEngine;
 import io.agora.scene.voice.databinding.VoiceRoomDetailActivityBinding;
 import io.agora.scene.voice.databinding.VoiceRoomDetailSeatItemBinding;
 import io.agora.scene.voice.widgets.BackgroundDialog;
@@ -33,7 +37,7 @@ import io.agora.uiwidget.utils.RandomUtil;
 import io.agora.uiwidget.utils.StatusBarUtil;
 
 public class RoomDetailActivity extends AppCompatActivity {
-    private final RtcManager rtcManager = new RtcManager();
+    private RtcEngine rtcEngine;
     private final RoomManager roomManager = RoomManager.getInstance();
 
     private RoomManager.RoomInfo roomInfo;
@@ -42,10 +46,30 @@ public class RoomDetailActivity extends AppCompatActivity {
     private final VoiceRoomDetailSeatItemBinding[] seatItemBindings = new VoiceRoomDetailSeatItemBinding[8];
     private LiveRoomMessageListView.LiveRoomMessageAdapter<RoomManager.MessageInfo> mMessageAdapter;
 
-    private final RoomManager.DataCallback<RoomManager.UserInfo> userAddOrUpdateCallback = data -> runOnUiThread(() -> updateUserView(data));
-    private final RoomManager.DataCallback<RoomManager.UserInfo> userDeleteCallback = data -> runOnUiThread(() -> downSeat(data));
+    private final RoomManager.DataListCallback<RoomManager.UserInfo> userInfoDataListCallback = dataList -> runOnUiThread(() -> {
+        mBinding.userView.setUserCount(dataList.size());
+        mBinding.userView.removeAllUserIcon();
+        for (int i = 1; i <= 3; i++) {
+            int index = dataList.size() - i;
+            if(index >= 0){
+                RoomManager.UserInfo userInfo = dataList.get(index);
+                mBinding.userView.addUserIcon(userInfo.getAvatarImgResId(), null);
+            }
+        }
+    });
+    private final RoomManager.DataCallback<RoomManager.UserInfo> userAddOrUpdateCallback = data -> runOnUiThread(() -> {
+        updateUserView(data);
+        roomManager.getUserInfoList(roomInfo.roomId, userInfoDataListCallback);
+    });
+    private final RoomManager.DataCallback<String> userDeleteCallback = data -> runOnUiThread(() -> {
+        downSeat(data);
+        roomManager.getUserInfoList(roomInfo.roomId, userInfoDataListCallback);
+    });
     private final RoomManager.DataCallback<RoomManager.RoomInfo> roomUpdateCallback = data -> runOnUiThread(() -> mBinding.ivBackground.setImageResource(data.getAndroidBgId()));
     private final RoomManager.DataCallback<String> roomDeleteCallback = data -> runOnUiThread(this::showRoomClosedDialog);
+    private final RoomManager.DataCallback<RoomManager.MessageInfo> messageInfoDataCallback = data -> runOnUiThread(() -> {
+        mMessageAdapter.addMessage(data);
+    });
 
     private TabScrollDialog soundEffectDialog;
     private TabScrollDialog voiceBeautyDialog;
@@ -63,8 +87,6 @@ public class RoomDetailActivity extends AppCompatActivity {
         boolean isRoomOwner = RoomManager.getCacheUserId().equals(roomInfo.userId);
 
         initDialogs();
-
-        mBinding.userView.randomUser(8, 3);
 
         // 房间信息
         mBinding.hostNameView.setName(roomInfo.roomName + "(" + roomInfo.roomId + ")");
@@ -90,7 +112,10 @@ public class RoomDetailActivity extends AppCompatActivity {
                     // 麦克风
                     boolean isActivated = mBinding.bottomView.isFun3Activated();
                     mBinding.bottomView.setFun3Activated(!isActivated);
-                    rtcManager.enableLocalAudio(!isActivated);
+                    roomManager.enableLocalAudio(roomInfo.roomId, !isActivated);
+                    if(rtcEngine != null){
+                        rtcEngine.enableLocalAudio(!isActivated);
+                    }
                 });
         mBinding.bottomView.setupInputText(true, v -> {
             // 弹出文本输入框
@@ -164,16 +189,73 @@ public class RoomDetailActivity extends AppCompatActivity {
     }
 
     private void initDialogs() {
-        soundEffectDialog = SoundEffectDialog.createDialog(this, rtcManager);
-        voiceBeautyDialog = VoiceBeautyDialog.createDialog(this, rtcManager);
-        bgMusicDialog = BgMusicDialog.createDialog(this, rtcManager);
+        soundEffectDialog = SoundEffectDialog.createDialog(this,
+                (item, position) -> {
+                    rtcEngine.setAudioEffectPreset(io.agora.scene.voice.Constants.VOICE_EFFECT_ROOM_ACOUSTICS[position]);
+                },
+                (item, position) -> {
+                    rtcEngine.setAudioEffectPreset(io.agora.scene.voice.Constants.VOICE_EFFECT_VOICE_CHANGER[position]);
+                },
+                (item, position) -> {
+                    rtcEngine.setAudioEffectPreset(io.agora.scene.voice.Constants.VOICE_EFFECT_STYLE_TRANSFORMATION[position]);
+                },
+                (buttonView, isChecked) -> {
+                    rtcEngine.setAudioEffectPreset(isChecked ? Constants.PITCH_CORRECTION: Constants.AUDIO_EFFECT_OFF);
+                },
+                (item, position) -> {
+                    rtcEngine.setAudioEffectParameters(io.agora.scene.voice.Constants.VOICE_EFFECT_PITCH_CORRECTION, position,
+                            io.agora.scene.voice.Constants.VOICE_EFFECT_PITCH_CORRECTION_VALUES[position]);
+                },
+                (item, position) -> {
+                    rtcEngine.setAudioEffectParameters(io.agora.scene.voice.Constants.VOICE_EFFECT_PITCH_CORRECTION, position,
+                            io.agora.scene.voice.Constants.VOICE_EFFECT_PITCH_CORRECTION_VALUES[position]);
+                });
+
+        voiceBeautyDialog = VoiceBeautyDialog.createDialog(this,
+                (item, position) -> {
+                    rtcEngine.setVoiceBeautifierPreset(io.agora.scene.voice.Constants.VOICE_BEAUTIFIER_CHAT[position]);
+                },
+                (item, position) -> {
+                    boolean isWoman = position == 1;
+                    if (isWoman) {
+                        rtcEngine.setVoiceBeautifierParameters(io.agora.scene.voice.Constants.VOICE_BEAUTIFIER_SINGING, 2, 3);
+                    } else {
+                        rtcEngine.setVoiceBeautifierPreset(io.agora.scene.voice.Constants.VOICE_BEAUTIFIER_SINGING);
+                    }
+                },
+                (item, position) -> {
+                    rtcEngine.setVoiceBeautifierPreset(io.agora.scene.voice.Constants.VOICE_BEAUTIFIER_TRANASFORMATION[position]);
+                });
+
+        bgMusicDialog = BgMusicDialog.createDialog(this, new BgMusicDialog.Listener() {
+            @Override
+            public void onVolumeChanged(int max, int volume) {
+                rtcEngine.adjustAudioMixingVolume(volume);
+            }
+
+            @Override
+            public void onMusicSelected(BgMusicDialog.MusicInfo musicInfo, boolean isSelected) {
+                if(isSelected){
+                    rtcEngine.startAudioMixing(musicInfo.url, false, false, 1);
+                }else{
+                    rtcEngine.stopAudioMixing();
+                }
+            }
+        });
+
         backgroundDialog = new BackgroundDialog(this);
         backgroundDialog.setOnBackgroundActionListener((index, res) -> {
             roomInfo.setBackgroundId(res);
             mBinding.ivBackground.setImageResource(res);
             roomManager.updateRoom(roomInfo);
         });
-        settingDialog = SettingDialog.createDialog(this, rtcManager, () -> backgroundDialog.show(), () -> bgMusicDialog.show());
+
+        settingDialog = SettingDialog.createDialog(this,
+                (view, item) -> {
+                    rtcEngine.enableInEarMonitoring(item.activated);
+                },
+                () -> backgroundDialog.show(),
+                () -> bgMusicDialog.show());
     }
 
 
@@ -222,7 +304,8 @@ public class RoomDetailActivity extends AppCompatActivity {
     private void showTextInputDialog() {
         new TextInputDialog(this)
                 .setOnSendClickListener((v, text) -> {
-                    mMessageAdapter.addMessage(new RoomManager.MessageInfo(RoomManager.getCacheUserId(), text));
+                    RoomManager.MessageInfo item = new RoomManager.MessageInfo(roomManager.getLocalUserInfo().userName, text);
+                    roomManager.sendMessage(roomInfo.roomId, item);
                 })
                 .show();
     }
@@ -237,37 +320,62 @@ public class RoomDetailActivity extends AppCompatActivity {
 
             roomManager.subscribeUserInfoEvent(roomInfo.roomId, userAddOrUpdateCallback, userDeleteCallback);
             roomManager.subscribeRoomEvent(roomInfo.roomId, roomUpdateCallback, roomDeleteCallback);
+            roomManager.subscribeMessageEvent(roomInfo.roomId, messageInfoDataCallback);
+            roomManager.getUserInfoList(roomInfo.roomId, userInfoDataListCallback);
         });
     }
 
     private void initRtcManager(boolean isRoomOwner) {
-        rtcManager.init(this, getString(R.string.rtc_app_id), null);
-        rtcManager.joinChannel(roomInfo.roomId, RoomManager.getCacheUserId(), getString(R.string.rtc_app_token), isRoomOwner, new RtcManager.OnChannelListener() {
-            @Override
-            public void onError(int code, String message) {
-                runOnUiThread(() -> {
-                    Toast.makeText(RoomDetailActivity.this, "code=" + code + ",message=" + message, Toast.LENGTH_LONG).show();
-                    finish();
-                });
 
-            }
+        try {
+            rtcEngine = RtcEngine.create(this, getString(R.string.rtc_app_id), new IRtcEngineEventHandler() {
+                @Override
+                public void onError(int err) {
+                    super.onError(err);
+                    runOnUiThread(() -> {
+                        Toast.makeText(RoomDetailActivity.this, "code=" + err + ",message=" + RtcEngine.getErrorDescription(err), Toast.LENGTH_LONG).show();
+                        finish();
+                    });
+                }
 
-            @Override
-            public void onJoinSuccess(int uid) {
-                runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
+                @Override
+                public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
+                    super.onJoinChannelSuccess(channel, uid, elapsed);
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
+                }
 
-            }
+                @Override
+                public void onUserJoined(int uid, int elapsed) {
+                    super.onUserJoined(uid, elapsed);
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
+                }
 
-            @Override
-            public void onUserJoined(String channelId, int uid) {
-                runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
-            }
+                @Override
+                public void onUserOffline(int uid, int reason) {
+                    super.onUserOffline(uid, reason);
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_left_suffix))));
+                }
 
-            @Override
-            public void onUserOffline(String channelId, int uid) {
-                runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_left_suffix))));
-            }
-        });
+                @Override
+                public void onClientRoleChanged(int oldRole, int newRole) {
+                    super.onClientRoleChanged(oldRole, newRole);
+                    if (newRole == Constants.CLIENT_ROLE_BROADCASTER) {
+                        rtcEngine.enableLocalAudio(mBinding.bottomView.isFun3Activated());
+                    }
+                }
+            });
+
+            rtcEngine.setDefaultAudioRoutetoSpeakerphone(true);
+
+            ChannelMediaOptions options = new ChannelMediaOptions();
+            options.clientRoleType = isRoomOwner ? Constants.CLIENT_ROLE_BROADCASTER: Constants.CLIENT_ROLE_AUDIENCE;
+            options.publishAudioTrack = isRoomOwner;
+            options.autoSubscribeAudio = true;
+            rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, Integer.parseInt(RoomManager.getCacheUserId()), options);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void updateUserView(RoomManager.UserInfo userInfo) {
@@ -284,7 +392,7 @@ public class RoomDetailActivity extends AppCompatActivity {
                         .setPositiveButton(R.string.common_confirm, (dialog, which) -> dialog.dismiss())
                         .show();
             } else if (userInfo.status == RoomManager.UserStatus.end) {
-                downSeat(userInfo);
+                downSeat(userInfo.objectId);
             }
         } else {
             // 房客
@@ -304,11 +412,23 @@ public class RoomDetailActivity extends AppCompatActivity {
                             .show();
                 } else if (userInfo.status == RoomManager.UserStatus.accept) {
                     upSeat(userInfo);
-                    rtcManager.setPublishAudio(true);
+
+                    ChannelMediaOptions options = new ChannelMediaOptions();
+                    options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
+                    options.publishAudioTrack = true;
+                    options.autoSubscribeAudio = true;
+                    rtcEngine.updateChannelMediaOptions(options);
+
                     mBinding.bottomView.setFun1Visible(true).setFun2Visible(true).setFun3Visible(true);
                 } else if (userInfo.status == RoomManager.UserStatus.end) {
-                    downSeat(userInfo);
-                    rtcManager.setPublishAudio(false);
+                    downSeat(userInfo.objectId);
+
+                    ChannelMediaOptions options = new ChannelMediaOptions();
+                    options.clientRoleType = Constants.CLIENT_ROLE_AUDIENCE;
+                    options.publishAudioTrack = false;
+                    options.autoSubscribeAudio = true;
+                    rtcEngine.updateChannelMediaOptions(options);
+
                     mBinding.bottomView.setFun1Visible(false).setFun2Visible(false).setFun3Visible(false);
                 }
             } else {
@@ -316,7 +436,7 @@ public class RoomDetailActivity extends AppCompatActivity {
                 if (userInfo.status == RoomManager.UserStatus.accept) {
                     upSeat(userInfo);
                 } else if (userInfo.status == RoomManager.UserStatus.end) {
-                    downSeat(userInfo);
+                    downSeat(userInfo.objectId);
                 }
             }
         }
@@ -345,9 +465,9 @@ public class RoomDetailActivity extends AppCompatActivity {
         userSeatBinding.seatUserMute.setVisibility(userInfo.isEnableAudio ? View.GONE : View.VISIBLE);
     }
 
-    private void downSeat(RoomManager.UserInfo userInfo) {
+    private void downSeat(String objectId) {
         // the user has seat or not?
-        VoiceRoomDetailSeatItemBinding userSeatBinding = getUserSeat(userInfo);
+        VoiceRoomDetailSeatItemBinding userSeatBinding = getUserSeatByObjectId(objectId);
 
         // not found sead
         if (userSeatBinding == null) {
@@ -365,6 +485,20 @@ public class RoomDetailActivity extends AppCompatActivity {
             Object tag = seatItemBinding.getRoot().getTag();
             if (tag instanceof RoomManager.UserInfo) {
                 if (((RoomManager.UserInfo) tag).userId.equals(userInfo.userId)) {
+                    userSeatBinding = seatItemBinding;
+                    break;
+                }
+            }
+        }
+        return userSeatBinding;
+    }
+
+    private VoiceRoomDetailSeatItemBinding getUserSeatByObjectId(String objectId) {
+        VoiceRoomDetailSeatItemBinding userSeatBinding = null;
+        for (VoiceRoomDetailSeatItemBinding seatItemBinding : seatItemBindings) {
+            Object tag = seatItemBinding.getRoot().getTag();
+            if (tag instanceof RoomManager.UserInfo) {
+                if (((RoomManager.UserInfo) tag).objectId.equals(objectId)){
                     userSeatBinding = seatItemBinding;
                     break;
                 }
@@ -411,7 +545,8 @@ public class RoomDetailActivity extends AppCompatActivity {
     @Override
     public void finish() {
         roomManager.leaveRoom(roomInfo.roomId, RoomManager.getCacheUserId().equals(roomInfo.userId));
-        rtcManager.release();
+        rtcEngine.leaveChannel();
+        RtcEngine.destroy();
         super.finish();
     }
 

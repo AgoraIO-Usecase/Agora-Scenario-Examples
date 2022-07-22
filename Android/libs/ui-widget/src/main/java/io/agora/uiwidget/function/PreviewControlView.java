@@ -43,11 +43,6 @@ public class PreviewControlView extends FrameLayout {
         mBinding.previewControlClose.setOnClickListener(onClickListener);
     }
 
-    public void setBeautyIcon(boolean visible, OnClickListener onClickListener){
-        mBinding.previewControlBeautyBtn.setVisibility(visible ? View.VISIBLE: View.INVISIBLE);
-        mBinding.previewControlBeautyBtn.setOnClickListener(onClickListener);
-    }
-
     public void setSettingIcon(boolean visible, OnClickListener onClickListener){
         mBinding.previewControlSettingBtn.setVisibility(visible ? View.VISIBLE: View.INVISIBLE);
         mBinding.previewControlSettingBtn.setOnClickListener(onClickListener);

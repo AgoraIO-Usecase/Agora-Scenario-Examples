@@ -11,22 +11,26 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewbinding.ViewBinding;
+
+import java.util.List;
 
 import io.agora.example.base.BaseActivity;
-import io.agora.example.base.BaseUtil;
 import io.agora.scene.databinding.AppHomeActivityBinding;
-import io.agora.scene.databinding.AppHomeItemBinding;
+import io.agora.scene.databinding.AppHomeItemImageBinding;
+import io.agora.scene.databinding.AppHomeItemTextBinding;
 
 /**
  * 首页
  */
 public class HomeActivity extends BaseActivity<AppHomeActivityBinding> {
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         configInsets();
         initModulesRecyclerView();
     }
@@ -42,44 +46,80 @@ public class HomeActivity extends BaseActivity<AppHomeActivityBinding> {
     }
 
     private void initModulesRecyclerView() {
-        mBinding.recyclerView.setAdapter(new RecyclerView.Adapter<ModuleItemViewHolder>() {
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+        final GridLayoutManager.SpanSizeLookup spanSizeLookup = new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                ModuleInfo moduleInfo = ModulesConfig.instance.moduleInfo.get(position);
+                if (moduleInfo.type == ModuleInfo.ModuleType.title) {
+                    return 2;
+                }
+                return 1;
+            }
+        };
+
+        layoutManager.setSpanSizeLookup(spanSizeLookup);
+        mBinding.recyclerView.setLayoutManager(layoutManager);
+        final List<ModuleInfo> moduleInfoList = ModulesConfig.instance.moduleInfo;
+        mBinding.recyclerView.setAdapter(new RecyclerView.Adapter<BindingViewHolder>() {
+
             @NonNull
             @Override
-            public ModuleItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                return new ModuleItemViewHolder(AppHomeItemBinding.inflate(LayoutInflater.from(parent.getContext()),parent, false));
+            public BindingViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                if(viewType == ModuleInfo.ModuleType.content){
+                    return new BindingViewHolder(AppHomeItemImageBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+                }
+                else{
+                    return new BindingViewHolder(AppHomeItemTextBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+                }
             }
 
             @Override
-            public void onBindViewHolder(@NonNull ModuleItemViewHolder holder, int position) {
-                ModuleInfo moduleInfo = ModulesConfig.instance.moduleInfo.get(position);
-                holder.mBinding.homeItemBg.setImageResource(moduleInfo.bgImageRes);
-                holder.mBinding.homeItemName.setText(moduleInfo.nameRes);
-                holder.mBinding.homeItemDescription.setText(moduleInfo.descriptionRes);
-                holder.mBinding.getRoot().setOnClickListener(v -> {
-                    try {
-                        startActivity(new Intent(HomeActivity.this, Class.forName(moduleInfo.mLaunchClassName)));
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                });
+            public void onBindViewHolder(@NonNull BindingViewHolder holder, int position) {
+                ModuleInfo moduleInfo = moduleInfoList.get(position);
+                if(getItemViewType(position) == ModuleInfo.ModuleType.content){
+                    AppHomeItemImageBinding binding = holder.getBinding(AppHomeItemImageBinding.class);
+                    binding.homeItemBg.setImageResource(moduleInfo.bgImageRes);
+                    binding.homeItemName.setText(moduleInfo.nameRes);
+                    holder.mBinding.getRoot().setOnClickListener(v -> {
+                        try {
+                            Intent intent = new Intent(HomeActivity.this, Class.forName(moduleInfo.launchClassName));
+                            intent.putExtra("from", "appHomeActivity");
+                            startActivity(intent);
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                }else{
+                    holder.getBinding(AppHomeItemTextBinding.class).text.setText(moduleInfo.titleRes);
+                }
             }
 
             @Override
             public int getItemCount() {
-                return ModulesConfig.instance.moduleInfo.size();
+                return moduleInfoList.size();
+            }
+
+            @Override
+            public int getItemViewType(int position) {
+                return moduleInfoList.get(position).type;
             }
         });
     }
 
-    private static final class ModuleItemViewHolder extends RecyclerView.ViewHolder {
+    private static final class BindingViewHolder extends RecyclerView.ViewHolder {
+        private final ViewBinding mBinding;
 
-        private final AppHomeItemBinding mBinding;
-
-        public ModuleItemViewHolder(AppHomeItemBinding binding) {
+        public BindingViewHolder(@NonNull ViewBinding binding) {
             super(binding.getRoot());
-            this.mBinding = binding;
-            mBinding.homeItemBg.setImageTintList(BaseUtil.getScrimColorSelector(mBinding.getRoot().getContext()));
+            mBinding = binding;
         }
 
+        public <T> T getBinding(Class<T> tClass) {
+            if (tClass.isInstance(mBinding)) {
+                return (T) mBinding;
+            }
+            throw new RuntimeException();
+        }
     }
 }

@@ -6,9 +6,12 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.TextureView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,12 +22,20 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import io.agora.example.base.BaseActivity;
+import io.agora.mediaplayer.Constants;
+import io.agora.mediaplayer.IMediaPlayer;
+import io.agora.mediaplayer.IMediaPlayerObserver;
+import io.agora.mediaplayer.data.PlayerUpdatedInfo;
+import io.agora.mediaplayer.data.SrcInfo;
+import io.agora.rtc2.ChannelMediaOptions;
+import io.agora.rtc2.IRtcEngineEventHandler;
+import io.agora.rtc2.RtcEngine;
+import io.agora.rtc2.video.VideoCanvas;
 import io.agora.scene.club.databinding.ClubRoomDetailActivityBinding;
 import io.agora.scene.club.databinding.ClubRoomDetailMsgItemBinding;
 import io.agora.scene.club.databinding.ClubRoomDetailRoomListDialogBinding;
@@ -42,8 +53,71 @@ import io.agora.uiwidget.utils.UIUtil;
 
 public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBinding> {
 
-    private final RtcManager rtcManager = RtcManager.getInstance();
+    private RtcEngine rtcEngine;
     private final RoomManager roomManager = RoomManager.getInstance();
+
+    private IMediaPlayer mediaPlayer;
+    private IMediaPlayerObserver mediaPlayerObserver = new IMediaPlayerObserver() {
+        @Override
+        public void onPlayerStateChanged(Constants.MediaPlayerState state, Constants.MediaPlayerError error) {
+            Log.d("MediaPlayer", "MediaPlayer onPlayerStateChanged -- url=" + mediaPlayer.getPlaySrc() + "state=" + state + ", error=" + error);
+            if (state == io.agora.mediaplayer.Constants.MediaPlayerState.PLAYER_STATE_OPEN_COMPLETED) {
+                if (mediaPlayer != null) {
+                    mediaPlayer.play();
+                }
+            }
+        }
+
+        @Override
+        public void onPositionChanged(long position) {
+
+        }
+
+        @Override
+        public void onPlayerEvent(Constants.MediaPlayerEvent eventCode, long elapsedTime, String message) {
+
+        }
+
+        @Override
+        public void onMetaData(Constants.MediaPlayerMetadataType type, byte[] data) {
+
+        }
+
+        @Override
+        public void onPlayBufferUpdated(long playCachedBuffer) {
+
+        }
+
+        @Override
+        public void onPreloadEvent(String src, Constants.MediaPlayerPreloadEvent event) {
+
+        }
+
+        @Override
+        public void onCompleted() {
+
+        }
+
+        @Override
+        public void onAgoraCDNTokenWillExpire() {
+
+        }
+
+        @Override
+        public void onPlayerSrcInfoChanged(SrcInfo from, SrcInfo to) {
+
+        }
+
+        @Override
+        public void onPlayerInfoUpdated(PlayerUpdatedInfo info) {
+
+        }
+
+        @Override
+        public void onAudioVolumeIndication(int volume) {
+
+        }
+    };
 
     private final ClubRoomDetailSeatItemBinding[] seatLayouts = new ClubRoomDetailSeatItemBinding[8];
 
@@ -51,7 +125,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
     private LiveRoomMessageListView.AbsMessageAdapter<RoomManager.MessageInfo, ClubRoomDetailMsgItemBinding> mMessageAdapter;
     private final RoomManager.DataCallback<RoomManager.GiftInfo> giftInfoDataCallback = new RoomManager.DataCallback<RoomManager.GiftInfo>() {
         @Override
-        public void onSuccess(RoomManager.GiftInfo data) {
+        public void onObtained(RoomManager.GiftInfo data) {
             runOnUiThread(() -> {
                 mMessageAdapter.addMessage(new RoomManager.MessageInfo(
                         data.userId,
@@ -68,9 +142,12 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
     private final RoomManager.DataCallback<RoomManager.UserInfo> userAddOrUpdateCallback = data -> runOnUiThread(() -> {
         updateUserView(data);
     });
+    private final RoomManager.DataCallback<RoomManager.MessageInfo> messageInfoDataCallback = data -> runOnUiThread(()->{
+        mMessageAdapter.addMessage(data);
+    });
 
-    private final RoomManager.DataCallback<RoomManager.UserInfo> userDeleteCallback = data -> runOnUiThread(() -> {
-        removeUserSeatLayout(data.userId);
+    private final RoomManager.DataCallback<String> userDeleteCallback = data -> runOnUiThread(() -> {
+        removeUserSeatLayout(data);
     });
 
     @Override
@@ -133,7 +210,9 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                             boolean activated = !mBinding.bottomView.isFun1Activated();
                             mBinding.bottomView.setFun1Activated(activated);
                             roomManager.openUserVideo(roomInfo.roomId, RoomManager.getInstance().getLocalUserInfo(), activated);
-                            rtcManager.enableLocalVideo(activated);
+                            if(rtcEngine != null){
+                                rtcEngine.enableLocalVideo(activated);
+                            }
                         }
                     } else {
                         Toast.makeText(RoomDetailActivity.this, "Please take your seat first", Toast.LENGTH_SHORT).show();
@@ -151,7 +230,9 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                             boolean activated = !mBinding.bottomView.isFun2Activated();
                             mBinding.bottomView.setFun2Activated(activated);
                             roomManager.openUserAudio(roomInfo.roomId, RoomManager.getInstance().getLocalUserInfo(), activated);
-                            rtcManager.enableLocalAudio(activated);
+                            if(rtcEngine != null){
+                                rtcEngine.enableLocalAudio(activated);
+                            }
                         }
                     } else {
                         Toast.makeText(RoomDetailActivity.this, "Please take your seat first", Toast.LENGTH_SHORT).show();
@@ -331,9 +412,16 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                     if (data.isEnableVideo) {
                         if(userSeatLayout.videoContainer.getChildCount() == 0){
                             if (data.userId.equals(RoomManager.getCacheUserId())) {
-                                rtcManager.renderLocalVideo(userSeatLayout.videoContainer, null);
+
+                                TextureView view = new TextureView(this);
+                                userSeatLayout.videoContainer.removeAllViews();
+                                userSeatLayout.videoContainer.addView(view);
+                                rtcEngine.setupLocalVideo(new VideoCanvas(view, io.agora.rtc2.Constants.RENDER_MODE_HIDDEN));
                             } else {
-                                rtcManager.renderRemoteVideo(userSeatLayout.videoContainer, uid);
+                                TextureView view = new TextureView(this);
+                                userSeatLayout.videoContainer.removeAllViews();
+                                userSeatLayout.videoContainer.addView(view);
+                                rtcEngine.setupRemoteVideo(new VideoCanvas(view, io.agora.rtc2.Constants.RENDER_MODE_HIDDEN, uid));
                             }
                         }
                     } else {
@@ -341,7 +429,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                     }
 
                     if (!data.userId.equals(RoomManager.getCacheUserId())) {
-                        rtcManager.playRemoteAudio(uid, true);
+                        rtcEngine.muteRemoteAudioStream(uid, false);
                     }
                     if(data.isEnableAudio){
                         userSeatLayout.ivMicOff.setVisibility(View.GONE);
@@ -362,8 +450,8 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
                 }
                 break;
             case RoomManager.Status.END:
-                removeUserSeatLayout(data.userId);
-                rtcManager.playRemoteAudio(Integer.parseInt(data.userId), false);
+                removeUserSeatLayout(data.objectId);
+                rtcEngine.muteRemoteAudioStream(Integer.parseInt(data.userId), true);
         }
     }
 
@@ -385,25 +473,28 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
         return idleSeatLayout;
     }
 
-    private void removeUserSeatLayout(String userId) {
+    private void removeUserSeatLayout(String objectId) {
         if(isDestroyed()){
             return;
         }
+        String userId = "";
         for (ClubRoomDetailSeatItemBinding seatLayout : seatLayouts) {
             if (seatLayout == null) {
                 continue;
             }
             Object tag = seatLayout.getRoot().getTag();
-            if (tag instanceof RoomManager.UserInfo && ((RoomManager.UserInfo) tag).userId.equals(userId)) {
+            if (tag instanceof RoomManager.UserInfo && ((RoomManager.UserInfo) tag).objectId.equals(objectId)) {
+                userId = ((RoomManager.UserInfo) tag).userId;
                 seatLayout.videoContainer.removeAllViews();
                 seatLayout.ivCover.setImageDrawable(null);
+                seatLayout.ivCamOff.setVisibility(View.GONE);
                 seatLayout.getRoot().setTag(null);
                 break;
             }
         }
-        if(userId.equals(roomInfo.userId)){
+        if (userId.equals(roomInfo.userId)) {
             // 房主已退出
-            rtcManager.closePlayerVideo();
+            mediaPlayer.stop();
             new AlertDialog.Builder(this)
                     .setTitle(R.string.common_tip)
                     .setMessage(R.string.common_tip_room_closed)
@@ -434,8 +525,9 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
         roomManager.joinRoom(roomInfo.roomId,
                 isLocalRoomOwner() ? RoomManager.Status.ACCEPT : RoomManager.Status.END,
                 list -> runOnUiThread(() -> {
-                    roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, new WeakReference<>(giftInfoDataCallback));
-                    roomManager.subscribeUserChangeEvent(roomInfo.roomId, new WeakReference<>(userAddOrUpdateCallback), new WeakReference<>(userDeleteCallback));
+                    roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, giftInfoDataCallback);
+                    roomManager.subscribeUserChangeEvent(roomInfo.roomId, userAddOrUpdateCallback, userDeleteCallback);
+                    roomManager.subscribeMessageReceiveEvent(roomInfo.roomId, messageInfoDataCallback);
                     for (RoomManager.UserInfo userInfo : list) {
                         updateUserView(userInfo);
                     }
@@ -448,32 +540,61 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
 
 
     private void initRtcManager() {
-        rtcManager.init(this, getString(R.string.rtc_app_id), null);
-        rtcManager.joinChannel(roomInfo.roomId, RoomManager.getCacheUserId(), getString(R.string.rtc_app_token), true, new RtcManager.OnChannelListener() {
-            @Override
-            public void onError(int code, String message) {
+        try {
+            rtcEngine = RtcEngine.create(this, getString(R.string.rtc_app_id), new IRtcEngineEventHandler() {
+                @Override
+                public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
+                    super.onJoinChannelSuccess(channel, uid, elapsed);
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
+                }
 
-            }
+                @Override
+                public void onUserJoined(int uid, int elapsed) {
+                    super.onUserJoined(uid, elapsed);
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
+                }
 
-            @Override
-            public void onJoinSuccess(int uid) {
-                runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
-            }
+                @Override
+                public void onUserOffline(int uid, int reason) {
+                    super.onUserOffline(uid, reason);
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
+                }
+            });
 
-            @Override
-            public void onUserJoined(String channelId, int uid) {
-                runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_join_suffix))));
-            }
+            ChannelMediaOptions options = new ChannelMediaOptions();
+            options.clientRoleType = io.agora.rtc2.Constants.CLIENT_ROLE_BROADCASTER;
+            options.publishAudioTrack = true;
+            options.publishCameraTrack = true;
+            options.autoSubscribeAudio = true;
+            options.autoSubscribeVideo = true;
+            rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, Integer.parseInt(RoomManager.getCacheUserId()), options);
 
-            @Override
-            public void onUserOffline(String channelId, int uid) {
-                runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo(uid + "", getString(R.string.live_room_message_user_left_suffix))));
-            }
-        });
-        rtcManager.enableLocalAudio(false);
-        rtcManager.enableLocalVideo(false);
-        rtcManager.renderPlayerVideo(mBinding.portraitPlayerContainer);
-        rtcManager.openPlayerVideo(roomInfo.videoUrl);
+            rtcEngine.enableLocalAudio(false);
+            rtcEngine.enableLocalVideo(false);
+
+            mediaPlayer = rtcEngine.createMediaPlayer();
+            mediaPlayer.registerPlayerObserver(mediaPlayerObserver);
+            mediaPlayer.open(roomInfo.videoUrl, 0);
+
+            renderPlayerView(mBinding.portraitPlayerContainer);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void renderPlayerView(FrameLayout container) {
+        TextureView view = new TextureView(this);
+        container.removeAllViews();
+        container.addView(view);
+        rtcEngine.setupLocalVideo(new VideoCanvas(
+                view,
+                io.agora.rtc2.Constants.RENDER_MODE_HIDDEN,
+                io.agora.rtc2.Constants.VIDEO_MIRROR_MODE_AUTO,
+                io.agora.rtc2.Constants.VIDEO_SOURCE_MEDIA_PLAYER,
+                mediaPlayer.getMediaPlayerId(),
+                0
+        ));
     }
 
     private void showGiftGridDialog() {
@@ -494,7 +615,10 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
     private void showTextInputDialog() {
         new TextInputDialog(this)
                 .setOnSendClickListener((v, text) ->
-                        mMessageAdapter.addMessage(new RoomManager.MessageInfo(RoomManager.getCacheUserId(), text)))
+                {
+                    RoomManager.MessageInfo messageInfo = new RoomManager.MessageInfo("User-" + RoomManager.getCacheUserId(), text);
+                    roomManager.sendMessage(roomInfo.roomId, messageInfo);
+                })
                 .show();
     }
 
@@ -535,11 +659,11 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
         if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             mBinding.portraitRootLayout.setVisibility(View.VISIBLE);
             mBinding.landscapeLayout.setVisibility(View.GONE);
-            rtcManager.renderPlayerVideo(mBinding.portraitPlayerContainer);
+            renderPlayerView(mBinding.portraitPlayerContainer);
         } else {
             mBinding.portraitRootLayout.setVisibility(View.GONE);
             mBinding.landscapeLayout.setVisibility(View.VISIBLE);
-            rtcManager.renderPlayerVideo(mBinding.landscapePlayerContainer);
+            renderPlayerView(mBinding.landscapePlayerContainer);
         }
     }
 
@@ -550,7 +674,11 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
         } else {
             roomManager.leaveRoom(roomInfo.roomId);
         }
-        rtcManager.release();
+        rtcEngine.stopPreview();
+        mediaPlayer.unRegisterPlayerObserver(mediaPlayerObserver);
+        mediaPlayer.destroy();
+        rtcEngine.leaveChannel();
+        RtcEngine.destroy();
         super.finish();
     }
 }

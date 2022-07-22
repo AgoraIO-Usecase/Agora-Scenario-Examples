@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
@@ -23,17 +24,26 @@ public class RoomListActivity extends BaseActivity<VoiceRoomListActivityBinding>
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StatusBarUtil.hideStatusBar(getWindow(), false);
-        RoomManager.getInstance().init(this, getString(R.string.rtm_app_id), getString(R.string.rtm_app_token));
+        RoomManager.getInstance().init(this, getString(R.string.rtm_app_id), getString(R.string.rtm_app_token),
+                ex -> runOnUiThread(() -> Toast.makeText(RoomListActivity.this, ex.getMessage(), Toast.LENGTH_SHORT).show()));
 
         mBinding.titleBar
                 .setTitleName(getString(R.string.voice_room_list_title), Color.WHITE)
-                .setBackIcon(false, 0, null);
+                .setBackIcon(false, 0, null)
+                .setDeliverVisible(false)
+                .setBackIcon(!TextUtils.isEmpty(getIntent().getStringExtra("from")), R.drawable.title_bar_back_white, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        finish();
+                    }
+                });
         mBinding.roomListView.setListAdapter(new RoomListView.AbsRoomListAdapter<RoomManager.RoomInfo>() {
             @Override
             protected void onItemUpdate(RoomListView.RoomListItemViewHolder holder, RoomManager.RoomInfo item) {
-                holder.bgView.setBackgroundResource(item.getAndroidBgId());
+                holder.bgView.setBackgroundResource(R.drawable.random_icon2_01);
                 holder.participantsLayout.setVisibility(View.GONE);
                 holder.roomName.setText(item.roomName);
+                holder.roomInfo.setText(item.roomId);
                 holder.itemView.setOnClickListener(v -> gotoRoomDetailPage(item));
             }
 
