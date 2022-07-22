@@ -159,7 +159,7 @@ extension LiveOnlineView: AGECollectionViewDelegate {
 
 class LiveOnLineViewCell: UICollectionViewCell {
     private lazy var avatarImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "pic-0"))
+        let imageView = UIImageView(image: UIImage(named: "portrait01"))
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 14
         imageView.layer.masksToBounds = true

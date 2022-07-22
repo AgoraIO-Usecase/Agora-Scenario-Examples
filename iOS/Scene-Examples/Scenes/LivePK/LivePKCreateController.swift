@@ -42,14 +42,6 @@ class LivePKCreateController: BaseViewController {
         button.addTarget(self, action: #selector(onTapStartLiveButton), for: .touchUpInside)
         return button
     }()
-    private lazy var changeRoomView: ChangeRoomBgView = {
-        let view = ChangeRoomBgView()
-        view.didSelectedBgImageClosure = { [weak self] imageNmae in
-            self?.bgImageName = imageNmae
-            self?.view.layer.contents = UIImage(named: imageNmae)?.cgImage
-        }
-        return view
-    }()
     
     private var agoraKit: AgoraRtcEngineKit?
     private lazy var rtcEngineConfig: AgoraRtcEngineConfig = {
@@ -69,7 +61,6 @@ class LivePKCreateController: BaseViewController {
         return option
     }()
     private var liveSettingModel: LiveSettingUseData?
-    private var bgImageName: String = "BG01"
         
     override func viewDidLoad() {
         super.viewDidLoad()

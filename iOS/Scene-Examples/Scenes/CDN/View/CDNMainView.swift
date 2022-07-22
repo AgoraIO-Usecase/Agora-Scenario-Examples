@@ -166,7 +166,7 @@ extension CDNMainView {
         
         static var empty: Info {
             return Info(title: "",
-                        imageName: "pic-11",
+                        imageName: "portrait11",
                         userCount: 0)
         }
     }

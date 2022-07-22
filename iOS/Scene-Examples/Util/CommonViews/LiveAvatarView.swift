@@ -33,7 +33,7 @@ class LiveAvatarView: UIView {
     }
     
     func setName(with name: String) {
-        nameLabel.text = "主播-\(name)"
+        nameLabel.text = "房间-\(name)"
     }
     
     private func setupUI() {

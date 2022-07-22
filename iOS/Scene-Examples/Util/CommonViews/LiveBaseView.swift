@@ -108,7 +108,7 @@ class LiveBaseView: UIView {
     
     /// 设置主播昵称
     func setAvatarName(name: String, roomId: String) {
-        avatarview.setName(with: "\(name)")
+        avatarview.setName(with: "\(roomId)")
     }
     
     /// 更新底部功能按钮
@@ -121,9 +121,9 @@ class LiveBaseView: UIView {
         liveCanvasView.dataArray = canvasDataArray
     }
     
-    func sendMessage(message: String, messageType: ChatMessageType) {
+    func sendMessage(userName: String, message: String, messageType: ChatMessageType) {
         var model = ChatMessageModel(content: message, messageType: messageType)
-        model.userName = UserInfo.uid
+        model.userName = userName
         chatView.sendMessage(messageModel: model)
     }
     

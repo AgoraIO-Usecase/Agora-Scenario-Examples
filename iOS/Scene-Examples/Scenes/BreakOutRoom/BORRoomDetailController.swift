@@ -160,6 +160,12 @@ class BORRoomDetailController: BaseViewController {
         SyncUtil.leaveScene(id: id)
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        guard ownerId == UserInfo.uid else { return }
+        SyncUtil.scene(id: id)?.delete(success: nil, fail: nil)
+    }
+    
     private func setupUI() {
         view.backgroundColor = .white
         navigationItem.titleView = segmentView

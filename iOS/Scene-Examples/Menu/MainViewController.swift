@@ -14,7 +14,7 @@ enum SceneType: String {
     /// 超级小班课
     case breakoutRoom = "BreakOutRoom"
     /// 音效
-    case voiceChatRoom = "voiceChatRoom"
+    case voiceChatRoom = "agoraVoice"
     /// 夜店
     case agoraClub = "agoraClub"
     /// PKApply
@@ -44,11 +44,11 @@ struct MainModel {
         model.sceneType = .singleLive
         tempArray.append(model)
         
-        model = MainModel()
-        model.title = "sound_effect".localized
-        model.imageNmae = "VideoCall"
-        model.sceneType = .voiceChatRoom
-        tempArray.append(model)
+//        model = MainModel()
+//        model.title = "sound_effect".localized
+//        model.imageNmae = "VideoCall"
+//        model.sceneType = .voiceChatRoom
+//        tempArray.append(model)
 
         model = MainModel()
         model.title = "VoiceChatRoom".localized

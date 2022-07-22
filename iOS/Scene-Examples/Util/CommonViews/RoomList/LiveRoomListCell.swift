@@ -87,14 +87,14 @@ class LiveRoomListCell: UITableViewCell {
     
     func setRoomInfo(info: Any?) {
         if let info = info as? LiveRoomInfo {
-            titleLabel.text = "\(info.roomName)" + "room_number".localized + ":\(info.roomId)"
-            let image = UIImage(named: "portrait0\(Int.random(in: 1...2))")//UIImage(named: info.backgroundId)
-            avatarImageView.image = image ?? UIImage(named: "clubBG")
-            descLabel.text = info.roomName
+            titleLabel.text = "\(info.roomName)"
+            let image = UIImage(named: "cover/portrait0\(Int.random(in: 1...2))")//UIImage(named: info.backgroundId)
+            avatarImageView.image = image ?? UIImage(named: "cover/clubBG")
+            descLabel.text = "room_number".localized + ":\(info.roomId)"
         } else if let info = info as? BORLiveModel {
             titleLabel.text = "room_number".localized + ":\(info.id)"
-            let image = UIImage(named: info.backgroundId)
-            avatarImageView.image = image ?? UIImage(named: "clubBG")
+            let image = UIImage(named: "cover/portrait0\(Int.random(in: 1...2))")
+            avatarImageView.image = image ?? UIImage(named: "cover/clubBG")
             descLabel.text = info.userId
         }
     }

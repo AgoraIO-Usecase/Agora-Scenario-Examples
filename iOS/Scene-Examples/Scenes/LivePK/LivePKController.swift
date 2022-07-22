@@ -517,7 +517,7 @@ class LivePKController: BaseViewController {
         if result == 0 {
             LogUtils.log(message: "主播进入房间", level: .info)
         }
-        liveView.sendMessage(message: "Join_Live_Room".localized, messageType: .message)
+        liveView.sendMessage(userName: UserInfo.uid, message: "Join_Live_Room".localized, messageType: .message)
     }
     
     /// Audience joins the channel
@@ -545,8 +545,8 @@ class LivePKController: BaseViewController {
         let joinResult = agoraKit?.joinChannelEx(byToken: KeyCenter.Token, connection: connection, delegate: self, mediaOptions: channelMediaOptions, joinSuccess: nil) ?? -1000
         if joinResult == 0 {
             LogUtils.log(message: "join audience success uid == \(pkUid) channelName == \(channelName)", level: .info)
-            let userId = pkUid == (UInt(currentUserId) ?? 0) ? UserInfo.userId : pkUid
-            liveView.sendMessage(message: "Join_Live_Room".localized,
+            liveView.sendMessage(userName: UserInfo.uid,
+                                 message: "Join_Live_Room".localized,
                                  messageType: .message)
             return
         }
@@ -579,7 +579,8 @@ class LivePKController: BaseViewController {
             liveView.removeData(index: index)
         }
         guard "\(uid)" != currentUserId else { return }
-        liveView.sendMessage(message: "Leave_Live_Room".localized,
+        liveView.sendMessage(userName: "\(uid)",
+                             message: "Leave_Live_Room".localized,
                              messageType: .message)
     }
     
@@ -603,6 +604,7 @@ extension LivePKController: AgoraRtcEngineDelegate {
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, didJoinedOfUid uid: UInt, elapsed: Int) {
         LogUtils.log(message: "remote user join: \(uid) \(elapsed)ms", level: .info)
+        liveView.sendMessage(userName: "\(uid)", message: "Join_Live_Room".localized, messageType: .message)
     }
 
     func rtcEngine(_ engine: AgoraRtcEngineKit, didOfflineOfUid uid: UInt, reason: AgoraUserOfflineReason) {

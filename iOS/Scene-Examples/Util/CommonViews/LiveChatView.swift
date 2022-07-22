@@ -16,7 +16,8 @@ enum ChatMessageType: Codable {
 struct ChatMessageModel: Codable {
     var content: String = ""
     var userName: String = ""
-    var messageType: ChatMessageType = .message
+    var messageType: ChatMessageType? = .message
+    var giftIcon: Int? = 0
 }
 
 class LiveChatView: UIView {
@@ -85,7 +86,7 @@ class LiveChatView: UIView {
 extension LiveChatView: AGETableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let message = tableLayoutView.dataArray?[indexPath.row] as? ChatMessageModel else { return UITableViewCell() }
-        switch message.messageType {
+        switch message.messageType ?? .message {
         case .message:
             let cell = tableView.dequeueReusableCell(withIdentifier: MessageCell.description(), for: indexPath) as! MessageCell
             cell.setChatMessage(message: message)

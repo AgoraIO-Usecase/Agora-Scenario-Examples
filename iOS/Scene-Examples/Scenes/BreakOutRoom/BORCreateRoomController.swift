@@ -82,7 +82,7 @@ class BORCreateRoomController: BaseViewController {
         ToastView.showWait(text: "loading".localized, view: view)
         var itemModel = BORLiveModel()
         itemModel.id = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        itemModel.backgroundId = String(format: "portrait%02d", Int.random(in: 1...2))
+        itemModel.backgroundId = String(format: "cover/portrait%02d", Int.random(in: 1...2))
         let params = JSONObject.toJson(itemModel)
         LogUtils.log(message: "params == \(params)", level: .info)
         SyncUtil.joinScene(id: itemModel.id, userId: UserInfo.uid, property: params) { objects in

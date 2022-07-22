@@ -18,7 +18,7 @@ class AgoraVoiceUsersView: UIView {
     var muteAudioClosure: ((Bool) -> Void)?
     
     private lazy var avatarImageView: AGEImageView = {
-        let imageView = AGEImageView(imageName: "pic-2")
+        let imageView = AGEImageView(imageName: "portrait01")
         imageView.contentMode = .scaleAspectFill
         imageView.cornerRadius = 40.fit
         return imageView
