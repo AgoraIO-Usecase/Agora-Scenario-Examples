@@ -20,6 +20,12 @@ public class ModulesConfig {
                 R.drawable.app_banner_video_call,
                 "io.agora.scene.singlehostlive.RoomListActivity"
         ));
+        // Voice
+        this.moduleInfo.add(new ModuleInfo(
+                R.string.app_voice_name,
+                R.drawable.app_banner_chat_room,
+                "io.agora.scene.voice.RoomListActivity"
+        ));
         // Live PK
         this.moduleInfo.add(new ModuleInfo(
                 R.string.app_live_pk_name,
@@ -29,21 +35,16 @@ public class ModulesConfig {
         // Live PK by CDN
         this.moduleInfo.add(new ModuleInfo(
                 R.string.app_live_pk_cdn_name,
-                R.drawable.app_banner_livepk,
+                R.drawable.app_banner_voice_call,
                 "io.agora.scene.pklivebycdn.RoomListActivity"
         ));
         // Club
-        this.moduleInfo.add(new ModuleInfo(
-                R.string.app_club_name,
-                R.drawable.app_banner_video_call,
-                "io.agora.scene.club.MainActivity"
-        ));
-        // Voice
-        this.moduleInfo.add(new ModuleInfo(
-                R.string.app_voice_name,
-                R.drawable.app_banner_voice_call,
-                "io.agora.scene.voice.RoomListActivity"
-        ));
+//        this.moduleInfo.add(new ModuleInfo(
+//                R.string.app_club_name,
+//                R.drawable.app_banner_video_call,
+//                "io.agora.scene.club.MainActivity"
+//        ));
+
 
         moduleInfo.add(new ModuleInfo(R.string.app_type_education));
         // BreakoutRoom
