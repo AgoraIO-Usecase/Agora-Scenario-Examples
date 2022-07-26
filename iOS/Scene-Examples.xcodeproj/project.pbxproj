@@ -11,6 +11,8 @@
 		E7000B232877D67100248345 /* RethinkSyncManager+ISyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7000B212877D67100248345 /* RethinkSyncManager+ISyncManager.swift */; };
 		E7000B242877D67100248345 /* RethinkSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7000B222877D67100248345 /* RethinkSyncManager.swift */; };
 		E710AE2F27A0F23300124356 /* ChangeRoomBgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E710AE2E27A0F23300124356 /* ChangeRoomBgView.swift */; };
+		E71A0782288F99D500CC4BF6 /* VideoCallCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71A0781288F99D500CC4BF6 /* VideoCallCreateViewController.swift */; };
+		E71A0784288F9A3A00CC4BF6 /* VideoCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71A0783288F9A3A00CC4BF6 /* VideoCallViewController.swift */; };
 		E7377D91286EE7C0008F6C62 /* LivePKCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7377D8F286EE7C0008F6C62 /* LivePKCreateController.swift */; };
 		E7377D94286EEA38008F6C62 /* VoiceChatRoomCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7377D93286EEA38008F6C62 /* VoiceChatRoomCreateController.swift */; };
 		E7377D962872CB94008F6C62 /* ClubCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7377D952872CB94008F6C62 /* ClubCreateController.swift */; };
@@ -172,6 +174,8 @@
 		E7000B212877D67100248345 /* RethinkSyncManager+ISyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RethinkSyncManager+ISyncManager.swift"; sourceTree = "<group>"; };
 		E7000B222877D67100248345 /* RethinkSyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RethinkSyncManager.swift; sourceTree = "<group>"; };
 		E710AE2E27A0F23300124356 /* ChangeRoomBgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeRoomBgView.swift; sourceTree = "<group>"; };
+		E71A0781288F99D500CC4BF6 /* VideoCallCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCallCreateViewController.swift; sourceTree = "<group>"; };
+		E71A0783288F9A3A00CC4BF6 /* VideoCallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCallViewController.swift; sourceTree = "<group>"; };
 		E7377D8F286EE7C0008F6C62 /* LivePKCreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LivePKCreateController.swift; sourceTree = "<group>"; };
 		E7377D93286EEA38008F6C62 /* VoiceChatRoomCreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoiceChatRoomCreateController.swift; sourceTree = "<group>"; };
 		E7377D952872CB94008F6C62 /* ClubCreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClubCreateController.swift; sourceTree = "<group>"; };
@@ -379,6 +383,7 @@
 		E7377D8B286ECB15008F6C62 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				E763A884288F991B00FE99FA /* VideoCall */,
 				E7D30EE92845DC4A0062CFE3 /* CDN */,
 				E79C25F2273B685100909CD4 /* BreakOutRoom */,
 				E7EDBCA727A0F94800E763A6 /* VoiceChatRoom */,
@@ -475,6 +480,15 @@
 				E757E697281AAE6B0017D5B9 /* SyncError.swift */,
 			);
 			path = Objects;
+			sourceTree = "<group>";
+		};
+		E763A884288F991B00FE99FA /* VideoCall */ = {
+			isa = PBXGroup;
+			children = (
+				E71A0781288F99D500CC4BF6 /* VideoCallCreateViewController.swift */,
+				E71A0783288F9A3A00CC4BF6 /* VideoCallViewController.swift */,
+			);
+			path = VideoCall;
 			sourceTree = "<group>";
 		};
 		E79BEF46273E50D9009FA838 /* Respurce */ = {
@@ -1011,10 +1025,12 @@
 				E777B3F5286C341100C8A0E7 /* CDNRoomListViewCell.swift in Sources */,
 				E7D30F162845DC4A0062CFE3 /* CDNMainView.swift in Sources */,
 				E7EDBCB027A131BC00E763A6 /* AgoraVoiceBelCantoView.swift in Sources */,
+				E71A0784288F9A3A00CC4BF6 /* VideoCallViewController.swift in Sources */,
 				E79C2626273B7BDA00909CD4 /* LiveBroadcastingCreateController.swift in Sources */,
 				E79BEF8627463FA5009FA838 /* BORRoomDetailController.swift in Sources */,
 				E7EDBCAE27A1281200E763A6 /* AgoraVoiceUsersView.swift in Sources */,
 				E7ECC56D27E81F5A00EFA778 /* UIImage+Color.swift in Sources */,
+				E71A0782288F99D500CC4BF6 /* VideoCallCreateViewController.swift in Sources */,
 				E7D30F1A2845DC4A0062CFE3 /* CDNPlayerViewControllerAudience.swift in Sources */,
 				E7D46061285C7A00004F3C82 /* MainHeaderViewCell.swift in Sources */,
 				E79BEF7D27463F79009FA838 /* BORSubRoomModel.swift in Sources */,

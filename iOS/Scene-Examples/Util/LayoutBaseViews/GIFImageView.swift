@@ -52,7 +52,7 @@ class GIFImageView: UIView {
         guard let image = UIImage.gifImageWithName(gifName) else { return }
         imageView.image = image
         let millisconds = image.duration * 1000
-        timer.scheduledMillisecondsTimer(withName: gifName, milliseconds: millisconds, queue: .main) { _, duration in
+        timer.scheduledMillisecondsTimer(withName: gifName, countDown: millisconds, milliseconds: millisconds, queue: .main) { _, duration in
             if duration <= 0 {
                 self.gifAnimationFinishedClosure?()
                 self.imageView.image = nil

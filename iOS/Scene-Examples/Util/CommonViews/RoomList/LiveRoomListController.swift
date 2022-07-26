@@ -118,6 +118,11 @@ class LiveRoomListController: BaseViewController {
             
         case .breakoutRoom:
             break
+            
+        case .videoCall:
+            let createLiveVC = VideoCallCreateViewController()
+            navigationController?.pushViewController(createLiveVC, animated: true)
+            
         case .voiceChatRoom:
             let createLiveVC = VoiceChatRoomCreateController()
             navigationController?.pushViewController(createLiveVC, animated: true)
@@ -162,6 +167,10 @@ class LiveRoomListController: BaseViewController {
                                              channelName: channelName,
                                              videoUrl: videoUrl)
             navigationController?.pushViewController(clubVC, animated: true)
+            
+        case .videoCall:
+            let livePlayerVC = VideoCallViewController(channelName: channelName ?? "", userId: ownerId ?? "")
+            navigationController?.pushViewController(livePlayerVC, animated: true)
             
         default: break
         }

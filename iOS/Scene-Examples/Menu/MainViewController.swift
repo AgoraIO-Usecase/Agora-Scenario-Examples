@@ -13,6 +13,8 @@ enum SceneType: String {
     case singleLive = "signleLive"
     /// 超级小班课
     case breakoutRoom = "BreakOutRoom"
+    /// 视频通话
+    case videoCall = "VideoCall"
     /// 音效
     case voiceChatRoom = "agoraVoice"
     /// 夜店
@@ -44,11 +46,11 @@ struct MainModel {
         model.sceneType = .singleLive
         tempArray.append(model)
         
-//        model = MainModel()
-//        model.title = "sound_effect".localized
-//        model.imageNmae = "VideoCall"
-//        model.sceneType = .voiceChatRoom
-//        tempArray.append(model)
+        model = MainModel()
+        model.title = "sound_effect".localized
+        model.imageNmae = "VideoCall"
+        model.sceneType = .videoCall
+        tempArray.append(model)
 
         model = MainModel()
         model.title = "VoiceChatRoom".localized

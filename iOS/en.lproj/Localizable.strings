@@ -32,7 +32,9 @@ Virtual_Live_Description="Avatar-based simulation for call or live streaming";
 Live_Shopping="Live Shopping";
 Live_Shopping_Description="Engage audience and other hosts in online shopping";
 VoiceChatRoom = "Voice Chat Room";
-sound_effect = "Voice calls";
+sound_effect = "Video calls";
+end_of_call = "End of call";
+end_the_call = "End the call?";
 social_entertainment = "Social entertainment";
 education = "Education";
 

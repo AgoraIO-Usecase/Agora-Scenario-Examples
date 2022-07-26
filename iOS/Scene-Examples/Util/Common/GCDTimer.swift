@@ -7,9 +7,11 @@
 import UIKit
 
 class GCDTimer {
-    typealias ActionBlock = (String, TimeInterval) -> ()
-    private var timerContainer = [String : DispatchSourceTimer]()
+    typealias ActionBlock = (String, TimeInterval) -> Void
+    private var timerContainer = [String: DispatchSourceTimer]()
     private var currentDuration: TimeInterval = 0
+    
+    
     /// 秒级定时器
     ///
     /// - Parameters:
@@ -19,10 +21,11 @@ class GCDTimer {
     ///  - repeats: 是否重复
     ///  - action: 执行的操作
     func scheduledSecondsTimer(withName name: String?,
-                                timeInterval: Int,
-                                queue: DispatchQueue,
-                                action: @escaping ActionBlock ) {
-        currentDuration = TimeInterval(timeInterval)
+                               timeInterval: Int,
+                               queue: DispatchQueue,
+                               action: @escaping ActionBlock)
+    {
+        currentDuration = TimeInterval(0)
         let scheduledName = name ?? Date().timeString()
         var timer = timerContainer[scheduledName]
         if timer == nil {
@@ -30,29 +33,54 @@ class GCDTimer {
             timer?.resume()
             timerContainer[scheduledName] = timer
         }
-        timer?.schedule(deadline: .now(), repeating: .seconds(1), leeway: .milliseconds(100))
+        timer?.schedule(deadline: .now(), repeating: .seconds(timeInterval), leeway: .milliseconds(100))
         timer?.setEventHandler(handler: { [weak self] in
             guard let self = self else { return }
-            self.currentDuration -= 1
+            self.currentDuration += TimeInterval(timeInterval)
             action(scheduledName, self.currentDuration)
-            if self.currentDuration <= 0 {
-                self.destoryTimer(withName: scheduledName)
-            }
         })
     }
     
-    
-    /// 毫秒级定时器
+    /// 秒级倒计时定时器
+    ///
+    /// - Parameters:
+    ///  - name: 定时器的名字
+    ///  - timeInterval: 时间间隔
+    ///  - queue: 线程
+    ///  - repeats: 是否重复
+    ///  - action: 执行的操作
+    func scheduledTimer(withName name: String?,
+                        timeInterval: Int,
+                        queue: DispatchQueue,
+                        action: @escaping ActionBlock)
+    {
+        let scheduledName = name ?? Date().timeString()
+        var timer = timerContainer[scheduledName]
+        if timer == nil {
+            timer = DispatchSource.makeTimerSource(flags: [], queue: queue)
+            timer?.resume()
+            timerContainer[scheduledName] = timer
+        }
+        timer?.schedule(deadline: .now(), repeating: .seconds(timeInterval), leeway: .milliseconds(1000))
+        timer?.setEventHandler(handler: {
+            action(scheduledName, 1)
+        })
+    }
+
+    /// 毫秒级倒计时定时器
     /// - Parameters:
     ///   - name: 名称
-    ///   - timeInterval: 毫秒
+    ///   - countDown: 倒计时毫秒
+    ///   - timeInterval: 多少毫秒回调一次
     ///   - queue: 线程
     ///   - action: 回调
     func scheduledMillisecondsTimer(withName name: String?,
+                                    countDown: TimeInterval,
                                     milliseconds: TimeInterval,
                                     queue: DispatchQueue,
-                                    action: @escaping ActionBlock ) {
-        currentDuration = milliseconds
+                                    action: @escaping ActionBlock)
+    {
+        currentDuration = countDown
         let scheduledName = name ?? Date().timeString()
         var timer = timerContainer[scheduledName]
         if timer == nil {
@@ -60,36 +88,35 @@ class GCDTimer {
             timer?.resume()
             timerContainer[scheduledName] = timer
         }
-        timer?.schedule(deadline: .now(), repeating: .milliseconds(1), leeway: .milliseconds(1))
+        timer?.schedule(deadline: .now(), repeating: .milliseconds(Int(milliseconds)), leeway: .milliseconds(1))
         timer?.setEventHandler(handler: { [weak self] in
             guard let self = self else { return }
-            self.currentDuration -= 1
+            self.currentDuration -= milliseconds
             action(scheduledName, self.currentDuration)
             if self.currentDuration <= 0 {
                 self.destoryTimer(withName: scheduledName)
             }
         })
     }
-    
+
     /// 销毁名字为name的计时器
     ///
     /// - Parameter name: 计时器的名字
-    func destoryTimer(withName name:String?) {
+    func destoryTimer(withName name: String?) {
         guard let name = name else { return }
         let timer = timerContainer[name]
         if timer == nil { return }
         timerContainer.removeValue(forKey: name)
         timer?.cancel()
     }
-    
+
     /// 销毁所有计时器
     func destoryAllTimer() {
-        timerContainer.forEach({
+        timerContainer.forEach {
             destoryTimer(withName: $0.key)
-        })
+        }
     }
-    
-    
+
     /// 检测是否已经存在名字为name的计时器
     ///
     /// - Parameter name: 计时器的名字
@@ -98,7 +125,6 @@ class GCDTimer {
         guard let name = name else { return false }
         return timerContainer[name] != nil
     }
-    
 }
 
 extension Date {
