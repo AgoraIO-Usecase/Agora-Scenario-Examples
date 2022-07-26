@@ -200,6 +200,7 @@ public class RoomManager {
         while (iterator.hasNext()) {
             WrapEventListener next = iterator.next();
             if (next.roomId.equals(roomId)) {
+                sceneReference.unsubscribe(next);
                 iterator.remove();
             }
         }
