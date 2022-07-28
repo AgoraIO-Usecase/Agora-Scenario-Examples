@@ -20,6 +20,12 @@ public class ModulesConfig {
                 R.drawable.app_banner_video_call,
                 "io.agora.scene.singlehostlive.RoomListActivity"
         ));
+        // Video call
+        moduleInfo.add(new ModuleInfo(
+                R.string.app_video_call_name,
+                R.drawable.app_banner_voice_call,
+                "io.agora.scene.videocall.RoomListActivity"
+        ));
         // Voice
         this.moduleInfo.add(new ModuleInfo(
                 R.string.app_voice_name,

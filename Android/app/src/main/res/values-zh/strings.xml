@@ -10,6 +10,10 @@
     <string name="app_live_single_host_name">实时直播</string>
     <string name="app_live_single_host_description">单主播直播</string>
 
+    <!--视频通话-->
+    <string name="app_video_call_name">视频通话</string>
+
+
     <string name="app_live_pk_name">直播PK</string>
     <string name="app_live_pk_description">两个不同直播间的主播跨频道连麦PK，引爆直播间</string>
 

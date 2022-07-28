@@ -10,9 +10,15 @@
     <!--单主播-->
     <string name="app_live_single_host_name">Single Host Live</string>
     <string name="app_live_single_host_description">Single Host Live</string>
+
+    <!--视频通话-->
+    <string name="app_video_call_name">Video Call</string>
+
+
     <!--PK-->
     <string name="app_live_pk_name">LivePK</string>
     <string name="app_live_pk_description">Two anchors with different live broadcasts linked the microphone PK across channels, detonating the live broadcast room</string>
+
     <!--小班课-->
     <string name="app_breakout_room_name">BreakoutRoom</string>
     <string name="app_breakout_room_description">Multi-person meeting, small meeting room can be established for discussion</string>
