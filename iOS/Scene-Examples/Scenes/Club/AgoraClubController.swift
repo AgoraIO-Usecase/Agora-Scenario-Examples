@@ -23,7 +23,7 @@ class AgoraClubController: BaseViewController {
         let option = AgoraRtcChannelMediaOptions()
         option.autoSubscribeAudio = .of(true)
         option.autoSubscribeVideo = .of(true)
-        option.publishAudioTrack = .of(true)
+        option.publishMicrophoneTrack = .of(true)
         option.publishCameraTrack = .of(false)
         option.clientRoleType = .of((Int32)(AgoraClientRole.broadcaster.rawValue))
         return option
@@ -241,7 +241,7 @@ class AgoraClubController: BaseViewController {
                         }
                     
                     case .mic:
-                        self.channelMediaOptions.publishAudioTrack = .of(!isSelected)
+                        self.channelMediaOptions.publishMicrophoneTrack = .of(!isSelected)
                         self.agoraKit?.updateChannelEx(with: self.channelMediaOptions,
                                                        connection: self.connection!)
                         
@@ -404,7 +404,7 @@ class AgoraClubController: BaseViewController {
             let model = JSONObject.toModel(AgoraVoiceUsersModel.self, value: object.toJson())
             self.currentUserModel = model
             self.usersView.fetchAgoraVoiceUserInfoData()
-            self.channelMediaOptions.publishAudioTrack = .of(false)
+            self.channelMediaOptions.publishMicrophoneTrack = .of(false)
             self.agoraKit?.updateChannelEx(with: self.channelMediaOptions, connection: self.connection!)
         }, fail: { error in
             ToastView.show(text: error.message)
@@ -525,10 +525,6 @@ extension AgoraClubController: AgoraRtcEngineDelegate {
 //        localVideo.statsInfo?.updateChannelStats(stats)
     }
     
-    func rtcEngine(_ engine: AgoraRtcEngineKit, localVideoStats stats: AgoraRtcLocalVideoStats) {
-//        localVideo.statsInfo?.updateLocalVideoStats(stats)
-    }
-
     func rtcEngine(_ engine: AgoraRtcEngineKit, localAudioStats stats: AgoraRtcLocalAudioStats) {
 //        localVideo.statsInfo?.updateLocalAudioStats(stats)
     }

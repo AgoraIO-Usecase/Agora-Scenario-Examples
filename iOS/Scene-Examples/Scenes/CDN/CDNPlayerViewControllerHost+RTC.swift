@@ -45,7 +45,7 @@ extension CDNPlayerViewControllerHost {
     }
     
     func leaveRtcByPassPush() { /** 离开旁推方式 **/
-        agoraKit.removePublishStreamUrl(pushUrlString)
+        agoraKit.removeInjectStreamUrl(pushUrlString)
     }
     
     func joinRtcByPush() { /** 直推方式加入 **/
@@ -129,7 +129,7 @@ extension CDNPlayerViewControllerHost {
         liveTranscoding.size = CGSize(width: videoSize.height, height: videoSize.width)
         liveTranscoding.videoFramerate = 15
         liveTranscoding.add(user)
-        engine.setLiveTranscoding(liveTranscoding)
+        engine.updateRtmpTranscoding(liveTranscoding)
     }
     
     func setMergeVideoRemote(engine: AgoraRtcEngineKit, uid: UInt) { /** 设置旁路推流合图（远程） **/
@@ -142,7 +142,7 @@ extension CDNPlayerViewControllerHost {
         user.uid = uid
         user.zOrder = 2
         liveTranscoding.add(user)
-        engine.setLiveTranscoding(liveTranscoding)
+        engine.updateRtmpTranscoding(liveTranscoding)
     }
     
     func destroyRtc() {
@@ -166,8 +166,8 @@ extension CDNPlayerViewControllerHost: AgoraRtcEngineDelegate {
                    elapsed: Int) {
         LogUtils.log(message: "didJoinChannel", level: .info)
         setMergeVideoLocal(engine: engine, uid: uid)
-        engine.addPublishStreamUrl(pushUrlString,
-                                   transcodingEnabled: true)
+        engine.startRtmpStream(withTranscoding: pushUrlString,
+                               transcoding: liveTranscoding)
     }
     
     func rtcEngine(_ engine: AgoraRtcEngineKit,

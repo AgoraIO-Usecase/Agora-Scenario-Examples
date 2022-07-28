@@ -53,7 +53,7 @@ class LivePKCreateController: BaseViewController {
     }()
     private lazy var channelMediaOptions: AgoraRtcChannelMediaOptions = {
        let option = AgoraRtcChannelMediaOptions()
-        option.publishAudioTrack = .of(true)
+        option.publishMicrophoneTrack = .of(true)
         option.publishCameraTrack = .of(true)
         option.clientRoleType = .of((Int32)(AgoraClientRole.broadcaster.rawValue))
         option.autoSubscribeVideo = .of(true)

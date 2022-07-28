@@ -41,14 +41,6 @@ class VideoCallCreateViewController: BaseViewController {
         button.addTarget(self, action: #selector(onTapStartLiveButton), for: .touchUpInside)
         return button
     }()
-    private lazy var changeRoomView: ChangeRoomBgView = {
-        let view = ChangeRoomBgView()
-        view.didSelectedBgImageClosure = { [weak self] imageNmae in
-            self?.bgImageName = imageNmae
-            self?.view.layer.contents = UIImage(named: imageNmae)?.cgImage
-        }
-        return view
-    }()
     
     private var agoraKit: AgoraRtcEngineKit?
     private lazy var rtcEngineConfig: AgoraRtcEngineConfig = {
@@ -60,7 +52,7 @@ class VideoCallCreateViewController: BaseViewController {
     }()
     private lazy var channelMediaOptions: AgoraRtcChannelMediaOptions = {
        let option = AgoraRtcChannelMediaOptions()
-        option.publishAudioTrack = .of(true)
+        option.publishMicrophoneTrack = .of(true)
         option.publishCameraTrack = .of(true)
         option.clientRoleType = .of((Int32)(AgoraClientRole.broadcaster.rawValue))
         option.autoSubscribeVideo = .of(true)
@@ -68,12 +60,11 @@ class VideoCallCreateViewController: BaseViewController {
         return option
     }()
     private var liveSettingModel: LiveSettingUseData?
-    private var bgImageName: String = "BG01"
             
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupAgoraKit()
         setupUI()
+        setupAgoraKit()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -123,8 +114,9 @@ class VideoCallCreateViewController: BaseViewController {
     }
     
     private func setupAgoraKit() {
-        agoraKit = AgoraRtcEngineKit.sharedEngine(with: rtcEngineConfig, delegate: nil)
+        agoraKit = AgoraRtcEngineKit.sharedEngine(with: rtcEngineConfig, delegate: self)
         agoraKit?.setLogFile(LogUtils.sdkLogPath())
+        agoraKit?.setChannelProfile(.liveBroadcasting)
         agoraKit?.setClientRole(.broadcaster)
         agoraKit?.setVideoEncoderConfiguration(
             AgoraVideoEncoderConfiguration(size: CGSize(width: 320, height: 240),
@@ -132,16 +124,15 @@ class VideoCallCreateViewController: BaseViewController {
                                            bitrate: AgoraVideoBitrateStandard,
                                            orientationMode: .fixedPortrait,
                                            mirrorMode: .auto))
+        agoraKit?.enableAudio()
+        agoraKit?.enableVideo()
         /// 开启扬声器
         agoraKit?.setDefaultAudioRouteToSpeakerphone(true)
-
         let canvas = AgoraRtcVideoCanvas()
         canvas.uid = UserInfo.userId
         canvas.renderMode = .hidden
         canvas.view = localView
         agoraKit?.setupLocalVideo(canvas)
-        agoraKit?.enableAudio()
-        agoraKit?.enableVideo()
         agoraKit?.startPreview()
     }
     
@@ -189,4 +180,7 @@ class VideoCallCreateViewController: BaseViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
+}
+extension VideoCallCreateViewController: AgoraRtcEngineDelegate {
+    
 }

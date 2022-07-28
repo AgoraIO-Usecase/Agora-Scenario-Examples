@@ -59,7 +59,7 @@ class BORRoomDetailController: BaseViewController {
     }()
     private lazy var channelMediaOptions: AgoraRtcChannelMediaOptions = {
        let option = AgoraRtcChannelMediaOptions()
-        option.publishAudioTrack = .of(true)
+        option.publishMicrophoneTrack = .of(true)
         option.clientRoleType = .of((Int32)(AgoraClientRole.broadcaster.rawValue))
         return option
     }()
@@ -317,10 +317,6 @@ extension BORRoomDetailController: AgoraRtcEngineDelegate {
 
     func rtcEngine(_ engine: AgoraRtcEngineKit, reportRtcStats stats: AgoraChannelStats) {
 //        localVideo.statsInfo?.updateChannelStats(stats)
-    }
-    
-    func rtcEngine(_ engine: AgoraRtcEngineKit, localVideoStats stats: AgoraRtcLocalVideoStats) {
-//        localVideo.statsInfo?.updateLocalVideoStats(stats)
     }
 
     func rtcEngine(_ engine: AgoraRtcEngineKit, localAudioStats stats: AgoraRtcLocalAudioStats) {

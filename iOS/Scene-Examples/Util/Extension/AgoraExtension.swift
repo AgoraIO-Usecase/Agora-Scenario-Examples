@@ -79,22 +79,6 @@ extension AgoraAudioProfile {
     }
 }
 
-extension AgoraAudioScenario {
-    func description() -> String {
-        switch self {
-        case .default: return "Default".localized
-        case .gameStreaming: return "Game Streaming".localized
-        case .highDefinition: return "High Defination".localized
-        default:
-            return "\(self.rawValue)"
-        }
-    }
-    
-    static func allValues() -> [AgoraAudioScenario] {
-        return [.default, .gameStreaming, .highDefinition]
-    }
-}
-
 extension AgoraEncryptionMode {
     func description() -> String {
         switch self {

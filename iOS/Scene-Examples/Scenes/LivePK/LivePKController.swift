@@ -508,7 +508,7 @@ class LivePKController: BaseViewController {
         
         if getRole(uid: "\(uid)") == .broadcaster && channelName == self.channleName {
             channelMediaOptions.clientRoleType = .of((Int32)(AgoraClientRole.broadcaster.rawValue))
-            channelMediaOptions.publishAudioTrack = .of(true)
+            channelMediaOptions.publishMicrophoneTrack = .of(true)
             channelMediaOptions.publishCameraTrack = .of(true)
             channelMediaOptions.autoSubscribeVideo = .of(true)
             channelMediaOptions.autoSubscribeAudio = .of(true)
@@ -614,10 +614,6 @@ extension LivePKController: AgoraRtcEngineDelegate {
 
     func rtcEngine(_ engine: AgoraRtcEngineKit, reportRtcStats stats: AgoraChannelStats) {
 //        localVideo.statsInfo?.updateChannelStats(stats)
-    }
-    
-    func rtcEngine(_ engine: AgoraRtcEngineKit, localVideoStats stats: AgoraRtcLocalVideoStats) {
-//        localVideo.statsInfo?.updateLocalVideoStats(stats)
     }
 
     func rtcEngine(_ engine: AgoraRtcEngineKit, localAudioStats stats: AgoraRtcLocalAudioStats) {

@@ -131,7 +131,7 @@ class SeatView: UIView {
             }
             if model.status == .end && model.userId == UserInfo.uid {
                 guard let option = self.channelMediaOptions, let connection = self.connection else { return }
-                option.publishAudioTrack = .of(false)
+                option.publishMicrophoneTrack = .of(false)
                 option.publishCustomVideoTrack = .of(false)
                 self.agoraKit?.updateChannelEx(with: option, connection: connection)
             }
@@ -140,7 +140,7 @@ class SeatView: UIView {
             let dataArray = self.collectionView.dataArray as? [AgoraVoiceUsersModel]
             if let model = dataArray?.filter({ $0.userId == UserInfo.uid }).first, model.objectId == object.getId() {
                 guard let option = self.channelMediaOptions, let connection = self.connection else { return }
-                option.publishAudioTrack = .of(false)
+                option.publishMicrophoneTrack = .of(false)
                 option.publishCustomVideoTrack = .of(false)
                 self.agoraKit?.updateChannelEx(with: option, connection: connection)
             }

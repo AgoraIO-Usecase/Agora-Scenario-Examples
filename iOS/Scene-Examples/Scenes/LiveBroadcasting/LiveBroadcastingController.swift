@@ -159,7 +159,7 @@ class LiveBroadcastingController: BaseViewController {
     
     private func joinChannel(channelName: String, uid: UInt) {
         channelMediaOptions.clientRoleType = .of((Int32)(getRole(uid: "\(uid)").rawValue))
-        channelMediaOptions.publishAudioTrack = .of(getRole(uid: "\(uid)") == .broadcaster)
+        channelMediaOptions.publishMicrophoneTrack = .of(getRole(uid: "\(uid)") == .broadcaster)
         channelMediaOptions.publishCameraTrack = .of(getRole(uid: "\(uid)") == .broadcaster)
         channelMediaOptions.autoSubscribeVideo = .of(true)
         channelMediaOptions.autoSubscribeAudio = .of(true)
@@ -225,10 +225,6 @@ extension LiveBroadcastingController: AgoraRtcEngineDelegate {
 
     func rtcEngine(_ engine: AgoraRtcEngineKit, reportRtcStats stats: AgoraChannelStats) {
 //        localVideo.statsInfo?.updateChannelStats(stats)
-    }
-    
-    func rtcEngine(_ engine: AgoraRtcEngineKit, localVideoStats stats: AgoraRtcLocalVideoStats) {
-//        localVideo.statsInfo?.updateLocalVideoStats(stats)
     }
 
     func rtcEngine(_ engine: AgoraRtcEngineKit, localAudioStats stats: AgoraRtcLocalAudioStats) {

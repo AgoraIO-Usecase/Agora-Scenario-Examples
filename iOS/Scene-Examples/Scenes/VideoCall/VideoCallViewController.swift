@@ -75,7 +75,7 @@ class VideoCallViewController: BaseViewController {
         option.autoSubscribeAudio = .of(true)
         option.autoSubscribeVideo = .of(true)
         option.clientRoleType = .of(Int32(AgoraClientRole.broadcaster.rawValue))
-        option.publishAudioTrack = .of(true)
+        option.publishMicrophoneTrack = .of(true)
         option.publishCameraTrack = .of(true)
         return option
     }()
@@ -236,9 +236,9 @@ class VideoCallViewController: BaseViewController {
     }
     
     private func setupUI() {
+        view.addSubview(remoteView)
         view.addSubview(localContainerView)
         localContainerView.addSubview(localView)
-        view.addSubview(remoteView)
         view.addSubview(switchCamera)
         view.addSubview(closButton)
         view.addSubview(micButton)
@@ -383,11 +383,7 @@ extension VideoCallViewController: AgoraRtcEngineDelegate {
     func rtcEngine(_ engine: AgoraRtcEngineKit, reportRtcStats stats: AgoraChannelStats) {
 //        localVideo.statsInfo?.updateChannelStats(stats)
     }
-    
-    func rtcEngine(_ engine: AgoraRtcEngineKit, localVideoStats stats: AgoraRtcLocalVideoStats) {
-//        localVideo.statsInfo?.updateLocalVideoStats(stats)
-    }
-
+ 
     func rtcEngine(_ engine: AgoraRtcEngineKit, localAudioStats stats: AgoraRtcLocalAudioStats) {
 //        localVideo.statsInfo?.updateLocalAudioStats(stats)
     }

@@ -63,7 +63,7 @@ class VoiceChatRoomController: BaseViewController {
     private lazy var channelMediaOptions: AgoraRtcChannelMediaOptions = {
         let option = AgoraRtcChannelMediaOptions()
         option.autoSubscribeAudio = .of(true)
-        option.publishAudioTrack = .of(true)
+        option.publishMicrophoneTrack = .of(true)
         option.clientRoleType = .of((Int32)(AgoraClientRole.broadcaster.rawValue))
         return option
     }()
@@ -139,7 +139,7 @@ class VoiceChatRoomController: BaseViewController {
     /// 加入channel
     private func joinChannel() {
         channelMediaOptions.clientRoleType = .of((Int32)(getRole(uid: UserInfo.uid).rawValue))
-        channelMediaOptions.publishAudioTrack = .of(getRole(uid: UserInfo.uid) == .broadcaster)
+        channelMediaOptions.publishMicrophoneTrack = .of(getRole(uid: UserInfo.uid) == .broadcaster)
         channelMediaOptions.autoSubscribeAudio = .of(true)
         
         let result = agoraKit?.joinChannel(byToken: KeyCenter.Token,
@@ -178,7 +178,7 @@ class VoiceChatRoomController: BaseViewController {
     
     private func muteAudioHandler(isVoice: Bool) {
         let option = channelMediaOptions
-        option.publishAudioTrack = getRole(uid: UserInfo.uid) == .broadcaster ? .of(true) : .of(isVoice)
+        option.publishMicrophoneTrack = getRole(uid: UserInfo.uid) == .broadcaster ? .of(true) : .of(isVoice)
         option.publishCameraTrack = .of(getRole(uid: UserInfo.uid) == .broadcaster)
         if getRole(uid: UserInfo.uid) == .audience {
             option.clientRoleType = isVoice ? .of((Int32)(AgoraClientRole.broadcaster.rawValue)) : .of((Int32)(AgoraClientRole.audience.rawValue))
@@ -259,7 +259,7 @@ class VoiceChatRoomController: BaseViewController {
         mucisView.onTapPlayButtonClosure = { [weak self] mucisModel, isPlay in
             guard let model = mucisModel else { return }
             if isPlay {
-                self?.agoraKit?.startAudioMixing(model.url, loopback: false, replace: false, cycle: 1)
+                self?.agoraKit?.startAudioMixing(model.url, loopback: false, cycle: 1)
                 return
             }
             self?.agoraKit?.stopAudioMixing()
@@ -410,10 +410,6 @@ extension VoiceChatRoomController: AgoraRtcEngineDelegate {
     func rtcEngine(_ engine: AgoraRtcEngineKit, reportRtcStats stats: AgoraChannelStats) {
 //        localVideo.statsInfo?.updateChannelStats(stats)
         realTimeView.setupData(channelStatus: stats)
-    }
-    
-    func rtcEngine(_ engine: AgoraRtcEngineKit, localVideoStats stats: AgoraRtcLocalVideoStats) {
-//        localVideo.statsInfo?.updateLocalVideoStats(stats)
     }
 
     func rtcEngine(_ engine: AgoraRtcEngineKit, localAudioStats stats: AgoraRtcLocalAudioStats) {
