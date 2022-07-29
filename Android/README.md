@@ -1,32 +1,75 @@
-# 场景化Demo
-此项目包含多个场景Demo，可以输出一个整理APK，也可输出单个场景APK。在 **gradle.properties** 中 **isRunAlone** 进行设置。
+# Android Scenarios demo
+_English | [中文](README_zh.md)
 
-目前包含以下场景
+![image](img_logo.jpg)
 
-|场景|工程名称|
+## Overview
+This repository contains scenarios using the Agora RTC Java SDK for Android.
+![image](img_case.png)
+
+## Scenarios
+|Scene|Location|
 |----|----|
-|单主播直播|[SingleHostLive](./modules/SingleHostLive/)|
-|PK直播|[LivePK](./modules/LivePK/)|
-|小班课|[BreakoutRoom](./modules/BreakoutRoom/)|
-|游戏主播PK主播|[RTEGame](./modules/RTEGame/)|
-|游戏直播间1V1|[OneLive](./modules/OneLive/)|
-|游戏直播间同玩|[ComLive](./modules/ComLive/)|
+|SingleHostLive|[SingleHostLive](./modules/SingleHostLive/)|
+|VideoCall|[VideoCall](./modules/VideoCall/)|
+|Voice|[Voice](./modules/Voice/)|
+|LivePK|[LivePK](./modules/LivePK/)|
+|PKLiveByCDN|[PKLiveByCDN](./modules/PKLiveByCDN/)|
+|BreakoutRoom|[BreakoutRoom](./modules/BreakoutRoom/)|
 
-# 前提条件
-开始前，请确保你的开发环境满足如下条件：
-- Android Studio 4.0.0 或以上版本。
-- Android 5.0 或以上版本的设备。部分模拟机可能无法支持本项目的全部功能，所以推荐使用真机。
+## Quickstart
+### Prerequisites
 
-# 使用
-#### 注册Agora
-前往 [Agora官网](https://console.agora.io/) 注册项目，生产appId
+- Physical Android device or Android simulator with Android 4.1+
+- Android Studio (latest version recommended)
+- Agora Rtc SDK (RTC version declare in [config](config.gradle))
 
-然后替换工程**libs/base-library**中 **strings_config.xml** 中 **rtc_app_id**
+### Steps to run
 
-如果启用了token模式，需要替换 **rtc_app_token**
+1. In Android Studio, open  `/Android`.
+2. Sync the project with Gradle files.
+3. Edit the  `/Android/libs/base-library/src/main/res/values/string_config.xml` file.
 
-**rtm_app_id**可以与**rtc_app_id**一致
+    - Replace `<=Agora RTC APP ID=>` with your RTC App ID.
+    - Replace `<=Agora RTM APP Id=>` with your RTM App ID which can be same with RTC App ID。
+    - If the certificate of project opened，the APP Certificate should be set to `rtm_app_certificate` and `rtc_app_certificate`
 
-**rtm_app_token**可以与**rtc_app_token**一致
+   ```xml
+   <string name="rtm_app_id" translatable="false"><=Agora RTM APP Id=></string>
+   <string name="rtm_app_certificate" translatable="false"/>
+   <string name="rtc_app_id" translatable="false"><=Agora RTC APP ID=></string>
+   <string name="rtc_app_certificate" translatable="false"/>
+   ```
 
-其余字段请联系技术支持团队获取
+   > See [开始使用 Agora 平台](https://docs.agora.io/en/Agora%20Platform/get_appid_token) to learn how to get an App ID and App Certificate.
+   >
+   > The project has a server for generating access token，so temporary access token is unnecessary. However, the APP Certificate should be set to `rtc_app_certificate` and `rtm_app_certificate`.
+
+   > To ensure communication security, Agora uses access tokens (dynamic keys) to authenticate users joining a channel.
+   >
+   > The server for generating access token in the project is for demonstration and testing purposes only。In a production environment, you need to deploy your own server for generating access tokens. See [Generate a Token](https://docs.agora.io/en/Interactive%20Broadcast/token_server) for details.
+
+4. Make the project and run the app in the simulator or connected physical Android device.
+
+You are all set! Feel free to play with this sample project and explore features of the Agora RTC SDK.
+
+## Feedback
+
+If you have any problems or suggestions regarding the sample projects, feel free to file an issue.
+
+## Reference
+
+- [RTC Java SDK Product Overview](https://docs.agora.io/en/Interactive%20Broadcast/product_live?platform=Android)
+- [RTC Java SDK API Reference](https://docs.agora.io/en/Interactive%20Broadcast/API%20Reference/java/index.html)
+
+## Related resources
+
+- Check our [FAQ](https://docs.agora.io/en/faq) to see if your issue has been recorded.
+- Dive into [Agora SDK Samples](https://github.com/AgoraIO) to see more tutorials
+- Take a look at [Agora Use Case](https://github.com/AgoraIO-usecase) for more complicated real use case
+- Repositories managed by developer communities can be found at [Agora Community](https://github.com/AgoraIO-Community)
+- If you encounter problems during integration, feel free to ask questions in [Stack Overflow](https://stackoverflow.com/questions/tagged/agora.io)
+
+## License
+
+The sample projects are under the MIT license.
