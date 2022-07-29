@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/room_list_item_view_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="@dimen/room_list_item_corner"
+    android:layout_marginHorizontal="26dp"
+    android:layout_marginVertical="13dp"
+    app:cardBackgroundColor="@color/room_list_item_bg">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/room_list_item"
+        android:layout_width="match_parent"
+        android:paddingHorizontal="15dp"
+        android:paddingVertical="10dp"
+        android:layout_height="wrap_content">
+
+
+        <ImageView
+            android:id="@+id/room_list_item_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:src="@drawable/random_icon2_01"/>
+
+
+        <TextView
+            android:id="@+id/room_list_item_room_name"
+            android:layout_width="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/room_list_item_image"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/room_list_item_room_info"
+            android:layout_marginStart="20dp"
+            android:maxWidth="200dp"
+
+            android:singleLine="true"
+            android:textColor="@color/room_list_icon_text_color"
+            android:textSize="@dimen/room_list_icon_text_size"
+            tools:text="测试测试测试测试测试测试"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/room_list_item_room_info"
+            android:layout_width="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/room_list_item_room_name"
+            app:layout_constraintStart_toStartOf="@id/room_list_item_room_name"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:maxWidth="200dp"
+            android:singleLine="true"
+            android:textColor="@color/room_list_icon_text_sub_color"
+            android:textSize="@dimen/room_list_icon_text_sub_size"
+            tools:text="测试测试测试测试测试测试"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/room_list_item_user_count"
+            app:layout_constraintEnd_toStartOf="@+id/room_list_item_arrow"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/room_list_icon_text_sub_color"
+            android:textSize="@dimen/room_list_icon_text_sub_size"
+            android:layout_marginEnd="@dimen/room_list_item_margin"
+            tools:text="112"/>
+
+        <ImageView
+            android:id="@+id/room_list_item_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:src="@drawable/common_arrow_forward_black"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

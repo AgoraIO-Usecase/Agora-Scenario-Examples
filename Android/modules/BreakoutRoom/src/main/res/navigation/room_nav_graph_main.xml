@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_main.xml"
+    app:startDestination="@id/splashFragment">
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="io.agora.scene.breakoutroom.ui.splah.SplashFragment"
+        android:label="SplashFragment"
+        tools:layout="@layout/room_fragment_splash">
+        <action
+            android:id="@+id/action_splashFragment_to_roomListFragment"
+            app:destination="@id/roomListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/roomListFragment"
+        android:name="io.agora.scene.breakoutroom.ui.list.RoomListFragment"
+        android:label="RoomListFragment"
+        tools:layout="@layout/room_fragment_room_list">
+        <action
+            android:id="@+id/action_roomListFragment_to_roomFragment"
+            app:destination="@id/roomFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/roomFragment"
+        android:name="io.agora.scene.breakoutroom.ui.room.RoomFragment"
+        android:label="RoomFragment"
+        tools:layout="@layout/room_fragment_room" />
+</navigation>

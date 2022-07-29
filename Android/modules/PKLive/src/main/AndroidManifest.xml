@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="io.agora.scene.pklive">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <application>
+        <activity
+            android:name=".RoomListActivity"
+            android:process="io.agora.scene.pklive"
+            android:theme="@style/pkLiveTheme"
+            android:screenOrientation="behind"
+            android:launchMode="singleTop"/>
+        <activity
+            android:name=".PreviewActivity"
+            android:theme="@style/pkLiveTheme"
+            android:screenOrientation="behind"
+            android:process="io.agora.scene.pklive"
+            android:launchMode="singleTop"/>
+        <activity
+            android:name=".HostDetailActivity"
+            android:theme="@style/pkLiveTheme"
+            android:process="io.agora.scene.pklive"
+            android:screenOrientation="behind"
+            android:launchMode="singleTop"/>
+        <activity
+            android:name=".AudienceDetailActivity"
+            android:theme="@style/pkLiveTheme"
+            android:process="io.agora.scene.pklive"
+            android:screenOrientation="behind"
+            android:launchMode="singleTop"/>
+
+    </application>
+
+</manifest>
