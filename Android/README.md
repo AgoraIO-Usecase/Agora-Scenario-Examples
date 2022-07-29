@@ -41,7 +41,7 @@ This repository contains scenarios using the Agora RTC Java SDK for Android.
    <string name="rtc_app_certificate" translatable="false"/>
    ```
 
-   > See [开始使用 Agora 平台](https://docs.agora.io/en/Agora%20Platform/get_appid_token) to learn how to get an App ID and App Certificate.
+   > See [Get Started with Agora](https://docs.agora.io/en/Agora%20Platform/get_appid_token) to learn how to get an App ID and App Certificate.
    >
    > The project has a server for generating access token，so temporary access token is unnecessary. However, the APP Certificate should be set to `rtc_app_certificate` and `rtm_app_certificate`.
 
