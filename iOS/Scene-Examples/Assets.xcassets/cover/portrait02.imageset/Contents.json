@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "portrait02.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "weekend_FILL0_wght400_GRAD0_opsz48@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "weekend_FILL0_wght400_GRAD0_opsz48@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

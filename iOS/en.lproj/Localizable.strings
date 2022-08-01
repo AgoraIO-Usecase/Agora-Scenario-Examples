@@ -25,14 +25,18 @@ Upload_Log="Upload Log";
 // Main Page
 Multi_Broadcasters="Multi Hosts";
 Multi_Broadcasters_Description="Invite others to co-host in live streaming channel";
-Single_Broadcaster="Single Host";
-Single_Broadcaster_Description="Live streaming by single host";
+Single_Broadcaster="Broadcast live";
 PK_Live="PK Host-in";
-PK_Live_Description="Merge 2 streams from different channels";
 Virtual_Live="Virtual Hosts";
 Virtual_Live_Description="Avatar-based simulation for call or live streaming";
 Live_Shopping="Live Shopping";
 Live_Shopping_Description="Engage audience and other hosts in online shopping";
+VoiceChatRoom = "Voice Chat Room";
+sound_effect = "Video calls";
+end_of_call = "End of call";
+end_the_call = "End the call?";
+social_entertainment = "Social entertainment";
+education = "Education";
 
 // Create Room Page
 Create_A_Live_Room="Create a room to start";
@@ -42,6 +46,8 @@ Create_NameLabel="Channel name: ";
 Virtual_Appearance_Select="Please select an avatar";
 
 Limit_Toast="Please refrain from using it commercially. The max duration per session is 10 minutes, and the max number of participants per channel is 10.";
+
+home="Agora Scenarios";
 
 // Mine
 Mine_Head="Profile";
@@ -193,3 +199,5 @@ Pants_Description="Men's K87 Workwear Pocket Short Sleeve T-Shirt";
 
 agoraClub = "club";
 agoraProgram = "program";
+
+pleaseInputRoomName = "Please enter a room name";

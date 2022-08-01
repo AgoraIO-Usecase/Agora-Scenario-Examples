@@ -1,35 +1,54 @@
 PODS:
-  - Agora-Scene-Utils (1.0.2)
-  - AgoraRtcEngine_iOS_Preview (4.0.0.preview.5)
-  - AgoraRtm_iOS (1.4.10)
-  - AgoraSyncKit (1.0.0)
+  - Agora-Scene-Utils (1.0.3)
+  - AgoraRtcEngine_iOS (3.7.0):
+    - AgoraRtcEngine_iOS/AINS (= 3.7.0)
+    - AgoraRtcEngine_iOS/AV1Dec (= 3.7.0)
+    - AgoraRtcEngine_iOS/ContentInspect (= 3.7.0)
+    - AgoraRtcEngine_iOS/FullAudioFormat (= 3.7.0)
+    - AgoraRtcEngine_iOS/ReplayKit (= 3.7.0)
+    - AgoraRtcEngine_iOS/ROIEnc (= 3.7.0)
+    - AgoraRtcEngine_iOS/RtcBasic (= 3.7.0)
+    - AgoraRtcEngine_iOS/SpatialAudio (= 3.7.0)
+    - AgoraRtcEngine_iOS/SuperResolution (= 3.7.0)
+    - AgoraRtcEngine_iOS/VideoPreprocess (= 3.7.0)
+    - AgoraRtcEngine_iOS/VirtualBackground (= 3.7.0)
+  - AgoraRtcEngine_iOS/AINS (3.7.0)
+  - AgoraRtcEngine_iOS/AV1Dec (3.7.0)
+  - AgoraRtcEngine_iOS/ContentInspect (3.7.0)
+  - AgoraRtcEngine_iOS/FullAudioFormat (3.7.0)
+  - AgoraRtcEngine_iOS/ReplayKit (3.7.0)
+  - AgoraRtcEngine_iOS/ROIEnc (3.7.0)
+  - AgoraRtcEngine_iOS/RtcBasic (3.7.0)
+  - AgoraRtcEngine_iOS/SpatialAudio (3.7.0)
+  - AgoraRtcEngine_iOS/SuperResolution (3.7.0)
+  - AgoraRtcEngine_iOS/VideoPreprocess (3.7.0)
+  - AgoraRtcEngine_iOS/VirtualBackground (3.7.0)
+  - AgoraRtm_iOS (1.4.9)
   - MBProgressHUD (1.2.0)
+  - SocketRocket (0.6.0)
 
 DEPENDENCIES:
-  - Agora-Scene-Utils (~> 1.0.2)
-  - AgoraRtcEngine_iOS_Preview (= 4.0.0.preview.5)
-  - AgoraRtm_iOS (~> 1.4.9)
-  - AgoraSyncKit (from `~/Desktop/SyncKit/AgoraSyncKit.podspec`)
+  - Agora-Scene-Utils (~> 1.0.3)
+  - AgoraRtcEngine_iOS (= 3.7.0)
+  - AgoraRtm_iOS (= 1.4.9)
   - MBProgressHUD (~> 1.2.0)
+  - SocketRocket
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  trunk:
     - Agora-Scene-Utils
-    - AgoraRtcEngine_iOS_Preview
+    - AgoraRtcEngine_iOS
     - AgoraRtm_iOS
     - MBProgressHUD
-
-EXTERNAL SOURCES:
-  AgoraSyncKit:
-    :path: "~/Desktop/SyncKit/AgoraSyncKit.podspec"
+    - SocketRocket
 
 SPEC CHECKSUMS:
-  Agora-Scene-Utils: 2a2cab06ef02607a160a0d4c3f6db337bd8150cd
-  AgoraRtcEngine_iOS_Preview: 59896a76a09cc04aa1426c2f1964d5dbe6cc9717
-  AgoraRtm_iOS: 95e7070466f42a6494435a7f39fd2b13fc143cbf
-  AgoraSyncKit: cf300cae7b52da1dc29d5d6a5b0736be822dfb2b
+  Agora-Scene-Utils: e5f27af2af265d73aecd421a947e251f6881b34f
+  AgoraRtcEngine_iOS: e6bc354af9b8b883926382b5034f18822b5303df
+  AgoraRtm_iOS: b4bb9a431ce36f9b44cda423e66b2f96945ca2ab
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
+  SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
 
-PODFILE CHECKSUM: 264a33888029fe53b0753ced9221c1b6a85a5601
+PODFILE CHECKSUM: dee0d33f3830257d3580eb7c36c96eac6a28a7ad
 
 COCOAPODS: 1.11.2
