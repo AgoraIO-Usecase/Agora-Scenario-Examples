@@ -20,6 +20,8 @@ enum SceneType: String {
     /// PKApply
     case pkApply = "pkApplyInfo"
     
+    case mutli = "mutli"
+    
     var alertTitle: String {
         switch self {
         case .pkApply: return "PK_Recieved_Invite".localized
@@ -58,6 +60,12 @@ struct MainModel {
         model.title = "PK_Live".localized
         model.imageNmae = "LivePK"
         model.sceneType = .pkApply
+        tempArray.append(model)
+        
+        model = MainModel()
+        model.title = "Multi-person joint broadcasting".localized
+        model.imageNmae = "LiveSingle"
+        model.sceneType = .mutli
         tempArray.append(model)
         
         dataArray.append(tempArray)
