@@ -270,6 +270,7 @@ class MutliViewCell: UICollectionViewCell {
             nameLabel.text = "\(userModel.userName)"
             label.isHidden = true
             nameLabel.isHidden = false
+            canvasView.isHidden = false
         } else {
             label.isHidden = false
             nameLabel.isHidden = true
