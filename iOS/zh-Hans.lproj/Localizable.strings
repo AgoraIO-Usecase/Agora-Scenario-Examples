@@ -286,3 +286,10 @@ agoraClub = "夜店";
 agoraProgram = "大厅";
 
 pleaseInputRoomName = "请输入房间名";
+
+"Multi-person joint broadcasting" = "多人连麦";
+"Apply for joint broadcasting" = "申请连麦";
+"Apply" = "申请";
+"Apply for connection" = "申请连线";
+"The anchor rejected your application" = "主播拒绝了您的申请";
+"Agree" = "同意";

@@ -43,7 +43,7 @@ class LiveBaseView: UIView {
     var setupRemoteVideoClosure: ((AgoraRtcVideoCanvas, AgoraRtcConnection) -> Void)?
     
     enum LiveLayoutPostion {
-        case full, center, bottom, signle
+        case full, center, bottom, signle, mutli
     }
     lazy var liveCanvasView: AGECollectionView = {
         let view = AGECollectionView()
@@ -205,6 +205,17 @@ class LiveBaseView: UIView {
             bottom = -70
             trailing = -15
             chatViewTrailingConstraint?.constant = -(itemWidth + 10)
+            
+        case .mutli:
+            let viewW = Screen.width * 0.7
+            itemWidth = viewW
+            leading = viewW - (itemWidth + 15)
+            top = Screen.kNavHeight + 40
+            trailing = -(Screen.width - viewW)
+            let chatViewW = Screen.width / 2 * 0.9
+            bottom = -(70 + chatViewW)
+            itemHeight = Screen.height - top + bottom
+            chatViewTrailingConstraint?.constant = -15
             
         default:
             let chatViewW = Screen.width / 2 * 0.9

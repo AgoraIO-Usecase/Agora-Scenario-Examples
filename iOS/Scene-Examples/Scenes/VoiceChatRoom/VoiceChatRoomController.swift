@@ -125,11 +125,6 @@ class VoiceChatRoomController: BaseViewController {
         agoraKit?.muteAllRemoteAudioStreams(true)
         agoraKit?.destroyMediaPlayer(nil)
         leaveChannel()
-        SyncUtil.scene(id: channelName)?.collection(className: SYNC_MANAGER_AGORA_VOICE_USERS).delete(id: currentUserModel?.objectId ?? "", success: {
-            ToastView.show(text: "delete successful")
-        }, fail: { error in
-            ToastView.show(text: error.message)
-        })
         SyncUtil.leaveScene(id: channelName)
         navigationTransparent(isTransparent: false)
         UIApplication.shared.isIdleTimerDisabled = false

@@ -135,6 +135,10 @@ class LiveRoomListController: BaseViewController {
             let createLiveVC = LivePKCreateController()
             navigationController?.pushViewController(createLiveVC, animated: true)
             
+        case .mutli:
+            let createLiveVC = MutliBroadcastingCreateController()
+            navigationController?.pushViewController(createLiveVC, animated: true)
+            
         case .cdn:
             break
         }
@@ -148,6 +152,7 @@ class LiveRoomListController: BaseViewController {
         case .singleLive:
             let livePlayerVC = LiveBroadcastingController(channelName: channelName ?? "", userId: ownerId ?? "")
             navigationController?.pushViewController(livePlayerVC, animated: true)
+            
         case .pkApply:
             let pkLiveVC = LivePKController(channelName: channelName ?? "", userId: ownerId ?? "")
             navigationController?.pushViewController(pkLiveVC, animated: true)
@@ -171,6 +176,10 @@ class LiveRoomListController: BaseViewController {
         case .videoCall:
             let livePlayerVC = VideoCallViewController(channelName: channelName ?? "", userId: ownerId ?? "")
             navigationController?.pushViewController(livePlayerVC, animated: true)
+            
+        case .mutli:
+            let mutliVC = MutliBroadcastingController(channelName: channelName ?? "", userId: ownerId ?? "")
+            navigationController?.pushViewController(mutliVC, animated: true)
             
         default: break
         }

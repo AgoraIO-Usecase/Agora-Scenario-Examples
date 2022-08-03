@@ -23,6 +23,8 @@ enum SceneType: String {
     case pkApply = "pkApplyInfo"
     /// 融合cdn
     case cdn = "PKByCDN"
+    /// 多人连麦
+    case mutli = "mutli"
     
     var alertTitle: String {
         switch self {
@@ -69,6 +71,13 @@ struct MainModel {
         model.imageNmae = "VideoCall"
         model.sceneType = .cdn
         tempArray.append(model)
+        
+        model = MainModel()
+        model.title = "Multi-person joint broadcasting".localized
+        model.imageNmae = "LiveSingle"
+        model.sceneType = .mutli
+        tempArray.append(model)
+        
         dataArray.append(tempArray)
         
         tempArray = [MainModel]()

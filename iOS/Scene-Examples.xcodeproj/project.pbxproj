@@ -13,6 +13,9 @@
 		E710AE2F27A0F23300124356 /* ChangeRoomBgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E710AE2E27A0F23300124356 /* ChangeRoomBgView.swift */; };
 		E71A0782288F99D500CC4BF6 /* VideoCallCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71A0781288F99D500CC4BF6 /* VideoCallCreateViewController.swift */; };
 		E71A0784288F9A3A00CC4BF6 /* VideoCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71A0783288F9A3A00CC4BF6 /* VideoCallViewController.swift */; };
+		E71E7AED2898C25F00B846C7 /* MutliBroadcastingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71E7AE02898C25F00B846C7 /* MutliBroadcastingController.swift */; };
+		E71E7AF32898C25F00B846C7 /* MutliBroadcastingCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71E7AE72898C25F00B846C7 /* MutliBroadcastingCreateController.swift */; };
+		E71E7AF82898D20200B846C7 /* MutliView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71E7AF72898D20200B846C7 /* MutliView.swift */; };
 		E7377D91286EE7C0008F6C62 /* LivePKCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7377D8F286EE7C0008F6C62 /* LivePKCreateController.swift */; };
 		E7377D94286EEA38008F6C62 /* VoiceChatRoomCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7377D93286EEA38008F6C62 /* VoiceChatRoomCreateController.swift */; };
 		E7377D962872CB94008F6C62 /* ClubCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7377D952872CB94008F6C62 /* ClubCreateController.swift */; };
@@ -176,6 +179,9 @@
 		E710AE2E27A0F23300124356 /* ChangeRoomBgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeRoomBgView.swift; sourceTree = "<group>"; };
 		E71A0781288F99D500CC4BF6 /* VideoCallCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCallCreateViewController.swift; sourceTree = "<group>"; };
 		E71A0783288F9A3A00CC4BF6 /* VideoCallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCallViewController.swift; sourceTree = "<group>"; };
+		E71E7AE02898C25F00B846C7 /* MutliBroadcastingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MutliBroadcastingController.swift; sourceTree = "<group>"; };
+		E71E7AE72898C25F00B846C7 /* MutliBroadcastingCreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MutliBroadcastingCreateController.swift; sourceTree = "<group>"; };
+		E71E7AF72898D20200B846C7 /* MutliView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MutliView.swift; sourceTree = "<group>"; };
 		E7377D8F286EE7C0008F6C62 /* LivePKCreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LivePKCreateController.swift; sourceTree = "<group>"; };
 		E7377D93286EEA38008F6C62 /* VoiceChatRoomCreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoiceChatRoomCreateController.swift; sourceTree = "<group>"; };
 		E7377D952872CB94008F6C62 /* ClubCreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClubCreateController.swift; sourceTree = "<group>"; };
@@ -366,6 +372,16 @@
 			path = RethinkDB;
 			sourceTree = "<group>";
 		};
+		E71E7ADF2898C25F00B846C7 /* MultiJointBroadcasting */ = {
+			isa = PBXGroup;
+			children = (
+				E71E7AF72898D20200B846C7 /* MutliView.swift */,
+				E71E7AE72898C25F00B846C7 /* MutliBroadcastingCreateController.swift */,
+				E71E7AE02898C25F00B846C7 /* MutliBroadcastingController.swift */,
+			);
+			path = MultiJointBroadcasting;
+			sourceTree = "<group>";
+		};
 		E7377D8A286ECB06008F6C62 /* Util */ = {
 			isa = PBXGroup;
 			children = (
@@ -383,6 +399,7 @@
 		E7377D8B286ECB15008F6C62 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				E71E7ADF2898C25F00B846C7 /* MultiJointBroadcasting */,
 				E763A884288F991B00FE99FA /* VideoCall */,
 				E7D30EE92845DC4A0062CFE3 /* CDN */,
 				E79C25F2273B685100909CD4 /* BreakOutRoom */,
@@ -1001,6 +1018,7 @@
 				E79BEF5B273E5768009FA838 /* GIFImageView.swift in Sources */,
 				E7D30F102845DC4A0062CFE3 /* CDNToolView.swift in Sources */,
 				E7D30F0C2845DC4A0062CFE3 /* CDNRoomInfo.swift in Sources */,
+				E71E7AF82898D20200B846C7 /* MutliView.swift in Sources */,
 				E757E6A4281AAE6B0017D5B9 /* RtmSyncManager+Info.swift in Sources */,
 				E757E6A3281AAE6B0017D5B9 /* RtmSyncManager+Handle.swift in Sources */,
 				E79BEF8A274644A9009FA838 /* BORLiveModel.swift in Sources */,
@@ -1011,6 +1029,7 @@
 				E79C262D273BC0CA00909CD4 /* ToastView.swift in Sources */,
 				E7EDBCB227A1463700E763A6 /* AgoraVoiceBelCantoModel.swift in Sources */,
 				E7D30F1C2845DC4A0062CFE3 /* CDNPlayerViewControllerAudience+RTC.swift in Sources */,
+				E71E7AF32898C25F00B846C7 /* MutliBroadcastingCreateController.swift in Sources */,
 				E7D30F182845DC4A0062CFE3 /* CDNRoomListViewController.swift in Sources */,
 				E76DE01D2809241200A0434C /* ClubRoomListView.swift in Sources */,
 				E7D30F152845DC4A0062CFE3 /* CDNRoomListView.swift in Sources */,
@@ -1081,6 +1100,7 @@
 				E79BEF8427463FA5009FA838 /* BORCreateRoomController.swift in Sources */,
 				E7D30F092845DC4A0062CFE3 /* String+Extension+SuperApp.swift in Sources */,
 				E7440E2C277420F200CBF4D8 /* LiveBaseView.swift in Sources */,
+				E71E7AED2898C25F00B846C7 /* MutliBroadcastingController.swift in Sources */,
 				E79C2628273B7D3700909CD4 /* LiveRandomName.swift in Sources */,
 				E79BEF41273E0C3A009FA838 /* LiveToolModel.swift in Sources */,
 				E79BEF31273D0EA4009FA838 /* LiveBroadcastingController.swift in Sources */,
