@@ -150,7 +150,9 @@ class LiveBroadcastingController: BaseViewController {
         guard agoraKit == nil else { return }
         agoraKit = AgoraRtcEngineKit.sharedEngine(with: rtcEngineConfig, delegate: self)
         agoraKit?.setLogFile(LogUtils.sdkLogPath())
-        agoraKit?.setClientRole(getRole(uid: currentUserId))
+        let roleOptions = AgoraClientRoleOptions()
+        roleOptions.audienceLatencyLevel = getRole(uid: currentUserId) == .audience ? .ultraLowLatency : .lowLatency
+        agoraKit?.setClientRole(getRole(uid: currentUserId), options: roleOptions)
         agoraKit?.enableVideo()
         agoraKit?.enableAudio()
         /// 开启扬声器
