@@ -169,6 +169,7 @@ public class AudienceDetailActivity extends AppCompatActivity {
     private void joinChannel(){
         ChannelMediaOptions options = new ChannelMediaOptions();
         options.clientRoleType = Constants.CLIENT_ROLE_AUDIENCE;
+        options.audienceLatencyLevel = Constants.AUDIENCE_LATENCY_LEVEL_ULTRA_LOW_LATENCY;
         options.autoSubscribeVideo = true;
         options.autoSubscribeAudio = true;
         rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, Integer.parseInt(RoomManager.getCacheUserId()), options);
