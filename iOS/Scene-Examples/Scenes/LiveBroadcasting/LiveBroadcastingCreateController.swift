@@ -179,13 +179,14 @@ class LiveBroadcastingCreateController: BaseViewController {
     
     private func startLiveHandler(result: IObject) {
         LogUtils.log(message: "result == \(result.toJson() ?? "")", level: .info)
-        let roomInfo = JSONObject.toModel(LiveRoomInfo.self, value: result.toJson())
         let channelName = result.getPropertyWith(key: "roomId", type: String.self) as? String
         
-        let livePlayerVC = LiveBroadcastingController(channelName: channelName ?? "",
-                                                      userId: "\(UserInfo.userId)",
-                                                      agoraKit: agoraKit)
-        navigationController?.pushViewController(livePlayerVC, animated: true)
+        NetworkManager.shared.generateToken(channelName: channelName ?? "", uid: UserInfo.userId) {
+            let livePlayerVC = LiveBroadcastingController(channelName: channelName ?? "",
+                                                          userId: "\(UserInfo.userId)",
+                                                          agoraKit: self.agoraKit)
+            self.navigationController?.pushViewController(livePlayerVC, animated: true)
+        }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

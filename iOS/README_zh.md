@@ -32,14 +32,14 @@ _[English](README.md) | 中文_
 2. 打开`Scene-Examples.xcworkspace`项目
 3. 编辑 `KeyCenter.swift文件`
     - 将 `<=YOUR APPID=>` 替换为你的 RTC App ID。
-    - 将 `<=YOUR TOKEN=>` 替换为你的 RTC TOKEN。
+    - 将 `<=YOUR Certificate=>` 替换为你的 RTC Certificate
     - 如果开启了token，需要获取 App 证书并设置给`rtm_app_certificate`和`rtc_app_certificate`
 
    ```swift
     static let AppId: String = <# YOUR APPID#>
 
     // assign token to nil if you have not enabled app certificate
-    static var Token: String? = <#YOUR TOKEN#>
+    static var Certificate: String? = <#YOUR Certificate#>
    ```
    > 参考 [开始使用 Agora 平台](https://docs.agora.io/cn/Agora%20Platform/get_appid_token) 了解如何获取 App ID 和 App 证书。
    > 

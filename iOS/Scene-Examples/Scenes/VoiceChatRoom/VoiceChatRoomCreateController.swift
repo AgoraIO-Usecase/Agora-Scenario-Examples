@@ -157,9 +157,11 @@ class VoiceChatRoomCreateController: BaseViewController {
     private func startLiveHandler(result: IObject) {
         LogUtils.log(message: "result == \(result.toJson() ?? "")", level: .info)
         let roomInfo = JSONObject.toModel(LiveRoomInfo.self, value: result.toJson())
-        let agoraVoiceVC = VoiceChatRoomController(roomInfo: roomInfo,
-                                                   agoraKit: agoraKit)
-        navigationController?.pushViewController(agoraVoiceVC, animated: true)
+        NetworkManager.shared.generateToken(channelName: roomInfo?.roomId ?? "", uid: UserInfo.userId) {
+            let agoraVoiceVC = VoiceChatRoomController(roomInfo: roomInfo,
+                                                       agoraKit: self.agoraKit)
+            self.navigationController?.pushViewController(agoraVoiceVC, animated: true)
+        }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

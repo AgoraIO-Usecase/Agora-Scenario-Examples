@@ -33,10 +33,10 @@ extension CDNPlayerViewControllerHost {
         
         agoraKit.setDefaultAudioRouteToSpeakerphone(true)
 
-        let ret = agoraKit.joinChannel(byToken: nil,
+        let ret = agoraKit.joinChannel(byToken: KeyCenter.Token,
                                        channelId: channelId,
                                        info: nil,
-                                       uid: 0,
+                                       uid: UserInfo.userId,
                                        joinSuccess: nil)
         
         if ret != 0 {

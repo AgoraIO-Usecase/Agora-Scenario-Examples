@@ -32,12 +32,12 @@ This repository contains scenarios using the Agora RTC SDK for iOS.
 2. Open` Scene-Examples.xcworkspace`
 3. Edit the  `KeyCenter` file.
    - Replace `<=YOUR APPID=>` with your RTC App ID.
-   - Replace `<=YOUR TOKEN=>` with your RTC ToKen.
+   - Replace `<=YOUR Certificate=>` with your RTC Certificate.
    - If the certificate of project opened，the APP Certificate should be set to `rtm_app_certificate` and `rtc_app_certificate`
    ```swift
      static let AppId: String = <# YOUR APPID#>
      // assign token to nil if you have not enabled app certificate
-     static var Token: String? = <#YOUR TOKEN#>
+     static var Certificate: String? = <#YOUR Certificate#>
    ```
    > See [Get Started with Agora](https://docs.agora.io/en/Agora%20Platform/get_appid_token) to learn how to get an App ID and App Certificate.
    > 

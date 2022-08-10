@@ -90,9 +90,11 @@ extension CDNRoomListViewController: SuperAppRoomListViewDelegate {
         /// 作为观众进入
         let config = CDNPlayerViewControllerAudience.Config(appId: appId,
                                                            roomInfo: roomInfo)
-        let vc = CDNPlayerViewControllerAudience(config: config)
-        vc.modalPresentationStyle = .fullScreen
-        present(vc, animated: true, completion: nil)
+        NetworkManager.shared.generateToken(channelName: config.sceneId, uid: UserInfo.userId) {
+            let vc = CDNPlayerViewControllerAudience(config: config)
+            vc.modalPresentationStyle = .fullScreen
+            self.present(vc, animated: true, completion: nil)
+        }
     }
 }
 
@@ -108,9 +110,10 @@ extension CDNRoomListViewController: CDNCreateLiveDelegate {
         
         let config = CDNPlayerViewControllerHost.Config(appId: appId,
                                                        roomItem: roomItem)
-        let vc = CDNPlayerViewControllerHost(config: config)
-        
-        vc.modalPresentationStyle = .fullScreen
-        present(vc, animated: true, completion: nil)
+        NetworkManager.shared.generateToken(channelName: config.sceneId, uid: UserInfo.userId) {
+            let vc = CDNPlayerViewControllerHost(config: config)
+            vc.modalPresentationStyle = .fullScreen
+            self.present(vc, animated: true, completion: nil)
+        }
     }
 }

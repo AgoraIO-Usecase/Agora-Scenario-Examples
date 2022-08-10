@@ -86,9 +86,11 @@ class BORCreateRoomController: BaseViewController {
         let params = JSONObject.toJson(itemModel)
         LogUtils.log(message: "params == \(params)", level: .info)
         SyncUtil.joinScene(id: itemModel.id, userId: UserInfo.uid, property: params) { objects in
-            let roomDetailVC = BORRoomDetailController(channelName: self.textField.text ?? "",
-                                                       ownerId: UserInfo.uid)
-            self.navigationController?.pushViewController(roomDetailVC, animated: true)
+            NetworkManager.shared.generateToken(channelName: self.textField.text ?? "", uid: UserInfo.userId) {
+                let roomDetailVC = BORRoomDetailController(channelName: self.textField.text ?? "",
+                                                           ownerId: UserInfo.uid)
+                self.navigationController?.pushViewController(roomDetailVC, animated: true)
+            }
             ToastView.hidden()
         } fail: { error in
             ToastView.hidden()

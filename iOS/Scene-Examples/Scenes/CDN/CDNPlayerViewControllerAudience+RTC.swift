@@ -51,10 +51,10 @@ extension CDNPlayerViewControllerAudience {
         
         agoraKit.setDefaultAudioRouteToSpeakerphone(true)
         
-        let ret = agoraKit.joinChannel(byToken: nil,
+        let ret = agoraKit.joinChannel(byToken: KeyCenter.Token,
                                        channelId: self.config.sceneId,
                                        info: nil,
-                                       uid: 0,
+                                       uid: UserInfo.userId,
                                        joinSuccess: nil)
         if ret != 0 {
             LogUtils.log(message: "joinRtcByPush error \(ret)", level: .error)
