@@ -1,14 +1,15 @@
 //
-//  VideoCallCreateViewController.swift
+//  CreateLiveController.swift
 //  Scene-Examples
 //
-//  Created by zhaoyongqiang on 2022/7/26.
+//  Created by zhaoyongqiang on 2021/11/10.
 //
 
 import UIKit
 import AgoraRtcKit
+//import AgoraSyncManager
 
-class VideoCallCreateViewController: BaseViewController {
+class MutliBroadcastingCreateController: BaseViewController {
     private lazy var randomNameView: LiveRandomNameView = {
         let view = LiveRandomNameView()
         return view
@@ -46,22 +47,25 @@ class VideoCallCreateViewController: BaseViewController {
     private lazy var rtcEngineConfig: AgoraRtcEngineConfig = {
        let config = AgoraRtcEngineConfig()
         config.appId = KeyCenter.AppId
+        config.channelProfile = .liveBroadcasting
+        config.areaCode = .global
         return config
     }()
     private lazy var channelMediaOptions: AgoraRtcChannelMediaOptions = {
        let option = AgoraRtcChannelMediaOptions()
-        option.publishLocalAudio = true
-        option.publishLocalVideo = true
-        option.autoSubscribeVideo = true
-        option.autoSubscribeAudio = true
+        option.publishMicrophoneTrack = .of(true)
+        option.publishCameraTrack = .of(true)
+        option.clientRoleType = .of((Int32)(AgoraClientRole.broadcaster.rawValue))
+        option.autoSubscribeVideo = .of(true)
+        option.autoSubscribeAudio = .of(true)
         return option
     }()
     private var liveSettingModel: LiveSettingUseData?
             
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
         setupAgoraKit()
+        setupUI()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -111,24 +115,25 @@ class VideoCallCreateViewController: BaseViewController {
     }
     
     private func setupAgoraKit() {
-        agoraKit = AgoraRtcEngineKit.sharedEngine(with: rtcEngineConfig, delegate: self)
-        agoraKit?.setChannelProfile(.liveBroadcasting)
+        agoraKit = AgoraRtcEngineKit.sharedEngine(with: rtcEngineConfig, delegate: nil)
         agoraKit?.setLogFile(LogUtils.sdkLogPath())
         agoraKit?.setClientRole(.broadcaster)
         agoraKit?.setVideoEncoderConfiguration(
             AgoraVideoEncoderConfiguration(size: CGSize(width: 320, height: 240),
                                            frameRate: .fps30,
                                            bitrate: AgoraVideoBitrateStandard,
-                                           orientationMode: .fixedPortrait))
-        agoraKit?.enableAudio()
-        agoraKit?.enableVideo()
+                                           orientationMode: .fixedPortrait,
+                                           mirrorMode: .auto))
         /// 开启扬声器
         agoraKit?.setDefaultAudioRouteToSpeakerphone(true)
+
         let canvas = AgoraRtcVideoCanvas()
         canvas.uid = UserInfo.userId
         canvas.renderMode = .hidden
         canvas.view = localView
         agoraKit?.setupLocalVideo(canvas)
+        agoraKit?.enableAudio()
+        agoraKit?.enableVideo()
         agoraKit?.startPreview()
     }
     
@@ -148,7 +153,8 @@ class VideoCallCreateViewController: BaseViewController {
                 AgoraVideoEncoderConfiguration(size: model.resolution,
                                                frameRate: model.framedate,
                                                bitrate: model.sliderValue,
-                                               orientationMode: .fixedPortrait))
+                                               orientationMode: .fixedPortrait,
+                                               mirrorMode: .auto))
         }
         AlertManager.show(view: settingView,
                           alertPostion: .bottom)
@@ -165,10 +171,10 @@ class VideoCallCreateViewController: BaseViewController {
     private func startLiveHandler(result: IObject) {
         LogUtils.log(message: "result == \(result.toJson() ?? "")", level: .info)
         let channelName = result.getPropertyWith(key: "roomId", type: String.self) as? String
-        NetworkManager.shared.generateToken(channelName: channelName ?? "") {
-            let livePlayerVC = VideoCallViewController(channelName: channelName ?? "",
-                                                       userId: "\(UserInfo.userId)",
-                                                       agoraKit: self.agoraKit)
+        NetworkManager.shared.generateToken(channelName: channelName ?? "", uid: UserInfo.userId) {
+            let livePlayerVC = MutliBroadcastingController(channelName: channelName ?? "",
+                                                           userId: "\(UserInfo.userId)",
+                                                           agoraKit: self.agoraKit)
             self.navigationController?.pushViewController(livePlayerVC, animated: true)
         }
     }
@@ -176,7 +182,4 @@ class VideoCallCreateViewController: BaseViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
-}
-extension VideoCallCreateViewController: AgoraRtcEngineDelegate {
-    
 }

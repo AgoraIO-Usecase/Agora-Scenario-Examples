@@ -161,7 +161,10 @@ extension LiveRoomListController: AGETableViewDelegate {
         let item = dataArray[indexPath.item]
         let params = JSONObject.toJson(item)
         SyncUtil.joinScene(id: item.roomId, userId: item.userId, property: params, success: { result in
-            self.joinSceneHandler(result: result)
+            let channelName = result.getPropertyWith(key: "roomId", type: String.self) as? String
+            NetworkManager.shared.generateToken(channelName: channelName ?? "") {
+                self.joinSceneHandler(result: result)                
+            }
         })
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
