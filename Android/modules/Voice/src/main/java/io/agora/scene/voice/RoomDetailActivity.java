@@ -236,7 +236,7 @@ public class RoomDetailActivity extends AppCompatActivity {
             @Override
             public void onMusicSelected(BgMusicDialog.MusicInfo musicInfo, boolean isSelected) {
                 if(isSelected){
-                    rtcEngine.startAudioMixing(musicInfo.url, false, false, 1);
+                    rtcEngine.startAudioMixing(musicInfo.url, false, 0, 1);
                 }else{
                     rtcEngine.stopAudioMixing();
                 }
@@ -369,7 +369,7 @@ public class RoomDetailActivity extends AppCompatActivity {
 
             ChannelMediaOptions options = new ChannelMediaOptions();
             options.clientRoleType = isRoomOwner ? Constants.CLIENT_ROLE_BROADCASTER: Constants.CLIENT_ROLE_AUDIENCE;
-            options.publishAudioTrack = isRoomOwner;
+            options.publishMicrophoneTrack = isRoomOwner;
             options.autoSubscribeAudio = true;
             rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, Integer.parseInt(RoomManager.getCacheUserId()), options);
 
@@ -415,7 +415,7 @@ public class RoomDetailActivity extends AppCompatActivity {
 
                     ChannelMediaOptions options = new ChannelMediaOptions();
                     options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
-                    options.publishAudioTrack = true;
+                    options.publishMicrophoneTrack = true;
                     options.autoSubscribeAudio = true;
                     rtcEngine.updateChannelMediaOptions(options);
 
@@ -425,7 +425,7 @@ public class RoomDetailActivity extends AppCompatActivity {
 
                     ChannelMediaOptions options = new ChannelMediaOptions();
                     options.clientRoleType = Constants.CLIENT_ROLE_AUDIENCE;
-                    options.publishAudioTrack = false;
+                    options.publishMicrophoneTrack = false;
                     options.autoSubscribeAudio = true;
                     rtcEngine.updateChannelMediaOptions(options);
 

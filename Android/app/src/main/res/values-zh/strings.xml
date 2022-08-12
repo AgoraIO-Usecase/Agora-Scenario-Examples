@@ -32,5 +32,9 @@
     <string name="app_voice_name">高音质语聊房</string>
     <string name="app_voice_description">和其他人一起语音聊天</string>
 
+    <!--Multi Call-->
+    <string name="app_multi_call">多人连麦</string>
+    <string name="app_multi_call_description">多人连麦</string>
+
 
 </resources>

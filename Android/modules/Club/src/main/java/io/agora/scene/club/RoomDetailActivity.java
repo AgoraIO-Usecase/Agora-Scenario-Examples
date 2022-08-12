@@ -563,7 +563,7 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
 
             ChannelMediaOptions options = new ChannelMediaOptions();
             options.clientRoleType = io.agora.rtc2.Constants.CLIENT_ROLE_BROADCASTER;
-            options.publishAudioTrack = true;
+            options.publishMicrophoneTrack = true;
             options.publishCameraTrack = true;
             options.autoSubscribeAudio = true;
             options.autoSubscribeVideo = true;

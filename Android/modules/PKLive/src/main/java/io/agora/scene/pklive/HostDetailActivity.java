@@ -252,6 +252,9 @@ public class HostDetailActivity extends AppCompatActivity {
                     runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo("User-" + uid + "", getString(R.string.live_room_message_user_left_suffix))));
                 }
             });
+            rtcEngine.enableVideo();
+            rtcEngine.enableAudio();
+
             rtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
             rtcEngine.setCameraCapturerConfiguration(new CameraCapturerConfiguration(io.agora.scene.pklive.Constants.cameraDirection));
             rtcEngine.setVideoEncoderConfiguration(io.agora.scene.pklive.Constants.encoderConfiguration);
@@ -263,7 +266,7 @@ public class HostDetailActivity extends AppCompatActivity {
 
             ChannelMediaOptions options = new ChannelMediaOptions();
             options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
-            options.publishAudioTrack = true;
+            options.publishMicrophoneTrack = true;
             options.publishCameraTrack = true;
             options.autoSubscribeVideo = true;
             options.autoSubscribeAudio = true;

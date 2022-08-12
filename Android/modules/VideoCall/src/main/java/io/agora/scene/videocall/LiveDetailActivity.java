@@ -119,7 +119,7 @@ public class LiveDetailActivity extends BaseActivity<VideoCallLiveDetailActivity
             ChannelMediaOptions options = new ChannelMediaOptions();
             options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
             options.publishCameraTrack = true;
-            options.publishAudioTrack = true;
+            options.publishMicrophoneTrack = true;
             options.autoSubscribeAudio = true;
             options.autoSubscribeVideo = true;
             rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, Integer.parseInt(RoomManager.getCacheUserId()), options);

@@ -90,6 +90,9 @@ public class RskHostActivity extends BaseActivity<SuperappHostDetailActivityBind
                     });
                 }
             });
+            rtcEngine.enableVideo();
+            rtcEngine.enableAudio();
+
             rtcEngine.setCameraCapturerConfiguration(new CameraCapturerConfiguration(io.agora.scene.pklivebycdn.Constants.currCameraDirection));
             rtcEngine.setVideoEncoderConfiguration(io.agora.scene.pklivebycdn.Constants.encoderConfiguration);
 

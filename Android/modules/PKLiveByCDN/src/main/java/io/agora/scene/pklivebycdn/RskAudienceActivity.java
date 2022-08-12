@@ -133,6 +133,8 @@ public class RskAudienceActivity extends BaseActivity<SuperappAudienceDetailActi
     private void initRtcManager(){
         try {
             rtcEngine = RtcEngine.create(this, getString(R.string.rtc_app_id), new IRtcEngineEventHandler() {});
+            rtcEngine.enableVideo();
+            rtcEngine.enableAudio();
 
             mediaPlayer = rtcEngine.createMediaPlayer();
             mediaPlayer.setPlayerOption("fps_probe_size", 0);

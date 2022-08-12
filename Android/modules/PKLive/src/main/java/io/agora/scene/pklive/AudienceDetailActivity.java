@@ -189,6 +189,8 @@ public class AudienceDetailActivity extends AppCompatActivity {
                 }
             });
 
+            rtcEngine.enableVideo();
+            rtcEngine.enableAudio();
 
             ChannelMediaOptions options = new ChannelMediaOptions();
             options.clientRoleType = Constants.CLIENT_ROLE_AUDIENCE;

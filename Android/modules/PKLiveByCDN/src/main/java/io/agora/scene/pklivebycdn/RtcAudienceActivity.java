@@ -168,7 +168,7 @@ public class RtcAudienceActivity extends BaseActivity<SuperappAudienceDetailActi
         ChannelMediaOptions options = new ChannelMediaOptions();
         options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
         options.publishCameraTrack = true;
-        options.publishAudioTrack = true;
+        options.publishMicrophoneTrack = true;
         options.autoSubscribeAudio = true;
         options.autoSubscribeVideo = true;
         rtcEngine.joinChannel(getString(R.string.rtc_app_token), mRoomInfo.roomId, 0, options);
@@ -226,6 +226,8 @@ public class RtcAudienceActivity extends BaseActivity<SuperappAudienceDetailActi
                     });
                 }
             });
+            rtcEngine.enableVideo();
+            rtcEngine.enableAudio();
 
             mediaPlayer = rtcEngine.createMediaPlayer();
             mediaPlayer.registerPlayerObserver(mediaPlayerObserver);
