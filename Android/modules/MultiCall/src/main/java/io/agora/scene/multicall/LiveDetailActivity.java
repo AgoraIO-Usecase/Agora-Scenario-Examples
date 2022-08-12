@@ -5,12 +5,9 @@ import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.util.List;
 
 import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.IRtcEngineEventHandler;
@@ -20,6 +17,7 @@ import io.agora.rtc2.video.VideoCanvas;
 import io.agora.scene.multicall.databinding.MultiCallLiveCallingLayoutBinding;
 import io.agora.scene.multicall.databinding.MultiCallLiveDetailActivityBinding;
 import io.agora.uiwidget.function.GiftAnimPlayDialog;
+import io.agora.uiwidget.function.GiftGridDialog;
 import io.agora.uiwidget.function.LiveRoomMessageListView;
 import io.agora.uiwidget.function.LiveToolsDialog;
 import io.agora.uiwidget.function.TextInputDialog;
@@ -57,24 +55,7 @@ public class LiveDetailActivity extends AppCompatActivity {
             });
         }
     };
-    private final RoomManager.DataListCallback<RoomManager.UserInfo> userListChangeEvent = new RoomManager.DataListCallback<RoomManager.UserInfo>() {
-        @Override
-        public void onObtained(@NonNull List<RoomManager.UserInfo> dataList) {
-            runOnUiThread(() -> {
-                mBinding.hostUserView.setUserCount(dataList.size());
-                mBinding.hostUserView.removeAllUserIcon();
-                for (int i = 1; i <= 3; i++) {
-                    int index = dataList.size() - i;
-                    if (index >= 0) {
-                        RoomManager.UserInfo userInfo = dataList.get(index);
-                        mBinding.hostUserView.addUserIcon(userInfo.getAvatarResId(), userInfo.userName);
-                    }
-                }
-            });
-        }
-    };
     private final RoomManager.DataCallback<RoomManager.UserInfo> userChangeEvent = data -> {
-        roomManager.getUserList(roomInfo.roomId, userListChangeEvent);
 
         if (data.status == RoomManager.Status.INVITING) {
             if (data.userId.equals(RoomManager.getCacheUserId())) {
@@ -108,7 +89,6 @@ public class LiveDetailActivity extends AppCompatActivity {
         }
     };
     private final RoomManager.DataCallback<String> userDelete = objectId -> {
-        roomManager.getUserList(roomInfo.roomId, userListChangeEvent);
         runOnUiThread(() -> downSeat(objectId));
     };
     private final RoomManager.DataCallback<String> roomDelete = objectId -> {
@@ -136,18 +116,30 @@ public class LiveDetailActivity extends AppCompatActivity {
         StatusBarUtil.hideStatusBar(getWindow(), false);
         roomInfo = (RoomManager.RoomInfo) getIntent().getSerializableExtra("roomInfo");
 
+        initView();
+        initRtcEngine();
+        joinChannel();
+        renderMainPreview();
+        initRoomManager();
+    }
+
+    private void initView() {
         // 房间信息
         mBinding.hostNameView.setName(roomInfo.roomName + "(" + roomInfo.roomId + ")");
+        mBinding.hostUserView.setUserCount(1);
+        mBinding.hostUserView.addUserIcon(R.drawable.user_profile_image_1, 0);
 
         // 底部按钮栏
-        mBinding.bottomView.setFun1Visible(false);
+        mBinding.bottomView.setFun1Visible(!localIsRoomOwner())
+                .setFun1ImageResource(R.drawable.live_bottom_btn_gift)
+                .setFun1ClickListener(v -> showGiftGridDialog());
         mBinding.bottomView.setFun2Visible(false);
         mBinding.bottomView.setupInputText(true, v -> {
             // 弹出文本输入框
             showTextInputDialog();
         });
         mBinding.bottomView.setupCloseBtn(true, v -> onBackPressed());
-        mBinding.bottomView.setupMoreBtn(true, v -> showSettingDialog());
+        mBinding.bottomView.setupMoreBtn(localIsRoomOwner(), v -> showSettingDialog());
 
         // 消息列表
         mMessageAdapter = new LiveRoomMessageListView.LiveRoomMessageAdapter<RoomManager.MessageInfo>() {
@@ -204,11 +196,21 @@ public class LiveDetailActivity extends AppCompatActivity {
 
             });
         }
+    }
 
-        initRoomManager();
-        initRtcEngine();
-        joinChannel();
-        renderMainPreview();
+    private void showGiftGridDialog() {
+        new GiftGridDialog(this)
+                .setOnGiftSendClickListener((dialog, item, position) -> {
+                    dialog.dismiss();
+                    RoomManager.GiftInfo giftInfo = new RoomManager.GiftInfo();
+                    giftInfo.setIconNameById(item.icon_res);
+                    giftInfo.setGifNameById(item.anim_res);
+                    giftInfo.title = getString(item.name_res);
+                    giftInfo.coin = item.coin_point;
+                    giftInfo.userId = RoomManager.getCacheUserId();
+                    roomManager.sendGift(roomInfo.roomId, giftInfo);
+                })
+                .show();
     }
 
     private void showTextInputDialog() {
@@ -222,13 +224,18 @@ public class LiveDetailActivity extends AppCompatActivity {
 
     private void initRoomManager() {
         roomManager.joinRoom(roomInfo.roomId,
-                localIsRoomOwner() ? RoomManager.Status.ACCEPT : RoomManager.Status.END,
                 (data) -> {
                     roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, giftInfoDataCallback);
                     roomManager.subscribeMessageReceiveEvent(roomInfo.roomId, messageDataCallback);
                     roomManager.subscribeUserChangeEvent(roomInfo.roomId, userChangeEvent, userDelete);
                     roomManager.subscribeRoomDeleteEvent(roomInfo.roomId, roomDelete);
-                    roomManager.getUserList(roomInfo.roomId, userListChangeEvent);
+                    roomManager.getUserList(roomInfo.roomId, dataList -> {
+                        for (RoomManager.UserInfo userInfo : dataList) {
+                            if (userInfo.status == RoomManager.Status.ACCEPT) {
+                                runOnUiThread(() -> upSeat(userInfo));
+                            }
+                        }
+                    });
                 }, data -> {
                     Toast.makeText(LiveDetailActivity.this, "Join Room error", Toast.LENGTH_LONG).show();
                     finish();
@@ -282,6 +289,8 @@ public class LiveDetailActivity extends AppCompatActivity {
                 localIsRoomOwner() ? io.agora.rtc2.Constants.CLIENT_ROLE_BROADCASTER : io.agora.rtc2.Constants.CLIENT_ROLE_AUDIENCE;
         channelMediaOptions.publishCameraTrack = localIsRoomOwner();
         channelMediaOptions.publishMicrophoneTrack = localIsRoomOwner();
+        channelMediaOptions.autoSubscribeVideo = true;
+        channelMediaOptions.autoSubscribeAudio = true;
         rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, Integer.parseInt(RoomManager.getCacheUserId()), channelMediaOptions);
     }
 
@@ -316,15 +325,12 @@ public class LiveDetailActivity extends AppCompatActivity {
                 .addToolItem(LiveToolsDialog.TOOL_ITEM_VIDEO, channelMediaOptions.publishCameraTrack, (view, item) -> {
                     channelMediaOptions.publishCameraTrack = item.activated;
                     rtcEngine.updateChannelMediaOptions(channelMediaOptions);
-                    if (item.activated) {
-                        rtcEngine.startPreview();
-                    } else {
-                        rtcEngine.stopPreview();
-                    }
+                    rtcEngine.enableLocalVideo(item.activated);
                 })
-                .addToolItem(LiveToolsDialog.TOOL_ITEM_SPEAKER,  channelMediaOptions.publishMicrophoneTrack, (view, item) -> {
+                .addToolItem(LiveToolsDialog.TOOL_ITEM_SPEAKER, channelMediaOptions.publishMicrophoneTrack, (view, item) -> {
                     channelMediaOptions.publishMicrophoneTrack = item.activated;
                     rtcEngine.updateChannelMediaOptions(channelMediaOptions);
+                    rtcEngine.enableLocalAudio(item.activated);
                 })
                 .show();
     }
@@ -412,6 +418,7 @@ public class LiveDetailActivity extends AppCompatActivity {
             return;
         }
         seat.videoContainer.removeAllViews();
+        seat.getRoot().setTag(null);
         if (userId.equals(RoomManager.getCacheUserId())) {
             rtcEngine.stopPreview();
         }
