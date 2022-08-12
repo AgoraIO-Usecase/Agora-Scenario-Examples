@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- BackgroundDialog -->
+    <dimen name="voice_background_corner_2">6dp</dimen>
+    <dimen name="voice_background_corner_4">12dp</dimen>
+
+    <dimen name="voice_sound_effect_dialog_content_height">300dp</dimen>
+</resources>
