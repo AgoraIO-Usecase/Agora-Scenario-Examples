@@ -7,26 +7,28 @@
 
     <string name="app_desc_banner">点击跳转对应场景</string>
 
-    <string name="app_live_single_host_name">单主播直播</string>
+    <string name="app_live_single_host_name">实时直播</string>
     <string name="app_live_single_host_description">单主播直播</string>
 
-    <string name="app_live_pk_name">PK直播</string>
+    <!--视频通话-->
+    <string name="app_video_call_name">视频通话</string>
+
+    <string name="app_live_pk_name">直播PK</string>
     <string name="app_live_pk_description">两个不同直播间的主播跨频道连麦PK，引爆直播间</string>
 
     <string name="app_breakout_room_name">小班课</string>
     <string name="app_breakout_room_description">多人会议，可建立小会议室讨论</string>
-
-    <!--PKByCDN-->
-    <string name="app_live_pk_cdn_name">CDN PK直播</string>
-    <string name="app_live_pk_cdn_description">融合CDN</string>
 
     <!--Club-->
     <string name="app_club_name">超级夜店</string>
     <string name="app_club_description">同一直播间观看同一部电影</string>
 
     <!--Voice-->
-    <string name="app_voice_name">语聊房</string>
+    <string name="app_voice_name">高音质语聊房</string>
     <string name="app_voice_description">和其他人一起语音聊天</string>
 
+    <!--Multi Call-->
+    <string name="app_multi_call">多人连麦</string>
+    <string name="app_multi_call_description">多人连麦</string>
 
 </resources>

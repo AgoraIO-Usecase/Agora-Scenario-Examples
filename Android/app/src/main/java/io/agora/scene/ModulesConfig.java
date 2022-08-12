@@ -20,11 +20,29 @@ public class ModulesConfig {
                 R.drawable.app_banner_video_call,
                 "io.agora.scene.singlehostlive.RoomListActivity"
         ));
+        // Video call
+        moduleInfo.add(new ModuleInfo(
+                R.string.app_video_call_name,
+                R.drawable.app_banner_voice_call,
+                "io.agora.scene.videocall.RoomListActivity"
+        ));
+        // Voice
+        this.moduleInfo.add(new ModuleInfo(
+                R.string.app_voice_name,
+                R.drawable.app_banner_chat_room,
+                "io.agora.scene.voice.RoomListActivity"
+        ));
         // Live PK
         this.moduleInfo.add(new ModuleInfo(
                 R.string.app_live_pk_name,
                 R.drawable.app_banner_livepk,
                 "io.agora.scene.pklive.RoomListActivity"
+        ));
+        // Multi Call
+        this.moduleInfo.add(new ModuleInfo(
+                R.string.app_multi_call,
+                R.drawable.app_banner_video_call,
+                "io.agora.scene.multicall.RoomListActivity"
         ));
 
         moduleInfo.add(new ModuleInfo(R.string.app_type_education));
