@@ -158,6 +158,8 @@ public class HostDetailActivity extends AppCompatActivity {
                     runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo("User-" +  uid, getString(R.string.live_room_message_user_left_suffix))));
                 }
             });
+            rtcEngine.enableVideo();
+            rtcEngine.enableVideo();
             rtcEngine.setCameraCapturerConfiguration(new CameraCapturerConfiguration(Constants.cameraDirection));
             rtcEngine.setVideoEncoderConfiguration(Constants.encoderConfiguration);
         } catch (Exception e) {
@@ -169,7 +171,7 @@ public class HostDetailActivity extends AppCompatActivity {
         ChannelMediaOptions options = new ChannelMediaOptions();
         options.clientRoleType = io.agora.rtc2.Constants.CLIENT_ROLE_BROADCASTER;
         options.publishCameraTrack = true;
-        options.publishAudioTrack = true;
+        options.publishMicrophoneTrack = true;
         rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, Integer.parseInt(RoomManager.getCacheUserId()), options);
     }
 

@@ -3,7 +3,7 @@ apply from: "../modular.gradle"
 android {
     defaultConfig {
         if (extIsModular()) {
-            applicationId "io.agora.scene.videocall"
+            applicationId "io.agora.scene.multicall"
         }
         versionCode 1
         versionName "1.0.0"

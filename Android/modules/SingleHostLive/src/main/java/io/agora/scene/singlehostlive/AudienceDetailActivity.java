@@ -154,6 +154,8 @@ public class AudienceDetailActivity extends AppCompatActivity {
                     runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo("User-" + uid + "", getString(R.string.live_room_message_user_left_suffix))));
                 }
             });
+            rtcEngine.enableVideo();
+            rtcEngine.enableAudio();
         } catch (Exception e) {
             e.printStackTrace();
         }

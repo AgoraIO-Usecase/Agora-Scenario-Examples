@@ -163,6 +163,9 @@ public class RtcHostActivity extends BaseActivity<SuperappHostDetailActivityBind
                     });
                 }
             });
+            rtcEngine.enableVideo();
+            rtcEngine.enableAudio();
+
             rtcEngine.setCameraCapturerConfiguration(new CameraCapturerConfiguration(io.agora.scene.pklivebycdn.Constants.currCameraDirection));
             rtcEngine.setVideoEncoderConfiguration(io.agora.scene.pklivebycdn.Constants.encoderConfiguration);
 
@@ -174,7 +177,7 @@ public class RtcHostActivity extends BaseActivity<SuperappHostDetailActivityBind
             ChannelMediaOptions options = new ChannelMediaOptions();
             options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
             options.publishCameraTrack = true;
-            options.publishAudioTrack = true;
+            options.publishMicrophoneTrack = true;
             options.autoSubscribeAudio = true;
             options.autoSubscribeVideo = true;
             rtcEngine.joinChannel(getString(R.string.rtc_app_token), mRoomInfo.roomId, 0, options);

@@ -34,6 +34,6 @@ dependencies {
     extSafeImplementation project(':libs:base-library')
     extSafeImplementation project(':libs:ui-widget')
 
-    extSafeImplementation 'io.agora.rtc:agora-full-beta:4.0.0-beta.1'
+    extSafeImplementation 'io.agora.rtc:full-sdk:4.0.0-rc.1'
     extSafeImplementation 'com.github.AgoraIO-Community:SyncManager-Android:1.0.0'
 }

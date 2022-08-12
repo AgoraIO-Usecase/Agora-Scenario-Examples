@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="multi_call_app_name">视频通话</string>
+    <string name="multi_call_description">视频通话</string>
+    <string name="multi_call_apply_linking">申请连线</string>
+    <string name="multi_call_close_linking">下麦</string>
+    <string name="multi_call_end_linking">封麦</string>
+    <string name="multi_call_accept_apply_or_not">是否授受申请?</string>
+
+</resources>
