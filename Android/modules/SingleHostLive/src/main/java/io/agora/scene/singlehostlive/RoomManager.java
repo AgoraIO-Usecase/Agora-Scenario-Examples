@@ -60,7 +60,7 @@ public class RoomManager {
         }
     }
 
-    public void init(Context context, String appId, String token, DataCallback<Exception> error) {
+    public void init(Context context, String appId, DataCallback<Exception> error) {
         if (isInitialized) {
             return;
         }

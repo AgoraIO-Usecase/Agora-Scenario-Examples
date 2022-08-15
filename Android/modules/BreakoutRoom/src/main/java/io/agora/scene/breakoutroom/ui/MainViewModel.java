@@ -24,8 +24,7 @@ public class MainViewModel extends ViewModel {
 
     public void initSyncManager(Context context) {
         HashMap<String, String> map = new HashMap<>();
-        map.put("appid", context.getString(R.string.rtm_app_id));
-        map.put("token", context.getString(R.string.rtm_app_token));
+        map.put("appid", context.getString(R.string.sync_app_id));
         map.put("defaultChannel", RoomConstant.globalChannel);
         Sync.Instance().init(context, map, null);
         // FIXME

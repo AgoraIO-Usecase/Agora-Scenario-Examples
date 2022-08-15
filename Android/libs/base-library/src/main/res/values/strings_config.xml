@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="rtm_app_id" translatable="false"><=AGORA RTC APP ID=></string>
-    <string name="rtm_app_token" translatable="false"/>
-
-    <string name="rtc_app_id" translatable="false"><=AGORA RTC APP ID=></string>
+    <string name="rtc_app_id" translatable="false"><=YOUR RTC APP ID=></string>
     <string name="rtc_certificate" translatable="false"/>
+    <string name="sync_app_id" translatable="false"><=YOUR SYNC APP ID=></string>
 
 </resources>
