@@ -356,6 +356,7 @@ public class LiveDetailActivity extends AppCompatActivity {
 
     @Override
     public void finish() {
+        roomManager.endUser(roomInfo.roomId, roomManager.getLocalUserInfo());
         if (localIsRoomOwner()) {
             roomManager.destroyRoom(roomInfo.roomId);
         } else {
