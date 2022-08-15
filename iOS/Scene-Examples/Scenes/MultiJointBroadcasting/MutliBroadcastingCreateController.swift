@@ -47,17 +47,14 @@ class MutliBroadcastingCreateController: BaseViewController {
     private lazy var rtcEngineConfig: AgoraRtcEngineConfig = {
        let config = AgoraRtcEngineConfig()
         config.appId = KeyCenter.AppId
-        config.channelProfile = .liveBroadcasting
-        config.areaCode = .global
         return config
     }()
     private lazy var channelMediaOptions: AgoraRtcChannelMediaOptions = {
        let option = AgoraRtcChannelMediaOptions()
-        option.publishMicrophoneTrack = .of(true)
-        option.publishCameraTrack = .of(true)
-        option.clientRoleType = .of((Int32)(AgoraClientRole.broadcaster.rawValue))
-        option.autoSubscribeVideo = .of(true)
-        option.autoSubscribeAudio = .of(true)
+        option.publishLocalAudio = true
+        option.publishLocalVideo = true
+        option.autoSubscribeVideo = true
+        option.autoSubscribeAudio = true
         return option
     }()
     private var liveSettingModel: LiveSettingUseData?
@@ -117,13 +114,13 @@ class MutliBroadcastingCreateController: BaseViewController {
     private func setupAgoraKit() {
         agoraKit = AgoraRtcEngineKit.sharedEngine(with: rtcEngineConfig, delegate: nil)
         agoraKit?.setLogFile(LogUtils.sdkLogPath())
+        agoraKit?.setChannelProfile(.liveBroadcasting)
         agoraKit?.setClientRole(.broadcaster)
         agoraKit?.setVideoEncoderConfiguration(
             AgoraVideoEncoderConfiguration(size: CGSize(width: 320, height: 240),
                                            frameRate: .fps30,
                                            bitrate: AgoraVideoBitrateStandard,
-                                           orientationMode: .fixedPortrait,
-                                           mirrorMode: .auto))
+                                           orientationMode: .fixedPortrait))
         /// 开启扬声器
         agoraKit?.setDefaultAudioRouteToSpeakerphone(true)
 
@@ -153,8 +150,7 @@ class MutliBroadcastingCreateController: BaseViewController {
                 AgoraVideoEncoderConfiguration(size: model.resolution,
                                                frameRate: model.framedate,
                                                bitrate: model.sliderValue,
-                                               orientationMode: .fixedPortrait,
-                                               mirrorMode: .auto))
+                                               orientationMode: .fixedPortrait))
         }
         AlertManager.show(view: settingView,
                           alertPostion: .bottom)
@@ -171,12 +167,11 @@ class MutliBroadcastingCreateController: BaseViewController {
     private func startLiveHandler(result: IObject) {
         LogUtils.log(message: "result == \(result.toJson() ?? "")", level: .info)
         let channelName = result.getPropertyWith(key: "roomId", type: String.self) as? String
-        NetworkManager.shared.generateToken(channelName: channelName ?? "", uid: UserInfo.userId) {
-            let livePlayerVC = MutliBroadcastingController(channelName: channelName ?? "",
-                                                           userId: "\(UserInfo.userId)",
-                                                           agoraKit: self.agoraKit)
-            self.navigationController?.pushViewController(livePlayerVC, animated: true)
-        }
+        
+        let livePlayerVC = MutliBroadcastingController(channelName: channelName ?? "",
+                                                       userId: "\(UserInfo.userId)",
+                                                       agoraKit: agoraKit)
+        navigationController?.pushViewController(livePlayerVC, animated: true)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

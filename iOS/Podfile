@@ -12,7 +12,7 @@ target 'Scene-Examples' do
   inhibit_all_warnings!
   
   pod 'MBProgressHUD', '~> 1.2.0'
-  pod 'AgoraRtcEngine_iOS', '3.7.0'
+  pod 'AgoraRtcEngine_iOS', '3.7.1'
 #  pod 'AgoraScreenShare', :path => 'sdk'
   pod 'Agora-Scene-Utils', '~> 1.0.3'
 #  pod 'AgoraSyncManager', '1.0.2'

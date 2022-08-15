@@ -23,14 +23,12 @@ class MutliBroadcastingController: BaseViewController {
     private lazy var rtcEngineConfig: AgoraRtcEngineConfig = {
         let config = AgoraRtcEngineConfig()
         config.appId = KeyCenter.AppId
-        config.channelProfile = .liveBroadcasting
-        config.areaCode = .global
         return config
     }()
     private lazy var channelMediaOptions: AgoraRtcChannelMediaOptions = {
         let option = AgoraRtcChannelMediaOptions()
-        option.autoSubscribeAudio = .of(true)
-        option.autoSubscribeVideo = .of(true)
+        option.autoSubscribeAudio = true
+        option.autoSubscribeVideo = true
         return option
     }()
     private(set) var channleName: String = ""
@@ -82,7 +80,6 @@ class MutliBroadcastingController: BaseViewController {
         agoraKit?.disableVideo()
         agoraKit?.muteAllRemoteAudioStreams(true)
         agoraKit?.muteAllRemoteVideoStreams(true)
-        agoraKit?.destroyMediaPlayer(nil)
         mutliView.leavl()
         leaveChannel(uid: UserInfo.userId, channelName: channleName, isExit: true)
         liveView.leave(channelName: channleName)
@@ -126,15 +123,13 @@ class MutliBroadcastingController: BaseViewController {
         liveView.onTapIsMuteMicClosure = { [weak self] isSelected in
             self?.agoraKit?.muteLocalAudioStream(isSelected)
         }
-        liveView.setupRemoteVideoClosure = { [weak self] canvas, connection in
-            self?.agoraKit?.setupRemoteVideoEx(canvas, connection: connection)
+        liveView.setupRemoteVideoClosure = { [weak self] canvas in
+            guard let canvas = canvas.canvas else { return }
+            self?.agoraKit?.setupRemoteVideo(canvas)
         }
         
         mutliView.joinTheBroadcasting = { [weak self] isBroadcast in
             guard let self = self else { return }
-            self.channelMediaOptions.publishCameraTrack = .of(isBroadcast)
-            self.channelMediaOptions.publishMicrophoneTrack = .of(isBroadcast)
-            self.agoraKit?.updateChannel(with: self.channelMediaOptions)
             self.agoraKit?.setClientRole(isBroadcast ? .broadcaster : .audience)
         }
         
@@ -178,11 +173,10 @@ class MutliBroadcastingController: BaseViewController {
     }
     
     private func joinChannel(channelName: String, uid: UInt) {
-        channelMediaOptions.clientRoleType = .of((Int32)(getRole(uid: "\(uid)").rawValue))
-        channelMediaOptions.publishMicrophoneTrack = .of(getRole(uid: "\(uid)") == .broadcaster)
-        channelMediaOptions.publishCameraTrack = .of(getRole(uid: "\(uid)") == .broadcaster)
-        channelMediaOptions.autoSubscribeVideo = .of(true)
-        channelMediaOptions.autoSubscribeAudio = .of(true)
+        channelMediaOptions.publishLocalAudio = getRole(uid: "\(uid)") == .broadcaster
+        channelMediaOptions.publishLocalVideo = getRole(uid: "\(uid)") == .broadcaster
+        channelMediaOptions.autoSubscribeVideo = true
+        channelMediaOptions.autoSubscribeAudio = true
         let result = agoraKit?.joinChannel(byToken: KeyCenter.Token, channelId: channelName, info: nil, uid: uid, joinSuccess: nil)
         if result == 0 {
             LogUtils.log(message: "进入房间", level: .info)

@@ -1,35 +1,35 @@
 PODS:
   - Agora-Scene-Utils (1.0.3)
-  - AgoraRtcEngine_iOS (3.7.0):
-    - AgoraRtcEngine_iOS/AINS (= 3.7.0)
-    - AgoraRtcEngine_iOS/AV1Dec (= 3.7.0)
-    - AgoraRtcEngine_iOS/ContentInspect (= 3.7.0)
-    - AgoraRtcEngine_iOS/FullAudioFormat (= 3.7.0)
-    - AgoraRtcEngine_iOS/ReplayKit (= 3.7.0)
-    - AgoraRtcEngine_iOS/ROIEnc (= 3.7.0)
-    - AgoraRtcEngine_iOS/RtcBasic (= 3.7.0)
-    - AgoraRtcEngine_iOS/SpatialAudio (= 3.7.0)
-    - AgoraRtcEngine_iOS/SuperResolution (= 3.7.0)
-    - AgoraRtcEngine_iOS/VideoPreprocess (= 3.7.0)
-    - AgoraRtcEngine_iOS/VirtualBackground (= 3.7.0)
-  - AgoraRtcEngine_iOS/AINS (3.7.0)
-  - AgoraRtcEngine_iOS/AV1Dec (3.7.0)
-  - AgoraRtcEngine_iOS/ContentInspect (3.7.0)
-  - AgoraRtcEngine_iOS/FullAudioFormat (3.7.0)
-  - AgoraRtcEngine_iOS/ReplayKit (3.7.0)
-  - AgoraRtcEngine_iOS/ROIEnc (3.7.0)
-  - AgoraRtcEngine_iOS/RtcBasic (3.7.0)
-  - AgoraRtcEngine_iOS/SpatialAudio (3.7.0)
-  - AgoraRtcEngine_iOS/SuperResolution (3.7.0)
-  - AgoraRtcEngine_iOS/VideoPreprocess (3.7.0)
-  - AgoraRtcEngine_iOS/VirtualBackground (3.7.0)
+  - AgoraRtcEngine_iOS (3.7.1):
+    - AgoraRtcEngine_iOS/AINS (= 3.7.1)
+    - AgoraRtcEngine_iOS/AV1Dec (= 3.7.1)
+    - AgoraRtcEngine_iOS/ContentInspect (= 3.7.1)
+    - AgoraRtcEngine_iOS/FullAudioFormat (= 3.7.1)
+    - AgoraRtcEngine_iOS/ReplayKit (= 3.7.1)
+    - AgoraRtcEngine_iOS/ROIEnc (= 3.7.1)
+    - AgoraRtcEngine_iOS/RtcBasic (= 3.7.1)
+    - AgoraRtcEngine_iOS/SpatialAudio (= 3.7.1)
+    - AgoraRtcEngine_iOS/SuperResolution (= 3.7.1)
+    - AgoraRtcEngine_iOS/VideoPreprocess (= 3.7.1)
+    - AgoraRtcEngine_iOS/VirtualBackground (= 3.7.1)
+  - AgoraRtcEngine_iOS/AINS (3.7.1)
+  - AgoraRtcEngine_iOS/AV1Dec (3.7.1)
+  - AgoraRtcEngine_iOS/ContentInspect (3.7.1)
+  - AgoraRtcEngine_iOS/FullAudioFormat (3.7.1)
+  - AgoraRtcEngine_iOS/ReplayKit (3.7.1)
+  - AgoraRtcEngine_iOS/ROIEnc (3.7.1)
+  - AgoraRtcEngine_iOS/RtcBasic (3.7.1)
+  - AgoraRtcEngine_iOS/SpatialAudio (3.7.1)
+  - AgoraRtcEngine_iOS/SuperResolution (3.7.1)
+  - AgoraRtcEngine_iOS/VideoPreprocess (3.7.1)
+  - AgoraRtcEngine_iOS/VirtualBackground (3.7.1)
   - AgoraRtm_iOS (1.4.9)
   - MBProgressHUD (1.2.0)
   - SocketRocket (0.6.0)
 
 DEPENDENCIES:
   - Agora-Scene-Utils (~> 1.0.3)
-  - AgoraRtcEngine_iOS (= 3.7.0)
+  - AgoraRtcEngine_iOS (= 3.7.1)
   - AgoraRtm_iOS (= 1.4.9)
   - MBProgressHUD (~> 1.2.0)
   - SocketRocket
@@ -44,11 +44,11 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   Agora-Scene-Utils: e5f27af2af265d73aecd421a947e251f6881b34f
-  AgoraRtcEngine_iOS: e6bc354af9b8b883926382b5034f18822b5303df
+  AgoraRtcEngine_iOS: f5181c4c32075bab11b0bdfc22e63fa00b9dc5bb
   AgoraRtm_iOS: b4bb9a431ce36f9b44cda423e66b2f96945ca2ab
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
 
-PODFILE CHECKSUM: e30cb1ac5657f1bd560b24cdb67176a698ccf789
+PODFILE CHECKSUM: da11e4b946940aba2b08598dcffacc4d16e421b7
 
 COCOAPODS: 1.11.2
