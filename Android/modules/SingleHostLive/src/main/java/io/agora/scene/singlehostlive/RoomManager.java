@@ -69,7 +69,6 @@ public class RoomManager {
         errorHandler = error;
         HashMap<String, String> params = new HashMap<>();
         params.put("appid", appId);
-        params.put("token", token);
         params.put("defaultChannel", "signleLive");
         Sync.Instance().init(context, params, new Sync.Callback() {
             @Override
