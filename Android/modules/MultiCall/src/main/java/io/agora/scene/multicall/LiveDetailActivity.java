@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import io.agora.example.base.TokenGenerator;
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
 import io.agora.rtc.models.ChannelMediaOptions;
@@ -292,7 +293,8 @@ public class LiveDetailActivity extends AppCompatActivity {
         channelMediaOptions.publishLocalAudio = localIsRoomOwner();
         channelMediaOptions.autoSubscribeVideo = true;
         channelMediaOptions.autoSubscribeAudio = true;
-        rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, "", Integer.parseInt(RoomManager.getCacheUserId()), channelMediaOptions);
+        int uid = Integer.parseInt(RoomManager.getCacheUserId());
+        TokenGenerator.gen(LiveDetailActivity.this, roomInfo.roomId, uid, ret -> rtcEngine.joinChannel(ret, roomInfo.roomId, "", uid, channelMediaOptions));
     }
 
     private void becomeBroadcast(boolean publish) {

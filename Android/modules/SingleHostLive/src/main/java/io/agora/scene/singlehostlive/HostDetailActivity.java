@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.List;
 
+import io.agora.example.base.TokenGenerator;
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
 import io.agora.rtc.models.ChannelMediaOptions;
@@ -176,7 +177,10 @@ public class HostDetailActivity extends AppCompatActivity {
         options.publishLocalVideo = true;
         options.autoSubscribeVideo = true;
         options.autoSubscribeAudio = true;
-        rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, "", Integer.parseInt(RoomManager.getCacheUserId()), options);
+        int uid = Integer.parseInt(RoomManager.getCacheUserId());
+        TokenGenerator.gen(this, roomInfo.roomId, uid, ret -> {
+            rtcEngine.joinChannel(ret, roomInfo.roomId, "", uid, options);
+        });
     }
 
     private void renderLocalPreview() {
