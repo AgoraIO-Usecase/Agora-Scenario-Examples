@@ -36,12 +36,17 @@ public class TokenGenerator {
     }
 
     public static void gen(Context context, String channelName,  int uid, OnTokenGenCallback<String> onGetToken){
-        String configToken = context.getString(R.string.rtc_app_token);
-        gen(context.getString(R.string.rtc_app_id), context.getString(R.string.rtc_certificate), channelName, uid, onGetToken, ret -> {
-            Log.e("TAG", "for requesting token error, use config token instead.");
+        gen(context.getString(R.string.rtc_app_id), context.getString(R.string.rtc_certificate), channelName, uid, ret -> {
             if(onGetToken != null){
                 new Handler(Looper.getMainLooper()).post(() -> {
-                    onGetToken.onTokenGen(configToken);
+                    onGetToken.onTokenGen(ret);
+                });
+            }
+        }, ret -> {
+            Log.e("TAG", "for requesting token error, use config token instead.");
+            if (onGetToken != null) {
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    onGetToken.onTokenGen("");
                 });
             }
         });

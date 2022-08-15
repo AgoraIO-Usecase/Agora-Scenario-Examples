@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.Iterator;
 import java.util.List;
 
+import io.agora.example.base.TokenGenerator;
 import io.agora.rtc.IRtcChannelEventHandler;
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcChannel;
@@ -266,7 +267,9 @@ public class HostDetailActivity extends AppCompatActivity {
             options.publishLocalVideo = true;
             options.autoSubscribeVideo = true;
             options.autoSubscribeAudio = true;
-            rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, null, Integer.parseInt(RoomManager.getCacheUserId()), options);
+            int uid = Integer.parseInt(RoomManager.getCacheUserId());
+            TokenGenerator.gen(HostDetailActivity.this, roomInfo.roomId, uid, ret -> rtcEngine.joinChannel(ret, roomInfo.roomId, null, uid, options));
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -324,7 +327,8 @@ public class HostDetailActivity extends AppCompatActivity {
             options.publishLocalAudio = false;
             options.autoSubscribeAudio = true;
             options.autoSubscribeVideo = true;
-            exChannel.joinChannel(getString(R.string.rtc_app_token), "", 0, options);
+            TokenGenerator.gen(HostDetailActivity.this, exChannelId, 0, ret -> exChannel.joinChannel(ret, "", 0, options));
+
         }else{
             mBinding.pkVideoContainer.setVisibility(View.GONE);
             mBinding.pkVideoContainer.removeAllViews();
