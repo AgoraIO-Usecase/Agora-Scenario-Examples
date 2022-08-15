@@ -5,6 +5,7 @@ _English | [中文](README_zh.md)
 
 ## Overview
 This repository contains scenarios using the Agora RTC Java SDK for Android.
+
 ![image](img_case.png)
 
 ## Scenarios
