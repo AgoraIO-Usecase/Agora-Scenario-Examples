@@ -65,7 +65,7 @@ public class TokenGenerator {
             postBody.put("appCertificate", certificate);
             postBody.put("channelName", channelName);
             postBody.put("expire", 900);
-            postBody.put("src", "iOS");
+            postBody.put("src", "Android");
             postBody.put("ts", System.currentTimeMillis() + "");
             postBody.put("type", 1);
             postBody.put("uid", uid + "");
