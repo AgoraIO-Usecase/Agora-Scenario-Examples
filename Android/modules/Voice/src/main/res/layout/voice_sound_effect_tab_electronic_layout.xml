@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/voice_sound_effect_dialog_content_height"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp"
+        tools:background="@android:color/darker_gray">
+
+        <Switch
+            android:id="@+id/switch_electronic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/voice_sound_effect_enable_electronic_voice"
+            android:textAlignment="gravity"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_key_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/switch_electronic"
+            android:layout_marginTop="8dp"
+            android:text="@string/voice_sound_effect_electronic_mode_hint"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_key"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_key_hint"
+            android:layout_marginTop="8dp"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="4" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_tone_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rv_key"
+            android:layout_marginTop="8dp"
+            android:text="@string/voice_sound_effect_electronic_key_hint"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_tone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_tone_hint"
+            android:layout_marginTop="16dp"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="4" />
+    </RelativeLayout>
+</FrameLayout>
+

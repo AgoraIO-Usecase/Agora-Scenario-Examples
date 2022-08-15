@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/voice_sound_effect_dialog_content_height"
+        android:gravity="center"
+        android:layout_centerInParent="true">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/magic_notes_coming"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/voice_sound_effect_ic_coming_soon"/>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/magic_notes_coming"
+            android:layout_marginTop="12dp"
+            android:textColor="#FFababab"
+            android:textSize="12sp"
+            android:text="@string/voice_sound_effect_magic_notes_coming_soon"/>
+    </RelativeLayout>
+</RelativeLayout>

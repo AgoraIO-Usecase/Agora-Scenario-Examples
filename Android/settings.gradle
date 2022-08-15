@@ -9,3 +9,7 @@ include ':libs:ui-widget'
 include ':modules:PKLive'
 include ':modules:SingleHostLive'
 include ':modules:BreakoutRoom'
+
+include ':modules:VideoCall'
+include ':modules:Voice'
+include ':modules:MultiCall'
