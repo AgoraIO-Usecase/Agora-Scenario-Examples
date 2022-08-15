@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Locale;
 
 import io.agora.example.base.BaseActivity;
+import io.agora.example.base.TokenGenerator;
 import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
 import io.agora.rtc2.IRtcEngineEventHandler;
@@ -180,7 +181,7 @@ public class RtcHostActivity extends BaseActivity<SuperappHostDetailActivityBind
             options.publishMicrophoneTrack = true;
             options.autoSubscribeAudio = true;
             options.autoSubscribeVideo = true;
-            rtcEngine.joinChannel(getString(R.string.rtc_app_token), mRoomInfo.roomId, 0, options);
+            TokenGenerator.gen(this, mRoomInfo.roomId, 0, ret -> rtcEngine.joinChannel(ret, mRoomInfo.roomId, 0, options));
         } catch (Exception e) {
             e.printStackTrace();
         }

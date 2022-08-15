@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.List;
 
+import io.agora.example.base.TokenGenerator;
 import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
 import io.agora.rtc2.IRtcEngineEventHandler;
@@ -174,7 +175,8 @@ public class AudienceDetailActivity extends AppCompatActivity {
         options.audienceLatencyLevel = Constants.AUDIENCE_LATENCY_LEVEL_ULTRA_LOW_LATENCY;
         options.autoSubscribeVideo = true;
         options.autoSubscribeAudio = true;
-        rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, Integer.parseInt(RoomManager.getCacheUserId()), options);
+        int uid = Integer.parseInt(RoomManager.getCacheUserId());
+        TokenGenerator.gen(this, roomInfo.roomId, uid, ret -> rtcEngine.joinChannel(ret, roomInfo.roomId, uid, options));
     }
 
     private void showGiftGridDialog() {

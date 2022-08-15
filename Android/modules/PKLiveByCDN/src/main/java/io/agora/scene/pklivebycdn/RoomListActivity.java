@@ -23,7 +23,7 @@ public class RoomListActivity extends BaseActivity<SuperappRoomListActivityBindi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        RoomManager.getInstance().init(this, getString(R.string.rtm_app_id), getString(R.string.rtm_app_token),
+        RoomManager.getInstance().init(this, getString(R.string.sync_app_id),
                 ex -> runOnUiThread(()-> Toast.makeText(RoomListActivity.this, ex.getMessage(), Toast.LENGTH_SHORT).show()));
         StatusBarUtil.hideStatusBar(getWindow(), false);
 

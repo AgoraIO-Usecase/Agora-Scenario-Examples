@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog;
 import java.util.Locale;
 
 import io.agora.example.base.BaseActivity;
+import io.agora.example.base.TokenGenerator;
 import io.agora.mediaplayer.IMediaPlayer;
 import io.agora.mediaplayer.IMediaPlayerObserver;
 import io.agora.mediaplayer.data.PlayerUpdatedInfo;
@@ -171,7 +172,9 @@ public class RtcAudienceActivity extends BaseActivity<SuperappAudienceDetailActi
         options.publishMicrophoneTrack = true;
         options.autoSubscribeAudio = true;
         options.autoSubscribeVideo = true;
-        rtcEngine.joinChannel(getString(R.string.rtc_app_token), mRoomInfo.roomId, 0, options);
+        TokenGenerator.gen(this, mRoomInfo.roomId, 0, ret -> {
+            rtcEngine.joinChannel(ret, mRoomInfo.roomId, 0, options);
+        });
 
         SurfaceView videoView = new SurfaceView(this);
         mBinding.fullVideoContainer.removeAllViews();

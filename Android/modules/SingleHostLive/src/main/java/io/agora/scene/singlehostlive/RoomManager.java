@@ -60,7 +60,7 @@ public class RoomManager {
         }
     }
 
-    public void init(Context context, String appId, String token, DataCallback<Exception> error) {
+    public void init(Context context, String appId, DataCallback<Exception> error) {
         if (isInitialized) {
             return;
         }
@@ -69,7 +69,6 @@ public class RoomManager {
         errorHandler = error;
         HashMap<String, String> params = new HashMap<>();
         params.put("appid", appId);
-        params.put("token", token);
         params.put("defaultChannel", "signleLive");
         Sync.Instance().init(context, params, new Sync.Callback() {
             @Override
