@@ -135,12 +135,12 @@ public class LiveDetailActivity extends BaseActivity<VideoCallLiveDetailActivity
     private void initRoomManager() {
         roomManager.joinRoom(roomInfo.roomId, () -> {
             roomManager.subscribeRoomDeleteEvent(roomInfo.roomId, data -> {
-                new AlertDialog.Builder(LiveDetailActivity.this)
+                runOnUiThread(() -> new AlertDialog.Builder(LiveDetailActivity.this)
                         .setTitle(R.string.common_tip)
                         .setMessage(R.string.common_tip_room_closed)
                         .setCancelable(false)
                         .setPositiveButton(R.string.common_confirm, (dialog, which) -> finish())
-                        .show();
+                        .show());
             });
         });
     }

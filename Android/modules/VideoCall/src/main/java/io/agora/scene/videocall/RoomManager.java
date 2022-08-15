@@ -168,7 +168,7 @@ public class RoomManager {
             @Override
             public void onDeleted(IObject item) {
                 super.onDeleted(item);
-                if (roomId.equals(item.getId()) && delete != null) {
+                if (delete != null) {
                     delete.onObtained(item.getId());
                 }
             }
