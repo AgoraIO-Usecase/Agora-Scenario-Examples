@@ -5,6 +5,7 @@ _English | [中文](README_zh.md)
 
 ## Overview
 This repository contains scenarios using the Agora RTC Java SDK for Android.
+
 ![image](img_case.png)
 
 ## Scenarios
@@ -16,6 +17,7 @@ This repository contains scenarios using the Agora RTC Java SDK for Android.
 |LivePK|[LivePK](./modules/LivePK/)|
 |PKLiveByCDN|[PKLiveByCDN](./modules/PKLiveByCDN/)|
 |BreakoutRoom|[BreakoutRoom](./modules/BreakoutRoom/)|
+|MultiCall|[MultiCall](./modules/MultiCall/)|
 
 ## Quickstart
 ### Prerequisites
@@ -30,20 +32,19 @@ This repository contains scenarios using the Agora RTC Java SDK for Android.
 2. Sync the project with Gradle files.
 3. Edit the  `/Android/libs/base-library/src/main/res/values/string_config.xml` file.
 
-    - Replace `<=Agora RTC APP ID=>` with your RTC App ID.
-    - Replace `<=Agora RTM APP Id=>` with your RTM App ID which can be same with RTC App ID。
-    - If the certificate of project opened，the APP Certificate should be set to `rtm_app_certificate` and `rtc_app_certificate`
+    - Replace `<=YOUR RTC APP ID=>` with your RTC App ID.
+    - Replace `<=YOUR SYNC APP ID=>` with your RTM App ID which can be same with RTC App ID。
+    - If the certificate of project opened，the APP Certificate should be set to `rtc_certificate`
 
    ```xml
-   <string name="rtm_app_id" translatable="false"><=Agora RTM APP Id=></string>
-   <string name="rtm_app_certificate" translatable="false"/>
-   <string name="rtc_app_id" translatable="false"><=Agora RTC APP ID=></string>
-   <string name="rtc_app_certificate" translatable="false"/>
+   <string name="rtc_app_id" translatable="false"><=YOUR RTC APP ID=></string>
+   <string name="rtc_certificate" translatable="false"/>
+   <string name="sync_app_id" translatable="false"><=YOUR SYNC APP ID=></string>
    ```
 
    > See [Get Started with Agora](https://docs.agora.io/en/Agora%20Platform/get_appid_token) to learn how to get an App ID and App Certificate.
    >
-   > The project has a server for generating access token，so temporary access token is unnecessary. However, the APP Certificate should be set to `rtc_app_certificate` and `rtm_app_certificate`.
+   > The project has a server for generating access token，so temporary access token is unnecessary. However, the APP Certificate should be set to `rtc_certificate`.
 
    > To ensure communication security, Agora uses access tokens (dynamic keys) to authenticate users joining a channel.
    >

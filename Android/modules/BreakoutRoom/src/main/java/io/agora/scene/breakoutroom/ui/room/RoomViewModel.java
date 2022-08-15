@@ -20,13 +20,13 @@ import java.util.Objects;
 import java.util.Set;
 
 import io.agora.example.base.BaseUtil;
+import io.agora.example.base.TokenGenerator;
 import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
 import io.agora.rtc2.IRtcEngineEventHandler;
 import io.agora.rtc2.RtcEngineEx;
 import io.agora.rtc2.internal.RtcEngineImpl;
 import io.agora.rtc2.video.VideoCanvas;
-import io.agora.scene.breakoutroom.R;
 import io.agora.scene.breakoutroom.RoomConstant;
 import io.agora.scene.breakoutroom.RoomUtil;
 import io.agora.scene.breakoutroom.ViewStatus;
@@ -296,12 +296,13 @@ public class RoomViewModel extends ViewModel implements RoomApi {
             currentSubRoom = roomName;
 
         Context context = ((RtcEngineImpl) rtcEngineEx).getContext();
-//            engine.joinChannel(context.getString(R.string.rtc_app_token), currentRoomInfo.getUserId() + roomName, null, Integer.parseInt(RoomConstant.userId));
         ChannelMediaOptions options = new ChannelMediaOptions();
         options.autoSubscribeAudio = true;
         options.autoSubscribeVideo = true;
         options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
-        rtcEngineEx.joinChannel(context.getString(R.string.rtc_app_token), currentRoomInfo.getUserId() + roomName, Integer.parseInt(RoomConstant.userId), options);
+        String channelName = currentRoomInfo.getUserId() + roomName;
+        int uid = Integer.parseInt(RoomConstant.userId);
+        TokenGenerator.gen(((RtcEngineImpl) rtcEngineEx).getContext(), channelName, uid, ret -> rtcEngineEx.joinChannel(ret, channelName, uid, options));
     }
 
     public void joinSubRoom(@NonNull String subRoomName) {

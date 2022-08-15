@@ -22,7 +22,7 @@ public class RoomListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pk_live_room_list_activity);
         StatusBarUtil.hideStatusBar(getWindow(), false);
-        RoomManager.getInstance().init(this, getString(R.string.rtm_app_id), getString(R.string.rtm_app_token), error -> runOnUiThread(() -> Toast.makeText(RoomListActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show()));
+        RoomManager.getInstance().init(this, getString(R.string.sync_app_id), error -> runOnUiThread(() -> Toast.makeText(RoomListActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show()));
 
         RoomListView roomListView = findViewById(R.id.room_list_view);
         roomListView.setListAdapter(new RoomListView.AbsRoomListAdapter<RoomManager.RoomInfo>() {

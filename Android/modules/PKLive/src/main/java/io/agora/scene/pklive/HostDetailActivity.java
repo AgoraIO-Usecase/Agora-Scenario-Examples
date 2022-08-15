@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import io.agora.example.base.TokenGenerator;
 import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
 import io.agora.rtc2.IRtcEngineEventHandler;
@@ -270,7 +271,9 @@ public class HostDetailActivity extends AppCompatActivity {
             options.publishCameraTrack = true;
             options.autoSubscribeVideo = true;
             options.autoSubscribeAudio = true;
-            rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, Integer.parseInt(RoomManager.getCacheUserId()), options);
+            int uid = Integer.parseInt(RoomManager.getCacheUserId());
+            TokenGenerator.gen(this, roomInfo.roomId, uid, ret -> rtcEngine.joinChannel(ret, roomInfo.roomId, uid, options));
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -289,34 +292,40 @@ public class HostDetailActivity extends AppCompatActivity {
             options.clientRoleType = Constants.CLIENT_ROLE_AUDIENCE;
             options.autoSubscribeAudio = true;
             options.autoSubscribeVideo = true;
-            rtcEngine.joinChannelEx(getString(R.string.rtc_app_token), exChannelConnection, options, new IRtcEngineEventHandler() {
-
+            TokenGenerator.gen(this, exChannelConnection.channelId, exChannelConnection.localUid, new TokenGenerator.OnTokenGenCallback<String>() {
                 @Override
-                public void onUserJoined(int uid, int elapsed) {
-                    super.onUserJoined(uid, elapsed);
-                    runOnUiThread(() -> {
-                        mBinding.pkVideoContainer.setVisibility(View.VISIBLE);
-                        mBinding.ivPkIcon.setVisibility(View.VISIBLE);
-                        mBinding.btnStopPk.setVisibility(View.VISIBLE);
-                        SurfaceView videoView = new SurfaceView(HostDetailActivity.this);
-                        mBinding.pkVideoContainer.removeAllViews();
-                        mBinding.pkVideoContainer.addView(videoView);
-                        rtcEngine.setupRemoteVideoEx(new VideoCanvas(videoView, Constants.RENDER_MODE_HIDDEN, uid), exChannelConnection);
-                    });
-                }
+                public void onTokenGen(String ret) {
+                    rtcEngine.joinChannelEx(ret, exChannelConnection, options, new IRtcEngineEventHandler() {
 
-                @Override
-                public void onUserOffline(int uid, int reason) {
-                    super.onUserOffline(uid, reason);
-                    runOnUiThread(() -> {
-                        mBinding.pkVideoContainer.setVisibility(View.GONE);
-                        mBinding.pkVideoContainer.removeAllViews();
-                        mBinding.ivPkIcon.setVisibility(View.GONE);
-                        mBinding.btnStopPk.setVisibility(View.GONE);
-                        endPK();
+                        @Override
+                        public void onUserJoined(int uid, int elapsed) {
+                            super.onUserJoined(uid, elapsed);
+                            runOnUiThread(() -> {
+                                mBinding.pkVideoContainer.setVisibility(View.VISIBLE);
+                                mBinding.ivPkIcon.setVisibility(View.VISIBLE);
+                                mBinding.btnStopPk.setVisibility(View.VISIBLE);
+                                SurfaceView videoView = new SurfaceView(HostDetailActivity.this);
+                                mBinding.pkVideoContainer.removeAllViews();
+                                mBinding.pkVideoContainer.addView(videoView);
+                                rtcEngine.setupRemoteVideoEx(new VideoCanvas(videoView, Constants.RENDER_MODE_HIDDEN, uid), exChannelConnection);
+                            });
+                        }
+
+                        @Override
+                        public void onUserOffline(int uid, int reason) {
+                            super.onUserOffline(uid, reason);
+                            runOnUiThread(() -> {
+                                mBinding.pkVideoContainer.setVisibility(View.GONE);
+                                mBinding.pkVideoContainer.removeAllViews();
+                                mBinding.ivPkIcon.setVisibility(View.GONE);
+                                mBinding.btnStopPk.setVisibility(View.GONE);
+                                endPK();
+                            });
+                        }
                     });
                 }
             });
+
         }else{
             mBinding.pkVideoContainer.setVisibility(View.GONE);
             mBinding.pkVideoContainer.removeAllViews();

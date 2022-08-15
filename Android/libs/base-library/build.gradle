@@ -38,4 +38,6 @@ dependencies {
     extSafeApi "com.google.android.material:material:1.4.0"
     extSafeApi "androidx.activity:activity:1.4.0"
     extSafeApi "androidx.fragment:fragment:1.4.0"
+    extSafeApi "com.squareup.okhttp3:okhttp:4.10.0"
+    extSafeApi "com.squareup.okhttp3:logging-interceptor:4.10.0"
 }

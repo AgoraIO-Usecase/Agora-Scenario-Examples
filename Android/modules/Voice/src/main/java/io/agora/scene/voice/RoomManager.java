@@ -64,7 +64,7 @@ public class RoomManager {
         return localUserInfo;
     }
 
-    public void init(Context context, String appId, String token, DataCallback<Exception> errorHandler) {
+    public void init(Context context, String appId, DataCallback<Exception> errorHandler) {
         if (isInitialized) {
             return;
         }
@@ -73,7 +73,6 @@ public class RoomManager {
         this.errorHandler = errorHandler;
         HashMap<String, String> params = new HashMap<>();
         params.put("appid", appId);
-        params.put("token", token);
         params.put("defaultChannel", "agoraVoice");
         Sync.Instance().init(context, params, new Sync.Callback() {
             @Override
