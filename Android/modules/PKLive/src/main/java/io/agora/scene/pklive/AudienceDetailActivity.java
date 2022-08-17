@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Random;
 
+import io.agora.example.base.TokenGenerator;
 import io.agora.rtc.Constants;
 import io.agora.rtc.IRtcChannelEventHandler;
 import io.agora.rtc.IRtcEngineEventHandler;
@@ -105,8 +106,8 @@ public class AudienceDetailActivity extends AppCompatActivity {
             ChannelMediaOptions options = new ChannelMediaOptions();
             options.autoSubscribeAudio = true;
             options.autoSubscribeVideo = true;
-            pkChannel.joinChannel(getString(R.string.rtc_app_token), "", pkUid, options);
 
+            TokenGenerator.gen(AudienceDetailActivity.this, pkChannelId, pkUid, ret -> pkChannel.joinChannel(ret, "", pkUid, options));
         } else if (data.status == RoomManager.PKApplyInfoStatus.end) {
             // 结束PK
             mBinding.pkVideoContainer.setVisibility(View.GONE);
@@ -202,7 +203,8 @@ public class AudienceDetailActivity extends AppCompatActivity {
             ChannelMediaOptions options = new ChannelMediaOptions();
             options.autoSubscribeVideo = true;
             options.autoSubscribeAudio = true;
-            rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, "", Integer.parseInt(RoomManager.getCacheUserId()), options);
+            int uid = Integer.parseInt(RoomManager.getCacheUserId());
+            TokenGenerator.gen(AudienceDetailActivity.this, roomInfo.roomId, uid, ret -> rtcEngine.joinChannel(ret, roomInfo.roomId, "", uid, options));
 
         } catch (Exception e) {
             e.printStackTrace();

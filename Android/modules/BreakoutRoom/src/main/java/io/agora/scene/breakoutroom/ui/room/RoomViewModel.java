@@ -19,13 +19,13 @@ import java.util.Objects;
 import java.util.Set;
 
 import io.agora.example.base.BaseUtil;
+import io.agora.example.base.TokenGenerator;
 import io.agora.rtc.Constants;
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
 import io.agora.rtc.internal.RtcEngineImpl;
 import io.agora.rtc.models.ChannelMediaOptions;
 import io.agora.rtc.video.VideoCanvas;
-import io.agora.scene.breakoutroom.R;
 import io.agora.scene.breakoutroom.RoomConstant;
 import io.agora.scene.breakoutroom.RoomUtil;
 import io.agora.scene.breakoutroom.ViewStatus;
@@ -234,7 +234,12 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
                 @Override
                 public void onUpdated(IObject item) {
-
+                    try {
+                        SubRoomInfo subRoomInfo = item.toObject(SubRoomInfo.class);
+                        onSubRoomAdded(subRoomInfo);
+                        _viewStatus.postValue(new ViewStatus.Done());
+                    } catch (Exception ignored) {
+                    }
                 }
 
                 @Override
@@ -282,11 +287,12 @@ public class RoomViewModel extends ViewModel implements RoomApi {
 
         rtcEngine.setClientRole(Constants.CLIENT_ROLE_BROADCASTER);
         Context context = ((RtcEngineImpl) rtcEngine).getContext();
-//            engine.joinChannel(context.getString(R.string.rtc_app_token), currentRoomInfo.getUserId() + roomName, null, Integer.parseInt(RoomConstant.userId));
         ChannelMediaOptions options = new ChannelMediaOptions();
         options.autoSubscribeAudio = true;
         options.autoSubscribeVideo = true;
-        rtcEngine.joinChannel(context.getString(R.string.rtc_app_token), currentRoomInfo.getUserId() + roomName, "", Integer.parseInt(RoomConstant.userId), options);
+        int uid = Integer.parseInt(RoomConstant.userId);
+        String channelName = currentRoomInfo.getUserId() + roomName;
+        TokenGenerator.gen(((RtcEngineImpl) rtcEngine).getContext(), channelName, uid, ret -> rtcEngine.joinChannel(ret, channelName, "", uid, options));
     }
 
     public void joinSubRoom(@NonNull String subRoomName) {
