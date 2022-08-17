@@ -20,10 +20,7 @@ class NetworkManager {
     
     private lazy var sessionConfig: URLSessionConfiguration = {
         let config = URLSessionConfiguration.default
-        config.httpAdditionalHeaders = ["Content-Type": "application/json",
-                                        "X-LC-Id": "fkUjxadPMmvYF3F3BI4uvmjo-gzGzoHsz",
-                                        "X-LC-Key": "QAvFS62IOR28GfSFQO5ze45s",
-                                        "X-LC-Session": "qmdj8pdidnmyzp0c7yqil91oc"]
+        config.httpAdditionalHeaders = ["Content-Type": "application/json"]
         config.timeoutIntervalForRequest = 30
         config.timeoutIntervalForResource = 30
         config.requestCachePolicy = .reloadIgnoringLocalCacheData
@@ -32,15 +29,15 @@ class NetworkManager {
     
     static let shared = NetworkManager()
     private init() { }
-    private let baseUrl = "https://agoraktv.xyz/1.1/functions/"
+    private let baseUrl = "https://toolbox.bj2.agoralab.co/v1/token/generate"
     
-    func generateToken(channelName: String, uid: UInt = 0, success: @escaping () -> Void) {
+    func generateToken(channelName: String, uid: UInt = UserInfo.userId, success: @escaping () -> Void) {
         generateToken(channelName: channelName, uid: uid) { _ in
             success()
         }
     }
     
-    func generateToken(channelName: String, uid: UInt = 0, success: @escaping (String?) -> Void) {
+    func generateToken(channelName: String, uid: UInt = UserInfo.userId, success: @escaping (String?) -> Void) {
         ToastView.showWait(text: "loading...", view: nil)
         if KeyCenter.Certificate == nil || KeyCenter.Certificate?.isEmpty == true {
             ToastView.hidden(delay: 0.15)
