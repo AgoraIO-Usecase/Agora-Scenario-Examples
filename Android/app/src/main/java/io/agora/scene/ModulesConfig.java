@@ -44,6 +44,12 @@ public class ModulesConfig {
                 R.drawable.app_banner_voice_call,
                 "io.agora.scene.pklivebycdn.RoomListActivity"
         ));
+        // Multi Call
+        this.moduleInfo.add(new ModuleInfo(
+                R.string.app_multi_call,
+                R.drawable.app_banner_video_call,
+                "io.agora.scene.multicall.RoomListActivity"
+        ));
         // Club
 //        this.moduleInfo.add(new ModuleInfo(
 //                R.string.app_club_name,

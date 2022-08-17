@@ -15,6 +15,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import io.agora.example.base.BaseActivity;
+import io.agora.example.base.TokenGenerator;
 import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
 import io.agora.rtc2.IRtcEngineEventHandler;
@@ -119,11 +120,13 @@ public class LiveDetailActivity extends BaseActivity<VideoCallLiveDetailActivity
             ChannelMediaOptions options = new ChannelMediaOptions();
             options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
             options.publishCameraTrack = true;
-            options.publishAudioTrack = true;
+            options.publishMicrophoneTrack = true;
             options.autoSubscribeAudio = true;
             options.autoSubscribeVideo = true;
-            rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, Integer.parseInt(RoomManager.getCacheUserId()), options);
-
+            int uid = Integer.parseInt(RoomManager.getCacheUserId());
+            TokenGenerator.gen(this, roomInfo.roomId, uid, ret -> {
+                rtcEngine.joinChannel(ret, roomInfo.roomId, uid, options);
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -132,12 +135,17 @@ public class LiveDetailActivity extends BaseActivity<VideoCallLiveDetailActivity
     private void initRoomManager() {
         roomManager.joinRoom(roomInfo.roomId, () -> {
             roomManager.subscribeRoomDeleteEvent(roomInfo.roomId, data -> {
-                new AlertDialog.Builder(LiveDetailActivity.this)
-                        .setTitle(R.string.common_tip)
-                        .setMessage(R.string.common_tip_room_closed)
-                        .setCancelable(false)
-                        .setPositiveButton(R.string.common_confirm, (dialog, which) -> finish())
-                        .show();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        new AlertDialog.Builder(LiveDetailActivity.this)
+                                .setTitle(R.string.common_tip)
+                                .setMessage(R.string.common_tip_room_closed)
+                                .setCancelable(false)
+                                .setPositiveButton(R.string.common_confirm, (dialog, which) -> finish())
+                                .show();
+                    }
+                });
             });
         });
     }

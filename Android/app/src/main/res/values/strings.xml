@@ -35,4 +35,8 @@
     <string name="app_voice_name">Voice</string>
     <string name="app_voice_description">voice with otherone</string>
 
+    <!--Multi Call-->
+    <string name="app_multi_call">Multi Call</string>
+    <string name="app_multi_call_description">Multi Call</string>
+
 </resources>

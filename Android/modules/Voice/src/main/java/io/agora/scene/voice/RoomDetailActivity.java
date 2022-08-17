@@ -14,6 +14,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import java.util.Iterator;
 
+import io.agora.example.base.TokenGenerator;
 import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
 import io.agora.rtc2.IRtcEngineEventHandler;
@@ -236,7 +237,7 @@ public class RoomDetailActivity extends AppCompatActivity {
             @Override
             public void onMusicSelected(BgMusicDialog.MusicInfo musicInfo, boolean isSelected) {
                 if(isSelected){
-                    rtcEngine.startAudioMixing(musicInfo.url, false, false, 1);
+                    rtcEngine.startAudioMixing(musicInfo.url, false, 0, 1);
                 }else{
                     rtcEngine.stopAudioMixing();
                 }
@@ -369,9 +370,11 @@ public class RoomDetailActivity extends AppCompatActivity {
 
             ChannelMediaOptions options = new ChannelMediaOptions();
             options.clientRoleType = isRoomOwner ? Constants.CLIENT_ROLE_BROADCASTER: Constants.CLIENT_ROLE_AUDIENCE;
-            options.publishAudioTrack = isRoomOwner;
+            options.publishMicrophoneTrack = isRoomOwner;
             options.autoSubscribeAudio = true;
-            rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, Integer.parseInt(RoomManager.getCacheUserId()), options);
+            int uid = Integer.parseInt(RoomManager.getCacheUserId());
+            TokenGenerator.gen(this, roomInfo.roomId, uid, ret -> rtcEngine.joinChannel(ret, roomInfo.roomId, uid, options));
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -415,7 +418,7 @@ public class RoomDetailActivity extends AppCompatActivity {
 
                     ChannelMediaOptions options = new ChannelMediaOptions();
                     options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
-                    options.publishAudioTrack = true;
+                    options.publishMicrophoneTrack = true;
                     options.autoSubscribeAudio = true;
                     rtcEngine.updateChannelMediaOptions(options);
 
@@ -425,7 +428,7 @@ public class RoomDetailActivity extends AppCompatActivity {
 
                     ChannelMediaOptions options = new ChannelMediaOptions();
                     options.clientRoleType = Constants.CLIENT_ROLE_AUDIENCE;
-                    options.publishAudioTrack = false;
+                    options.publishMicrophoneTrack = false;
                     options.autoSubscribeAudio = true;
                     rtcEngine.updateChannelMediaOptions(options);
 

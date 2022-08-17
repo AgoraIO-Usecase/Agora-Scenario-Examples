@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Locale;
 
 import io.agora.example.base.BaseActivity;
+import io.agora.example.base.TokenGenerator;
 import io.agora.mediaplayer.Constants;
 import io.agora.mediaplayer.IMediaPlayer;
 import io.agora.mediaplayer.IMediaPlayerObserver;
@@ -563,11 +564,12 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
 
             ChannelMediaOptions options = new ChannelMediaOptions();
             options.clientRoleType = io.agora.rtc2.Constants.CLIENT_ROLE_BROADCASTER;
-            options.publishAudioTrack = true;
+            options.publishMicrophoneTrack = true;
             options.publishCameraTrack = true;
             options.autoSubscribeAudio = true;
             options.autoSubscribeVideo = true;
-            rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, Integer.parseInt(RoomManager.getCacheUserId()), options);
+            int uid = Integer.parseInt(RoomManager.getCacheUserId());
+            TokenGenerator.gen(this, roomInfo.roomId, uid, ret -> rtcEngine.joinChannel(ret, roomInfo.roomId, uid, options));
 
             rtcEngine.enableLocalAudio(false);
             rtcEngine.enableLocalVideo(false);

@@ -23,7 +23,7 @@ public class RoomListActivity extends AppCompatActivity {
         setContentView(R.layout.video_call_room_list_activity);
         StatusBarUtil.hideStatusBar(getWindow(), false);
 
-        RoomManager.getInstance().init(this, getString(R.string.rtm_app_id), getString(R.string.rtm_app_token), data -> {
+        RoomManager.getInstance().init(this, getString(R.string.sync_app_id), data -> {
             runOnUiThread(() -> Toast.makeText(RoomListActivity.this, data.getMessage(), Toast.LENGTH_SHORT).show());
         });
 

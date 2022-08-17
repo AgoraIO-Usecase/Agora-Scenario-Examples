@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.List;
 
+import io.agora.example.base.TokenGenerator;
 import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.IRtcEngineEventHandler;
 import io.agora.rtc2.RtcEngine;
@@ -158,6 +159,8 @@ public class HostDetailActivity extends AppCompatActivity {
                     runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo("User-" +  uid, getString(R.string.live_room_message_user_left_suffix))));
                 }
             });
+            rtcEngine.enableVideo();
+            rtcEngine.enableVideo();
             rtcEngine.setCameraCapturerConfiguration(new CameraCapturerConfiguration(Constants.cameraDirection));
             rtcEngine.setVideoEncoderConfiguration(Constants.encoderConfiguration);
         } catch (Exception e) {
@@ -169,8 +172,9 @@ public class HostDetailActivity extends AppCompatActivity {
         ChannelMediaOptions options = new ChannelMediaOptions();
         options.clientRoleType = io.agora.rtc2.Constants.CLIENT_ROLE_BROADCASTER;
         options.publishCameraTrack = true;
-        options.publishAudioTrack = true;
-        rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, Integer.parseInt(RoomManager.getCacheUserId()), options);
+        options.publishMicrophoneTrack = true;
+        int uid = Integer.parseInt(RoomManager.getCacheUserId());
+        TokenGenerator.gen(this, roomInfo.roomId, uid, ret -> rtcEngine.joinChannel(ret, roomInfo.roomId, uid, options));
     }
 
     private void renderLocalPreview() {

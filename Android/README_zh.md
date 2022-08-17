@@ -5,6 +5,7 @@ _[English](README.md) | 中文_
 
 ## 简介
 该仓库包含了使用 RTC Java SDK for Android 开发的场景实现合集。
+
 ![image](img_case_zh.png)
 
 ## 场景
@@ -16,6 +17,7 @@ _[English](README.md) | 中文_
 |直播PK|[LivePK](./modules/LivePK/)|
 |CDN PK|[PKLiveByCDN](./modules/PKLiveByCDN/)|
 |超级小班课|[BreakoutRoom](./modules/BreakoutRoom/)|
+|多人连麦|[MultiCall](./modules/MultiCall/)|
 
 ## 快速上手
 ### 前提条件
@@ -30,20 +32,19 @@ _[English](README.md) | 中文_
 2. 将项目与 Gradle 文件同步。
 3. 编辑 `/Android/libs/base-library/src/main/res/values/string_config.xml` 文件。
 
-    - 将 `<=Agora RTC APP ID=>` 替换为你的 RTC App ID。
-    - 将 `<=Agora RTM APP Id=>` 替换为你的 RTM App ID，可以和RTC App ID一样。
-    - 如果开启了token，需要获取 App 证书并设置给`rtm_app_certificate`和`rtc_app_certificate`
+    - 将 `<=YOUR RTC APP ID=>` 替换为你的 RTC App ID。
+    - 将 `<=YOUR SYNC APP ID=>` 替换为你的 RTM App ID，可以和RTC App ID一样。
+    - 如果开启了token，需要获取 App 证书并设置给`rtc_certificate`
 
    ```xml
-   <string name="rtm_app_id" translatable="false"><=Agora RTM APP Id=></string>
-   <string name="rtm_app_certificate" translatable="false"/>
-   <string name="rtc_app_id" translatable="false"><=Agora RTC APP ID=></string>
-   <string name="rtc_app_certificate" translatable="false"/>
+   <string name="rtc_app_id" translatable="false"><=YOUR RTC APP ID=></string>
+   <string name="rtc_certificate" translatable="false"/>
+   <string name="sync_app_id" translatable="false"><=YOUR SYNC APP ID=></string>
    ```
 
    > 参考 [开始使用 Agora 平台](https://docs.agora.io/cn/Agora%20Platform/get_appid_token) 了解如何获取 App ID 和 App 证书。
    >
-   > 项目里自带Token签发服务，不需要使用临时token，但是需要配置`rtc_app_certificate`和`rtm_app_certificate`
+   > 项目里自带Token签发服务，不需要使用临时token，但是需要配置`rtc_certificate`
 
    > 为提高项目的安全性，Agora 使用 Token（动态密钥）对即将加入频道的用户进行鉴权。
    >

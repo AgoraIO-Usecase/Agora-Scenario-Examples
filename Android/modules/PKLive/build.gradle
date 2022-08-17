@@ -26,7 +26,7 @@ dependencies {
 
     // Agora
     extSafeImplementation 'com.github.AgoraIO-Community:SyncManager-Android:1.0.4'
-    extSafeImplementation 'io.agora.rtc:agora-full-beta:4.0.0-beta.1'
+    extSafeImplementation 'io.agora.rtc:full-sdk:4.0.0-rc.1'
 
     // Google
     extSafeImplementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'

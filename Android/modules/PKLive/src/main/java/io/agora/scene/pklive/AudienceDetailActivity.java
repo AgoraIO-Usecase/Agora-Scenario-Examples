@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Random;
 
+import io.agora.example.base.TokenGenerator;
 import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
 import io.agora.rtc2.IRtcEngineEventHandler;
@@ -87,22 +88,27 @@ public class AudienceDetailActivity extends AppCompatActivity {
             options.clientRoleType = Constants.CLIENT_ROLE_AUDIENCE;
             options.autoSubscribeAudio = true;
             options.autoSubscribeVideo = true;
-            rtcEngine.joinChannelEx(getString(R.string.rtc_app_token), pkConnection, options, new IRtcEngineEventHandler() {
+            TokenGenerator.gen(this, pkConnection.channelId, pkConnection.localUid, new TokenGenerator.OnTokenGenCallback<String>() {
                 @Override
-                public void onUserJoined(int uid, int elapsed) {
-                    super.onUserJoined(uid, elapsed);
-                    runOnUiThread(() -> {
-                        mBinding.pkVideoContainer.setVisibility(View.VISIBLE);
-                        mBinding.ivPkIcon.setVisibility(View.VISIBLE);
+                public void onTokenGen(String ret) {
+                    rtcEngine.joinChannelEx(ret, pkConnection, options, new IRtcEngineEventHandler() {
+                        @Override
+                        public void onUserJoined(int uid, int elapsed) {
+                            super.onUserJoined(uid, elapsed);
+                            runOnUiThread(() -> {
+                                mBinding.pkVideoContainer.setVisibility(View.VISIBLE);
+                                mBinding.ivPkIcon.setVisibility(View.VISIBLE);
 
-                        SurfaceView videoView = new SurfaceView(AudienceDetailActivity.this);
-                        mBinding.pkVideoContainer.removeAllViews();
-                        mBinding.pkVideoContainer.addView(videoView);
-                        rtcEngine.setupRemoteVideoEx(new VideoCanvas(videoView, Constants.RENDER_MODE_HIDDEN, uid), pkConnection);
+                                SurfaceView videoView = new SurfaceView(AudienceDetailActivity.this);
+                                mBinding.pkVideoContainer.removeAllViews();
+                                mBinding.pkVideoContainer.addView(videoView);
+                                rtcEngine.setupRemoteVideoEx(new VideoCanvas(videoView, Constants.RENDER_MODE_HIDDEN, uid), pkConnection);
+                            });
+                        }
                     });
                 }
-
             });
+
         } else if (data.status == RoomManager.PKApplyInfoStatus.end) {
             // 结束PK
             rtcEngine.leaveChannelEx(pkConnection);
@@ -189,13 +195,15 @@ public class AudienceDetailActivity extends AppCompatActivity {
                 }
             });
 
+            rtcEngine.enableVideo();
+            rtcEngine.enableAudio();
 
             ChannelMediaOptions options = new ChannelMediaOptions();
             options.clientRoleType = Constants.CLIENT_ROLE_AUDIENCE;
             options.autoSubscribeVideo = true;
             options.autoSubscribeAudio = true;
-            rtcEngine.joinChannel(getString(R.string.rtc_app_token), roomInfo.roomId, Integer.parseInt(RoomManager.getCacheUserId()), options);
-
+            int uid = Integer.parseInt(RoomManager.getCacheUserId());
+            TokenGenerator.gen(this, roomInfo.roomId, uid, ret -> rtcEngine.joinChannel(ret, roomInfo.roomId, uid, options));
         } catch (Exception e) {
             e.printStackTrace();
         }
