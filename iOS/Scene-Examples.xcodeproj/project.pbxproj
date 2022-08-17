@@ -20,6 +20,12 @@
 		E7377D94286EEA38008F6C62 /* VoiceChatRoomCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7377D93286EEA38008F6C62 /* VoiceChatRoomCreateController.swift */; };
 		E7377D962872CB94008F6C62 /* ClubCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7377D952872CB94008F6C62 /* ClubCreateController.swift */; };
 		E7440E2C277420F200CBF4D8 /* LiveBaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7440E2B277420F200CBF4D8 /* LiveBaseView.swift */; };
+		E748788D28AA198F00CA2F58 /* InteractiveBlogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E748788B28AA198F00CA2F58 /* InteractiveBlogController.swift */; };
+		E748788E28AA198F00CA2F58 /* InteractiveBlogCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E748788C28AA198F00CA2F58 /* InteractiveBlogCreateController.swift */; };
+		E748789128AA214B00CA2F58 /* InteractiveBlogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E748789028AA214B00CA2F58 /* InteractiveBlogView.swift */; };
+		E748789328AA3F5C00CA2F58 /* InteractiveBlogRaiseListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E748789228AA3F5B00CA2F58 /* InteractiveBlogRaiseListView.swift */; };
+		E748789528AB4A8300CA2F58 /* InteractiveBlogControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E748789428AB4A8300CA2F58 /* InteractiveBlogControlView.swift */; };
+		E748789728AB7D3800CA2F58 /* InteractiveBlogBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E748789628AB7D3800CA2F58 /* InteractiveBlogBannerView.swift */; };
 		E7499C1B276A078500E799FF /* LiveOnlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C1A276A078500E799FF /* LiveOnlineView.swift */; };
 		E7499C2A2770534400E799FF /* NoticeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C292770534400E799FF /* NoticeCell.swift */; };
 		E7499C2C2770537C00E799FF /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C2B2770537C00E799FF /* MessageCell.swift */; };
@@ -186,6 +192,12 @@
 		E7377D93286EEA38008F6C62 /* VoiceChatRoomCreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoiceChatRoomCreateController.swift; sourceTree = "<group>"; };
 		E7377D952872CB94008F6C62 /* ClubCreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClubCreateController.swift; sourceTree = "<group>"; };
 		E7440E2B277420F200CBF4D8 /* LiveBaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveBaseView.swift; sourceTree = "<group>"; };
+		E748788B28AA198F00CA2F58 /* InteractiveBlogController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractiveBlogController.swift; sourceTree = "<group>"; };
+		E748788C28AA198F00CA2F58 /* InteractiveBlogCreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractiveBlogCreateController.swift; sourceTree = "<group>"; };
+		E748789028AA214B00CA2F58 /* InteractiveBlogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractiveBlogView.swift; sourceTree = "<group>"; };
+		E748789228AA3F5B00CA2F58 /* InteractiveBlogRaiseListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractiveBlogRaiseListView.swift; sourceTree = "<group>"; };
+		E748789428AB4A8300CA2F58 /* InteractiveBlogControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractiveBlogControlView.swift; sourceTree = "<group>"; };
+		E748789628AB7D3800CA2F58 /* InteractiveBlogBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractiveBlogBannerView.swift; sourceTree = "<group>"; };
 		E7499C1A276A078500E799FF /* LiveOnlineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveOnlineView.swift; sourceTree = "<group>"; };
 		E7499C292770534400E799FF /* NoticeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeCell.swift; sourceTree = "<group>"; };
 		E7499C2B2770537C00E799FF /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
@@ -399,6 +411,7 @@
 		E7377D8B286ECB15008F6C62 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				E748788A28AA198F00CA2F58 /* InteractiveBlog */,
 				E71E7ADF2898C25F00B846C7 /* MultiJointBroadcasting */,
 				E763A884288F991B00FE99FA /* VideoCall */,
 				E7D30EE92845DC4A0062CFE3 /* CDN */,
@@ -437,6 +450,27 @@
 				E79C264B273D053E00909CD4 /* LiveRoomListController.swift */,
 			);
 			path = RoomList;
+			sourceTree = "<group>";
+		};
+		E748788A28AA198F00CA2F58 /* InteractiveBlog */ = {
+			isa = PBXGroup;
+			children = (
+				E748788F28AA212B00CA2F58 /* Views */,
+				E748788C28AA198F00CA2F58 /* InteractiveBlogCreateController.swift */,
+				E748788B28AA198F00CA2F58 /* InteractiveBlogController.swift */,
+			);
+			path = InteractiveBlog;
+			sourceTree = "<group>";
+		};
+		E748788F28AA212B00CA2F58 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E748789028AA214B00CA2F58 /* InteractiveBlogView.swift */,
+				E748789228AA3F5B00CA2F58 /* InteractiveBlogRaiseListView.swift */,
+				E748789428AB4A8300CA2F58 /* InteractiveBlogControlView.swift */,
+				E748789628AB7D3800CA2F58 /* InteractiveBlogBannerView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		E757E675281AAE6B0017D5B9 /* AgoraSyncManager */ = {
@@ -1008,6 +1042,7 @@
 				E79BEF37273D15D6009FA838 /* Screen.swift in Sources */,
 				E7000B242877D67100248345 /* RethinkSyncManager.swift in Sources */,
 				E7D30F1B2845DC4A0062CFE3 /* CDNPlayerViewControllerHost+RTC.swift in Sources */,
+				E748788E28AA198F00CA2F58 /* InteractiveBlogCreateController.swift in Sources */,
 				E7D46065285C825D004F3C82 /* BaseCollectionViewCell.swift in Sources */,
 				E79C2611273B689B00909CD4 /* SyncUtil.swift in Sources */,
 				E7EDBCC627A3BDCD00E763A6 /* AgoraVoiceChangeBGModel.swift in Sources */,
@@ -1028,6 +1063,7 @@
 				E79C264A273D003B00909CD4 /* LiveRoomInfo.swift in Sources */,
 				E79C262D273BC0CA00909CD4 /* ToastView.swift in Sources */,
 				E7EDBCB227A1463700E763A6 /* AgoraVoiceBelCantoModel.swift in Sources */,
+				E748789128AA214B00CA2F58 /* InteractiveBlogView.swift in Sources */,
 				E7D30F1C2845DC4A0062CFE3 /* CDNPlayerViewControllerAudience+RTC.swift in Sources */,
 				E71E7AF32898C25F00B846C7 /* MutliBroadcastingCreateController.swift in Sources */,
 				E7D30F182845DC4A0062CFE3 /* CDNRoomListViewController.swift in Sources */,
@@ -1050,6 +1086,7 @@
 				E7EDBCAE27A1281200E763A6 /* AgoraVoiceUsersView.swift in Sources */,
 				E7ECC56D27E81F5A00EFA778 /* UIImage+Color.swift in Sources */,
 				E71A0782288F99D500CC4BF6 /* VideoCallCreateViewController.swift in Sources */,
+				E748789328AA3F5C00CA2F58 /* InteractiveBlogRaiseListView.swift in Sources */,
 				E7D30F1A2845DC4A0062CFE3 /* CDNPlayerViewControllerAudience.swift in Sources */,
 				E7D46061285C7A00004F3C82 /* MainHeaderViewCell.swift in Sources */,
 				E79BEF7D27463F79009FA838 /* BORSubRoomModel.swift in Sources */,
@@ -1106,6 +1143,7 @@
 				E79BEF31273D0EA4009FA838 /* LiveBroadcastingController.swift in Sources */,
 				E7ECC56B27E81BAE00EFA778 /* ClubHeaderView.swift in Sources */,
 				E757E6A6281AAE6B0017D5B9 /* RtmSyncManager.swift in Sources */,
+				E748789728AB7D3800CA2F58 /* InteractiveBlogBannerView.swift in Sources */,
 				E79C2632273BC17B00909CD4 /* String+Extension.swift in Sources */,
 				E79C262A273B7D8900909CD4 /* DeviceAssistant.swift in Sources */,
 				E7EDBCB827A284AB00E763A6 /* AgoraVoiceToolView.swift in Sources */,
@@ -1114,8 +1152,10 @@
 				E710AE2F27A0F23300124356 /* ChangeRoomBgView.swift in Sources */,
 				E7499C1B276A078500E799FF /* LiveOnlineView.swift in Sources */,
 				E7EDBCC027A2A4CA00E763A6 /* RTCRealTimeDataView.swift in Sources */,
+				E748788D28AA198F00CA2F58 /* InteractiveBlogController.swift in Sources */,
 				E7D30F142845DC4A0062CFE3 /* CDNInvitationView.swift in Sources */,
 				E79C260F273B689B00909CD4 /* JSONObject.swift in Sources */,
+				E748789528AB4A8300CA2F58 /* InteractiveBlogControlView.swift in Sources */,
 				E79C25DF273B67DB00909CD4 /* AppDelegate.swift in Sources */,
 				E79C260E273B689B00909CD4 /* AgoraExtension.swift in Sources */,
 				E79C2646273CBA2700909CD4 /* LiveSettingModel.swift in Sources */,

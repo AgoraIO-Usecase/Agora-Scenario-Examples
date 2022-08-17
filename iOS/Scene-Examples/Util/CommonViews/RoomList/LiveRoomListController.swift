@@ -26,6 +26,41 @@ class LiveRoomListController: BaseViewController {
         button.addTarget(self, action: #selector(onTapCreateLiveButton), for: .touchUpInside)
         return button
     }()
+    
+    private lazy var bannerView: InteractiveBlogBannerView = {
+        let view = InteractiveBlogBannerView()
+        view.isHidden = true
+        view.onTapInteractiveBlogExitClosure = { [weak self] in
+            self?.createLiveButton.isHidden = false
+            view.isHidden = true
+            self?.getLiveData()
+        }
+        view.onTapInteractiveBlogBannerViewClosure = { [weak self] channelName in
+            guard let self = self else { return }
+            self.createLiveButton.isHidden = false
+            let roomInfo = self.dataArray.first(where: { $0.roomId == channelName })
+            let params = JSONObject.toJson(roomInfo)
+            SyncUtil.joinScene(id: roomInfo?.roomId ?? "",
+                               userId: roomInfo?.userId ?? "",
+                               property: params,
+                               success: { result in
+                let channelName = result.getPropertyWith(key: "roomId", type: String.self) as? String
+                let ownerId = result.getPropertyWith(key: "userId", type: String.self) as? String
+                NetworkManager.shared.generateToken(channelName: channelName ?? "", uid: UserInfo.userId) {
+                    let interactiveBlogVC = InteractiveBlogController(channelName: channelName ?? "", userId: ownerId ?? "", isAddUser: false)
+                    self.navigationController?.pushViewController(interactiveBlogVC, animated: true)
+                }
+            })
+        }
+        interactiveBlogDownPullClosure = { [weak self] channelName, userModel, agoraKit, role in
+            guard let self = self else { return }
+            self.bannerView.isHidden = false
+            self.createLiveButton.isHidden = true
+            self.bannerView.setupParams(channelName: channelName, model: userModel, agoraKit: agoraKit, role: role)
+        }
+        return view
+    }()
+    
     private var dataArray = [LiveRoomInfo]()
     private var sceneType: SceneType = .singleLive
     
@@ -95,6 +130,18 @@ class LiveRoomListController: BaseViewController {
         createLiveButton.translatesAutoresizingMaskIntoConstraints = false
         createLiveButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         createLiveButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -35).isActive = true
+        
+        view.addSubview(bannerView)
+        bannerView.translatesAutoresizingMaskIntoConstraints = false
+        bannerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15).isActive = true
+        bannerView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -(Screen.safeAreaBottomHeight() + 30)).isActive = true
+        bannerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15).isActive = true
+    }
+    
+    override func onTapBackButton() {
+        super.onTapBackButton()
+        guard sceneType == .interactiveBlog else { return }
+        bannerView.leave()
     }
     
     @objc
@@ -138,7 +185,11 @@ class LiveRoomListController: BaseViewController {
         case .mutli:
             let createLiveVC = MutliBroadcastingCreateController()
             navigationController?.pushViewController(createLiveVC, animated: true)
-            
+           
+        case .interactiveBlog:
+            let createLiveVC = InteractiveBlogCreateController()
+            navigationController?.pushViewController(createLiveVC, animated: true)
+        
         case .cdn:
             break
         }
@@ -181,6 +232,10 @@ class LiveRoomListController: BaseViewController {
             let mutliVC = MutliBroadcastingController(channelName: channelName ?? "", userId: ownerId ?? "")
             navigationController?.pushViewController(mutliVC, animated: true)
             
+        case .interactiveBlog:
+            let interactiveBlogVC = InteractiveBlogController(channelName: channelName ?? "", userId: ownerId ?? "", isAddUser: bannerView.isHidden)
+            navigationController?.pushViewController(interactiveBlogVC, animated: true)
+            
         default: break
         }
     }
@@ -189,6 +244,9 @@ class LiveRoomListController: BaseViewController {
 extension LiveRoomListController: AGETableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let item = dataArray[indexPath.item]
+        if sceneType == .interactiveBlog {
+            bannerView.checkRoom(channelName: item.roomId)
+        }
         let params = JSONObject.toJson(item)
         SyncUtil.joinScene(id: item.roomId, userId: item.userId, property: params, success: { result in
             let channelName = result.getPropertyWith(key: "roomId", type: String.self) as? String
