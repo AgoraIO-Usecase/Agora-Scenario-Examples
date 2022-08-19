@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="interactive_blog_app_name">Interactive Blog</string>
+    <string name="interactive_blog_description">Interactive Blog</string>
+
+    <string name="interactive_blog_error_room_default">Room exception(%s)</string>
+    <string name="interactive_blog_room_name_speaker">Speaker</string>
+    <string name="interactive_blog_room_name_listener">Audience</string>
+    <string name="interactive_blog_room_name_exit">Leave quietly</string>
+    <string name="interactive_blog_room_dialog_hand_up_title">Raise hands list</string>
+    <string name="interactive_blog_room_dialog_hand_up_agree">Agree</string>
+    <string name="interactive_blog_room_dialog_hand_up_refuse">Decline</string>
+    <string name="interactive_blog_room_dialog_seat_off">Become audience</string>
+    <string name="interactive_blog_room_dialog_open_audio">Turn on mic</string>
+    <string name="interactive_blog_room_dialog_close_audio">Turn off mic</string>
+    <string name="interactive_blog_room_dialog_close_title">Close room</string>
+    <string name="interactive_blog_room_dialog_close_message">Ending the room will remove everyone and close the room</string>
+    <string name="interactive_blog_room_dialog_invite">Invite to speak</string>
+    <string name="interactive_blog_room_dialog_invited">Host invites you to speak</string>
+    <string name="interactive_blog_invite_refuse">%s declines your request</string>
+    <string name="interactive_blog_invite_agree">%s approves your request</string>
+    <string name="interactive_blog_request_handup_success">You have raised hands to speak. Please wait.</string>
+    <string name="interactive_blog_handup_refuse">Your request to speak has been rejected</string>
+    <string name="interactive_blog_room_closed">Room closed</string>
+    <string name="interactive_blog_member_speaker_to_listener">You\'ve been set as audience</string>
+    <string name="interactive_blog_member_muted">You\'ve been muted.</string>
+
+</resources>
