@@ -16,7 +16,7 @@ This repository contains scenarios using the Agora RTC Java SDK for Android.
 |Voice|[Voice](./modules/Voice/)|
 |LivePK|[LivePK](./modules/LivePK/)|
 |MultiCall|[MultiCall](./modules/MultiCall/)|
-|InteractiveBlog|[MultiCall](./modules/InteractiveBlog/)|
+|InteractiveBlog|[InteractiveBlog](./modules/InteractiveBlog/)|
 
 ## Quickstart
 ### Prerequisites
