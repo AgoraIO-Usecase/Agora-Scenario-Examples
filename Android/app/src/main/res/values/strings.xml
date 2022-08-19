@@ -34,4 +34,8 @@
     <string name="app_multi_call">Multi Call</string>
     <string name="app_multi_call_description">Multi Call</string>
 
+    <!--Interactive Blog-->
+    <string name="app_interactive_blog">Interactive Blog</string>
+    <string name="app_interactive_blog_description">Interactive Blog</string>
+
 </resources>

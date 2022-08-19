@@ -111,6 +111,11 @@ public class RoomListView extends FrameLayout {
         mNetworkErrorBg.setVisibility(View.GONE);
     }
 
+    public void refreshData(){
+        removeCallbacks(mPageRefreshRunnable);
+        post(mPageRefreshRunnable);
+    }
+
     public <Data> void setListAdapter(AbsRoomListAdapter<Data> listAdapter) {
         setListAdapter((CustRoomListAdapter<Data, RoomListItemBinding>)listAdapter);
     }
