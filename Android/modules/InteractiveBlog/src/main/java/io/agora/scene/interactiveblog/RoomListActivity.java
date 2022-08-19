@@ -24,7 +24,6 @@ import io.agora.uiwidget.utils.RandomUtil;
 import io.agora.uiwidget.utils.StatusBarUtil;
 
 public class RoomListActivity extends BaseActivity<InteractiveBlogRoomListActivityBinding> implements ChatManager.OnEventListener{
-    private final String TAG = "RoomListActivity";
 
     private final ChatManager chatManager = ChatManager.getInstance();
     private int broadcastCount = 0;
@@ -90,9 +89,15 @@ public class RoomListActivity extends BaseActivity<InteractiveBlogRoomListActivi
     }
 
     private void gotoAudiencePage(RoomManager.RoomInfo roomInfo) {
-        Intent intent = new Intent(RoomListActivity.this, LiveDetailActivity.class);
-        intent.putExtra("roomInfo", roomInfo);
-        startActivity(intent);
+        AndPermission.with(this)
+                .runtime()
+                .permission(Permission.RECORD_AUDIO)
+                .onGranted(data -> {
+                    Intent intent = new Intent(RoomListActivity.this, LiveDetailActivity.class);
+                    intent.putExtra("roomInfo", roomInfo);
+                    startActivity(intent);
+                })
+                .start();
     }
 
     @Override

@@ -9,13 +9,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.runtime.Permission;
 
-import io.agora.rtc2.RtcEngine;
 import io.agora.uiwidget.function.PreviewControlView;
 import io.agora.uiwidget.utils.StatusBarUtil;
 
 public class PreviewActivity extends AppCompatActivity {
-    private static final String TAG = "PreviewActivity";
-    private RtcEngine rtcEngine;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
