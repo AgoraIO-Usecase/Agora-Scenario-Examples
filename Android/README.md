@@ -5,6 +5,7 @@ _English | [中文](README_zh.md)
 
 ## Overview
 This repository contains scenarios using the Agora RTC Java SDK for Android.
+
 ![image](img_case.png)
 
 ## Scenarios
@@ -15,6 +16,7 @@ This repository contains scenarios using the Agora RTC Java SDK for Android.
 |Voice|[Voice](./modules/Voice/)|
 |LivePK|[LivePK](./modules/LivePK/)|
 |MultiCall|[MultiCall](./modules/MultiCall/)|
+|InteractiveBlog|[MultiCall](./modules/InteractiveBlog/)|
 
 ## Quickstart
 ### Prerequisites
@@ -30,7 +32,7 @@ This repository contains scenarios using the Agora RTC Java SDK for Android.
 3. Edit the  `/Android/libs/base-library/src/main/res/values/string_config.xml` file.
 
     - Replace `<=YOUR RTC APP ID=>` with your RTC App ID.
-    - Replace `<=YOUR SYNC APP ID=><` with your sync App ID which can be same with RTC App ID。
+    - Replace `<=YOUR SYNC APP ID=>` with your sync App ID which can be same with RTC App ID。
     - If the certificate of project opened，the APP Certificate should be set to  `rtc_certificate`
 
    ```xml

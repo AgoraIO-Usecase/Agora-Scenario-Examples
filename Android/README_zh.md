@@ -16,6 +16,7 @@ _[English](README.md) | 中文_
 |高音质语聊房|[Voice](./modules/Voice/)|
 |直播PK|[LivePK](./modules/LivePK/)|
 |多人连麦|[MultiCall](./modules/MultiCall/)|
+|互动播客|[MultiCall](./modules/InteractiveBlog/)|
 
 ## 快速上手
 ### 前提条件
