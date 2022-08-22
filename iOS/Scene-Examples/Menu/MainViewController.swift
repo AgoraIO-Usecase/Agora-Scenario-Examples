@@ -19,8 +19,10 @@ enum SceneType: String {
     case voiceChatRoom = "agoraVoice"
     /// PKApply
     case pkApply = "pkApplyInfo"
-    
+    /// 多人连麦
     case mutli = "mutli"
+    /// 互动播客
+    case interactiveBlog = "interactiveBlog"
     
     var alertTitle: String {
         switch self {
@@ -66,6 +68,12 @@ struct MainModel {
         model.title = "Multi-person joint broadcasting".localized
         model.imageNmae = "LiveSingle"
         model.sceneType = .mutli
+        tempArray.append(model)
+        
+        model = MainModel()
+        model.title = "Interactive blog".localized
+        model.imageNmae = "LiveSingle"
+        model.sceneType = .interactiveBlog
         tempArray.append(model)
         
         dataArray.append(tempArray)

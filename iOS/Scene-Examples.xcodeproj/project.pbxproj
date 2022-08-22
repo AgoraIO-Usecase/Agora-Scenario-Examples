@@ -101,6 +101,12 @@
 		E79C264A273D003B00909CD4 /* LiveRoomInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2649273D003B00909CD4 /* LiveRoomInfo.swift */; };
 		E79C264C273D053E00909CD4 /* LiveRoomListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C264B273D053E00909CD4 /* LiveRoomListController.swift */; };
 		E79C264E273D062400909CD4 /* LiveRoomListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C264D273D062400909CD4 /* LiveRoomListCell.swift */; };
+		E7C6322E28B387FE0030E506 /* InteractiveBlogCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C6322728B387FE0030E506 /* InteractiveBlogCreateController.swift */; };
+		E7C6322F28B387FE0030E506 /* InteractiveBlogRaiseListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C6322928B387FE0030E506 /* InteractiveBlogRaiseListView.swift */; };
+		E7C6323028B387FE0030E506 /* InteractiveBlogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C6322A28B387FE0030E506 /* InteractiveBlogView.swift */; };
+		E7C6323128B387FE0030E506 /* InteractiveBlogBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C6322B28B387FE0030E506 /* InteractiveBlogBannerView.swift */; };
+		E7C6323228B387FE0030E506 /* InteractiveBlogControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C6322C28B387FE0030E506 /* InteractiveBlogControlView.swift */; };
+		E7C6323328B387FE0030E506 /* InteractiveBlogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C6322D28B387FE0030E506 /* InteractiveBlogController.swift */; };
 		E7D46061285C7A00004F3C82 /* MainHeaderViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D46060285C7A00004F3C82 /* MainHeaderViewCell.swift */; };
 		E7D46063285C8244004F3C82 /* VideoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D46062285C8244004F3C82 /* VideoCollectionViewCell.swift */; };
 		E7D46065285C825D004F3C82 /* BaseCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D46064285C825D004F3C82 /* BaseCollectionViewCell.swift */; };
@@ -243,6 +249,12 @@
 		E79C2649273D003B00909CD4 /* LiveRoomInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRoomInfo.swift; sourceTree = "<group>"; };
 		E79C264B273D053E00909CD4 /* LiveRoomListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRoomListController.swift; sourceTree = "<group>"; };
 		E79C264D273D062400909CD4 /* LiveRoomListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRoomListCell.swift; sourceTree = "<group>"; };
+		E7C6322728B387FE0030E506 /* InteractiveBlogCreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractiveBlogCreateController.swift; sourceTree = "<group>"; };
+		E7C6322928B387FE0030E506 /* InteractiveBlogRaiseListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractiveBlogRaiseListView.swift; sourceTree = "<group>"; };
+		E7C6322A28B387FE0030E506 /* InteractiveBlogView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractiveBlogView.swift; sourceTree = "<group>"; };
+		E7C6322B28B387FE0030E506 /* InteractiveBlogBannerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractiveBlogBannerView.swift; sourceTree = "<group>"; };
+		E7C6322C28B387FE0030E506 /* InteractiveBlogControlView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractiveBlogControlView.swift; sourceTree = "<group>"; };
+		E7C6322D28B387FE0030E506 /* InteractiveBlogController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractiveBlogController.swift; sourceTree = "<group>"; };
 		E7D46060285C7A00004F3C82 /* MainHeaderViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHeaderViewCell.swift; sourceTree = "<group>"; };
 		E7D46062285C8244004F3C82 /* VideoCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoCollectionViewCell.swift; sourceTree = "<group>"; };
 		E7D46064285C825D004F3C82 /* BaseCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -327,6 +339,7 @@
 		E7377D8B286ECB15008F6C62 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				E7C6322628B387FE0030E506 /* InteractiveBlog */,
 				E748787C28A9F95700CA2F58 /* MultiJointBroadcasting */,
 				E763A884288F991B00FE99FA /* VideoCall */,
 				E79C25F2273B685100909CD4 /* BreakOutRoom */,
@@ -684,6 +697,27 @@
 			path = Extension;
 			sourceTree = "<group>";
 		};
+		E7C6322628B387FE0030E506 /* InteractiveBlog */ = {
+			isa = PBXGroup;
+			children = (
+				E7C6322728B387FE0030E506 /* InteractiveBlogCreateController.swift */,
+				E7C6322828B387FE0030E506 /* Views */,
+				E7C6322D28B387FE0030E506 /* InteractiveBlogController.swift */,
+			);
+			path = InteractiveBlog;
+			sourceTree = "<group>";
+		};
+		E7C6322828B387FE0030E506 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E7C6322928B387FE0030E506 /* InteractiveBlogRaiseListView.swift */,
+				E7C6322A28B387FE0030E506 /* InteractiveBlogView.swift */,
+				E7C6322B28B387FE0030E506 /* InteractiveBlogBannerView.swift */,
+				E7C6322C28B387FE0030E506 /* InteractiveBlogControlView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		E7EDBCA727A0F94800E763A6 /* VoiceChatRoom */ = {
 			isa = PBXGroup;
 			children = (
@@ -882,6 +916,7 @@
 				E71A0784288F9A3A00CC4BF6 /* VideoCallViewController.swift in Sources */,
 				E748788028A9F95700CA2F58 /* MutliBroadcastingController.swift in Sources */,
 				E79C2626273B7BDA00909CD4 /* LiveBroadcastingCreateController.swift in Sources */,
+				E7C6323328B387FE0030E506 /* InteractiveBlogController.swift in Sources */,
 				E79BEF8627463FA5009FA838 /* BORRoomDetailController.swift in Sources */,
 				E7EDBCAE27A1281200E763A6 /* AgoraVoiceUsersView.swift in Sources */,
 				E7ECC56D27E81F5A00EFA778 /* UIImage+Color.swift in Sources */,
@@ -903,6 +938,7 @@
 				E757E6A5281AAE6B0017D5B9 /* RtmSyncManager+ISyncManager.swift in Sources */,
 				E7377D94286EEA38008F6C62 /* VoiceChatRoomCreateController.swift in Sources */,
 				E79BEF662741FD43009FA838 /* LivePKController.swift in Sources */,
+				E7C6322F28B387FE0030E506 /* InteractiveBlogRaiseListView.swift in Sources */,
 				E79C264C273D053E00909CD4 /* LiveRoomListController.swift in Sources */,
 				E79C261F273B737100909CD4 /* MainCollectionViewCell.swift in Sources */,
 				E79BEF3D273D327F009FA838 /* LiveBottomView.swift in Sources */,
@@ -937,16 +973,20 @@
 				E757E69D281AAE6B0017D5B9 /* SyncManager+Info.swift in Sources */,
 				E710AE2F27A0F23300124356 /* ChangeRoomBgView.swift in Sources */,
 				E7499C1B276A078500E799FF /* LiveOnlineView.swift in Sources */,
+				E7C6323028B387FE0030E506 /* InteractiveBlogView.swift in Sources */,
 				E7EDBCC027A2A4CA00E763A6 /* RTCRealTimeDataView.swift in Sources */,
+				E7C6323128B387FE0030E506 /* InteractiveBlogBannerView.swift in Sources */,
 				E79C260F273B689B00909CD4 /* JSONObject.swift in Sources */,
 				E79C25DF273B67DB00909CD4 /* AppDelegate.swift in Sources */,
 				E79C260E273B689B00909CD4 /* AgoraExtension.swift in Sources */,
 				E79C2646273CBA2700909CD4 /* LiveSettingModel.swift in Sources */,
 				E79C260D273B689B00909CD4 /* Config.swift in Sources */,
 				E7EDBCBC27A2918D00E763A6 /* AgoraVoiceMusicModel.swift in Sources */,
+				E7C6323228B387FE0030E506 /* InteractiveBlogControlView.swift in Sources */,
 				E79C25E1273B67DB00909CD4 /* SceneDelegate.swift in Sources */,
 				E79BEF88274640A6009FA838 /* BORVideoRoomDetailCell.swift in Sources */,
 				E757E69C281AAE6B0017D5B9 /* Utils.swift in Sources */,
+				E7C6322E28B387FE0030E506 /* InteractiveBlogCreateController.swift in Sources */,
 				E757E69B281AAE6B0017D5B9 /* Log.swift in Sources */,
 				E7EDBCAC27A0F98900E763A6 /* VoiceChatRoomController.swift in Sources */,
 				E757E6B3281AAE6B0017D5B9 /* Blocks.swift in Sources */,

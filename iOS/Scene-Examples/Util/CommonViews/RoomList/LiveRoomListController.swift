@@ -119,6 +119,10 @@ class LiveRoomListController: BaseViewController {
         case .mutli:
             let createLiveVC = MutliBroadcastingCreateController()
             navigationController?.pushViewController(createLiveVC, animated: true)
+            
+        case .interactiveBlog:
+            let createLiveVC = InteractiveBlogCreateController()
+            navigationController?.pushViewController(createLiveVC, animated: true)
         }
         
     }
