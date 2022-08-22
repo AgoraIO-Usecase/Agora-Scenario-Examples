@@ -44,6 +44,12 @@ public class ModulesConfig {
                 R.drawable.app_banner_video_call,
                 "io.agora.scene.multicall.RoomListActivity"
         ));
+        // Interactive Blog
+        this.moduleInfo.add(new ModuleInfo(
+                R.string.app_interactive_blog,
+                R.drawable.app_banner_video_call,
+                "io.agora.scene.interactiveblog.RoomListActivity"
+        ));
 
         moduleInfo.add(new ModuleInfo(R.string.app_type_education));
         // BreakoutRoom
