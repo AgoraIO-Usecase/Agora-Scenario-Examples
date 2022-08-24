@@ -85,6 +85,14 @@ public class GlobalViewModel extends AndroidViewModel {
                 engine.enableAudio();
                 engine.enableVideo();
                 rtcEngine = engine;
+                rtcEngine.setParameters("{"
+                        + "\"rtc.report_app_scenario\":"
+                        + "{"
+                        + "\"appScenario\":" + 100 + ","
+                        + "\"serviceType\":" + 12 + ","
+                        + "\"appVersion\":\"" + RtcEngine.getSdkVersion() + "\""
+                        + "}"
+                        + "}");
                 setInitResult(RTC_SDK, true);
             } catch (Exception e) {
                 e.printStackTrace();

@@ -367,6 +367,14 @@ public class RoomDetailActivity extends AppCompatActivity {
             });
 
             rtcEngine.setDefaultAudioRoutetoSpeakerphone(true);
+            rtcEngine.setParameters("{"
+                    + "\"rtc.report_app_scenario\":"
+                    + "{"
+                    + "\"appScenario\":" + 100 + ","
+                    + "\"serviceType\":" + 12 + ","
+                    + "\"appVersion\":\"" + RtcEngine.getSdkVersion() + "\""
+                    + "}"
+                    + "}");
 
             rtcEngine.setClientRole(isRoomOwner ? Constants.CLIENT_ROLE_BROADCASTER: Constants.CLIENT_ROLE_AUDIENCE);
             ChannelMediaOptions options = new ChannelMediaOptions();
