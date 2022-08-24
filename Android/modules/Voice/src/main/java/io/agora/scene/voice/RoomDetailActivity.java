@@ -368,9 +368,9 @@ public class RoomDetailActivity extends AppCompatActivity {
             rtcEngine.setParameters("{"
                     + "\"rtc.report_app_scenario\":"
                     + "{"
-                    + "\"appScenario\":" + BuildConfig.RTCAppScenario + ","
-                    + "\"serviceType\":" + BuildConfig.RTCServiceType + ","
-                    + "\"appVersion\":\"" + BuildConfig.RTCAppVersion + "\""
+                    + "\"appScenario\":" + 100 + ","
+                    + "\"serviceType\":" + 11 + ","
+                    + "\"appVersion\":\"" + RtcEngine.getSdkVersion() + "\""
                     + "}"
                     + "}");
             rtcEngine.setDefaultAudioRoutetoSpeakerphone(true);
