@@ -260,7 +260,7 @@ public class HostDetailActivity extends AppCompatActivity {
                     + "\"rtc.report_app_scenario\":"
                     + "{"
                     + "\"appScenario\":" + 100 + ","
-                    + "\"serviceType\":" + 11 + ","
+                    + "\"serviceType\":" + 12 + ","
                     + "\"appVersion\":\"" + RtcEngine.getSdkVersion() + "\""
                     + "}"
                     + "}");
