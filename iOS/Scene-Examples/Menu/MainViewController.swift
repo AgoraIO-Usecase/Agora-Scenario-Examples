@@ -70,19 +70,19 @@ struct MainModel {
 
         model = MainModel()
         model.title = "CDN".localized
-        model.imageNmae = "VideoCall"
+        model.imageNmae = "cdn"
         model.sceneType = .cdn
         tempArray.append(model)
         
         model = MainModel()
         model.title = "Multi-person joint broadcasting".localized
-        model.imageNmae = "LiveSingle"
+        model.imageNmae = "mutli"
         model.sceneType = .mutli
         tempArray.append(model)
         
         model = MainModel()
         model.title = "Interactive blog".localized
-        model.imageNmae = "LiveSingle"
+        model.imageNmae = "interactiveblog"
         model.sceneType = .interactiveBlog
         tempArray.append(model)
         
