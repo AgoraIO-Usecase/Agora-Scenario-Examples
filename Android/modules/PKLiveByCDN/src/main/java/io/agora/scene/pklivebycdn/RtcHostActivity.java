@@ -166,6 +166,14 @@ public class RtcHostActivity extends BaseActivity<SuperappHostDetailActivityBind
             });
             rtcEngine.enableVideo();
             rtcEngine.enableAudio();
+            rtcEngine.setParameters("{"
+                    + "\"rtc.report_app_scenario\":"
+                    + "{"
+                    + "\"appScenario\":" + BuildConfig.RTCAppScenario + ","
+                    + "\"serviceType\":" + BuildConfig.RTCServiceType + ","
+                    + "\"appVersion\":\"" + BuildConfig.RTCAppVersion + "\""
+                    + "}"
+                    + "}");
 
             rtcEngine.setCameraCapturerConfiguration(new CameraCapturerConfiguration(io.agora.scene.pklivebycdn.Constants.currCameraDirection));
             rtcEngine.setVideoEncoderConfiguration(io.agora.scene.pklivebycdn.Constants.encoderConfiguration);

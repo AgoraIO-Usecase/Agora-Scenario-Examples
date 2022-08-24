@@ -58,6 +58,9 @@ android {
             minifyEnabled false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "RTCAppVersion", "\"${extSafeGetVersion('dependencies', 'io.agora.rtc:full-sdk', '4.0.0-rc')}\""
+            buildConfigField "int", "RTCAppScenario", "100"
+            buildConfigField "int", "RTCServiceType", "11"
         }
 
         release {
@@ -66,6 +69,9 @@ android {
             zipAlignEnabled true
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "RTCAppVersion", "\"${extSafeGetVersion('dependencies', 'io.agora.rtc:full-sdk', '4.0.0-rc')}\""
+            buildConfigField "int", "RTCAppScenario", "100"
+            buildConfigField "int", "RTCServiceType", "11"
         }
     }
 

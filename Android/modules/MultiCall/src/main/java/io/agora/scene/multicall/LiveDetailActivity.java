@@ -279,6 +279,14 @@ public class LiveDetailActivity extends AppCompatActivity {
             rtcEngine.enableVideo();
             rtcEngine.setCameraCapturerConfiguration(new CameraCapturerConfiguration(Constants.cameraDirection));
             rtcEngine.setVideoEncoderConfiguration(Constants.encoderConfiguration);
+            rtcEngine.setParameters("{"
+                    + "\"rtc.report_app_scenario\":"
+                    + "{"
+                    + "\"appScenario\":" + BuildConfig.RTCAppScenario + ","
+                    + "\"serviceType\":" + BuildConfig.RTCServiceType + ","
+                    + "\"appVersion\":\"" + BuildConfig.RTCAppVersion + "\""
+                    + "}"
+                    + "}");
         } catch (Exception e) {
             e.printStackTrace();
         }

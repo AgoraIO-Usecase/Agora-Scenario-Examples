@@ -21,6 +21,7 @@ import io.agora.rtc2.IRtcEngineEventHandler;
 import io.agora.rtc2.RtcEngine;
 import io.agora.rtc2.RtcEngineConfig;
 import io.agora.rtc2.RtcEngineEx;
+import io.agora.scene.breakoutroom.BuildConfig;
 import io.agora.scene.breakoutroom.R;
 import io.agora.scene.breakoutroom.RoomConstant;
 import io.agora.syncmanager.rtm.Sync;
@@ -86,6 +87,14 @@ public class GlobalViewModel extends AndroidViewModel {
                 engine.enableAudio();
                 engine.enableVideo();
                 rtcEngine = engine;
+                rtcEngine.setParameters("{"
+                        + "\"rtc.report_app_scenario\":"
+                        + "{"
+                        + "\"appScenario\":" + BuildConfig.RTCAppScenario + ","
+                        + "\"serviceType\":" + BuildConfig.RTCServiceType + ","
+                        + "\"appVersion\":\"" + BuildConfig.RTCAppVersion + "\""
+                        + "}"
+                        + "}");
                 setInitResult(RTC_SDK, true);
             } catch (Exception e) {
                 e.printStackTrace();

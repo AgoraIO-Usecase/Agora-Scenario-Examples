@@ -136,6 +136,15 @@ public class RskAudienceActivity extends BaseActivity<SuperappAudienceDetailActi
             rtcEngine.enableVideo();
             rtcEngine.enableAudio();
 
+            rtcEngine.setParameters("{"
+                    + "\"rtc.report_app_scenario\":"
+                    + "{"
+                    + "\"appScenario\":" + BuildConfig.RTCAppScenario + ","
+                    + "\"serviceType\":" + BuildConfig.RTCServiceType + ","
+                    + "\"appVersion\":\"" + BuildConfig.RTCAppVersion + "\""
+                    + "}"
+                    + "}");
+
             mediaPlayer = rtcEngine.createMediaPlayer();
             mediaPlayer.setPlayerOption("fps_probe_size", 0);
             mediaPlayer.registerPlayerObserver(mediaPlayerObserver);

@@ -157,6 +157,15 @@ public class AudienceDetailActivity extends AppCompatActivity {
             });
             rtcEngine.enableVideo();
             rtcEngine.enableAudio();
+
+            rtcEngine.setParameters("{"
+                    + "\"rtc.report_app_scenario\":"
+                    + "{"
+                    + "\"appScenario\":" + BuildConfig.RTCAppScenario + ","
+                    + "\"serviceType\":" + BuildConfig.RTCServiceType + ","
+                    + "\"appVersion\":\"" + BuildConfig.RTCAppVersion + "\""
+                    + "}"
+                    + "}");
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -55,7 +55,7 @@ public class RoomListActivity extends AppCompatActivity {
         });
 
         TitleBar titleBar = findViewById(R.id.title_bar);
-        titleBar.setTitleName(getResources().getString(R.string.pk_live_app_name), 0);
+        titleBar.setTitleName(!TextUtils.isEmpty(getIntent().getStringExtra("label"))? getIntent().getStringExtra("label"):getResources().getString(R.string.pk_live_app_name), 0);
         titleBar.setDeliverVisible(false);
         titleBar.setUserIcon(false, 0, null);
         titleBar.setBackIcon(!TextUtils.isEmpty(getIntent().getStringExtra("from")), R.drawable.title_bar_back_white, new View.OnClickListener() {

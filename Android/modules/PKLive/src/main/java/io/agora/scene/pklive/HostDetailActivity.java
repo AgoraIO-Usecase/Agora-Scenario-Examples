@@ -256,6 +256,15 @@ public class HostDetailActivity extends AppCompatActivity {
             rtcEngine.enableVideo();
             rtcEngine.enableAudio();
 
+            rtcEngine.setParameters("{"
+                    + "\"rtc.report_app_scenario\":"
+                    + "{"
+                    + "\"appScenario\":" + BuildConfig.RTCAppScenario + ","
+                    + "\"serviceType\":" + BuildConfig.RTCServiceType + ","
+                    + "\"appVersion\":\"" + BuildConfig.RTCAppVersion + "\""
+                    + "}"
+                    + "}");
+
             rtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
             rtcEngine.setCameraCapturerConfiguration(new CameraCapturerConfiguration(io.agora.scene.pklive.Constants.cameraDirection));
             rtcEngine.setVideoEncoderConfiguration(io.agora.scene.pklive.Constants.encoderConfiguration);

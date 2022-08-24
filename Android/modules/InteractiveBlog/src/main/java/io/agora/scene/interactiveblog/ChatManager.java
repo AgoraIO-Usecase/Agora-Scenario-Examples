@@ -326,6 +326,14 @@ public class ChatManager {
             rtcEngine.enableVideo();
             rtcEngine.enableAudio();
             rtcEngine.setDefaultAudioRoutetoSpeakerphone(true);
+            rtcEngine.setParameters("{"
+                    + "\"rtc.report_app_scenario\":"
+                    + "{"
+                    + "\"appScenario\":" + BuildConfig.RTCAppScenario + ","
+                    + "\"serviceType\":" + BuildConfig.RTCServiceType + ","
+                    + "\"appVersion\":\"" + BuildConfig.RTCAppVersion + "\""
+                    + "}"
+                    + "}");
 
             // join channel
             int uid = Integer.parseInt(RoomManager.getCacheUserId());

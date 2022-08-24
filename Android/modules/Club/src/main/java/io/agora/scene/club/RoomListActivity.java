@@ -43,7 +43,7 @@ public class RoomListActivity extends BaseActivity<ClubRoomListActivityBinding> 
         mBinding.titleBar
                 .setBgDrawable(R.drawable.club_main_title_bar_bg)
                 .setDeliverVisible(false)
-                .setTitleName(getString(R.string.club_room_list_title), getResources().getColor(R.color.club_title_bar_text_color))
+                .setTitleName(!TextUtils.isEmpty(getIntent().getStringExtra("label"))? getIntent().getStringExtra("label"):getString(R.string.club_room_list_title), getResources().getColor(R.color.club_title_bar_text_color))
                 .setBackIcon(true, R.drawable.club_ic_arrow_24, v -> finish());
         mBinding.btnStartLive.setOnClickListener(v -> checkPermission(this::showRoomCreateDialog));
         mBinding.roomListView.setListAdapter(new RoomListAdapter(){

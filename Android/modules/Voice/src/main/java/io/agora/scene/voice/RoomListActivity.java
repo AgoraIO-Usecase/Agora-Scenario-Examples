@@ -28,7 +28,7 @@ public class RoomListActivity extends BaseActivity<VoiceRoomListActivityBinding>
                 ex -> runOnUiThread(() -> Toast.makeText(RoomListActivity.this, ex.getMessage(), Toast.LENGTH_SHORT).show()));
 
         mBinding.titleBar
-                .setTitleName(getString(R.string.voice_room_list_title), Color.WHITE)
+                .setTitleName(!TextUtils.isEmpty(getIntent().getStringExtra("label"))? getIntent().getStringExtra("label"): getResources().getString(R.string.voice_room_list_title), Color.WHITE)
                 .setBackIcon(false, 0, null)
                 .setDeliverVisible(false)
                 .setBackIcon(!TextUtils.isEmpty(getIntent().getStringExtra("from")), R.drawable.title_bar_back_white, new View.OnClickListener() {

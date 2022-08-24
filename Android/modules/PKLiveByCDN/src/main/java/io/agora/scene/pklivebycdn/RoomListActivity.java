@@ -60,7 +60,7 @@ public class RoomListActivity extends BaseActivity<SuperappRoomListActivityBindi
             }
         });
 
-        mBinding.titleBar.setTitleName(getResources().getString(R.string.superapp_app_name), 0);
+        mBinding.titleBar.setTitleName(!TextUtils.isEmpty(getIntent().getStringExtra("label"))? getIntent().getStringExtra("label"):getResources().getString(R.string.superapp_app_name), 0);
         mBinding.titleBar.setUserIcon(false, 0, null);
         mBinding.titleBar.setDeliverVisible(false);
         mBinding.titleBar.setBackIcon(!TextUtils.isEmpty(getIntent().getStringExtra("from")), R.drawable.title_bar_back_white, new View.OnClickListener() {

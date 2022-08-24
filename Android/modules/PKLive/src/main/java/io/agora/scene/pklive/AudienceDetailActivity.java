@@ -198,6 +198,15 @@ public class AudienceDetailActivity extends AppCompatActivity {
             rtcEngine.enableVideo();
             rtcEngine.enableAudio();
 
+            rtcEngine.setParameters("{"
+                    + "\"rtc.report_app_scenario\":"
+                    + "{"
+                    + "\"appScenario\":" + BuildConfig.RTCAppScenario + ","
+                    + "\"serviceType\":" + BuildConfig.RTCServiceType + ","
+                    + "\"appVersion\":\"" + BuildConfig.RTCAppVersion + "\""
+                    + "}"
+                    + "}");
+
             ChannelMediaOptions options = new ChannelMediaOptions();
             options.clientRoleType = Constants.CLIENT_ROLE_AUDIENCE;
             options.autoSubscribeVideo = true;

@@ -578,6 +578,15 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
             mediaPlayer.registerPlayerObserver(mediaPlayerObserver);
             mediaPlayer.open(roomInfo.videoUrl, 0);
 
+            rtcEngine.setParameters("{"
+                    + "\"rtc.report_app_scenario\":"
+                    + "{"
+                    + "\"appScenario\":" + BuildConfig.RTCAppScenario + ","
+                    + "\"serviceType\":" + BuildConfig.RTCServiceType + ","
+                    + "\"appVersion\":\"" + BuildConfig.RTCAppVersion + "\""
+                    + "}"
+                    + "}");
+
             renderPlayerView(mBinding.portraitPlayerContainer);
 
         } catch (Exception e) {

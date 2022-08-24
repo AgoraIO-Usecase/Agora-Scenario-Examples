@@ -64,7 +64,7 @@ public class HostDetailActivity extends AppCompatActivity {
                 mBinding.hostUserView.removeAllUserIcon();
                 for (int i = 1; i <= 3; i++) {
                     int index = dataList.size() - i;
-                    if(index >= 0){
+                    if (index >= 0) {
                         RoomManager.UserInfo userInfo = dataList.get(index);
                         mBinding.hostUserView.addUserIcon(userInfo.getAvatarResId(), userInfo.userName);
                     }
@@ -119,7 +119,7 @@ public class HostDetailActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void initRoomManager(){
+    private void initRoomManager() {
         roomManager.joinRoom(roomInfo.roomId, () -> {
             roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, giftInfoDataCallback);
             roomManager.subscribeMessageReceiveEvent(roomInfo.roomId, messageDataCallback);
@@ -130,7 +130,7 @@ public class HostDetailActivity extends AppCompatActivity {
 
     private void initRtcEngine() {
         try {
-            rtcEngine = RtcEngine.create(this,  getString(R.string.rtc_app_id), new IRtcEngineEventHandler(){
+            rtcEngine = RtcEngine.create(this, getString(R.string.rtc_app_id), new IRtcEngineEventHandler() {
 
                 @Override
                 public void onError(int err) {
@@ -144,7 +144,7 @@ public class HostDetailActivity extends AppCompatActivity {
                 @Override
                 public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
                     super.onJoinChannelSuccess(channel, uid, elapsed);
-                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo("User-" +  uid, getString(R.string.live_room_message_user_join_suffix))));
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo("User-" + uid, getString(R.string.live_room_message_user_join_suffix))));
                 }
 
                 @Override
@@ -156,13 +156,22 @@ public class HostDetailActivity extends AppCompatActivity {
                 @Override
                 public void onUserOffline(int uid, int reason) {
                     super.onUserOffline(uid, reason);
-                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo("User-" +  uid, getString(R.string.live_room_message_user_left_suffix))));
+                    runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo("User-" + uid, getString(R.string.live_room_message_user_left_suffix))));
                 }
             });
             rtcEngine.enableVideo();
             rtcEngine.enableVideo();
             rtcEngine.setCameraCapturerConfiguration(new CameraCapturerConfiguration(Constants.cameraDirection));
             rtcEngine.setVideoEncoderConfiguration(Constants.encoderConfiguration);
+
+            rtcEngine.setParameters("{"
+                    + "\"rtc.report_app_scenario\":"
+                    + "{"
+                    + "\"appScenario\":" + BuildConfig.RTCAppScenario + ","
+                    + "\"serviceType\":" + BuildConfig.RTCServiceType + ","
+                    + "\"appVersion\":\"" + BuildConfig.RTCAppVersion + "\""
+                    + "}"
+                    + "}");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -188,7 +197,7 @@ public class HostDetailActivity extends AppCompatActivity {
     private void showSettingDialog() {
         new LiveToolsDialog(HostDetailActivity.this)
                 .addToolItem(LiveToolsDialog.TOOL_ITEM_ROTATE, false, (view, item) -> {
-                    if(rtcEngine != null){
+                    if (rtcEngine != null) {
                         rtcEngine.switchCamera();
                     }
                 })

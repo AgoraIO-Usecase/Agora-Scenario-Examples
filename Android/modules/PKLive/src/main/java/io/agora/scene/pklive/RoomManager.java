@@ -753,17 +753,6 @@ public class RoomManager {
         sceneMap.remove(roomInfo.roomId);
 
         if(roomInfo.userId.equals(getCacheUserId())){
-            sceneReference.collection(SYNC_MANAGER_USER_COLLECTION).delete(new Sync.Callback() {
-                @Override
-                public void onSuccess() {
-
-                }
-
-                @Override
-                public void onFail(SyncManagerException exception) {
-                    notifyErrorHandler(exception);
-                }
-            });
             sceneReference.delete(new Sync.Callback() {
                 @Override
                 public void onSuccess() {

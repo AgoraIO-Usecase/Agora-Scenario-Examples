@@ -110,6 +110,15 @@ public class LiveDetailActivity extends BaseActivity<VideoCallLiveDetailActivity
             rtcEngine.setVideoEncoderConfiguration(io.agora.scene.videocall.Constants.encoderConfiguration);
             rtcEngine.enableVideo();
 
+            rtcEngine.setParameters("{"
+                    + "\"rtc.report_app_scenario\":"
+                    + "{"
+                    + "\"appScenario\":" + BuildConfig.RTCAppScenario + ","
+                    + "\"serviceType\":" + BuildConfig.RTCServiceType + ","
+                    + "\"appVersion\":\"" + BuildConfig.RTCAppVersion + "\""
+                    + "}"
+                    + "}");
+
             // render local view
             TextureView localRenderView = new TextureView(this);
             mBinding.smallVideoContainer.removeAllViews();

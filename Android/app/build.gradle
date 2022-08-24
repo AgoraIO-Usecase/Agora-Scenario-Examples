@@ -10,7 +10,7 @@ android {
         minSdkVersion extSafeGetVersion('android', 'minSdkVersion', 21)
         targetSdkVersion extSafeGetVersion('android', 'targetSdkVersion', 30)
         versionCode 13
-        versionName "1.0.12"
+        versionName "1.0.13"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 

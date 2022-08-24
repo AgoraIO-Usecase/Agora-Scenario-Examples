@@ -232,6 +232,15 @@ public class RtcAudienceActivity extends BaseActivity<SuperappAudienceDetailActi
             rtcEngine.enableVideo();
             rtcEngine.enableAudio();
 
+            rtcEngine.setParameters("{"
+                    + "\"rtc.report_app_scenario\":"
+                    + "{"
+                    + "\"appScenario\":" + BuildConfig.RTCAppScenario + ","
+                    + "\"serviceType\":" + BuildConfig.RTCServiceType + ","
+                    + "\"appVersion\":\"" + BuildConfig.RTCAppVersion + "\""
+                    + "}"
+                    + "}");
+
             mediaPlayer = rtcEngine.createMediaPlayer();
             mediaPlayer.registerPlayerObserver(mediaPlayerObserver);
 
