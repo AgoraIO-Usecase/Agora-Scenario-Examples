@@ -18,6 +18,7 @@ This repository contains scenarios using the Agora RTC Java SDK for Android.
 |PKLiveByCDN|[PKLiveByCDN](./modules/PKLiveByCDN/)|
 |BreakoutRoom|[BreakoutRoom](./modules/BreakoutRoom/)|
 |MultiCall|[MultiCall](./modules/MultiCall/)|
+|InteractiveBlog|[InteractiveBlog](./modules/InteractiveBlog/)|
 
 ## Quickstart
 ### Prerequisites

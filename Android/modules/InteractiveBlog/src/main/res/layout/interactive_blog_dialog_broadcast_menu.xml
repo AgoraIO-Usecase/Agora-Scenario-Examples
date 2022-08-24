@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/interactive_blog_dialog_bottom_bg"
+    android:padding="40dp"
+    android:layout_gravity="bottom"
+    tools:ignore="MissingDefaultResource">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivUser"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearance="@style/interactive_blog_CircleStyle"
+        tools:src="@drawable/user_profile_image_1" />
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivUser"
+        tools:text="1112233" />
+
+    <ImageView
+        android:id="@+id/ivAudio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/interactive_blog_ic_microphone_blue"
+        android:background="@drawable/interactive_blog_seat_audio_background"
+        app:layout_constraintBottom_toBottomOf="@+id/ivUser"
+        app:layout_constraintEnd_toEndOf="@+id/ivUser" />
+
+    <Button
+        android:id="@+id/btSeatoff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/interactive_blog_btn_bg_black"
+        android:text="@string/interactive_blog_room_dialog_seat_off"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvName" />
+
+    <Button
+        android:id="@+id/btAudio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/interactive_blog_btn_bg_orange"
+        android:text="@string/interactive_blog_room_dialog_open_audio"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btSeatoff" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

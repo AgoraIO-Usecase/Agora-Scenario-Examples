@@ -18,6 +18,7 @@ _[English](README.md) | 中文_
 |CDN PK|[PKLiveByCDN](./modules/PKLiveByCDN/)|
 |超级小班课|[BreakoutRoom](./modules/BreakoutRoom/)|
 |多人连麦|[MultiCall](./modules/MultiCall/)|
+|互动播客|[InteractiveBlog](./modules/InteractiveBlog/)|
 
 ## 快速上手
 ### 前提条件
