@@ -91,6 +91,7 @@ public class HomeActivity extends BaseActivity<AppHomeActivityBinding> {
                         try {
                             Intent intent = new Intent(HomeActivity.this, Class.forName(moduleInfo.launchClassName));
                             intent.putExtra("from", "appHomeActivity");
+                            intent.putExtra("label", getString(moduleInfo.nameRes));
                             startActivity(intent);
                         } catch (ClassNotFoundException e) {
                             e.printStackTrace();

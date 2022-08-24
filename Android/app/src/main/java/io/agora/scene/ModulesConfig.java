@@ -41,13 +41,13 @@ public class ModulesConfig {
         // Multi Call
         this.moduleInfo.add(new ModuleInfo(
                 R.string.app_multi_call,
-                R.drawable.app_banner_video_call,
+                R.drawable.app_banner_multi_call,
                 "io.agora.scene.multicall.RoomListActivity"
         ));
         // Interactive Blog
         this.moduleInfo.add(new ModuleInfo(
                 R.string.app_interactive_blog,
-                R.drawable.app_banner_video_call,
+                R.drawable.app_banner_interactor_blog,
                 "io.agora.scene.interactiveblog.RoomListActivity"
         ));
 

@@ -20,6 +20,7 @@
                 android:layout_height="@dimen/live_room_user_count_icon_size"
                 android:layout_marginStart="@dimen/live_room_user_count_icon_margin_start"
                 android:layout_marginEnd="@dimen/live_room_user_count_icon_margin_end"
+                android:padding="6dp"
                 android:src="@drawable/live_room_user_icon"
                 android:scaleType="fitCenter"/>
             <androidx.appcompat.widget.AppCompatTextView

@@ -412,17 +412,6 @@ public class RoomManager {
                 }
             }
             if(delete){
-                sceneReference.collection(SYNC_MANAGER_USER_COLLECTION).delete(new Sync.Callback() {
-                    @Override
-                    public void onSuccess() {
-
-                    }
-
-                    @Override
-                    public void onFail(SyncManagerException exception) {
-                        notifyErrorHandler(exception);
-                    }
-                });
                 sceneReference.delete(new Sync.Callback() {
                     @Override
                     public void onSuccess() {
