@@ -190,6 +190,10 @@ class LiveRoomListController: BaseViewController {
             let createLiveVC = InteractiveBlogCreateController()
             navigationController?.pushViewController(createLiveVC, animated: true)
         
+        case .shopping:
+            let createLiveVC = LiveShoppingCreateController()
+            navigationController?.pushViewController(createLiveVC, animated: true)
+            
         case .cdn:
             break
         }
@@ -201,15 +205,18 @@ class LiveRoomListController: BaseViewController {
         let ownerId = result.getPropertyWith(key: "userId", type: String.self) as? String
         switch sceneType {
         case .singleLive:
-            let livePlayerVC = LiveBroadcastingController(channelName: channelName ?? "", userId: ownerId ?? "")
+            let livePlayerVC = LiveBroadcastingController(channelName: channelName ?? "",
+                                                          userId: ownerId ?? "")
             navigationController?.pushViewController(livePlayerVC, animated: true)
             
         case .pkApply:
-            let pkLiveVC = LivePKController(channelName: channelName ?? "", userId: ownerId ?? "")
+            let pkLiveVC = LivePKController(channelName: channelName ?? "",
+                                            userId: ownerId ?? "")
             navigationController?.pushViewController(pkLiveVC, animated: true)
             
         case .breakoutRoom:
-            let breakoutRoomVC = BORRoomDetailController(channelName: channelName ?? "", ownerId: ownerId ?? "")
+            let breakoutRoomVC = BORRoomDetailController(channelName: channelName ?? "",
+                                                         ownerId: ownerId ?? "")
             navigationController?.pushViewController(breakoutRoomVC, animated: true)
             
         case .voiceChatRoom:
@@ -225,16 +232,25 @@ class LiveRoomListController: BaseViewController {
             navigationController?.pushViewController(clubVC, animated: true)
             
         case .videoCall:
-            let livePlayerVC = VideoCallViewController(channelName: channelName ?? "", userId: ownerId ?? "")
+            let livePlayerVC = VideoCallViewController(channelName: channelName ?? "",
+                                                       userId: ownerId ?? "")
             navigationController?.pushViewController(livePlayerVC, animated: true)
             
         case .mutli:
-            let mutliVC = MutliBroadcastingController(channelName: channelName ?? "", userId: ownerId ?? "")
+            let mutliVC = MutliBroadcastingController(channelName: channelName ?? "",
+                                                      userId: ownerId ?? "")
             navigationController?.pushViewController(mutliVC, animated: true)
             
         case .interactiveBlog:
-            let interactiveBlogVC = InteractiveBlogController(channelName: channelName ?? "", userId: ownerId ?? "", isAddUser: bannerView.isHidden)
+            let interactiveBlogVC = InteractiveBlogController(channelName: channelName ?? "",
+                                                              userId: ownerId ?? "",
+                                                              isAddUser: bannerView.isHidden)
             navigationController?.pushViewController(interactiveBlogVC, animated: true)
+            
+        case .shopping:
+            let shoppingVC = LiveShoppingViewController(channelName: channelName ?? "",
+                                                               userId: ownerId ?? "")
+            navigationController?.pushViewController(shoppingVC, animated: true)
             
         default: break
         }

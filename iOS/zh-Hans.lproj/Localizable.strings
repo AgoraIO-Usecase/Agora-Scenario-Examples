@@ -287,6 +287,13 @@ agoraProgram = "大厅";
 
 pleaseInputRoomName = "请输入房间名";
 
+Lipstick_Description="烈焰魅唇膏 16#(SCARLETROUGE)3g TF黑管口红";
+Rucksack_Description="Supreme x Louis Vuitton LV Shoulder Bag 17SS 大号斜跨包";
+iPad_Description="APPLE苹果 2020新款 iPad Pro 12.9英寸 银色 64GB WLAN版";
+Pants_Description="花花公子衬衫男短袖夏季";
+Buy_This_Product="你是否确定要购买这件商品?";
+Product_Purchased_Successfully="商品购买成功";
+
 "CDN" = "CDN直播推流";
 "Multi-person joint broadcasting" = "多人连麦";
 "Apply for joint broadcasting" = "申请连麦";
@@ -305,3 +312,5 @@ pleaseInputRoomName = "请输入房间名";
 "Become audience" = "下台";
 "Invite to speak" = "邀请上台";
 "invite you to speak" = "邀请你上台";
+"Shopping" = "电商";
+"Buy now" = "立即购买";

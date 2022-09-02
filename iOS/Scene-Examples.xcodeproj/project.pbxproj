@@ -16,6 +16,10 @@
 		E71E7AED2898C25F00B846C7 /* MutliBroadcastingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71E7AE02898C25F00B846C7 /* MutliBroadcastingController.swift */; };
 		E71E7AF32898C25F00B846C7 /* MutliBroadcastingCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71E7AE72898C25F00B846C7 /* MutliBroadcastingCreateController.swift */; };
 		E71E7AF82898D20200B846C7 /* MutliView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71E7AF72898D20200B846C7 /* MutliView.swift */; };
+		E7218BAC28BF7DA1005A01D5 /* LiveShoppingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7218BA828BF7DA1005A01D5 /* LiveShoppingViewController.swift */; };
+		E7218BAD28BF7DA1005A01D5 /* LiveShoppingCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7218BA928BF7DA1005A01D5 /* LiveShoppingCreateController.swift */; };
+		E7218BAF28BF8138005A01D5 /* LiveShoppingListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7218BAE28BF8138005A01D5 /* LiveShoppingListView.swift */; };
+		E7218BB128C0B084005A01D5 /* LiveShoppingDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7218BB028C0B084005A01D5 /* LiveShoppingDetailViewController.swift */; };
 		E7377D91286EE7C0008F6C62 /* LivePKCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7377D8F286EE7C0008F6C62 /* LivePKCreateController.swift */; };
 		E7377D94286EEA38008F6C62 /* VoiceChatRoomCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7377D93286EEA38008F6C62 /* VoiceChatRoomCreateController.swift */; };
 		E7377D962872CB94008F6C62 /* ClubCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7377D952872CB94008F6C62 /* ClubCreateController.swift */; };
@@ -188,6 +192,10 @@
 		E71E7AE02898C25F00B846C7 /* MutliBroadcastingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MutliBroadcastingController.swift; sourceTree = "<group>"; };
 		E71E7AE72898C25F00B846C7 /* MutliBroadcastingCreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MutliBroadcastingCreateController.swift; sourceTree = "<group>"; };
 		E71E7AF72898D20200B846C7 /* MutliView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MutliView.swift; sourceTree = "<group>"; };
+		E7218BA828BF7DA1005A01D5 /* LiveShoppingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveShoppingViewController.swift; sourceTree = "<group>"; };
+		E7218BA928BF7DA1005A01D5 /* LiveShoppingCreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveShoppingCreateController.swift; sourceTree = "<group>"; };
+		E7218BAE28BF8138005A01D5 /* LiveShoppingListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveShoppingListView.swift; sourceTree = "<group>"; };
+		E7218BB028C0B084005A01D5 /* LiveShoppingDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveShoppingDetailViewController.swift; sourceTree = "<group>"; };
 		E7377D8F286EE7C0008F6C62 /* LivePKCreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LivePKCreateController.swift; sourceTree = "<group>"; };
 		E7377D93286EEA38008F6C62 /* VoiceChatRoomCreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoiceChatRoomCreateController.swift; sourceTree = "<group>"; };
 		E7377D952872CB94008F6C62 /* ClubCreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClubCreateController.swift; sourceTree = "<group>"; };
@@ -394,6 +402,33 @@
 			path = MultiJointBroadcasting;
 			sourceTree = "<group>";
 		};
+		E7218BA728BF7DA1005A01D5 /* Shopping */ = {
+			isa = PBXGroup;
+			children = (
+				E7218BA928BF7DA1005A01D5 /* LiveShoppingCreateController.swift */,
+				E7218BA828BF7DA1005A01D5 /* LiveShoppingViewController.swift */,
+				E7218BB028C0B084005A01D5 /* LiveShoppingDetailViewController.swift */,
+				E7218BAA28BF7DA1005A01D5 /* Models */,
+				E7218BAB28BF7DA1005A01D5 /* Views */,
+			);
+			path = Shopping;
+			sourceTree = "<group>";
+		};
+		E7218BAA28BF7DA1005A01D5 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		E7218BAB28BF7DA1005A01D5 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E7218BAE28BF8138005A01D5 /* LiveShoppingListView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		E7377D8A286ECB06008F6C62 /* Util */ = {
 			isa = PBXGroup;
 			children = (
@@ -411,6 +446,7 @@
 		E7377D8B286ECB15008F6C62 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				E7218BA728BF7DA1005A01D5 /* Shopping */,
 				E748788A28AA198F00CA2F58 /* InteractiveBlog */,
 				E71E7ADF2898C25F00B846C7 /* MultiJointBroadcasting */,
 				E763A884288F991B00FE99FA /* VideoCall */,
@@ -1057,6 +1093,7 @@
 				E757E6A4281AAE6B0017D5B9 /* RtmSyncManager+Info.swift in Sources */,
 				E757E6A3281AAE6B0017D5B9 /* RtmSyncManager+Handle.swift in Sources */,
 				E79BEF8A274644A9009FA838 /* BORLiveModel.swift in Sources */,
+				E7218BB128C0B084005A01D5 /* LiveShoppingDetailViewController.swift in Sources */,
 				E79BEF45273E4D99009FA838 /* LiveGiftModel.swift in Sources */,
 				E79C264E273D062400909CD4 /* LiveRoomListCell.swift in Sources */,
 				E7ECC56927E81A9E00EFA778 /* BaseNavigationController.swift in Sources */,
@@ -1077,6 +1114,7 @@
 				E7499C2C2770537C00E799FF /* MessageCell.swift in Sources */,
 				E79BEF3F273D3EF0009FA838 /* LiveToolView.swift in Sources */,
 				E757E6B6281AAE6B0017D5B9 /* SyncError.swift in Sources */,
+				E7218BAD28BF7DA1005A01D5 /* LiveShoppingCreateController.swift in Sources */,
 				E777B3F5286C341100C8A0E7 /* CDNRoomListViewCell.swift in Sources */,
 				E7D30F162845DC4A0062CFE3 /* CDNMainView.swift in Sources */,
 				E7EDBCB027A131BC00E763A6 /* AgoraVoiceBelCantoView.swift in Sources */,
@@ -1106,6 +1144,7 @@
 				E79C2612273B689B00909CD4 /* SegmentView.swift in Sources */,
 				E757E6A5281AAE6B0017D5B9 /* RtmSyncManager+ISyncManager.swift in Sources */,
 				E7377D94286EEA38008F6C62 /* VoiceChatRoomCreateController.swift in Sources */,
+				E7218BAC28BF7DA1005A01D5 /* LiveShoppingViewController.swift in Sources */,
 				E79BEF662741FD43009FA838 /* LivePKController.swift in Sources */,
 				E79C264C273D053E00909CD4 /* LiveRoomListController.swift in Sources */,
 				E7D30F062845DC4A0062CFE3 /* CDNInvitationSheetManager.swift in Sources */,
@@ -1160,6 +1199,7 @@
 				E79C260E273B689B00909CD4 /* AgoraExtension.swift in Sources */,
 				E79C2646273CBA2700909CD4 /* LiveSettingModel.swift in Sources */,
 				E757E65028126D630017D5B9 /* AgoraClubProgramViewController.swift in Sources */,
+				E7218BAF28BF8138005A01D5 /* LiveShoppingListView.swift in Sources */,
 				E79C260D273B689B00909CD4 /* Config.swift in Sources */,
 				E7EDBCBC27A2918D00E763A6 /* AgoraVoiceMusicModel.swift in Sources */,
 				E79C25E1273B67DB00909CD4 /* SceneDelegate.swift in Sources */,

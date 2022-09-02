@@ -7,9 +7,8 @@
 
 import UIKit
 import AgoraRtcKit
-//import AgoraSyncManager
 
-class LiveBroadcastingCreateController: BaseViewController {
+class LiveShoppingCreateController: BaseViewController {
     private lazy var randomNameView: LiveRandomNameView = {
         let view = LiveRandomNameView()
         return view
@@ -42,14 +41,6 @@ class LiveBroadcastingCreateController: BaseViewController {
         button.addTarget(self, action: #selector(onTapStartLiveButton), for: .touchUpInside)
         return button
     }()
-    private lazy var changeRoomView: ChangeRoomBgView = {
-        let view = ChangeRoomBgView()
-        view.didSelectedBgImageClosure = { [weak self] imageNmae in
-            self?.bgImageName = imageNmae
-            self?.view.layer.contents = UIImage(named: imageNmae)?.cgImage
-        }
-        return view
-    }()
     
     private var agoraKit: AgoraRtcEngineKit?
     private lazy var rtcEngineConfig: AgoraRtcEngineConfig = {
@@ -69,8 +60,7 @@ class LiveBroadcastingCreateController: BaseViewController {
         return option
     }()
     private var liveSettingModel: LiveSettingUseData?
-    private var bgImageName: String = "BG01"
-            
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -135,7 +125,7 @@ class LiveBroadcastingCreateController: BaseViewController {
                                            mirrorMode: .auto))
         /// 开启扬声器
         agoraKit?.setDefaultAudioRouteToSpeakerphone(true)
-
+        
         let canvas = AgoraRtcVideoCanvas()
         canvas.uid = UserInfo.userId
         canvas.renderMode = .hidden
@@ -179,13 +169,13 @@ class LiveBroadcastingCreateController: BaseViewController {
     
     private func startLiveHandler(result: IObject) {
         LogUtils.log(message: "result == \(result.toJson() ?? "")", level: .info)
-        let channelName = result.getPropertyWith(key: "roomId", type: String.self) as? String
         
+        let channelName = result.getPropertyWith(key: "roomId", type: String.self) as? String
         NetworkManager.shared.generateToken(channelName: channelName ?? "", uid: UserInfo.userId) {
-            let livePlayerVC = LiveBroadcastingController(channelName: channelName ?? "",
-                                                          userId: "\(UserInfo.userId)",
-                                                          agoraKit: self.agoraKit)
-            self.navigationController?.pushViewController(livePlayerVC, animated: true)
+            let pkLiveVC = LiveShoppingViewController(channelName: channelName ?? "",
+                                                      userId: "\(UserInfo.userId)",
+                                                      agoraKit: self.agoraKit)
+            self.navigationController?.pushViewController(pkLiveVC, animated: true)
         }
     }
     

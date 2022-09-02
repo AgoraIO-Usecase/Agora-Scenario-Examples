@@ -28,6 +28,11 @@ let SYNC_MANAGER_AGORA_CLUB_USERS = "agoraClubUsers"
 let SYNC_SCENE_ROOM_MESSAGE_INFO = "messageInfo"
 /// 房间内用户列表
 let SYNC_SCENE_ROOM_USER_COLLECTION = "userCollection"
+/// 商品信息
+let SYNC_SCENE_SHOPPING_INFO = "shoppingInfo"
+
+let APP_SCENARIO: Int = 100
+let SERVICE_TYPE: Int = 12
 
 struct UserInfo {
     static var userId: UInt {
@@ -44,3 +49,5 @@ struct UserInfo {
         "\(userId)"
     }
 }
+
+

@@ -64,8 +64,8 @@ class LivePKCreateController: BaseViewController {
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupAgoraKit()
         setupUI()
+        setupAgoraKit()
     }
     
     override func viewWillAppear(_ animated: Bool) {

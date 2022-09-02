@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AgoraRtcKit
 import Agora_Scene_Utils
 
 enum SceneType: String {
@@ -25,7 +26,9 @@ enum SceneType: String {
     case cdn = "PKByCDN"
     /// 多人连麦
     case mutli = "mutli"
-    
+    /// 电商
+    case shopping = "shopping"
+    /// 互动播客
     case interactiveBlog = "interactiveBlog"
     
     var alertTitle: String {
@@ -86,6 +89,12 @@ struct MainModel {
         model.sceneType = .interactiveBlog
         tempArray.append(model)
         
+        model = MainModel()
+        model.title = "Shopping".localized
+        model.imageNmae = "interactiveblog"
+        model.sceneType = .shopping
+        tempArray.append(model)
+        
         dataArray.append(tempArray)
         
         tempArray = [MainModel]()
@@ -113,6 +122,13 @@ struct MainModel {
 
 
 class MainViewController: BaseViewController {
+    private lazy var rtcEngineConfig: AgoraRtcEngineConfig = {
+        let config = AgoraRtcEngineConfig()
+        config.appId = KeyCenter.AppId
+        config.channelProfile = .liveBroadcasting
+        config.areaCode = .global
+        return config
+    }()
     public lazy var collectionView: AGECollectionView = {
         let view = AGECollectionView()
         let w = (Screen.width - 40) / 2
@@ -134,6 +150,13 @@ class MainViewController: BaseViewController {
         super.viewDidLoad()
         title = "home".localized
         setupUI()
+//        setupAgoraKit()
+    }
+    
+    private func setupAgoraKit() {
+        let agoraKit = AgoraRtcEngineKit.sharedEngine(with: rtcEngineConfig, delegate: nil)
+        agoraKit.setParameters("{\"rtc.report_app_scenario\":{\"appScenario\":\(APP_SCENARIO),\"serviceType\":\(SERVICE_TYPE),\"appVersion\":\"\(AgoraRtcEngineKit.getSdkVersion())\"}}")
+        agoraKit.setLogFile(LogUtils.sdkLogPath())
     }
     
     private func setupUI() {
