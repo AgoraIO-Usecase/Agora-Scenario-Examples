@@ -581,9 +581,9 @@ public class RoomDetailActivity extends BaseActivity<ClubRoomDetailActivityBindi
             rtcEngine.setParameters("{"
                     + "\"rtc.report_app_scenario\":"
                     + "{"
-                    + "\"appScenario\":" + BuildConfig.RTCAppScenario + ","
-                    + "\"serviceType\":" + BuildConfig.RTCServiceType + ","
-                    + "\"appVersion\":\"" + BuildConfig.RTCAppVersion + "\""
+                    + "\"appScenario\":" + 100 + ","
+                    + "\"serviceType\":" + 12 + ","
+                    + "\"appVersion\":\"" + RtcEngine.getSdkVersion() + "\""
                     + "}"
                     + "}");
 
