@@ -50,7 +50,12 @@ public class ModulesConfig {
                 R.drawable.app_banner_interactor_blog,
                 "io.agora.scene.interactiveblog.RoomListActivity"
         ));
-
+        // Shopping
+        this.moduleInfo.add(new ModuleInfo(
+                R.string.app_shopping,
+                R.drawable.app_banner_interactor_blog,
+                "io.agora.scene.shopping.RoomListActivity"
+        ));
         moduleInfo.add(new ModuleInfo(R.string.app_type_education));
         // BreakoutRoom
         this.moduleInfo.add(new ModuleInfo(

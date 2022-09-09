@@ -15,5 +15,6 @@
     <string name="app_voice_name">Voice</string>
     <string name="app_multi_call">Multi Call</string>
     <string name="app_interactive_blog">Interactive Blog</string>
+    <string name="app_shopping">Shopping</string>
 
 </resources>
