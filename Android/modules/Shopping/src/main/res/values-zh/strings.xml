@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="shopping_app_name">电商</string>
+
+    <string name="shopping_pk_invite_tip">"收到邀请，是否接受？"</string>
+
+    <string name="shopping_product_detail_buy_now">立即购买</string>
+    <string name="shopping_product_promote_title">抢 9 期免息券</string>
+    <string name="shopping_product_promote_date">6.11 - 6.18</string>
+    <string name="shopping_product_promote_actual_price_title">到手价</string>
+    <string name="shopping_product_promote_actual_price">6599</string>
+
+    <string name="shopping_product_default_description">Apple iPad Pro 11英寸平板电脑 2020年新款(256G WLAN版/全面屏/A12Z/FaceID/MXDC2CH/A) 深空灰色</string>
+    <string name="shopping_product_name_1">口红</string>
+    <string name="shopping_product_name_2">背包</string>
+    <string name="shopping_product_name_3">iPad</string>
+    <string name="shopping_product_name_4">裤子</string>
+
+    <string name="shopping_product_desp_1">烈焰幻魅唇膏16# (SCARLET GOUGE) 3g TF黑管口红</string>
+    <string name="shopping_product_desp_2">Supreme x Louis Vuitton LV Shoulder Bag 17SS 大号斜挎包</string>
+    <string name="shopping_product_desp_3">苹果 iPad Pro (12.9英寸, WLAN, 64GB) - Silver </string>
+    <string name="shopping_product_desp_4">花花公子衬衫男短袖，夏季</string>
+
+    <string name="shopping_product_list_title">商品列表</string>
+    <string name="shopping_product_type_unlisted_title">未上架</string>
+    <string name="shopping_product_type_listed_title">已上架</string>
+    <string name="shopping__product_action_detail">去看看</string>
+    <string name="shopping__product_action_list">上架</string>
+    <string name="shopping__product_action_unlisted">下架</string>
+
+</resources>

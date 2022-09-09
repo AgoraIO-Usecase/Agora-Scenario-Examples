@@ -56,6 +56,12 @@ public class ModulesConfig {
                 R.drawable.app_banner_interactor_blog,
                 "io.agora.scene.interactiveblog.RoomListActivity"
         ));
+        // Interactive Blog
+        this.moduleInfo.add(new ModuleInfo(
+                R.string.app_shopping,
+                R.drawable.app_banner_interactor_blog,
+                "io.agora.scene.shopping.RoomListActivity"
+        ));
         // Club
 //        this.moduleInfo.add(new ModuleInfo(
 //                R.string.app_club_name,
