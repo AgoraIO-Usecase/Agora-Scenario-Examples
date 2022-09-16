@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:id="@+id/product_content_scroll_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/product_bottom_action_layout">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <io.agora.uiwidget.basic.SquareRelativeLayout
+                android:id="@+id/product_remote_image_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/product_detail_big_picture"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginBottom="32dp" />
+            </io.agora.uiwidget.basic.SquareRelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/product_promote_title_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/product_remote_image_layout">
+
+                <RelativeLayout
+                    android:id="@+id/product_orange_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:background="@drawable/shopping_product_detail_background_gradient_orange">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/product_promote_title_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginHorizontal="16dp"
+                        android:text="@string/shopping_product_promote_title"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/product_promote_data_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="16dp"
+                        android:layout_toEndOf="@id/product_promote_title_text"
+                        android:background="@drawable/shopping_product_detail_promote_date_bg"
+                        android:paddingStart="24dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:text="@string/shopping_product_promote_date"
+                        android:textColor="#FFFF4B00"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/product_purple_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:layout_below="@id/product_orange_layout"
+                    android:background="@drawable/shopping_product_detail_background_gradient_purple"></RelativeLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/product_round_layout"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:layout_alignBottom="@id/product_promote_title_layout"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="32dp"
+                android:background="@drawable/shopping_product_detail_background_gradient_purple_oval">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/product_actual_price_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/shopping_product_promote_actual_price_title"
+                    android:textColor="@android:color/white"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/product_actual_price_title"
+                    android:layout_centerHorizontal="true">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/product_price_unit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@id/product_actual_price"
+                        android:layout_alignBottom="@id/product_actual_price"
+                        android:text="￥"
+                        android:textColor="@android:color/white"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/product_actual_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:layout_toEndOf="@id/product_price_unit"
+                        android:gravity="bottom"
+                        android:text="@string/shopping_product_promote_actual_price"
+                        android:textAlignment="gravity"
+                        android:textColor="@android:color/white"
+                        android:textSize="36dp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/product_description_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/product_promote_title_layout">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/product_window_description_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    tools:text="@string/shopping_product_desp_1" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/product_detail_back"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/shopping_ic_product_detail_back" />
+
+    <RelativeLayout
+        android:id="@+id/product_bottom_action_layout"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_alignParentBottom="true">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/product_buy_now_btn"
+            android:layout_width="124dp"
+            android:layout_height="48dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/shopping_product_buy_now_btn_bg"
+            android:gravity="center"
+            android:text="@string/shopping_product_detail_buy_now"
+            android:textAlignment="gravity"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/product_detail_owner_video_layout"
+        android:layout_width="130dp"
+        android:layout_height="170dp"
+        android:layout_above="@id/product_bottom_action_layout"
+        android:layout_alignParentEnd="true"
+        android:layout_marginHorizontal="16dp"
+        android:visibility="visible">
+
+        <FrameLayout
+            android:id="@+id/owner_video"
+            android:layout_width="120dp"
+            android:layout_height="160dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"></FrameLayout>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/product_detail_video_close_btn"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/shopping_ic_video_close_gray" />
+    </RelativeLayout>
+</RelativeLayout>

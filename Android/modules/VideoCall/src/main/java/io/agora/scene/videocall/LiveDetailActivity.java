@@ -107,6 +107,14 @@ public class LiveDetailActivity extends BaseActivity<VideoCallLiveDetailActivity
                     });
                 }
             });
+            rtcEngine.setParameters("{"
+                    + "\"rtc.report_app_scenario\":"
+                    + "{"
+                    + "\"appScenario\":" + 100 + ","
+                    + "\"serviceType\":" + 12 + ","
+                    + "\"appVersion\":\"" + RtcEngine.getSdkVersion() + "\""
+                    + "}"
+                    + "}");
             rtcEngine.setVideoEncoderConfiguration(io.agora.scene.videocall.Constants.encoderConfiguration);
             rtcEngine.enableVideo();
 

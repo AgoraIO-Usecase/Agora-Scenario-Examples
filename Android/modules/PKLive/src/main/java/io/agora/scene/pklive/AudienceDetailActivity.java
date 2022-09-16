@@ -38,7 +38,7 @@ public class AudienceDetailActivity extends AppCompatActivity {
     private final RoomManager.DataCallback<String> roomDeleteCallback = new RoomManager.DataCallback<String>() {
         @Override
         public void onObtained(String data) {
-            if(data.equals(roomInfo.roomId)){
+            if (data.equals(roomInfo.roomId)) {
                 runOnUiThread(() -> showRoomEndDialog());
             }
         }
@@ -59,15 +59,15 @@ public class AudienceDetailActivity extends AppCompatActivity {
             });
         }
     };
-    private final RoomManager.DataCallback<RoomManager.MessageInfo> messageInfoDataCallback = msg -> runOnUiThread(()->{
+    private final RoomManager.DataCallback<RoomManager.MessageInfo> messageInfoDataCallback = msg -> runOnUiThread(() -> {
         mMessageAdapter.addMessage(msg);
     });
-    private final RoomManager.DataListCallback<RoomManager.UserInfo> userInfoDataListCallback = dataList -> runOnUiThread(()->{
+    private final RoomManager.DataListCallback<RoomManager.UserInfo> userInfoDataListCallback = dataList -> runOnUiThread(() -> {
         mBinding.hostUserView.setUserCount(dataList.size());
         mBinding.hostUserView.removeAllUserIcon();
         for (int i = 1; i <= 3; i++) {
             int index = dataList.size() - i;
-            if(index >= 0){
+            if (index >= 0) {
                 RoomManager.UserInfo userInfo = dataList.get(index);
                 mBinding.hostUserView.addUserIcon(userInfo.getAvatarResId(), userInfo.userName);
             }
@@ -75,7 +75,7 @@ public class AudienceDetailActivity extends AppCompatActivity {
     });
     private RtcChannel pkChannel;
     private final RoomManager.DataCallback<RoomManager.PKInfoModel> pkInfoModelDataCallback = data -> runOnUiThread(() -> {
-        if(data == null){
+        if (data == null) {
             return;
         }
         if (data.status == RoomManager.PKApplyInfoStatus.accept) {
@@ -102,18 +102,19 @@ public class AudienceDetailActivity extends AppCompatActivity {
             });
 
 
-            pkChannel.setClientRole(io.agora.rtc.Constants.CLIENT_ROLE_AUDIENCE);
+            pkChannel.setClientRole(Constants.CLIENT_ROLE_AUDIENCE);
             ChannelMediaOptions options = new ChannelMediaOptions();
             options.autoSubscribeAudio = true;
             options.autoSubscribeVideo = true;
-
+            options.publishLocalAudio = false;
+            options.publishLocalVideo = false;
             TokenGenerator.gen(AudienceDetailActivity.this, pkChannelId, pkUid, ret -> pkChannel.joinChannel(ret, "", pkUid, options));
         } else if (data.status == RoomManager.PKApplyInfoStatus.end) {
             // 结束PK
             mBinding.pkVideoContainer.setVisibility(View.GONE);
             mBinding.pkVideoContainer.removeAllViews();
             mBinding.ivPkIcon.setVisibility(View.GONE);
-            if(pkChannel != null){
+            if (pkChannel != null) {
                 pkChannel.leaveChannel();
                 pkChannel = null;
             }
@@ -195,6 +196,14 @@ public class AudienceDetailActivity extends AppCompatActivity {
                     runOnUiThread(() -> mMessageAdapter.addMessage(new RoomManager.MessageInfo("User-" + uid + "", getString(R.string.live_room_message_user_left_suffix))));
                 }
             });
+            rtcEngine.setParameters("{"
+                    + "\"rtc.report_app_scenario\":"
+                    + "{"
+                    + "\"appScenario\":" + 100 + ","
+                    + "\"serviceType\":" + 12 + ","
+                    + "\"appVersion\":\"" + RtcEngine.getSdkVersion() + "\""
+                    + "}"
+                    + "}");
             rtcEngine.enableAudio();
             rtcEngine.enableVideo();
             rtcEngine.setChannelProfile(io.agora.rtc.Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
@@ -211,8 +220,8 @@ public class AudienceDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void showRoomEndDialog(){
-        if(isDestroyed()){
+    private void showRoomEndDialog() {
+        if (isDestroyed()) {
             return;
         }
         new AlertDialog.Builder(this)
@@ -255,7 +264,7 @@ public class AudienceDetailActivity extends AppCompatActivity {
     @Override
     public void finish() {
         roomManager.leaveRoom(roomInfo);
-        if(pkChannel != null){
+        if (pkChannel != null) {
             pkChannel.leaveChannel();
             pkChannel = null;
         }

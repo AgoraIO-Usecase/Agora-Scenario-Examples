@@ -322,6 +322,15 @@ public class ChatManager {
         };
         try {
             rtcEngine = RtcEngine.create(config);
+            rtcEngine.setParameters("{"
+                    + "\"rtc.report_app_scenario\":"
+                    + "{"
+                    + "\"appScenario\":" + 100 + ","
+                    + "\"serviceType\":" + 12 + ","
+                    + "\"appVersion\":\"" + RtcEngine.getSdkVersion() + "\""
+                    + "}"
+                    + "}");
+
             rtcEngine.enableAudio();
             rtcEngine.setDefaultAudioRoutetoSpeakerphone(true);
 

@@ -275,6 +275,14 @@ public class LiveDetailActivity extends AppCompatActivity {
                 }
 
             });
+            rtcEngine.setParameters("{"
+                    + "\"rtc.report_app_scenario\":"
+                    + "{"
+                    + "\"appScenario\":" + 100 + ","
+                    + "\"serviceType\":" + 12 + ","
+                    + "\"appVersion\":\"" + RtcEngine.getSdkVersion() + "\""
+                    + "}"
+                    + "}");
             rtcEngine.enableVideo();
             rtcEngine.enableVideo();
             rtcEngine.setCameraCapturerConfiguration(new CameraCapturerConfiguration(CameraCapturerConfiguration.CAPTURER_OUTPUT_PREFERENCE.CAPTURER_OUTPUT_PREFERENCE_AUTO, Constants.cameraDirection));

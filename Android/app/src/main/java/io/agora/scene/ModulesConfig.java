@@ -41,22 +41,32 @@ public class ModulesConfig {
         // Multi Call
         this.moduleInfo.add(new ModuleInfo(
                 R.string.app_multi_call,
-                R.drawable.app_banner_video_call,
+                R.drawable.app_banner_multi_call,
                 "io.agora.scene.multicall.RoomListActivity"
         ));
         // Interactive Blog
         this.moduleInfo.add(new ModuleInfo(
                 R.string.app_interactive_blog,
-                R.drawable.app_banner_video_call,
+                R.drawable.app_banner_interactor_blog,
                 "io.agora.scene.interactiveblog.RoomListActivity"
         ));
-
+        // Shopping
+        this.moduleInfo.add(new ModuleInfo(
+                R.string.app_shopping,
+                R.drawable.app_banner_interactor_blog,
+                "io.agora.scene.shopping.RoomListActivity"
+        ));
         moduleInfo.add(new ModuleInfo(R.string.app_type_education));
         // BreakoutRoom
         this.moduleInfo.add(new ModuleInfo(
                 R.string.app_breakout_room_name,
                 R.drawable.app_banner_breakout_room,
                 "io.agora.scene.breakoutroom.ui.MainActivity"
+        ));
+        this.moduleInfo.add(new ModuleInfo(
+                R.string.app_education1v1,
+                R.drawable.app_banner_breakout_room,
+                "io.agora.scene.edu1v1.RoomListActivity"
         ));
     }
 

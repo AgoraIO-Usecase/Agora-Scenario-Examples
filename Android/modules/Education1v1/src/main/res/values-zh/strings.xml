@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="edu1v1_app_name">教育1v1</string>
+    <string name="edu1v1_waiting_remote_user">等待远端用户加入</string>
+
+</resources>
