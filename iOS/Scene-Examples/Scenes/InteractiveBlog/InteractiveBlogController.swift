@@ -178,6 +178,7 @@ class InteractiveBlogController: BaseViewController {
         agoraKit?.leaveChannel({ state in
             LogUtils.log(message: "leave channel: \(state)", level: .info)
         })
+        AgoraRtcEngineKit.destroy()
     }
     
     deinit {

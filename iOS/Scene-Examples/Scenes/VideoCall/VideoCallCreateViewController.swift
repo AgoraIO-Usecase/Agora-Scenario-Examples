@@ -119,7 +119,7 @@ class VideoCallCreateViewController: BaseViewController {
         agoraKit?.setChannelProfile(.liveBroadcasting)
         agoraKit?.setClientRole(.broadcaster)
         agoraKit?.setVideoEncoderConfiguration(
-            AgoraVideoEncoderConfiguration(size: CGSize(width: 320, height: 240),
+            AgoraVideoEncoderConfiguration(size: CGSize(width: 480, height: 840),
                                            frameRate: .fps30,
                                            bitrate: AgoraVideoBitrateStandard,
                                            orientationMode: .fixedPortrait,

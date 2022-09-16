@@ -116,12 +116,6 @@ class LivePKController: BaseViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        agoraKit?.disableAudio()
-        agoraKit?.disableVideo()
-        agoraKit?.muteAllRemoteAudioStreams(true)
-        agoraKit?.muteAllRemoteVideoStreams(true)
-        agoraKit?.destroyMediaPlayer(nil)
-        
         leaveChannel(uid: UserInfo.userId, channelName: channleName, isExit: true)
         liveView.leave(channelName: channleName)
         SyncUtil.scene(id: channleName)?.unsubscribe(key: SceneType.pkApply.rawValue)
@@ -138,6 +132,10 @@ class LivePKController: BaseViewController {
             
         })
         deleteSubscribe()
+        
+        agoraKit?.disableAudio()
+        agoraKit?.disableVideo()
+        AgoraRtcEngineKit.destroy()
     }
     
     private func setupUI() {
@@ -542,6 +540,8 @@ class LivePKController: BaseViewController {
         liveView.setupCanvasData(data: canvasModel)
         
         channelMediaOptions.clientRoleType = .of((Int32)(AgoraClientRole.audience.rawValue))
+        channelMediaOptions.publishMicrophoneTrack = .of(false)
+        channelMediaOptions.publishCameraTrack = .of(false)
         let joinResult = agoraKit?.joinChannelEx(byToken: KeyCenter.Token, connection: connection, delegate: self, mediaOptions: channelMediaOptions, joinSuccess: nil) ?? -1000
         if joinResult == 0 {
             LogUtils.log(message: "join audience success uid == \(pkUid) channelName == \(channelName)", level: .info)

@@ -127,8 +127,6 @@ class LiveShoppingViewController: BaseViewController {
         if isJumpDetailVC {
             return
         }
-        agoraKit?.disableAudio()
-        agoraKit?.disableVideo()
         
         leaveChannel(uid: UserInfo.userId, channelName: channleName, isExit: true)
         liveView.leave(channelName: channleName)
@@ -146,6 +144,9 @@ class LiveShoppingViewController: BaseViewController {
             
         })
         deleteSubscribe()
+        agoraKit?.disableAudio()
+        agoraKit?.disableVideo()
+        AgoraRtcEngineKit.destroy()
     }
     
     private func setupUI() {

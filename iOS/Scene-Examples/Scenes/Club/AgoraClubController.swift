@@ -132,9 +132,6 @@ class AgoraClubController: BaseViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        agoraKit?.disableAudio()
-        agoraKit?.muteAllRemoteAudioStreams(true)
-        agoraKit?.destroyMediaPlayer(mediaPlayerKit)
         SyncUtil.scene(id: channelName)?.collection(className: SYNC_MANAGER_AGORA_CLUB_USERS).delete(id: currentUserModel?.objectId ?? "", success: {
             
         }, fail: { error in
@@ -151,6 +148,10 @@ class AgoraClubController: BaseViewController {
         }
         UIApplication.shared.isIdleTimerDisabled = false
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        agoraKit?.disableAudio()
+        agoraKit?.muteAllRemoteAudioStreams(true)
+        agoraKit?.destroyMediaPlayer(mediaPlayerKit)
+        AgoraRtcEngineKit.destroy()
     }
     
     /// 监听礼物

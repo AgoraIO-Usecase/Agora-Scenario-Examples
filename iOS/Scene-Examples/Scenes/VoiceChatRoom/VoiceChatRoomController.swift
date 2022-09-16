@@ -121,14 +121,13 @@ class VoiceChatRoomController: BaseViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        agoraKit?.disableAudio()
-        agoraKit?.muteAllRemoteAudioStreams(true)
-        agoraKit?.destroyMediaPlayer(nil)
         leaveChannel()
         SyncUtil.leaveScene(id: channelName)
         navigationTransparent(isTransparent: false)
         UIApplication.shared.isIdleTimerDisabled = false
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        agoraKit?.disableAudio()
+        AgoraRtcEngineKit.destroy()
     }
     
     /// 加入channel

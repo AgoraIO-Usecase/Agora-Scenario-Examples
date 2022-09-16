@@ -158,6 +158,7 @@ class BORRoomDetailController: BaseViewController {
         leaveChannel()
         SyncUtil.scene(id: id)?.collection(className: SYNC_COLLECTION_SUB_ROOM).document().unsubscribe(key: "")
         SyncUtil.leaveScene(id: id)
+        AgoraRtcEngineKit.destroy()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
