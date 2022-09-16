@@ -150,6 +150,7 @@ extension MutliView: AGECollectionViewDelegate {
             let canvas = AgoraRtcVideoCanvas()
             canvas.uid = UInt(userModel.userId) ?? 0
             canvas.view = cell.canvasView
+            canvas.renderMode = .hidden
             if userModel.userId == UserInfo.uid {
                 agoraKit?.setupLocalVideo(canvas)
                 agoraKit?.startPreview()
@@ -157,7 +158,7 @@ extension MutliView: AGECollectionViewDelegate {
                 agoraKit?.setupRemoteVideo(canvas)
             }
         }
-        cell.setupData(model: model)
+        cell.setupData(model: model, role: currentRole)
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -264,7 +265,8 @@ class MutliViewCell: UICollectionViewCell {
         nameLabel.bottomAnchor.constraint(equalTo: canvasView.bottomAnchor, constant: -5).isActive = true
     }
     
-    func setupData(model: Any?) {
+    func setupData(model: Any?, role: AgoraClientRole) {
+        label.text = role == .audience ? "Apply for connection".localized : "Waiting for connection".localized
         if model is AgoraVoiceUsersModel {
             let userModel = model as! AgoraVoiceUsersModel
             nameLabel.text = "\(userModel.userName)"
