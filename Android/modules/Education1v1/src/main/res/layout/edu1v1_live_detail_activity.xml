@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/extra_blue_gradient_background"
+    android:padding="8dp">
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/board_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_gravity="end"
+        android:layout_marginEnd="8dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/local_video_container"
+        app:layout_constraintHorizontal_weight="3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_weight="1">
+
+        <io.agora.board.fast.FastboardView
+            android:id="@+id/fastboard"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </androidx.cardview.widget.CardView>
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/local_video_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_gravity="end"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toTopOf="@id/remote_video_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/board_container"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_weight="1" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/remote_video_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_gravity="end"
+        android:layout_marginTop="8dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/local_video_container"
+        app:layout_constraintStart_toStartOf="@id/local_video_container"
+        app:layout_constraintTop_toBottomOf="@id/local_video_container"
+        app:layout_constraintVertical_weight="1" />
+
+    <TextView
+        android:id="@+id/tv_waiting_remote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/remote_video_container"
+        app:layout_constraintEnd_toEndOf="@id/remote_video_container"
+        app:layout_constraintTop_toTopOf="@id/remote_video_container"
+        app:layout_constraintBottom_toBottomOf="@id/remote_video_container"
+        android:text="@string/edu1v1_waiting_remote_user"/>
+
+
+    <io.agora.uiwidget.function.LiveHostNameView
+        android:id="@+id/host_name_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        app:layout_constraintStart_toStartOf="@id/board_container"
+        app:layout_constraintTop_toTopOf="@id/board_container" />
+
+    <io.agora.uiwidget.function.LiveBottomView
+        android:id="@+id/bottom_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:gravity="end"
+        app:layout_constraintStart_toStartOf="@id/board_container"
+        app:layout_constraintBottom_toBottomOf="@id/board_container"
+        app:layout_constraintEnd_toEndOf="@id/board_container" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
