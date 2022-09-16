@@ -71,6 +71,7 @@ dependencies {
     runtimeOnly(project(':modules:MultiCall'))
     runtimeOnly(project(':modules:InteractiveBlog'))
     runtimeOnly(project(':modules:Shopping'))
+    runtimeOnly(project(':modules:Education1v1'))
 
     extSafeImplementation 'androidx.core:core-ktx:1.3.2'
     extSafeImplementation 'com.makeramen:roundedimageview:2.3.0'

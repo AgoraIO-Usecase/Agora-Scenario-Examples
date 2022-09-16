@@ -41,5 +41,6 @@ ext {
             'io.agora:player'                               : '1.3.0',
             'com.github.agorabuilder:rtm-sdk'               : '1.4.6',
             'com.github.AgoraIO-Community:SyncManager-Android' : '2.0.6',
+            'com.github.netless-io:fastboard-android'       : '1.2.3',
     ]
 }
