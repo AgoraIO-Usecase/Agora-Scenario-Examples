@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
@@ -41,6 +42,12 @@ public class LiveToolsDialog extends BottomSheetDialog {
     public LiveToolsDialog(@NonNull Context context, int theme) {
         super(context, theme);
         init();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     protected void init() {

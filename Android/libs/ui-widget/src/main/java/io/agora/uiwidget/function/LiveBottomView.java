@@ -66,7 +66,7 @@ public class LiveBottomView extends RelativeLayout{
     }
 
     public LiveBottomView setupInputText(boolean visible, OnClickListener listener){
-        mInputText.setVisibility(visible ? View.VISIBLE: View.GONE);
+        mInputText.setVisibility(visible ? View.VISIBLE: View.INVISIBLE);
         mInputText.setOnClickListener(listener);
         return this;
     }

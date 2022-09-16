@@ -1,0 +1,14 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="shoppingTheme" parent="CommonAppTheme">
+
+    </style>
+
+    <style name="shoppingDialogProductDetail">
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+    </style>
+
+</resources>
