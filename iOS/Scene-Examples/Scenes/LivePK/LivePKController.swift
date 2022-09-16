@@ -116,11 +116,6 @@ class LivePKController: BaseViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        agoraKit?.disableAudio()
-        agoraKit?.disableVideo()
-        agoraKit?.muteAllRemoteAudioStreams(true)
-        agoraKit?.muteAllRemoteVideoStreams(true)
-        
         leaveChannel(uid: UserInfo.userId, channelName: channleName, isExit: true)
         liveView.leave(channelName: channleName)
         SyncUtil.scene(id: channleName)?.unsubscribe(key: SceneType.pkApply.rawValue)
@@ -137,6 +132,8 @@ class LivePKController: BaseViewController {
             
         })
         deleteSubscribe()
+        agoraKit?.disableAudio()
+        agoraKit?.disableVideo()
         AgoraRtcEngineKit.destroy()
     }
     

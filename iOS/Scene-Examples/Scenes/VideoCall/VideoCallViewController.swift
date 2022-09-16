@@ -137,9 +137,6 @@ class VideoCallViewController: BaseViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        agoraKit?.disableAudio()
-        agoraKit?.disableVideo()
-        AgoraRtcEngineKit.destroy()
         leaveChannel(uid: UserInfo.userId, channelName: channleName, isExit: true)
         if !userObjectId.isEmpty {
             SyncUtil.scene(id: channleName)?.collection(className: SYNC_SCENE_ROOM_USER_COLLECTION).delete(id: userObjectId, success: nil, fail: nil)
@@ -152,6 +149,9 @@ class VideoCallViewController: BaseViewController {
         navigationTransparent(isTransparent: false)
         UIApplication.shared.isIdleTimerDisabled = false
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        agoraKit?.disableAudio()
+        agoraKit?.disableVideo()
+        AgoraRtcEngineKit.destroy()
     }
     
     private func eventHandler() {
@@ -211,7 +211,11 @@ class VideoCallViewController: BaseViewController {
     }
     
     private func joinChannel(channelName: String, uid: UInt) {
-        let result = agoraKit?.joinChannel(byToken: KeyCenter.Token, channelId: channelName, info: nil, uid: UserInfo.userId, options: channelMediaOptions)
+        let result = agoraKit?.joinChannel(byToken: KeyCenter.Token,
+                                           channelId: channelName,
+                                           info: nil,
+                                           uid: UserInfo.userId,
+                                           options: channelMediaOptions)
         if result == 0 {
             LogUtils.log(message: "进入房间", level: .info)
         }

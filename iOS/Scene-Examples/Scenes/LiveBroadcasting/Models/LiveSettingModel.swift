@@ -37,9 +37,9 @@ struct LiveSettingModel {
     
     static func settingsData() -> [LiveSettingModel] {
         var dataArray = [LiveSettingModel]()
-        var model = LiveSettingModel(title: "Resolution".localized, desc: "240 X 240", settingType: .resolution)
+        var model = LiveSettingModel(title: "Resolution".localized, desc: "480 X 840", settingType: .resolution)
         dataArray.append(model)
-        model = LiveSettingModel(title: "FrameRate".localized, desc: "15", settingType: .frameRate)
+        model = LiveSettingModel(title: "FrameRate".localized, desc: "30", settingType: .frameRate)
         dataArray.append(model)
         model = LiveSettingModel(title: "BitRate".localized, desc: "200kbps", sliderValue: 0.1, settingType: .bitRate)
         dataArray.append(model)

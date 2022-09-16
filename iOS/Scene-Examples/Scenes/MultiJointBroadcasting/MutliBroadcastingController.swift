@@ -76,10 +76,6 @@ class MutliBroadcastingController: BaseViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        agoraKit?.disableAudio()
-        agoraKit?.disableVideo()
-        agoraKit?.muteAllRemoteAudioStreams(true)
-        agoraKit?.muteAllRemoteVideoStreams(true)
         mutliView.leavl()
         leaveChannel(uid: UserInfo.userId, channelName: channleName, isExit: true)
         liveView.leave(channelName: channleName)
@@ -88,6 +84,9 @@ class MutliBroadcastingController: BaseViewController {
         navigationTransparent(isTransparent: false)
         UIApplication.shared.isIdleTimerDisabled = false
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        agoraKit?.disableAudio()
+        agoraKit?.disableVideo()
+        AgoraRtcEngineKit.destroy()
     }
     
     private func setupUI() {
@@ -177,7 +176,11 @@ class MutliBroadcastingController: BaseViewController {
         channelMediaOptions.publishLocalVideo = getRole(uid: "\(uid)") == .broadcaster
         channelMediaOptions.autoSubscribeVideo = true
         channelMediaOptions.autoSubscribeAudio = true
-        let result = agoraKit?.joinChannel(byToken: KeyCenter.Token, channelId: channelName, info: nil, uid: uid, joinSuccess: nil)
+        let result = agoraKit?.joinChannel(byToken: KeyCenter.Token,
+                                           channelId: channelName,
+                                           info: nil,
+                                           uid: uid,
+                                           options: channelMediaOptions)
         if result == 0 {
             LogUtils.log(message: "进入房间", level: .info)
         }

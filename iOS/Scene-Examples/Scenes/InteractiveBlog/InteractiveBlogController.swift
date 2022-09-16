@@ -158,21 +158,22 @@ class InteractiveBlogController: BaseViewController {
         guard isAddUser else { return }
         agoraKit?.setClientRole(getRole(uid: "\(uid)"))
         channelMediaOptions.publishLocalAudio = getRole(uid: "\(uid)") == .broadcaster
-        let result = agoraKit?.joinChannel(byToken: KeyCenter.Token, channelId: channelName, info: nil, uid: uid, joinSuccess: nil)
+        let result = agoraKit?.joinChannel(byToken: KeyCenter.Token, channelId: channelName, info: nil, uid: uid, options: channelMediaOptions)
         if result == 0 {
             LogUtils.log(message: "进入房间", level: .info)
         }
     }
     
     public func leaveChannel() {
-        agoraKit?.disableAudio()
-        agoraKit?.disableVideo()
         liveView.leave()
         SyncUtil.scene(id: channleName)?.unsubscribe(key: SceneType.interactiveBlog.rawValue)
         SyncUtil.scene(id: channleName)?.unsubscribe(key: SYNC_MANAGER_AGORA_VOICE_USERS)
         agoraKit?.leaveChannel({ state in
             LogUtils.log(message: "leave channel: \(state)", level: .info)
         })
+        agoraKit?.disableAudio()
+        agoraKit?.disableVideo()
+        AgoraRtcEngineKit.destroy()
     }
     
     deinit {

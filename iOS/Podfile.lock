@@ -1,5 +1,5 @@
 PODS:
-  - Agora-Scene-Utils (1.0.3)
+  - Agora-Scene-Utils (1.0.7)
   - AgoraRtcEngine_iOS (3.7.1):
     - AgoraRtcEngine_iOS/AINS (= 3.7.1)
     - AgoraRtcEngine_iOS/AV1Dec (= 3.7.1)
@@ -28,7 +28,7 @@ PODS:
   - SocketRocket (0.6.0)
 
 DEPENDENCIES:
-  - Agora-Scene-Utils (~> 1.0.3)
+  - Agora-Scene-Utils (~> 1.0.7)
   - AgoraRtcEngine_iOS (= 3.7.1)
   - AgoraRtm_iOS (= 1.4.9)
   - MBProgressHUD (~> 1.2.0)
@@ -43,12 +43,12 @@ SPEC REPOS:
     - SocketRocket
 
 SPEC CHECKSUMS:
-  Agora-Scene-Utils: e5f27af2af265d73aecd421a947e251f6881b34f
+  Agora-Scene-Utils: f14741b381b7d495b37277d9648866164a2a77e3
   AgoraRtcEngine_iOS: f5181c4c32075bab11b0bdfc22e63fa00b9dc5bb
   AgoraRtm_iOS: b4bb9a431ce36f9b44cda423e66b2f96945ca2ab
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
 
-PODFILE CHECKSUM: da11e4b946940aba2b08598dcffacc4d16e421b7
+PODFILE CHECKSUM: 6a6131b8bf7767f230e7440746cbf1ec858a5563
 
 COCOAPODS: 1.11.2
