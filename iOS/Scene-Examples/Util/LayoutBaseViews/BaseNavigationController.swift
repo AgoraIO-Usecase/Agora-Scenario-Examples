@@ -24,6 +24,9 @@ class BaseNavigationController: UINavigationController {
     override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
         viewControllers.last?.preferredStatusBarUpdateAnimation ?? .slide
     }
+    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+        viewControllers.last?.preferredInterfaceOrientationForPresentation ?? .portrait
+    }
 }
 
 extension BaseNavigationController {

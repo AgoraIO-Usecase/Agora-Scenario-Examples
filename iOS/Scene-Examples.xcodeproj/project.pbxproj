@@ -16,6 +16,8 @@
 		E71E7AED2898C25F00B846C7 /* MutliBroadcastingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71E7AE02898C25F00B846C7 /* MutliBroadcastingController.swift */; };
 		E71E7AF32898C25F00B846C7 /* MutliBroadcastingCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71E7AE72898C25F00B846C7 /* MutliBroadcastingCreateController.swift */; };
 		E71E7AF82898D20200B846C7 /* MutliView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71E7AF72898D20200B846C7 /* MutliView.swift */; };
+		E721602528D8122E006431BD /* EducationCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E721601928D8122E006431BD /* EducationCreateController.swift */; };
+		E721602628D8122E006431BD /* EducationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E721601A28D8122E006431BD /* EducationController.swift */; };
 		E7218BAC28BF7DA1005A01D5 /* LiveShoppingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7218BA828BF7DA1005A01D5 /* LiveShoppingViewController.swift */; };
 		E7218BAD28BF7DA1005A01D5 /* LiveShoppingCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7218BA928BF7DA1005A01D5 /* LiveShoppingCreateController.swift */; };
 		E7218BAF28BF8138005A01D5 /* LiveShoppingListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7218BAE28BF8138005A01D5 /* LiveShoppingListView.swift */; };
@@ -192,6 +194,8 @@
 		E71E7AE02898C25F00B846C7 /* MutliBroadcastingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MutliBroadcastingController.swift; sourceTree = "<group>"; };
 		E71E7AE72898C25F00B846C7 /* MutliBroadcastingCreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MutliBroadcastingCreateController.swift; sourceTree = "<group>"; };
 		E71E7AF72898D20200B846C7 /* MutliView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MutliView.swift; sourceTree = "<group>"; };
+		E721601928D8122E006431BD /* EducationCreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EducationCreateController.swift; sourceTree = "<group>"; };
+		E721601A28D8122E006431BD /* EducationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EducationController.swift; sourceTree = "<group>"; };
 		E7218BA828BF7DA1005A01D5 /* LiveShoppingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveShoppingViewController.swift; sourceTree = "<group>"; };
 		E7218BA928BF7DA1005A01D5 /* LiveShoppingCreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveShoppingCreateController.swift; sourceTree = "<group>"; };
 		E7218BAE28BF8138005A01D5 /* LiveShoppingListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveShoppingListView.swift; sourceTree = "<group>"; };
@@ -402,23 +406,32 @@
 			path = MultiJointBroadcasting;
 			sourceTree = "<group>";
 		};
+		E721601228D8122E006431BD /* Education1v1 */ = {
+			isa = PBXGroup;
+			children = (
+				E721601928D8122E006431BD /* EducationCreateController.swift */,
+				E721601A28D8122E006431BD /* EducationController.swift */,
+				E721601B28D8122E006431BD /* Views */,
+			);
+			path = Education1v1;
+			sourceTree = "<group>";
+		};
+		E721601B28D8122E006431BD /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		E7218BA728BF7DA1005A01D5 /* Shopping */ = {
 			isa = PBXGroup;
 			children = (
 				E7218BA928BF7DA1005A01D5 /* LiveShoppingCreateController.swift */,
 				E7218BA828BF7DA1005A01D5 /* LiveShoppingViewController.swift */,
 				E7218BB028C0B084005A01D5 /* LiveShoppingDetailViewController.swift */,
-				E7218BAA28BF7DA1005A01D5 /* Models */,
 				E7218BAB28BF7DA1005A01D5 /* Views */,
 			);
 			path = Shopping;
-			sourceTree = "<group>";
-		};
-		E7218BAA28BF7DA1005A01D5 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 		E7218BAB28BF7DA1005A01D5 /* Views */ = {
@@ -446,6 +459,7 @@
 		E7377D8B286ECB15008F6C62 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				E721601228D8122E006431BD /* Education1v1 */,
 				E7218BA728BF7DA1005A01D5 /* Shopping */,
 				E748788A28AA198F00CA2F58 /* InteractiveBlog */,
 				E71E7ADF2898C25F00B846C7 /* MultiJointBroadcasting */,
@@ -1097,6 +1111,7 @@
 				E79BEF45273E4D99009FA838 /* LiveGiftModel.swift in Sources */,
 				E79C264E273D062400909CD4 /* LiveRoomListCell.swift in Sources */,
 				E7ECC56927E81A9E00EFA778 /* BaseNavigationController.swift in Sources */,
+				E721602628D8122E006431BD /* EducationController.swift in Sources */,
 				E79C264A273D003B00909CD4 /* LiveRoomInfo.swift in Sources */,
 				E79C262D273BC0CA00909CD4 /* ToastView.swift in Sources */,
 				E7EDBCB227A1463700E763A6 /* AgoraVoiceBelCantoModel.swift in Sources */,
@@ -1163,6 +1178,7 @@
 				E757E69E281AAE6B0017D5B9 /* AgoraSyncManager.swift in Sources */,
 				E7EEF1BF2887A02D00D9D2AE /* KeyCenter.swift in Sources */,
 				E79BEF35273D1304009FA838 /* LivePlayerCell.swift in Sources */,
+				E721602528D8122E006431BD /* EducationCreateController.swift in Sources */,
 				E79BEF8527463FA5009FA838 /* BORHomeViewController.swift in Sources */,
 				E7D46063285C8244004F3C82 /* VideoCollectionViewCell.swift in Sources */,
 				E79C2636273BC6C400909CD4 /* LiveRandomNameView.swift in Sources */,

@@ -82,6 +82,8 @@ class LiveRoomListController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationTransparent(isTransparent: false)
+        let appdelegate = UIApplication.shared.delegate as? AppDelegate
+        appdelegate?.blockRotation = .portrait
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         if sceneType == .agoraClub {
             navigationController?.navigationBar.setBackgroundImage(UIImage().color(view.backgroundColor, height: Screen.kNavHeight), for: .any, barMetrics: .default)
@@ -194,6 +196,10 @@ class LiveRoomListController: BaseViewController {
             let createLiveVC = LiveShoppingCreateController()
             navigationController?.pushViewController(createLiveVC, animated: true)
             
+        case .Education1v1:
+            let createLiveVC = EducationCreateController()
+            navigationController?.pushViewController(createLiveVC, animated: true)
+            
         case .cdn:
             break
         }
@@ -250,6 +256,11 @@ class LiveRoomListController: BaseViewController {
         case .shopping:
             let shoppingVC = LiveShoppingViewController(channelName: channelName ?? "",
                                                                userId: ownerId ?? "")
+            navigationController?.pushViewController(shoppingVC, animated: true)
+            
+        case .Education1v1:
+            let shoppingVC = EducationController(channelName: channelName ?? "",
+                                                 userId: ownerId ?? "")
             navigationController?.pushViewController(shoppingVC, animated: true)
             
         default: break
