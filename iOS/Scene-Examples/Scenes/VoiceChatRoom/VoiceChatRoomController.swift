@@ -361,7 +361,7 @@ class VoiceChatRoomController: BaseViewController {
     private func onTapCloseLive() {
         if getRole(uid: UserInfo.uid) == .broadcaster {
             showAlert(title: "Live_End".localized, message: "Confirm_End_Live".localized) { [weak self] in
-                SyncUtil.scene(id: self?.channelName ?? "")?.delete(success: nil, fail: nil)
+                SyncUtil.scene(id: self?.channelName ?? "")?.deleteScenes()
                 self?.navigationController?.popViewController(animated: true)
             }
 
