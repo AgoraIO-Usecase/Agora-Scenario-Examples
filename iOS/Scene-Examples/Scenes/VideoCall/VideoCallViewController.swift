@@ -44,7 +44,7 @@ class VideoCallViewController: BaseViewController {
         return button
     }()
     private lazy var closButton: AGEButton = {
-        let button = AGEButton(style: .imageName(name: "videoCall/Hangup"), colorStyle: .white)
+        let button = AGEButton(style: .imageName(name: "VideoCall/Hangup"), colorStyle: .white)
         button.addTarget(self, action: #selector(onTapCloseButton(sender:)), for: .touchUpInside)
         button.cornerRadius = 28
         button.backgroundColor = .red

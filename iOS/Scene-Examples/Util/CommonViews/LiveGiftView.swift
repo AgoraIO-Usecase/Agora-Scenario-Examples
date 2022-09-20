@@ -24,7 +24,8 @@ class LiveGiftView: UIView {
     }()
     private lazy var collectionViewLayout: AGECollectionView = {
         let view = AGECollectionView()
-        view.estimatedItemSize = CGSize(width: 60, height: 100)
+        let w = (Screen.width - 30 - 60) / 4
+        view.itemSize = CGSize(width: w, height: 110)
         view.showsHorizontalScrollIndicator = false
         view.minInteritemSpacing = 20
         view.minLineSpacing = 10

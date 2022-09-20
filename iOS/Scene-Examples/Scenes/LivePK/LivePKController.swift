@@ -90,14 +90,14 @@ class LivePKController: BaseViewController {
         eventHandler()
         // 设置屏幕常亮
         UIApplication.shared.isIdleTimerDisabled = true
-        if getRole(uid: UserInfo.uid) == .audience {
-            getBroadcastPKApplyInfo()
-        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationTransparent(isTransparent: true, isHiddenNavBar: true)
+        if getRole(uid: UserInfo.uid) == .audience {
+            getBroadcastPKApplyInfo()
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -192,7 +192,6 @@ class LivePKController: BaseViewController {
         }
         liveView.setupLocalVideoClosure = { [weak self] canvas in
             self?.agoraKit?.setupLocalVideo(canvas)
-            self?.agoraKit?.startPreview()
         }
         liveView.setupRemoteVideoClosure = { [weak self] model in
             guard let canvas = model.canvas else { return }
@@ -292,6 +291,7 @@ class LivePKController: BaseViewController {
         agoraKit?.enableAudio()
         /// 开启扬声器
         agoraKit?.setDefaultAudioRouteToSpeakerphone(true)
+        agoraKit?.startPreview()
     }
     
     public func pkSubscribeHandler(object: IObject) {
@@ -308,11 +308,11 @@ class LivePKController: BaseViewController {
             // PK结束
             pkLiveEndHandler()
             
-            guard var pkInfoModel = pkInfoModel else {
-                return
-            }
-            pkInfoModel.status = .end
-            SyncUtil.scene(id: channleName)?.update(key: SYNC_MANAGER_PK_INFO, data: JSONObject.toJson(pkInfoModel), success: { _ in
+            var pkInfo = PKInfoModel()
+            pkInfo.status = .end
+            pkInfo.roomId = channleName
+            pkInfo.userId = UserInfo.uid
+            SyncUtil.scene(id: channleName)?.update(key: SYNC_MANAGER_PK_INFO, data: JSONObject.toJson(pkInfo), success: { _ in
                 
             }, fail: { error in
                 ToastView.show(text: error.message)
@@ -374,6 +374,7 @@ class LivePKController: BaseViewController {
             self.updatePKUIStatus(isStart: pkInfoModel.status == .accept)
             if pkInfoModel.status == .accept {
                 self.joinAudienceChannel(channelName: pkInfoModel.roomId, pkUid: UInt(pkInfoModel.userId) ?? 0)
+                self.liveView.updateLiveLayout(postion: .center)
             }
             self.getBroadcastPKStatus()
         }, fail: { error in
