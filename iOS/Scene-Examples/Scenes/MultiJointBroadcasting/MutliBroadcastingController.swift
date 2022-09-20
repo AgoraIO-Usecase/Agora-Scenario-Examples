@@ -194,7 +194,7 @@ class MutliBroadcastingController: BaseViewController {
             agoraKit?.setupRemoteVideo(canvas)
         }
         agoraKit?.startPreview()
-        liveView.sendMessage(userName: UserInfo.uid, message: "Join_Live_Room".localized, messageType: .message)
+        liveView.sendMessage(userName: "User-\(UserInfo.uid)", message: "Join_Live_Room".localized, messageType: .message)
     }
     
     public func leaveChannel(uid: UInt, channelName: String, isExit: Bool = false) {
@@ -205,7 +205,7 @@ class MutliBroadcastingController: BaseViewController {
     
     public func didOfflineOfUid(uid: UInt) {
         guard "\(uid)" != currentUserId else { return }
-        liveView.sendMessage(userName: "\(uid)",
+        liveView.sendMessage(userName: "User-\(uid)",
                              message: "Leave_Live_Room".localized,
                              messageType: .message)
     }
@@ -231,7 +231,7 @@ extension MutliBroadcastingController: AgoraRtcEngineDelegate {
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, didJoinedOfUid uid: UInt, elapsed: Int) {
         LogUtils.log(message: "remote user join: \(uid) \(elapsed)ms", level: .info)
-        liveView.sendMessage(userName: "\(uid)", message: "Join_Live_Room".localized, messageType: .message)
+        liveView.sendMessage(userName: "User-\(uid)", message: "Join_Live_Room".localized, messageType: .message)
     }
 
     func rtcEngine(_ engine: AgoraRtcEngineKit, didOfflineOfUid uid: UInt, reason: AgoraUserOfflineReason) {
