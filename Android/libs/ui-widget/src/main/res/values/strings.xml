@@ -8,6 +8,8 @@
     <string name="common_no">No</string>
     <string name="common_tip_close_room">Sure to close room?</string>
     <string name="common_tip_room_closed">Room is closed</string>
+    <string name="common_tip_no_user">No one in the room</string>
+    <string name="common_tip_no_host">No host is live</string>
 
 
     <!--================== Function ==================-->

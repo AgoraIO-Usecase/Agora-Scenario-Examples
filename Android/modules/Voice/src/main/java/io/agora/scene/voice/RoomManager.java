@@ -28,8 +28,9 @@ import io.agora.uiwidget.utils.RandomUtil;
 public class RoomManager {
     private static final String TAG = "RoomManager";
     private static final String PREFERENCE_KEY_USER_ID = RoomManager.class.getName() + "_userId";
-    private static final String SYNC_MANAGER_USER_INFO = "agoraVoiceUsers";
-    private static final String SYNC_MANAGER_MESSAGE_INFO = "agoraVoiceMessages";
+    private static final String SYNC_MANAGER_VOICE_USER_INFO = "agoraVoiceUsers";
+    private static final String SYNC_MANAGER_USER_INFO = "userCollection";
+    private static final String SYNC_MANAGER_MESSAGE_INFO = "messageInfo";
 
     private static volatile RoomManager INSTANCE;
     private static volatile boolean isInitialized = false;
@@ -38,6 +39,7 @@ public class RoomManager {
     private final List<WrapEventListener> eventListeners = new ArrayList<>();
     private DataCallback<Exception> errorHandler;
     private UserInfo localUserInfo;
+    private UserInfo localVoiceUserInfo;
 
     public static RoomManager getInstance() {
         if (INSTANCE == null) {
@@ -179,39 +181,8 @@ public class RoomManager {
             @Override
             public void onSuccess(SceneReference sceneReference) {
                 sceneMap.put(roomId, sceneReference);
-                getUserInfoList(roomId, dataList -> {
-                    for (UserInfo userInfo : dataList) {
-                        if (userInfo.userId.equals(getCacheUserId())) {
-                            localUserInfo = userInfo;
-                            break;
-                        }
-                    }
-                    if (localUserInfo != null) {
-                        if (successRun != null) {
-                            successRun.onObtained(dataList);
-                        }
-                        return;
-                    }
-
-                    localUserInfo = new UserInfo();
-                    dataList.add(localUserInfo);
-                    sceneReference.collection(SYNC_MANAGER_USER_INFO).add(
-                            localUserInfo, new Sync.DataItemCallback() {
-                                @Override
-                                public void onSuccess(IObject result) {
-                                    localUserInfo.objectId = result.getId();
-                                    if (successRun != null) {
-                                        successRun.onObtained(dataList);
-                                    }
-                                }
-
-                                @Override
-                                public void onFail(SyncManagerException exception) {
-                                    notifyErrorHandler(exception);
-                                }
-                            }
-                    );
-                });
+                loginLocalUser(roomId);
+                loginLocalVoiceUser(roomId, successRun);
 
             }
 
@@ -221,6 +192,119 @@ public class RoomManager {
                 notifyErrorHandler(exception);
             }
         });
+    }
+
+    private void loginLocalVoiceUser(String roomId, DataListCallback<UserInfo> successRun) {
+        checkInitialized();
+        SceneReference sceneReference = sceneMap.get(roomId);
+        if (sceneReference == null) {
+            return;
+        }
+        getUserInfoList(roomId, dataList -> {
+            for (UserInfo userInfo : dataList) {
+                if (userInfo.userId.equals(getCacheUserId())) {
+                    localVoiceUserInfo = userInfo;
+                    break;
+                }
+            }
+            if (localVoiceUserInfo != null) {
+                if (successRun != null) {
+                    successRun.onObtained(dataList);
+                }
+                return;
+            }
+
+            localVoiceUserInfo = new UserInfo();
+            dataList.add(localVoiceUserInfo);
+            sceneReference.collection(SYNC_MANAGER_VOICE_USER_INFO).add(
+                    localVoiceUserInfo, new Sync.DataItemCallback() {
+                        @Override
+                        public void onSuccess(IObject result) {
+                            localVoiceUserInfo.objectId = result.getId();
+                            if (successRun != null) {
+                                successRun.onObtained(dataList);
+                            }
+                        }
+
+                        @Override
+                        public void onFail(SyncManagerException exception) {
+                            notifyErrorHandler(exception);
+                        }
+                    }
+            );
+        });
+    }
+
+    private void loginLocalUser(String roomId) {
+        checkInitialized();
+        SceneReference sceneReference = sceneMap.get(roomId);
+        if (sceneReference == null) {
+            return;
+        }
+        getUserInfoList(roomId, dataList -> {
+            for (UserInfo userInfo : dataList) {
+                if (userInfo.userId.equals(getCacheUserId())) {
+                    localUserInfo = userInfo;
+                    return;
+                }
+            }
+
+            localUserInfo = new UserInfo();
+            dataList.add(localUserInfo);
+            sceneReference.collection(SYNC_MANAGER_USER_INFO).add(
+                    localUserInfo, new Sync.DataItemCallback() {
+                        @Override
+                        public void onSuccess(IObject result) {
+                            localUserInfo.objectId = result.getId();
+                        }
+
+                        @Override
+                        public void onFail(SyncManagerException exception) {
+                            notifyErrorHandler(exception);
+                        }
+                    }
+            );
+        });
+    }
+
+    private void logoutLocalUser(String roomId){
+        checkInitialized();
+        SceneReference sceneReference = sceneMap.get(roomId);
+        if (sceneReference == null || localUserInfo == null) {
+            return;
+        }
+        sceneReference.collection(SYNC_MANAGER_USER_INFO).delete(localUserInfo.objectId, new Sync.Callback() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onFail(SyncManagerException exception) {
+                notifyErrorHandler(exception);
+            }
+        });
+        localUserInfo = null;
+    }
+
+    private void logoutLocalVoiceUser(String roomId){
+        checkInitialized();
+        SceneReference sceneReference = sceneMap.get(roomId);
+        if (sceneReference == null || localVoiceUserInfo == null) {
+            return;
+        }
+        sceneReference.collection(SYNC_MANAGER_VOICE_USER_INFO).delete(localVoiceUserInfo.objectId, new Sync.Callback() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onFail(SyncManagerException exception) {
+                notifyErrorHandler(exception);
+            }
+        });
+        localVoiceUserInfo = null;
     }
 
     public void getUserInfoList(String roomId, DataListCallback<UserInfo> callback) {
@@ -253,7 +337,37 @@ public class RoomManager {
         });
     }
 
-    public void inviteUser(String roomId, UserInfo userInfo) {
+    public void getVoiceUserInfoList(String roomId, DataListCallback<UserInfo> callback) {
+        checkInitialized();
+        SceneReference sceneReference = sceneMap.get(roomId);
+        if (sceneReference == null) {
+            return;
+        }
+        sceneReference.collection(SYNC_MANAGER_VOICE_USER_INFO).get(new Sync.DataListCallback() {
+            @Override
+            public void onSuccess(List<IObject> result) {
+                if (callback != null) {
+                    List<UserInfo> list = new ArrayList<>();
+                    for (IObject iObject : result) {
+                        UserInfo item = iObject.toObject(UserInfo.class);
+                        item.objectId = iObject.getId();
+                        list.add(item);
+                    }
+                    callback.onObtained(list);
+                }
+            }
+
+            @Override
+            public void onFail(SyncManagerException exception) {
+                if (callback != null) {
+                    callback.onObtained(new ArrayList<>());
+                }
+                notifyErrorHandler(exception);
+            }
+        });
+    }
+
+    public void inviteVoiceUser(String roomId, UserInfo userInfo) {
         checkInitialized();
         SceneReference sceneReference = sceneMap.get(roomId);
         if (sceneReference == null) {
@@ -266,7 +380,7 @@ public class RoomManager {
         } else {
             userInfo.status = UserStatus.invite;
         }
-        sceneReference.collection(SYNC_MANAGER_USER_INFO)
+        sceneReference.collection(SYNC_MANAGER_VOICE_USER_INFO)
                 .update(userInfo.objectId, userInfo, new Sync.Callback() {
                     @Override
                     public void onSuccess() {
@@ -280,7 +394,7 @@ public class RoomManager {
                 });
     }
 
-    public void acceptInvite(String roomId, UserInfo userInfo) {
+    public void acceptVoiceUserInvite(String roomId, UserInfo userInfo) {
         checkInitialized();
         SceneReference sceneReference = sceneMap.get(roomId);
         if (sceneReference == null) {
@@ -292,7 +406,7 @@ public class RoomManager {
         } else {
             userInfo.status = UserStatus.accept;
         }
-        sceneReference.collection(SYNC_MANAGER_USER_INFO)
+        sceneReference.collection(SYNC_MANAGER_VOICE_USER_INFO)
                 .update(userInfo.objectId, userInfo, new Sync.Callback() {
                     @Override
                     public void onSuccess() {
@@ -306,7 +420,7 @@ public class RoomManager {
                 });
     }
 
-    public void refuseInvite(String roomId, UserInfo userInfo) {
+    public void refuseVoiceUserInvite(String roomId, UserInfo userInfo) {
         checkInitialized();
         SceneReference sceneReference = sceneMap.get(roomId);
         if (sceneReference == null) {
@@ -318,7 +432,7 @@ public class RoomManager {
         } else {
             userInfo.status = UserStatus.refuse;
         }
-        sceneReference.collection(SYNC_MANAGER_USER_INFO)
+        sceneReference.collection(SYNC_MANAGER_VOICE_USER_INFO)
                 .update(userInfo.objectId, userInfo, new Sync.Callback() {
                     @Override
                     public void onSuccess() {
@@ -332,7 +446,7 @@ public class RoomManager {
                 });
     }
 
-    public void endUser(String roomId, UserInfo userInfo) {
+    public void endVoiceUser(String roomId, UserInfo userInfo) {
         checkInitialized();
         SceneReference sceneReference = sceneMap.get(roomId);
         if (sceneReference == null) {
@@ -344,7 +458,7 @@ public class RoomManager {
         } else {
             userInfo.status = UserStatus.end;
         }
-        sceneReference.collection(SYNC_MANAGER_USER_INFO)
+        sceneReference.collection(SYNC_MANAGER_VOICE_USER_INFO)
                 .update(userInfo.objectId, userInfo, new Sync.Callback() {
                     @Override
                     public void onSuccess() {
@@ -365,7 +479,7 @@ public class RoomManager {
             return;
         }
         localUserInfo.isEnableAudio = enable;
-        sceneReference.collection(SYNC_MANAGER_USER_INFO).update(localUserInfo.objectId, localUserInfo, new Sync.Callback() {
+        sceneReference.collection(SYNC_MANAGER_VOICE_USER_INFO).update(localUserInfo.objectId, localUserInfo, new Sync.Callback() {
             @Override
             public void onSuccess() {
 
@@ -461,6 +575,43 @@ public class RoomManager {
         sceneReference.collection(SYNC_MANAGER_USER_INFO).subscribe(listener);
     }
 
+    public void subscribeVoiceUserInfoEvent(String roomId, DataCallback<UserInfo> addOrUpdate, DataCallback<String> delete) {
+        checkInitialized();
+        SceneReference sceneReference = sceneMap.get(roomId);
+        if (sceneReference == null) {
+            return;
+        }
+        WrapEventListener listener = null;
+        if (addOrUpdate != null) {
+            listener = new WrapEventListener(roomId) {
+                @Override
+                public void onCreated(IObject item) {
+                    super.onCreated(item);
+                    UserInfo userInfo = item.toObject(UserInfo.class);
+                    userInfo.objectId = item.getId();
+                    addOrUpdate.onObtained(userInfo);
+                }
+
+                @Override
+                public void onUpdated(IObject item) {
+                    UserInfo userInfo = item.toObject(UserInfo.class);
+                    userInfo.objectId = item.getId();
+                    addOrUpdate.onObtained(userInfo);
+                }
+
+                @Override
+                public void onDeleted(IObject item) {
+                    super.onDeleted(item);
+                    if (delete != null) {
+                        delete.onObtained(item.getId());
+                    }
+                }
+            };
+            eventListeners.add(listener);
+        }
+        sceneReference.collection(SYNC_MANAGER_VOICE_USER_INFO).subscribe(listener);
+    }
+
     public void subscribeRoomEvent(String roomId, DataCallback<RoomInfo> update, DataCallback<String> delete) {
         checkInitialized();
         SceneReference sceneReference = sceneMap.get(roomId);
@@ -534,20 +685,8 @@ public class RoomManager {
                     }
                 });
             } else {
-                if (localUserInfo != null) {
-                    sceneReference.collection(SYNC_MANAGER_USER_INFO).delete(localUserInfo.objectId, new Sync.Callback() {
-                        @Override
-                        public void onSuccess() {
-
-                        }
-
-                        @Override
-                        public void onFail(SyncManagerException exception) {
-                            notifyErrorHandler(exception);
-                        }
-                    });
-                    localUserInfo = null;
-                }
+                logoutLocalUser(roomId);
+                logoutLocalVoiceUser(roomId);
                 sceneReference.unsubscribe(null);
                 sceneMap.remove(roomId);
             }

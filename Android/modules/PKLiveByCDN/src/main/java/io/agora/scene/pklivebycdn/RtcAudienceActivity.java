@@ -130,7 +130,7 @@ public class RtcAudienceActivity extends BaseActivity<SuperappAudienceDetailActi
                     openMediaPlayer();
                 }
             }));
-            roomManager.subscriptRoomInfoEvent(mRoomInfo.roomId, pkInfo -> runOnUiThread(()->{
+            roomManager.subscriptPKInfoEvent(mRoomInfo.roomId, pkInfo -> runOnUiThread(()->{
                 if (pkInfo.isPKing()) {
                     // 开始连麦
                     if (RoomManager.getCacheUserId().equals(pkInfo.userIdPK)) {

@@ -56,7 +56,24 @@ public class LiveDetailActivity extends AppCompatActivity {
             });
         }
     };
-    private final RoomManager.DataCallback<RoomManager.UserInfo> userChangeEvent = data -> {
+    private final RoomManager.DataListCallback<RoomManager.UserInfo> userInfoDataListCallback = dataList -> runOnUiThread(() -> {
+        mBinding.hostUserView.setUserCount(dataList.size());
+        mBinding.hostUserView.removeAllUserIcon();
+        for (int i = 1; i <= 3; i++) {
+            int index = dataList.size() - i;
+            if(index >= 0){
+                RoomManager.UserInfo userInfo = dataList.get(index);
+                mBinding.hostUserView.addUserIcon(userInfo.getAvatarResId(), null);
+            }
+        }
+    });
+    private final RoomManager.DataCallback<RoomManager.UserInfo> userChangeEvent = data -> runOnUiThread(() -> {
+        roomManager.getUserList(roomInfo.roomId, userInfoDataListCallback);
+    });
+    private final RoomManager.DataCallback<String> userDeleteEvent = data -> runOnUiThread(() -> {
+        roomManager.getUserList(roomInfo.roomId, userInfoDataListCallback);
+    });
+    private final RoomManager.DataCallback<RoomManager.UserInfo> voiceUserChangeEvent = data -> {
 
         if (data.status == RoomManager.Status.INVITING) {
             if (data.userId.equals(RoomManager.getCacheUserId())) {
@@ -69,8 +86,8 @@ public class LiveDetailActivity extends AppCompatActivity {
                 new AlertDialog.Builder(LiveDetailActivity.this)
                         .setTitle(R.string.common_tip)
                         .setMessage(R.string.multi_call_accept_apply_or_not)
-                        .setPositiveButton(R.string.common_yes, (dialog, which) -> roomManager.acceptUser(roomInfo.roomId, data))
-                        .setNegativeButton(R.string.common_no, (dialog, which) -> roomManager.refuseUser(roomInfo.roomId, data))
+                        .setPositiveButton(R.string.common_yes, (dialog, which) -> roomManager.acceptVoiceUser(roomInfo.roomId, data))
+                        .setNegativeButton(R.string.common_no, (dialog, which) -> roomManager.refuseVoiceUser(roomInfo.roomId, data))
                         .show();
             });
         } else if (data.status == RoomManager.Status.ACCEPT) {
@@ -89,7 +106,7 @@ public class LiveDetailActivity extends AppCompatActivity {
             });
         }
     };
-    private final RoomManager.DataCallback<String> userDelete = objectId -> {
+    private final RoomManager.DataCallback<String> voiceUserDelete = objectId -> {
         runOnUiThread(() -> downSeat(objectId));
     };
     private final RoomManager.DataCallback<String> roomDelete = objectId -> {
@@ -166,17 +183,17 @@ public class LiveDetailActivity extends AppCompatActivity {
                         new AlertDialog.Builder(LiveDetailActivity.this)
                                 .setTitle(R.string.common_tip)
                                 .setMessage(R.string.multi_call_end_linking)
-                                .setPositiveButton(R.string.common_confirm, (dialog, which) -> roomManager.endUser(roomInfo.roomId, (RoomManager.UserInfo) tag))
+                                .setPositiveButton(R.string.common_confirm, (dialog, which) -> roomManager.endVoiceUser(roomInfo.roomId, (RoomManager.UserInfo) tag))
                                 .setNegativeButton(R.string.common_cancel, (dialog, which) -> dialog.dismiss())
                                 .show();
                     }
                 } else {
-                    if (roomManager.getLocalUserInfo().status != RoomManager.Status.ACCEPT) {
+                    if (roomManager.getLocalVoiceUserInfo().status != RoomManager.Status.ACCEPT) {
                         // 发起上座申请
                         new AlertDialog.Builder(LiveDetailActivity.this)
                                 .setTitle(R.string.common_tip)
                                 .setMessage(R.string.multi_call_apply_linking)
-                                .setPositiveButton(R.string.common_confirm, (dialog, which) -> roomManager.inviteUser(roomInfo.roomId, roomManager.getLocalUserInfo()))
+                                .setPositiveButton(R.string.common_confirm, (dialog, which) -> roomManager.inviteVoiceUser(roomInfo.roomId, roomManager.getLocalVoiceUserInfo()))
                                 .setNegativeButton(R.string.common_cancel, (dialog, which) -> dialog.dismiss())
                                 .show();
                     } else {
@@ -187,7 +204,7 @@ public class LiveDetailActivity extends AppCompatActivity {
                                 new AlertDialog.Builder(LiveDetailActivity.this)
                                         .setTitle(R.string.common_tip)
                                         .setMessage(R.string.multi_call_close_linking)
-                                        .setPositiveButton(R.string.common_confirm, (dialog, which) -> roomManager.endUser(roomInfo.roomId, roomManager.getLocalUserInfo()))
+                                        .setPositiveButton(R.string.common_confirm, (dialog, which) -> roomManager.endVoiceUser(roomInfo.roomId, roomManager.getLocalVoiceUserInfo()))
                                         .setNegativeButton(R.string.common_cancel, (dialog, which) -> dialog.dismiss())
                                         .show();
                             }
@@ -217,7 +234,7 @@ public class LiveDetailActivity extends AppCompatActivity {
     private void showTextInputDialog() {
         new TextInputDialog(this)
                 .setOnSendClickListener((v, text) -> {
-                    RoomManager.MessageInfo item = new RoomManager.MessageInfo(roomManager.getLocalUserInfo().userName, text);
+                    RoomManager.MessageInfo item = new RoomManager.MessageInfo(roomManager.getLocalVoiceUserInfo().userName, text);
                     roomManager.sendMessage(roomInfo.roomId, item);
                 })
                 .show();
@@ -228,9 +245,11 @@ public class LiveDetailActivity extends AppCompatActivity {
                 (data) -> {
                     roomManager.subscribeGiftReceiveEvent(roomInfo.roomId, giftInfoDataCallback);
                     roomManager.subscribeMessageReceiveEvent(roomInfo.roomId, messageDataCallback);
-                    roomManager.subscribeUserChangeEvent(roomInfo.roomId, userChangeEvent, userDelete);
+                    roomManager.subscribeVoiceUserChangeEvent(roomInfo.roomId, voiceUserChangeEvent, voiceUserDelete);
+                    roomManager.subscribeUserChangeEvent(roomInfo.roomId, userChangeEvent, userDeleteEvent);
                     roomManager.subscribeRoomDeleteEvent(roomInfo.roomId, roomDelete);
-                    roomManager.getUserList(roomInfo.roomId, dataList -> {
+                    roomManager.getUserList(roomInfo.roomId, userInfoDataListCallback);
+                    roomManager.getVoiceUserList(roomInfo.roomId, dataList -> {
                         for (RoomManager.UserInfo userInfo : dataList) {
                             if (userInfo.status == RoomManager.Status.ACCEPT) {
                                 runOnUiThread(() -> upSeat(userInfo));
@@ -364,7 +383,7 @@ public class LiveDetailActivity extends AppCompatActivity {
 
     @Override
     public void finish() {
-        roomManager.endUser(roomInfo.roomId, roomManager.getLocalUserInfo());
+        roomManager.endVoiceUser(roomInfo.roomId, roomManager.getLocalVoiceUserInfo());
         if (localIsRoomOwner()) {
             roomManager.destroyRoom(roomInfo.roomId);
         } else {

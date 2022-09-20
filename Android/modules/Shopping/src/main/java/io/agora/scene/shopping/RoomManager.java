@@ -795,6 +795,7 @@ public class RoomManager {
                         for (IObject iObject : result) {
                             ShoppingModel model = iObject.toObject(ShoppingModel.class);
                             model.objectId = iObject.getId();
+
                             if (model.status == ShoppingStatus.goodsShelves) {
                                 upModels.add(model);
                             }

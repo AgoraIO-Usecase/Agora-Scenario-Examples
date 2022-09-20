@@ -178,6 +178,7 @@ public class HostDetailActivity extends AppCompatActivity {
                     }
                 }
                 if (dataList.size() == 0) {
+                    runOnUiThread(() -> Toast.makeText(HostDetailActivity.this, R.string.common_tip_no_host, Toast.LENGTH_SHORT).show());
                     return;
                 }
                 runOnUiThread(() -> {
@@ -357,6 +358,11 @@ public class HostDetailActivity extends AppCompatActivity {
 
     private void showSettingDialog() {
         new LiveToolsDialog(HostDetailActivity.this)
+                .addToolItem(LiveToolsDialog.TOOL_ITEM_SPEAKER, true, (view, item) -> {
+                    if (rtcEngine != null) {
+                        rtcEngine.enableLocalAudio(item.activated);
+                    }
+                })
                 .addToolItem(LiveToolsDialog.TOOL_ITEM_ROTATE, false, (view, item) -> {
                     if (rtcEngine != null) {
                         rtcEngine.switchCamera();

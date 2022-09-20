@@ -173,7 +173,7 @@ public class RoomManager {
         }
         PKInfo pkInfo = new PKInfo();
         pkInfo.userIdPK = userIdPK;
-        sceneReference.update(pkInfo.toObjectMap(), new Sync.DataItemCallback() {
+        sceneReference.update("", pkInfo.toObjectMap(), new Sync.DataItemCallback() {
             @Override
             public void onSuccess(IObject result) {
                 if (successRun != null) {
@@ -318,7 +318,7 @@ public class RoomManager {
             Log.e(TAG, "The room has not joined. roomId=" + roomId);
             return;
         }
-        sceneReference.get(new Sync.DataItemCallback() {
+        sceneReference.get("", new Sync.DataItemCallback() {
             @Override
             public void onSuccess(IObject result) {
                 PKInfo pkInfo = result.toObject(PKInfo.class);
@@ -366,7 +366,7 @@ public class RoomManager {
         sceneReference.collection(COLLECTION_MEMBER).subscribe(listener);
     }
 
-    public void subscriptRoomInfoEvent(String roomId, DataCallback<PKInfo> addOrUpdate, DataCallback<Boolean> destroy) {
+    public void subscriptPKInfoEvent(String roomId, DataCallback<PKInfo> addOrUpdate, DataCallback<Boolean> destroy) {
         checkInitialized();
         SceneReference sceneReference = sceneMap.get(roomId);
         if (sceneReference == null) {
@@ -404,7 +404,7 @@ public class RoomManager {
             }
         };
         eventListeners.add(listener);
-        sceneReference.subscribe(listener);
+        sceneReference.subscribe("", listener);
     }
 
 
