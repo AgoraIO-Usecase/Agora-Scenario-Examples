@@ -32,7 +32,7 @@ extension RethinkSyncManager: ISyncManager {
         let className = (reference.className + key) == sceneName ? channelName : reference.className + key
         onSuccessBlock[className] = success
         onFailBlock[className] = fail
-        write(channelName: className, data: data)
+        write(channelName: className, data: data, objectId: data["objectId"] as? String)
     }
     
     func subscribe(reference: DocumentReference, key: String, onCreated: OnSubscribeBlock?, onUpdated: OnSubscribeBlock?, onDeleted: OnSubscribeBlock?, onSubscribed: OnSubscribeBlockVoid?, fail: FailBlock?) {
