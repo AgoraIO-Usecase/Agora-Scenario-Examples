@@ -173,6 +173,7 @@ public class HostDetailActivity extends AppCompatActivity {
                     }
                 }
                 if (dataList.size() == 0) {
+                    runOnUiThread(() -> Toast.makeText(HostDetailActivity.this, R.string.common_tip_no_host, Toast.LENGTH_SHORT).show());
                     return;
                 }
                 runOnUiThread(() -> {

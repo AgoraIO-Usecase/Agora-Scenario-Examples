@@ -114,7 +114,7 @@
     <dimen name="text_input_dialog_content_text_size">16sp</dimen>
 
     <!-- OnlineUserListDialog -->
-    <dimen name="online_user_list_dialog_height">540dp</dimen>
+    <dimen name="online_user_list_dialog_height">350dp</dimen>
     <dimen name="online_user_list_dialog_text_height">48dp</dimen>
     <dimen name="online_user_list_dialog_text_size">16sp</dimen>
     <dimen name="online_user_list_dialog_divider_height">1dp</dimen>
