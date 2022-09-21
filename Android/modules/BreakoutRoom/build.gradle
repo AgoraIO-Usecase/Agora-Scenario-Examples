@@ -1,7 +1,6 @@
 apply from: "../modular.gradle"
 
 android {
-    resourcePrefix "room_"
     defaultConfig {
         if (extIsModular()) {
             applicationId "io.agora.scene.breakoutroom"
@@ -17,16 +16,9 @@ dependencies {
     extSafeImplementation project(path: ':libs:base-library')
     extSafeImplementation project(path: ':libs:ui-widget')
 
-    // Third part
-    extSafeImplementation 'com.google.code.gson:gson:2.8.9'
-
     // Agora
     extSafeImplementation 'com.github.AgoraIO-Community:SyncManager-Android:1.0.4'
     extSafeImplementation 'io.agora.rtc:full-sdk:4.0.0-rc.1'
-
-    // Google
-    extSafeImplementation 'androidx.navigation:navigation-fragment:2.3.5'
-    extSafeImplementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
     // Test
     extSafeImplementation 'junit:junit:4.13.2'

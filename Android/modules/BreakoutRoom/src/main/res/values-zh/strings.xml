@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="breakout_room_app_name">小班课</string>
+
+    <string name="breakout_room_create_room">创建房间</string>
+    <string name="breakout_room_create_subroom">创建子房间</string>
+    <string name="breakout_room_name_empty_tip">房间名为空！</string>
+
+</resources>

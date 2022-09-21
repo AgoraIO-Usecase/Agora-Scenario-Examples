@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:background="@drawable/extra_blue_gradient_background">
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout_fg_room"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="48dp"
+        android:background="@android:color/transparent"
+        android:clipToPadding="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tabIndicatorColor="#0088EB"
+        app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget" />
+
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/title_bar_back_white"
+        app:layout_constraintBottom_toBottomOf="@id/tab_layout_fg_room"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tab_layout_fg_room" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_fg_room"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|top"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/breakout_room_ic_add"
+        app:backgroundTint="#0088EB"
+        app:ensureMinTouchTargetSize="true"
+        app:fabCustomSize="24dp"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="@id/tab_layout_fg_room"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tab_layout_fg_room"
+        tools:ignore="ContentDescription" />
+
+
+    <io.agora.uiwidget.DynamicView
+        android:id="@+id/dynamic_view_fg_room"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:dynamic_gapInFlex="16dp"
+        app:dynamic_layoutStyle="flex"
+        app:dynamic_previewViewCount="3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tab_layout_fg_room" />
+
+    <CheckBox
+        android:id="@+id/checkbox_mic_fg_room"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:button="@drawable/breakout_room_ic_mic"
+        android:checked="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
