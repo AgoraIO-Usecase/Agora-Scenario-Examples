@@ -10,15 +10,10 @@ import AgoraRtcKit
 import Fastboard
 
 class EducationController: BaseViewController {
-    public lazy var liveView: LiveBaseView = {
-        let view = LiveBaseView(channelName: channleName, currentUserId: currentUserId)
-        view.updateLiveLayout(postion: .full)
-        return view
-    }()
     private lazy var fastRoom: FastRoom = {
-        let config = FastRoomConfiguration(appIdentifier: SceneType.Education1v1.rawValue,
-                                           roomUUID: channleName,
-                                           roomToken: KeyCenter.Token ?? "",
+        let config = FastRoomConfiguration(appIdentifier: KeyCenter.BOARD_APP_ID,
+                                           roomUUID: KeyCenter.BOARD_ROOM_UUID,
+                                           roomToken: KeyCenter.BOARD_ROOM_TOKEN,
                                            region: .CN,
                                            userUID: UserInfo.uid)
         let fastRoom = Fastboard.createFastRoom(withFastRoomConfig: config)
@@ -28,16 +23,36 @@ class EducationController: BaseViewController {
         let view = UIView()
         view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
-        view.backgroundColor = .red
+        view.backgroundColor = .systemPink
         return view
     }()
     private lazy var remoteView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
-        view.backgroundColor = .blue
+        view.backgroundColor = .white
+        view.tag = 0
         return view
     }()
+    private lazy var remoteTipsLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .gray
+        label.font = .systemFont(ofSize: 14)
+        label.text = "Waiting for remote users to join".localized
+        return label
+    }()
+    
+    /// 顶部头像昵称
+    public lazy var avatarview = LiveAvatarView()
+    /// 底部功能
+    public lazy var bottomView: LiveBottomView = {
+        let view = LiveBottomView(type: [.tool, .close])
+        view.hiddenOrShowChatView(isHidden: true)
+        return view
+    }()
+    /// 设置直播的工具弹窗
+    private lazy var liveToolView = LiveToolView()
+    
     public var agoraKit: AgoraRtcEngineKit?
     private lazy var rtcEngineConfig: AgoraRtcEngineConfig = {
         let config = AgoraRtcEngineConfig()
@@ -48,6 +63,9 @@ class EducationController: BaseViewController {
     }()
     public lazy var channelMediaOptions: AgoraRtcChannelMediaOptions = {
         let option = AgoraRtcChannelMediaOptions()
+        option.clientRoleType = .of((Int32)(AgoraClientRole.broadcaster.rawValue))
+        option.publishMicrophoneTrack = .of(true)
+        option.publishCameraTrack = .of(true)
         option.autoSubscribeAudio = .of(true)
         option.autoSubscribeVideo = .of(true)
         return option
@@ -65,6 +83,7 @@ class EducationController: BaseViewController {
         self.channleName = channelName
         self.agoraKit = agoraKit
         self.currentUserId = userId
+        avatarview.setName(with: channelName)
     }
     
     required init?(coder: NSCoder) {
@@ -89,6 +108,9 @@ class EducationController: BaseViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        if KeyCenter.BOARD_APP_ID.isEmpty {
+            ToastView.show(text: "Please configure FastBoard information in the keyCenter file".localized)
+        }
         joinChannel(channelName: channleName, uid: UserInfo.userId)
         navigationController?.interactivePopGestureRecognizer?.isEnabled = currentUserId != "\(UserInfo.userId)"
         var controllers = navigationController?.viewControllers ?? []
@@ -100,12 +122,15 @@ class EducationController: BaseViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         leaveChannel(uid: UserInfo.userId, channelName: channleName, isExit: true)
-        liveView.leave(channelName: channleName)
         SyncUtil.scene(id: channleName)?.unsubscribe(key: SceneType.singleLive.rawValue)
         SyncUtil.leaveScene(id: channleName)
         navigationTransparent(isTransparent: false)
         UIApplication.shared.isIdleTimerDisabled = false
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        if getRole(uid: UserInfo.uid) == .broadcaster {
+            fastRoom.dismissAllSubPanels()
+        }
+        fastRoom.disconnectRoom()
         agoraKit?.disableAudio()
         agoraKit?.disableVideo()
         AgoraRtcEngineKit.destroy()
@@ -116,10 +141,16 @@ class EducationController: BaseViewController {
         fastRoom.view.translatesAutoresizingMaskIntoConstraints = false
         localView.translatesAutoresizingMaskIntoConstraints = false
         remoteView.translatesAutoresizingMaskIntoConstraints = false
+        remoteTipsLabel.translatesAutoresizingMaskIntoConstraints = false
+        avatarview.translatesAutoresizingMaskIntoConstraints = false
+        bottomView.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(fastRoom.view)
         view.addSubview(localView)
         view.addSubview(remoteView)
+        remoteView.addSubview(remoteTipsLabel)
+        view.addSubview(avatarview)
+        view.addSubview(bottomView)
         
         fastRoom.view.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5).isActive = true
         fastRoom.view.topAnchor.constraint(equalTo: view.topAnchor, constant: 5).isActive = true
@@ -134,23 +165,46 @@ class EducationController: BaseViewController {
         remoteView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -5).isActive = true
         remoteView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5).isActive = true
         remoteView.topAnchor.constraint(equalTo: localView.bottomAnchor, constant: 5).isActive = true
+        remoteTipsLabel.centerYAnchor.constraint(equalTo: remoteView.centerYAnchor).isActive = true
+        remoteTipsLabel.centerXAnchor.constraint(equalTo: remoteView.centerXAnchor).isActive = true
+        
+        avatarview.leadingAnchor.constraint(equalTo: fastRoom.view.leadingAnchor, constant: 5).isActive = true
+        avatarview.topAnchor.constraint(equalTo: fastRoom.view.topAnchor, constant: 5).isActive = true
+        
+        bottomView.bottomAnchor.constraint(equalTo: fastRoom.view.bottomAnchor, constant: 5).isActive = true
+        bottomView.trailingAnchor.constraint(equalTo: fastRoom.view.trailingAnchor, constant: 5).isActive = true
     }
     
     public func eventHandler() {
-        liveView.onTapCloseLiveClosure = { [weak self] in
-            self?.onTapCloseLive()
-        }
-        liveView.onTapSwitchCameraClosure = { [weak self] isSelected in
-            self?.agoraKit?.switchCamera()
-        }
-        liveView.onTapIsMuteCameraClosure = { [weak self] isSelected in
-            self?.agoraKit?.muteLocalVideoStream(isSelected)
-        }
-        liveView.onTapIsMuteMicClosure = { [weak self] isSelected in
-            self?.agoraKit?.muteLocalAudioStream(isSelected)
-        }
-        liveView.setupRemoteVideoClosure = { [weak self] canvas, connection in
-            self?.agoraKit?.setupRemoteVideoEx(canvas, connection: connection)
+        // 底部功能回调
+        bottomView.onTapBottomButtonTypeClosure = { [weak self] type in
+            guard let self = self else { return }
+            switch type {
+            case .close:
+                self.onTapCloseLive()
+                
+            case .tool:
+                self.liveToolView.onTapItemClosure = { itemType, isSelected in
+                    switch itemType {
+                    case .switch_camera:
+                        self.agoraKit?.switchCamera()
+                        
+                    case .camera:
+                        _ = isSelected ? self.agoraKit?.stopPreview() : self.agoraKit?.startPreview()
+                        self.channelMediaOptions.publishCameraTrack = .of(!isSelected)
+                        self.agoraKit?.updateChannel(with: self.channelMediaOptions)
+                    
+                    case .mic:
+                        self.channelMediaOptions.publishMicrophoneTrack = .of(!isSelected)
+                        self.agoraKit?.updateChannel(with: self.channelMediaOptions)
+                    
+                    default: break
+                    }
+                }
+                AlertManager.show(view: self.liveToolView, alertPostion: .bottom)
+                
+            default: break
+            }
         }
         
         guard getRole(uid: UserInfo.uid) == .audience else { return }
@@ -195,40 +249,29 @@ class EducationController: BaseViewController {
     }
     
     private func joinChannel(channelName: String, uid: UInt) {
-        channelMediaOptions.clientRoleType = .of((Int32)(getRole(uid: "\(uid)").rawValue))
-        channelMediaOptions.publishMicrophoneTrack = .of(getRole(uid: "\(uid)") == .broadcaster)
-        channelMediaOptions.publishCameraTrack = .of(getRole(uid: "\(uid)") == .broadcaster)
-        let result = agoraKit?.joinChannel(byToken: KeyCenter.Token, channelId: channelName, info: nil, uid: uid, joinSuccess: nil)
+        let result = agoraKit?.joinChannel(byToken: KeyCenter.Token,
+                                           channelId: channelName,
+                                           uid: uid,
+                                           mediaOptions: channelMediaOptions,
+                                           joinSuccess: nil)
         if result == 0 {
             LogUtils.log(message: "进入房间", level: .info)
         }
         let canvas = AgoraRtcVideoCanvas()
         canvas.renderMode = .hidden
-        if getRole(uid: "\(uid)") == .broadcaster {
-            canvas.view = localView
-            canvas.uid = uid
-            agoraKit?.setupLocalVideo(canvas)
-        } else {
-            canvas.view = remoteView
-            canvas.uid = UInt(currentUserId) ?? 0
-            agoraKit?.setupRemoteVideo(canvas)
-        }
+        canvas.view = localView
+        canvas.uid = uid
+        agoraKit?.setupLocalVideo(canvas)
         agoraKit?.startPreview()
-        fastRoom.joinRoom()
-        liveView.sendMessage(userName: UserInfo.uid, message: "Join_Live_Room".localized, messageType: .message)
+        if !KeyCenter.BOARD_APP_ID.isEmpty {
+            fastRoom.joinRoom()
+        }
     }
     
     public func leaveChannel(uid: UInt, channelName: String, isExit: Bool = false) {
         agoraKit?.leaveChannel({ state in
             LogUtils.log(message: "leave channel: \(state)", level: .info)
         })
-    }
-    
-    public func didOfflineOfUid(uid: UInt) {
-        guard "\(uid)" != currentUserId else { return }
-        liveView.sendMessage(userName: "\(uid)",
-                             message: "Leave_Live_Room".localized,
-                             messageType: .message)
     }
     
     deinit {
@@ -252,12 +295,35 @@ extension EducationController: AgoraRtcEngineDelegate {
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, didJoinedOfUid uid: UInt, elapsed: Int) {
         LogUtils.log(message: "remote user join: \(uid) \(elapsed)ms", level: .info)
-        liveView.sendMessage(userName: "\(uid)", message: "Join_Live_Room".localized, messageType: .message)
+        if remoteView.tag <= 0 {
+            remoteView.tag = Int(uid)
+            let canvas = AgoraRtcVideoCanvas()
+            canvas.uid = uid
+            canvas.renderMode = .hidden
+            canvas.view = remoteView
+            agoraKit?.setupRemoteVideo(canvas)
+            remoteView.subviews.forEach({
+                if !($0 is UILabel) {
+                    // show stream player
+                    $0.isHidden = false
+                    return
+                }
+            })
+        }
     }
 
     func rtcEngine(_ engine: AgoraRtcEngineKit, didOfflineOfUid uid: UInt, reason: AgoraUserOfflineReason) {
         LogUtils.log(message: "remote user leval: \(uid) reason \(reason)", level: .info)
-        didOfflineOfUid(uid: uid)
+        if remoteView.tag > 0 {
+            remoteView.tag = 0
+            remoteView.subviews.forEach({
+                if !($0 is UILabel) {
+                    // hidden stream player
+                    $0.isHidden = true
+                    return
+                }
+            })
+        }
     }
 
     func rtcEngine(_ engine: AgoraRtcEngineKit, reportRtcStats stats: AgoraChannelStats) {

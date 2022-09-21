@@ -316,3 +316,5 @@ Product_Purchased_Successfully="商品购买成功";
 "Shopping" = "电商";
 "Buy now" = "立即购买";
 "Education1v1" = "教育1v1";
+"Waiting for remote users to join" = "等待远端用户加入";
+"Please configure FastBoard information in the keyCenter file" = "请在keyCenter文件中配置白板信息";

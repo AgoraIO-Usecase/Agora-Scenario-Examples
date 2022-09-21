@@ -411,16 +411,8 @@
 			children = (
 				E721601928D8122E006431BD /* EducationCreateController.swift */,
 				E721601A28D8122E006431BD /* EducationController.swift */,
-				E721601B28D8122E006431BD /* Views */,
 			);
 			path = Education1v1;
-			sourceTree = "<group>";
-		};
-		E721601B28D8122E006431BD /* Views */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Views;
 			sourceTree = "<group>";
 		};
 		E7218BA728BF7DA1005A01D5 /* Shopping */ = {

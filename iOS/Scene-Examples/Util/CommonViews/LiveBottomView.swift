@@ -114,6 +114,10 @@ class LiveBottomView: UIView {
         createBottomButton()
     }
     
+    func hiddenOrShowChatView(isHidden: Bool) {
+        chatButton.isHidden = isHidden
+    }
+    
     private func setupUI() {
         chatButton.translatesAutoresizingMaskIntoConstraints = false
         statckView.translatesAutoresizingMaskIntoConstraints = false

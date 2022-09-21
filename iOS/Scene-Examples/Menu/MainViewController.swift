@@ -31,7 +31,7 @@ enum SceneType: String {
     /// 互动播客
     case interactiveBlog = "interactiveBlog"
     /// 教育1v1
-    case Education1v1 = "education1v1"
+    case Education1v1 = "Education1v1"
     
     var alertTitle: String {
         switch self {

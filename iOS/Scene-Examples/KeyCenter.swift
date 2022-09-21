@@ -13,4 +13,9 @@ struct KeyCenter {
     static let Certificate: String? = <#YOUR Certificate#>
     
     static var Token: String? = nil
+    
+    // FastBoard Configration
+    static let BOARD_APP_ID: String = ""
+    static let BOARD_ROOM_UUID: String = ""
+    static let BOARD_ROOM_TOKEN: String = ""
 }
