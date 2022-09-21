@@ -16,19 +16,21 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
     <application
-        android:icon="@mipmap/room_ic_launcher"
-        android:label="@string/room_app_name"
-        android:roundIcon="@mipmap/room_ic_launcher_round"
-        android:theme="@style/room_BaseTheme"
+        android:icon="@mipmap/breakout_room_ic_launcher"
+        android:label="@string/breakout_room_app_name"
+        android:theme="@style/breakout_room_BaseTheme"
         tools:ignore="AllowBackup">
         <activity
-            android:name=".ui.MainActivity"
-            android:theme="@style/room_BreakoutRoomAppTheme"
+            android:name=".RoomListActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".LiveDetailActivity"
+            android:screenOrientation="behind" />
     </application>
 </manifest>

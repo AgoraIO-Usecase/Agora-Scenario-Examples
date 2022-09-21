@@ -61,7 +61,7 @@ public class ModulesConfig {
         this.moduleInfo.add(new ModuleInfo(
                 R.string.app_breakout_room_name,
                 R.drawable.app_banner_breakout_room,
-                "io.agora.scene.breakoutroom.ui.MainActivity"
+                "io.agora.scene.breakoutroom.RoomListActivity"
         ));
         this.moduleInfo.add(new ModuleInfo(
                 R.string.app_education1v1,

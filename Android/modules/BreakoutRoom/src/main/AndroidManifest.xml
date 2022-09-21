@@ -9,9 +9,16 @@
 
     <application>
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".RoomListActivity"
             android:screenOrientation="behind"
             android:process="io.agora.scene.breakoutroom"
-            android:theme="@style/room_BreakoutRoomAppTheme" />
+            android:theme="@style/breakout_room_BaseTheme" />
+
+        <activity
+            android:name=".LiveDetailActivity"
+            android:screenOrientation="behind"
+            android:process="io.agora.scene.breakoutroom"
+            android:theme="@style/breakout_room_BaseTheme" />
+
     </application>
 </manifest>

@@ -136,15 +136,13 @@ public class ProductListDialog extends BottomSheetDialog {
     }
 
     private void updateListData() {
-        listAdapter.removeAll();
-
         if (isAudience || isCurrentUnListed()) {
             roomManager.getUpShoppingModels(roomId, dataList -> {
-                mBinding.getRoot().post(() -> listAdapter.insertAll(dataList));
+                mBinding.getRoot().post(() -> listAdapter.resetAll(dataList));
             });
         } else {
             roomManager.getNormalShoppingModels(roomId, dataList -> {
-                mBinding.getRoot().post(() -> listAdapter.insertAll(dataList));
+                mBinding.getRoot().post(() -> listAdapter.resetAll(dataList));
             });
         }
     }

@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
@@ -39,6 +40,12 @@ public class OnlineUserListDialog extends BottomSheetDialog {
 
         mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(
                 getContext(), LinearLayoutManager.VERTICAL, false));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     public <T> OnlineUserListDialog setListAdapter(AbsListItemAdapter<T> adapter){
