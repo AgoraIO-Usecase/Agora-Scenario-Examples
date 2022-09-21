@@ -95,7 +95,7 @@ public class RtcHostActivity extends BaseActivity<SuperappHostDetailActivityBind
 
     private void initRoomManager() {
         roomManager.joinRoom(mRoomInfo.roomId, true, () -> {
-            roomManager.subscriptRoomInfoEvent(mRoomInfo.roomId, pkInfo -> runOnUiThread(() -> {
+            roomManager.subscriptPKInfoEvent(mRoomInfo.roomId, pkInfo -> runOnUiThread(() -> {
                 if (!pkInfo.isPKing()) {
                     // 结束连麦
                     // 隐藏远程视图

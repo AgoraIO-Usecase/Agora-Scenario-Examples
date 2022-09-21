@@ -41,6 +41,15 @@ public abstract class BindingSingleAdapter<Data, Binding extends ViewBinding> ex
         notifyItemInserted(index);
     }
 
+    public void resetAll(List<Data> list){
+        if (list == null) {
+            list = new ArrayList<>();
+        }
+        mDataList.clear();
+        mDataList.addAll(list);
+        notifyDataSetChanged();
+    }
+
     public void insertAll(List<Data> list) {
         if (list == null || list.size() <= 0) {
             return;

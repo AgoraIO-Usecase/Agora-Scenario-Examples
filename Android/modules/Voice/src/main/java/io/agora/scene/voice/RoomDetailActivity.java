@@ -59,12 +59,16 @@ public class RoomDetailActivity extends AppCompatActivity {
         }
     });
     private final RoomManager.DataCallback<RoomManager.UserInfo> userAddOrUpdateCallback = data -> runOnUiThread(() -> {
-        updateUserView(data);
         roomManager.getUserInfoList(roomInfo.roomId, userInfoDataListCallback);
     });
     private final RoomManager.DataCallback<String> userDeleteCallback = data -> runOnUiThread(() -> {
-        downSeat(data);
         roomManager.getUserInfoList(roomInfo.roomId, userInfoDataListCallback);
+    });
+    private final RoomManager.DataCallback<RoomManager.UserInfo> voiceUserAddOrUpdateCallback = data -> runOnUiThread(() -> {
+        updateUserView(data);
+    });
+    private final RoomManager.DataCallback<String> voiceUserDeleteCallback = data -> runOnUiThread(() -> {
+        downSeat(data);
     });
     private final RoomManager.DataCallback<RoomManager.RoomInfo> roomUpdateCallback = data -> runOnUiThread(() -> mBinding.ivBackground.setImageResource(data.getAndroidBgId()));
     private final RoomManager.DataCallback<String> roomDeleteCallback = data -> runOnUiThread(this::showRoomClosedDialog);
@@ -179,7 +183,7 @@ public class RoomDetailActivity extends AppCompatActivity {
                             // 显示用户列表
                             showOnLineUserDialog();
                         } else if (option == UserOptionsDialog.OPTION_MUTE) {
-                            roomManager.endUser(roomInfo.roomId, _tagUserInfo);
+                            roomManager.endVoiceUser(roomInfo.roomId, _tagUserInfo);
                         }
                         dialog.dismiss();
                     });
@@ -261,7 +265,7 @@ public class RoomDetailActivity extends AppCompatActivity {
 
 
     private void showOnLineUserDialog() {
-        roomManager.getUserInfoList(roomInfo.roomId, dataList -> {
+        roomManager.getVoiceUserInfoList(roomInfo.roomId, dataList -> {
             Iterator<RoomManager.UserInfo> iterator = dataList.iterator();
             while (iterator.hasNext()) {
                 RoomManager.UserInfo next = iterator.next();
@@ -270,6 +274,7 @@ public class RoomDetailActivity extends AppCompatActivity {
                 }
             }
             if (dataList.size() == 0) {
+                runOnUiThread(() -> Toast.makeText(RoomDetailActivity.this, R.string.common_tip_no_user, Toast.LENGTH_SHORT).show());
                 return;
             }
 
@@ -290,7 +295,7 @@ public class RoomDetailActivity extends AppCompatActivity {
 
                         holder.binding.tvStatus.setOnClickListener(v -> {
                             // 发起邀请
-                            roomManager.inviteUser(roomInfo.roomId, item);
+                            roomManager.inviteVoiceUser(roomInfo.roomId, item);
                             dialog.dismiss();
                         });
                     }
@@ -319,6 +324,7 @@ public class RoomDetailActivity extends AppCompatActivity {
                 }
             });
 
+            roomManager.subscribeVoiceUserInfoEvent(roomInfo.roomId, voiceUserAddOrUpdateCallback, voiceUserDeleteCallback);
             roomManager.subscribeUserInfoEvent(roomInfo.roomId, userAddOrUpdateCallback, userDeleteCallback);
             roomManager.subscribeRoomEvent(roomInfo.roomId, roomUpdateCallback, roomDeleteCallback);
             roomManager.subscribeMessageEvent(roomInfo.roomId, messageInfoDataCallback);
@@ -414,10 +420,10 @@ public class RoomDetailActivity extends AppCompatActivity {
                     new AlertDialog.Builder(this)
                             .setMessage(R.string.voice_room_detail_invite_tip)
                             .setPositiveButton(R.string.voice_room_detail_invite_accept, (dialog, which) -> {
-                                roomManager.acceptInvite(roomInfo.roomId, userInfo);
+                                roomManager.acceptVoiceUserInvite(roomInfo.roomId, userInfo);
                             })
                             .setNegativeButton(R.string.voice_room_detail_invite_refuse, (dialog, which) -> {
-                                roomManager.refuseInvite(roomInfo.roomId, userInfo);
+                                roomManager.refuseVoiceUserInvite(roomInfo.roomId, userInfo);
                             })
                             .show();
                 } else if (userInfo.status == RoomManager.UserStatus.accept) {

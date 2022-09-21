@@ -114,7 +114,7 @@ public class RskAudienceActivity extends BaseActivity<SuperappAudienceDetailActi
                 mBinding.hostNameView.setName(data.userName);
                 mBinding.hostNameView.setIcon(data.getUserIcon());
             }));
-            roomManager.subscriptRoomInfoEvent(mRoomInfo.roomId, null, data -> runOnUiThread(this::showRoomExitDialog));
+            roomManager.subscriptPKInfoEvent(mRoomInfo.roomId, null, data -> runOnUiThread(this::showRoomExitDialog));
         });
     }
 
