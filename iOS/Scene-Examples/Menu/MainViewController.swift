@@ -23,6 +23,9 @@ enum SceneType: String {
     case mutli = "mutli"
     /// 互动播客
     case interactiveBlog = "interactiveBlog"
+    /// 教育1v1
+    case Education1v1 = "Education1v1"
+
     
     var alertTitle: String {
         switch self {
@@ -85,12 +88,11 @@ struct MainModel {
         model.sceneType = .breakoutRoom
         tempArray.append(model)
         
-//        model = MainModel()
-//        model.title = "agoraClub".localized
-//        model.desc = "agoraClub".localized
-//        model.imageNmae = "pic-Blind-date"
-//        model.sceneType = .agoraClub
-//        tempArray.append(model)
+        model = MainModel()
+        model.title = "Education1v1".localized
+        model.imageNmae = "BreakoutRoom"
+        model.sceneType = .Education1v1
+        tempArray.append(model)
         dataArray.append(tempArray)
         
         return dataArray

@@ -305,3 +305,6 @@ pleaseInputRoomName = "请输入房间名";
 "Become audience" = "下台";
 "Invite to speak" = "邀请上台";
 "invite you to speak" = "邀请你上台";
+"Education1v1" = "教育1v1";
+"Waiting for remote users to join" = "等待远端用户加入";
+"Please configure FastBoard information in the keyCenter file" = "请在keyCenter文件中配置白板信息";

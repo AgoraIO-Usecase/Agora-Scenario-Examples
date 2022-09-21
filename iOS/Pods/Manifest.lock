@@ -24,13 +24,43 @@ PODS:
   - AgoraRtcEngine_iOS/VideoPreprocess (3.7.1)
   - AgoraRtcEngine_iOS/VirtualBackground (3.7.1)
   - AgoraRtm_iOS (1.4.9)
+  - Fastboard (1.1.2):
+    - Fastboard/core (= 1.1.2)
+  - Fastboard/core (1.1.2):
+    - Whiteboard (~> 2.16.36)
   - MBProgressHUD (1.2.0)
+  - NTLBridge (3.1.4)
   - SocketRocket (0.6.0)
+  - Whiteboard (2.16.39):
+    - Whiteboard/Whiteboard-YYModel (= 2.16.39)
+  - Whiteboard/Base (2.16.39):
+    - NTLBridge (~> 3.1.4)
+    - Whiteboard/Object
+  - Whiteboard/Converter (2.16.39):
+    - Whiteboard/Object
+  - Whiteboard/Model (2.16.39):
+    - YYModel
+  - Whiteboard/NativeReplayer (2.16.39):
+    - Whiteboard/Replayer
+  - Whiteboard/Object (2.16.39):
+    - Whiteboard/Model
+  - Whiteboard/Replayer (2.16.39):
+    - Whiteboard/Base
+  - Whiteboard/Resource (2.16.39)
+  - Whiteboard/Room (2.16.39):
+    - Whiteboard/Base
+  - Whiteboard/Whiteboard-YYModel (2.16.39):
+    - Whiteboard/Converter
+    - Whiteboard/NativeReplayer
+    - Whiteboard/Resource
+    - Whiteboard/Room
+  - YYModel (1.0.4)
 
 DEPENDENCIES:
   - Agora-Scene-Utils (~> 1.0.7)
   - AgoraRtcEngine_iOS (= 3.7.1)
   - AgoraRtm_iOS (= 1.4.9)
+  - Fastboard
   - MBProgressHUD (~> 1.2.0)
   - SocketRocket
 
@@ -39,16 +69,24 @@ SPEC REPOS:
     - Agora-Scene-Utils
     - AgoraRtcEngine_iOS
     - AgoraRtm_iOS
+    - Fastboard
     - MBProgressHUD
+    - NTLBridge
     - SocketRocket
+    - Whiteboard
+    - YYModel
 
 SPEC CHECKSUMS:
   Agora-Scene-Utils: f14741b381b7d495b37277d9648866164a2a77e3
   AgoraRtcEngine_iOS: f5181c4c32075bab11b0bdfc22e63fa00b9dc5bb
   AgoraRtm_iOS: b4bb9a431ce36f9b44cda423e66b2f96945ca2ab
+  Fastboard: 2fb2863f6f6c23d1087f597660ddc74f1f198dec
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
+  NTLBridge: 49780dc966976d3221a0eb03c7368617c1987cb6
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
+  Whiteboard: 4622f3866b7c35a9c757955619ba0a2b26d968f5
+  YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
 
-PODFILE CHECKSUM: 6a6131b8bf7767f230e7440746cbf1ec858a5563
+PODFILE CHECKSUM: a80d639ae75a49b973de99262267647aafec44bb
 
 COCOAPODS: 1.11.2

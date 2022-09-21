@@ -45,6 +45,8 @@ class LiveRoomListController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationTransparent(isTransparent: false)
+        let appdelegate = UIApplication.shared.delegate as? AppDelegate
+        appdelegate?.blockRotation = .portrait
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
     override func viewDidAppear(_ animated: Bool) {
@@ -123,6 +125,10 @@ class LiveRoomListController: BaseViewController {
         case .interactiveBlog:
             let createLiveVC = InteractiveBlogCreateController()
             navigationController?.pushViewController(createLiveVC, animated: true)
+            
+        case .Education1v1:
+            let createLiveVC = EducationCreateController()
+            navigationController?.pushViewController(createLiveVC, animated: true)
         }
         
     }
@@ -154,6 +160,11 @@ class LiveRoomListController: BaseViewController {
         case .mutli:
             let livePlayerVC = MutliBroadcastingController(channelName: channelName ?? "", userId: ownerId ?? "")
             navigationController?.pushViewController(livePlayerVC, animated: true)
+            
+        case .Education1v1:
+            let shoppingVC = EducationController(channelName: channelName ?? "",
+                                                 userId: ownerId ?? "")
+            navigationController?.pushViewController(shoppingVC, animated: true)
             
         default: break
         }

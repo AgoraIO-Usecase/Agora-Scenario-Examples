@@ -20,5 +20,6 @@ target 'Scene-Examples' do
   # Pods for Scene-Examples
   pod 'AgoraRtm_iOS', '1.4.9'
   pod 'SocketRocket'
-
+  pod 'Fastboard'
+  
 end

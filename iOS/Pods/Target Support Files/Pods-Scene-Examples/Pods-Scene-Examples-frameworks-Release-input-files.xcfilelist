@@ -1,8 +1,12 @@
 ${PODS_ROOT}/Target Support Files/Pods-Scene-Examples/Pods-Scene-Examples-frameworks.sh
 ${BUILT_PRODUCTS_DIR}/Agora-Scene-Utils/Agora_Scene_Utils.framework
 ${PODS_ROOT}/AgoraRtm_iOS/AgoraRtmKit.framework
+${BUILT_PRODUCTS_DIR}/Fastboard/Fastboard.framework
 ${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework
+${BUILT_PRODUCTS_DIR}/NTLBridge/NTLBridge.framework
 ${BUILT_PRODUCTS_DIR}/SocketRocket/SocketRocket.framework
+${BUILT_PRODUCTS_DIR}/Whiteboard/Whiteboard.framework
+${BUILT_PRODUCTS_DIR}/YYModel/YYModel.framework
 ${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS/AINS/AgoraAIDenoiseExtension.framework/AgoraAIDenoiseExtension
 ${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS/AV1Dec/AgoraDav1dExtension.framework/AgoraDav1dExtension
 ${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS/ContentInspect/AgoraCIExtension.framework/AgoraCIExtension
