@@ -206,7 +206,7 @@ public class LiveDetailActivity extends AppCompatActivity {
         options.publishCameraTrack = true;
         options.publishMicrophoneTrack = true;
         String channelName = roomInfo.userId + roomId;
-        TokenGenerator.gen(this, roomInfo.id, localUid, ret -> rtcEngine.joinChannel(ret, channelName, localUid, options));
+        TokenGenerator.gen(this, channelName, localUid, ret -> rtcEngine.joinChannel(ret, channelName, localUid, options));
     }
 
     private void renderLocalPreview() {
