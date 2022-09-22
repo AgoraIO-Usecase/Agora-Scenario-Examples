@@ -9,11 +9,14 @@ import UIKit
 import AgoraRtcKit
 import Fastboard
 
+let BOARD_APP_ID: String = "283/VGiScM9Wiw2HJg"
+let BOARD_ROOM_UUID: String = "6d181120525e11ec89361798d9c15050"
+let BOARD_ROOM_TOKEN: String = "WHITEcGFydG5lcl9pZD15TFExM0tTeUx5VzBTR3NkJnNpZz0wZWIzMmY5M2IzMGUzZTBiMTQ4NzQ3NGVmZTRhNTlkNWM2MjY4ZjFjOmFrPXlMUTEzS1N5THlXMFNHc2QmY3JlYXRlX3RpbWU9MTYzODMzMjYwNTUwNiZleHBpcmVfdGltZT0xNjY5ODY4NjA1NTA2Jm5vbmNlPTE2MzgzMzI2MDU1MDYwMCZyb2xlPXJvb20mcm9vbUlkPTZkMTgxMTIwNTI1ZTExZWM4OTM2MTc5OGQ5YzE1MDUwJnRlYW1JZD05SUQyMFBRaUVldTNPNy1mQmNBek9n"
 class EducationController: BaseViewController {
     private lazy var fastRoom: FastRoom = {
-        let config = FastRoomConfiguration(appIdentifier: KeyCenter.BOARD_APP_ID,
-                                           roomUUID: KeyCenter.BOARD_ROOM_UUID,
-                                           roomToken: KeyCenter.BOARD_ROOM_TOKEN,
+        let config = FastRoomConfiguration(appIdentifier: BOARD_APP_ID,
+                                           roomUUID: BOARD_ROOM_UUID,
+                                           roomToken: BOARD_ROOM_TOKEN,
                                            region: .CN,
                                            userUID: UserInfo.uid)
         let fastRoom = Fastboard.createFastRoom(withFastRoomConfig: config)
@@ -105,9 +108,6 @@ class EducationController: BaseViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if KeyCenter.BOARD_APP_ID.isEmpty {
-            ToastView.show(text: "Please configure FastBoard information in the keyCenter file".localized)
-        }
         joinChannel(channelName: channleName, uid: UserInfo.userId)
         navigationController?.interactivePopGestureRecognizer?.isEnabled = currentUserId != "\(UserInfo.userId)"
         var controllers = navigationController?.viewControllers ?? []
@@ -257,9 +257,7 @@ class EducationController: BaseViewController {
         canvas.uid = uid
         agoraKit?.setupLocalVideo(canvas)
         agoraKit?.startPreview()
-        if !KeyCenter.BOARD_APP_ID.isEmpty {
-            fastRoom.joinRoom()
-        }
+        fastRoom.joinRoom()
     }
     
     public func leaveChannel(uid: UInt, channelName: String, isExit: Bool = false) {

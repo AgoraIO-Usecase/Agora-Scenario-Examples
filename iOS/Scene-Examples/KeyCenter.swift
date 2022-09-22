@@ -9,13 +9,8 @@
 struct KeyCenter {
     static let AppId: String = <#YOUR APPID#>
 
-    // assign token to nil if you have not enabled app certificate
+    // assign token and certificate to null if you have not enabled app certificate
     static let Certificate: String? = <#YOUR Certificate#>
-    
+    // assign token and certificate to null if you have not enabled app certificate or you have set the certificate above.
     static var Token: String? = nil
-    
-    // FastBoard Configration
-    static let BOARD_APP_ID: String = ""
-    static let BOARD_ROOM_UUID: String = ""
-    static let BOARD_ROOM_TOKEN: String = ""
 }
