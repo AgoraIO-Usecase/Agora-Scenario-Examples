@@ -24,17 +24,19 @@ class LiveBottomView: UIView {
         case effect = 8
         /// 音效工具
         case effect_tool = 9
+        case shopping = 10
         var imageName: String {
             switch self {
             case .tool: return "icon-more-gray"
             case .close: return "icon-close-gray"
             case .gift: return "icon-gift"
-            case .pk: return "PK/pic-PK"
+            case .pk: return "Shopping/icon-PK"
             case .game: return "Game/gameicon"
             case .exitgame: return ""
             case .belcanto: return "icon-美声"
             case .effect: return "icon-音效"
             case .effect_tool: return "icon-more-gray"
+            case .shopping: return "Shopping/icon-货架"
             }
         }
         

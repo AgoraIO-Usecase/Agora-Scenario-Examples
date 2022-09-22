@@ -29,6 +29,8 @@ class LiveBaseView: UIView {
     var onTapIsMuteMicClosure: ((Bool) -> Void)?
     /// 点击PK邀请
     var onTapPKButtonClosure: (() -> Void)?
+    /// 点击商品列表
+    var onTapShoppingButtonClosure: (() -> Void)?
     /// 点击游戏
     var onTapGameButtonClosure: (() -> Void)?
     /// 点击退出游戏
@@ -303,6 +305,9 @@ class LiveBaseView: UIView {
                 
             case .exitgame:
                 self.onTapExitGameButtonClosure?()
+                
+            case .shopping:
+                self.onTapShoppingButtonClosure?()
                 
             default: break
             }

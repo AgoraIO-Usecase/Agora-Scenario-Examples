@@ -112,6 +112,10 @@
 		E7D46065285C825D004F3C82 /* BaseCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D46064285C825D004F3C82 /* BaseCollectionViewCell.swift */; };
 		E7DB5B3E28DB0B1200C6C181 /* EducationCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7DB5B3B28DB0B1200C6C181 /* EducationCreateController.swift */; };
 		E7DB5B3F28DB0B1200C6C181 /* EducationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7DB5B3C28DB0B1200C6C181 /* EducationController.swift */; };
+		E7DB5B4628DC09B200C6C181 /* LiveShoppingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7DB5B4128DC09B200C6C181 /* LiveShoppingViewController.swift */; };
+		E7DB5B4728DC09B200C6C181 /* LiveShoppingDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7DB5B4228DC09B200C6C181 /* LiveShoppingDetailViewController.swift */; };
+		E7DB5B4828DC09B200C6C181 /* LiveShoppingCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7DB5B4328DC09B200C6C181 /* LiveShoppingCreateController.swift */; };
+		E7DB5B4928DC09B200C6C181 /* LiveShoppingListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7DB5B4528DC09B200C6C181 /* LiveShoppingListView.swift */; };
 		E7ECC56927E81A9E00EFA778 /* BaseNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ECC56827E81A9E00EFA778 /* BaseNavigationController.swift */; };
 		E7ECC56D27E81F5A00EFA778 /* UIImage+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ECC56C27E81F5A00EFA778 /* UIImage+Color.swift */; };
 		E7ECC57127E8923200EFA778 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ECC57027E8923200EFA778 /* Array+Extension.swift */; };
@@ -262,6 +266,10 @@
 		E7D46064285C825D004F3C82 /* BaseCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseCollectionViewCell.swift; sourceTree = "<group>"; };
 		E7DB5B3B28DB0B1200C6C181 /* EducationCreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EducationCreateController.swift; sourceTree = "<group>"; };
 		E7DB5B3C28DB0B1200C6C181 /* EducationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EducationController.swift; sourceTree = "<group>"; };
+		E7DB5B4128DC09B200C6C181 /* LiveShoppingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveShoppingViewController.swift; sourceTree = "<group>"; };
+		E7DB5B4228DC09B200C6C181 /* LiveShoppingDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveShoppingDetailViewController.swift; sourceTree = "<group>"; };
+		E7DB5B4328DC09B200C6C181 /* LiveShoppingCreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveShoppingCreateController.swift; sourceTree = "<group>"; };
+		E7DB5B4528DC09B200C6C181 /* LiveShoppingListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveShoppingListView.swift; sourceTree = "<group>"; };
 		E7ECC56827E81A9E00EFA778 /* BaseNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseNavigationController.swift; sourceTree = "<group>"; };
 		E7ECC56C27E81F5A00EFA778 /* UIImage+Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Color.swift"; sourceTree = "<group>"; };
 		E7ECC57027E8923200EFA778 /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
@@ -344,6 +352,7 @@
 			isa = PBXGroup;
 			children = (
 				E7DB5B3A28DB0B1200C6C181 /* Education1v1 */,
+				E7DB5B4028DC09B200C6C181 /* Shopping */,
 				E7C6322628B387FE0030E506 /* InteractiveBlog */,
 				E748787C28A9F95700CA2F58 /* MultiJointBroadcasting */,
 				E763A884288F991B00FE99FA /* VideoCall */,
@@ -732,6 +741,25 @@
 			path = Education1v1;
 			sourceTree = "<group>";
 		};
+		E7DB5B4028DC09B200C6C181 /* Shopping */ = {
+			isa = PBXGroup;
+			children = (
+				E7DB5B4128DC09B200C6C181 /* LiveShoppingViewController.swift */,
+				E7DB5B4228DC09B200C6C181 /* LiveShoppingDetailViewController.swift */,
+				E7DB5B4328DC09B200C6C181 /* LiveShoppingCreateController.swift */,
+				E7DB5B4428DC09B200C6C181 /* Views */,
+			);
+			path = Shopping;
+			sourceTree = "<group>";
+		};
+		E7DB5B4428DC09B200C6C181 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E7DB5B4528DC09B200C6C181 /* LiveShoppingListView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		E7EDBCA727A0F94800E763A6 /* VoiceChatRoom */ = {
 			isa = PBXGroup;
 			children = (
@@ -910,6 +938,7 @@
 				E7EDBCC627A3BDCD00E763A6 /* AgoraVoiceChangeBGModel.swift in Sources */,
 				E7EDBCBE27A2A41900E763A6 /* RTEStatistics.swift in Sources */,
 				E79BEF5B273E5768009FA838 /* GIFImageView.swift in Sources */,
+				E7DB5B4828DC09B200C6C181 /* LiveShoppingCreateController.swift in Sources */,
 				E757E6A4281AAE6B0017D5B9 /* RtmSyncManager+Info.swift in Sources */,
 				E757E6A3281AAE6B0017D5B9 /* RtmSyncManager+Handle.swift in Sources */,
 				E79BEF8A274644A9009FA838 /* BORLiveModel.swift in Sources */,
@@ -921,6 +950,7 @@
 				E79C262D273BC0CA00909CD4 /* ToastView.swift in Sources */,
 				E7EDBCB227A1463700E763A6 /* AgoraVoiceBelCantoModel.swift in Sources */,
 				E7377D91286EE7C0008F6C62 /* LivePKCreateController.swift in Sources */,
+				E7DB5B4728DC09B200C6C181 /* LiveShoppingDetailViewController.swift in Sources */,
 				E79C2644273BE7C000909CD4 /* LiveSettingView.swift in Sources */,
 				E79BEF3B273D21FD009FA838 /* LiveChatView.swift in Sources */,
 				E7499C2C2770537C00E799FF /* MessageCell.swift in Sources */,
@@ -935,6 +965,7 @@
 				E7EDBCAE27A1281200E763A6 /* AgoraVoiceUsersView.swift in Sources */,
 				E7ECC56D27E81F5A00EFA778 /* UIImage+Color.swift in Sources */,
 				E71A0782288F99D500CC4BF6 /* VideoCallCreateViewController.swift in Sources */,
+				E7DB5B4628DC09B200C6C181 /* LiveShoppingViewController.swift in Sources */,
 				E7D46061285C7A00004F3C82 /* MainHeaderViewCell.swift in Sources */,
 				E79BEF7D27463F79009FA838 /* BORSubRoomModel.swift in Sources */,
 				E757E6A8281AAE6B0017D5B9 /* Protocols.swift in Sources */,
@@ -986,6 +1017,7 @@
 				E7EDBCB827A284AB00E763A6 /* AgoraVoiceToolView.swift in Sources */,
 				E748788228A9F95700CA2F58 /* MutliBroadcastingCreateController.swift in Sources */,
 				E79BEF43273E3709009FA838 /* LiveGiftView.swift in Sources */,
+				E7DB5B4928DC09B200C6C181 /* LiveShoppingListView.swift in Sources */,
 				E757E69D281AAE6B0017D5B9 /* SyncManager+Info.swift in Sources */,
 				E710AE2F27A0F23300124356 /* ChangeRoomBgView.swift in Sources */,
 				E7499C1B276A078500E799FF /* LiveOnlineView.swift in Sources */,

@@ -23,6 +23,8 @@ enum SceneType: String {
     case mutli = "mutli"
     /// 互动播客
     case interactiveBlog = "interactiveBlog"
+    /// 电商
+    case shopping = "shopping"
     /// 教育1v1
     case Education1v1 = "Education1v1"
 
@@ -77,6 +79,12 @@ struct MainModel {
         model.title = "Interactive blog".localized
         model.imageNmae = "interactiveblog"
         model.sceneType = .interactiveBlog
+        tempArray.append(model)
+        
+        model = MainModel()
+        model.title = "Shopping".localized
+        model.imageNmae = "interactiveblog"
+        model.sceneType = .shopping
         tempArray.append(model)
         
         dataArray.append(tempArray)

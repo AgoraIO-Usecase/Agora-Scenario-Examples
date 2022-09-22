@@ -126,6 +126,10 @@ class LiveRoomListController: BaseViewController {
             let createLiveVC = InteractiveBlogCreateController()
             navigationController?.pushViewController(createLiveVC, animated: true)
             
+        case .shopping:
+            let createLiveVC = LiveShoppingCreateController()
+            navigationController?.pushViewController(createLiveVC, animated: true)
+            
         case .Education1v1:
             let createLiveVC = EducationCreateController()
             navigationController?.pushViewController(createLiveVC, animated: true)
@@ -160,6 +164,11 @@ class LiveRoomListController: BaseViewController {
         case .mutli:
             let livePlayerVC = MutliBroadcastingController(channelName: channelName ?? "", userId: ownerId ?? "")
             navigationController?.pushViewController(livePlayerVC, animated: true)
+            
+        case .shopping:
+            let shoppingVC = LiveShoppingViewController(channelName: channelName ?? "",
+                                                               userId: ownerId ?? "")
+            navigationController?.pushViewController(shoppingVC, animated: true)
             
         case .Education1v1:
             let shoppingVC = EducationController(channelName: channelName ?? "",
