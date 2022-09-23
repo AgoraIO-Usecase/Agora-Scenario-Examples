@@ -125,7 +125,7 @@ class LiveBaseView: UIView {
     
     func sendMessage(userName: String, message: String, messageType: ChatMessageType) {
         var model = ChatMessageModel(content: message, messageType: messageType)
-        model.userName = userName
+        model.userName = "User-\(userName)"
         chatView.sendMessage(messageModel: model)
     }
     

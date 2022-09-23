@@ -231,7 +231,6 @@ class EducationController: BaseViewController {
     }
         
     private func setupAgoraKit() {
-        guard agoraKit == nil else { return }
         agoraKit = AgoraRtcEngineKit.sharedEngine(with: rtcEngineConfig, delegate: self)
         agoraKit?.setLogFile(LogUtils.sdkLogPath())
         agoraKit?.setChannelProfile(.liveBroadcasting)
