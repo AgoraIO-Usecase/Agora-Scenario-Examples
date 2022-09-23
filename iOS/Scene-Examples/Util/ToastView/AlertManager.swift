@@ -52,7 +52,8 @@ class AlertManager: NSObject {
             view.trailingAnchor.constraint(equalTo: containerView.trailingAnchor).isActive = true
         }
         if vc == nil {
-            vc = UIViewController()
+            vc = BaseViewController()
+            vc?.view.layer.contents = nil
             vc?.view.backgroundColor = UIColor.clear
             vc?.view.addSubview(containerView)
             vc?.modalPresentationStyle = .custom
