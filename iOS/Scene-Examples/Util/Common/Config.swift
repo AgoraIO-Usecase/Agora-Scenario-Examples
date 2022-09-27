@@ -31,6 +31,7 @@ let SYNC_SCENE_ROOM_USER_COLLECTION = "userCollection"
 /// 商品信息
 let SYNC_SCENE_SHOPPING_INFO = "shoppingInfo"
 
+
 let APP_SCENARIO: Int = 100
 let SERVICE_TYPE: Int = 12
 

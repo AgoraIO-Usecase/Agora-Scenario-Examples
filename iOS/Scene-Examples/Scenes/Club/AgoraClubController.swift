@@ -67,7 +67,7 @@ class AgoraClubController: BaseViewController {
     private var channelName: String = ""
     private var videoUrl: String?
     private var headerHeightCons: NSLayoutConstraint?
-    private var currentUserModel: AgoraVoiceUsersModel?
+    private var currentUserModel: AgoraUsersModel?
     private var currentUserId: String = ""
     
     /// 用户角色
@@ -394,7 +394,7 @@ class AgoraClubController: BaseViewController {
         var messageModel = ChatMessageModel()
         messageModel.content = "\(UserInfo.uid) " + "Join_Live_Room".localized
         chatView.sendMessage(messageModel: messageModel)
-        var userModel = AgoraVoiceUsersModel()
+        var userModel = AgoraUsersModel()
         if getRole(uid: UserInfo.uid) == .broadcaster {
             userModel.status = .accept
         } else {
@@ -402,7 +402,7 @@ class AgoraClubController: BaseViewController {
         }
         let params = JSONObject.toJson(userModel)
         SyncUtil.scene(id: channelName)?.collection(className: SYNC_MANAGER_AGORA_CLUB_USERS).add(data: params, success: { object in
-            let model = JSONObject.toModel(AgoraVoiceUsersModel.self, value: object.toJson())
+            let model = JSONObject.toModel(AgoraUsersModel.self, value: object.toJson())
             self.currentUserModel = model
             self.usersView.fetchAgoraVoiceUserInfoData()
             self.channelMediaOptions.publishMicrophoneTrack = .of(false)

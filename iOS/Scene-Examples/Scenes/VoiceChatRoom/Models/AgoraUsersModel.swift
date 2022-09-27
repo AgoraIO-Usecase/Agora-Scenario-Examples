@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct AgoraVoiceUsersModel: Codable {
+struct AgoraUsersModel: Codable {
     var userName: String = "User-\(UserInfo.uid)"
     var avatar: String = String(format: "portrait%02d", Int.random(in: 1...14))
     var userId: String = UserInfo.uid

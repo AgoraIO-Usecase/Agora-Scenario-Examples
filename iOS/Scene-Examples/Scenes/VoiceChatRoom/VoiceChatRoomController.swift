@@ -70,7 +70,7 @@ class VoiceChatRoomController: BaseViewController {
     private var roomInfo: LiveRoomInfo?
     private var channelName: String = ""
     private var currentUserId: String = ""
-    private var currentUserModel: AgoraVoiceUsersModel?
+    private var currentUserModel: AgoraUsersModel?
     
     /// 用户角色
     public func getRole(uid: String) -> AgoraClientRole {
@@ -150,9 +150,9 @@ class VoiceChatRoomController: BaseViewController {
         messageModel.content = "Join_Live_Room".localized
         messageModel.userName = UserInfo.uid
         chatView.sendMessage(messageModel: messageModel)
-        let params = JSONObject.toJson(AgoraVoiceUsersModel())
+        let params = JSONObject.toJson(AgoraUsersModel())
         SyncUtil.scene(id: channelName)?.collection(className: SYNC_MANAGER_AGORA_VOICE_USERS).add(data: params, success: { object in
-            let model = JSONObject.toModel(AgoraVoiceUsersModel.self, value: object.toJson())
+            let model = JSONObject.toModel(AgoraUsersModel.self, value: object.toJson())
             self.currentUserModel = model
         }, fail: { error in
             ToastView.show(text: error.message)

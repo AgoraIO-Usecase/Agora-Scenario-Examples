@@ -48,7 +48,7 @@ class AgoraVoiceInviteView: UIView {
     private func fetchAgoraVoiceUserInfoData() {
         SyncUtil.scene(id: channelName)?.collection(className: syncName).get(success: { results in
             let datas = results.compactMap({ $0.toJson() })
-                .compactMap({ JSONObject.toModel(AgoraVoiceUsersModel.self, value: $0 )})
+                .compactMap({ JSONObject.toModel(AgoraUsersModel.self, value: $0 )})
                 .filter({ $0.userId != "\(UserInfo.userId)" && $0.status != .accept })
                 .filterDuplicates({ $0.userId })
             self.tableView.dataArray = datas
@@ -125,7 +125,7 @@ class AgoraVoiceInviteViewCell: UITableViewCell {
         button.addTarget(self, action: #selector(onTapInviteButton(sender:)), for: .touchUpInside)
         return button
     }()
-    public var currendModel: AgoraVoiceUsersModel?
+    public var currendModel: AgoraUsersModel?
     public var channelName: String = ""
     private var syncName: String = SYNC_MANAGER_AGORA_VOICE_USERS
     
@@ -141,7 +141,7 @@ class AgoraVoiceInviteViewCell: UITableViewCell {
     func setUserInfoData(with item: Any?,
                          channelName: String,
                          syncName: String = SYNC_MANAGER_AGORA_VOICE_USERS) {
-        guard let model = item as? AgoraVoiceUsersModel else { return }
+        guard let model = item as? AgoraUsersModel else { return }
         self.channelName = channelName
         self.syncName = syncName
         currendModel = model

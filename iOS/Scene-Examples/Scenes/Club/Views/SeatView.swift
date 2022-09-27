@@ -11,7 +11,7 @@ import AgoraRtcKit
 
 class SeatView: UIView {
     var updateBottomTypeClosure: ((Bool) -> Void)?
-    var updateUserStatusClosure: ((AgoraVoiceUsersModel) -> Void)?
+    var updateUserStatusClosure: ((AgoraUsersModel) -> Void)?
     
     private lazy var collectionView: AGECollectionView = {
         let view = AGECollectionView()
@@ -72,7 +72,7 @@ class SeatView: UIView {
         SyncUtil.scene(id: channelName)?.collection(className: SYNC_MANAGER_AGORA_CLUB_USERS).get(success: { results in
             var tempArray = [Any]()
             let datas = results.compactMap({ $0.toJson() })
-                .compactMap({ JSONObject.toModel(AgoraVoiceUsersModel.self, value: $0 )})
+                .compactMap({ JSONObject.toModel(AgoraUsersModel.self, value: $0 )})
                 .filter({ $0.status == .accept })
                 .sorted(by: { $0.timestamp < $1.timestamp })
             tempArray += datas
@@ -93,7 +93,7 @@ class SeatView: UIView {
         SyncUtil.scene(id: channelName)?.collection(className: SYNC_MANAGER_AGORA_CLUB_USERS).document().subscribe(key: "", onCreated: { object in
             
         }, onUpdated: { object in
-            guard var model = JSONObject.toModel(AgoraVoiceUsersModel.self, value: object.toJson()) else { return }
+            guard var model = JSONObject.toModel(AgoraUsersModel.self, value: object.toJson()) else { return }
             let controller = UIApplication.topMostViewController
             if model.userId == UserInfo.uid && model.status == .invite {
                 let alert = UIAlertController(title: "host_invites_you_on_the_mic".localized, message: nil, preferredStyle: .alert)
@@ -137,7 +137,7 @@ class SeatView: UIView {
             }
             self.fetchAgoraVoiceUserInfoData()
         }, onDeleted: { object in
-            let dataArray = self.collectionView.dataArray as? [AgoraVoiceUsersModel]
+            let dataArray = self.collectionView.dataArray as? [AgoraUsersModel]
             if let model = dataArray?.filter({ $0.userId == UserInfo.uid }).first, model.objectId == object.getId() {
                 guard let option = self.channelMediaOptions, let connection = self.connection else { return }
                 option.publishMicrophoneTrack = .of(false)
@@ -167,7 +167,7 @@ extension SeatView: AGECollectionViewDelegate {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AgoraVoiceUsersViewCell.description(), for: indexPath) as! AgoraVoiceUsersViewCell
         cell.defaultImageName = "zuowei"
         let model = self.collectionView.dataArray?[indexPath.item]
-        if let userModel = model as? AgoraVoiceUsersModel {
+        if let userModel = model as? AgoraUsersModel {
             let canvas = AgoraRtcVideoCanvas()
             canvas.uid = UInt(userModel.userId) ?? 0
             canvas.renderMode = .hidden
@@ -192,7 +192,7 @@ extension SeatView: AGECollectionViewDelegate {
         let controller = UIApplication.topMostViewController
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let close = UIAlertAction(title: /*封麦*/"Seat_Close".localized, style: .destructive) { _ in
-            guard var userModel = model as? AgoraVoiceUsersModel else { return }
+            guard var userModel = model as? AgoraUsersModel else { return }
             userModel.status = .end
             SyncUtil.scene(id: self.channelName)?.collection(className: SYNC_MANAGER_AGORA_CLUB_USERS).update(id: userModel.objectId ?? "", data: JSONObject.toJson(userModel), success: {
                 

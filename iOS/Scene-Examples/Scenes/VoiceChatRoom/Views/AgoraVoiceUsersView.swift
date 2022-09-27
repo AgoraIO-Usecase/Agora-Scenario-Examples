@@ -58,7 +58,7 @@ class AgoraVoiceUsersView: UIView {
         SyncUtil.scene(id: channelName)?.collection(className: SYNC_MANAGER_AGORA_VOICE_USERS).get(success: { results in
             var tempArray = [Any]()
             var datas = results.compactMap({ $0.toJson() })
-                .compactMap({ JSONObject.toModel(AgoraVoiceUsersModel.self, value: $0 )})
+                .compactMap({ JSONObject.toModel(AgoraUsersModel.self, value: $0 )})
                 .filter({ $0.status == .accept })
                 .sorted(by: { $0.timestamp < $1.timestamp })
             datas = datas.map { item in
@@ -97,7 +97,7 @@ class AgoraVoiceUsersView: UIView {
         SyncUtil.scene(id: channelName)?.collection(className: SYNC_MANAGER_AGORA_VOICE_USERS).document().subscribe(key: "", onCreated: { object in
             
         }, onUpdated: { object in
-            guard var model = JSONObject.toModel(AgoraVoiceUsersModel.self, value: object.toJson()) else { return }
+            guard var model = JSONObject.toModel(AgoraUsersModel.self, value: object.toJson()) else { return }
             let controller = UIApplication.topMostViewController
             if model.userId == UserInfo.uid && model.status == .invite {
                 let alert = UIAlertController(title: "host_invites_you_on_the_mic".localized, message: nil, preferredStyle: .alert)
@@ -139,7 +139,7 @@ class AgoraVoiceUsersView: UIView {
             self.fetchAgoraVoiceUserInfoData()
 
         }, onDeleted: { object in
-            let dataArray = self.collectionView.dataArray as? [AgoraVoiceUsersModel]
+            let dataArray = self.collectionView.dataArray as? [AgoraUsersModel]
             if let models = dataArray?.filter({ $0.userId == UserInfo.uid && $0.objectId == object.getId() }), models.isEmpty == false {
                 self.muteAudioClosure?(false)
             }
@@ -165,7 +165,7 @@ extension AgoraVoiceUsersView: AGECollectionViewDelegate {
         let controller = UIApplication.topMostViewController
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let close = UIAlertAction(title: /*封麦*/"Seat_Close".localized, style: .destructive) { _ in
-            var userModel = model as? AgoraVoiceUsersModel
+            var userModel = model as? AgoraUsersModel
             userModel?.status = .end
             SyncUtil.scene(id: self.channelName)?.collection(className: SYNC_MANAGER_AGORA_VOICE_USERS).update(id: userModel?.objectId ?? "", data: JSONObject.toJson(userModel), success: {
                 
@@ -224,8 +224,8 @@ class AgoraVoiceUsersViewCell: UICollectionViewCell {
     }
     
     func setupData(model: Any?) {
-        if model is AgoraVoiceUsersModel {
-            let userModel = model as! AgoraVoiceUsersModel
+        if model is AgoraUsersModel {
+            let userModel = model as! AgoraUsersModel
             avatariImageView.setImage(UIImage(named: userModel.avatar), for: .normal)
             muteVideoImageView.isHidden = userModel.isEnableVideo ?? false
             muteAudioImageView.isHidden = userModel.isEnableAudio ?? false
