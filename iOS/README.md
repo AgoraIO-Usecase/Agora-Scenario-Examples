@@ -33,10 +33,26 @@ This repository contains scenarios using the Agora RTC SDK for iOS.
 3. Edit the  `KeyCenter` file.
    - Replace `<=YOUR APPID=>` with your RTC App ID.
    - Replace `<=YOUR Certificate=>` with your RTC Certificate.
-   - If the certificate of project opened，the APP Certificate should be set to `rtm_app_certificate` and `rtc_app_certificate`
+   - If the certificate of project opened，the APP Certificate should be set to `certificate` 
+      
    ```swift
+     /**
+      Agora assigns App IDs to app developers to identify projects and organizations.
+     If you have multiple completely separate apps in your organization, for example built by different teams,
+     you should use different App IDs.
+     If applications need to communicate with each other, they should use the same App ID.
+     In order to get the APP ID, you can open the agora console (https://console.agora.io/) to create a project,
+     then the APP ID can be found in the project detail page.
+     */
      static let AppId: String = <# YOUR APPID#>
-     // assign token to nil if you have not enabled app certificate
+     
+     /**
+      Agora provides App certificate to generate Token. You can deploy and generate a token on your server,
+     or use the console to generate a temporary token.
+     In order to get the APP ID, you can open the agora console (https://console.agora.io/) to create a project with the App Certificate enabled,
+     then the APP Certificate can be found in the project detail page.
+     PS: If the project does not have certificates enabled, leave this field blank.
+     */
      static var Certificate: String? = <#YOUR Certificate#>
    ```
    > See [Get Started with Agora](https://docs.agora.io/en/Agora%20Platform/get_appid_token) to learn how to get an App ID and App Certificate.
