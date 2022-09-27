@@ -112,7 +112,7 @@ class MutliView: UIView {
             self.fetchUserInfoData()
 
         }, onDeleted: { object in
-            let dataArray = self.collectionView.dataArray as? [AgoraUsersModel]
+            let dataArray = self.collectionView.dataArray?.filter({ $0 is AgoraUsersModel }) as? [AgoraUsersModel]
             if let models = dataArray?.filter({ $0.userId == UserInfo.uid && $0.objectId == object.getId() }), models.isEmpty == false {
                 self.muteAudioClosure?(false)
                 self.joinTheBroadcasting?(false)

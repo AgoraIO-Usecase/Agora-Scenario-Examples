@@ -28,7 +28,6 @@ class GIFImageView: UIView {
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()
-    private lazy var timer = GCDTimer()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -51,12 +50,9 @@ class GIFImageView: UIView {
     func loadGIFName(gifName: String) {
         guard let image = UIImage.gifImageWithName(gifName) else { return }
         imageView.image = image
-        let millisconds = image.duration * 1000
-        timer.scheduledMillisecondsTimer(withName: gifName, countDown: millisconds, milliseconds: millisconds, queue: .main) { _, duration in
-            if duration <= 0 {
-                self.gifAnimationFinishedClosure?()
-                self.imageView.image = nil
-            }
+        DispatchQueue.main.asyncAfter(deadline: .now() + image.duration) {
+            self.gifAnimationFinishedClosure?()
+            self.imageView.image = nil
         }
     }
 }

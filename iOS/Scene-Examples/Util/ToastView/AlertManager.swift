@@ -20,7 +20,7 @@ class AlertManager: NSObject {
         case bottom
     }
     
-    private static var vc: UIViewController?
+    private static var vc: BaseViewController?
     private static var containerView: UIView?
     private static var currentPosition: AlertPosition = .center
     private static var viewCache: [AlertViewCache] = []
@@ -52,7 +52,8 @@ class AlertManager: NSObject {
             view.trailingAnchor.constraint(equalTo: containerView.trailingAnchor).isActive = true
         }
         if vc == nil {
-            vc = UIViewController()
+            vc = BaseViewController()
+            vc?.view.layer.contents = nil
             vc?.view.backgroundColor = UIColor.clear
             vc?.view.addSubview(containerView)
             vc?.modalPresentationStyle = .custom
@@ -117,6 +118,10 @@ class AlertManager: NSObject {
     }
     
     static func hiddenView(all: Bool = true, completion: (() -> Void)? = nil){
+        if vc == nil {
+            completion?()
+            return
+        }
         if currentPosition == .bottom {
             guard let lastView = viewCache.last?.view else { return }
             bottomAnchor?.constant = lastView.frame.height

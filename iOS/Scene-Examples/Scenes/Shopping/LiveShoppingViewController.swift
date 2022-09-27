@@ -276,9 +276,12 @@ class LiveShoppingViewController: BaseViewController {
         
         guard getRole(uid: UserInfo.uid) == .audience else { return }
         SyncUtil.scene(id: channleName)?.subscribeScene(onDeleted: { _ in
-            self.showAlert(title: "live_broadcast_over".localized, message: "") {
-                self.navigationController?.popViewController(animated: true)
+            AlertManager.hiddenView(all: true) {
+                self.showAlert(title: "live_broadcast_over".localized, message: "") {
+                    self.navigationController?.popViewController(animated: true)
+                }
             }
+            
         }, fail: { error in
             ToastView.show(text: error.message)
         })
