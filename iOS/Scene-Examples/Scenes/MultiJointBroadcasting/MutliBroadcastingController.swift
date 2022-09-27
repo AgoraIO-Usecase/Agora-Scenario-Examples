@@ -94,8 +94,8 @@ class MutliBroadcastingController: BaseViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: UIView())
         liveView.translatesAutoresizingMaskIntoConstraints = false
     
-        view.addSubview(mutliView)
         view.addSubview(liveView)
+        view.addSubview(mutliView)
         
         liveView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         liveView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
@@ -130,8 +130,11 @@ class MutliBroadcastingController: BaseViewController {
         mutliView.joinTheBroadcasting = { [weak self] isBroadcast in
             guard let self = self else { return }
             self.agoraKit?.setClientRole(isBroadcast ? .broadcaster : .audience)
+            self.agoraKit?.muteLocalAudioStream(!isBroadcast)
+            self.agoraKit?.muteLocalVideoStream(!isBroadcast)
+            let type: [LiveBottomView.LiveBottomType] = isBroadcast ? [.gift, .tool, .close] : [.gift, .close]
+            self.liveView.updateBottomButtonType(type: type)
         }
-        
         guard getRole(uid: UserInfo.uid) == .audience else { return }
         SyncUtil.scene(id: channleName)?.subscribe(key: "", onCreated: { object in
             

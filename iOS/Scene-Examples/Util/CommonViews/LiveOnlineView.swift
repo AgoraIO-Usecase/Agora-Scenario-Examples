@@ -40,7 +40,7 @@ class LiveOnlineView: UIView {
     }()
     private var collectionViewCons: NSLayoutConstraint?
     
-    private var dataArray = [AgoraVoiceUsersModel]() {
+    private var dataArray = [AgoraUsersModel]() {
         didSet {
             let dats = dataArray//.filterDuplicates({ $0.userId })
             collectionView.dataArray = dats
@@ -72,7 +72,7 @@ class LiveOnlineView: UIView {
         }
         group.notify(queue: .main) {
             SyncUtil.scene(id: channelName)?.collection(className: SYNC_SCENE_ROOM_USER_COLLECTION).get(success: { list in
-                let users = list.compactMap({ JSONObject.toModel(AgoraVoiceUsersModel.self,
+                let users = list.compactMap({ JSONObject.toModel(AgoraUsersModel.self,
                                                                  value: $0.toJson()) })
                 guard !users.isEmpty else { return }
                 self.dataArray = users
@@ -88,7 +88,7 @@ class LiveOnlineView: UIView {
     }
     
     private func addUserInfo(channelName: String, finished: @escaping () -> Void) {
-        let model = AgoraVoiceUsersModel()
+        let model = AgoraUsersModel()
         dataArray.append(model)
         let params = JSONObject.toJson(model)
         SyncUtil.scene(id: channelName)?.collection(className: SYNC_SCENE_ROOM_USER_COLLECTION).add(data: params, success: { object in
@@ -103,7 +103,7 @@ class LiveOnlineView: UIView {
         SyncUtil.scene(id: channelName)?.subscribe(key: SYNC_SCENE_ROOM_USER_COLLECTION, onCreated: { _ in
             
         }, onUpdated: { object in
-            guard let model = JSONObject.toModel(AgoraVoiceUsersModel.self,
+            guard let model = JSONObject.toModel(AgoraUsersModel.self,
                                                  value: object.toJson()) else { return }
             if self.dataArray.contains(where: { $0.userId == model.userId }) { return }
             self.dataArray.append(model)
@@ -174,7 +174,7 @@ class LiveOnLineViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setUserInfo(info: AgoraVoiceUsersModel) {
+    func setUserInfo(info: AgoraUsersModel) {
         avatarImageView.image = UIImage(named: info.avatar)
         print("avatar ==== \(info.avatar)")
     }

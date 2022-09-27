@@ -163,7 +163,7 @@ class VideoCallViewController: BaseViewController {
                 return
             }
             // 添加用户
-            SyncUtil.scene(id: self.channleName)?.collection(className: SYNC_SCENE_ROOM_USER_COLLECTION).add(data: JSONObject.toJson(AgoraVoiceUsersModel()), success: { object in
+            SyncUtil.scene(id: self.channleName)?.collection(className: SYNC_SCENE_ROOM_USER_COLLECTION).add(data: JSONObject.toJson(AgoraUsersModel()), success: { object in
                 self.userObjectId = object.getId()
             }, fail: nil)
             self.joinChannel(channelName: self.channleName, uid: UserInfo.userId)

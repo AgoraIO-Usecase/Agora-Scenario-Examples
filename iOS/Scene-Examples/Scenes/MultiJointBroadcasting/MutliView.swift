@@ -29,7 +29,7 @@ class MutliView: UIView {
     private var agoraKit: AgoraRtcEngineKit?
     private var channelName: String = ""
     private var currentRole: AgoraClientRole = .audience
-    private var currentUserModel: AgoraVoiceUsersModel?
+    private var currentUserModel: AgoraUsersModel?
     
     init(channelName: String, role: AgoraClientRole, agoraKit: AgoraRtcEngineKit?) {
         super.init(frame: .zero)
@@ -67,7 +67,7 @@ class MutliView: UIView {
         SyncUtil.scene(id: channelName)?.collection(className: SYNC_MANAGER_AGORA_VOICE_USERS).document().subscribe(key: "", onCreated: { object in
             
         }, onUpdated: { object in
-            guard var model = JSONObject.toModel(AgoraVoiceUsersModel.self, value: object.toJson()) else { return }
+            guard var model = JSONObject.toModel(AgoraUsersModel.self, value: object.toJson()) else { return }
             let controller = UIApplication.topMostViewController
             if model.status == .invite && self.currentRole == .broadcaster {
                 let alert = UIAlertController(title: "\(model.userName): " + "Apply for joint broadcasting".localized, message: nil, preferredStyle: .alert)
@@ -112,7 +112,7 @@ class MutliView: UIView {
             self.fetchUserInfoData()
 
         }, onDeleted: { object in
-            let dataArray = self.collectionView.dataArray as? [AgoraVoiceUsersModel]
+            let dataArray = self.collectionView.dataArray?.filter({ $0 is AgoraUsersModel }) as? [AgoraUsersModel]
             if let models = dataArray?.filter({ $0.userId == UserInfo.uid && $0.objectId == object.getId() }), models.isEmpty == false {
                 self.muteAudioClosure?(false)
                 self.joinTheBroadcasting?(false)
@@ -129,7 +129,7 @@ class MutliView: UIView {
         SyncUtil.scene(id: channelName)?.collection(className: SYNC_MANAGER_AGORA_VOICE_USERS).get(success: { results in
             var tempArray = [Any]()
             let datas = results.compactMap({ $0.toJson() })
-                .compactMap({ JSONObject.toModel(AgoraVoiceUsersModel.self, value: $0 )})
+                .compactMap({ JSONObject.toModel(AgoraUsersModel.self, value: $0 )})
                 .filter({ $0.status == .accept })
                 .sorted(by: { $0.timestamp < $1.timestamp })
             tempArray += datas
@@ -146,7 +146,7 @@ extension MutliView: AGECollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MutliViewCell.description(), for: indexPath) as! MutliViewCell
         let model = self.collectionView.dataArray?[indexPath.item]
-        if let userModel = model as? AgoraVoiceUsersModel {
+        if let userModel = model as? AgoraUsersModel {
             let canvas = AgoraRtcVideoCanvas()
             canvas.uid = UInt(userModel.userId) ?? 0
             canvas.view = cell.canvasView
@@ -166,22 +166,22 @@ extension MutliView: AGECollectionViewDelegate {
         let model = self.collectionView.dataArray?[indexPath.item]
         let cancel = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
         if currentRole == .broadcaster {
-            guard model is AgoraVoiceUsersModel else { return }
+            guard model is AgoraUsersModel else { return }
             let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
             let close = UIAlertAction(title: /*封麦*/"Seat_Close".localized, style: .destructive) { _ in
-                let userModel = model as? AgoraVoiceUsersModel
+                let userModel = model as? AgoraUsersModel
                 SyncUtil.scene(id: self.channelName)?.collection(className: SYNC_MANAGER_AGORA_VOICE_USERS).document(id: userModel?.objectId ?? "").delete(success: nil, fail: nil)
             }
             alert.addAction(close)
             alert.addAction(cancel)
             controller?.present(alert, animated: true, completion: nil)
         } else {
-            let userModels = self.collectionView.dataArray?.compactMap({ $0 as? AgoraVoiceUsersModel })
+            let userModels = self.collectionView.dataArray?.compactMap({ $0 as? AgoraUsersModel })
             let isContainer = userModels?.contains(where: { $0.userId == UserInfo.uid }) ?? false
             if isContainer {
                 let alert = UIAlertController(title: "Confirm_End_Broadcasting".localized, message: nil, preferredStyle: .alert)
                 let end = UIAlertAction(title: "End".localized, style: .destructive) { _ in
-                    let userModel = model as? AgoraVoiceUsersModel
+                    let userModel = model as? AgoraUsersModel
                     SyncUtil.scene(id: self.channelName)?.collection(className: SYNC_MANAGER_AGORA_VOICE_USERS).document(id: userModel?.objectId ?? "").delete(success: nil, fail: nil)
                 }
                 alert.addAction(end)
@@ -192,11 +192,11 @@ extension MutliView: AGECollectionViewDelegate {
             let alert = UIAlertController(title: "Apply for joint broadcasting".localized, message: nil, preferredStyle: .alert)
             let apply = UIAlertAction(title: "Apply".localized, style: .default) { [weak self] _ in
                 guard let self = self else { return }
-                var model = AgoraVoiceUsersModel()
+                var model = AgoraUsersModel()
                 model.status = .invite
                 let params = JSONObject.toJson(model)
                 SyncUtil.scene(id: self.channelName)?.collection(className: SYNC_MANAGER_AGORA_VOICE_USERS).add(data: params, success: { object in
-                    let model = JSONObject.toModel(AgoraVoiceUsersModel.self, value: object.toJson())
+                    let model = JSONObject.toModel(AgoraUsersModel.self, value: object.toJson())
                     self.currentUserModel = model
                 }, fail: { error in
                     ToastView.show(text: error.message)
@@ -267,8 +267,8 @@ class MutliViewCell: UICollectionViewCell {
     
     func setupData(model: Any?, role: AgoraClientRole) {
         label.text = role == .audience ? "Apply for connection".localized : "Waiting for connection".localized
-        if model is AgoraVoiceUsersModel {
-            let userModel = model as! AgoraVoiceUsersModel
+        if model is AgoraUsersModel {
+            let userModel = model as! AgoraUsersModel
             nameLabel.text = "\(userModel.userName)"
             label.isHidden = true
             nameLabel.isHidden = false
