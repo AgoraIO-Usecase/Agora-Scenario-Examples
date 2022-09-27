@@ -134,6 +134,8 @@ class MutliBroadcastingController: BaseViewController {
             self.channelMediaOptions.publishMicrophoneTrack = .of(isBroadcast)
             self.agoraKit?.updateChannel(with: self.channelMediaOptions)
             self.agoraKit?.setClientRole(isBroadcast ? .broadcaster : .audience)
+            let type: [LiveBottomView.LiveBottomType] = isBroadcast ? [.gift, .tool, .close] : [.gift, .close]
+            self.liveView.updateBottomButtonType(type: type)
         }
         
         guard getRole(uid: UserInfo.uid) == .audience else { return }

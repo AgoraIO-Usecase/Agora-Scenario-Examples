@@ -33,7 +33,7 @@ _[English](README.md) | 中文_
 3. 编辑 `KeyCenter.swift文件`
     - 将 `<=YOUR APPID=>` 替换为你的 RTC App ID。
     - 将 `<=YOUR Certificate=>` 替换为你的 RTC Certificate
-    - 如果开启了token，需要获取 App 证书并设置给`rtm_app_certificate`和`rtc_app_certificate`
+    - 如果开启了token，需要获取 App 证书并设置给`certificate`
 
    ```swift
    /**

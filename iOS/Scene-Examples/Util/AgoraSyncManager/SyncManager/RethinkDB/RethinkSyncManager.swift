@@ -243,7 +243,7 @@ extension RethinkSyncManager: SRWebSocketDelegate {
             }
             if let onDeleteBlock = onDeletedBlocks[channelName], realAction == .deleteProp {
                 if objects?.isEmpty ?? false {
-                    onDeleteBlock(Attribute(key: "", value: ""))
+                    onDeleteBlock(Attribute(key: propsDel?.first ?? "", value: ""))
                     return
                 }
                 propsDel?.forEach({

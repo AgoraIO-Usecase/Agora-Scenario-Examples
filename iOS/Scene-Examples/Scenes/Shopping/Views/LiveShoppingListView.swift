@@ -144,6 +144,8 @@ class LiveShoppingListView: UIView {
         if role == .broadcaster {
             segmentView.setSelectIndex(index: 0)
             collectionView.dataArray = dataArray.filter({ $0.status == .list })
+        } else {
+            collectionView.dataArray = dataArray.filter({ $0.status == .goodsShelves })
         }
     }
     
@@ -153,7 +155,11 @@ class LiveShoppingListView: UIView {
                 JSONObject.toModel(LiveShoppingListModel.self,
                                    value: $0.toJson())
             })
-            self.dataArray = models
+            if self.role == .broadcaster {
+                self.dataArray = models
+            } else {
+                self.dataArray = models.filter({ $0.status == .goodsShelves })
+            }
         }, fail: nil)
     }
     

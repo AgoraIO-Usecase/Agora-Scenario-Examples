@@ -156,7 +156,7 @@ class LiveBaseView: UIView {
                 self.playGifView.isHidden = false
                 self.playGifView.loadGIFName(gifName: userModel.gifName)
                 var model = ChatMessageModel(content: "i_gave_one_away".localized + userModel.title, messageType: .message)
-                model.userName = userModel.userId
+                model.userName = "User-\(userModel.userId)"
                 self.chatView.sendMessage(messageModel: model)
             }
             self.onReceivedGiftClosure?(userModel, type)
@@ -249,7 +249,7 @@ class LiveBaseView: UIView {
         bottomView.onTapChatButtonClosure = { [weak self] message in
             guard let self = self else { return }
             var model = ChatMessageModel(content: message, messageType: .message)
-            model.userName = UserInfo.uid
+            model.userName = "User-\(UserInfo.uid)"
             self.onTapSendMessageClosure?(model)
             SyncUtil.scene(id: self.channelName)?
                 .collection(className: SYNC_SCENE_ROOM_MESSAGE_INFO)
@@ -327,7 +327,6 @@ class LiveBaseView: UIView {
         playGifView.translatesAutoresizingMaskIntoConstraints = false
         onlineView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(liveCanvasView)
-        addSubview(playGifView)
         addSubview(avatarview)
         addSubview(chatView)
         addSubview(bottomView)
@@ -356,10 +355,13 @@ class LiveBaseView: UIView {
         bottomView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         bottomView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         
-        playGifView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        playGifView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        playGifView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        playGifView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        if let vcView = UIViewController.keyWindow{
+            vcView.addSubview(playGifView)
+            playGifView.leadingAnchor.constraint(equalTo: vcView.leadingAnchor).isActive = true
+            playGifView.topAnchor.constraint(equalTo: vcView.topAnchor).isActive = true
+            playGifView.trailingAnchor.constraint(equalTo: vcView.trailingAnchor).isActive = true
+            playGifView.bottomAnchor.constraint(equalTo: vcView.bottomAnchor).isActive = true
+        }
         
         onlineView.topAnchor.constraint(equalTo: avatarview.topAnchor).isActive = true
         onlineView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15).isActive = true

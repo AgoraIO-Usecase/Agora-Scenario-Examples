@@ -118,6 +118,10 @@ class AlertManager: NSObject {
     }
     
     static func hiddenView(all: Bool = true, completion: (() -> Void)? = nil){
+        if vc == nil {
+            completion?()
+            return
+        }
         if currentPosition == .bottom {
             guard let lastView = viewCache.last?.view else { return }
             bottomAnchor?.constant = lastView.frame.height
