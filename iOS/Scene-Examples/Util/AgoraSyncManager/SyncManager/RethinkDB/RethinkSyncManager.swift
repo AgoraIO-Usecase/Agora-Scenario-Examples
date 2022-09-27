@@ -261,6 +261,9 @@ extension RethinkSyncManager: SRWebSocketDelegate {
             if let successBlockObjVoid = onSuccessBlockObjOptional[channelName], action == .query {
                 successBlockObjVoid(attrs?.first)
             }
+            if let successBlock = onSuccessBlock[channelName], action == .deleteProp {
+                successBlock(attrs ?? [])
+            }
         }
         Log.info(text: "channelName == \(channelName) action == \(action.rawValue) realAction == \(realAction.rawValue) props == \(props ?? [:])", tag: "收到消息")
     }
