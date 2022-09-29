@@ -95,7 +95,7 @@ struct MainModel {
         
         model = MainModel()
         model.title = "Shopping".localized
-        model.imageNmae = "interactiveblog"
+        model.imageNmae = "shopping"
         model.sceneType = .shopping
         tempArray.append(model)
         
@@ -110,13 +110,13 @@ struct MainModel {
         
         model = MainModel()
         model.title = "Education1v1".localized
-        model.imageNmae = "BreakoutRoom"
+        model.imageNmae = "Education1v1"
         model.sceneType = .education1v1
         tempArray.append(model)
         
         model = MainModel()
         model.title = "Small Class".localized
-        model.imageNmae = "BreakoutRoom"
+        model.imageNmae = "SmallClass"
         model.sceneType = .smallClass
         tempArray.append(model)
         dataArray.append(tempArray)
