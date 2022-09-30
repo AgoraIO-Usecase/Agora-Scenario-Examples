@@ -26,7 +26,7 @@ class EducationController: BaseViewController {
         let view = UIView()
         view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
-        view.backgroundColor = .systemPink
+        view.backgroundColor = .clear
         return view
     }()
     private lazy var remoteView: UIView = {

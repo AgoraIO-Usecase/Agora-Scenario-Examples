@@ -34,6 +34,8 @@ enum SceneType: String {
     case education1v1 = "Education1v1"
     /// 小班课
     case smallClass = "SmallClass"
+    /// 大班课
+    case largeClass = "LargeClass"
     
     var alertTitle: String {
         switch self {
@@ -118,6 +120,12 @@ struct MainModel {
         model.title = "Small Class".localized
         model.imageNmae = "SmallClass"
         model.sceneType = .smallClass
+        tempArray.append(model)
+        
+        model = MainModel()
+        model.title = "Large Class".localized
+        model.imageNmae = "LargeClass"
+        model.sceneType = .largeClass
         tempArray.append(model)
         dataArray.append(tempArray)
         

@@ -1,16 +1,16 @@
 //
-//  InteractiveBlogRaiseListView.swift
+//  LargeClassRaiseListView.swift
 //  Scene-Examples
 //
-//  Created by zhaoyongqiang on 2022/8/15.
+//  Created by zhaoyongqiang on 2022/9/30.
 //
 
 import UIKit
 import Agora_Scene_Utils
 
-class InteractiveBlogRaiseListView: UIView {
+class LargeClassRaiseListView: UIView {
     private lazy var titleLabel: AGELabel = {
-        let label = AGELabel(colorStyle: .white, fontStyle: .large)
+        let label = AGELabel(colorStyle: .black, fontStyle: .large)
         label.text = "Raised hands".localized
         return label
     }()
@@ -18,13 +18,14 @@ class InteractiveBlogRaiseListView: UIView {
         let view = AGETableView()
         view.rowHeight = 70
         view.delegate = self
-        view.register(InteractiveBlogRaiseListViewCell.self,
-                      forCellWithReuseIdentifier: InteractiveBlogRaiseListViewCell.description())
+        view.register(LargeViewRaiseListViewCell.self,
+                      forCellWithReuseIdentifier: LargeViewRaiseListViewCell.description())
+        view.emptyTitle = ""
         view.backgroundColor = .clear
         return view
     }()
     private var channelName: String = ""
-    private var dataArray: [InteractiveBlogUsersModel] = [] {
+    private var dataArray: [ClassUsersModel] = [] {
         didSet {
             tableView.dataArray = dataArray
         }
@@ -43,7 +44,7 @@ class InteractiveBlogRaiseListView: UIView {
     
     private func fetchUsers() {
         SyncUtil.scene(id: channelName)?.collection(className: SYNC_MANAGER_AGORA_VOICE_USERS).get(success: { list in
-            let users = list.compactMap({ JSONObject.toModel(InteractiveBlogUsersModel.self, value: $0.toJson()) }).filter({ $0.status == .request })
+            let users = list.compactMap({ JSONObject.toModel(ClassUsersModel.self, value: $0.toJson()) }).filter({ $0.status == .request })
             self.dataArray = users
         }, fail: { error in
             LogUtils.log(message: error.message, level: .error)
@@ -51,7 +52,7 @@ class InteractiveBlogRaiseListView: UIView {
     }
     
     private func setupUI() {
-        backgroundColor = UIColor(hex: "#10141c")
+        backgroundColor = .white
         layer.cornerRadius = 15
         layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         
@@ -59,7 +60,7 @@ class InteractiveBlogRaiseListView: UIView {
         addSubview(tableView)
         
         widthAnchor.constraint(equalToConstant: Screen.width).isActive = true
-        heightAnchor.constraint(equalToConstant: Screen.height * 0.5).isActive = true
+        heightAnchor.constraint(equalToConstant: Screen.height * 0.8).isActive = true
         
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -73,10 +74,9 @@ class InteractiveBlogRaiseListView: UIView {
         tableView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
 }
-
-extension InteractiveBlogRaiseListView: AGETableViewDelegate {
+extension LargeClassRaiseListView: AGETableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: InteractiveBlogRaiseListViewCell.description(), for: indexPath) as! InteractiveBlogRaiseListViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: LargeViewRaiseListViewCell.description(), for: indexPath) as! LargeViewRaiseListViewCell
         cell.setUserInfo(model: dataArray[indexPath.row], channelName: channelName)
         cell.refreshUIClosure = { [weak self] in
             self?.fetchUsers()
@@ -85,7 +85,7 @@ extension InteractiveBlogRaiseListView: AGETableViewDelegate {
     }
 }
 
-class InteractiveBlogRaiseListViewCell: UITableViewCell {
+class LargeViewRaiseListViewCell: UITableViewCell {
     var refreshUIClosure: (() -> Void)?
     
     private lazy var avatarImageView: AGEImageView = {
@@ -94,12 +94,12 @@ class InteractiveBlogRaiseListViewCell: UITableViewCell {
         return imageView
     }()
     private lazy var nameLabel: AGELabel = {
-        let label = AGELabel(colorStyle: .white, fontStyle: .middle)
+        let label = AGELabel(colorStyle: .black, fontStyle: .middle)
         label.text = "User-123"
         return label
     }()
     private lazy var refuseButton: AGEButton = {
-        let button = AGEButton(style: .outline(borderColor: .gray), colorStyle: .white, fontStyle: .middle)
+        let button = AGEButton(style: .outline(borderColor: .gray), colorStyle: .black, fontStyle: .middle)
         button.setTitle("Reject".localized, for: .normal)
         button.addTarget(self, action: #selector(onTapRefuseButton), for: .touchUpInside)
         button.cornerRadius = 18
@@ -114,7 +114,7 @@ class InteractiveBlogRaiseListViewCell: UITableViewCell {
     }()
     
     private var channelName: String = ""
-    private var currentUserModel: InteractiveBlogUsersModel?
+    private var currentUserModel: ClassUsersModel?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -125,7 +125,7 @@ class InteractiveBlogRaiseListViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setUserInfo(model: InteractiveBlogUsersModel, channelName: String) {
+    func setUserInfo(model: ClassUsersModel, channelName: String) {
         currentUserModel = model
         self.channelName = channelName
         avatarImageView.image = UIImage(named: model.avatar)
@@ -185,4 +185,3 @@ class InteractiveBlogRaiseListViewCell: UITableViewCell {
             }, fail: nil)
     }
 }
-
