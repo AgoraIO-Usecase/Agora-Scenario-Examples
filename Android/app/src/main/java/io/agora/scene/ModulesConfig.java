@@ -33,17 +33,17 @@ public class ModulesConfig {
                 "io.agora.scene.voice.RoomListActivity"
         ));
         // Live PK
-        this.moduleInfo.add(new ModuleInfo(
-                R.string.app_live_pk_name,
-                R.drawable.app_banner_livepk,
-                "io.agora.scene.pklive.RoomListActivity"
-        ));
+//        this.moduleInfo.add(new ModuleInfo(
+//                R.string.app_live_pk_name,
+//                R.drawable.app_banner_livepk,
+//                "io.agora.scene.pklive.RoomListActivity"
+//        ));
         // Live PK by CDN
-        this.moduleInfo.add(new ModuleInfo(
-                R.string.app_live_pk_cdn_name,
-                R.drawable.app_banner_video_call_cdn,
-                "io.agora.scene.pklivebycdn.RoomListActivity"
-        ));
+//        this.moduleInfo.add(new ModuleInfo(
+//                R.string.app_live_pk_cdn_name,
+//                R.drawable.app_banner_video_call_cdn,
+//                "io.agora.scene.pklivebycdn.RoomListActivity"
+//        ));
         // Multi Call
         this.moduleInfo.add(new ModuleInfo(
                 R.string.app_multi_call,
@@ -72,11 +72,11 @@ public class ModulesConfig {
 
         moduleInfo.add(new ModuleInfo(R.string.app_type_education));
         // BreakoutRoom
-        this.moduleInfo.add(new ModuleInfo(
-                R.string.app_breakout_room_name,
-                R.drawable.app_banner_breakout_room,
-                "io.agora.scene.breakoutroom.RoomListActivity"
-        ));
+//        this.moduleInfo.add(new ModuleInfo(
+//                R.string.app_breakout_room_name,
+//                R.drawable.app_banner_breakout_room,
+//                "io.agora.scene.breakoutroom.RoomListActivity"
+//        ));
         this.moduleInfo.add(new ModuleInfo(
                 R.string.app_education1v1,
                 R.drawable.app_banner_edu1v1,
