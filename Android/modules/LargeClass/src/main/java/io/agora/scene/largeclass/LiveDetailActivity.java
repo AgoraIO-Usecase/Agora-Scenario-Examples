@@ -14,6 +14,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.runtime.Permission;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -53,9 +56,13 @@ public class LiveDetailActivity extends BaseActivity<LargeClassLiveDetailActivit
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         roomInfo = (RoomManager.RoomInfo) getIntent().getSerializableExtra("roomInfo");
-
+        AndPermission.with(this)
+                .runtime()
+                .permission(Permission.Group.CAMERA, Permission.Group.MICROPHONE)
+                .onGranted(data -> initRtcEngine())
+                .onDenied(data -> finish())
+                .start();
         initRoomManager();
-        initRtcEngine();
         initFastBoard();
         initView();
     }
