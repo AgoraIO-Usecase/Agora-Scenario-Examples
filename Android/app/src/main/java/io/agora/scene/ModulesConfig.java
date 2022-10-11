@@ -59,7 +59,7 @@ public class ModulesConfig {
         // Interactive Blog
         this.moduleInfo.add(new ModuleInfo(
                 R.string.app_shopping,
-                R.drawable.app_banner_interactor_blog,
+                R.drawable.app_banner_shopping,
                 "io.agora.scene.shopping.RoomListActivity"
         ));
         // Club
@@ -79,12 +79,12 @@ public class ModulesConfig {
         ));
         this.moduleInfo.add(new ModuleInfo(
                 R.string.app_education1v1,
-                R.drawable.app_banner_breakout_room,
+                R.drawable.app_banner_edu1v1,
                 "io.agora.scene.edu1v1.RoomListActivity"
         ));
         this.moduleInfo.add(new ModuleInfo(
                 R.string.app_small_class,
-                R.drawable.app_banner_breakout_room,
+                R.drawable.app_banner_small_class,
                 "io.agora.scene.smallclass.RoomListActivity"
         ));
     }
