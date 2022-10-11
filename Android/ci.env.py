@@ -9,7 +9,7 @@ def main():
         appId = os.environ["AGORA_APP_ID"]
     token = ""
 
-    f = open("./libs/base-library/src/main/res/values/string_configs.xml", 'r+')
+    f = open("./libs/base-library/src/main/res/values/strings_config.xml", 'r+')
     content = f.read()
     contentNew = re.sub(r'<=YOUR RTC APP ID=>', appId, content)
     contentNew = re.sub(r'<=YOUR SYNC APP ID=>', appId, contentNew)
