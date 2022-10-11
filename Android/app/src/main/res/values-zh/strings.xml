@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SceneExample</string>
+    <string name="app_name">Agora Scenarios</string>
 
     <string name="app_type_social_entertainment">社交娱乐</string>
     <string name="app_type_education">教育</string>
@@ -12,11 +12,12 @@
     <string name="app_live_pk_name">直播PK</string>
     <string name="app_breakout_room_name">小班课</string>
     <string name="app_club_name">超级夜店</string>
-    <string name="app_voice_name">高音质语聊房</string>
+    <string name="app_voice_name">语聊房</string>
     <string name="app_multi_call">多人连麦</string>
     <string name="app_interactive_blog">互动播客</string>
     <string name="app_shopping">电商</string>
     <string name="app_education1v1">教育1v1</string>
     <string name="app_small_class">小班课</string>
+    <string name="app_large_class">大班课</string>
 
 </resources>

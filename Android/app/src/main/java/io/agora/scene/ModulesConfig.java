@@ -33,11 +33,11 @@ public class ModulesConfig {
                 "io.agora.scene.voice.RoomListActivity"
         ));
         // Live PK
-        this.moduleInfo.add(new ModuleInfo(
-                R.string.app_live_pk_name,
-                R.drawable.app_banner_livepk,
-                "io.agora.scene.pklive.RoomListActivity"
-        ));
+//        this.moduleInfo.add(new ModuleInfo(
+//                R.string.app_live_pk_name,
+//                R.drawable.app_banner_livepk,
+//                "io.agora.scene.pklive.RoomListActivity"
+//        ));
         // Multi Call
         this.moduleInfo.add(new ModuleInfo(
                 R.string.app_multi_call,
@@ -53,26 +53,31 @@ public class ModulesConfig {
         // Shopping
         this.moduleInfo.add(new ModuleInfo(
                 R.string.app_shopping,
-                R.drawable.app_banner_interactor_blog,
+                R.drawable.app_banner_shopping,
                 "io.agora.scene.shopping.RoomListActivity"
         ));
         moduleInfo.add(new ModuleInfo(R.string.app_type_education));
         // BreakoutRoom
-        this.moduleInfo.add(new ModuleInfo(
-                R.string.app_breakout_room_name,
-                R.drawable.app_banner_breakout_room,
-                "io.agora.scene.breakoutroom.RoomListActivity"
-        ));
+//        this.moduleInfo.add(new ModuleInfo(
+//                R.string.app_breakout_room_name,
+//                R.drawable.app_banner_breakout_room,
+//                "io.agora.scene.breakoutroom.RoomListActivity"
+//        ));
         this.moduleInfo.add(new ModuleInfo(
                 R.string.app_education1v1,
-                R.drawable.app_banner_breakout_room,
+                R.drawable.app_banner_edu1v1,
                 "io.agora.scene.edu1v1.RoomListActivity"
         ));
         this.moduleInfo.add(new ModuleInfo(
                 R.string.app_small_class,
-                R.drawable.app_banner_breakout_room,
+                R.drawable.app_banner_small_class,
                 "io.agora.scene.smallclass.RoomListActivity"
         ));
+//        this.moduleInfo.add(new ModuleInfo(
+//                R.string.app_large_class,
+//                R.drawable.app_banner_large_class,
+//                "io.agora.scene.largeclass.RoomListActivity"
+//        ));
     }
 
 
