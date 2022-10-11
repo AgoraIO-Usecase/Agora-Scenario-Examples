@@ -46,6 +46,7 @@ xcodebuild clean -workspace "${TARGET_FILE}" -scheme "${APP_TARGET}" -configurat
 xcodebuild archive -workspace "${TARGET_FILE}" -scheme "${APP_TARGET}" -configuration ${MODE} -archivePath "${ArchivePath}" -destination 'generic/platform=iOS'
 fi
 
+ls -al
 xcodebuild -exportArchive -exportOptionsPlist ${Export_Plist_File} -archivePath "${ArchivePath}" -exportPath .
 
 mkdir app
