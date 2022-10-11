@@ -31,7 +31,7 @@ Virtual_Live="虚拟主播";
 Virtual_Live_Description="用卡通形象模拟真人进行对话或直播";
 Live_Shopping="电商直播";
 Live_Shopping_Description="通过观众连麦和主播PK的方式带货";
-VoiceChatRoom = "高音质语聊房";
+VoiceChatRoom = "语聊房";
 social_entertainment = "社交娱乐";
 education = "教育";
 

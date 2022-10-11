@@ -64,11 +64,11 @@ struct MainModel {
         model.sceneType = .voiceChatRoom
         tempArray.append(model)
         
-        model = MainModel()
-        model.title = "PK_Live".localized
-        model.imageNmae = "LivePK"
-        model.sceneType = .pkApply
-        tempArray.append(model)
+//        model = MainModel()
+//        model.title = "PK_Live".localized
+//        model.imageNmae = "LivePK"
+//        model.sceneType = .pkApply
+//        tempArray.append(model)
         
         model = MainModel()
         model.title = "Multi-person joint broadcasting".localized
@@ -91,11 +91,11 @@ struct MainModel {
         dataArray.append(tempArray)
         
         tempArray = [MainModel]()
-        model = MainModel()
-        model.title = "breakoutroom".localized
-        model.imageNmae = "BreakoutRoom"
-        model.sceneType = .breakoutRoom
-        tempArray.append(model)
+//        model = MainModel()
+//        model.title = "breakoutroom".localized
+//        model.imageNmae = "BreakoutRoom"
+//        model.sceneType = .breakoutRoom
+//        tempArray.append(model)
         
         model = MainModel()
         model.title = "Education1v1".localized

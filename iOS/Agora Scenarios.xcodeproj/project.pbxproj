@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		B5DF969B7ED11BACA57C6864 /* Pods_Scene_Examples.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AED837A3EC68965AC33FE2E6 /* Pods_Scene_Examples.framework */; };
-		E7000B232877D67100248345 /* RethinkSyncManager+ISyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7000B212877D67100248345 /* RethinkSyncManager+ISyncManager.swift */; };
-		E7000B242877D67100248345 /* RethinkSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7000B222877D67100248345 /* RethinkSyncManager.swift */; };
 		E710AE2F27A0F23300124356 /* ChangeRoomBgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E710AE2E27A0F23300124356 /* ChangeRoomBgView.swift */; };
 		E71A0782288F99D500CC4BF6 /* VideoCallCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71A0781288F99D500CC4BF6 /* VideoCallCreateViewController.swift */; };
 		E71A0784288F9A3A00CC4BF6 /* VideoCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71A0783288F9A3A00CC4BF6 /* VideoCallViewController.swift */; };
@@ -22,25 +20,28 @@
 		E7499C1B276A078500E799FF /* LiveOnlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C1A276A078500E799FF /* LiveOnlineView.swift */; };
 		E7499C2A2770534400E799FF /* NoticeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C292770534400E799FF /* NoticeCell.swift */; };
 		E7499C2C2770537C00E799FF /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C2B2770537C00E799FF /* MessageCell.swift */; };
-		E757E69B281AAE6B0017D5B9 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E677281AAE6B0017D5B9 /* Log.swift */; };
-		E757E69C281AAE6B0017D5B9 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E678281AAE6B0017D5B9 /* Utils.swift */; };
-		E757E69D281AAE6B0017D5B9 /* SyncManager+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E67A281AAE6B0017D5B9 /* SyncManager+Info.swift */; };
-		E757E69E281AAE6B0017D5B9 /* AgoraSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E67B281AAE6B0017D5B9 /* AgoraSyncManager.swift */; };
-		E757E6A3281AAE6B0017D5B9 /* RtmSyncManager+Handle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E682281AAE6B0017D5B9 /* RtmSyncManager+Handle.swift */; };
-		E757E6A4281AAE6B0017D5B9 /* RtmSyncManager+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E683281AAE6B0017D5B9 /* RtmSyncManager+Info.swift */; };
-		E757E6A5281AAE6B0017D5B9 /* RtmSyncManager+ISyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E684281AAE6B0017D5B9 /* RtmSyncManager+ISyncManager.swift */; };
-		E757E6A6281AAE6B0017D5B9 /* RtmSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E685281AAE6B0017D5B9 /* RtmSyncManager.swift */; };
-		E757E6A7281AAE6B0017D5B9 /* SyncManager.swift~HEAD in Resources */ = {isa = PBXBuildFile; fileRef = E757E686281AAE6B0017D5B9 /* SyncManager.swift~HEAD */; };
-		E757E6A8281AAE6B0017D5B9 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E687281AAE6B0017D5B9 /* Protocols.swift */; };
-		E757E6A9281AAE6B0017D5B9 /* CollectionReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E688281AAE6B0017D5B9 /* CollectionReference.swift */; };
-		E757E6B0281AAE6B0017D5B9 /* SyncManager.swift~zyq in Resources */ = {isa = PBXBuildFile; fileRef = E757E690281AAE6B0017D5B9 /* SyncManager.swift~zyq */; };
-		E757E6B1281AAE6B0017D5B9 /* DocumentReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E691281AAE6B0017D5B9 /* DocumentReference.swift */; };
-		E757E6B2281AAE6B0017D5B9 /* publish.sh in Resources */ = {isa = PBXBuildFile; fileRef = E757E692281AAE6B0017D5B9 /* publish.sh */; };
-		E757E6B3281AAE6B0017D5B9 /* Blocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E694281AAE6B0017D5B9 /* Blocks.swift */; };
-		E757E6B4281AAE6B0017D5B9 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E695281AAE6B0017D5B9 /* Extensions.swift */; };
-		E757E6B5281AAE6B0017D5B9 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E696281AAE6B0017D5B9 /* Models.swift */; };
-		E757E6B6281AAE6B0017D5B9 /* SyncError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E757E697281AAE6B0017D5B9 /* SyncError.swift */; };
-		E757E6B8281AAE6B0017D5B9 /* AgoraSyncManager.podspec in Resources */ = {isa = PBXBuildFile; fileRef = E757E699281AAE6B0017D5B9 /* AgoraSyncManager.podspec */; };
+		E77D535828F5123900D51C1E /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77D533D28F5123900D51C1E /* Log.swift */; };
+		E77D535928F5123900D51C1E /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77D533E28F5123900D51C1E /* Utils.swift */; };
+		E77D535A28F5123900D51C1E /* AgoraSyncManagerLocal.podspec in Resources */ = {isa = PBXBuildFile; fileRef = E77D533F28F5123900D51C1E /* AgoraSyncManagerLocal.podspec */; };
+		E77D535B28F5123900D51C1E /* SyncManager+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77D534128F5123900D51C1E /* SyncManager+Info.swift */; };
+		E77D535C28F5123900D51C1E /* AgoraSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77D534228F5123900D51C1E /* AgoraSyncManager.swift */; };
+		E77D535D28F5123900D51C1E /* RtmSyncManager+Handle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77D534428F5123900D51C1E /* RtmSyncManager+Handle.swift */; };
+		E77D535E28F5123900D51C1E /* RtmSyncManager+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77D534528F5123900D51C1E /* RtmSyncManager+Info.swift */; };
+		E77D535F28F5123900D51C1E /* RtmSyncManager+ISyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77D534628F5123900D51C1E /* RtmSyncManager+ISyncManager.swift */; };
+		E77D536028F5123900D51C1E /* RtmSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77D534728F5123900D51C1E /* RtmSyncManager.swift */; };
+		E77D536128F5123900D51C1E /* RethinkSyncManager+ISyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77D534928F5123900D51C1E /* RethinkSyncManager+ISyncManager.swift */; };
+		E77D536228F5123900D51C1E /* RethinkSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77D534A28F5123900D51C1E /* RethinkSyncManager.swift */; };
+		E77D536328F5123900D51C1E /* SyncManager.swift~HEAD in Resources */ = {isa = PBXBuildFile; fileRef = E77D534B28F5123900D51C1E /* SyncManager.swift~HEAD */; };
+		E77D536428F5123900D51C1E /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77D534C28F5123900D51C1E /* Protocols.swift */; };
+		E77D536528F5123900D51C1E /* CollectionReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77D534D28F5123900D51C1E /* CollectionReference.swift */; };
+		E77D536628F5123900D51C1E /* SyncManager.swift~zyq in Resources */ = {isa = PBXBuildFile; fileRef = E77D534E28F5123900D51C1E /* SyncManager.swift~zyq */; };
+		E77D536728F5123900D51C1E /* DocumentReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77D534F28F5123900D51C1E /* DocumentReference.swift */; };
+		E77D536828F5123900D51C1E /* publish.sh in Resources */ = {isa = PBXBuildFile; fileRef = E77D535028F5123900D51C1E /* publish.sh */; };
+		E77D536928F5123900D51C1E /* Blocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77D535228F5123900D51C1E /* Blocks.swift */; };
+		E77D536A28F5123900D51C1E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77D535328F5123900D51C1E /* Extensions.swift */; };
+		E77D536B28F5123900D51C1E /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77D535428F5123900D51C1E /* Models.swift */; };
+		E77D536C28F5123900D51C1E /* SyncError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77D535528F5123900D51C1E /* SyncError.swift */; };
+		E77D536D28F5123900D51C1E /* AgoraSyncManager.podspec in Resources */ = {isa = PBXBuildFile; fileRef = E77D535628F5123900D51C1E /* AgoraSyncManager.podspec */; };
 		E79BEF31273D0EA4009FA838 /* LiveBroadcastingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF30273D0EA4009FA838 /* LiveBroadcastingController.swift */; };
 		E79BEF33273D0F0C009FA838 /* LiveCanvasModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF32273D0F0C009FA838 /* LiveCanvasModel.swift */; };
 		E79BEF35273D1304009FA838 /* LivePlayerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF34273D1304009FA838 /* LivePlayerCell.swift */; };
@@ -157,8 +158,6 @@
 		4EAC22A0ABCEA5BE7ED7FCFA /* Pods-Agora-ScreenShare-Extension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Agora-ScreenShare-Extension.release.xcconfig"; path = "Target Support Files/Pods-Agora-ScreenShare-Extension/Pods-Agora-ScreenShare-Extension.release.xcconfig"; sourceTree = "<group>"; };
 		AED837A3EC68965AC33FE2E6 /* Pods_Scene_Examples.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Scene_Examples.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C99DD6A332A83A34EF8B5943 /* Pods-Scene-Examples.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Scene-Examples.release.xcconfig"; path = "Target Support Files/Pods-Scene-Examples/Pods-Scene-Examples.release.xcconfig"; sourceTree = "<group>"; };
-		E7000B212877D67100248345 /* RethinkSyncManager+ISyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RethinkSyncManager+ISyncManager.swift"; sourceTree = "<group>"; };
-		E7000B222877D67100248345 /* RethinkSyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RethinkSyncManager.swift; sourceTree = "<group>"; };
 		E710AE2E27A0F23300124356 /* ChangeRoomBgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeRoomBgView.swift; sourceTree = "<group>"; };
 		E71A0781288F99D500CC4BF6 /* VideoCallCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCallCreateViewController.swift; sourceTree = "<group>"; };
 		E71A0783288F9A3A00CC4BF6 /* VideoCallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCallViewController.swift; sourceTree = "<group>"; };
@@ -171,25 +170,28 @@
 		E7499C1A276A078500E799FF /* LiveOnlineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveOnlineView.swift; sourceTree = "<group>"; };
 		E7499C292770534400E799FF /* NoticeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeCell.swift; sourceTree = "<group>"; };
 		E7499C2B2770537C00E799FF /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
-		E757E677281AAE6B0017D5B9 /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
-		E757E678281AAE6B0017D5B9 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
-		E757E67A281AAE6B0017D5B9 /* SyncManager+Info.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SyncManager+Info.swift"; sourceTree = "<group>"; };
-		E757E67B281AAE6B0017D5B9 /* AgoraSyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraSyncManager.swift; sourceTree = "<group>"; };
-		E757E682281AAE6B0017D5B9 /* RtmSyncManager+Handle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RtmSyncManager+Handle.swift"; sourceTree = "<group>"; };
-		E757E683281AAE6B0017D5B9 /* RtmSyncManager+Info.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RtmSyncManager+Info.swift"; sourceTree = "<group>"; };
-		E757E684281AAE6B0017D5B9 /* RtmSyncManager+ISyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RtmSyncManager+ISyncManager.swift"; sourceTree = "<group>"; };
-		E757E685281AAE6B0017D5B9 /* RtmSyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RtmSyncManager.swift; sourceTree = "<group>"; };
-		E757E686281AAE6B0017D5B9 /* SyncManager.swift~HEAD */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "SyncManager.swift~HEAD"; sourceTree = "<group>"; };
-		E757E687281AAE6B0017D5B9 /* Protocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
-		E757E688281AAE6B0017D5B9 /* CollectionReference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionReference.swift; sourceTree = "<group>"; };
-		E757E690281AAE6B0017D5B9 /* SyncManager.swift~zyq */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "SyncManager.swift~zyq"; sourceTree = "<group>"; };
-		E757E691281AAE6B0017D5B9 /* DocumentReference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentReference.swift; sourceTree = "<group>"; };
-		E757E692281AAE6B0017D5B9 /* publish.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = publish.sh; sourceTree = "<group>"; };
-		E757E694281AAE6B0017D5B9 /* Blocks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Blocks.swift; sourceTree = "<group>"; };
-		E757E695281AAE6B0017D5B9 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		E757E696281AAE6B0017D5B9 /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
-		E757E697281AAE6B0017D5B9 /* SyncError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncError.swift; sourceTree = "<group>"; };
-		E757E699281AAE6B0017D5B9 /* AgoraSyncManager.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AgoraSyncManager.podspec; sourceTree = "<group>"; };
+		E77D533D28F5123900D51C1E /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		E77D533E28F5123900D51C1E /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		E77D533F28F5123900D51C1E /* AgoraSyncManagerLocal.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AgoraSyncManagerLocal.podspec; sourceTree = "<group>"; };
+		E77D534128F5123900D51C1E /* SyncManager+Info.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SyncManager+Info.swift"; sourceTree = "<group>"; };
+		E77D534228F5123900D51C1E /* AgoraSyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraSyncManager.swift; sourceTree = "<group>"; };
+		E77D534428F5123900D51C1E /* RtmSyncManager+Handle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RtmSyncManager+Handle.swift"; sourceTree = "<group>"; };
+		E77D534528F5123900D51C1E /* RtmSyncManager+Info.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RtmSyncManager+Info.swift"; sourceTree = "<group>"; };
+		E77D534628F5123900D51C1E /* RtmSyncManager+ISyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RtmSyncManager+ISyncManager.swift"; sourceTree = "<group>"; };
+		E77D534728F5123900D51C1E /* RtmSyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RtmSyncManager.swift; sourceTree = "<group>"; };
+		E77D534928F5123900D51C1E /* RethinkSyncManager+ISyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RethinkSyncManager+ISyncManager.swift"; sourceTree = "<group>"; };
+		E77D534A28F5123900D51C1E /* RethinkSyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RethinkSyncManager.swift; sourceTree = "<group>"; };
+		E77D534B28F5123900D51C1E /* SyncManager.swift~HEAD */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "SyncManager.swift~HEAD"; sourceTree = "<group>"; };
+		E77D534C28F5123900D51C1E /* Protocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
+		E77D534D28F5123900D51C1E /* CollectionReference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionReference.swift; sourceTree = "<group>"; };
+		E77D534E28F5123900D51C1E /* SyncManager.swift~zyq */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "SyncManager.swift~zyq"; sourceTree = "<group>"; };
+		E77D534F28F5123900D51C1E /* DocumentReference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentReference.swift; sourceTree = "<group>"; };
+		E77D535028F5123900D51C1E /* publish.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = publish.sh; sourceTree = "<group>"; };
+		E77D535228F5123900D51C1E /* Blocks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Blocks.swift; sourceTree = "<group>"; };
+		E77D535328F5123900D51C1E /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		E77D535428F5123900D51C1E /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		E77D535528F5123900D51C1E /* SyncError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncError.swift; sourceTree = "<group>"; };
+		E77D535628F5123900D51C1E /* AgoraSyncManager.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AgoraSyncManager.podspec; sourceTree = "<group>"; };
 		E79BEF30273D0EA4009FA838 /* LiveBroadcastingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveBroadcastingController.swift; sourceTree = "<group>"; };
 		E79BEF32273D0F0C009FA838 /* LiveCanvasModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCanvasModel.swift; sourceTree = "<group>"; };
 		E79BEF34273D1304009FA838 /* LivePlayerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivePlayerCell.swift; sourceTree = "<group>"; };
@@ -224,7 +226,7 @@
 		E79BEF89274644A9009FA838 /* BORLiveModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BORLiveModel.swift; sourceTree = "<group>"; };
 		E79BEFA0274796F7009FA838 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		E79BF019274B6902009FA838 /* ReplayKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReplayKit.framework; path = System/Library/Frameworks/ReplayKit.framework; sourceTree = SDKROOT; };
-		E79C25DB273B67DB00909CD4 /* Scene-Examples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Scene-Examples.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E79C25DB273B67DB00909CD4 /* Agora Scenarios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Agora Scenarios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E79C25DE273B67DB00909CD4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E79C25E0273B67DB00909CD4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		E79C25E2273B67DB00909CD4 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -329,20 +331,11 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		E7000B202877D67100248345 /* RethinkDB */ = {
-			isa = PBXGroup;
-			children = (
-				E7000B212877D67100248345 /* RethinkSyncManager+ISyncManager.swift */,
-				E7000B222877D67100248345 /* RethinkSyncManager.swift */,
-			);
-			path = RethinkDB;
-			sourceTree = "<group>";
-		};
 		E7377D8A286ECB06008F6C62 /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				E77D533B28F5123900D51C1E /* AgoraSyncManager */,
 				E7377D8D286ED873008F6C62 /* CommonViews */,
-				E757E675281AAE6B0017D5B9 /* AgoraSyncManager */,
 				E79BEF9F274796E1009FA838 /* NetworkManager */,
 				E79C2630273BC16700909CD4 /* Extension */,
 				E79C262B273BC0B500909CD4 /* ToastView */,
@@ -407,66 +400,6 @@
 			path = MultiJointBroadcasting;
 			sourceTree = "<group>";
 		};
-		E757E675281AAE6B0017D5B9 /* AgoraSyncManager */ = {
-			isa = PBXGroup;
-			children = (
-				E757E676281AAE6B0017D5B9 /* Other */,
-				E757E679281AAE6B0017D5B9 /* SyncManager */,
-				E757E692281AAE6B0017D5B9 /* publish.sh */,
-				E757E693281AAE6B0017D5B9 /* Objects */,
-				E757E699281AAE6B0017D5B9 /* AgoraSyncManager.podspec */,
-			);
-			name = AgoraSyncManager;
-			path = "Scene-Examples/Util/AgoraSyncManager";
-			sourceTree = SOURCE_ROOT;
-		};
-		E757E676281AAE6B0017D5B9 /* Other */ = {
-			isa = PBXGroup;
-			children = (
-				E757E677281AAE6B0017D5B9 /* Log.swift */,
-				E757E678281AAE6B0017D5B9 /* Utils.swift */,
-			);
-			path = Other;
-			sourceTree = "<group>";
-		};
-		E757E679281AAE6B0017D5B9 /* SyncManager */ = {
-			isa = PBXGroup;
-			children = (
-				E757E67A281AAE6B0017D5B9 /* SyncManager+Info.swift */,
-				E757E67B281AAE6B0017D5B9 /* AgoraSyncManager.swift */,
-				E7000B202877D67100248345 /* RethinkDB */,
-				E757E681281AAE6B0017D5B9 /* RtmManager */,
-				E757E686281AAE6B0017D5B9 /* SyncManager.swift~HEAD */,
-				E757E687281AAE6B0017D5B9 /* Protocols.swift */,
-				E757E688281AAE6B0017D5B9 /* CollectionReference.swift */,
-				E757E690281AAE6B0017D5B9 /* SyncManager.swift~zyq */,
-				E757E691281AAE6B0017D5B9 /* DocumentReference.swift */,
-			);
-			path = SyncManager;
-			sourceTree = "<group>";
-		};
-		E757E681281AAE6B0017D5B9 /* RtmManager */ = {
-			isa = PBXGroup;
-			children = (
-				E757E682281AAE6B0017D5B9 /* RtmSyncManager+Handle.swift */,
-				E757E683281AAE6B0017D5B9 /* RtmSyncManager+Info.swift */,
-				E757E684281AAE6B0017D5B9 /* RtmSyncManager+ISyncManager.swift */,
-				E757E685281AAE6B0017D5B9 /* RtmSyncManager.swift */,
-			);
-			path = RtmManager;
-			sourceTree = "<group>";
-		};
-		E757E693281AAE6B0017D5B9 /* Objects */ = {
-			isa = PBXGroup;
-			children = (
-				E757E694281AAE6B0017D5B9 /* Blocks.swift */,
-				E757E695281AAE6B0017D5B9 /* Extensions.swift */,
-				E757E696281AAE6B0017D5B9 /* Models.swift */,
-				E757E697281AAE6B0017D5B9 /* SyncError.swift */,
-			);
-			path = Objects;
-			sourceTree = "<group>";
-		};
 		E763A884288F991B00FE99FA /* VideoCall */ = {
 			isa = PBXGroup;
 			children = (
@@ -474,6 +407,75 @@
 				E71A0783288F9A3A00CC4BF6 /* VideoCallViewController.swift */,
 			);
 			path = VideoCall;
+			sourceTree = "<group>";
+		};
+		E77D533B28F5123900D51C1E /* AgoraSyncManager */ = {
+			isa = PBXGroup;
+			children = (
+				E77D533C28F5123900D51C1E /* Other */,
+				E77D533F28F5123900D51C1E /* AgoraSyncManagerLocal.podspec */,
+				E77D534028F5123900D51C1E /* SyncManager */,
+				E77D535028F5123900D51C1E /* publish.sh */,
+				E77D535128F5123900D51C1E /* Objects */,
+				E77D535628F5123900D51C1E /* AgoraSyncManager.podspec */,
+			);
+			path = AgoraSyncManager;
+			sourceTree = "<group>";
+		};
+		E77D533C28F5123900D51C1E /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				E77D533D28F5123900D51C1E /* Log.swift */,
+				E77D533E28F5123900D51C1E /* Utils.swift */,
+			);
+			path = Other;
+			sourceTree = "<group>";
+		};
+		E77D534028F5123900D51C1E /* SyncManager */ = {
+			isa = PBXGroup;
+			children = (
+				E77D534128F5123900D51C1E /* SyncManager+Info.swift */,
+				E77D534228F5123900D51C1E /* AgoraSyncManager.swift */,
+				E77D534328F5123900D51C1E /* RtmManager */,
+				E77D534828F5123900D51C1E /* RethinkDB */,
+				E77D534B28F5123900D51C1E /* SyncManager.swift~HEAD */,
+				E77D534C28F5123900D51C1E /* Protocols.swift */,
+				E77D534D28F5123900D51C1E /* CollectionReference.swift */,
+				E77D534E28F5123900D51C1E /* SyncManager.swift~zyq */,
+				E77D534F28F5123900D51C1E /* DocumentReference.swift */,
+			);
+			path = SyncManager;
+			sourceTree = "<group>";
+		};
+		E77D534328F5123900D51C1E /* RtmManager */ = {
+			isa = PBXGroup;
+			children = (
+				E77D534428F5123900D51C1E /* RtmSyncManager+Handle.swift */,
+				E77D534528F5123900D51C1E /* RtmSyncManager+Info.swift */,
+				E77D534628F5123900D51C1E /* RtmSyncManager+ISyncManager.swift */,
+				E77D534728F5123900D51C1E /* RtmSyncManager.swift */,
+			);
+			path = RtmManager;
+			sourceTree = "<group>";
+		};
+		E77D534828F5123900D51C1E /* RethinkDB */ = {
+			isa = PBXGroup;
+			children = (
+				E77D534928F5123900D51C1E /* RethinkSyncManager+ISyncManager.swift */,
+				E77D534A28F5123900D51C1E /* RethinkSyncManager.swift */,
+			);
+			path = RethinkDB;
+			sourceTree = "<group>";
+		};
+		E77D535128F5123900D51C1E /* Objects */ = {
+			isa = PBXGroup;
+			children = (
+				E77D535228F5123900D51C1E /* Blocks.swift */,
+				E77D535328F5123900D51C1E /* Extensions.swift */,
+				E77D535428F5123900D51C1E /* Models.swift */,
+				E77D535528F5123900D51C1E /* SyncError.swift */,
+			);
+			path = Objects;
 			sourceTree = "<group>";
 		};
 		E79BEF46273E50D9009FA838 /* Respurce */ = {
@@ -558,7 +560,7 @@
 		E79C25D2273B67DB00909CD4 = {
 			isa = PBXGroup;
 			children = (
-				E79C25DD273B67DB00909CD4 /* Scene-Examples */,
+				E79C25DD273B67DB00909CD4 /* Agora Scenarios */,
 				E79C25DC273B67DB00909CD4 /* Products */,
 				E79C263D273BCC0A00909CD4 /* Localizable.strings */,
 				220C86AB99C410077231BCD4 /* Pods */,
@@ -569,12 +571,12 @@
 		E79C25DC273B67DB00909CD4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E79C25DB273B67DB00909CD4 /* Scene-Examples.app */,
+				E79C25DB273B67DB00909CD4 /* Agora Scenarios.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		E79C25DD273B67DB00909CD4 /* Scene-Examples */ = {
+		E79C25DD273B67DB00909CD4 /* Agora Scenarios */ = {
 			isa = PBXGroup;
 			children = (
 				E79C2603273B689A00909CD4 /* KeyCenter.swift */,
@@ -588,7 +590,7 @@
 				E79C25EC273B67DD00909CD4 /* Info.plist */,
 				E79BEF46273E50D9009FA838 /* Respurce */,
 			);
-			path = "Scene-Examples";
+			path = "Agora Scenarios";
 			sourceTree = "<group>";
 		};
 		E79C25F2273B685100909CD4 /* BreakOutRoom */ = {
@@ -815,9 +817,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E79C25DA273B67DB00909CD4 /* Scene-Examples */ = {
+		E79C25DA273B67DB00909CD4 /* Agora Scenarios */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E79C25EF273B67DD00909CD4 /* Build configuration list for PBXNativeTarget "Scene-Examples" */;
+			buildConfigurationList = E79C25EF273B67DD00909CD4 /* Build configuration list for PBXNativeTarget "Agora Scenarios" */;
 			buildPhases = (
 				0D1B76B8BE323CFBDA5C0C47 /* [CP] Check Pods Manifest.lock */,
 				E79C25D7273B67DB00909CD4 /* Sources */,
@@ -830,9 +832,9 @@
 			);
 			dependencies = (
 			);
-			name = "Scene-Examples";
+			name = "Agora Scenarios";
 			productName = "Scene-Examples";
-			productReference = E79C25DB273B67DB00909CD4 /* Scene-Examples.app */;
+			productReference = E79C25DB273B67DB00909CD4 /* Agora Scenarios.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -850,7 +852,7 @@
 					};
 				};
 			};
-			buildConfigurationList = E79C25D6273B67DB00909CD4 /* Build configuration list for PBXProject "Scene-Examples" */;
+			buildConfigurationList = E79C25D6273B67DB00909CD4 /* Build configuration list for PBXProject "Agora Scenarios" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -864,7 +866,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E79C25DA273B67DB00909CD4 /* Scene-Examples */,
+				E79C25DA273B67DB00909CD4 /* Agora Scenarios */,
 			);
 		};
 /* End PBXProject section */
@@ -879,16 +881,17 @@
 				E79BEF53273E50ED009FA838 /* SuperWatch.gif in Resources */,
 				E79BEF55273E50ED009FA838 /* SuperRocket.gif in Resources */,
 				E79BEF59273E50ED009FA838 /* sound.gif in Resources */,
-				E757E6A7281AAE6B0017D5B9 /* SyncManager.swift~HEAD in Resources */,
 				E79BEF54273E50ED009FA838 /* SuperWine.gif in Resources */,
+				E77D535A28F5123900D51C1E /* AgoraSyncManagerLocal.podspec in Resources */,
 				E79C263B273BCC0A00909CD4 /* Localizable.strings in Resources */,
-				E757E6B0281AAE6B0017D5B9 /* SyncManager.swift~zyq in Resources */,
-				E757E6B8281AAE6B0017D5B9 /* AgoraSyncManager.podspec in Resources */,
+				E77D536828F5123900D51C1E /* publish.sh in Resources */,
 				E79BEF56273E50ED009FA838 /* SuperRing.gif in Resources */,
-				E757E6B2281AAE6B0017D5B9 /* publish.sh in Resources */,
+				E77D536D28F5123900D51C1E /* AgoraSyncManager.podspec in Resources */,
 				E79C25E8273B67DD00909CD4 /* Assets.xcassets in Resources */,
+				E77D536628F5123900D51C1E /* SyncManager.swift~zyq in Resources */,
 				E79C25E6273B67DB00909CD4 /* Main.storyboard in Resources */,
 				E79BEF57273E50ED009FA838 /* SuperIcecream.gif in Resources */,
+				E77D536328F5123900D51C1E /* SyncManager.swift~HEAD in Resources */,
 				E79BEF51273E50ED009FA838 /* SuperBell.gif in Resources */,
 				E79BEF58273E50ED009FA838 /* SuperDiamond.gif in Resources */,
 			);
@@ -943,18 +946,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E7000B232877D67100248345 /* RethinkSyncManager+ISyncManager.swift in Sources */,
-				E757E6B4281AAE6B0017D5B9 /* Extensions.swift in Sources */,
 				E79BEF37273D15D6009FA838 /* Screen.swift in Sources */,
-				E7000B242877D67100248345 /* RethinkSyncManager.swift in Sources */,
 				E7D46065285C825D004F3C82 /* BaseCollectionViewCell.swift in Sources */,
 				E79C2611273B689B00909CD4 /* SyncUtil.swift in Sources */,
 				E7EDBCC627A3BDCD00E763A6 /* AgoraVoiceChangeBGModel.swift in Sources */,
 				E7EDBCBE27A2A41900E763A6 /* RTEStatistics.swift in Sources */,
+				E77D535C28F5123900D51C1E /* AgoraSyncManager.swift in Sources */,
 				E79BEF5B273E5768009FA838 /* GIFImageView.swift in Sources */,
 				E7DB5B4828DC09B200C6C181 /* LiveShoppingCreateController.swift in Sources */,
-				E757E6A4281AAE6B0017D5B9 /* RtmSyncManager+Info.swift in Sources */,
-				E757E6A3281AAE6B0017D5B9 /* RtmSyncManager+Handle.swift in Sources */,
 				E79BEF8A274644A9009FA838 /* BORLiveModel.swift in Sources */,
 				E79BEF45273E4D99009FA838 /* LiveGiftModel.swift in Sources */,
 				E79C264E273D062400909CD4 /* LiveRoomListCell.swift in Sources */,
@@ -969,21 +968,26 @@
 				E7BE807C28E2D676007E3A84 /* SmallClassController.swift in Sources */,
 				E79BEF3B273D21FD009FA838 /* LiveChatView.swift in Sources */,
 				E7499C2C2770537C00E799FF /* MessageCell.swift in Sources */,
+				E77D536128F5123900D51C1E /* RethinkSyncManager+ISyncManager.swift in Sources */,
+				E77D535D28F5123900D51C1E /* RtmSyncManager+Handle.swift in Sources */,
 				E79BEF3F273D3EF0009FA838 /* LiveToolView.swift in Sources */,
-				E757E6B6281AAE6B0017D5B9 /* SyncError.swift in Sources */,
 				E7EDBCB027A131BC00E763A6 /* AgoraVoiceBelCantoView.swift in Sources */,
+				E77D535928F5123900D51C1E /* Utils.swift in Sources */,
 				E71A0784288F9A3A00CC4BF6 /* VideoCallViewController.swift in Sources */,
 				E748788028A9F95700CA2F58 /* MutliBroadcastingController.swift in Sources */,
 				E79C2626273B7BDA00909CD4 /* LiveBroadcastingCreateController.swift in Sources */,
+				E77D536428F5123900D51C1E /* Protocols.swift in Sources */,
 				E7C6323328B387FE0030E506 /* InteractiveBlogController.swift in Sources */,
 				E79BEF8627463FA5009FA838 /* BORRoomDetailController.swift in Sources */,
 				E7EDBCAE27A1281200E763A6 /* AgoraVoiceUsersView.swift in Sources */,
 				E7ECC56D27E81F5A00EFA778 /* UIImage+Color.swift in Sources */,
+				E77D536A28F5123900D51C1E /* Extensions.swift in Sources */,
 				E71A0782288F99D500CC4BF6 /* VideoCallCreateViewController.swift in Sources */,
+				E77D535E28F5123900D51C1E /* RtmSyncManager+Info.swift in Sources */,
 				E7DB5B4628DC09B200C6C181 /* LiveShoppingViewController.swift in Sources */,
 				E7D46061285C7A00004F3C82 /* MainHeaderViewCell.swift in Sources */,
 				E79BEF7D27463F79009FA838 /* BORSubRoomModel.swift in Sources */,
-				E757E6A8281AAE6B0017D5B9 /* Protocols.swift in Sources */,
+				E77D536028F5123900D51C1E /* RtmSyncManager.swift in Sources */,
 				E79BEF39273D18B4009FA838 /* LiveAvatarView.swift in Sources */,
 				E79C261C273B712000909CD4 /* BaseViewController.swift in Sources */,
 				E79BEF752744FD8B009FA838 /* GCDTimer.swift in Sources */,
@@ -993,25 +997,23 @@
 				E7EDBCB427A23EEF00E763A6 /* AgoraVoiceSoundEffectModel.swift in Sources */,
 				E79BEF33273D0F0C009FA838 /* LiveCanvasModel.swift in Sources */,
 				E7499C2A2770534400E799FF /* NoticeCell.swift in Sources */,
-				E757E6B1281AAE6B0017D5B9 /* DocumentReference.swift in Sources */,
 				E7DB5B3E28DB0B1200C6C181 /* EducationCreateController.swift in Sources */,
+				E77D536528F5123900D51C1E /* CollectionReference.swift in Sources */,
 				E79C25E3273B67DB00909CD4 /* MainViewController.swift in Sources */,
 				E79C2612273B689B00909CD4 /* SegmentView.swift in Sources */,
-				E757E6A5281AAE6B0017D5B9 /* RtmSyncManager+ISyncManager.swift in Sources */,
 				E7377D94286EEA38008F6C62 /* VoiceChatRoomCreateController.swift in Sources */,
 				E79BEF662741FD43009FA838 /* LivePKController.swift in Sources */,
 				E7C6322F28B387FE0030E506 /* InteractiveBlogRaiseListView.swift in Sources */,
 				E79C264C273D053E00909CD4 /* LiveRoomListController.swift in Sources */,
+				E77D536228F5123900D51C1E /* RethinkSyncManager.swift in Sources */,
 				E79C261F273B737100909CD4 /* MainCollectionViewCell.swift in Sources */,
 				E79BEF3D273D327F009FA838 /* LiveBottomView.swift in Sources */,
+				E77D535828F5123900D51C1E /* Log.swift in Sources */,
 				E7EDBCC427A3927B00E763A6 /* AgoraVoiceInviteView.swift in Sources */,
 				E79C2613273B689B00909CD4 /* UIColor+Extension.swift in Sources */,
-				E757E6A9281AAE6B0017D5B9 /* CollectionReference.swift in Sources */,
-				E757E6B5281AAE6B0017D5B9 /* Models.swift in Sources */,
 				E7EDBCC227A2B0F100E763A6 /* AgoraUsersModel.swift in Sources */,
 				E79BEF6A27420933009FA838 /* PKApplyInfoModel.swift in Sources */,
 				E7ECC57127E8923200EFA778 /* Array+Extension.swift in Sources */,
-				E757E69E281AAE6B0017D5B9 /* AgoraSyncManager.swift in Sources */,
 				E7EEF1BF2887A02D00D9D2AE /* KeyCenter.swift in Sources */,
 				E79BEF35273D1304009FA838 /* LivePlayerCell.swift in Sources */,
 				E79BEF8527463FA5009FA838 /* BORHomeViewController.swift in Sources */,
@@ -1020,27 +1022,31 @@
 				E79C2642273BE5C500909CD4 /* AlertManager.swift in Sources */,
 				E7EDBCBA27A28BD300E763A6 /* AgoraVoiceMusicView.swift in Sources */,
 				E79BEFA1274796F7009FA838 /* NetworkManager.swift in Sources */,
+				E77D536728F5123900D51C1E /* DocumentReference.swift in Sources */,
 				E7BE807B28E2D676007E3A84 /* SmallClassCreateController.swift in Sources */,
 				E79BEF772745036E009FA838 /* PKLiveProgressView.swift in Sources */,
+				E77D535F28F5123900D51C1E /* RtmSyncManager+ISyncManager.swift in Sources */,
 				E79BEF8427463FA5009FA838 /* BORCreateRoomController.swift in Sources */,
 				E7440E2C277420F200CBF4D8 /* LiveBaseView.swift in Sources */,
 				E79C2628273B7D3700909CD4 /* LiveRandomName.swift in Sources */,
 				E79BEF41273E0C3A009FA838 /* LiveToolModel.swift in Sources */,
 				E79BEF31273D0EA4009FA838 /* LiveBroadcastingController.swift in Sources */,
-				E757E6A6281AAE6B0017D5B9 /* RtmSyncManager.swift in Sources */,
+				E77D535B28F5123900D51C1E /* SyncManager+Info.swift in Sources */,
 				E79C2632273BC17B00909CD4 /* String+Extension.swift in Sources */,
 				E79C262A273B7D8900909CD4 /* DeviceAssistant.swift in Sources */,
+				E77D536C28F5123900D51C1E /* SyncError.swift in Sources */,
 				E7EDBCB827A284AB00E763A6 /* AgoraVoiceToolView.swift in Sources */,
 				E748788228A9F95700CA2F58 /* MutliBroadcastingCreateController.swift in Sources */,
 				E79BEF43273E3709009FA838 /* LiveGiftView.swift in Sources */,
 				E7DB5B4928DC09B200C6C181 /* LiveShoppingListView.swift in Sources */,
-				E757E69D281AAE6B0017D5B9 /* SyncManager+Info.swift in Sources */,
 				E710AE2F27A0F23300124356 /* ChangeRoomBgView.swift in Sources */,
 				E7499C1B276A078500E799FF /* LiveOnlineView.swift in Sources */,
+				E77D536928F5123900D51C1E /* Blocks.swift in Sources */,
 				E7C6323028B387FE0030E506 /* InteractiveBlogView.swift in Sources */,
 				E7EDBCC027A2A4CA00E763A6 /* RTCRealTimeDataView.swift in Sources */,
 				E7C6323128B387FE0030E506 /* InteractiveBlogBannerView.swift in Sources */,
 				E79C260F273B689B00909CD4 /* JSONObject.swift in Sources */,
+				E77D536B28F5123900D51C1E /* Models.swift in Sources */,
 				E79C25DF273B67DB00909CD4 /* AppDelegate.swift in Sources */,
 				E79C260E273B689B00909CD4 /* AgoraExtension.swift in Sources */,
 				E79C2646273CBA2700909CD4 /* LiveSettingModel.swift in Sources */,
@@ -1049,11 +1055,8 @@
 				E7C6323228B387FE0030E506 /* InteractiveBlogControlView.swift in Sources */,
 				E79C25E1273B67DB00909CD4 /* SceneDelegate.swift in Sources */,
 				E79BEF88274640A6009FA838 /* BORVideoRoomDetailCell.swift in Sources */,
-				E757E69C281AAE6B0017D5B9 /* Utils.swift in Sources */,
 				E7C6322E28B387FE0030E506 /* InteractiveBlogCreateController.swift in Sources */,
-				E757E69B281AAE6B0017D5B9 /* Log.swift in Sources */,
 				E7EDBCAC27A0F98900E763A6 /* VoiceChatRoomController.swift in Sources */,
-				E757E6B3281AAE6B0017D5B9 /* Blocks.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1220,8 +1223,8 @@
 				DEVELOPMENT_TEAM = YS397FG5PA;
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Scene-Examples/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = Scenarios_Examples;
+				INFOPLIST_FILE = "Agora Scenarios/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Agora Scenarios";
 				INFOPLIST_KEY_NSCameraUsageDescription = "App needs your permission to access camera for video interaction";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "App needs your permission to access microphone for audio interaction";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -1258,8 +1261,8 @@
 				DEVELOPMENT_TEAM = YS397FG5PA;
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Scene-Examples/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = Scenarios_Examples;
+				INFOPLIST_FILE = "Agora Scenarios/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Agora Scenarios";
 				INFOPLIST_KEY_NSCameraUsageDescription = "App needs your permission to access camera for video interaction";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "App needs your permission to access microphone for audio interaction";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -1287,7 +1290,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E79C25D6273B67DB00909CD4 /* Build configuration list for PBXProject "Scene-Examples" */ = {
+		E79C25D6273B67DB00909CD4 /* Build configuration list for PBXProject "Agora Scenarios" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E79C25ED273B67DD00909CD4 /* Debug */,
@@ -1296,7 +1299,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E79C25EF273B67DD00909CD4 /* Build configuration list for PBXNativeTarget "Scene-Examples" */ = {
+		E79C25EF273B67DD00909CD4 /* Build configuration list for PBXNativeTarget "Agora Scenarios" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E79C25F0273B67DD00909CD4 /* Debug */,
