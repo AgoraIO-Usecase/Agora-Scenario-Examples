@@ -310,3 +310,7 @@ pleaseInputRoomName = "请输入房间名";
 "Education1v1" = "教育1v1";
 "Waiting for remote users to join" = "等待远端用户加入";
 "Small Class" = "小班课";
+"Large Class" = "大班课";
+"The teacher refuses you to serve the mic" = "老师拒绝您上麦";
+"The teacher agrees you on the mic" = "老师同意您上麦";
+"End of speech" = "结束了发言";

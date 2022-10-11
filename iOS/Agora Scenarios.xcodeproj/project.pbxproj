@@ -42,6 +42,10 @@
 		E77D536B28F5123900D51C1E /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77D535428F5123900D51C1E /* Models.swift */; };
 		E77D536C28F5123900D51C1E /* SyncError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77D535528F5123900D51C1E /* SyncError.swift */; };
 		E77D536D28F5123900D51C1E /* AgoraSyncManager.podspec in Resources */ = {isa = PBXBuildFile; fileRef = E77D535628F5123900D51C1E /* AgoraSyncManager.podspec */; };
+		E77D54B428F5418D00D51C1E /* LargeClassController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77D54B028F5418D00D51C1E /* LargeClassController.swift */; };
+		E77D54B528F5418D00D51C1E /* LargeClassCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77D54B128F5418D00D51C1E /* LargeClassCreateController.swift */; };
+		E77D54B628F5418D00D51C1E /* LargeClassView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77D54B228F5418D00D51C1E /* LargeClassView.swift */; };
+		E77D54B728F5418D00D51C1E /* LargeClassRaiseListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77D54B328F5418D00D51C1E /* LargeClassRaiseListView.swift */; };
 		E79BEF31273D0EA4009FA838 /* LiveBroadcastingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF30273D0EA4009FA838 /* LiveBroadcastingController.swift */; };
 		E79BEF33273D0F0C009FA838 /* LiveCanvasModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF32273D0F0C009FA838 /* LiveCanvasModel.swift */; };
 		E79BEF35273D1304009FA838 /* LivePlayerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79BEF34273D1304009FA838 /* LivePlayerCell.swift */; };
@@ -192,6 +196,10 @@
 		E77D535428F5123900D51C1E /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		E77D535528F5123900D51C1E /* SyncError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncError.swift; sourceTree = "<group>"; };
 		E77D535628F5123900D51C1E /* AgoraSyncManager.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AgoraSyncManager.podspec; sourceTree = "<group>"; };
+		E77D54B028F5418D00D51C1E /* LargeClassController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LargeClassController.swift; sourceTree = "<group>"; };
+		E77D54B128F5418D00D51C1E /* LargeClassCreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LargeClassCreateController.swift; sourceTree = "<group>"; };
+		E77D54B228F5418D00D51C1E /* LargeClassView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LargeClassView.swift; sourceTree = "<group>"; };
+		E77D54B328F5418D00D51C1E /* LargeClassRaiseListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LargeClassRaiseListView.swift; sourceTree = "<group>"; };
 		E79BEF30273D0EA4009FA838 /* LiveBroadcastingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveBroadcastingController.swift; sourceTree = "<group>"; };
 		E79BEF32273D0F0C009FA838 /* LiveCanvasModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCanvasModel.swift; sourceTree = "<group>"; };
 		E79BEF34273D1304009FA838 /* LivePlayerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivePlayerCell.swift; sourceTree = "<group>"; };
@@ -348,6 +356,7 @@
 		E7377D8B286ECB15008F6C62 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				E77D54AF28F5418D00D51C1E /* LargeClass */,
 				E7BE807828E2D676007E3A84 /* SmallClass */,
 				E7DB5B3A28DB0B1200C6C181 /* Education1v1 */,
 				E7DB5B4028DC09B200C6C181 /* Shopping */,
@@ -476,6 +485,17 @@
 				E77D535528F5123900D51C1E /* SyncError.swift */,
 			);
 			path = Objects;
+			sourceTree = "<group>";
+		};
+		E77D54AF28F5418D00D51C1E /* LargeClass */ = {
+			isa = PBXGroup;
+			children = (
+				E77D54B028F5418D00D51C1E /* LargeClassController.swift */,
+				E77D54B128F5418D00D51C1E /* LargeClassCreateController.swift */,
+				E77D54B228F5418D00D51C1E /* LargeClassView.swift */,
+				E77D54B328F5418D00D51C1E /* LargeClassRaiseListView.swift */,
+			);
+			path = LargeClass;
 			sourceTree = "<group>";
 		};
 		E79BEF46273E50D9009FA838 /* Respurce */ = {
@@ -975,6 +995,7 @@
 				E77D535928F5123900D51C1E /* Utils.swift in Sources */,
 				E71A0784288F9A3A00CC4BF6 /* VideoCallViewController.swift in Sources */,
 				E748788028A9F95700CA2F58 /* MutliBroadcastingController.swift in Sources */,
+				E77D54B528F5418D00D51C1E /* LargeClassCreateController.swift in Sources */,
 				E79C2626273B7BDA00909CD4 /* LiveBroadcastingCreateController.swift in Sources */,
 				E77D536428F5123900D51C1E /* Protocols.swift in Sources */,
 				E7C6323328B387FE0030E506 /* InteractiveBlogController.swift in Sources */,
@@ -1020,6 +1041,7 @@
 				E7D46063285C8244004F3C82 /* VideoCollectionViewCell.swift in Sources */,
 				E79C2636273BC6C400909CD4 /* LiveRandomNameView.swift in Sources */,
 				E79C2642273BE5C500909CD4 /* AlertManager.swift in Sources */,
+				E77D54B628F5418D00D51C1E /* LargeClassView.swift in Sources */,
 				E7EDBCBA27A28BD300E763A6 /* AgoraVoiceMusicView.swift in Sources */,
 				E79BEFA1274796F7009FA838 /* NetworkManager.swift in Sources */,
 				E77D536728F5123900D51C1E /* DocumentReference.swift in Sources */,
@@ -1036,6 +1058,8 @@
 				E79C262A273B7D8900909CD4 /* DeviceAssistant.swift in Sources */,
 				E77D536C28F5123900D51C1E /* SyncError.swift in Sources */,
 				E7EDBCB827A284AB00E763A6 /* AgoraVoiceToolView.swift in Sources */,
+				E77D54B728F5418D00D51C1E /* LargeClassRaiseListView.swift in Sources */,
+				E77D54B428F5418D00D51C1E /* LargeClassController.swift in Sources */,
 				E748788228A9F95700CA2F58 /* MutliBroadcastingCreateController.swift in Sources */,
 				E79BEF43273E3709009FA838 /* LiveGiftView.swift in Sources */,
 				E7DB5B4928DC09B200C6C181 /* LiveShoppingListView.swift in Sources */,

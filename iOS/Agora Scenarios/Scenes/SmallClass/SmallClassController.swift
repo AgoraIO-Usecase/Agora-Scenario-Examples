@@ -134,7 +134,7 @@ class SmallClassController: BaseViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         leaveChannel()
-        SyncUtil.scene(id: channleName)?.unsubscribe(key: SceneType.singleLive.rawValue)
+        SyncUtil.scene(id: channleName)?.unsubscribe(key: SceneType.smallClass.rawValue)
         SyncUtil.scene(id: channleName)?.collection(className: SYNC_SCENE_ROOM_USER_COLLECTION).document().unsubscribe(key: "")
         SyncUtil.leaveScene(id: channleName)
         navigationTransparent(isTransparent: false)
@@ -410,6 +410,10 @@ class AgoraUserCollectionViewCell: UICollectionViewCell {
         view.layer.masksToBounds = true
         return view
     }()
+    private lazy var nameLabel: AGELabel = {
+        let label = AGELabel(colorStyle: .white, fontStyle: .middle)
+        return label
+    }()
     private lazy var muteAudioImageView: AGEImageView = {
         let imageView = AGEImageView(systemName: "mic.slash", imageColor: .red)
         imageView.isHidden = true
@@ -437,6 +441,15 @@ class AgoraUserCollectionViewCell: UICollectionViewCell {
         muteVideoImageView.isHidden = model.isEnableVideo ?? false
         muteAudioImageView.isHidden = model.isEnableAudio ?? false
         canvasView.isHidden = model.isEnableVideo == false
+        nameLabel.text = model.userName
+    }
+    
+    func setupData(model: ClassUsersModel) {
+        avatariImageView.setImage(UIImage(named: model.avatar), for: .normal)
+        muteVideoImageView.isHidden = model.isEnableVideo ?? false
+        muteAudioImageView.isHidden = model.isEnableAudio ?? false
+        canvasView.isHidden = model.isEnableVideo == false
+        nameLabel.text = model.userName
     }
     
     private func setupUI() {
@@ -444,8 +457,10 @@ class AgoraUserCollectionViewCell: UICollectionViewCell {
         canvasView.translatesAutoresizingMaskIntoConstraints = false
         muteAudioImageView.translatesAutoresizingMaskIntoConstraints = false
         muteVideoImageView.translatesAutoresizingMaskIntoConstraints = false
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(avatariImageView)
         contentView.addSubview(canvasView)
+        contentView.addSubview(nameLabel)
         contentView.addSubview(muteVideoImageView)
         contentView.addSubview(muteAudioImageView)
         avatariImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
@@ -458,12 +473,15 @@ class AgoraUserCollectionViewCell: UICollectionViewCell {
         canvasView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         canvasView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
         
+        nameLabel.leadingAnchor.constraint(equalTo: canvasView.leadingAnchor, constant: 5).isActive = true
+        nameLabel.bottomAnchor.constraint(equalTo: canvasView.bottomAnchor, constant: -5).isActive = true
+        
         muteVideoImageView.rightAnchor.constraint(equalTo: avatariImageView.rightAnchor, constant: -5).isActive = true
-        muteVideoImageView.bottomAnchor.constraint(equalTo: avatariImageView.bottomAnchor, constant: -5).isActive = true
+        muteVideoImageView.topAnchor.constraint(equalTo: avatariImageView.topAnchor, constant: 5).isActive = true
         muteVideoImageView.widthAnchor.constraint(equalToConstant: 12).isActive = true
         muteVideoImageView.heightAnchor.constraint(equalToConstant: 16).isActive = true
         muteAudioImageView.leadingAnchor.constraint(equalTo: avatariImageView.leadingAnchor, constant: 5).isActive = true
-        muteAudioImageView.bottomAnchor.constraint(equalTo: avatariImageView.bottomAnchor, constant: -5).isActive = true
+        muteAudioImageView.topAnchor.constraint(equalTo: avatariImageView.topAnchor, constant: 5).isActive = true
         muteAudioImageView.widthAnchor.constraint(equalTo: muteVideoImageView.widthAnchor).isActive = true
         muteAudioImageView.heightAnchor.constraint(equalTo: muteVideoImageView.heightAnchor).isActive = true
     }

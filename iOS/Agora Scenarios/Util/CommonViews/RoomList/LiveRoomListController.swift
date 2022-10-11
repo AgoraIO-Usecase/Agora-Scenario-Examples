@@ -176,6 +176,10 @@ class LiveRoomListController: BaseViewController {
         case .smallClass:
             let createLiveVC = SmallClassCreateController()
             navigationController?.pushViewController(createLiveVC, animated: true)
+            
+        case .largeClass:
+            let createLiveVC = LargeClassCreateController()
+            navigationController?.pushViewController(createLiveVC, animated: true)
         }
         
     }
@@ -226,6 +230,11 @@ class LiveRoomListController: BaseViewController {
             
         case .smallClass:
             let vc = SmallClassController(channelName: channelName ?? "",
+                                          userId: ownerId ?? "")
+            navigationController?.pushViewController(vc, animated: true)
+            
+        case .largeClass:
+            let vc = LargeClassController(channelName: channelName ?? "",
                                           userId: ownerId ?? "")
             navigationController?.pushViewController(vc, animated: true)
             
