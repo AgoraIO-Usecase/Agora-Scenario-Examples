@@ -17,4 +17,4 @@ jobs:
     displayName: 'AgoraScenarioIOS'
     workingDirectory: 'iOS'
     project: 'Agora Scenarios'
-    scheme: 'Aogora Scenarios'
+    scheme: 'Agora Scenarios'
