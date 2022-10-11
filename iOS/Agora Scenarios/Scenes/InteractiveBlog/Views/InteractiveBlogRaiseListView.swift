@@ -78,11 +78,16 @@ extension InteractiveBlogRaiseListView: AGETableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: InteractiveBlogRaiseListViewCell.description(), for: indexPath) as! InteractiveBlogRaiseListViewCell
         cell.setUserInfo(model: dataArray[indexPath.row], channelName: channelName)
+        cell.refreshUIClosure = { [weak self] in
+            self?.fetchUsers()
+        }
         return cell
     }
 }
 
 class InteractiveBlogRaiseListViewCell: UITableViewCell {
+    var refreshUIClosure: (() -> Void)?
+    
     private lazy var avatarImageView: AGEImageView = {
         let imageView = AGEImageView(imageName: "portrait04")
         imageView.cornerRadius = 25
@@ -162,14 +167,22 @@ class InteractiveBlogRaiseListViewCell: UITableViewCell {
     private func onTapRefuseButton() {
         currentUserModel?.status = .refuse
         let params = JSONObject.toJson(currentUserModel)
-        SyncUtil.scene(id: channelName)?.collection(className: SYNC_MANAGER_AGORA_VOICE_USERS).update(id: currentUserModel?.objectId ?? "", data: params, success: nil, fail: nil)
+        SyncUtil.scene(id: channelName)?
+            .collection(className: SYNC_MANAGER_AGORA_VOICE_USERS)
+            .update(id: currentUserModel?.objectId ?? "", data: params, success: {
+                self.refreshUIClosure?()
+            }, fail: nil)
+        
     }
     
     @objc
     private func onTapAgreeButton() {
         currentUserModel?.status = .accept
         let params = JSONObject.toJson(currentUserModel)
-        SyncUtil.scene(id: channelName)?.collection(className: SYNC_MANAGER_AGORA_VOICE_USERS).update(id: currentUserModel?.objectId ?? "", data: params, success: nil, fail: nil)
+        SyncUtil.scene(id: channelName)?.collection(className: SYNC_MANAGER_AGORA_VOICE_USERS)
+            .update(id: currentUserModel?.objectId ?? "", data: params, success: {
+                self.refreshUIClosure?()
+            }, fail: nil)
     }
 }
 
