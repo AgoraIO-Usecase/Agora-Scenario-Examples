@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/extra_blue_gradient_background"
+    android:padding="8dp">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_video_list"
+        android:layout_width="120dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:spanCount="1"
+        tools:itemCount="2"
+        tools:listitem="@layout/large_class_live_video_item" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/board_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        app:cardBackgroundColor="#F9F9F9"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/rv_video_list"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <io.agora.board.fast.FastboardView
+            android:id="@+id/fastboard"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.cardview.widget.CardView>
+
+
+    <io.agora.uiwidget.function.LiveHostNameView
+        android:id="@+id/host_name_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        app:layout_constraintStart_toStartOf="@id/board_container"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <io.agora.uiwidget.function.LiveRoomUserView
+        android:id="@+id/user_count_view"
+        android:layout_width="wrap_content"
+        app:layout_constraintEnd_toEndOf="@id/board_container"
+        app:layout_constraintTop_toTopOf="@id/board_container"
+        android:layout_margin="4dp"
+        android:layout_height="wrap_content"/>
+
+
+    <LinearLayout
+        android:id="@+id/ll_media_controller"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="4dp"
+        app:layout_constraintBottom_toBottomOf="@id/board_container"
+        app:layout_constraintEnd_toEndOf="@id/board_container">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp">
+
+
+            <ImageView
+                android:id="@+id/iv_hands_list"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/large_class_ic_hands_list"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tv_hands_list_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:background="@drawable/large_class_hands_list_tag_bg"
+                android:ellipsize="marquee"
+                android:maxWidth="30dp"
+                android:minWidth="8dp"
+                android:minHeight="8dp"
+                android:paddingHorizontal="4dp"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textSize="11sp"
+                android:visibility="gone"
+                tools:text="1000"
+                tools:visibility="visible" />
+
+        </FrameLayout>
+
+
+        <ImageView
+            android:id="@+id/iv_raise_hand"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/large_class_ic_raise_hand"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <CheckBox
+            android:id="@+id/cb_video"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/large_class_ic_video"
+            android:button="@null"
+            android:checked="true" />
+
+        <CheckBox
+            android:id="@+id/cb_mic"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/large_class_ic_mic"
+            android:button="@null"
+            android:checked="true" />
+
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/large_class_ic_close" />
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
