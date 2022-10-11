@@ -87,11 +87,11 @@ public class ModulesConfig {
                 R.drawable.app_banner_small_class,
                 "io.agora.scene.smallclass.RoomListActivity"
         ));
-        this.moduleInfo.add(new ModuleInfo(
-                R.string.app_large_class,
-                R.drawable.app_banner_large_class,
-                "io.agora.scene.largeclass.RoomListActivity"
-        ));
+//        this.moduleInfo.add(new ModuleInfo(
+//                R.string.app_large_class,
+//                R.drawable.app_banner_large_class,
+//                "io.agora.scene.largeclass.RoomListActivity"
+//        ));
     }
 
 
