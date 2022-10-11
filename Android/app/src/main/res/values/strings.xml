@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SceneExample</string>
+    <string name="app_name">Agora Scenarios</string>
     
     <string name="app_type_social_entertainment">Social Entertainment</string>
     <string name="app_type_education">Education</string>
@@ -13,7 +13,7 @@
     <string name="app_breakout_room_name">BreakoutRoom</string>
     <string name="app_live_pk_cdn_name">LivePKByCDN</string>
     <string name="app_club_name">Club</string>
-    <string name="app_voice_name">Voice</string>
+    <string name="app_voice_name">Chat Room</string>
     <string name="app_multi_call">Multi Call</string>
     <string name="app_interactive_blog">Interactive Blog</string>
     <string name="app_shopping">Shopping</string>
