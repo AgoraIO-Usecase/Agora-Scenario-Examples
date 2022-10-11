@@ -5,6 +5,8 @@
     <string name="common_confirm">Confirm</string>
     <string name="common_cancel">Cancel</string>
     <string name="common_create">Create</string>
+    <string name="common_accept">Accept</string>
+    <string name="common_refuse">Refuse</string>
     <string name="common_no">No</string>
     <string name="common_tip_close_room">Sure to close room?</string>
     <string name="common_tip_room_closed">Room is closed</string>

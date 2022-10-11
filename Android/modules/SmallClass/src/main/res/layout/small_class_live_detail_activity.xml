@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/extra_blue_gradient_background"
+    android:padding="8dp">
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_video_list"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintEnd_toEndOf="@id/board_container"
+        app:layout_constraintStart_toStartOf="@id/board_container"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/small_class_live_video_item"
+        tools:itemCount="2"
+        app:spanCount="1" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/board_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_gravity="end"
+        android:layout_marginEnd="8dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:contentPaddingLeft="55dp"
+        app:cardBackgroundColor="#F9F9F9"
+        app:layout_constraintTop_toBottomOf="@id/rv_video_list"
+        app:layout_constraintVertical_weight="1">
+
+        <io.agora.board.fast.FastboardView
+            android:id="@+id/fastboard"
+            android:layout_width="match_parent"
+
+            android:layout_height="match_parent" />
+
+    </androidx.cardview.widget.CardView>
+
+
+    <io.agora.uiwidget.function.LiveHostNameView
+        android:id="@+id/host_name_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        app:layout_constraintStart_toStartOf="@id/board_container"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <LinearLayout
+        android:id="@+id/ll_media_controller"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        app:layout_constraintStart_toStartOf="@id/board_container"
+        app:layout_constraintBottom_toBottomOf="@id/board_container"
+        android:orientation="vertical">
+
+        <CheckBox
+            android:id="@+id/cb_video"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:checked="true"
+            android:button="@null"
+            android:background="@drawable/small_class_ic_video"/>
+
+        <CheckBox
+            android:id="@+id/cb_mic"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="8dp"
+            android:checked="true"
+            android:button="@null"
+            android:background="@drawable/small_class_ic_mic"/>
+
+    </LinearLayout>
+
+    <io.agora.uiwidget.function.LiveBottomView
+        android:id="@+id/bottom_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:gravity="end"
+        app:layout_constraintBottom_toBottomOf="@id/board_container"
+        app:layout_constraintEnd_toEndOf="@id/board_container"
+        app:layout_constraintStart_toEndOf="@id/ll_media_controller" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
