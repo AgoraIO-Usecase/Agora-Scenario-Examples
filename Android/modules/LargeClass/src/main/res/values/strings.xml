@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="large_class_app_name">Education1v1</string>
+    <string name="large_class_end_speak">%s end of speech</string>
+    <string name="large_class_requesting_speak">The application for speaking has been sent, waiting for the teacher to deal…</string>
+    <string name="large_class_refused_speak">The teacher rejected your application to speak.</string>
+
+</resources>

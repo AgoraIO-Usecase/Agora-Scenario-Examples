@@ -19,5 +19,6 @@
     <string name="app_shopping">Shopping</string>
     <string name="app_education1v1">Education1v1</string>
     <string name="app_small_class">SmallClass</string>
+    <string name="app_large_class">LargeClass</string>
 
 </resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="large_class_app_name">教育1v1</string>
+    <string name="large_class_end_speak">%s 结束了发言</string>
+    <string name="large_class_requesting_speak">发言申请已发送，请等待老师处理…</string>
+    <string name="large_class_refused_speak">老师拒绝了你的发言申请</string>
+
+</resources>
