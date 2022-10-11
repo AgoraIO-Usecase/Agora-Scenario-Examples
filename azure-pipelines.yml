@@ -10,4 +10,11 @@ jobs:
   parameters:
    project: 'Android'
    module: 'app'
-   name: 'AgoraScenaioAndroid'
+   name: 'AgoraScenarioAndroid'
+     
+- template: cicd/build-ios.yml
+  parameters:
+    displayName: 'AgoraScenarioIOS'
+    workingDirectory: 'iOS'
+    project: 'Agora Scenarios'
+    scheme: 'Aogora Scenarios'
