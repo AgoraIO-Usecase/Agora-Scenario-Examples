@@ -33,5 +33,5 @@ jobs:
         
       - task: PublishBuildArtifacts@1
         inputs:
-          PathtoPublish: ${{ parameters.workingDirectory }}/app
+          PathtoPublish: ${{ parameters.workingDirectory }}/*.ipa
           ArtifactName: ${{ parameters.displayName }}
