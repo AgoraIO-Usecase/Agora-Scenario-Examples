@@ -30,8 +30,8 @@ jobs:
           provProfileSecureFile: 'App.mobileprovision'
 
       - script: cd 'cicd/scripts' && chmod +x ios_build.sh && ./ios_build.sh ../../${{ parameters.workingDirectory }} '${{ parameters.project }}' '${{ parameters.scheme }}'
-        
+
       - task: PublishBuildArtifacts@1
         inputs:
-          PathtoPublish: '${{ parameters.workingDirectory }}/${{ parameters.project }}.ipa'
+          PathtoPublish: ${{ parameters.workingDirectory }}/app
           ArtifactName: ${{ parameters.displayName }}

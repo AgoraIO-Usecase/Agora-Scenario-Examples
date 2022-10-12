@@ -33,9 +33,9 @@ jobs:
           Contents: '**/*.apk'
           TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-      - script: cd $(Build.ArtifactStagingDirectory) && mv $(ls *.apk) ${{ parameters.name }}.apk
+      - script: cd $(Build.ArtifactStagingDirectory) && zip -r ${{ parameters.name }}.zip .
 
       - task: PublishBuildArtifacts@1
         inputs:
-          PathtoPublish: '$(Build.ArtifactStagingDirectory)/${{ parameters.name }}.apk'
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)/${{ parameters.name }}.zip'
           ArtifactName: ${{ parameters.name }}
