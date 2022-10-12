@@ -1,0 +1,20 @@
+trigger:
+- main
+- legacy
+
+pool:
+  vmImage: 'macos-latest'
+
+jobs:
+- template: cicd/build-android.yml
+  parameters:
+   project: 'Android'
+   module: 'app'
+   name: 'AgoraScenarioAndroid'
+     
+- template: cicd/build-ios.yml
+  parameters:
+    displayName: 'AgoraScenarioIOS'
+    workingDirectory: 'iOS'
+    project: 'Agora Scenarios'
+    scheme: 'Agora Scenarios'
