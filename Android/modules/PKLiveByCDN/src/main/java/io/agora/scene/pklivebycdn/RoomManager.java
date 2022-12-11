@@ -463,8 +463,8 @@ public class RoomManager {
             this.liveMode = liveMode;
         }
 
-        public HashMap<String, String> toMap() {
-            HashMap<String, String> data = new HashMap<>();
+        public HashMap<String, Object> toMap() {
+            HashMap<String, Object> data = new HashMap<>();
             data.put("roomId", roomId);
             data.put("roomName", roomName);
             data.put("liveMode", liveMode + "");

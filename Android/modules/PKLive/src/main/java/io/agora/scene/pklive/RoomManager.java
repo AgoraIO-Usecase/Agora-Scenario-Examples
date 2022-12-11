@@ -847,8 +847,8 @@ public class RoomManager {
             return bgResId;
         }
 
-        public Map<String, String> toMap() {
-            HashMap<String, String> map = new HashMap<>();
+        public Map<String, Object> toMap() {
+            HashMap<String, Object> map = new HashMap<>();
             map.put("roomName", roomName);
             map.put("roomId", roomId);
             map.put("userId", userId);
