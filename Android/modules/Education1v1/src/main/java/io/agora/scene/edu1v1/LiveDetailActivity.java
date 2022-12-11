@@ -170,6 +170,9 @@ public class LiveDetailActivity extends BaseActivity<Edu1v1LiveDetailActivityBin
     }
 
     private void initView() {
+        if(mBinding == null){
+            return;
+        }
         mBinding.hostNameView.setName(roomInfo.roomName + "(" + roomInfo.roomId + ")");
         mBinding.bottomView
                 .setupCloseBtn(true, v -> onBackPressed())
