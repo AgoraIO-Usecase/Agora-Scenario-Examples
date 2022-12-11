@@ -145,6 +145,9 @@ public class LiveDetailActivity extends BaseActivity<SmallClassLiveDetailActivit
             });
             updateUserListView();
             runOnUiThread(() -> {
+                if(mBinding == null){
+                    return;
+                }
                 mBinding.cbMic.setChecked(roomManager.isLocalAudioEnable(roomInfo.roomId));
                 mBinding.cbVideo.setChecked(roomManager.isLocalVideoEnable(roomInfo.roomId));
             });
