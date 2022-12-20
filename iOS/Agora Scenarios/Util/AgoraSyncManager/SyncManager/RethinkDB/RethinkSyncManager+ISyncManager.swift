@@ -87,19 +87,19 @@ extension RethinkSyncManager: ISyncManager {
                         onUpdated: OnSubscribeBlock?,
                         onDeleted: OnSubscribeBlock?,
                         fail: FailBlock?) {
-        onFailBlock[sceneName] = fail
-        onUpdatedBlocks[sceneName] = onUpdated
-        onDeletedBlocks[sceneName] = onDeleted
+        onFailBlock[channelName] = fail
+        onUpdatedBlocks[channelName] = onUpdated
+        onDeletedBlocks[channelName] = onDeleted
         subscribe(channelName: sceneName,
-                  roomId: "",
+                  roomId: channelName,
                   objType: "room")
     }
 
     func unsubscribeScene(reference: SceneReference, fail: FailBlock?) {
-        onDeletedBlocks.removeValue(forKey: sceneName)
-        onFailBlock.removeValue(forKey: sceneName)
+        onDeletedBlocks.removeValue(forKey: channelName)
+        onFailBlock.removeValue(forKey: channelName)
         unsubscribe(channelName: sceneName,
-                    roomId: "",
+                    roomId: channelName,
                     objType: "room")
     }
 
@@ -109,11 +109,12 @@ extension RethinkSyncManager: ISyncManager {
         getRoomList(channelName: sceneName)
     }
 
-    func deleteScenes(sceneIds: [String], success: SuccessBlockObjOptional?, fail: FailBlock?) {
-        let params = sceneIds.map({ ["objectId": $0] })
-        onDeleteBlockObjOptional[sceneName] = success
-        onFailBlock[sceneName] = fail
-        delete(channelName: "room", data: params)
+    func deleteScenes(sceneIds: [String],
+                      success: SuccessBlockObjOptional?,
+                      fail: FailBlock?) {
+        onDeleteBlockObjOptional[channelName] = success
+        onFailBlock[channelName] = fail
+        deleteRoom()
     }
 
     func get(collectionRef: CollectionReference, success: SuccessBlock?, fail: FailBlock?) {

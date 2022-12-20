@@ -210,6 +210,16 @@ public class RethinkSyncManager: NSObject {
         let data = try? JSONSerialization.data(withJSONObject: params, options: [])
         try? socket?.send(dataNoCopy: data)
     }
+    
+    public func deleteRoom() {
+        let params = ["action": "deleteRoom",
+                      "appId": appId,
+                      "sceneName": sceneName,
+                      "roomId": channelName,
+                      "requestId": UUID().uuid16string()]
+        let data = try? JSONSerialization.data(withJSONObject: params, options: [])
+        try? socket?.send(dataNoCopy: data)
+    }
 
     public func delete(channelName: String, data: Any) {
         var objectIds: [Any] = []
