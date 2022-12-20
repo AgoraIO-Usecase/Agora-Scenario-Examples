@@ -7,111 +7,171 @@
 
 import UIKit
 
-extension RethinkSyncManager: ISyncManager {    
+extension RethinkSyncManager: ISyncManager {
     func createScene(scene: Scene, success: SuccessBlockVoid?, fail: FailBlock?) {
         /** add room in list **/
         let attr = Attribute(key: scene.id, value: scene.toJson())
-        sceneName = scene.id
-        write(channelName: channelName, data: attr.toJson(), objectId: sceneName)
+        channelName = scene.id
+        write(channelName: channelName,
+              data: attr.toDict(),
+              roomId: channelName,
+              objectId: sceneName,
+              objType: "room")
         success?()
     }
-    
-    func joinScene(sceneId: String, manager: AgoraSyncManager, success: SuccessBlockObjSceneRef?, fail: FailBlock?) {
+
+    func joinScene(sceneId: String,
+                   manager: AgoraSyncManager,
+                   success: SuccessBlockObjSceneRef?,
+                   fail: FailBlock?) {
         let sceneRef = SceneReference(manager: manager,
                                       id: sceneId)
         success?(sceneRef)
     }
-    
-    func get(documentRef: DocumentReference, key: String, success: SuccessBlockObjOptional?, fail: FailBlock?) {
+
+    func get(documentRef: DocumentReference,
+             key: String,
+             success: SuccessBlockObjOptional?,
+             fail: FailBlock?) {
         onSuccessBlockObjOptional[documentRef.className + key] = success
         onFailBlock[documentRef.className + key] = fail
-        query(channelName: documentRef.className + key)
+        query(channelName: documentRef.className + key,
+              roomId: "",
+              objType: documentRef.className + key)
     }
-    
-    func update(reference: DocumentReference, key: String, data: [String : Any?], success: SuccessBlock?, fail: FailBlock?) {
-        let className = (reference.className + key) == sceneName ? channelName : reference.className + key
+
+    func update(reference: DocumentReference,
+                key: String,
+                data: [String: Any?],
+                success: SuccessBlock?,
+                fail: FailBlock?) {
+        let className = (reference.className + key) == channelName ? sceneName : reference.className + key
         onSuccessBlock[className] = success
         onFailBlock[className] = fail
-        write(channelName: className, data: data, objectId: data["objectId"] as? String)
+        write(channelName: key,
+              data: data,
+              roomId: reference.className,
+              objectId: data["objectId"] as? String,
+              objType: className)
     }
-    
-    func subscribe(reference: DocumentReference, key: String, onCreated: OnSubscribeBlock?, onUpdated: OnSubscribeBlock?, onDeleted: OnSubscribeBlock?, onSubscribed: OnSubscribeBlockVoid?, fail: FailBlock?) {
-        let className = (reference.className + key) == sceneName ? channelName : reference.className + key
+
+    func subscribe(reference: DocumentReference,
+                   key: String,
+                   onCreated: OnSubscribeBlock?,
+                   onUpdated: OnSubscribeBlock?,
+                   onDeleted: OnSubscribeBlock?,
+                   onSubscribed: OnSubscribeBlockVoid?,
+                   fail: FailBlock?) {
+        let className = (reference.className + key) == channelName ? sceneName : reference.className + key
         print("className == \(className)")
         onCreateBlocks[className] = onCreated
         onUpdatedBlocks[className] = onUpdated
         onDeletedBlocks[className] = onDeleted
-        subscribe(channelName: className)
+        subscribe(channelName: key,
+                  roomId: reference.className,
+                  objType: className)
         onSubscribed?()
     }
-    
+
     func unsubscribe(reference: DocumentReference, key: String) {
-        let className = (reference.className + key) == sceneName ? channelName : reference.className + key
-        unsubscribe(channelName: className)
+        let className = (reference.className + key) == channelName ? sceneName : reference.className + key
+        unsubscribe(channelName: key,
+                    roomId: reference.className,
+                    objType: className)
         onCreateBlocks.removeValue(forKey: className)
         onUpdatedBlocks.removeValue(forKey: className)
         onDeletedBlocks.removeValue(forKey: className)
     }
-    
-    func subscribeScene(reference: SceneReference, onUpdated: OnSubscribeBlock?, onDeleted: OnSubscribeBlock?, fail: FailBlock?) {
-        onFailBlock[channelName] = fail
-        onUpdatedBlocks[channelName] = onUpdated
-        onDeletedBlocks[channelName] = onDeleted
-        subscribe(channelName: channelName)
+
+    func subscribeScene(reference: SceneReference,
+                        onUpdated: OnSubscribeBlock?,
+                        onDeleted: OnSubscribeBlock?,
+                        fail: FailBlock?) {
+        onFailBlock[sceneName] = fail
+        onUpdatedBlocks[sceneName] = onUpdated
+        onDeletedBlocks[sceneName] = onDeleted
+        subscribe(channelName: sceneName,
+                  roomId: "",
+                  objType: "room")
     }
-    
+
     func unsubscribeScene(reference: SceneReference, fail: FailBlock?) {
-        onDeletedBlocks.removeValue(forKey: channelName)
-        onFailBlock.removeValue(forKey: channelName)
-        unsubscribe(channelName: channelName)
+        onDeletedBlocks.removeValue(forKey: sceneName)
+        onFailBlock.removeValue(forKey: sceneName)
+        unsubscribe(channelName: sceneName,
+                    roomId: "",
+                    objType: "room")
     }
-    
+
     func getScenes(success: SuccessBlock?, fail: FailBlock?) {
-        onSuccessBlock[channelName] = success
-        onFailBlock[channelName] = fail
-        query(channelName: channelName)
+        onSuccessBlock[sceneName] = success
+        onFailBlock[sceneName] = fail
+        getRoomList(channelName: sceneName)
     }
-    
-    func deleteScenes(sceneIds: [String], success: SuccessBlockVoid?, fail: FailBlock?) {
+
+    func deleteScenes(sceneIds: [String], success: SuccessBlockObjOptional?, fail: FailBlock?) {
         let params = sceneIds.map({ ["objectId": $0] })
-        onSuccessBlockVoid[channelName] = success
-        onFailBlock[channelName] = fail
-        delete(channelName: channelName, data: params)
+        onDeleteBlockObjOptional[sceneName] = success
+        onFailBlock[sceneName] = fail
+        delete(channelName: "room", data: params)
     }
-    
+
     func get(collectionRef: CollectionReference, success: SuccessBlock?, fail: FailBlock?) {
         onSuccessBlock[collectionRef.className] = success
         onFailBlock[collectionRef.className] = fail
-        query(channelName: collectionRef.className)
+        query(channelName: collectionRef.className,
+              roomId: "",
+              objType: collectionRef.className)
     }
-    
-    func add(reference: CollectionReference, data: [String : Any?], success: SuccessBlockObj?, fail: FailBlock?) {
+
+    func add(reference: CollectionReference,
+             data: [String: Any?],
+             success: SuccessBlockObj?,
+             fail: FailBlock?) {
+        let roomId = reference.parent.className
+        let className = reference.className.replacingOccurrences(of: roomId, with: "")
         onSuccessBlockObj[reference.className] = success
         onFailBlock[reference.className] = fail
         let objectId = UUID().uuid16string()
         var parasm = data
         parasm["objectId"] = objectId
-        write(channelName: reference.className, data: parasm, objectId: objectId, isAdd: true)
+        write(channelName: className,
+              data: parasm,
+              roomId: roomId,
+              objectId: objectId,
+              objType: reference.className,
+              isAdd: true)
     }
-    
-    func update(reference: CollectionReference, id: String, data: [String : Any?], success: SuccessBlockVoid?, fail: FailBlock?) {
-        let className = reference.className == sceneName ? channelName : reference.className
+
+    func update(reference: CollectionReference,
+                id: String,
+                data: [String: Any?],
+                success: SuccessBlockVoid?,
+                fail: FailBlock?) {
+        let className = reference.className == channelName ? sceneName : reference.className
         onSuccessBlockVoid[className] = success
         onFailBlock[className] = fail
-        write(channelName: reference.className, data: data, objectId: id)
+        write(channelName: reference.className,
+              data: data,
+              roomId: "",
+              objectId: id,
+              objType: className)
     }
-    
-    func delete(reference: CollectionReference, id: String, success: SuccessBlockVoid?, fail: FailBlock?) {
-        let className = reference.className == sceneName ? channelName : reference.className
+
+    func delete(reference: CollectionReference,
+                id: String,
+                success: SuccessBlockObjOptional?,
+                fail: FailBlock?) {
+        let className = reference.className == channelName ? sceneName : reference.className
         print("channelName == \(channelName)")
-        onSuccessBlockVoid[className] = success
+        onDeleteBlockObjOptional[className] = success
         onFailBlock[className] = fail
         delete(channelName: className, data: ["objectId": id])
     }
-    
+
     func delete(documentRef: DocumentReference, success: SuccessBlock?, fail: FailBlock?) {
         let keys = documentRef.id.isEmpty ? nil : [documentRef.id]
-        let className = documentRef.className == sceneName ? channelName : documentRef.className
+        let className = documentRef.className == channelName ? sceneName : documentRef.className
         onSuccessBlock[className] = success
         onFailBlock[className] = fail
         if let keys = keys {
@@ -119,9 +179,9 @@ extension RethinkSyncManager: ISyncManager {
             delete(channelName: className, data: params)
         }
     }
-    
+
     func delete(collectionRef: CollectionReference, success: SuccessBlock?, fail: FailBlock?) {
-        let className = collectionRef.className == sceneName ? channelName : collectionRef.className
+        let className = collectionRef.className == channelName ? sceneName : collectionRef.className
         onSuccessBlock[className] = success
         onFailBlock[className] = fail
         delete(channelName: className, data: [])

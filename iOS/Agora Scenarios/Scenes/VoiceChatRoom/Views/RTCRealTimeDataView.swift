@@ -25,7 +25,8 @@ class RTCRealTimeDataView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupData(channelStatus: AgoraChannelStats? = nil, localAudioStatus: AgoraRtcLocalAudioStats? = nil) {
+    func setupData(channelStatus: AgoraChannelStats? = nil,
+                   localAudioStatus: AgoraRtcLocalAudioStats? = nil) {
         statistics.sceneStats = channelStatus
         statistics.localAudioStats = localAudioStatus
         detailLabel.text = statistics.description

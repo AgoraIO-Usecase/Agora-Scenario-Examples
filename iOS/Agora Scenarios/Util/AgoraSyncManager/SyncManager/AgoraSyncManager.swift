@@ -9,56 +9,61 @@ import Foundation
 
 public class AgoraSyncManager: NSObject {
     private var proxy: ISyncManager
-    
+
     deinit {
         Log.info(text: "AgoraSyncManager deinit", tag: "AgoraSyncManager")
     }
-    
+
     /// init
     /// - Parameters:
     ///   - config: config of rtm
     ///   - complete: `code = 0` is success, else error
     public init(config: RtmConfig,
-                complete: @escaping SuccessBlockInt) {
+                complete: @escaping SuccessBlockInt)
+    {
         let tempConfig = RtmSyncManager.Config(appId: config.appId,
                                                channelName: config.channelName)
         proxy = RtmSyncManager(config: tempConfig,
                                complete: complete)
     }
-    
+
     /// init
     /// - Parameters:
     ///   - config: config of rtm
     ///   - complete: `code = 0` is success, else error
     public init(config: RethinkConfig,
-                complete: @escaping SuccessBlockInt) {
+                complete: @escaping SuccessBlockInt)
+    {
         let tempConfig = RethinkSyncManager.Config(appId: config.appId,
-                                               channelName: config.channelName)
+                                                   channelName: config.channelName)
         proxy = RethinkSyncManager(config: tempConfig,
                                    complete: complete)
     }
-    
+
     public func createScene(scene: Scene,
-                     success: SuccessBlockVoid?,
-                     fail: FailBlock?) {
+                            success: SuccessBlockVoid?,
+                            fail: FailBlock?)
+    {
         proxy.createScene(scene: scene,
                           success: success,
                           fail: fail)
     }
-    
+
     /// 加入房间
     public func joinScene(sceneId: String,
-                   success: SuccessBlockObjSceneRef?,
-                   fail: FailBlock?) {
+                          success: SuccessBlockObjSceneRef?,
+                          fail: FailBlock?)
+    {
         proxy.joinScene(sceneId: sceneId,
                         manager: self,
                         success: success,
                         fail: fail)
     }
-    
+
     /// 获取房间列表
     public func getScenes(success: SuccessBlock? = nil,
-                          fail: FailBlock? = nil) {
+                          fail: FailBlock? = nil)
+    {
         proxy.getScenes(success: success,
                         fail: fail)
     }
@@ -67,13 +72,14 @@ public class AgoraSyncManager: NSObject {
     /// - Parameters:
     ///   - attributesByKeys: 房间id列表
     public func deleteScenes(sceneIds: [String],
-                             success: SuccessBlockVoid? = nil,
-                             fail: FailBlock? = nil) {
+                             success: SuccessBlockObjOptional? = nil,
+                             fail: FailBlock? = nil)
+    {
         proxy.deleteScenes(sceneIds: sceneIds,
                            success: success,
                            fail: fail)
     }
-    
+
     /// 获取指定属性
     /// - Parameters:
     ///   - documentRef: `Document`类型实体
@@ -81,24 +87,26 @@ public class AgoraSyncManager: NSObject {
     func get(documentRef: DocumentReference,
              key: String,
              success: SuccessBlockObjOptional?,
-             fail: FailBlock?) {
+             fail: FailBlock?)
+    {
         proxy.get(documentRef: documentRef,
                   key: key,
                   success: success,
                   fail: fail)
     }
-    
+
     /// 获取所有数据（Collection）
     /// - Parameters:
     ///   - collectionRef: `Collection`类型实体
     func get(collectionRef: CollectionReference,
              success: SuccessBlock?,
-             fail: FailBlock?) {
+             fail: FailBlock?)
+    {
         proxy.get(collectionRef: collectionRef,
                   success: success,
                   fail: fail)
     }
-    
+
     /// 新增一项数据（Collection）
     /// - Parameters:
     ///   - reference: `Collection`类型实体
@@ -106,35 +114,38 @@ public class AgoraSyncManager: NSObject {
     func add(reference: CollectionReference,
              data: [String: Any?],
              success: SuccessBlockObj?,
-             fail: FailBlock?) {
+             fail: FailBlock?)
+    {
         proxy.add(reference: reference,
                   data: data,
                   success: success,
                   fail: fail)
     }
-    
+
     func update(reference: CollectionReference,
                 id: String,
-                data: [String : Any?],
+                data: [String: Any?],
                 success: SuccessBlockVoid?,
-                fail: FailBlock?) {
+                fail: FailBlock?)
+    {
         proxy.update(reference: reference,
                      id: id,
                      data: data,
                      success: success,
                      fail: fail)
     }
-    
+
     func delete(reference: CollectionReference,
                 id: String,
-                success: SuccessBlockVoid?,
-                fail: FailBlock?) {
+                success: SuccessBlockObjOptional?,
+                fail: FailBlock?)
+    {
         proxy.delete(reference: reference,
                      id: id,
                      success: success,
                      fail: fail)
     }
-    
+
     /// 更新或者增加数据（Document）
     /// - Parameters:
     ///   - reference: `Document`类型实体
@@ -144,36 +155,39 @@ public class AgoraSyncManager: NSObject {
                 key: String,
                 data: [String: Any?],
                 success: SuccessBlock?,
-                fail: FailBlock?) {
+                fail: FailBlock?)
+    {
         proxy.update(reference: reference,
                      key: key,
                      data: data,
                      success: success,
                      fail: fail)
     }
-    
+
     /// 删除一个document
     /// - Parameters:
     ///   - documentRef: 要删除的`Document`
     func delete(documentRef: DocumentReference,
                 success: SuccessBlock?,
-                fail: FailBlock?) {
+                fail: FailBlock?)
+    {
         proxy.delete(documentRef: documentRef,
                      success: success,
                      fail: fail)
     }
-    
+
     /// 删除一个Collection
     /// - Parameters:
     ///   - collectionRef: 要删除的`Collection`
     func delete(collectionRef: CollectionReference,
                 success: SuccessBlock?,
-                fail: FailBlock?) {
+                fail: FailBlock?)
+    {
         proxy.delete(collectionRef: collectionRef,
                      success: success,
                      fail: fail)
     }
-    
+
     /// 订阅属性的更新事件
     /// - Parameters:
     ///   - reference: `Document`类型
@@ -184,7 +198,8 @@ public class AgoraSyncManager: NSObject {
                    onUpdated: OnSubscribeBlock?,
                    onDeleted: OnSubscribeBlock?,
                    onSubscribed: OnSubscribeBlockVoid?,
-                   fail: FailBlock?) {
+                   fail: FailBlock?)
+    {
         let key = key ?? "scene"
         return proxy.subscribe(reference: reference,
                                key: key,
@@ -194,26 +209,28 @@ public class AgoraSyncManager: NSObject {
                                onSubscribed: onSubscribed,
                                fail: fail)
     }
-    
+
     /// 取消订阅
     /// - Parameters:
     ///   - reference: `Document`类型
     ///   - key: 键值
     func unsubscribe(reference: DocumentReference,
-                     key: String) {
+                     key: String)
+    {
         proxy.unsubscribe(reference: reference, key: key)
     }
-    
+
     func subscribeScene(reference: SceneReference,
                         onUpdated: OnSubscribeBlock?,
                         onDeleted: OnSubscribeBlock? = nil,
-                        fail: FailBlock? = nil) {
+                        fail: FailBlock? = nil)
+    {
         proxy.subscribeScene(reference: reference,
                              onUpdated: onUpdated,
                              onDeleted: onDeleted,
                              fail: fail)
     }
-    
+
     func unsubscribeScene(reference: SceneReference, fail: FailBlock? = nil) {
         proxy.unsubscribeScene(reference: reference, fail: fail)
     }

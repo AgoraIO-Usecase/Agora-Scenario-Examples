@@ -7,27 +7,51 @@
 
 import Foundation
 
-public class Scene: Codable {
+public struct Scene: Codable {
     let id: String
     let userId: String
-    let property: [String : String]?
+    let property: [String : Any]?
     
     public init(id: String,
                 userId: String,
-                property: [String : String]?) {
+                property: [String : Any]?) {
         self.id = id
         self.userId = userId
         self.property = property
     }
     
     func toJson() -> String {
-        var dict = [String : String]()
+        var dict = [String : Any]()
         dict["id"] = id
         dict["userId"] = userId
         let _ = self.property?.map({ (key,value) in
             dict[key] = value
         })
         return Utils.getJson(dict: dict as NSDictionary)
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case userId
+        case property
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        id = try values.decode(String.self, forKey: .id)
+        userId = try values.decode(String.self, forKey: .userId)
+        let data = try values.decode(Data.self, forKey: .property)
+        property = try JSONSerialization.jsonObject(with: data,
+                                                    options: []) as? [String: Any]
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(userId, forKey: .userId)
+        let data = try JSONSerialization.data(withJSONObject: property ?? [:],
+                                              options: [])
+        try container.encode(data, forKey: .property)
     }
 }
 
@@ -42,6 +66,12 @@ class Attribute: IObject, Equatable {
     func getPropertyWith(key: String, type: Any.Type) -> Any? {
         let dict = Utils.getDict(text: object)
         return dict?[key]
+    }
+    
+    func toDict() -> [String : Any] {
+        var dict = Utils.toDictionary(jsonString: object)
+        dict["objectId"] = key
+        return dict
     }
     
     func toJson() -> String? {

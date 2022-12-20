@@ -163,7 +163,7 @@ class VoiceChatRoomController: BaseViewController {
         agoraKit?.leaveChannel({ state in
             LogUtils.log(message: "leave channel state == \(state)", level: .info)
         })
-        SyncUtil.scene(id: channelName)?.collection(className: SYNC_MANAGER_AGORA_VOICE_USERS).delete(id: currentUserModel?.objectId ?? "", success: {
+        SyncUtil.scene(id: channelName)?.collection(className: SYNC_MANAGER_AGORA_VOICE_USERS).delete(id: currentUserModel?.objectId ?? "", success: { _ in 
             
         }, fail: { error in
             ToastView.show(text: error.message)
@@ -189,7 +189,6 @@ class VoiceChatRoomController: BaseViewController {
     }
     
     private func setupAgoraKit() {
-        guard agoraKit == nil else { return }
         agoraKit = AgoraRtcEngineKit.sharedEngine(with: rtcEngineConfig, delegate: self)
         agoraKit?.setLogFile(LogUtils.sdkLogPath())
         agoraKit?.setClientRole(getRole(uid: UserInfo.uid))

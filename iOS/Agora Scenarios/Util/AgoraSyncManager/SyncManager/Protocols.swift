@@ -18,7 +18,7 @@ protocol ISyncManager {
     func getScenes(success: SuccessBlock?,
                    fail: FailBlock?)
     func deleteScenes(sceneIds: [String],
-                      success: SuccessBlockVoid?,
+                      success: SuccessBlockObjOptional?,
                       fail: FailBlock?)
     func get(documentRef: DocumentReference,
              key: String,
@@ -33,12 +33,12 @@ protocol ISyncManager {
              fail: FailBlock?)
     func update(reference: CollectionReference,
                 id: String,
-                data: [String : Any?],
+                data: [String: Any?],
                 success: SuccessBlockVoid?,
                 fail: FailBlock?)
     func delete(reference: CollectionReference,
                 id: String,
-                success: SuccessBlockVoid?,
+                success: SuccessBlockObjOptional?,
                 fail: FailBlock?)
     func update(reference: DocumentReference,
                 key: String,
@@ -59,7 +59,7 @@ protocol ISyncManager {
                    onSubscribed: OnSubscribeBlockVoid?,
                    fail: FailBlock?)
     func unsubscribe(reference: DocumentReference, key: String) -> Void
-    
+
     func subscribeScene(reference: SceneReference,
                         onUpdated: OnSubscribeBlock?,
                         onDeleted: OnSubscribeBlock?,
@@ -72,5 +72,6 @@ public protocol IObject {
     func getId() -> String
     func toObject<T>() throws -> T? where T: Decodable
     func getPropertyWith(key: String, type: Any.Type) -> Any?
+    func toDict() -> [String: Any]
     func toJson() -> String?
 }

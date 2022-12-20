@@ -132,7 +132,7 @@ class AgoraClubController: BaseViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        SyncUtil.scene(id: channelName)?.collection(className: SYNC_MANAGER_AGORA_CLUB_USERS).delete(id: currentUserModel?.objectId ?? "", success: {
+        SyncUtil.scene(id: channelName)?.collection(className: SYNC_MANAGER_AGORA_CLUB_USERS).delete(id: currentUserModel?.objectId ?? "", success: { _ in
             
         }, fail: { error in
             ToastView.show(text: error.message)
@@ -416,7 +416,7 @@ class AgoraClubController: BaseViewController {
         agoraKit?.leaveChannelEx(connection!, leaveChannelBlock: { state in
             LogUtils.log(message: "leave channel state == \(state)", level: .info)
         })
-        SyncUtil.scene(id: channelName)?.collection(className: SYNC_MANAGER_AGORA_CLUB_USERS).delete(id: currentUserModel?.objectId ?? "", success: {
+        SyncUtil.scene(id: channelName)?.collection(className: SYNC_MANAGER_AGORA_CLUB_USERS).delete(id: currentUserModel?.objectId ?? "", success: { _ in 
             
         }, fail: { error in
             ToastView.show(text: error.message)
