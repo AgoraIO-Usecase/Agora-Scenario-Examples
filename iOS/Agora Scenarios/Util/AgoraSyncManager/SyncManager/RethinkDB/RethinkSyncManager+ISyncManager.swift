@@ -36,7 +36,7 @@ extension RethinkSyncManager: ISyncManager {
         onSuccessBlockObjOptional[documentRef.className + key] = success
         onFailBlock[documentRef.className + key] = fail
         query(channelName: documentRef.className + key,
-              roomId: "",
+              roomId: channelName,
               objType: documentRef.className + key)
     }
 
@@ -121,7 +121,7 @@ extension RethinkSyncManager: ISyncManager {
         onSuccessBlock[collectionRef.className] = success
         onFailBlock[collectionRef.className] = fail
         query(channelName: collectionRef.className,
-              roomId: "",
+              roomId: channelName,
               objType: collectionRef.className)
     }
 
@@ -154,7 +154,7 @@ extension RethinkSyncManager: ISyncManager {
         onFailBlock[className] = fail
         write(channelName: reference.className,
               data: data,
-              roomId: "",
+              roomId: channelName,
               objectId: id,
               objType: className)
     }
