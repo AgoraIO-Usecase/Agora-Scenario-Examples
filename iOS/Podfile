@@ -6,15 +6,16 @@
 
 #source 'https://mirrors.tuna.tsinghua.edu.cn/git/CocoaPods/Specs.git'
 
-project 'Agora Scenarios.xcodeproj'
-target 'Agora Scenarios' do
+project 'AgoraScenarios.xcodeproj'
+target 'AgoraScenarios' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
   inhibit_all_warnings!
   
   pod 'MBProgressHUD', '~> 1.2.0'
 #  pod 'AgoraRtcEngine_iOS_Beta', '4.0.0-beta.2'
-  pod 'AgoraRtcEngine_iOS', '4.0.0-rc.1'
+  # pod 'AgoraRtcEngine_iOS', '4.0.0-rc.1'
+  pod 'sdk', :path => 'sdk.podspec'
 #  pod 'AgoraScreenShare', :path => 'sdk'
   pod 'Agora-Scene-Utils', '~> 1.0.8'
 #  pod 'AgoraSyncManager', '1.0.2'
