@@ -364,7 +364,7 @@ class AgoraClubController: BaseViewController {
         videoCanvas.view = headerView.localVideoView
         videoCanvas.renderMode = .hidden
         videoCanvas.sourceType = .mediaPlayer
-        videoCanvas.sourceId = mediaPlayerKit?.getMediaPlayerId() ?? 0
+        videoCanvas.mediaPlayerId = mediaPlayerKit?.getMediaPlayerId() ?? 0
         agoraKit?.setupLocalVideo(videoCanvas)
         mediaPlayerKit?.open(videoUrl ?? "", startPos: 0)
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {

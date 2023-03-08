@@ -14,8 +14,8 @@ target 'AgoraScenarios' do
   
   pod 'MBProgressHUD', '~> 1.2.0'
 #  pod 'AgoraRtcEngine_iOS_Beta', '4.0.0-beta.2'
-  # pod 'AgoraRtcEngine_iOS', '4.0.0-rc.1'
-  pod 'sdk', :path => 'sdk.podspec'
+   pod 'AgoraRtcEngine_iOS', '4.1.1'
+#  pod 'sdk', :path => 'sdk.podspec'
 #  pod 'AgoraScreenShare', :path => 'sdk'
   pod 'Agora-Scene-Utils', '~> 1.0.8'
 #  pod 'AgoraSyncManager', '1.0.2'
